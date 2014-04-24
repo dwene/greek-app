@@ -1,0 +1,180 @@
+{   "greekapp" :
+//probably split subcategories into different databases
+    {
+        "organizations" :
+        [
+        {
+            "example_name" :
+            {
+                "id" : "01",
+                "number_of_members" : "100",
+                "type" : "sorority",
+                "school" : "Texas A&M"
+                "active_members" :
+                [
+                    {
+                    "username" : "sample_username",
+                    "password" : "encrypted?",
+                    "first_name" : "sample_first_name",
+                    "last_name" : "sample_last_name",
+                    "field_of_study" : "example_major",
+                    "class_year" : "example_year",
+                    "student_email" : "example@school.edu",
+                    "personal_email" : "example@gmail.com",
+                    "primary_email" : "personal_email",
+                    "phone_number" : "##########",
+                    "address_line1" : "sample_address_line1",
+                    "address_line2" : "sample_address_line2",
+                    "city" : "sample_city",
+                    "state" : "sample_state",
+                    "zipcode" : "#####",
+                    //the rest are optional
+                    "website" : "www.examplesite.com",
+                    "facebook" : "https://www.facebook.com/username",
+                    "twitter" : "https://twitter.com/username",
+                    "google_plus" : "https://plus.google.com/+username",
+                    "linked_in" : "https://www.linkedin.com/profile/view?id=#########",
+                    //account meta data, possibly need more
+                    "is_pledge" : "yes",
+                    "is_officer" : "no",
+                    "user_group_tags" :
+                    [
+                        "freshman", "pledge", "social_committee", "5K_event_planner"
+                    ]
+                    "member_created" : "sample_date_created",
+                    "inactive_date" : "date_to_switch_inactive"
+                    }
+                    // above repeats for each active member
+                ],
+                "all_group_tags" :
+                [
+                    "freshman", "pledge", "social_committee", "5K_event_planner", "etc..."
+                ],
+                "inactive_members" :
+                [
+                    {
+                    "username" : "sample_username",
+                    "password" : "encrypted?",
+                    "first_name" : "sample_first_name",
+                    "last_name" : "sample_last_name",
+                    "field_of_study" : "example_major",
+                    "class_year" : "example_year",
+                    "student_email" : "example@school.edu",
+                    "personal_email" : "example@gmail.com",
+                    "primary_email" : "personal_email",
+                    "phone_number" : "##########",
+                    "address_line1" : "sample_address_line1",
+                    "address_line2" : "sample_address_line2",
+                    "city" : "sample_city",
+                    "state" : "sample_state",
+                    "zipcode" : "#####",
+                    //the rest are optional
+                    "website" : "www.examplesite.com",
+                    "facebook" : "https://www.facebook.com/username",
+                    "twitter" : "https://twitter.com/username",
+                    "google_plus" : "https://plus.google.com/+username",
+                    "linked_in" : "https://www.linkedin.com/profile/view?id=#########",
+                    //account meta data, possibly need more
+                    "member_created" : "##############"
+                    }
+                    //above repeats for each inactive member
+                ],
+                ///////////////////////////////////////////////////////////
+                "lineup" :
+                [
+                    {
+                    "event_title" : "name of event",
+                    "event_groups" : ["all"],
+                    "event_date" : "##/##/####",
+                    "event_is_allday" : "yes"
+                        //if all day set time to midnight
+                    "event_time" : "##:##*M",
+                    "event_dateandtime" : "##############",
+                    "event_duration" : "1440",
+                        //if all day set duration to 24 hours
+                    "event_notresponded" : ["name", "name", "name", "etc..."],
+                    "event_accepted" : ["name", "name", "name", "etc..."],
+                    "event_notattending" :
+                        [
+                            {
+                            "person_notattending" : "name",
+                            "notattending_response" : "content submitted by form sent",
+                            "notattending_response_timestamp" : "##############"
+                            }
+                        ],
+                    "event_comments" :
+                        [
+                            {
+                            "event_comment_creator" : "name",
+                            "event_comment" : "content",
+                            "event_comment_timestamp" : "##############"
+                            }
+                        ],
+                    "event_creator" : "name",
+                    "event_created" : "##############"
+                    }
+                    //above repeats for all events
+                ],
+                ///////////////////////////////////////////////////////////
+                "pushes" :
+                [
+                    {
+                    "push_type" : "text",
+                    "push_groups" : ["all"],
+                    "push_recipients" : ["name", "name", "name", "etc..."],
+                    "push_title" : "title",
+                    "push_content" : "content",
+                    "push_link" : "http://url.com",
+                        //if applicable
+                    "push_creator" : "name",
+                    "push_created" : "##############"
+                    }
+                    //above repeats for all pushes
+                ],
+                ///////////////////////////////////////////////////////////
+                "pleads" :
+                [
+                    {
+                    "plead_type" : "poll",
+                    "plead_groups" : ["all"],
+                    "plead_recipients" : ["name", "name", "name", "etc..."],
+                    "plead_title" : "title",
+                    "plead_content" : "content",
+                    "plead_questions" :
+                        [
+                            {
+                            "plead_question_title" : "title",
+                            "plead_question_content" : "content",
+                            "plead_question_type" : "radio",
+                            "plead_question_answers" : ["yes", "no", "maybe", "idk", "idc"]
+                            //more added depending on question type
+                            }
+                            //above repeats for all questions
+                        ],
+                    "plead responses" :
+                        [
+                            {
+                            "plead_response_creator" : "name",
+                            "plead_response_answers" :
+                                [
+                                    {
+                                    "plead_question_title" : "title",
+                                    "plead_answer" : "yes"
+                                    //more added depending on question type
+                                    }
+                                    //above repeats for all answers
+                                ],
+                            "plead_response_created" : "##############"
+                            }
+                            //above repeats for all responses
+                        ],
+                    "plead_creator" : "name",
+                    "plead_created" : "##############"
+                    }
+                ]
+            }
+        }
+        ]
+        //repeats for each organization
+    }
+}
