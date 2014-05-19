@@ -6,22 +6,25 @@ var App = angular.module('App', ['ngRoute']);
 			// route for the home page
 			.when('/', {
 				templateUrl : 'Static/home.html',
-				controller  : 'mainController'
+				controller  : 'homeController'
 			})
-
-			// route for the about page
 			.when('/login', {
 
 				templateUrl : 'Static/login.html',
 				controller  : 'loginController'
 			})
-
-			// route for the contact page
 			.when('/register', {
 				templateUrl : 'Static/register.html',
 				controller  : 'registerController'
 			})
-            // route for the contact page
+            .when('/registerinfo', {
+				templateUrl : 'Static/registerinfo.html',
+				controller  : 'registerinfoController'
+			})
+            .when('/payment', {
+				templateUrl : 'Static/payment.html',
+				controller  : 'paymentController'
+			})
 			.when('/app', {
 				templateUrl : 'Static/app.html',
 				controller  : 'appController'
@@ -79,28 +82,48 @@ var App = angular.module('App', ['ngRoute']);
         };
 
     });
-//
-	App.controller('registerController', function($scope, $http) {
-		$scope.register = function(item) {
-        console.log(item)
-        $http.post('/_ah/api/todolist/v1/auth/register/',item)
-            .success(function(data) {
-                console.log(data.message);
-                cookie = data.current_token;
-                
-                console.log(cookie);
-                $.cookie('first_name', data.first_name);
-                $.cookie('USER_TOKEN', cookie);
-                console.log(data);
-                window.location.replace("/#/app");
-                //debug credentials user:jakeruesink pass:jakeiscool
 
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-        };
+App.controller('registerController', function($scope, $http) {
+    $scope.registerClick = function(){
+        window.location.replace("/#/registerinfo");
+    };
+    
+});
+
+App.controller('registerinfoController', function($scope, $http) {
+    
+    $scope.registerinfoClick = function(){
+        window.location.replace("/#/payment");
+    };
+    
+//		$scope.register = function(item) {
+//        console.log(item)
+//        $http.post('/_ah/api/todolist/v1/auth/register/',item)
+//            .success(function(data) {
+//                console.log(data.message);
+//                cookie = data.current_token;
+//                
+//                console.log(cookie);
+//                $.cookie('first_name', data.first_name);
+//                $.cookie('USER_TOKEN', cookie);
+//                console.log(data);
+//                window.location.replace("/#/app");
+//                //debug credentials user:jakeruesink pass:jakeiscool
+//
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
+//        };
 	});
+
+App.controller('paymentController', function($scope, $http) {
+    $scope.submitPayment = function(){
+        window.location.replace("/#/app/addmembers");
+    };
+    
+});
+
 function checkLogin(){
     if($.cookie('USER_TOKEN') != undefined)
         return true;
