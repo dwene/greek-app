@@ -17,9 +17,14 @@ var App = angular.module('App', ['ngRoute']);
 			})
 
 			// route for the contact page
-			.when('/signup', {
-				templateUrl : 'Static/signup.html',
-				controller  : 'signupController'
+			.when('/register', {
+				templateUrl : 'Static/register.html',
+				controller  : 'registerController'
+			})
+            // route for the contact page
+			.when('/app', {
+				templateUrl : 'Static/app.html',
+				controller  : 'appController'
 			})
             .otherwise({
                 redirectTo: '/'
@@ -31,30 +36,16 @@ var App = angular.module('App', ['ngRoute']);
             return checkLogin();
         }
         
-        $scope.name = function(){
-            return $.cookie('first_name');
-        }
-        /*if($.cookie('first_name') != undefined)
-            $scope.first_name = $.cookie('first_name');
-        else
-            $scope.first_name = '';*/
-    
-
-        
-        //if($.cookie('first_name').length){$scope.first_name = $.cookie('first_name');}
-        
-
-        
         $scope.logout = function(){
                 $.removeCookie('USER_TOKEN');
                 window.location.replace("/#/login");
-            }
+         }
     });
 
 	// create the controller and inject Angular's $scope
 	App.controller('mainController', function($scope, $http) {
         if(!checkLogin()){
-        window.location.replace("/#/login");
+        window.location.replace("/#/home");
         }
         $scope.formData = {};
         
@@ -64,91 +55,20 @@ var App = angular.module('App', ['ngRoute']);
             }else{return false;}
         };
         
-        // when landing on the page, get all todos and show them
-        $http.get('/_ah/api/todolist/v1/getlist/'+$.cookie('USER_TOKEN'))
-            .success(function(data) {
-                console.log(data.message)
-                $scope.todos = JSON.parse(data.message);
-								console.log($scope.todos)
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+	});
 
-        // when submitting the add form, send the text to the node API
-        $scope.createTodo = function() {
-						console.log({"message" : $scope.formData.title})
-            $http.post('/_ah/api/todolist/v1/addItem/'+$.cookie('USER_TOKEN')+'/'+$scope.formData.title)
-                .success(function(data) {
-                    console.log(data.message)
-                    usable = JSON.parse(data.message);
-                    addme = {id: usable.id, checked: false, title: $scope.formData.title, timestamp: usable.timestamp};
-                    console.log($scope.todos);
-                    $scope.todos.push(addme);
-                    //{checked:false, title:$scope.formData.title, timestamp:}
-                    $scope.formData = {}; // clear the form so our user is ready to enter another
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
+    App.controller('appController', function($scope, $http) {
+        if(!checkLogin()){
+        window.location.replace("/#/register");
+        }
+        $scope.formData = {};
+        
+        $scope.isitemchecked = function(checked){
+            if(checked === true){
+                return true;
+            }else{return false;}
         };
-
-        // check a todo after checking it
-        $scope.checkTodo = function(id) {
-            $http.post('/_ah/api/todolist/v1/checkItem/' + $.cookie('USER_TOKEN') + '/' + id)
-                .success(function(data) {
-                    //$scope.todos = JSON.parse(data.message);
-                    for(var i = 0; i<$scope.todos.length; i++){
-                        if($scope.todos[i].id == id){
-                            if($scope.todos[i].checked){
-                                $scope.todos[i].checked = false;}
-                            else{
-                                $scope.todos[i].checked = true;}
-                        }
-                    }
-                    console.log(data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-        };
-
-        // delete a todo after deleting it
-        $scope.deleteTodo = function(id) {
-            $http.delete('/_ah/api/todolist/v1/removeItem/' + $.cookie('USER_TOKEN') + '/' + id)
-                .success(function(data) {
-                    for (var i = 0; i < $scope.todos.length; i++)
-                    {
-                        if ($scope.todos[i].id == id)
-                        {
-                            $scope.todos.splice(i, 1);
-                            break;
-                        }
-                    }
-                   // $scope.todos = JSON.parse(data.message);
-                    console.log(data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-        };
-        $scope.clearCompleted = function() {
-            $http.delete('/_ah/api/todolist/v1/deleteChecked/'+$.cookie('USER_TOKEN'))
-                .success(function(data) {
-                    for(var i = 0; i<$scope.todos.length; i++){
-                        console.log(i)
-                        if($scope.todos[i].checked){
-                            $scope.todos.splice(i, 1);
-                            i=0;
-                        }
-                    }
-                    console.log($scope.todos)
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-        };
+        
 	});
 
 //if controllers are needed for these pages
@@ -164,7 +84,7 @@ var App = angular.module('App', ['ngRoute']);
                 $.cookie('first_name', data.first_name);
                 $.cookie('USER_TOKEN', cookie);
                 console.log(data);
-                window.location.replace("/#/home");
+                window.location.replace("/#/app");
                 //debug credentials user:jakeruesink pass:jakeiscool
 
             })
@@ -175,7 +95,7 @@ var App = angular.module('App', ['ngRoute']);
 
     });
 //
-	App.controller('signupController', function($scope, $http) {
+	App.controller('registerController', function($scope, $http) {
 		$scope.register = function(item) {
         console.log(item)
         $http.post('/_ah/api/todolist/v1/auth/register/',item)
@@ -187,7 +107,7 @@ var App = angular.module('App', ['ngRoute']);
                 $.cookie('first_name', data.first_name);
                 $.cookie('USER_TOKEN', cookie);
                 console.log(data);
-                window.location.replace("/#/home");
+                window.location.replace("/#/app");
                 //debug credentials user:jakeruesink pass:jakeiscool
 
             })
