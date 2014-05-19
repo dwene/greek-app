@@ -1,17 +1,41 @@
 application: greek-app
 version: 1
-runtime: php
+runtime: python27
 api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /(.*\.(gif|png|jpg|ico|js|css|txt|json))
+- url: /(.*\.(gif|png|jpg|ico|js|css|txt|json|wof|ttf|svg))
   static_files: \1
-  upload: (.*\.(gif|png|jpg|ico|js|css|txt|json))
+  upload: (.*\.(gif|png|jpg|ico|js|css|txt|json|wof|ttf|svg))
+  secure: always
 
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
+  secure: always
+  
+- url: /Static
+  static_dir: Static
+  secure: always
 
-- url: .*
-  script: main.php
+- url: /
+  script: main.app
+  secure: always
+
+- url: /_ah/spi/.*
+  script: controller.APPLICATION
+  secure: always
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+
+- name: jinja2
+  version: latest
+
+- name: endpoints
+  version: 1.0
+
+- name: pycrypto
+  version: latest

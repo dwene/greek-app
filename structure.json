@@ -39,7 +39,7 @@
                     "is_officer" : "no",
                     "user_group_tags" :
                     [
-                        "freshman", "pledge", "social_committee", "5K_event_planner"
+                        "freshman", "pledge", "social_committee", "5K_event_planner", "pledge_class_name"
                     ]
                     "member_created" : "sample_date_created",
                     "inactive_date" : "date_to_switch_inactive"

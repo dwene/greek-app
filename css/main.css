@@ -3,3 +3,8 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 /*Page Styles*/
 body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -webkit-font-smoothing:antialiased;}
+
+#logoutbutton{margin-top:10px;}
+#clearcompletedbutton{margin-bottom:15px;}
+.delete_button{line-height:22px; height:22px; width:22px; font-size:82px;}
+.delete_button span{display:block; height:200px; margin:-16px 0 0 -21px;}

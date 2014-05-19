@@ -1,0 +1,53 @@
+<div class="jumbotron text-center">
+		<h1>Signup Page</h1>
+</div>
+
+
+<div class="container">
+		<form id="signupform" class="form-horizontal" role="form">
+		
+		<div class="form-group">
+			<label for="firstName" class="col-sm-2 control-label">First Name</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="firstName" ng-model="item.first_name" placeholder="John" required>
+			</div>
+		</div>
+        <div class="form-group">
+			<label for="lastName" class="col-sm-2 control-label">Last Name</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="lastName" ng-model="item.last_name" placeholder="Doe" required>
+			</div>
+        </div>
+        <div class="form-group">
+			<label for="inputUsername" class="col-sm-2 control-label">Username</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="inputUsername" ng-model="item.user_name" placeholder="john.doe" required>
+			</div>
+        </div>
+        <div class="form-group">
+			<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+			<div class="col-sm-10">
+			  <input type="email" class="form-control" id="inputEmail" ng-model="item.email" placeholder="john@doe.com" required>
+			</div>
+        </div>
+        <div class="form-group">
+			<label for="inputPassword" class="col-sm-2 control-label">Password</label>
+			<div class="col-sm-10">
+			  <input type="password" class="form-control" id="inputPassword" ng-model="item.password" placeholder="***********" required>
+			</div>
+        </div>
+        <div class="form-group">
+			<label for="repeatPassword" class="col-sm-2 control-label">Repeat Password</label>
+			<div class="col-sm-10">
+			  <input type="password" class="form-control" id="repeatPassword" placeholder="***********" required>
+			</div>
+        </div>
+
+		  <div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+			  <button type="submit" ng-click="register(item)" class="btn btn-default">Sign Up</button>
+			</div>
+		  </div>
+		  
+		</form>
+</div>
