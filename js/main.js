@@ -43,17 +43,8 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 	// create the controller and inject Angular's $scope
-	App.controller('mainController', function($scope, $http) {
-        if(!checkLogin()){
-        window.location.replace("/#/home");
-        }
-        $scope.formData = {};
-        
-        $scope.isitemchecked = function(checked){
-            if(checked === true){
-                return true;
-            }else{return false;}
-        };
+	App.controller('homeController', function($scope, $http) {
+           
         
 	});
 
@@ -62,12 +53,6 @@ var App = angular.module('App', ['ngRoute']);
         window.location.replace("/#/login");
         }
         $scope.formData = {};
-        
-        $scope.isitemchecked = function(checked){
-            if(checked === true){
-                return true;
-            }else{return false;}
-        };
         
 	});
 
