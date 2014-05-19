@@ -12,9 +12,8 @@ import time
 from endpoints_proto_datastore.ndb import EndpointsModel
 import collections
 
-# TODO: Replace the following lines with client IDs obtained from the APIs
-# Console or Cloud Console.
-WEB_CLIENT_ID = 'testtodolist007'
+
+WEB_CLIENT_ID = 'greek-app'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
 IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID
@@ -24,13 +23,13 @@ ERROR_BAD_ID = 'BAD_TOKEN'
 
 
 class IncomingMessage(messages.Message):
-    user_name = ''
-    token = ''
-    data = object
+    user_name = messages.StringField(1)
+    token = messages.StringField(2)
+    blob = messages.StringField(3)
 
 class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
-    data = object
+    blob = messages.StringField(2)
 
 """MODELS"""
 class User(ndb.Model):
@@ -81,7 +80,7 @@ def get_key_from_token(token):
         return user.key
     return 0
 
-@endpoints.api(name='NeteGreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
+@endpoints.api(name='netegreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
 class RESTApi(remote.Service):
     USER_TOKEN = endpoints.ResourceContainer(message_types.VoidMessage, token=messages.StringField(1,
@@ -90,12 +89,12 @@ class RESTApi(remote.Service):
     ORG_IN = endpoints.ResourceContainer(IncomingMessage,
                                         user_name=messages.StringField(1, variant=messages.Variant.STRING),
                                         token=messages.StringField(2, variant=messages.Variant.STRING),
-                                        data=messages.StringField(3, variant=messages.Variant.STRING))
+                                        blob=messages.StringField(3, variant=messages.Variant.STRING))
     """USER REQUESTS"""
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/registerOrganization',
-                      http_method='POST', name='auth.registerOrganization')
+    @endpoints.method(ORG_IN, OutgoingMessage, path='auth/register',
+                      http_method='POST', name='auth.register')
     def register_organization(self, request):
-        clump = json.loads(request.data)
+        clump = json.loads(request.blob)
         new_org = Organization(name=clump.organization.name, school=clump.organization.school)
         new_org.put()
         new_user = User(user_name=clump.user.user_name)
@@ -106,7 +105,7 @@ class RESTApi(remote.Service):
         new_user.email = clump.user.email
         new_user.organization = new_org.key
         new_user.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', blob='OK')
 """
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register',
                       http_method='POST', name='auth.register')
