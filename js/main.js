@@ -29,6 +29,10 @@ var App = angular.module('App', ['ngRoute']);
 				templateUrl : 'Static/app.html',
 				controller  : 'appController'
 			})
+            .when('/app/addmembers', {
+				templateUrl : 'Static/addmembers.html',
+				controller  : 'appController'
+			})
             .otherwise({
                 redirectTo: '/'
             });
@@ -52,9 +56,9 @@ var App = angular.module('App', ['ngRoute']);
 	});
 
     App.controller('appController', function($scope, $http) {
-        if(!checkLogin()){
-        window.location.replace("/#/login");
-        }
+//        if(!checkLogin()){
+//        window.location.replace("/#/login");
+//        }
         $scope.formData = {};
         
 	});
@@ -120,6 +124,17 @@ App.controller('registerinfoController', function($scope, $http) {
 App.controller('paymentController', function($scope, $http) {
     $scope.submitPayment = function(){
         window.location.replace("/#/app/addmembers");
+    };
+    
+});
+
+App.controller('addmembersController', function($scope, $http) {
+    $scope.addMember = function(){
+
+    };
+    
+    $scope.addMembers = function(){
+
     };
     
 });
