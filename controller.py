@@ -19,34 +19,44 @@ ANDROID_CLIENT_ID = 'replace this with your Android client ID'
 IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID
 
+"""error codes for returning errors"""
+ERROR_BAD_ID = 'BAD_TOKEN'
 
-class Response(messages.Message):
-    """Greeting that stores a message."""
-    message = messages.StringField(1)
 
-class UserCreds(messages.Message):
-    user_name = messages.StringField(1)
-    password = messages.StringField(2)
-    email = messages.StringField(3)
-    first_name = messages.StringField(4)
-    last_name = messages.StringField(5)
-    current_token = messages.StringField(6)
+class IncomingMessage(messages.Message):
+    user_name = ''
+    token = ''
+    data = object
 
-class ListItem(ndb.Model):
-    title = ndb.StringProperty()
-    checked = ndb.BooleanProperty(default=False)
-    timestamp = ndb.DateTimeProperty()
-    user_key = ndb.KeyProperty()
+class OutgoingMessage(messages.Message):
+    error = messages.StringField(1)
+    data = object
 
+"""MODELS"""
 class User(ndb.Model):
     user_name = ndb.StringProperty()
     hash_pass = ndb.StringProperty()
-    first_name = ndb.StringProperty()
-    email = ndb.StringProperty()
-    last_name = ndb.StringProperty()
     current_token = ndb.StringProperty()
     previous_token = ndb.StringProperty()
-    time_stamp = ndb.DateTimeProperty()
+    timestamp = ndb.DateTimeProperty()
+    first_name = ndb.StringProperty()
+    last_name = ndb.StringProperty()
+    email = ndb.StringProperty()
+    dob = ndb.DateProperty()
+    address = ndb.StringProperty()
+    city = ndb.StringProperty()
+    state = ndb.StringProperty()
+    zip = ndb.IntegerProperty()
+    phone = ndb.IntegerProperty()
+    class_year = ndb.IntegerProperty()
+    is_alumni = ndb.BooleanProperty()
+    organization = ndb.KeyProperty()
+
+class Organization(ndb.Model):
+    name = ndb.StringProperty()
+    school = ndb.StringProperty()
+
+
 
 def dumpJSON(item):
     dthandler = lambda obj: (
@@ -57,104 +67,51 @@ def dumpJSON(item):
     logging.debug(item)
     return json.dumps(item, dthandler)
 
+def check_auth(message):
+    user = User.fetch(User.user_name == message.user_name)
+    if user.current_token == message.token:
+        return user.key
+    else:
+        return False
+
+
 def get_key_from_token(token):
     user = User.query().filter(User.current_token == token).get()
     if user:
         return user.key
     return 0
 
-
-def itemListToJSON(token):
-
-    dthandler = lambda obj: (
-        obj.isoformat()
-        if isinstance(obj, datetime.datetime)
-        or isinstance(obj, datetime.date)
-        else None)
-    try:
-        itemlist = ListItem.query().filter(ListItem.user_key == get_key_from_token(token)).fetch(projection=[ListItem.title, ListItem.checked, ListItem.timestamp])
-        printlist = []
-        for item in itemlist:
-            printlist.append({'id': item.key.urlsafe(), 'title': item.title, 'checked': item.checked,
-                            'timestamp': item.timestamp.isoformat()})
-        logging.error('I made it')
-        logging.error(printlist)
-        return json.dumps(printlist, dthandler)
-        return 'error'
-    except:
-        return 'error'
-
-
-@endpoints.api(name='todolist', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
+@endpoints.api(name='NeteGreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
 class RESTApi(remote.Service):
     USER_TOKEN = endpoints.ResourceContainer(message_types.VoidMessage, token=messages.StringField(1,
                                               variant=messages.Variant.STRING))
 
-    """TODO REQUESTS"""
-    @endpoints.method(USER_TOKEN, Response, path='getlist/{token}', http_method='GET', name='listItem.getList')
-    def greeting_get(self, request):
-        return Response(message=itemListToJSON(request.token))
-
-
-    ADD_ITEM = endpoints.ResourceContainer(message_types.VoidMessage,
-                                           token=messages.StringField(1, variant=messages.Variant.STRING),
-                                           title=messages.StringField(2, variant=messages.Variant.STRING))
-
-    @endpoints.method(ADD_ITEM, Response, path='addItem/{token}/{title}', http_method='POST', name='listItem.addItem')
-    def add_item(self, request):
-        key = get_key_from_token(request.token)
-        if key != 0:
-            newitem = ListItem(title=request.title, timestamp=datetime.datetime.now(), user_key=key)
-            newitem.put()
-        printitem = {'id': newitem.key.urlsafe(), 'timestamp': newitem.timestamp.isoformat()}
-        return Response(message=dumpJSON(printitem))
-
-    ID_RESOURCE = endpoints.ResourceContainer(message_types.VoidMessage,
-                                              id=messages.StringField(2, variant=messages.Variant.STRING),
-                                              token=messages.StringField(1, variant=messages.Variant.STRING))
-
-    @endpoints.method(ID_RESOURCE, Response, path='checkItem/{token}/{id}', http_method='POST', name='listItem.checkItem')
-    def check_item(self, request):
-        key = ndb.Key(urlsafe=request.id)
-        item = key.get()
-        if item.checked:
-            item.checked = False
-        else:
-            item.checked = True
-        item.put()
-        return Response(message='ok')
-
-    @endpoints.method(ID_RESOURCE, Response, path='removeItem/{token}/{id}', http_method='DELETE', name='listItem.removeItem')
-    def remove_item(self, request):
-        try:
-            key = ndb.Key(urlsafe=request.id)
-            item = key.get()
-            item.key.delete()
-            return Response(message='ok')
-        except:
-            return Response(message='error')
-
-    @endpoints.method(USER_TOKEN, Response, path='deleteChecked/{token}', http_method='DELETE', name='listItem.deleteChecked')
-    def delete_checked(self, request):
-        key = get_key_from_token(request.token)
-        items = ListItem.query(ListItem.user_key == key).filter(ListItem.checked == True).fetch()
-        logging.error(items)
-        for item in items:
-            item.key.delete()
-        return Response(message='ok')
-
-
+    ORG_IN = endpoints.ResourceContainer(IncomingMessage,
+                                        user_name=messages.StringField(1, variant=messages.Variant.STRING),
+                                        token=messages.StringField(2, variant=messages.Variant.STRING),
+                                        data=messages.StringField(3, variant=messages.Variant.STRING))
     """USER REQUESTS"""
-
-    USER_PASS = endpoints.ResourceContainer(message_types.VoidMessage
-                                            , user_name=messages.StringField(1, variant=messages.Variant.STRING)
-                                            , password=messages.StringField(2, variant=messages.Variant.STRING))
-
-    REGISTER = endpoints.ResourceContainer(UserCreds)
-    @endpoints.method(REGISTER, UserCreds, path='auth/register',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/registerOrganization',
+                      http_method='POST', name='auth.registerOrganization')
+    def register_organization(self, request):
+        clump = json.loads(request.data)
+        new_org = Organization(name=clump.organization.name, school=clump.organization.school)
+        new_org.put()
+        new_user = User(user_name=clump.user.user_name)
+        new_user.hash_pass = hashlib.sha224(clump.user.password + "we will we will rock you rock you, we will we will"
+                                                                  " rock you rock you. buddy.").hexdigest()
+        new_user.first_name = clump.user.first_name
+        new_user.last_name = clump.user.last_name
+        new_user.email = clump.user.email
+        new_user.organization = new_org.key
+        new_user.put()
+        return OutgoingMessage(error='', data='OK')
+"""
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register',
                       http_method='POST', name='auth.register')
-    def register_user(self, request):
+    def add_users(self, request):
+
         user = User()
         user.user_name = request.user_name
         user.first_name = request.first_name
@@ -169,7 +126,7 @@ class RESTApi(remote.Service):
         try:
             return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
         except:
-            return Response(message='error')
+            return OutgoingMessage(message='error')
 
     @endpoints.method(USER_PASS, UserCreds, path='auth/login/{user_name}/{password}',
                       http_method='GET', name='auth.login')
@@ -185,6 +142,6 @@ class RESTApi(remote.Service):
                 time.sleep(.5)
                 return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
 
-        return Response(message='error')
-
+        return OutgoingMessage(message='error')
+"""
 APPLICATION = endpoints.api_server([RESTApi])
