@@ -91,7 +91,7 @@ class RESTApi(remote.Service):
                                         token=messages.StringField(2, variant=messages.Variant.STRING),
                                         blob=messages.StringField(3, variant=messages.Variant.STRING))
     """USER REQUESTS"""
-    @endpoints.method(ORG_IN, OutgoingMessage, path='auth/register',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register',
                       http_method='POST', name='auth.register')
     def register_organization(self, request):
         clump = json.loads(request.blob)
