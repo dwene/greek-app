@@ -59,7 +59,7 @@ var App = angular.module('App', ['ngRoute']);
 
     App.controller('appController', function($scope, $http) {
         if(!checkLogin()){
-        window.location.replace("/#/register");
+        window.location.replace("/#/login");
         }
         $scope.formData = {};
         
