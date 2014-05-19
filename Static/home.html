@@ -1,0 +1,36 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>You have <span class="label label-info">{{ todos.length }}</span> To-dos</h1>
+		</div>
+
+		<!-- TODO LIST -->
+		<div id="todo-list" class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+
+				<!-- LOOP OVER THE TODOS IN $scope.todos -->
+				<div class="checkbox" ng-repeat="todo in todos | orderBy:'timestamp'">
+					<label>
+						<input type="checkbox"  ng-checked="isitemchecked(todo.checked)" ng-click="checkTodo(todo.id)"> {{ todo.title }} <button class="btn btn-danger btn-sm delete_button" ng-click="deleteTodo(todo.id)"><span>x</span></button>
+					</label>
+				</div>
+				<button type="button" ng-click="clearCompleted()" id="clearcompletedbutton" class="btn btn-warning btn-sm btn-block">Clear Completed Tasks</button>
+			</div>
+		</div>
+
+		<!-- FORM TO CREATE TODOS -->
+		<div id="todo-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form>
+					<div class="form-group">
+						<input type="text" class="form-control input-lg text-center" placeholder="add a todo" ng-model="formData.title" required>
+					</div>
+
+					<!-- createToDo() WILL CREATE NEW TODOS -->
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add</button>
+				</form>
+			</div>
+		</div>
+
+</div>
