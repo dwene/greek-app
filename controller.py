@@ -213,6 +213,23 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data={"token": user.current_token()})
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_info',
+                      http_method='GET', name='user.update_info')
+    def update_info(self, request):
+        data = json.loads(request.token)
+        user = User.query(User.current_token == data["token"]).get()
+        if user and user.user_name == '':
+            if not username_available(data["user_name"]):
+                return OutgoingMessage(error='INVALID USERNAME')
+            if not data["password"].length > 6:
+                return OutgoingMessage(error='INVALID PASSWORD')
+            user.user_name = data["user_name"]
+            user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
+            user.current_token = generate_token()
+            user.put()
+            return OutgoingMessage(error='', data={"token": user.current_token()})
+        return OutgoingMessage(error=ERROR_BAD_ID, data='')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
                       http_method='POST', name='auth.test_email')
     def test_email(self, request):
