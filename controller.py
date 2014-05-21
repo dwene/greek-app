@@ -19,11 +19,12 @@ ANDROID_CLIENT_ID = 'replace this with your Android client ID'
 IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID
 
+
 """Password Salt"""
 SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
 """error codes for returning errors"""
 ERROR_BAD_ID = 'BAD_TOKEN'
-
+INVALID_FORMAT = "INVALID_FORMAT"
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -131,20 +132,24 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_organization',
                       http_method='POST', name='auth.register_organization')
     def register_organization(self, request):
-        clump = json.loads(request.data)
-        logging.error(clump)
-        new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'])
-        new_org.put()
-        user = clump['user']
-        new_user = User(user_name=user['user_name'])
-        new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
-        new_user.first_name = user['first_name']
-        new_user.last_name = user['last_name']
-        new_user.email = user['email']
-        new_user.organization = new_org.key
-        new_user.tag = ['council']
-        new_user.put()
-        return OutgoingMessage(error='', data='OK')
+        try:
+            clump = json.loads(request.data)
+            logging.error(clump)
+            new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'])
+            new_org.put()
+            user = clump['user']
+            new_user = User(user_name=user['user_name'])
+            new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
+            new_user.first_name = user['first_name']
+            new_user.last_name = user['last_name']
+            new_user.email = user['email']
+            new_user.organization = new_org.key
+            new_user.tag = ['council']
+            new_user.put()
+            return OutgoingMessage(error='', data='OK')
+        except:
+            return OutgoingMessage(error=INVALID_FORMAT + request.data)
+
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',

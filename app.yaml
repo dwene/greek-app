@@ -25,7 +25,6 @@ handlers:
 
 - url: /_ah/spi/.*
   script: controller.APPLICATION
-  secure: always
 
 libraries:
 - name: webapp2
