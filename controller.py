@@ -186,6 +186,20 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data=json.dumps(user_dict))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_credentials',
+                      http_method='GET', name='auth.add_credentials')
+    def add_credentials(self, request):
+        data = json.loads(request.token)
+        user = User.query(User.current_token == data["token"])
+        if user and user.user_name == '':
+            user_dict = user.__dict__
+            logging.error(user_dict)
+            user_dict["hash_pass"] = "xxx"
+            user_dict["current_token"] = "xxx"
+            user_dict["previous_token"] = "xxx"
+            return OutgoingMessage(error='', data=json.dumps(user_dict))
+        return OutgoingMessage(error=ERROR_BAD_ID, data='')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
                       http_method='POST', name='auth.test_email')
     def test_email(self, request):

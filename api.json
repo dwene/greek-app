@@ -21,15 +21,16 @@ POST REQUEST
 data example
     { "register" :
         { "organization":
-            { "name" : "test sorority",
-              "school" : "test A&M"
+            { "name" : nameString,
+              "school" : schoolString,
+              "type" : typeString
             },
           "user" :
-            { "user_name" : "djtest",
-              "password" : "password",
-              "first_name" : "derek",
-              "last_name" : "wene",
-              "email" : "derek.wene@yahoo.com"
+            { "user_name" : userName,
+              "password" : Password,
+              "first_name" : firstName,
+              "last_name" : lastName,
+              "email" : emailAddress
              }
         }
     }
@@ -72,7 +73,18 @@ GET REQUEST
 /_ah/api/netegreek/v1/auth/new_user
 data example
 
+No data necessary, just include the token
+
+return example
 {
-    "token": tokenString
+    "first_name" : firstName,
+    "last_name" : lastName,
+    "email" : emailAddress,
+    "class_year" : classYear
 }
 
+---Add Credentials for User---
+{
+    "user_name" : userName,
+    "password" : Password
+}
