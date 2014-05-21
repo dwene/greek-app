@@ -1,28 +1,6 @@
 {   "greekapp" :
 //probably split subcategories into different databases
     {
-
-
-
-    { "register" :
-        { "organization":
-            { "name" : "test sorority",
-              "school" : "test A&M"
-            },
-          "user" :
-            { "user_name" : "djtest",
-              "password" : "password",
-              "first_name" : "derek",
-              "last_name" : "wene",
-              "email" : "derek.wene@yahoo.com"
-             }
-        }
-    }
-
-
-
-
-
         "organizations" :
         [
         {

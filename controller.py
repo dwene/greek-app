@@ -143,7 +143,7 @@ class RESTApi(remote.Service):
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
-                      http_method='POST', name='auth.login')
+                      http_method='GET', name='auth.login')
     def login(self, request):
         clump = json.loads(request.data)
         user_name = clump['user_name']
@@ -173,9 +173,10 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
-                      http_method='POST', name='auth.new_user')
+                      http_method='GET', name='auth.new_user')
     def register_user(self, request):
-        user = User.query(User.current_token == request.token)
+        data = json.loads(request.data)
+        user = User.query(User.current_token == data["token"])
         if user and user.user_name == '':
             user_dict = user.__dict__
             logging.error(user_dict)
