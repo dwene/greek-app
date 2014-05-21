@@ -1,9 +1,7 @@
 var App = angular.module('App', ['ngRoute']);
 
-	// configure our routes
 	App.config( function ($routeProvider) {
 		$routeProvider
-			// route for the home page
 			.when('/', {
 				templateUrl : 'Static/home.html',
 				controller  : 'homeController'
@@ -92,17 +90,49 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 App.controller('registerController', function($scope, $http) {
-    $scope.registerClick = function(){
-        window.location.replace("/#/registerinfo");
-    };
     
 });
 
 App.controller('registerinfoController', function($scope, $http) {
     
+   //may be necessary $scope.getParameterByName(name) = getParameterByName(name);
+    
     $scope.registerinfoClick = function(){
-        window.location.replace("/#/payment");
+        
+        var params = [
+            {
+                name: "name",
+                value: getParameterByName('org_name')
+            },
+            {
+                name: "school",
+                value: getParameterByName('school_name')
+            },
+            {
+                name: "type",
+                value: getParameterByName('org_type')
+            }
+        ];
+        
+        $.each(params, function(i,param){
+        $('<input />').attr('type', 'hidden')
+            .attr('name', param.name)
+            .attr('value', param.value)
+            .appendTo('#commentForm');
+        });
+        
+        $http.post('/_ah/api/netegreek/v1/auth/register_organization')
+        .success(function(data){
+            console.log(data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+        
+        
     };
+    
+
     
 //		$scope.register = function(item) {
 //        console.log(item)
@@ -166,15 +196,10 @@ App.controller('addmembersController', function($scope, $http) {
     
 });
 
-function checkLogin(){
-    if($.cookie('USER_TOKEN') != undefined)
-        return true;
-    else
-        return false;
-}
 
 App.controller('newmemberController', function($scope, $http){
-    });
+
+});
 
 
 //Initialize Smoothscroll
@@ -185,7 +210,12 @@ smoothScroll.init();
 // arrays. The default delimiter is the comma, but this
 // can be overriden in the second argument.
 
-
+function checkLogin(){
+    if($.cookie('USER_TOKEN') != undefined)
+        return true;
+    else
+        return false;
+}
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -274,3 +304,12 @@ $("#download").click(function() {
     var json = CSV2JSON(csv);
     window.open("data:text/json;charset=utf-8," + escape(json))
 });
+
+
+
+function toSend(send_data){
+    var output = {user_name:$.cookie("USER_NAME"),
+     token: $.cookie("TOKEN"),
+     data: send_data};
+    return JSON.stringify(output);
+}
