@@ -145,8 +145,9 @@ class RESTApi(remote.Service):
             new_user.email = user['email']
             new_user.organization = new_org.key
             new_user.tag = ['council']
+            new_user.current_token = generate_token()
             new_user.put()
-            return OutgoingMessage(error='', data='OK')
+            return OutgoingMessage(error='', data=new_user.current_token)
         except:
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 

@@ -120,6 +120,7 @@ App.controller('registerinfoController', function($scope, $http) {
         console.log(toSend(data_tosend));
         $http.post('/_ah/api/netegreek/v1/auth/register_organization', toSend(data_tosend))
         .success(function(data){
+            $.cookie("TOKEN") = data.data;
             console.log(data);
         })
         .error(function(data) {
@@ -302,11 +303,10 @@ $("#download").click(function() {
     window.open("data:text/json;charset=utf-8," + escape(json))
 });
 
-
-
 function toSend(send_data){
-    var output = {user_name:"",
-     token: "",
+    var output = 
+    {user_name:$.cookie("TOKEN"),
+     token: $.cookie("TOKEN"),
      data: JSON.stringify(send_data)};
     return output;
 }
