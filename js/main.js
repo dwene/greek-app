@@ -33,6 +33,10 @@ var App = angular.module('App', ['ngRoute']);
 				templateUrl : 'Static/addmembers.html',
 				controller  : 'addmembersController'
 			})
+            .when('/newmember', {
+                templateUrl : 'Static/newmember.html',
+                controller : 'newmemberController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
@@ -168,6 +172,10 @@ function checkLogin(){
     else
         return false;
 }
+
+App.controller('newmemberController', function($scope, $http){
+    });
+
 
 //Initialize Smoothscroll
 smoothScroll.init();
