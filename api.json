@@ -50,7 +50,7 @@ data example
 returns either 'OK' or error
 
 ---Login---
-GET REQUEST
+POST REQUEST
 /_ah/api/netegreek/v1/auth/login
 data example
 
@@ -68,7 +68,7 @@ return example
 
 
 ---New Users Get information---
-GET REQUEST
+POST REQUEST
 /_ah/api/netegreek/v1/auth/new_user
 data example
 

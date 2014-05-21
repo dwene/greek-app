@@ -7,6 +7,7 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 import json
+import pickle
 from google.appengine.ext import ndb
 import time
 import collections
@@ -25,6 +26,7 @@ SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere th
 """error codes for returning errors"""
 ERROR_BAD_ID = 'BAD_TOKEN'
 INVALID_FORMAT = "INVALID_FORMAT"
+TOKEN_EXPIRED = "TOKEN_EXPIRED"
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -95,7 +97,7 @@ def dumpJSON(item):
         or isinstance(obj, datetime.date)
         else None)
     logging.debug(item)
-    return json.dumps(item, dthandler)
+    return dumpJSON(item, dthandler)
 
 def check_auth(user_name, token):
     user = User.query(User.user_name == user_name).get()
@@ -153,7 +155,7 @@ class RESTApi(remote.Service):
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
-                http_method='GET', name='auth.login')
+                      http_method='POST', name='auth.login')
     def login(self, request):
         clump = json.loads(request.data)
         user_name = clump['user_name']
@@ -167,7 +169,8 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
                       http_method='POST', name='auth.add_users')
     def add_users(self, request):
-        check_auth(request.user_name, request.token)
+        if not check_auth(request.user_name, request.token):
+            return OutgoingMessage(error=TOKEN_EXPIRED)
         clump = json.loads(request.data)
         logging.error(clump)
         for user in clump['users']:
@@ -183,23 +186,23 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
-                      http_method='GET', name='auth.new_user')
+                      http_method='POST', name='auth.new_user')
     def register_user(self, request):
         data = json.loads(request.data)
         user = User.query(User.current_token == data["token"])
         if user and user.user_name == '':
-            user_dict = user.__dict__
+            user_dict = user.to_dict()
             logging.error(user_dict)
             user_dict["hash_pass"] = "xxx"
             user_dict["current_token"] = "xxx"
             user_dict["previous_token"] = "xxx"
-            return OutgoingMessage(error='', data=json.dumps(user_dict))
+            return OutgoingMessage(error='', data=dumpJSON(user_dict))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_credentials',
-                      http_method='GET', name='auth.register_credentials')
+                      http_method='POST', name='auth.register_credentials')
     def add_credentials(self, request):
-        data = json.loads(request.token)
+        data = json.loads(request.data)
         user = User.query(User.current_token == data["token"]).get()
         if user and user.user_name == '':
             if not username_available(data["user_name"]):
@@ -209,30 +212,67 @@ class RESTApi(remote.Service):
             user.user_name = data["user_name"]
             user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
             user.current_token = generate_token()
+            user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(error='', data={"token": user.current_token()})
+            return OutgoingMessage(error='', data={"token": user.current_token})
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_info',
-                      http_method='GET', name='user.update_info')
-    def update_info(self, request):
-        data = json.loads(request.token)
-        user = User.query(User.current_token == data["token"]).get()
-        if user and user.user_name == '':
-            if not username_available(data["user_name"]):
-                return OutgoingMessage(error='INVALID USERNAME')
-            if not data["password"].length > 6:
-                return OutgoingMessage(error='INVALID PASSWORD')
-            user.user_name = data["user_name"]
-            user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
-            user.current_token = generate_token()
-            user.put()
-            return OutgoingMessage(error='', data={"token": user.current_token()})
-        return OutgoingMessage(error=ERROR_BAD_ID, data='')
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user_directory_info',
+                      http_method='POST', name='user.get_user_directory_info')
+    def get_user_directory_info(self, request):
+        if not check_auth(request.user_name, request.token):
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+
+        user = User.query(User.user_name == 'djtest').get()
+        logging.error(user.user_name)
+        user_dict = user.to_dict()
+        user_dict["hash_pass"] = ''
+        user_dict["current_token"] = ''
+        user_dict["previous_token"] = ''
+        logging.error(user_dict)
+        return OutgoingMessage(error='', data=dumpJSON(user_dict))
+
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
+                      http_method='POST', name='user.update_user_directory_info')
+    def update_user_directory_info(self, request):
+        try:
+            if not check_auth(request.user_name, request.token):
+                return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+            user = User.query(User.user_name == request.user_name).get()
+            user_data = dumpJSON(request.data)
+            keys = user_data.keys()
+            for key, value in user_data.iteritems():
+                if key == "email":
+                    user.email = user_data[key]
+                if key == "first_name":
+                    user.first_name = user_data[key]
+                if key == "last_name":
+                    user.last_name = user_data[key]
+                if key == "dob":
+                    user.dob = user_data[key]
+                if key == "address":
+                    user.address = user_data[key]
+                if key == "city":
+                    user.city = user_data[key]
+                if key == "state":
+                    user.state = user_data[key]
+                if key == "zip":
+                    user.zip = user_data[key]
+                if key == "class_year":
+                    user.class_year = user_data[key]
+                if key == "phone":
+                    user.phone = user_data[key]
+            return OutgoingMessage(error='', data='OK')
+        except:
+            return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
                       http_method='POST', name='auth.test_email')
-    def test_email(self, request):
+    def test_email(self):
         background_thread.BackgroundThread(target=testEmail, args=[]).start()
         return OutgoingMessage(error='', data='OK')
 
