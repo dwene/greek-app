@@ -151,9 +151,8 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
-                      http_method='GET', name='auth.login')
+                http_method='GET', name='auth.login')
     def login(self, request):
         clump = json.loads(request.data)
         user_name = clump['user_name']

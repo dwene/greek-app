@@ -19,7 +19,7 @@ POST REQUEST
 /_ah/api/netegreek/v1/auth/register_organization
 
 data example
-    { "register" :
+
         { "organization":
             { "name" : nameString,
               "school" : schoolString,
@@ -32,8 +32,7 @@ data example
               "last_name" : lastName,
               "email" : emailAddress
              }
-        }
-    }
+         }
 
 ---Add Users---
 POST REQUEST

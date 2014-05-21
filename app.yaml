@@ -8,20 +8,16 @@ handlers:
 - url: /(.*\.(gif|png|jpg|ico|js|css|txt|json|wof|ttf|svg))
   static_files: \1
   upload: (.*\.(gif|png|jpg|ico|js|css|txt|json|wof|ttf|svg))
-  secure: always
 
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
-  secure: always
   
 - url: /Static
   static_dir: Static
-  secure: always
 
 - url: /
   script: main.app
-  secure: always
 
 - url: /_ah/spi/.*
   script: controller.APPLICATION

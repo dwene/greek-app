@@ -117,7 +117,7 @@ App.controller('registerinfoController', function($scope, $http) {
         var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
         data_tosend = {organization: organization, user: item}
         
-        
+        console.log(toSend(data_tosend));
         $http.post('/_ah/api/netegreek/v1/auth/register_organization', toSend(data_tosend))
         .success(function(data){
             console.log(data);
@@ -305,8 +305,8 @@ $("#download").click(function() {
 
 
 function toSend(send_data){
-    var output = {user_name:$.cookie("USER_NAME"),
-     token: $.cookie("TOKEN"),
-     data: send_data};
-    return JSON.stringify(output);
+    var output = {user_name:"",
+     token: "",
+     data: JSON.stringify(send_data)};
+    return output;
 }
