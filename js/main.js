@@ -148,6 +148,7 @@ var App = angular.module('App', ['ngRoute']);
         {
             var o = {};
             var a = this.serializeArray();
+            
             $.each(a, function() {
                 if (o[this.name] !== undefined) {
                     if (!o[this.name].push) {
@@ -158,14 +159,13 @@ var App = angular.module('App', ['ngRoute']);
                     o[this.name] = this.value || '';
                 }
             });
-            
-            newmemberList.push(o);
-            return newmemberList;
+            return o;
         };
     
         //ng-click for the form to add one member at a time
         $scope.addMember = function(){
-            $('#result').text(JSON.stringify($('#addmemberForm').serializeObject()));
+            newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
+            $('#result').text(JSON.stringify(newmemberList));
         };
         
         //this function sets up a filereader to read the CSV
@@ -197,9 +197,15 @@ var App = angular.module('App', ['ngRoute']);
             }
             else{
                 //converts CSV file to JSON
-                newmemberList.push(CSV2JSON(filecontents));
+            
+                
+                var list1 = JSON.parse(CSV2JSON(filecontents));
+                    console.log(list1);
+                    console.log(newmemberList);
+                    
+                newmemberList = newmemberList.concat(list1);
                 //outputs object to result
-                $('#result').text(newmemberList);
+                $('#result').text(JSON.stringify(newmemberList));
             }
             
         };
@@ -305,6 +311,7 @@ function CSV2JSON(csv) {
     }
 
     var json = JSON.stringify(objArray);
+    console.log(json);
     var str = json.replace(/},/g, "},\r\n");
 
     return str;
