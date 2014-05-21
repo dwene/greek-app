@@ -95,10 +95,39 @@ App.controller('registerController', function($scope, $http) {
 
 App.controller('registerinfoController', function($scope, $http) {
     
-    
+   //may be necessary $scope.getParameterByName(name) = getParameterByName(name);
     
     $scope.registerinfoClick = function(){
-        //$http.post('/_ah/api/todolist/v1/checkItem/' + $.cookie('USER_TOKEN') + '/' + id)
+        
+        var params = [
+            {
+                name: "name",
+                value: getParameterByName('org_name')
+            },
+            {
+                name: "school",
+                value: getParameterByName('school_name')
+            },
+            {
+                name: "type",
+                value: getParameterByName('org_type')
+            }
+        ];
+        
+        $.each(params, function(i,param){
+        $('<input />').attr('type', 'hidden')
+            .attr('name', param.name)
+            .attr('value', param.value)
+            .appendTo('#commentForm');
+        });
+        
+        $http.post('/_ah/api/netegreek/v1/auth/register_organization')
+        .success(function(data){
+            console.log(data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
         
         
     };
@@ -167,15 +196,10 @@ App.controller('addmembersController', function($scope, $http) {
     
 });
 
-function checkLogin(){
-    if($.cookie('USER_TOKEN') != undefined)
-        return true;
-    else
-        return false;
-}
 
 App.controller('newmemberController', function($scope, $http){
-    });
+
+});
 
 
 //Initialize Smoothscroll
@@ -186,7 +210,12 @@ smoothScroll.init();
 // arrays. The default delimiter is the comma, but this
 // can be overriden in the second argument.
 
-
+function checkLogin(){
+    if($.cookie('USER_TOKEN') != undefined)
+        return true;
+    else
+        return false;
+}
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
