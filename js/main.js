@@ -115,13 +115,16 @@ App.controller('registerinfoController', function($scope, $http) {
         ];
         
         $.each(params, function(i,param){
+            
         $('<input />').attr('type', 'hidden')
             .attr('name', param.name)
             .attr('value', param.value)
             .appendTo('#commentForm');
         });
         
-        $http.post('/_ah/api/netegreek/v1/auth/register_organization')
+       var item = $('#registerInfoForm').serializeArray();
+        
+        $http.post('/_ah/api/netegreek/v1/auth/register_organization', item)
         .success(function(data){
             console.log(data);
         })
