@@ -1,5 +1,7 @@
+//initialize app
 var App = angular.module('App', ['ngRoute']);
 
+//define routes and link to their controllers
 	App.config( function ($routeProvider) {
 		$routeProvider
 			.when('/', {
@@ -40,6 +42,7 @@ var App = angular.module('App', ['ngRoute']);
             });
 	});
 
+//controller for the navigation header
     App.controller('navigationController', function($scope, $http){
         $scope.checkLogin = function(){
             return checkLogin();
@@ -51,94 +54,24 @@ var App = angular.module('App', ['ngRoute']);
          }
     });
 
-	// create the controller and inject Angular's $scope
-	App.controller('homeController', function($scope, $http) {
+
+//controller for the home page
+    App.controller('homeController', function($scope, $http) {
            
         
 	});
 
-    App.controller('appController', function($scope, $http) {
-//        if(!checkLogin()){
-//        window.location.replace("/#/login");
-//        }
-        $scope.formData = {};
-        
-	});
 
-//if controllers are needed for these pages
+//controller for the login page
 	App.controller('loginController', function($scope, $http) {
 
-        $scope.login = function(user_name, password) {
-        console.log(user_name + ' ' +password)
-        $http.get('/_ah/api/todolist/v1/auth/login/' + user_name + '/' + password)
-            .success(function(data) {
-                console.log(data.message);
-                cookie = data.current_token;
-                console.log(cookie);
-                $.cookie('first_name', data.first_name);
-                $.cookie('USER_TOKEN', cookie);
-                console.log(data);
-                window.location.replace("/#/app");
-                //debug credentials user:jakeruesink pass:jakeiscool
-
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-        };
-
-    });
-
-App.controller('registerController', function($scope, $http) {
-    
-});
-
-App.controller('registerinfoController', function($scope, $http) {
-    
-   //may be necessary $scope.getParameterByName(name) = getParameterByName(name);
-    
-    $scope.registerinfoClick = function(item){
-        
-        var params = [
-            {
-                name: "name",
-                value: getParameterByName('org_name')
-            },
-            {
-                name: "school",
-                value: getParameterByName('school_name')
-            },
-            {
-                name: "type",
-                value: getParameterByName('org_type')
-            }
-        ];
-        
-        var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
-        data_tosend = {organization: organization, user: item}
-        
-        console.log(toSend(data_tosend));
-        $http.post('/_ah/api/netegreek/v1/auth/register_organization', toSend(data_tosend))
-        .success(function(data){
-            $.cookie("TOKEN") = data.data;
-            console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
-        
-        
-    };
-    
-
-    
-//		$scope.register = function(item) {
-//        console.log(item)
-//        $http.post('/_ah/api/todolist/v1/auth/register/',item)
+        //need to update login controller
+//        $scope.login = function(user_name, password) {
+//        console.log(user_name + ' ' +password)
+//        $http.get('/_ah/api/todolist/v1/auth/login/' + user_name + '/' + password)
 //            .success(function(data) {
 //                console.log(data.message);
 //                cookie = data.current_token;
-//                
 //                console.log(cookie);
 //                $.cookie('first_name', data.first_name);
 //                $.cookie('USER_TOKEN', cookie);
@@ -151,19 +84,66 @@ App.controller('registerinfoController', function($scope, $http) {
 //                console.log('Error: ' + data);
 //            });
 //        };
+
+    });
+//controller for the registration page
+    App.controller('registerController', function($scope, $http) {
+        //this page passes parameters through a get method to register info
+    });
+
+//controller for the register info page
+    App.controller('registerinfoController', function($scope, $http) {
+    
+        //ng-click on form button click
+        $scope.registerinfoClick = function(item){
+            
+            //define organization based on parameters passed from registration page
+            var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
+            //format data for the api
+            data_tosend = {organization: organization, user: item}
+            
+            console.log(toSend(data_tosend));
+            
+            //send the organization and user date from registration pages
+            $http.post('/_ah/api/netegreek/v1/auth/register_organization', toSend(data_tosend))
+            .success(function(data){
+                $.cookie("TOKEN") = data.data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+                
+        };
+    
 	});
 
-App.controller('paymentController', function($scope, $http) {
-    $scope.submitPayment = function(){
-        window.location.replace("/#/app/addmembers");
-    };
-    
-});
+//controller for the payment page
+    App.controller('paymentController', function($scope, $http) {
+        //skip payment page right now
+        $scope.submitPayment = function(){
+            window.location.replace("/#/app/addmembers");
+        };
+        
+    });
 
-App.controller('addmembersController', function($scope, $http) {
+//controller for the main app page
+    App.controller('appController', function($scope, $http) {
+        
+//        if(!checkLogin()){
+//        window.location.replace("/#/login");
+//        }
+        
+	});
 
+//controller for the add members page
+    App.controller('addmembersController', function($scope, $http) {
+        //initialize a member array
         var newmemberList = [];
-            
+        //initialize a filecontents variable
+        var filecontents;
+        
+        //this method will get the data from the form and add it to the newmemberList object
         $.fn.serializeObject = function()
         {
             var o = {};
@@ -182,32 +162,58 @@ App.controller('addmembersController', function($scope, $http) {
             newmemberList.push(o);
             return newmemberList;
         };
-
-    $scope.addMember = function(){
-        $('#result').text(JSON.stringify($('#addmemberForm').serializeObject()));
-        return false;
-    };
     
-    $scope.addMembers = function(){
-
-    };
+        //ng-click for the form to add one member at a time
+        $scope.addMember = function(){
+            $('#result').text(JSON.stringify($('#addmemberForm').serializeObject()));
+        };
+        
+        //this function sets up a filereader to read the CSV
+        function readSingleFile(evt) {
+                //Retrieve the first (and only!) File from the FileList object
+                var f = evt.target.files[0]; 
     
-});
+                if (f) {
+                  var r = new FileReader();
+                  r.onload = function(e) { 
+                      filecontents = e.target.result;
+                  }
+                  r.readAsText(f);
+                } else { 
+                  alert("Failed to load file");
+                }
+            }
+        
+        //reads the file as it's added into the file input
+        document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
+        
+       //this function takes the CSV, converts it to JSON and outputs it
+        $scope.addMembers = function(){
+            
+            //check to see if file is being read
+            if(filecontents == null){
+             //do nothing
+            alert('you have not selected a file');
+            }
+            else{
+                //converts CSV file to JSON
+                newmemberList.push(CSV2JSON(filecontents));
+                //outputs object to result
+                $('#result').text(newmemberList);
+            }
+            
+        };
+    
+    });
 
+//controller for new member page
+    App.controller('newmemberController', function($scope, $http){
+    
+    });
 
-App.controller('newmemberController', function($scope, $http){
+//More Functions
 
-});
-
-
-//Initialize Smoothscroll
-smoothScroll.init();
-
-// Source: http://www.bennadel.com/blog/1504-Ask-Ben-Parsing-CSV-Strings-With-Javascript-Exec-Regular-Expression-Command.htm
-// This will parse a delimited string into an array of
-// arrays. The default delimiter is the comma, but this
-// can be overriden in the second argument.
-
+//checks to see if user is logged in or not
 function checkLogin(){
     if($.cookie('USER_TOKEN') != undefined)
         return true;
@@ -215,6 +221,16 @@ function checkLogin(){
         return false;
 }
 
+//use toSend(send_data) when $http.post in order to attach data to user
+function toSend(send_data){
+    var output = 
+    {user_name:$.cookie("TOKEN"),
+     token: $.cookie("TOKEN"),
+     data: JSON.stringify(send_data)};
+    return output;
+}
+
+//easy way to get parameters from URL (use for non-sensitive info)
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -222,6 +238,10 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+    // Source: http://www.bennadel.com/blog/1504-Ask-Ben-Parsing-CSV-Strings-With-Javascript-Exec-Regular-Expression-Command.htm
+    // This will parse a delimited string into an array of
+    // arrays. The default delimiter is the comma, but this
+    // can be overriden in the second argument.
 function CSVToArray(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
     // then default to comma.
@@ -273,7 +293,6 @@ function CSVToArray(strData, strDelimiter) {
     // Return the parsed data.
     return (arrData);
 }
-
 function CSV2JSON(csv) {
     var array = CSVToArray(csv);
     var objArray = [];
@@ -289,24 +308,4 @@ function CSV2JSON(csv) {
     var str = json.replace(/},/g, "},\r\n");
 
     return str;
-}
-
-$("#convert").click(function() {
-    var csv = $("#csv").val();
-    var json = CSV2JSON(csv);
-    $("#json").val(json);
-});
-
-$("#download").click(function() {
-    var csv = $("#csv").val();
-    var json = CSV2JSON(csv);
-    window.open("data:text/json;charset=utf-8," + escape(json))
-});
-
-function toSend(send_data){
-    var output = 
-    {user_name:$.cookie("TOKEN"),
-     token: $.cookie("TOKEN"),
-     data: JSON.stringify(send_data)};
-    return output;
 }
