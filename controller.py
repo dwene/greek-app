@@ -148,7 +148,7 @@ class RESTApi(remote.Service):
             new_user.put()
             return OutgoingMessage(error='', data='OK')
         except:
-            return OutgoingMessage(error=INVALID_FORMAT + request.data)
+            return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
 
 
