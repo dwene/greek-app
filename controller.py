@@ -60,19 +60,22 @@ class Organization(ndb.Model):
     school = ndb.StringProperty()
     type = ndb.StringProperty()
 
+
 def emailSignup(key):
     new_user = key.get()
     to_email = new_user.email
     logging.debug(new_user.organization)
     token = new_user.organization.get().name
     token += new_user.first_name
-    token += generate_token()
-    signup_link = '/'+token
+    token += generate_token
+    new_user.current_token = token
+    signup_link = 'https://greek-app.appspot.com/newuser/'+token
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
     body += signup_link + "\n\n -NeteGreek Team"
+    new_user.put()
     mail.send_mail(from_email, to_email, subject, body)
 
 
@@ -169,6 +172,18 @@ class RESTApi(remote.Service):
 
         return OutgoingMessage(error='', data='OK')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
+                      http_method='POST', name='auth.new_user')
+    def register_user(self, request):
+        user = User.query(User.current_token == request.token)
+        if user and user.user_name == '':
+            user_dict = user.__dict__
+            logging.error(user_dict)
+            user_dict["hash_pass"] = "xxx"
+            user_dict["current_token"] = "xxx"
+            user_dict["previous_token"] = "xxx"
+            return OutgoingMessage(error='', data=json.dumps(user_dict))
+        return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
                       http_method='POST', name='auth.test_email')
