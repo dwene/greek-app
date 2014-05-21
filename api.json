@@ -83,8 +83,16 @@ return example
     "class_year" : classYear
 }
 
+
+
 ---Add Credentials for User---
+/_ah/api/netegreek/v1/auth/register_credentials
 {
     "user_name" : userName,
     "password" : Password
+}
+
+return
+{
+ "token" : tokenString
 }

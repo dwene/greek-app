@@ -103,6 +103,11 @@ def check_auth(user_name, token):
     else:
         return False
 
+def username_available(user):
+    if User.query(User.user_name == user).get() and user.length > 5:
+        return False
+    return True
+
 def generate_token():
     return str(uuid.uuid4())
 
@@ -186,18 +191,21 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data=json.dumps(user_dict))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_credentials',
-                      http_method='GET', name='auth.add_credentials')
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_credentials',
+                      http_method='GET', name='auth.register_credentials')
     def add_credentials(self, request):
         data = json.loads(request.token)
-        user = User.query(User.current_token == data["token"])
+        user = User.query(User.current_token == data["token"]).get()
         if user and user.user_name == '':
-            user_dict = user.__dict__
-            logging.error(user_dict)
-            user_dict["hash_pass"] = "xxx"
-            user_dict["current_token"] = "xxx"
-            user_dict["previous_token"] = "xxx"
-            return OutgoingMessage(error='', data=json.dumps(user_dict))
+            if not username_available(data["user_name"]):
+                return OutgoingMessage(error='INVALID USERNAME')
+            if not data["password"].length > 6:
+                return OutgoingMessage(error='INVALID PASSWORD')
+            user.user_name = data["user_name"]
+            user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
+            user.current_token = generate_token()
+            user.put()
+            return OutgoingMessage(error='', data={"token": user.current_token()})
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
