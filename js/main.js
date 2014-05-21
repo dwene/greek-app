@@ -129,12 +129,11 @@ App.controller('paymentController', function($scope, $http) {
 });
 
 App.controller('addmembersController', function($scope, $http) {
-    $scope.addMember = function(){
-    
-        
-        $('#result').text(JSON.stringify($('#addmemberForm').serializeObject()));
-        
-    $.fn.serializeObject = function(){
+
+        var newmemberList = [];
+            
+        $.fn.serializeObject = function()
+        {
             var o = {};
             var a = this.serializeArray();
             $.each(a, function() {
@@ -147,8 +146,14 @@ App.controller('addmembersController', function($scope, $http) {
                     o[this.name] = this.value || '';
                 }
             });
-            return o;
+            
+            newmemberList.push(o);
+            return newmemberList;
         };
+
+    $scope.addMember = function(){
+        $('#result').text(JSON.stringify($('#addmemberForm').serializeObject()));
+        return false;
     };
     
     $scope.addMembers = function(){
@@ -174,7 +179,12 @@ smoothScroll.init();
 
 
 
-
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 function CSVToArray(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
