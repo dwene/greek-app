@@ -4,35 +4,35 @@
 
 
 <div class="container">
-		<form id="registerForm" class="form-horizontal" role="form">
+		<form id="registerForm" method="get" action="/#/registerinfo" class="form-horizontal" role="form">
 		
 		<div class="form-group">
 			<label for="orgName" class="col-sm-2 control-label">Organization Name</label>
 			<div class="col-sm-10">
-			  <input type="text" class="form-control" id="orgName" ng-model="item.org_name" placeholder="Greek Organization" required>
+			  <input type="text" class="form-control" id="orgName" name="org_name" ng-model="item.org_name" placeholder="Greek Organization" required>
 			</div>
 		</div>
         
         <div class="form-group">
 			<label for="schoolName" class="col-sm-2 control-label">School Name</label>
 			<div class="col-sm-10">
-			  <input type="text" class="form-control" id="schoolName" ng-model="item.school_name" placeholder="Texas A&M" required>
+			  <input type="text" class="form-control" id="schoolName" name="school_name" ng-model="item.school_name" placeholder="Texas A&M" required>
 			</div>
         </div>
         
         <div class="form-group">
 			<label for="orgType" class="col-sm-2 control-label">Organization Type</label>
 			<div class="col-sm-10" id="orgType">
-			  <input type="radio" id="orgType1" ng-model="item.org_type" value="sorority" required><label for="orgType1">Sorority</label><br>
-			  <input type="radio" id="orgType2" ng-model="item.org_type" value="fraternity" required><label for="orgType2">Fraternity</label><br>
-			  <input type="radio" id="orgType3" ng-model="item.org_type" value="coed" required><label for="orgType3">Coed</label>
+			  <input type="radio" id="orgType1" name="org_type" ng-model="item.org_type" value="sorority" required><label for="orgType1">Sorority</label><br>
+			  <input type="radio" id="orgType2" name="org_type" ng-model="item.org_type" value="fraternity"><label for="orgType2">Fraternity</label><br>
+			  <input type="radio" id="orgType3" name="org_type" ng-model="item.org_type" value="coed"><label for="orgType3">Coed</label>
 			</div>
         </div>
         
        
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button ng-click="registerClick()" class="btn btn-default">Register</button>
+              <button type=submit" class="btn btn-default">Register</button>
             </div>
           </div>
 		</form>

@@ -1,9 +1,7 @@
 var App = angular.module('App', ['ngRoute']);
 
-	// configure our routes
 	App.config( function ($routeProvider) {
 		$routeProvider
-			// route for the home page
 			.when('/', {
 				templateUrl : 'Static/home.html',
 				controller  : 'homeController'
@@ -92,17 +90,20 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 App.controller('registerController', function($scope, $http) {
-    $scope.registerClick = function(){
-        window.location.replace("/#/registerinfo");
-    };
     
 });
 
 App.controller('registerinfoController', function($scope, $http) {
     
+    
+    
     $scope.registerinfoClick = function(){
-        window.location.replace("/#/payment");
+        //$http.post('/_ah/api/todolist/v1/checkItem/' + $.cookie('USER_TOKEN') + '/' + id)
+        
+        
     };
+    
+
     
 //		$scope.register = function(item) {
 //        console.log(item)
@@ -274,3 +275,12 @@ $("#download").click(function() {
     var json = CSV2JSON(csv);
     window.open("data:text/json;charset=utf-8," + escape(json))
 });
+
+
+
+function toSend(send_data){
+    var output = {user_name:$.cookie("USER_NAME"),
+     token: $.cookie("TOKEN"),
+     data: send_data};
+    return JSON.stringify(output);
+}
