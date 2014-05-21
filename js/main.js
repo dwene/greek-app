@@ -97,7 +97,7 @@ App.controller('registerinfoController', function($scope, $http) {
     
    //may be necessary $scope.getParameterByName(name) = getParameterByName(name);
     
-    $scope.registerinfoClick = function(){
+    $scope.registerinfoClick = function(item){
         
         var params = [
             {
@@ -114,17 +114,11 @@ App.controller('registerinfoController', function($scope, $http) {
             }
         ];
         
-        $.each(params, function(i,param){
-            
-        $('<input />').attr('type', 'hidden')
-            .attr('name', param.name)
-            .attr('value', param.value)
-            .appendTo('#commentForm');
-        });
+        var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
+        data_tosend = {organization: organization, user: item}
         
-       var item = $('#registerInfoForm').serializeArray();
         
-        $http.post('/_ah/api/netegreek/v1/auth/register_organization', item)
+        $http.post('/_ah/api/netegreek/v1/auth/register_organization', toSend(data_tosend))
         .success(function(data){
             console.log(data);
         })
