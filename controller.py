@@ -150,6 +150,7 @@ class RESTApi(remote.Service):
             new_user.organization = new_org.key
             new_user.tag = ['council']
             new_user.current_token = generate_token()
+            new_user.timestamp = datetime.datetime.now()
             new_user.put()
             return OutgoingMessage(error='', data=new_user.current_token)
         except:
@@ -181,7 +182,7 @@ class RESTApi(remote.Service):
             new_user.first_name = user['first_name']
             new_user.last_name = user['last_name']
             new_user.email = user['email']
-            new_user.class_year = user['class_year']
+            new_user.class_year = int(user['class_year'])
             new_user.organization = User.query(User.user_name == request.user_name).get().organization
             new_user.put()
             emailSignup(new_user.key)

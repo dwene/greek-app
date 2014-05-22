@@ -102,13 +102,20 @@ var App = angular.module('App', ['ngRoute']);
             //format data for the api
             data_tosend = {organization: organization, user: item}
             
-            console.log(toSend(data_tosend));
+            console.log(packageForSending(data_tosend));
             
             //send the organization and user date from registration pages
-            $http.post('/_ah/api/netegreek/v1/auth/register_organization', toSend(data_tosend))
+            $http.post('/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
             .success(function(data){
-                $.cookie("TOKEN") = data.data;
-                console.log(data);
+                if (!checkResponseErrors(data))
+                {
+                    console.log(data);
+                    window.location.replace("/#/payment");
+                    $.cookie("TOKEN",  data.data);
+                    $.cookie("USER_NAME", data_tosend.user.user_name);
+                }
+                else
+                    console.log('ERROR: '+data);
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -167,6 +174,29 @@ var App = angular.module('App', ['ngRoute']);
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
         };
+        
+        $scope.submitMembers = function(){
+            
+            
+            var data_tosend = {users: newmemberList};
+            $http.post('/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    console.log(data);
+                    newmemberList = [];
+                    $("#result").text('');
+                    $('#areAdded').text("members have been added");
+                    $.cookie("TOKEN",  data.data);
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+            
+        }
         
         //this function sets up a filereader to read the CSV
         function readSingleFile(evt) {
@@ -227,13 +257,35 @@ function checkLogin(){
         return false;
 }
 
-//use toSend(send_data) when $http.post in order to attach data to user
-function toSend(send_data){
+//use packageForSending(send_data) when $http.post in order to attach data to user
+function packageForSending(send_data){
     var output = 
-    {user_name:$.cookie("TOKEN"),
+    {user_name:$.cookie("USER_NAME"),
      token: $.cookie("TOKEN"),
      data: JSON.stringify(send_data)};
     return output;
+}
+
+function checkResponseErrors(received_data){
+    console.log(received_data)
+    response = received_data;
+    if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN')
+    {
+        window.location.replace("/#/login");
+        return true;
+    }
+    else if(response.error == 'INVALID_FORMAT')
+    {
+        return true;
+    }
+    else if(response.error == '')
+    {
+        return false;
+    }
+    else
+    {
+        return true;    
+    }
 }
 
 //easy way to get parameters from URL (use for non-sensitive info)
