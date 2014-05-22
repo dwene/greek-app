@@ -1,0 +1,43 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>New Member Account</h1>
+		</div>
+
+</div>
+
+
+<div class="container">
+
+
+
+<form id="newmemberAccount" class="form-horizontal" role="form">
+    
+<div class="row">first_name</div>
+<div class="row">last_name</div>
+<div class="row">email</div>
+    
+    <div class="form-group">
+        <label for="userName" class="col-sm-2 control-label">User Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="password" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" name="password" ng-model="item.password" placeholder="***********" required>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="repeatPassword" class="col-sm-2 control-label">Repeat Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="item.repeat_password" placeholder="***********" required>
+        </div>
+    </div>
+    <button type="submit" ng-click="createAccount()" class="btn btn-default pull-right">Submit</button>
+</form>
+</div>

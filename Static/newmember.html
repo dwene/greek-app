@@ -2,11 +2,18 @@
 
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
-			<h1>New Member Info</h1>
+			<h1>Is this you?</h1>
 		</div>
 
 </div>
 
-
 <div class="container">
+<div id="correctPerson" class="row">
+    <div class="col-xs-6 col-sm-3">first_name</div>
+    <div class="col-xs-6 col-sm-3">last_name</div>
+    <div class="col-xs-6 col-sm-3">class_year</div>
+    <div class="col-xs-6 col-sm-3">email</div>
+</div>
+<button ng-click="correctPerson()" class="btn btn-default">Yes</button>
+<button ng-click="incorrectPerson()" class="btn btn-default">No</button>
 </div>

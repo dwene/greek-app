@@ -37,6 +37,18 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/newmember.html',
                 controller : 'newmemberController'
             })
+            .when('/incorrectperson', {
+                templateUrl : 'Static/incorrectperson.html',
+                controller : 'incorrectpersonController'
+            })
+            .when('/newmemberinfo', {
+                templateUrl : 'Static/newmemberinfo.html',
+                controller : 'newmemberinfoController'
+            })
+            .when('/app/accountinfo', {
+                templateUrl : 'Static/accountinto.html',
+                controller : 'accountinfoController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
@@ -244,8 +256,28 @@ var App = angular.module('App', ['ngRoute']);
 
 //controller for new member page
     App.controller('newmemberController', function($scope, $http){
+        $scope.correctPerson = function(){
+            window.location.replace("/#/newmemberinfo");
+        }
+        $scope.incorrectPerson = function(){
+            window.location.replace("/#/incorrectperson");
+        }
+    });
+
+//controller for incorrect person page
+    App.controller('incorrectpersonController', function($scope, $http){
     
     });
+
+//controller for new member info page
+    App.controller('newmemberinfoController', function($scope, $http){
+        $scope.createAccount = function(){
+            window.location.replace("/#/app/accountinfo");
+            //now logged in
+        }
+        
+    });
+
 
 //More Functions
 
