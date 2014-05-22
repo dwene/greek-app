@@ -30,16 +30,20 @@ INVALID_FORMAT = "INVALID_FORMAT"
 TOKEN_EXPIRED = "TOKEN_EXPIRED"
 USERNAME_TAKEN = 'USERNAME_TAKEN'
 
+
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
     token = messages.StringField(2)
     data = messages.StringField(3)
+
 
 class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
     data = messages.StringField(2)
 
 """MODELS"""
+
+
 class User(ndb.Model):
     user_name = ndb.StringProperty()
     hash_pass = ndb.StringProperty()
@@ -59,6 +63,7 @@ class User(ndb.Model):
     is_alumni = ndb.BooleanProperty()
     organization = ndb.KeyProperty()
     tag = ndb.StringProperty(repeated=True)
+
 
 class Organization(ndb.Model):
     name = ndb.StringProperty()
@@ -102,6 +107,7 @@ def dumpJSON(item):
     logging.debug(item)
     return json.dumps(item, dthandler)
 
+
 def check_auth(user_name, token):
     user = User.query(User.user_name == user_name).get()
     dt = (datetime.datetime.now() - user.timestamp)
@@ -110,13 +116,16 @@ def check_auth(user_name, token):
     else:
         return False
 
-def username_available(user):
-    if User.query(User.user_name == user).get() and user.length > 5:
+
+def username_available(user_name):
+    if User.query(User.user_name == user_name).get() and len(user_name) > 5:
         return False
     return True
 
+
 def generate_token():
     return str(uuid.uuid4())
+
 
 def get_key_from_token(token):
     user = User.query().filter(User.current_token == token).get()
@@ -128,12 +137,12 @@ def get_key_from_token(token):
                audiences=[ANDROID_AUDIENCE])
 class RESTApi(remote.Service):
     USER_TOKEN = endpoints.ResourceContainer(message_types.VoidMessage, token=messages.StringField(1,
-                                              variant=messages.Variant.STRING))
+                                             variant=messages.Variant.STRING))
 
     ORG_IN = endpoints.ResourceContainer(IncomingMessage,
-                                        user_name=messages.StringField(1, variant=messages.Variant.STRING),
-                                        token=messages.StringField(2, variant=messages.Variant.STRING),
-                                        data=messages.StringField(3, variant=messages.Variant.STRING))
+                                         user_name=messages.StringField(1, variant=messages.Variant.STRING),
+                                         token=messages.StringField(2, variant=messages.Variant.STRING),
+                                         data=messages.StringField(3, variant=messages.Variant.STRING))
     """USER REQUESTS"""
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_organization',
                       http_method='POST', name='auth.register_organization')
@@ -214,18 +223,18 @@ class RESTApi(remote.Service):
                       http_method='POST', name='auth.register_credentials')
     def add_credentials(self, request):
         data = json.loads(request.data)
-        user = User.query(User.current_token == data["token"]).get()
+        user = User.query(User.current_token == request.token).get()
         if user and user.user_name == '':
             if not username_available(data["user_name"]):
-                return OutgoingMessage(error='INVALID USERNAME')
-            if not data["password"].length > 6:
-                return OutgoingMessage(error='INVALID PASSWORD')
+                return OutgoingMessage(error='INVALID_USERNAME')
+            if not len(data["password"]) >= 6:
+                return OutgoingMessage(error='INVALID_PASSWORD')
             user.user_name = data["user_name"]
             user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(error='', data={"token": user.current_token})
+            return OutgoingMessage(error='', data=user.current_token)
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user_directory_info',

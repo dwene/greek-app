@@ -269,8 +269,7 @@ var App = angular.module('App', ['ngRoute']);
                 if (!checkResponseErrors(data))
                 {
                     console.log(data.data);
-                    $user = JSON.parse(data.data);
-                    $scope.first_name = $user.first_name
+                    $scope.user = JSON.parse(data.data);
                     $('.container').fadeIn();
                 }
                 else
@@ -295,8 +294,28 @@ var App = angular.module('App', ['ngRoute']);
 
 //controller for new member info page
     App.controller('newmemberinfoController', function($scope, $http){
+        $("#userTaken").hide();
         $scope.createAccount = function(){
-            window.location.replace("/#/app/accountinfo");
+            var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
+            $http.post('/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    console.log(data.data);
+                    $.cookie('TOKEN',data.data);
+                    $.cookie('USER_NAME', $scope.item.user_name);
+                    window.location.replace("/#/app/accountinfo");
+                }
+                else
+                {
+                    if(checkResponseErrors(data) == "INVALID_USERNAME")
+                        $("#userTaken").fadeIn()
+                    console.log('ERROR: '+data);
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
             //now logged in
         }
         
