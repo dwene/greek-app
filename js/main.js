@@ -257,6 +257,22 @@ var App = angular.module('App', ['ngRoute']);
 
 //controller for new member page
     App.controller('newmemberController', function($scope, $http){
+        $('.container').hide();
+        $.cookie('TOKEN', getParameterByName('token'))
+        $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending('NONE'))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $item = JSON.parse(data.data);
+                    $('.container').fadeIn();
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
         $scope.correctPerson = function(){
             window.location.replace("/#/newmemberinfo");
         }

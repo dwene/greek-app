@@ -73,7 +73,7 @@ def emailSignup(key):
     token += generate_token()
     token = token.replace(" ", "")
     new_user.current_token = token
-    signup_link = 'https://greek-app.appspot.com/newmember?token='+token
+    signup_link = 'https://greek-app.appspot.com/#/newmember?token='+token
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
@@ -251,7 +251,6 @@ class RESTApi(remote.Service):
             logging.error(key + " " + str(value))
             if key == "email":
                 user.email = value
-                logging.error('changed the email')
             if key == "first_name":
                 user.first_name = value
             if key == "last_name":
