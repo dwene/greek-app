@@ -27,6 +27,7 @@ SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere th
 ERROR_BAD_ID = 'BAD_TOKEN'
 INVALID_FORMAT = "INVALID_FORMAT"
 TOKEN_EXPIRED = "TOKEN_EXPIRED"
+USERNAME_TAKEN = 'USERNAME_TAKEN'
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -141,7 +142,10 @@ class RESTApi(remote.Service):
             new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'])
             new_org.put()
             user = clump['user']
-            new_user = User(user_name=user['user_name'])
+            if username_available(user['user_name']):
+                new_user = User(user_name=user['user_name'])
+            else:
+                return OutgoingMessage(error=USERNAME_TAKEN, data='')
             new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
             new_user.first_name = user['first_name']
             new_user.last_name = user['last_name']
@@ -183,15 +187,15 @@ class RESTApi(remote.Service):
             new_user.email = user['email']
             new_user.class_year = int(user['class_year'])
             new_user.organization = User.query(User.user_name == request.user_name).get().organization
+            new_user.user_name = ''
             new_user.put()
             emailSignup(new_user.key)
-
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
                       http_method='POST', name='auth.new_user')
     def register_user(self, request):
-        user = User.query(User.current_token == request.token)
+        user = User.query(User.current_token == request.token).get()
         if user and user.user_name == '':
             user_dict = user.to_dict()
             logging.error(user_dict)
@@ -234,8 +238,6 @@ class RESTApi(remote.Service):
         user_dict["organization"] = ''
         logging.error(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
-
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
                       http_method='POST', name='user.update_user_directory_info')
