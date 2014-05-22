@@ -270,6 +270,7 @@ var App = angular.module('App', ['ngRoute']);
                 {
                     console.log(data.data);
                     $user = JSON.parse(data.data);
+                    $scope.first_name = $user.first_name
                     $('.container').fadeIn();
                 }
                 else
