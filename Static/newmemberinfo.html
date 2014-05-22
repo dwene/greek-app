@@ -38,6 +38,6 @@
           <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="item.repeat_password" placeholder="***********" required>
         </div>
     </div>
-    <button type="submit" ng-click="createAccount()" class="btn btn-default pull-right">Submit</button>
+    <button type="submit" ng-click="createAccount()" ng-disabled="waiting_for_response" class="btn btn-default pull-right">Submit</button>
 </form>
 </div>
