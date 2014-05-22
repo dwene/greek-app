@@ -70,9 +70,10 @@ def emailSignup(key):
     logging.debug(new_user.organization)
     token = new_user.organization.get().name
     token += new_user.first_name
-    token += generate_token
+    token += new_user.last_name
+    token += generate_token()
     new_user.current_token = token
-    signup_link = 'https://greek-app.appspot.com/newuser/'+token
+    signup_link = 'https://greek-app.appspot.com/newmember?token='+token
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
@@ -97,11 +98,12 @@ def dumpJSON(item):
         or isinstance(obj, datetime.date)
         else None)
     logging.debug(item)
-    return dumpJSON(item, dthandler)
+    return json.dumps(item, dthandler)
 
 def check_auth(user_name, token):
     user = User.query(User.user_name == user_name).get()
-    if user.current_token == token:
+    dt = (datetime.datetime.now() - user.timestamp)
+    if user.current_token == token and dt.days < 3:
         return user.key
     else:
         return False
@@ -153,7 +155,6 @@ class RESTApi(remote.Service):
         except:
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
                       http_method='POST', name='auth.login')
     def login(self, request):
@@ -163,6 +164,8 @@ class RESTApi(remote.Service):
         user = User.query(User.user_name == user_name).get()
         if user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
             user.current_token = generate_token()
+            user.timestamp = datetime.datetime.now()
+            user.put()
             return OutgoingMessage(data=user.current_token)
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
@@ -223,12 +226,13 @@ class RESTApi(remote.Service):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
 
-        user = User.query(User.user_name == 'djtest').get()
+        user = User.query(User.user_name == request.user_name).get()
         logging.error(user.user_name)
         user_dict = user.to_dict()
         user_dict["hash_pass"] = ''
         user_dict["current_token"] = ''
         user_dict["previous_token"] = ''
+        user_dict["organization"] = ''
         logging.error(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
 
@@ -237,36 +241,37 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
                       http_method='POST', name='user.update_user_directory_info')
     def update_user_directory_info(self, request):
-        try:
-            if not check_auth(request.user_name, request.token):
-                return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-            user = User.query(User.user_name == request.user_name).get()
-            user_data = dumpJSON(request.data)
-            keys = user_data.keys()
-            for key, value in user_data.iteritems():
-                if key == "email":
-                    user.email = user_data[key]
-                if key == "first_name":
-                    user.first_name = user_data[key]
-                if key == "last_name":
-                    user.last_name = user_data[key]
-                if key == "dob":
-                    user.dob = user_data[key]
-                if key == "address":
-                    user.address = user_data[key]
-                if key == "city":
-                    user.city = user_data[key]
-                if key == "state":
-                    user.state = user_data[key]
-                if key == "zip":
-                    user.zip = user_data[key]
-                if key == "class_year":
-                    user.class_year = user_data[key]
-                if key == "phone":
-                    user.phone = user_data[key]
-            return OutgoingMessage(error='', data='OK')
-        except:
-            return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+        user = User.query(User.user_name == request.user_name).get()
+        logging.error(user)
+        user_data = json.loads(request.data)
+        logging.error(user_data)
+        for key, value in user_data.iteritems():
+            logging.error(key + " " + str(value))
+            if key == "email":
+                user.email = value
+                logging.error('changed the email')
+            if key == "first_name":
+                user.first_name = value
+            if key == "last_name":
+                user.last_name = value
+            if key == "dob":
+                user.dob = value
+            if key == "address":
+                user.address = value
+            if key == "city":
+                user.city = value
+            if key == "state":
+                user.state = value
+            if key == "zip":
+                user.zip = value
+            if key == "class_year":
+                user.class_year = value
+            if key == "phone":
+                user.phone = value
+        user.put()
+        return OutgoingMessage(error='', data='OK')
+
 
 
 
