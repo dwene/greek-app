@@ -107,11 +107,15 @@ var App = angular.module('App', ['ngRoute']);
 //controller for the register info page
     App.controller('registerinfoController', function($scope, $http) {
     
-        //ng-click on form button click
+        //ng-submit on form submit button click
         $scope.registerinfoClick = function(item){
             
             //define organization based on parameters passed from registration page
             var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
+            //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
+//            if(organization.name === null || organization.school === null || organization.type === null){
+//                window.location.replace("/#/register");
+//            }
             //format data for the api
             data_tosend = {organization: organization, user: item}
             
