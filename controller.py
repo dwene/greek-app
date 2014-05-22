@@ -25,6 +25,7 @@ ANDROID_AUDIENCE = WEB_CLIENT_ID
 SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
 """error codes for returning errors"""
 ERROR_BAD_ID = 'BAD_TOKEN'
+BAD_FIRST_TOKEN = 'BAD_FIRST_TOKEN'
 INVALID_FORMAT = "INVALID_FORMAT"
 TOKEN_EXPIRED = "TOKEN_EXPIRED"
 USERNAME_TAKEN = 'USERNAME_TAKEN'
@@ -73,6 +74,7 @@ def emailSignup(key):
     token += generate_token()
     token = token.replace(" ", "")
     new_user.current_token = token
+    logging.error(token)
     signup_link = 'https://greek-app.appspot.com/#/newmember?token='+token
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
@@ -195,15 +197,18 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
                       http_method='POST', name='auth.new_user')
     def register_user(self, request):
+        logging.error(request.token)
         user = User.query(User.current_token == request.token).get()
+        logging.error(user)
         if user and user.user_name == '':
             user_dict = user.to_dict()
             logging.error(user_dict)
             user_dict["hash_pass"] = "xxx"
             user_dict["current_token"] = "xxx"
             user_dict["previous_token"] = "xxx"
+            user_dict["organization"] = "xxx"
             return OutgoingMessage(error='', data=dumpJSON(user_dict))
-        return OutgoingMessage(error=ERROR_BAD_ID, data='')
+        return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_credentials',
                       http_method='POST', name='auth.register_credentials')

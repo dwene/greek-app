@@ -263,12 +263,13 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('newmemberController', function($scope, $http){
         $('.container').hide();
         $.cookie('TOKEN', getParameterByName('token'))
+        console.log(getParameterByName('token'));
         $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     console.log(data.data);
-                    $item = JSON.parse(data.data);
+                    $user = JSON.parse(data.data);
                     $('.container').fadeIn();
                 }
                 else
@@ -305,7 +306,7 @@ var App = angular.module('App', ['ngRoute']);
 
 //checks to see if user is logged in or not
 function checkLogin(){
-    if($.cookie('USER_TOKEN') != undefined)
+    if($.cookie('USER') != undefined)
         return true;
     else
         return false;
