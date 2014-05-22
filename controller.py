@@ -67,7 +67,6 @@ class Organization(ndb.Model):
 def emailSignup(key):
     new_user = key.get()
     to_email = new_user.email
-    logging.debug(new_user.organization)
     token = new_user.organization.get().name
     token += new_user.last_name
     token += generate_token()
@@ -192,8 +191,7 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
                       http_method='POST', name='auth.new_user')
     def register_user(self, request):
-        data = json.loads(request.data)
-        user = User.query(User.current_token == data["token"])
+        user = User.query(User.current_token == request.token)
         if user and user.user_name == '':
             user_dict = user.to_dict()
             logging.error(user_dict)

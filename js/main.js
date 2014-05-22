@@ -259,10 +259,11 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('newmemberController', function($scope, $http){
         $('.container').hide();
         $.cookie('TOKEN', getParameterByName('token'))
-        $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending('NONE'))
+        $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
+                    console.log(data.data);
                     $item = JSON.parse(data.data);
                     $('.container').fadeIn();
                 }
