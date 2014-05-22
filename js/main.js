@@ -46,7 +46,7 @@ var App = angular.module('App', ['ngRoute']);
                 controller : 'newmemberinfoController'
             })
             .when('/app/accountinfo', {
-                templateUrl : 'Static/accountinto.html',
+                templateUrl : 'Static/accountinfo.html',
                 controller : 'accountinfoController'
             })
             .otherwise({
