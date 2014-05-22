@@ -108,36 +108,43 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('registerinfoController', function($scope, $http) {
     
         //ng-submit on form submit button click
-        $scope.registerinfoClick = function(item){
+        $scope.registerinfoClick = function(item, isValid){
+            
+        if(isValid){
             
             //define organization based on parameters passed from registration page
-            var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
-            //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
-//            if(organization.name === null || organization.school === null || organization.type === null){
-//                window.location.replace("/#/register");
-//            }
-            //format data for the api
-            data_tosend = {organization: organization, user: item}
-            
-            console.log(packageForSending(data_tosend));
-            
-            //send the organization and user date from registration pages
-            $http.post('/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    console.log(data);
-                    window.location.replace("/#/payment");
-                    $.cookie("TOKEN",  data.data);
-                    $.cookie("USER_NAME", data_tosend.user.user_name);
-                }
-                else
-                    console.log('ERROR: '+data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+                var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
+                //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
+    //            if(organization.name === null || organization.school === null || organization.type === null){
+    //                window.location.replace("/#/register");
+    //            }
+                //format data for the api
+                data_tosend = {organization: organization, user: item}
                 
+                console.log(packageForSending(data_tosend));
+                
+                //send the organization and user date from registration pages
+                $http.post('/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log(data);
+                        window.location.replace("/#/payment");
+                        $.cookie("TOKEN",  data.data);
+                        $.cookie("USER_NAME", data_tosend.user.user_name);
+                    }
+                    else
+                        console.log('ERROR: '+data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+                
+        }
+            else{
+            $scope.submitted = true;
+            }
+        
         };
     
 	});
@@ -443,3 +450,21 @@ function CSV2JSON(csv) {
 
     return str;
 }
+
+//Directives
+App.directive('match', function () {
+        return {
+            require: 'ngModel',
+            restrict: 'A',
+            scope: {
+                match: '='
+            },
+            link: function(scope, elem, attrs, ctrl) {
+                scope.$watch(function() {
+                    return (ctrl.$pristine && angular.isUndefined(ctrl.$modelValue)) || scope.match === ctrl.$modelValue;
+                }, function(currentValue) {
+                    ctrl.$setValidity('match', currentValue);
+                });
+            }
+        };
+});
