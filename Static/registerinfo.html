@@ -7,7 +7,7 @@
 		<form id="registerinfoForm" ng-submit="registerinfoClick(item, registerinfoForm.$valid)" name="registerinfoForm" class="form-horizontal" role="form" novalidate>
 
         <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)}">
-			<label for="firstName" class="col-sm-2 control-label">User Name</label>
+			<label for="firstName" class="col-sm-2 control-label">First Name</label>
 			<div class="col-sm-10">
 			  <input type="text" class="form-control" id="firstName" name="first_name" ng-model="item.first_name" placeholder="John" required>
 			</div>
@@ -15,19 +15,11 @@
         </div>
         
         <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)}">
-			<label for="lastName" class="col-sm-2 control-label">User Name</label>
+			<label for="lastName" class="col-sm-2 control-label">Last Name</label>
 			<div class="col-sm-10">
 			  <input type="text" class="form-control" id="lastName" name="last_name" ng-model="item.last_name" placeholder="John" required>
 			</div>
             <p ng-show="(registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
-        </div>
-        
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}">
-			<label for="userName" class="col-sm-2 control-label">User Name</label>
-			<div class="col-sm-10">
-			  <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
-			</div>
-            <p ng-show="(registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
         </div>
         
         
