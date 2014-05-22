@@ -4,7 +4,7 @@
 
 
 <div class="container">
-		<form id="registerinfoForm" ng-submit="registerinfoClick(item)" name="registerinfoForm" class="form-horizontal" role="form" novalidate>
+		<form id="registerinfoForm" ng-submit="registerinfoClick(item, registerinfoForm.$valid)" name="registerinfoForm" class="form-horizontal" role="form" novalidate>
 
         
         <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}">
