@@ -29,7 +29,7 @@ BAD_FIRST_TOKEN = 'BAD_FIRST_TOKEN'
 INVALID_FORMAT = "INVALID_FORMAT"
 TOKEN_EXPIRED = "TOKEN_EXPIRED"
 USERNAME_TAKEN = 'USERNAME_TAKEN'
-
+INCORRECT_PERMS = 'INCORECT_PERMISSIONS'
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -192,6 +192,8 @@ class RESTApi(remote.Service):
     def add_users(self, request):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED)
+        if not User.query(User.user_name == request.user_name).get().tags == 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)
         for user in clump['users']:
@@ -288,9 +290,6 @@ class RESTApi(remote.Service):
                 user.phone = value
         user.put()
         return OutgoingMessage(error='', data='OK')
-
-
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
                       http_method='POST', name='auth.test_email')
