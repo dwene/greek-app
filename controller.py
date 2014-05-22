@@ -80,7 +80,7 @@ def emailSignup(key):
     token = token.replace(" ", "")
     new_user.current_token = token
     logging.error(token)
-    signup_link = 'https://greek-app.appspot.com/#/newmember?token='+token
+    signup_link = 'https://greek-app.appspot.com/?token='+token+'#/newmember'
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
@@ -118,9 +118,12 @@ def check_auth(user_name, token):
 
 
 def username_available(user_name):
-    if User.query(User.user_name == user_name).get() and len(user_name) > 5:
+    if User.query(User.user_name == user_name).get():
         return False
-    return True
+    elif len(user_name) < 5:
+        return False
+    else:
+        return True
 
 
 def generate_token():

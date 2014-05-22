@@ -24,7 +24,7 @@
           <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
         </div>
     </div>
-    <p id="#userTaken">*Sorry, this  user name has already been registered to someone else :(</p>
+    <p ng-show="user_is_taken">*Sorry, this user name has already been registered to someone else :(</p>
     <div class="form-group">
         <label for="password" class="col-sm-2 control-label">Password</label>
         <div class="col-sm-10">
@@ -38,6 +38,6 @@
           <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="item.repeat_password" placeholder="***********" required>
         </div>
     </div>
-    <button type="submit" ng-click="createAccount()" class="btn btn-default pull-right">Submit</button>
+    <button type="submit" ng-click="createAccount()" ng-disabled="waiting_for_response" class="btn btn-default pull-right">Submit</button>
 </form>
 </div>

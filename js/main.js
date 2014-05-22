@@ -301,8 +301,10 @@ var App = angular.module('App', ['ngRoute']);
 
 //controller for new member info page
     App.controller('newmemberinfoController', function($scope, $http){
-        $("#userTaken").hide();
+        $scope.user_is_taken = false;
+        $scope.waiting_for_response = false;
         $scope.createAccount = function(){
+            $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
             $http.post('/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
             .success(function(data){
@@ -315,15 +317,19 @@ var App = angular.module('App', ['ngRoute']);
                 }
                 else
                 {
-                    if(checkResponseErrors(data) == "INVALID_USERNAME")
-                        $("#userTaken").fadeIn()
+                    if(data.error == "INVALID_USERNAME")
+                    {
+                        $scope.user_is_taken = true;
+                    }
                     console.log('ERROR: '+data);
                 }
+                
             })
             .error(function(data) {
                 console.log('Error: ' + data);
             });
             //now logged in
+        $scope.waiting_for_response = false;
         }
         
     });
