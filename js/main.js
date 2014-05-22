@@ -119,6 +119,7 @@ var App = angular.module('App', ['ngRoute']);
     //                window.location.replace("/#/register");
     //            }
                 //format data for the api
+                console.log(item);
                 data_tosend = {organization: organization, user: item}
                 
                 console.log(packageForSending(data_tosend));
