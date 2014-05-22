@@ -77,25 +77,26 @@ var App = angular.module('App', ['ngRoute']);
 //controller for the login page
 	App.controller('loginController', function($scope, $http) {
 
-        //need to update login controller
-//        $scope.login = function(user_name, password) {
-//        console.log(user_name + ' ' +password)
-//        $http.get('/_ah/api/todolist/v1/auth/login/' + user_name + '/' + password)
-//            .success(function(data) {
-//                console.log(data.message);
-//                cookie = data.current_token;
-//                console.log(cookie);
-//                $.cookie('first_name', data.first_name);
-//                $.cookie('USER_TOKEN', cookie);
-//                console.log(data);
-//                window.location.replace("/#/app");
-//                //debug credentials user:jakeruesink pass:jakeiscool
-//
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' + data);
-//            });
-//        };
+        $scope.login = function(user_name, password) {
+        console.log(user_name + ' ' +password)
+        $http.post('/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
+            .success(function(data) {
+                if(!checkResponseErrors(data))
+                {
+                    $.cookie('USER_NAME', user_name);
+                    $.cookie('TOKEN', data.data);
+                    window.location.replace("/#/app");
+                }
+                else{
+                window.location.replace("/#/login");
+                }
+                //debug credentials user:jakeruesink pass:jakeiscool
+
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        };
 
     });
 //controller for the registration page

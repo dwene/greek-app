@@ -104,7 +104,7 @@ def check_auth(user_name, token):
     user = User.query(User.user_name == user_name).get()
     dt = (datetime.datetime.now() - user.timestamp)
     if user.current_token == token and dt.days < 3:
-        return user.key
+        return True
     else:
         return False
 
@@ -167,7 +167,7 @@ class RESTApi(remote.Service):
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(data=user.current_token)
+            return OutgoingMessage(data=user.current_token, error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
