@@ -69,9 +69,9 @@ def emailSignup(key):
     to_email = new_user.email
     logging.debug(new_user.organization)
     token = new_user.organization.get().name
-    token += new_user.first_name
     token += new_user.last_name
     token += generate_token()
+    token = token.replace(" ", "")
     new_user.current_token = token
     signup_link = 'https://greek-app.appspot.com/newmember?token='+token
     from_email = 'netegreek@greek-app.appspotmail.com'
