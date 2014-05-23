@@ -249,12 +249,17 @@ class RESTApi(remote.Service):
         request_user = User.query(User.user_name == request.user_name).get()
         if 'council' not in request_user.tag:
             return OutgoingMessage(error=INCORRECT_PERMS)
-        user_info = request.data.user
-        user_to_remove = User.query(User.organization == request_user.organization and User.email == user_info.email and
-                                    User.first_name == user_info.first_name and User.last_name == user_info.last_name)
+        logging.error(request.data)
+        user_info = json.loads(request.data)
+        logging.error(user_info)
+        user_to_remove = User.query(ndb.AND(User.organization == request_user.organization,
+                                            User.email == user_info["email"],
+                                            User.first_name == user_info["first_name"],
+                                            User.last_name == user_info["last_name"])).get()
         if user_to_remove:
             removal_email(user_to_remove.key)
             user_to_remove.key.delete()
+            time.sleep(.25)
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error='USER_NOT_FOUND', data='')
 

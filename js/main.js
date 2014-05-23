@@ -176,6 +176,42 @@ var App = angular.module('App', ['ngRoute']);
 //controller for the add members page
     App.controller('managemembersController', function($scope, $http) {
         
+        function updateManageMembersView(){
+            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        
+                        users = JSON.parse(data.data);
+                        console.log(users);
+                        $scope.members = users;
+                    }
+                    else
+                        console.log('ERROR: '+data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        
+        updateManageMembersView();
+        $scope.deleteMember = function(member){
+            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(member))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        updateManageMembersView();
+                    }
+                    else
+                        console.log('ERROR: '+data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        
         //TABS
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
@@ -290,7 +326,6 @@ var App = angular.module('App', ['ngRoute']);
         };
     
     });
-
 //controller for new member page
     App.controller('newmemberController', function($scope, $http){
         $('.container').hide();
