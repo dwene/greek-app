@@ -29,9 +29,9 @@ var App = angular.module('App', ['ngRoute']);
 				templateUrl : 'Static/app.html',
 				controller  : 'appController'
 			})
-            .when('/app/addmembers', {
-				templateUrl : 'Static/addmembers.html',
-				controller  : 'addmembersController'
+            .when('/app/managemembers', {
+				templateUrl : 'Static/managemembers.html',
+				controller  : 'managemembersController'
 			})
             .when('/newmember', {
                 templateUrl : 'Static/newmember.html',
@@ -61,7 +61,8 @@ var App = angular.module('App', ['ngRoute']);
         }
         
         $scope.logout = function(){
-                $.removeCookie('USER_TOKEN');
+                $.removeCookie('USER_NAME');
+                $.removeCookie('TOKEN');
                 window.location.replace("/#/login");
          }
     });
@@ -88,7 +89,11 @@ var App = angular.module('App', ['ngRoute']);
                     window.location.replace("/#/app");
                 }
                 else{
-                window.location.replace("/#/login");
+                
+                    if (data.error == "BAD_LOGIN"){
+                        $scope.badLogin = true;
+                    }
+                    
                 }
                 //debug credentials user:jakeruesink pass:jakeiscool
 
@@ -154,7 +159,7 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('paymentController', function($scope, $http) {
         //skip payment page right now
         $scope.submitPayment = function(){
-            window.location.replace("/#/app/addmembers");
+            window.location.replace("/#/app/managemembers");
         };
         
     });
@@ -169,7 +174,14 @@ var App = angular.module('App', ['ngRoute']);
 	});
 
 //controller for the add members page
-    App.controller('addmembersController', function($scope, $http) {
+    App.controller('managemembersController', function($scope, $http) {
+        
+        //control Tabs
+        $('#managemembersTabs a').click(function (e) {
+          e.preventDefault()
+          $(this).tab('show')
+        });
+        
         //initialize a member array
         var newmemberList = [];
         //initialize a filecontents variable
@@ -383,7 +395,7 @@ var App = angular.module('App', ['ngRoute']);
 
 //checks to see if user is logged in or not
 function checkLogin(){
-    if($.cookie('USER') != undefined)
+    if($.cookie('USER_NAME') != undefined)
         return true;
     else
         return false;
