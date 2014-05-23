@@ -192,7 +192,7 @@ class RESTApi(remote.Service):
     def add_users(self, request):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED)
-        if not User.query(User.user_name == request.user_name).get().tags == 'council':
+        if 'council' not in User.query(User.user_name == request.user_name).get().tag:
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)

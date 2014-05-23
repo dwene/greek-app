@@ -335,6 +335,48 @@ var App = angular.module('App', ['ngRoute']);
         
     });
 
+    App.controller('accountinfoController', function($scope, $http) {
+        $('.container').hide();
+        $http.post('/_ah/api/netegreek/v1/auth/get_user_directory_info', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.item = JSON.parse(data.data);
+                    $('.container').fadeIn();
+                }
+                else
+                {
+                    console.log('ERROR: '+data);
+                }
+                
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        $scope.updatedInfo = false;
+        $scope.updateAccount() = function(){
+            $http.post('/_ah/api/netegreek/v1/auth/update_user_directory_info', packageForSending($scope.item))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    console.log(data.data);
+                    $scope.updatedInfo=true;
+                }
+                else
+                {
+                    console.log('ERROR: '+data);
+                }
+                
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        };
+        
+    });
+
+
 
 //More Functions
 
