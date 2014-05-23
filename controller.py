@@ -251,10 +251,11 @@ class RESTApi(remote.Service):
         user = User.query(User.user_name == request.user_name).get()
         logging.error(user.user_name)
         user_dict = user.to_dict()
-        user_dict["hash_pass"] = ''
-        user_dict["current_token"] = ''
-        user_dict["previous_token"] = ''
-        user_dict["organization"] = ''
+        del user_dict["hash_pass"]
+        del user_dict["current_token"]
+        del user_dict["previous_token"]
+        del user_dict["organization"]
+        del user_dict["timestamp"]
         logging.error(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
 
@@ -275,7 +276,7 @@ class RESTApi(remote.Service):
             if key == "last_name":
                 user.last_name = value
             if key == "dob":
-                user.dob = value
+                user.dob = datetime.datetime.strptime(value, '%Y-%m-%d')
             if key == "address":
                 user.address = value
             if key == "city":

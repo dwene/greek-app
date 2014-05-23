@@ -337,7 +337,8 @@ var App = angular.module('App', ['ngRoute']);
 
     App.controller('accountinfoController', function($scope, $http) {
         $('.container').hide();
-        $http.post('/_ah/api/netegreek/v1/auth/get_user_directory_info', packageForSending(''))
+        $scope.updatedInfo = false;
+        $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -354,9 +355,9 @@ var App = angular.module('App', ['ngRoute']);
                 console.log('Error: ' + data);
             });
         
-        $scope.updatedInfo = false;
-        $scope.updateAccount() = function(){
-            $http.post('/_ah/api/netegreek/v1/auth/update_user_directory_info', packageForSending($scope.item))
+        
+        $scope.updateAccount = function(){
+            $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
