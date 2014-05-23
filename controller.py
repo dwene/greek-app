@@ -187,7 +187,7 @@ class RESTApi(remote.Service):
         user_name = clump['user_name']
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
-        if user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
+        if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
