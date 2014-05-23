@@ -96,6 +96,16 @@ def emailSignup(key):
     new_user.put()
     mail.send_mail(from_email, to_email, subject, body)
 
+def removal_email(key):
+    user = key.get()
+    to_email = user.email
+    from_email = 'netegreek@greek-app.appspotmail.com'
+    subject = 'Removal from NeteGreek App'
+    body = "Hello\n"
+    body += "This if a notice that you have been removed from the organization '" + user.organization.get().name
+    body += "' Please email your NeteGreek administrators for more information\n"
+    body += "Have a great day\n\n"
+    body+= "NeteGreek Team"
 
 def testEmail():
     from_email = 'netegreek@greek-app.appspotmail.com'
@@ -214,6 +224,45 @@ class RESTApi(remote.Service):
             new_user.put()
             emailSignup(new_user.key)
         return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/get_users',
+                      http_method='POST', name='auth.get_users')
+    def get_users(self, request):
+        if not check_auth(request.user_name, request.token):
+            return OutgoingMessage(error=TOKEN_EXPIRED)
+        request_user = User.query(User.user_name == request.user_name).get()
+        if 'council' not in request_user.tag:
+            return OutgoingMessage(error=INCORRECT_PERMS)
+
+        organization_users = User.query(User.organization == request_user.organization).fetch()
+        user_list = []
+        for user in organization_users:
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["previous_token"]
+            del user_dict["organization"]
+            del user_dict["timestamp"]
+            user_list.append(user_dict)
+
+        return OutgoingMessage(error='', data=dumpJSON(user_list))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/remove_user',
+                      http_method='POST', name='auth.remove_user')
+    def remove_user(self, request):
+        if not check_auth(request.user_name, request.token):
+            return OutgoingMessage(error=TOKEN_EXPIRED)
+        request_user = User.query(User.user_name == request.user_name).get()
+        if 'council' not in request_user.tag:
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        user_info = request.data.user
+        user_to_remove = User.query(User.organization == request_user.organization and User.email == user_info.email and
+                                    User.first_name == user_info.first_name and User.last_name == user_info.last_name)
+        if user_to_remove:
+            removal_email(user_to_remove.key)
+            user_to_remove.key.delete()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='USER_NOT_FOUND', data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
                       http_method='POST', name='auth.new_user')
