@@ -65,6 +65,13 @@ class User(ndb.Model):
     tag = ndb.StringProperty(repeated=True)
 
 
+#class EmailRequest(ndb.model):
+#    user_key = ndb.KeyProperty()
+#    request_type = ndb.StringProperty()
+#    JSON_toList = ndb.TextProperty()
+#    content = ndb.TextProperty()
+#    title = ndb.TextProperty()
+
 class Organization(ndb.Model):
     name = ndb.StringProperty()
     school = ndb.StringProperty()
@@ -196,6 +203,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)
+        to_list = []
         for user in clump['users']:
             new_user = User()
             new_user.first_name = user['first_name']
