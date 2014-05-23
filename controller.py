@@ -24,7 +24,7 @@ ANDROID_AUDIENCE = WEB_CLIENT_ID
 """Password Salt"""
 SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
 """error codes for returning errors"""
-ERROR_BAD_ID = 'BAD_TOKEN'
+ERROR_BAD_ID = 'BAD_LOGIN'
 BAD_FIRST_TOKEN = 'BAD_FIRST_TOKEN'
 INVALID_FORMAT = "INVALID_FORMAT"
 TOKEN_EXPIRED = "TOKEN_EXPIRED"
@@ -203,7 +203,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)
-        to_list = []
         for user in clump['users']:
             new_user = User()
             new_user.first_name = user['first_name']
@@ -299,6 +298,14 @@ class RESTApi(remote.Service):
                 user.phone = value
         user.put()
         return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/forgot_password',
+                      http_method='POST', name='auth.forgot_password')
+    def forgot_password(self, request):
+        email = request.data["email"]
+        user = User.query(User.email == email).get()
+        return OutgoingMessage(error='', data='OK')
+
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
                       http_method='POST', name='auth.test_email')
