@@ -1,4 +1,4 @@
-
+<div class="container">
 <!-- Nav tabs -->
 <ul id="managemembersTabs" class="nav nav-tabs">
   <li class="active"><a href="#managemembers" data-toggle="tab">Manage Members</a></li>
@@ -21,6 +21,11 @@
         
         <div class="container">
             
+            <ul ng-repeat="member in members | orderBy:'last_name'">
+                
+                    <li>{{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }} <button class="btn btn-danger btn-sm" ng-click="deleteMember()">delete</button></li>
+                
+            </ul>
             
         </div>
   
@@ -84,6 +89,4 @@
     </div>
 </div>
 
-
-
-
+</div>
