@@ -78,7 +78,8 @@ class Organization(ndb.Model):
     type = ndb.StringProperty()
 
 
-def emailSignup(key):
+def signup_email(url_key):
+    key = ndb.Key(urlsafe=url_key)
     new_user = key.get()
     to_email = new_user.email
     token = new_user.organization.get().name
@@ -156,14 +157,7 @@ def get_key_from_token(token):
 @endpoints.api(name='netegreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
 class RESTApi(remote.Service):
-    USER_TOKEN = endpoints.ResourceContainer(message_types.VoidMessage, token=messages.StringField(1,
-                                             variant=messages.Variant.STRING))
-
-    ORG_IN = endpoints.ResourceContainer(IncomingMessage,
-                                         user_name=messages.StringField(1, variant=messages.Variant.STRING),
-                                         token=messages.StringField(2, variant=messages.Variant.STRING),
-                                         data=messages.StringField(3, variant=messages.Variant.STRING))
-    """USER REQUESTS"""
+    # USER REQUESTS
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_organization',
                       http_method='POST', name='auth.register_organization')
     def register_organization(self, request):
@@ -222,7 +216,7 @@ class RESTApi(remote.Service):
             new_user.organization = User.query(User.user_name == request.user_name).get().organization
             new_user.user_name = ''
             new_user.put()
-            emailSignup(new_user.key)
+            signup_email(new_user.key.urlsafe())
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/get_users',
@@ -362,42 +356,42 @@ class RESTApi(remote.Service):
         background_thread.BackgroundThread(target=testEmail, args=[]).start()
         return OutgoingMessage(error='', data='OK')
 
+    #
+    #
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register',
+    #                   http_method='POST', name='auth.register')
+    # def add_users(self, request):
+    #
+    #     user = User()
+    #     user.user_name = request.user_name
+    #     user.first_name = request.first_name
+    #     user.last_name = request.last_name
+    #     user.email = request.email
+    #     user.hash_pass = hashlib.sha224(request.password + "this is a random string to help in the salting progress "
+    #                                                        "blah").hexdigest()
+    #     user.current_token = str(uuid.uuid4())
+    #     user.time_stamp = datetime.datetime.now()
+    #     user.put()
+    #     time.sleep(.25)
+    #     try:
+    #         return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
+    #     except:
+    #         return OutgoingMessage(message='error')
+    #
+    # @endpoints.method(USER_PASS, UserCreds, path='auth/login/{user_name}/{password}',
+    #                   http_method='GET', name='auth.login')
+    # def login_user(self, request):
+    #     user = User.query().filter(User.user_name == request.user_name).get()
+    #     logging.error(user)
+    #     if user:
+    #         if user.hash_pass == hashlib.sha224(request.password + "this is a random string to help in the salting"
+    #                                                                " progress blah").hexdigest():
+    #             user.current_token = str(uuid.uuid4())
+    #             user.time_stamp = datetime.datetime.now()
+    #             user.put()
+    #             time.sleep(.5)
+    #             return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
+    #
+    #     return OutgoingMessage(message='error')
 
-"""
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register',
-                      http_method='POST', name='auth.register')
-    def add_users(self, request):
-
-        user = User()
-        user.user_name = request.user_name
-        user.first_name = request.first_name
-        user.last_name = request.last_name
-        user.email = request.email
-        user.hash_pass = hashlib.sha224(request.password + "this is a random string to help in the salting progress "
-                                                           "blah").hexdigest()
-        user.current_token = str(uuid.uuid4())
-        user.time_stamp = datetime.datetime.now()
-        user.put()
-        time.sleep(.25)
-        try:
-            return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
-        except:
-            return OutgoingMessage(message='error')
-
-    @endpoints.method(USER_PASS, UserCreds, path='auth/login/{user_name}/{password}',
-                      http_method='GET', name='auth.login')
-    def login_user(self, request):
-        user = User.query().filter(User.user_name == request.user_name).get()
-        logging.error(user)
-        if user:
-            if user.hash_pass == hashlib.sha224(request.password + "this is a random string to help in the salting"
-                                                                   " progress blah").hexdigest():
-                user.current_token = str(uuid.uuid4())
-                user.time_stamp = datetime.datetime.now()
-                user.put()
-                time.sleep(.5)
-                return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
-
-        return OutgoingMessage(message='error')
-"""
 APPLICATION = endpoints.api_server([RESTApi])
