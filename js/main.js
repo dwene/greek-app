@@ -188,6 +188,10 @@ var App = angular.module('App', ['ngRoute']);
         //$scope.members = JSON.parse(data);
 		//console.log($scope.members)
         
+        $scope.deleteMember = function(){
+        //add an http.delete, but idk how to get the ID of the user to delete and send that back?
+        }
+        
         //ADD MEMBERS TAB
         
         //initialize a member array
