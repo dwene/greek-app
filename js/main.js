@@ -176,11 +176,19 @@ var App = angular.module('App', ['ngRoute']);
 //controller for the add members page
     App.controller('managemembersController', function($scope, $http) {
         
-        //control Tabs
+        //TABS
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
           $(this).tab('show')
         });
+        
+        //MANAGE MEMBERS TAB
+        
+        //this goes inside the HTTP request
+        //$scope.members = JSON.parse(data);
+		//console.log($scope.members)
+        
+        //ADD MEMBERS TAB
         
         //initialize a member array
         var newmemberList = [];
