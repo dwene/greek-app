@@ -65,13 +65,6 @@ class User(ndb.Model):
     tag = ndb.StringProperty(repeated=True)
 
 
-#class EmailRequest(ndb.model):
-#    user_key = ndb.KeyProperty()
-#    request_type = ndb.StringProperty()
-#    JSON_toList = ndb.TextProperty()
-#    content = ndb.TextProperty()
-#    title = ndb.TextProperty()
-
 class Organization(ndb.Model):
     name = ndb.StringProperty()
     school = ndb.StringProperty()
@@ -107,6 +100,22 @@ def removal_email(key):
     body += "' Please email your NeteGreek administrators for more information\n"
     body += "Have a great day\n\n"
     body+= "NeteGreek Team"
+    mail.send_mail(from_email, to_email, subject, body)
+
+def forgotten_password_email(url_key):
+    key = ndb.Key(urlsafe=url_key)
+    user = key.get()
+    to_email = user.email
+    from_email = 'netegreek@greek-app.appspotmail.com'
+    subject = 'NeteGreek Password Reset'
+    token = generate_token()
+    user.current_token = token
+    user.put()
+    link = 'https://greek-app.appspot.com/?token='+token+'#/newpassword'
+    body = 'Hello\n'
+    body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
+    body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
+    mail.send_mail(from_email, to_email, subject, body)
 
 def testEmail():
     from_email = 'netegreek@greek-app.appspotmail.com'
@@ -350,8 +359,10 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/forgot_password',
                       http_method='POST', name='auth.forgot_password')
     def forgot_password(self, request):
-        email = request.data["email"]
+        user_data = json.loads(request.data)
+        email = user_data["email"]
         user = User.query(User.email == email).get()
+        forgotten_password_email(user.key.urlsafe())
         return OutgoingMessage(error='', data='OK')
 
 
