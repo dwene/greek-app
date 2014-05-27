@@ -130,9 +130,7 @@ def dumpJSON(item):
     dthandler = lambda obj: (
         obj.isoformat()
         if isinstance(obj, datetime.datetime)
-    elif:
-        obj.isoformat()
-        if isinstance(obj, datetime.date)
+        or isinstance(obj, datetime.date)
         else None)
     logging.debug(item)
     return json.dumps(item, dthandler)
