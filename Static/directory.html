@@ -11,7 +11,7 @@
     <ul ng-repeat="member in directory | orderBy:'last_name'">
         <li>
             <div>
-                <a ng-click="seeMember(member)">{{member.last_name}}, {{member.first_name}}</a>
+                <a ng-click="showIndividual(member)">{{member.last_name}}, {{member.first_name}}</a>
             </div>
         </li>
     </ul>

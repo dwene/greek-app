@@ -147,6 +147,8 @@ def check_auth(user_name, token):
 
 def get_user(user_name, token):
     user = User.query(User.user_name == user_name).get()
+    if not user:
+        return None
     dt = (datetime.datetime.now() - user.timestamp)
     if user.current_token == token and dt.days < 3:
         return user
@@ -196,7 +198,7 @@ class RESTApi(remote.Service):
             new_user.organization = new_org.key
             new_user.tag = ['council']
             new_user.current_token = generate_token()
-            new_user.class_year = ['class_year']
+            new_user.class_year = int(user['class_year'])
             new_user.timestamp = datetime.datetime.now()
             new_user.put()
             return OutgoingMessage(error='', data=new_user.current_token)
@@ -417,7 +419,8 @@ class RESTApi(remote.Service):
             del user_dict["previous_token"]
             del user_dict["organization"]
             del user_dict["timestamp"]
-            user_dict["prof_pic"] = blobstore.get_serving_url(user.prof_pic)
+            del user_dict["prof_pic"]
+            #user_dict["prof_pic"] = blobstore.get_serving_url(user.prof_pic)
             user_list.append(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_list))
 

@@ -61,6 +61,10 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
+            .when('/app/directory/user', {
+                templateUrl : 'Static/individual.html',
+                controller : 'individualController'  
+            })
             .otherwise({
                 redirectTo: '/'
             });
@@ -475,6 +479,40 @@ var App = angular.module('App', ['ngRoute']);
                 console.log('Error: ' + data);
             });
         
+        $scope.showIndividual = function(member){
+            window.location.replace("/?user_name="+member.user_name+"#/app/directory/user");
+        }
+        
+    });
+
+
+    App.controller('individualController', function($scope, $http){
+         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.members = JSON.parse(data.data)
+                     var user_name = getParameterByName('user_name');
+                    console.log(user_name);
+                    for(var i = 0; i<$scope.members.length; i++)
+                    {
+                        if($scope.members[i].user_name == user_name)
+                        {
+                            $scope.member = $scope.members[i];
+                            $scope.member.prof_pic = TEMP_PROF_PIC;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+           
     });
 
 
