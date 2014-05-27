@@ -152,6 +152,7 @@ var App = angular.module('App', ['ngRoute']);
                 
         }
             else{
+            //for validation purposes
             $scope.submitted = true;
             }
         
@@ -454,6 +455,7 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('accountinfoController', function($scope, $http) {
         $('.container').hide();
         $scope.updatedInfo = false;
+        
         $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -472,25 +474,30 @@ var App = angular.module('App', ['ngRoute']);
             });
         
         
-        $scope.updateAccount = function(){
-            $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    console.log(data.data);
-                    $scope.updatedInfo=true;
-                }
-                else
-                {
-                    console.log('ERROR: '+data);
-                }
-                
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-        };
-        
+        $scope.updateAccount = function(isValid){
+            if(isValid){
+                $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log(data.data);
+                        $scope.updatedInfo=true;
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                    
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            }
+            else{
+            //for validation purposes
+            $scope.submitted = true;
+            }
+        }
     });
 
 
