@@ -278,7 +278,7 @@ class RESTApi(remote.Service):
         if user_to_remove:
             removal_email(user_to_remove.key)
             user_to_remove.key.delete()
-            time.sleep(.25)
+            time.sleep(.1)
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error='USER_NOT_FOUND', data='')
 
@@ -330,6 +330,10 @@ class RESTApi(remote.Service):
         del user_dict["previous_token"]
         del user_dict["organization"]
         del user_dict["timestamp"]
+        if not user_dict["user_name"]:
+            user_dict["has_registered"] = True
+        else:
+            user_dict["has_registered"] = False
         logging.error(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
 
