@@ -11,9 +11,8 @@ import pickle
 from google.appengine.ext import ndb
 import time
 import collections
-from google.appengine.api import background_thread
 from google.appengine.api import mail
-
+from google.appengine.ext import blobstore
 
 WEB_CLIENT_ID = 'greek-app'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
@@ -63,6 +62,7 @@ class User(ndb.Model):
     is_alumni = ndb.BooleanProperty()
     organization = ndb.KeyProperty()
     tag = ndb.StringProperty(repeated=True)
+    prof_pic = ndb.BlobKeyProperty()
 
 
 class Organization(ndb.Model):
@@ -143,6 +143,14 @@ def check_auth(user_name, token):
     else:
         return False
 
+
+def get_user(user_name, token):
+    user = User.query(User.user_name == user_name).get()
+    dt = (datetime.datetime.now() - user.timestamp)
+    if user.current_token == token and dt.days < 3:
+        return user
+    else:
+        return None
 
 def username_available(user_name):
     if User.query(User.user_name == user_name).get():
@@ -365,12 +373,39 @@ class RESTApi(remote.Service):
         forgotten_password_email(user.key.urlsafe())
         return OutgoingMessage(error='', data='OK')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/upload_profile_picture_url',
+                      http_method='POST', name='auth.upload_profile_picture')
+    def upload_profile_picture(self, request):
+        user = get_user(request.user_name, request.token)
+        if not user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        upload_url = blobstore.create_upload_url('/upload')
+        return OutgoingMessage(error='', data=upload_url)
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
-                      http_method='POST', name='auth.test_email')
-    def test_email(self):
-        background_thread.BackgroundThread(target=testEmail, args=[]).start()
-        return OutgoingMessage(error='', data='OK')
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/set_uploaded_prof_pic',
+                      http_method='POST', name='auth.upload_profile_picture')
+    def upload_profile_picture(self, request):
+        user = get_user(request.user_name, request.token)
+        if not user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        key = request.data
+        old_key = user.prof_pic
+        blobstore.BlobInfo.get(old_key).delete()
+        user.prof_pic = key
+        user.put()
+        return OutgoingMessage(error='', data=blobstore.BlobInfo.get(user.prof_pic).get_serving_url(secure_url=True))
+
+
+
+
+
+
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
+    #                   http_method='POST', name='auth.test_email')
+    # def test_email(self):
+    #     background_thread.BackgroundThread(target=testEmail, args=[]).start()
+    #     return OutgoingMessage(error='', data='OK')
 
     #
     #
