@@ -227,12 +227,37 @@ var App = angular.module('App', ['ngRoute']);
         };
     
         //ng-click for the form to add one member at a time
+        
+        
+        
         $scope.addMember = function(){
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
             $scope.adds = newmemberList;
         };
+        
+        
+        
+        
+        $scope.getMembers = function(){
+            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    console.log(data);
+                    $scope.members = JSON.parse(data.data)
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        }
+        
+        $scope.getMembers();
         
         $scope.submitMembers = function(){
             
