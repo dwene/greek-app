@@ -373,9 +373,9 @@ class RESTApi(remote.Service):
         forgotten_password_email(user.key.urlsafe())
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/upload_profile_picture_url',
-                      http_method='POST', name='auth.upload_profile_picture')
-    def upload_profile_picture(self, request):
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_upload_url',
+                      http_method='POST', name='auth.get_upload_url')
+    def get_upload_url(self, request):
         user = get_user(request.user_name, request.token)
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -388,7 +388,7 @@ class RESTApi(remote.Service):
         user = get_user(request.user_name, request.token)
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        key = request.data
+        key = request.data["key"]
         old_key = user.prof_pic
         blobstore.BlobInfo.get(old_key).delete()
         user.prof_pic = key
