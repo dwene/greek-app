@@ -185,6 +185,7 @@ var App = angular.module('App', ['ngRoute']);
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
           $(this).tab('show')
+          $scope.getMembers();
         });
         
         //MANAGE MEMBERS TAB
@@ -277,7 +278,6 @@ var App = angular.module('App', ['ngRoute']);
         
         $scope.submitMembers = function(){
             
-            
             var data_tosend = {users: newmemberList};
             $http.post('/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
             .success(function(data){
@@ -287,7 +287,6 @@ var App = angular.module('App', ['ngRoute']);
                     newmemberList = [];
                     $("#result").text('');
                     $('#areAdded').text("members have been added");
-                    $.cookie("TOKEN",  data.data);
                 }
                 else
                     console.log('ERROR: '+data);
