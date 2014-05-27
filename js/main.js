@@ -320,6 +320,7 @@ var App = angular.module('App', ['ngRoute']);
                       filecontents = e.target.result;
                   }
                   r.readAsText(f);
+                    
                 } else { 
                   alert("Failed to load file");
                 }
@@ -440,10 +441,32 @@ var App = angular.module('App', ['ngRoute']);
                 console.log('Error: ' + data);
             });
         
+        //initialize profile image variable
+        var newprofileImage;
+        
+        //this function sets up a filereader to read the CSV
+            function readImage(evt) {
+                //Retrieve the first (and only!) File from the FileList object
+                var f = evt.target.files[0]; 
+    
+                if (f) {
+                  var r = new FileReader();
+                  r.onload = function(e) { 
+                      newprofileImage = e.target.result;
+                  }
+                    
+                } else { 
+                  alert("Failed to load file");
+                }
+            }
+        
+        //reads the file as it's added into the file input
+        document.getElementById('fileUpload').addEventListener('change', readImage, false);
         
         $scope.uploadPicture = function(){
-            console.log($scope.image)
-            $http.post($scope.url, $scope.image)
+            
+            
+            $http.post($scope.url, newprofileImage)
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -458,6 +481,27 @@ var App = angular.module('App', ['ngRoute']);
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+            
+            
+            
+            
+            
+//            console.log($scope.image)
+//            $http.post($scope.url, $scope.image)
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    console.log("WORKED: "+data)
+//                }
+//                else
+//                {
+//                   console.log("DIDNT WORK: " + data) 
+//                }
+//                
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
         }
         
     });
