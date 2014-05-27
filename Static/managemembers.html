@@ -44,7 +44,11 @@
             
         <div class="container">
             
-            <pre id="result"></pre>
+            <ul ng-repeat="add in adds | orderBy:'last_name'">
+                
+                    <li>{{ add.first_name }}, {{ add.last_name }}, {{ add.class_year }}, {{ add.email }} <button class="btn btn-danger btn-sm" ng-click="deleteAdd(add)">delete</button></li>
+                
+            </ul>
             <button ng-click="submitMembers()" class="btn btn-default">Submit Members</button>
             
             <hr>
