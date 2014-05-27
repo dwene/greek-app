@@ -194,7 +194,7 @@ var App = angular.module('App', ['ngRoute']);
         
         $scope.deleteAdd = function(add){
               var index=$scope.adds.indexOf(add)
-              $scope.adds.splice(add,1);     
+              $scope.adds.splice(index,1);     
         }
         
         //ADD MEMBERS TAB
@@ -261,7 +261,8 @@ var App = angular.module('App', ['ngRoute']);
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.getMembers();
+                    var index=$scope.adds.indexOf(user)
+                    $scope.adds.splice(index,1); 
                 }
                 else
                     console.log('ERROR: '+data);

@@ -278,7 +278,6 @@ class RESTApi(remote.Service):
         if user_to_remove:
             removal_email(user_to_remove.key)
             user_to_remove.key.delete()
-            time.sleep(.1)
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error='USER_NOT_FOUND', data='')
 
