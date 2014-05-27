@@ -1,3 +1,7 @@
+//Final/static variables
+TEMP_PROF_PIC="http://storage.googleapis.com/greek-app.appspot.com/smiley-face-text.jpg";
+
+
 //initialize app
 var App = angular.module('App', ['ngRoute']);
 
@@ -52,6 +56,10 @@ var App = angular.module('App', ['ngRoute']);
             .when('/app/uploadprofilepicture', {
                 templateUrl : 'Static/uploadprofilepicture.html',
                 controller : 'profilepictureController'  
+            })
+            .when('/app/directory', {
+                templateUrl : 'Static/directory.html',
+                controller : 'directoryController'  
             })
             .otherwise({
                 redirectTo: '/'
@@ -451,6 +459,25 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 
+    App.controller('directoryController', function($scope, $http){
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.directory = JSON.parse(data.data)
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+    });
+
+
     App.controller('accountinfoController', function($scope, $http) {
         $('.container').hide();
         $scope.updatedInfo = false;
@@ -498,6 +525,15 @@ var App = angular.module('App', ['ngRoute']);
             }
         }
     });
+
+
+
+
+
+
+
+
+
 
 
 

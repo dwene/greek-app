@@ -1,0 +1,18 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>Directory</h1>
+		</div>
+
+</div>
+
+<div class="container">         
+    <ul ng-repeat="member in directory | orderBy:'last_name'">
+        <li>
+            <div>
+                <a ng-click="seeMember(member)">{{member.last_name}}, {{member.first_name}}</a>
+            </div>
+        </li>
+    </ul>
+</div>

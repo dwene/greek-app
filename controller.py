@@ -63,6 +63,7 @@ class User(ndb.Model):
     organization = ndb.KeyProperty()
     tag = ndb.StringProperty(repeated=True)
     prof_pic = ndb.BlobKeyProperty()
+    status = ndb.StringProperty()
 
 
 class Organization(ndb.Model):
@@ -395,14 +396,30 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         key = request.data["key"]
         old_key = user.prof_pic
-        blobstore.BlobInfo.get(old_key).delete()
+        if old_key:
+            blobstore.BlobInfo.get(old_key).delete()
         user.prof_pic = key
         user.put()
-        return OutgoingMessage(error='', data=blobstore.BlobInfo.get(user.prof_pic).get_serving_url(secure_url=True))
+        return OutgoingMessage(error='', data=blobstore.get_serving_url(key))
 
-
-
-
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
+                      http_method='POST', name='auth.get_directory_info')
+    def get_directory_info(self, request):
+        user = get_user(request.user_name, request.token)
+        if not user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        organization_users = User.query(User.organization == user.organization).fetch()
+        user_list = []
+        for user in organization_users:
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["previous_token"]
+            del user_dict["organization"]
+            del user_dict["timestamp"]
+            user_dict["prof_pic"] = blobstore.get_serving_url(user.prof_pic)
+            user_list.append(user_dict)
+        return OutgoingMessage(error='', data=dumpJSON(user_list))
 
 
 
