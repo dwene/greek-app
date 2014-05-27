@@ -72,6 +72,14 @@ class Organization(ndb.Model):
     type = ndb.StringProperty()
 
 
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        else:
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)
+
 def signup_email(url_key):
     key = ndb.Key(urlsafe=url_key)
     new_user = key.get()
@@ -127,13 +135,7 @@ def testEmail():
 
 
 def dumpJSON(item):
-    dthandler = lambda obj: (
-        obj.isoformat()
-        if isinstance(obj, datetime.datetime)
-        or isinstance(obj, datetime.date)
-        else None)
-    logging.debug(item)
-    return json.dumps(item, dthandler)
+    return json.dumps(item, cls=DateEncoder)
 
 
 def check_auth(user_name, token):
