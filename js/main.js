@@ -465,7 +465,7 @@ var App = angular.module('App', ['ngRoute']);
         
         $scope.uploadPicture = function(){
             
-            
+            console.log(newprofileImage);
             $http.post($scope.url, newprofileImage)
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -544,9 +544,7 @@ var App = angular.module('App', ['ngRoute']);
                         {
                             $scope.member = $scope.members[i];
                             $scope.member.prof_pic = TEMP_PROF_PIC;
-                            console.log($scope.member);
                             break;
-                            
                         }
                     }
                 }

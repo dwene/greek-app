@@ -19,6 +19,7 @@
                     "last_name" : "sample_last_name",
                     "field_of_study" : "example_major",
                     "class_year" : "example_year",
+                    "pledge_class_year" : "PC2015"
                     "student_email" : "example@school.edu",
                     "personal_email" : "example@gmail.com",
                     "primary_email" : "personal_email",
