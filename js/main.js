@@ -192,9 +192,6 @@ var App = angular.module('App', ['ngRoute']);
         //$scope.members = JSON.parse(data);
 		//console.log($scope.members)
         
-        $scope.deleteMember = function(){
-        //add an http.delete, but idk how to get the ID of the user to delete and send that back?
-        }
         $scope.deleteAdd = function(add){
               var index=$scope.adds.indexOf(add)
               $scope.adds.splice(add,1);     
@@ -256,8 +253,25 @@ var App = angular.module('App', ['ngRoute']);
             });
         
         }
-        
         $scope.getMembers();
+        
+        
+        $scope.removeMember = function(user){
+            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.getMembers();
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        }
+        
         
         $scope.submitMembers = function(){
             

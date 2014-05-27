@@ -23,7 +23,7 @@
             
             <ul ng-repeat="member in members | orderBy:'last_name'">
                 
-                    <li>{{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }} <button class="btn btn-danger btn-sm" ng-click="deleteMember(member)">delete</button></li>
+                    <li>{{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }} <button class="btn btn-danger btn-sm" ng-click="removeMember(member)">delete</button></li>
                 
             </ul>
             

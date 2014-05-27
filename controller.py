@@ -244,6 +244,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED)
         request_user = User.query(User.user_name == request.user_name).get()
         if 'council' not in request_user.tag:
+            logging.error(request_user.tag)
             return OutgoingMessage(error=INCORRECT_PERMS)
 
         organization_users = User.query(User.organization == request_user.organization).fetch()
