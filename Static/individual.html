@@ -2,7 +2,7 @@
 
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
-			<h1>Directory Listing</h1>
+			<h1>{{member.first_name}}, {{member.last_name}}</h1>
 		</div>
 
 </div>
@@ -10,8 +10,13 @@
 <div class="container">
     <img style="width:200px;" ng-src="http://storage.googleapis.com/greek-app.appspot.com/smiley-face-text.jpg">
     <ul>
-        <li>{{member.first_name}}, {{member.last_name}}</li>
-        <li>{{member.dob}}</li>
+        <li>Email: {{member.email}}</li>
+        <li>Address: {{member.address}} {{member.city}}, {{member.state}} {{member.zip}}</li>
+        <li>Phone: {{member.phone}}</li>
+        <li>Class Year: {{member.class_year}}</li>
+        <li>Position: {{member.position}}</li>
+        <li>Birthday: {{member.dob}}</li>
+        
     </ul>
     
 </div>

@@ -500,7 +500,9 @@ var App = angular.module('App', ['ngRoute']);
                         {
                             $scope.member = $scope.members[i];
                             $scope.member.prof_pic = TEMP_PROF_PIC;
+                            console.log($scope.member);
                             break;
+                            
                         }
                     }
                 }

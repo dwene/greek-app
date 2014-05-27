@@ -57,7 +57,7 @@ class User(ndb.Model):
     city = ndb.StringProperty()
     state = ndb.StringProperty()
     zip = ndb.IntegerProperty()
-    phone = ndb.IntegerProperty()
+    phone = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
     is_alumni = ndb.BooleanProperty()
     organization = ndb.KeyProperty()
@@ -130,7 +130,9 @@ def dumpJSON(item):
     dthandler = lambda obj: (
         obj.isoformat()
         if isinstance(obj, datetime.datetime)
-        or isinstance(obj, datetime.date)
+    elif:
+        obj.isoformat()
+        if isinstance(obj, datetime.date)
         else None)
     logging.debug(item)
     return json.dumps(item, dthandler)
@@ -259,6 +261,7 @@ class RESTApi(remote.Service):
             del user_dict["previous_token"]
             del user_dict["organization"]
             del user_dict["timestamp"]
+            del user_dict["prof_pic"]
             user_list.append(user_dict)
 
         return OutgoingMessage(error='', data=dumpJSON(user_list))
