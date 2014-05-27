@@ -195,6 +195,10 @@ var App = angular.module('App', ['ngRoute']);
         $scope.deleteMember = function(){
         //add an http.delete, but idk how to get the ID of the user to delete and send that back?
         }
+        $scope.deleteAdd = function(add){
+              var index=$scope.adds.indexOf(add)
+              $scope.adds.splice(add,1);     
+        }
         
         //ADD MEMBERS TAB
         
@@ -226,6 +230,8 @@ var App = angular.module('App', ['ngRoute']);
         $scope.addMember = function(){
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
+            //define variable for ng-repeat
+            $scope.adds = newmemberList;
         };
         
         $scope.submitMembers = function(){
@@ -289,6 +295,8 @@ var App = angular.module('App', ['ngRoute']);
                 newmemberList = newmemberList.concat(list1);
                 //outputs object to result
                 $('#result').text(JSON.stringify(newmemberList));
+                //define variable for ng-repeat
+                $scope.adds = newmemberList;
             }
             
         };
