@@ -8,5 +8,5 @@ body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -web
 #addmemberForm button{float:right; margin-right:15px;}
 #correctPerson{text-align:center; margin-bottom:15px;}
 #logoutbutton{margin-top:7px;}
-
+.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
