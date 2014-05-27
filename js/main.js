@@ -261,8 +261,8 @@ var App = angular.module('App', ['ngRoute']);
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var index=$scope.adds.indexOf(user)
-                    $scope.adds.splice(index,1); 
+                    var index=$scope.members.indexOf(user);
+                    $scope.members.splice(index,1); 
                 }
                 else
                     console.log('ERROR: '+data);
