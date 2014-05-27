@@ -382,8 +382,8 @@ var App = angular.module('App', ['ngRoute']);
         
         
         $scope.uploadPicture = function(){
-            
-            $http.post($scope.url, $scope.item)
+            console.log($scope.image)
+            $http.post($scope.url, $scope.image)
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {

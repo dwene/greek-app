@@ -195,6 +195,7 @@ class RESTApi(remote.Service):
             new_user.organization = new_org.key
             new_user.tag = ['council']
             new_user.current_token = generate_token()
+            new_user.class_year = ['class_year']
             new_user.timestamp = datetime.datetime.now()
             new_user.put()
             return OutgoingMessage(error='', data=new_user.current_token)
