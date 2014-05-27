@@ -32,7 +32,7 @@
                     "website" : "www.examplesite.com",
                     "facebook" : "https://www.facebook.com/username",
                     "twitter" : "https://twitter.com/username",
-                    "google_plus" : "https://plus.google.com/+username",
+                    "instagram" : "https://instagram.com/blahblah",
                     "linked_in" : "https://www.linkedin.com/profile/view?id=#########",
                     //account meta data, possibly need more
                     "is_pledge" : "yes",
@@ -42,7 +42,7 @@
                         "freshman", "pledge", "social_committee", "5K_event_planner", "pledge_class_name"
                     ]
                     "member_created" : "sample_date_created",
-                    "inactive_date" : "date_to_switch_inactive"
+                    "graduation_date" : "date_to_switch_inactive"
                     }
                     // above repeats for each active member
                 ],
