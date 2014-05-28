@@ -422,8 +422,10 @@ class RESTApi(remote.Service):
             del user_dict["previous_token"]
             del user_dict["organization"]
             del user_dict["timestamp"]
-            del user_dict["prof_pic"]
-            #user_dict["prof_pic"] = blobstore.get_serving_url(user.prof_pic)
+            try:
+                user_dict["prof_pic"] = blobstore.get_serving_url(user.prof_pic)
+            except:
+                del user_dict["prof_pic"]
             user_list.append(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_list))
 

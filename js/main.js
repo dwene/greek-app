@@ -71,9 +71,13 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
-            .when('/app/directory/user', {
+            .when('/app/directory/user/:id', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
+            })
+            .when('/app/postNewKeyPictureLink', {
+                templateUrl : 'Static/memberprofile.html',
+                controller : 'uploadImageController'
             })
             .otherwise({
                 redirectTo: '/'
@@ -581,26 +585,26 @@ var App = angular.module('App', ['ngRoute']);
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("/?user_name="+member.user_name+"#/app/directory/user");
+            window.location.replace("#/app/directory/user/"+member.user_name);
         }
         
     });
 
 
-    App.controller('memberprofileController', function($scope, $http){
-         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+    App.controller('memberprofileController', function($scope, $http, $routeParams){
+         var user_name = $routeParams.id;
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     $scope.members = JSON.parse(data.data)
-                     var user_name = getParameterByName('user_name');
                     console.log(user_name);
                     for(var i = 0; i<$scope.members.length; i++)
                     {
                         if($scope.members[i].user_name == user_name)
                         {
                             $scope.member = $scope.members[i];
-                            $scope.member.prof_pic = TEMP_PROF_PIC;
+                            $scope.member.prof_pic = scope.members[i].prof_pic;
                              //define profile information
                             $scope.firstName = $scope.member.first_name;
                             $scope.lastName = $scope.member.last_name;
@@ -613,7 +617,7 @@ var App = angular.module('App', ['ngRoute']);
                             $scope.twitter = $scope.member.twitter;
                             $scope.instagram = $scope.member.instagram;
                             
-                            console.log($scope.member);
+                            console.log($scope.firstName);
                             break;
                         }
                     }
@@ -682,7 +686,28 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 
-
+    App.controller('uploadImageController', function($scope, $http){
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending({key: getParameterByName('key')}))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.url = JSON.parse(data.data);
+                    window.location.replace("#/app/directory/user/"+$.cookie('USER_NAME'));
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        $scope.showIndividual = function(member){
+            window.location.replace("#/app/directory/user/"+member.user_name);
+        }
+        
+    });
 
 
 
