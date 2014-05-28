@@ -20,7 +20,7 @@
                     "field_of_study" : "example_major",
                     "class_year" : "example_year",
                     "email" : "email",
-                    "pledge_class_year" : "PC2015"
+                    "pledge_class" : "PC2015"
                     "phone_number" : "##########",
                     "address_line1" : "sample_address_line1",
                     "address_line2" : "sample_address_line2",

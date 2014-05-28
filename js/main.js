@@ -612,6 +612,7 @@ var App = angular.module('App', ['ngRoute']);
                             $scope.facebook = $scope.member.facebook;
                             $scope.twitter = $scope.member.twitter;
                             $scope.instagram = $scope.member.instagram;
+                            $scope.linkedin = $scope.member.linkedin;
                             
                             console.log($scope.member);
                             break;
@@ -643,6 +644,10 @@ var App = angular.module('App', ['ngRoute']);
                 {
                     $scope.item = JSON.parse(data.data);
                     $('.container').fadeIn();
+                    //define items
+                    $scope.userName = $scope.item.user_name;
+                    $scope.pledgeClass = $scope.item.pledge_class;
+                    
                 }
                 else
                 {
