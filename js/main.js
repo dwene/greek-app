@@ -84,7 +84,7 @@ var App = angular.module('App', ['ngRoute']);
                 controller : 'forgotPasswordController'
             })
             .when('/changepasswordfromtoken', {
-                templateUrl : 'Static/changepassword.html',
+                templateUrl : 'Static/change_password.html',
                 controller : 'changePasswordFromTokenController'
             })
             .when('/changepassword', {
@@ -153,7 +153,12 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('forgotPasswordController', function($scope, $http) {
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
-            $http.post('/_ah/api/netegreek/v1/auth/forgot_password', packageForSending({email: email, user_name: user_name}))
+            if (email === undefined){
+                email = '';
+            }
+            to_send = {email: email, user_name: user_name}
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.sentEmail = true;
