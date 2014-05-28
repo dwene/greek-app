@@ -71,9 +71,25 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
-            .when('/app/directory/user', {
+            .when('/app/directory/user/:id', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
+            })
+            .when('/app/postNewKeyPictureLink', {
+                templateUrl : 'Static/memberprofile.html',
+                controller : 'uploadImageController'
+            })
+            .when('/forgotpassword', {
+                templateUrl : 'Static/forgot_password.html',
+                controller : 'forgotPasswordController'
+            })
+            .when('/changepasswordfromtoken', {
+                templateUrl : 'Static/change_password.html',
+                controller : 'changePasswordFromTokenController'
+            })
+            .when('/app/changepassword', {
+                templateUrl : 'Static/change_password.html',
+                controller : 'changePasswordController'
             })
             .otherwise({
                 redirectTo: '/'
@@ -96,7 +112,6 @@ var App = angular.module('App', ['ngRoute']);
 
 //controller for the home page
     App.controller('homeController', function($scope, $http) {
-           
         
 	});
 
@@ -129,7 +144,91 @@ var App = angular.module('App', ['ngRoute']);
             });
         };
 
+        $scope.forgotPassword = function(){
+        window.location.replace('/#/forgotpassword'); 
+        }
+        
     });
+    
+    App.controller('forgotPasswordController', function($scope, $http) {
+        $scope.sentEmail = false;
+        $scope.reset = function(email, user_name) {
+            if (email === undefined){
+                email = '';
+            }
+            to_send = {email: email, user_name: user_name}
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
+            .success(function(data) {
+                if(!checkResponseErrors(data)){
+                    $scope.sentEmail = true;
+                }
+                else{
+                    $scope.emailFailed = true;
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                $scope.emailFailed = true;
+            });
+
+        
+        }
+    });
+
+    App.controller('changePasswordFromTokenController', function($scope, $http) {
+        $.cookie('TOKEN', getParameterByName('token'));
+        $scope.passwordChanged = false;
+        $scope.changeFailed = false;
+        
+        $scope.changePassword = function(password) {
+            $http.post('/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
+            .success(function(data) {
+                console.log(data)
+                    $scope.passwordChanged = true;
+                    $scope.changeFailed = false;
+                    $scope.user_name = data.data;
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                $scope.changeFailed = true;
+                $scope.passwordChanged = false;
+            });            
+            
+        }
+        
+    });
+
+
+App.controller('changePasswordController', function($scope, $http) {
+        $scope.passwordChanged = false;
+        $scope.changeFailed = false;
+        
+        $scope.changePassword = function(password) {
+            $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending({password: password}))
+            .success(function(data) {
+                if(!checkResponseErrors(data)){
+                    $scope.passwordChanged = true;
+                    $scope.changeFailed = false;
+                    $scope.user_name = data.data;
+                }
+                else{
+                    console.log('Error: ' + data);
+                    $scope.changeFailed = true;
+                    $scope.passwordChanged = false;
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                $scope.changeFailed = true;
+                $scope.passwordChanged = false;
+            });            
+            
+        }
+        
+    });
+
+
 //controller for the registration page
     App.controller('registerController', function($scope, $http) {
         //this page passes parameters through a get method to register info
@@ -581,26 +680,27 @@ var App = angular.module('App', ['ngRoute']);
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("/?user_name="+member.user_name+"#/app/directory/user");
+            window.location.replace("#/app/directory/user/"+member.user_name);
         }
         
     });
 
 
-    App.controller('memberprofileController', function($scope, $http){
-         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+    App.controller('memberprofileController', function($scope, $http, $routeParams){
+         var user_name = $routeParams.id;
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     $scope.members = JSON.parse(data.data)
-                     var user_name = getParameterByName('user_name');
-                    console.log(user_name);
+                    console.log($scope.members);
                     for(var i = 0; i<$scope.members.length; i++)
                     {
                         if($scope.members[i].user_name == user_name)
                         {
                             $scope.member = $scope.members[i];
-                            $scope.member.prof_pic = TEMP_PROF_PIC;
+                            $scope.prof_pic = $scope.members[i].prof_pic;
+                            console.log($scope.members[i]);
                              //define profile information
                             $scope.firstName = $scope.member.first_name;
                             $scope.lastName = $scope.member.last_name;
@@ -614,7 +714,7 @@ var App = angular.module('App', ['ngRoute']);
                             $scope.instagram = $scope.member.instagram;
                             $scope.linkedin = $scope.member.linkedin;
                             
-                            console.log($scope.member);
+                            console.log($scope.firstName);
                             break;
                         }
                     }
@@ -687,7 +787,28 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 
-
+    App.controller('uploadImageController', function($scope, $http){
+        $http.post('/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    //$scope.url = JSON.parse(data.data);
+                    window.location.replace("#/app/directory/user/"+$.cookie('USER_NAME'));
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        $scope.showIndividual = function(member){
+            window.location.replace("#/app/directory/user/"+member.user_name);
+        }
+        
+    });
 
 
 

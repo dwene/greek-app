@@ -19,6 +19,14 @@ handlers:
   static_dir: Static
   secure: always
 
+- url: /picup
+  script: main.app
+  secure: always
+
+- url: /upload
+  script: main.app
+  secure: always
+
 - url: /
   script: main.app
   secure: always
