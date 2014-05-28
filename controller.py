@@ -13,6 +13,7 @@ import time
 import collections
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
+from  google.appengine.api import images
 
 WEB_CLIENT_ID = 'greek-app'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
@@ -29,6 +30,8 @@ INVALID_FORMAT = "INVALID_FORMAT"
 TOKEN_EXPIRED = "TOKEN_EXPIRED"
 USERNAME_TAKEN = 'USERNAME_TAKEN'
 INCORRECT_PERMS = 'INCORECT_PERMISSIONS'
+INFO_NOT_FILLED_OUT = 'EMPTY_INFO'
+INVALID_EMAIL = 'INVALID_EMAIL'
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -53,12 +56,24 @@ class User(ndb.Model):
     last_name = ndb.StringProperty()
     email = ndb.StringProperty()
     dob = ndb.DateProperty()
+    major = ndb.StringProperty()
     address = ndb.StringProperty()
     city = ndb.StringProperty()
     state = ndb.StringProperty()
     zip = ndb.IntegerProperty()
+    perm_address = ndb.StringProperty()
+    perm_city = ndb.StringProperty()
+    perm_state = ndb.StringProperty()
+    perm_zip = ndb.IntegerProperty()
     phone = ndb.StringProperty()
+    facebook = ndb.StringProperty()
+    twitter = ndb.StringProperty()
+    instagram = ndb.StringProperty()
+    linkedin = ndb.StringProperty()
+    website = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
+    expected_graduation = ndb.StringProperty()
+    pledge_class = ndb.StringProperty()
     is_alumni = ndb.BooleanProperty()
     organization = ndb.KeyProperty()
     tag = ndb.StringProperty(repeated=True)
@@ -120,7 +135,7 @@ def forgotten_password_email(url_key):
     token = generate_token()
     user.current_token = token
     user.put()
-    link = 'https://greek-app.appspot.com/?token='+token+'#/newpassword'
+    link = 'https://greek-app.appspot.com/?token='+token+'#/changepasswordfromtoken'
     body = 'Hello\n'
     body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
     body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
@@ -145,6 +160,11 @@ def check_auth(user_name, token):
         return True
     else:
         return False
+
+
+def check_if_info_set(key):
+
+    return True
 
 
 def get_user(user_name, token):
@@ -372,6 +392,28 @@ class RESTApi(remote.Service):
                 user.class_year = value
             if key == "phone":
                 user.phone = value
+            if key == "facebook":
+                user.facebook = value
+            if key == "instagram":
+                user.instagram = value
+            if key == "twitter":
+                user.twitter = value
+            if key == "website":
+                user.website = value
+            if key == "perm_address":
+                user.perm_address = value
+            if key == "perm_city":
+                user.perm_city = value
+            if key == "perm_state":
+                user.perm_state = value
+            if key == "perm_zip":
+                user.perm_zip = value
+            if key == "major":
+                user.major = value
+            if key == "status":
+                user.status = value
+            if key == "expected_graduation":
+                user.expected_graduation = value
         user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -379,10 +421,40 @@ class RESTApi(remote.Service):
                       http_method='POST', name='auth.forgot_password')
     def forgot_password(self, request):
         user_data = json.loads(request.data)
-        email = user_data["email"]
-        user = User.query(User.email == email).get()
+        if user_data["email"]:
+            user = User.query(User.email == user_data["email"]).get()
+        elif user_data["user_name"]:
+            user = User.query(User.email == user_data["user_name"]).get()
+        if not user:
+            return OutgoingMessage(error=INVALID_EMAIL, data='')
         forgotten_password_email(user.key.urlsafe())
         return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/change_password',
+                      http_method='POST', name='auth.change_password')
+    def change_password(self, request):
+        user = get_user(request.user_name, request.token)
+        if not user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        new_pass = json.loads(request.data)["password"]
+        if not len(new_pass) >= 6:
+                return OutgoingMessage(error='INVALID_PASSWORD', data='')
+        user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
+        user.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/change_password_from_token',
+                      http_method='POST', name='auth.change_password_from_token')
+    def change_password_from_token(self, request):
+        user = User.query(User.current_token == request.token)
+        if not user:
+            return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
+        new_pass = json.loads(request.data)["password"]
+        if not len(new_pass) >= 6:
+                return OutgoingMessage(error='INVALID_PASSWORD', data='')
+        user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
+        user.put()
+        return OutgoingMessage(error='', data=user.user_name)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_upload_url',
                       http_method='POST', name='auth.get_upload_url')
@@ -399,13 +471,13 @@ class RESTApi(remote.Service):
         user = get_user(request.user_name, request.token)
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        key = request.data["key"]
+        key = json.loads(request.data)["key"]
         old_key = user.prof_pic
         if old_key:
             blobstore.BlobInfo.get(old_key).delete()
-        user.prof_pic = key
+        user.prof_pic = blobstore.BlobKey(key)
         user.put()
-        return OutgoingMessage(error='', data=blobstore.get_serving_url(key))
+        return OutgoingMessage(error='', data=images.get_serving_url(user.prof_pic))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
                       http_method='POST', name='auth.get_directory_info')
@@ -423,7 +495,7 @@ class RESTApi(remote.Service):
             del user_dict["organization"]
             del user_dict["timestamp"]
             try:
-                user_dict["prof_pic"] = blobstore.get_serving_url(user.prof_pic)
+                user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
             except:
                 del user_dict["prof_pic"]
             user_list.append(user_dict)
