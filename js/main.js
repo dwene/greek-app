@@ -461,12 +461,12 @@ var App = angular.module('App', ['ngRoute']);
 //            }
         
         //reads the file as it's added into the file input
-        document.getElementById('fileUpload').addEventListener('change', readImage, false);
+        //document.getElementById('fileUpload').addEventListener('change', readImage, false);
         
         $scope.uploadFile = function(files) {
             newprofileImage = new FormData();
             //Take the first selected file
-            fd.append("file", files[0]);
+            newprofileImage.append("file", files[0]);
         }
         
         
@@ -474,7 +474,7 @@ var App = angular.module('App', ['ngRoute']);
             
             console.log(newprofileImage);
             $http.post($scope.url, newprofileImage, {
-                withCredentials: true,
+                withCredentials: false,
                 headers: {'Content-Type': undefined },
                 transformRequest: angular.identity
             }).success(function(data){
