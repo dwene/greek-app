@@ -5,6 +5,16 @@ TEMP_PROF_PIC="http://storage.googleapis.com/greek-app.appspot.com/smiley-face-t
 //initialize app
 var App = angular.module('App', ['ngRoute']);
 
+    App.factory('formDataObject', function() {
+            return function(data) {
+                var fd = new FormData();
+                angular.forEach(data, function(value, key) {
+                    fd.append(key, value);
+                });
+                return fd;
+            };
+        });
+
 //define routes and link to their controllers
 	App.config( function ($routeProvider) {
 		$routeProvider
@@ -425,7 +435,7 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 
-    App.controller('profilepictureController', function($scope, $http){
+    App.controller('profilepictureController', function($scope, $http, $q,$rootScope, formDataObject){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -445,45 +455,89 @@ var App = angular.module('App', ['ngRoute']);
         var newprofileImage;
         
         //this function sets up a filereader to read the CSV
-            function readImage(evt) {
-                //Retrieve the first (and only!) File from the FileList object
-                var f = evt.target.files[0]; 
-    
-                if (f) {
-                  var r = new FileReader();
-                  r.onload = function(e) { 
-                      newprofileImage = e.target.result;
-                  }
-                    
-                } else { 
-                  alert("Failed to load file");
-                }
-            }
+//            function readImage(evt) {
+//                //Retrieve the first (and only!) File from the FileList object
+//                var f = evt.target.files[0]; 
+//    
+//                if (f) {
+//                  var r = new FileReader();
+//                  r.onload = function(e) { 
+//                      newprofileImage = e.target.result;
+//                  }
+//                    
+//                } else { 
+//                  alert("Failed to load file");
+//                }
+//            }
         
         //reads the file as it's added into the file input
-        document.getElementById('fileUpload').addEventListener('change', readImage, false);
+        
+        $scope.uploadFile = function(files) {
+            newprofileImage = new FormData();
+            //Take the first selected file
+            newprofileImage.append("file", files[0]);
+        }
+        
         
         $scope.uploadPicture = function(){
             
-            
-            $http.post($scope.url, newprofileImage)
+            console.log(newprofileImage);
+            $http.post($scope.url, newprofileImage, {
+                headers: {'Content-Type': undefined},
+                transformRequest: angular.identity,
+                })
             .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    console.log("WORKED: "+data)
-                }
-                else
-                {
-                   console.log("DIDNT WORK: " + data) 
-                }
-                
+                console.log("success");
+                console.log(data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log("failure");
+                console.log(data);
             });
+}
+        
+        $scope.create = function(message){
+            console.log(message);
+            var deferred = $q.defer();
+            $http({
+               method: 'POST',
+               url: $scope.url,
+               data: message, // your original form data,
+               transformRequest: formDataObject,  // this sends your data to the formDataObject provider that we are defining below.
+               headers: {'Content-Type': undefined}
+            }).
+             success(function(data, status, headers, config){
+               deferred.resolve(data);
+                console.log(data);
+             }).
+             error(function(data, status, headers, config){
+               deferred.reject(status);
+                console.log(data);
+             });
+            return deferred.promise;
+            };    
+        
+        
+        
             
-            
-            
+//            $http.post($scope.url, newprofileImage)
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    console.log("WORKED: "+data)
+//                }
+//                else
+//                {
+//                   console.log("DIDNT WORK: " + data) 
+//                }
+//                
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
+//            
+//            
+//            
             
             
 //            console.log($scope.image)
@@ -502,9 +556,12 @@ var App = angular.module('App', ['ngRoute']);
 //            .error(function(data) {
 //                console.log('Error: ' + data);
 //            });
-        }
+//        }
         
     });
+
+
+
 
 
     App.controller('directoryController', function($scope, $http){
@@ -558,7 +615,6 @@ var App = angular.module('App', ['ngRoute']);
                             
                             console.log($scope.member);
                             break;
-                            
                         }
                     }
                     
