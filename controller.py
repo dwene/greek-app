@@ -136,6 +136,7 @@ def forgotten_password_email(url_key):
     user.current_token = token
     user.put()
     link = 'https://greek-app.appspot.com/?token='+token+'#/changepasswordfromtoken'
+    logging.error(link)
     body = 'Hello\n'
     body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
     body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
@@ -446,10 +447,11 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/change_password_from_token',
                       http_method='POST', name='auth.change_password_from_token')
     def change_password_from_token(self, request):
-        user = User.query(User.current_token == request.token)
+        user = User.query(User.current_token == request.token).get()
         if not user:
             return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
         new_pass = json.loads(request.data)["password"]
+        logging.error(new_pass)
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
         user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
@@ -501,7 +503,7 @@ class RESTApi(remote.Service):
             user_list.append(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_list))
 
-
+APPLICATION = endpoints.api_server([RESTApi])
 
     # @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
     #                   http_method='POST', name='auth.test_email')
@@ -547,4 +549,5 @@ class RESTApi(remote.Service):
     #
     #     return OutgoingMessage(message='error')
 
-APPLICATION = endpoints.api_server([RESTApi])
+
+

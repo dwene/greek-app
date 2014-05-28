@@ -87,7 +87,7 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/change_password.html',
                 controller : 'changePasswordFromTokenController'
             })
-            .when('/changepassword', {
+            .when('/app/changepassword', {
                 templateUrl : 'Static/change_password.html',
                 controller : 'changePasswordController'
             })
@@ -177,13 +177,14 @@ var App = angular.module('App', ['ngRoute']);
     });
 
     App.controller('changePasswordFromTokenController', function($scope, $http) {
-        $.cookie('USER_NAME', getParameterByName('token'));
+        $.cookie('TOKEN', getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         
         $scope.changePassword = function(password) {
             $http.post('/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
             .success(function(data) {
+                console.log(data)
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
                     $scope.user_name = data.data;
@@ -206,9 +207,16 @@ App.controller('changePasswordController', function($scope, $http) {
         $scope.changePassword = function(password) {
             $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending({password: password}))
             .success(function(data) {
+                if(!checkResponseErrors(data)){
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
                     $scope.user_name = data.data;
+                }
+                else{
+                    console.log('Error: ' + data);
+                    $scope.changeFailed = true;
+                    $scope.passwordChanged = false;
+                }
             })
             .error(function(data) {
                 console.log('Error: ' + data);
