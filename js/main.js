@@ -177,7 +177,7 @@ var App = angular.module('App', ['ngRoute']);
     });
 
     App.controller('changePasswordFromTokenController', function($scope, $http) {
-        $.cookie('USER_NAME', getParameterByName(token))
+        $.cookie('USER_NAME', getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         
