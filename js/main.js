@@ -62,8 +62,8 @@ var App = angular.module('App', ['ngRoute']);
                 controller : 'directoryController'  
             })
             .when('/app/directory/user', {
-                templateUrl : 'Static/individual.html',
-                controller : 'individualController'  
+                templateUrl : 'Static/memberprofile.html',
+                controller : 'memberprofileController'  
             })
             .otherwise({
                 redirectTo: '/'
@@ -530,7 +530,7 @@ var App = angular.module('App', ['ngRoute']);
     });
 
 
-    App.controller('individualController', function($scope, $http){
+    App.controller('memberprofileController', function($scope, $http){
          $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -544,11 +544,26 @@ var App = angular.module('App', ['ngRoute']);
                         {
                             $scope.member = $scope.members[i];
                             $scope.member.prof_pic = TEMP_PROF_PIC;
+                             //define profile information
+                            $scope.firstName = $scope.member.first_name;
+                            $scope.lastName = $scope.member.last_name;
+                            $scope.birthday = $scope.member.dob;
+                            $scope.phone = $scope.member.phone;
+                            $scope.currentAddress = $scope.member.current_address+" "+$scope.member.current_city+" "+$scope.member.current_state+" "+$scope.member.current_zip;
+                            $scope.permanentAddress = $scope.member.permanent_address+" "+$scope.member.permanent_city+" "+$scope.member.permanent_state+" "+$scope.member.permanent_zip;
+                            $scope.website = $scope.member.website;
+                            $scope.facebook = $scope.member.facebook;
+                            $scope.twitter = $scope.member.twitter;
+                            $scope.instagram = $scope.member.instagram;
+                            
                             console.log($scope.member);
                             break;
                             
                         }
                     }
+                    
+                    
+                    
                 }
                 else
                 {
