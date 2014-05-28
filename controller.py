@@ -421,10 +421,10 @@ class RESTApi(remote.Service):
                       http_method='POST', name='auth.forgot_password')
     def forgot_password(self, request):
         user_data = json.loads(request.data)
-        if user_data["email"]:
+        if len(user_data["email"]) > 1:
             user = User.query(User.email == user_data["email"]).get()
         elif user_data["user_name"]:
-            user = User.query(User.email == user_data["user_name"]).get()
+            user = User.query(User.user_name == user_data["user_name"]).get()
         if not user:
             return OutgoingMessage(error=INVALID_EMAIL, data='')
         forgotten_password_email(user.key.urlsafe())
