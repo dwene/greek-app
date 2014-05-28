@@ -445,45 +445,65 @@ var App = angular.module('App', ['ngRoute']);
         var newprofileImage;
         
         //this function sets up a filereader to read the CSV
-            function readImage(evt) {
-                //Retrieve the first (and only!) File from the FileList object
-                var f = evt.target.files[0]; 
-    
-                if (f) {
-                  var r = new FileReader();
-                  r.onload = function(e) { 
-                      newprofileImage = e.target.result;
-                  }
-                    
-                } else { 
-                  alert("Failed to load file");
-                }
-            }
+//            function readImage(evt) {
+//                //Retrieve the first (and only!) File from the FileList object
+//                var f = evt.target.files[0]; 
+//    
+//                if (f) {
+//                  var r = new FileReader();
+//                  r.onload = function(e) { 
+//                      newprofileImage = e.target.result;
+//                  }
+//                    
+//                } else { 
+//                  alert("Failed to load file");
+//                }
+//            }
         
         //reads the file as it's added into the file input
         document.getElementById('fileUpload').addEventListener('change', readImage, false);
         
+        $scope.uploadFile = function(files) {
+            newprofileImage = new FormData();
+            //Take the first selected file
+            fd.append("file", files[0]);
+        }
+        
+        
         $scope.uploadPicture = function(){
             
             console.log(newprofileImage);
-            $http.post($scope.url, newprofileImage)
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    console.log("WORKED: "+data)
-                }
-                else
-                {
-                   console.log("DIDNT WORK: " + data) 
-                }
-                
+            $http.post($scope.url, newprofileImage, {
+                withCredentials: true,
+                headers: {'Content-Type': undefined },
+                transformRequest: angular.identity
+            }).success(function(data){
+                console.log(data);
             })
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+}
             
             
-            
+//            $http.post($scope.url, newprofileImage)
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    console.log("WORKED: "+data)
+//                }
+//                else
+//                {
+//                   console.log("DIDNT WORK: " + data) 
+//                }
+//                
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
+//            
+//            
+//            
             
             
 //            console.log($scope.image)
@@ -502,7 +522,7 @@ var App = angular.module('App', ['ngRoute']);
 //            .error(function(data) {
 //                console.log('Error: ' + data);
 //            });
-        }
+//        }
         
     });
 
