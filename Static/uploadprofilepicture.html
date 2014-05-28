@@ -1,5 +1,5 @@
 
-<form id="newmemberAccount" class="form-horizontal" role="form">
+<form id="newmemberAccount" class="form-horizontal" enctype="multipart/form-data" role="form">
     
     <div class="form-group">
         <label for="fileUpload" class="col-sm-2 control-label">Upload Picture</label>
@@ -10,3 +10,16 @@
     
     <button type="submit" ng-click="uploadPicture()" class="btn btn-default pull-right">Submit</button>
 </form>
+
+
+<!--<form ng-submit="create(message)" class="form-horizontal" enctype="multipart/form-data">
+      <div class="control-group">
+        <label class="control-label">Profile Picture: </label>
+        <div class="controls">
+          <input type="file" ng-model="message.profilePic" name="message.profilePic" />
+        </div>
+      </div>
+      <div class="well">
+        <input class="btn btn-large btn-primary" type="submit" value="Submit" />
+      </div>
+    </form>-->
