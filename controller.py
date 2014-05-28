@@ -441,6 +441,7 @@ class RESTApi(remote.Service):
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
         user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
+        user.current_token = generate_token()
         user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -455,6 +456,7 @@ class RESTApi(remote.Service):
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
         user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
+        user.current_token = generate_token()
         user.put()
         return OutgoingMessage(error='', data=user.user_name)
 

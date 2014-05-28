@@ -184,10 +184,17 @@ var App = angular.module('App', ['ngRoute']);
         $scope.changePassword = function(password) {
             $http.post('/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
             .success(function(data) {
-                console.log(data)
+                if(!checkResponseErrors(data)){
+                    console.log(data)
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
                     $scope.user_name = data.data;
+                }
+                else{
+                    console.log('Error: ' + data);
+                    $scope.changeFailed = true;
+                    $scope.passwordChanged = false;
+                }
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -198,7 +205,6 @@ var App = angular.module('App', ['ngRoute']);
         }
         
     });
-
 
 App.controller('changePasswordController', function($scope, $http) {
         $scope.passwordChanged = false;
