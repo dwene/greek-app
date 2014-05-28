@@ -10,7 +10,6 @@
 
 <div class="container">
 
-
 <form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
@@ -267,4 +266,7 @@
     <button type="submit" class="btn btn-default pull-right">Submit</button>
     <p ng-show="updatedInfo">Account info updated!</p>
 </form>
+ <img ngSrc = "item.prof_pic">
+ <a href="/picup">Change Profile Picture</a>
+    
 </div>
