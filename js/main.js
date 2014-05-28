@@ -604,7 +604,8 @@ var App = angular.module('App', ['ngRoute']);
                         if($scope.members[i].user_name == user_name)
                         {
                             $scope.member = $scope.members[i];
-                            $scope.member.prof_pic = scope.members[i].prof_pic;
+                            $scope.prof_pic = scope.members[i].prof_pic;
+                            console.log($scope.members[i]);
                              //define profile information
                             $scope.firstName = $scope.member.first_name;
                             $scope.lastName = $scope.member.last_name;
