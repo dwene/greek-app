@@ -360,7 +360,10 @@ class RESTApi(remote.Service):
             user_dict["has_registered"] = True
         else:
             user_dict["has_registered"] = False
-        logging.error(user_dict)
+        try:
+            user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
+        except:
+            del user_dict["prof_pic"]
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',

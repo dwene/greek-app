@@ -758,6 +758,7 @@ App.controller('changePasswordController', function($scope, $http) {
                 if (!checkResponseErrors(data))
                 {
                     $scope.item = JSON.parse(data.data);
+                    console.log($scope.item);
                     $('.container').fadeIn();
                     //define items
                     $scope.userName = $scope.item.user_name;
@@ -808,7 +809,7 @@ App.controller('changePasswordController', function($scope, $http) {
                 if (!checkResponseErrors(data))
                 {
                     //$scope.url = JSON.parse(data.data);
-                    window.location.replace("#/app/directory/user/"+$.cookie('USER_NAME'));
+                    window.location.replace("/#/app/directory/user/"+$.cookie('USER_NAME'));
                 }
                 else
                 {
@@ -820,7 +821,7 @@ App.controller('changePasswordController', function($scope, $http) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/user/"+member.user_name);
+            window.location.replace("/#/app/directory/user/"+member.user_name);
         }
         
     });
