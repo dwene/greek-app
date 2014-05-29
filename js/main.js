@@ -546,6 +546,7 @@ App.controller('changePasswordController', function($scope, $http) {
                 if (!checkResponseErrors(data))
                 {
                     $("#profilePic").attr("action", data.data);
+                    $scope.url = data.data;
                 }
                 else
                 {
