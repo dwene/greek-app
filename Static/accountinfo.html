@@ -10,6 +10,8 @@
 
 <div class="container">
 
+<img ng-src = "{{item.prof_pic}}">
+<a href="/picup" class="btn btn-default">Change Profile Picture</a>
 <div class="row"> Username: {{userName}} </div>
 <div class="row"> Pledge Class: {{pledgeClass}} </div>
 <a href="#/app/changepassword" class="btn btn-default">Change Password</a>
@@ -280,7 +282,6 @@
     <button type="submit" class="btn btn-default pull-right">Submit</button>
     <p ng-show="updatedInfo">Account info updated!</p>
 </form>
- <img ng-src = "{{item.prof_pic}}">
- <a href="/picup">Change Profile Picture</a>
+ 
     
 </div>

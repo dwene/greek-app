@@ -577,52 +577,52 @@ App.controller('changePasswordController', function($scope, $http) {
         
         //reads the file as it's added into the file input
         
-        $scope.uploadFile = function(files) {
-            newprofileImage = new FormData();
-            //Take the first selected file
-            newprofileImage.append("file", files[0]);
-        }
-        
-        
-        $scope.uploadPicture = function(){
-            
-            console.log(newprofileImage);
-            $http.post($scope.url, newprofileImage, {
-                headers: {'Content-Type': undefined},
-                transformRequest: angular.identity,
-                })
-            .success(function(data){
-                console.log("success");
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log("failure");
-                console.log(data);
-            });
-}
-        
-        $scope.create = function(message){
-            console.log(message);
-            var deferred = $q.defer();
-            $http({
-               method: 'POST',
-               url: $scope.url,
-               data: message, // your original form data,
-               transformRequest: formDataObject,  // this sends your data to the formDataObject provider that we are defining below.
-               headers: {'Content-Type': undefined}
-            }).
-             success(function(data, status, headers, config){
-               deferred.resolve(data);
-                console.log(data);
-             }).
-             error(function(data, status, headers, config){
-               deferred.reject(status);
-                console.log(data);
-             });
-            return deferred.promise;
-            };    
-        
-        
+//        $scope.uploadFile = function(files) {
+//            newprofileImage = new FormData();
+//            //Take the first selected file
+//            newprofileImage.append("file", files[0]);
+//        }
+//        
+//        
+//        $scope.uploadPicture = function(){
+//            
+//            console.log(newprofileImage);
+//            $http.post($scope.url, newprofileImage, {
+//                headers: {'Content-Type': undefined},
+//                transformRequest: angular.identity,
+//                })
+//            .success(function(data){
+//                console.log("success");
+//                console.log(data);
+//            })
+//            .error(function(data) {
+//                console.log("failure");
+//                console.log(data);
+//            });
+//}
+//        
+//        $scope.create = function(message){
+//            console.log(message);
+//            var deferred = $q.defer();
+//            $http({
+//               method: 'POST',
+//               url: $scope.url,
+//               data: message, // your original form data,
+//               transformRequest: formDataObject,  // this sends your data to the formDataObject provider that we are defining below.
+//               headers: {'Content-Type': undefined}
+//            }).
+//             success(function(data, status, headers, config){
+//               deferred.resolve(data);
+//                console.log(data);
+//             }).
+//             error(function(data, status, headers, config){
+//               deferred.reject(status);
+//                console.log(data);
+//             });
+//            return deferred.promise;
+//            };    
+//        
+//        
         
             
 //            $http.post($scope.url, newprofileImage)
