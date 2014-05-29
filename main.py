@@ -21,6 +21,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+import logging
 
 
 import jinja2
@@ -43,6 +44,7 @@ class MainHandler(webapp2.RequestHandler):
 class ProfilePictureHandler(webapp2.RequestHandler):
     def get(self):
         upload_url = blobstore.create_upload_url('/upload')
+        logging.error(upload_url);
         self.response.out.write('<html><body>')
         self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
         self.response.out.write("""Upload File: <input type="file" name="file"><br> <input type="submit"
