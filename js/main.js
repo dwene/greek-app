@@ -594,6 +594,14 @@ App.controller('changePasswordController', function($scope, $http) {
                 headers: {'Content-Type': undefined},
                 transformRequest: angular.identity,
                 })
+            .success(function(data){
+                console.log("success");
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log("failure");
+                console.log(data);
+            });
         }
     });
 //        
@@ -740,11 +748,12 @@ App.controller('changePasswordController', function($scope, $http) {
         $('.container').hide();
         $scope.updatedInfo = false;
         
-        $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     $scope.item = JSON.parse(data.data);
+                    console.log($scope.item);
                     $('.container').fadeIn();
                     //define items
                     $scope.userName = $scope.item.user_name;
@@ -795,7 +804,7 @@ App.controller('changePasswordController', function($scope, $http) {
                 if (!checkResponseErrors(data))
                 {
                     //$scope.url = JSON.parse(data.data);
-                    window.location.replace("#/app/directory/user/"+$.cookie('USER_NAME'));
+                    window.location.replace("/#/app/directory/user/"+$.cookie('USER_NAME'));
                 }
                 else
                 {
@@ -807,7 +816,7 @@ App.controller('changePasswordController', function($scope, $http) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/user/"+member.user_name);
+            window.location.replace("/#/app/directory/user/"+member.user_name);
         }
         
     });
