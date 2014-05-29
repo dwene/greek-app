@@ -748,7 +748,7 @@ App.controller('changePasswordController', function($scope, $http) {
         $('.container').hide();
         $scope.updatedInfo = false;
         
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
