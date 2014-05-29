@@ -784,7 +784,7 @@ App.controller('changePasswordController', function($scope, $http) {
                     if (!checkResponseErrors(data))
                     {
                         console.log(data.data);
-                        $scope.updatedInfo=true;
+                        $scope.updatedInfo = true;
                     }
                     else
                     {
