@@ -540,12 +540,11 @@ App.controller('changePasswordController', function($scope, $http) {
     });
 
 
-    App.controller('profilepictureController', function($scope, $http, $q,$rootScope, formDataObject){
+    App.controller('profilepictureController', function($scope, $http){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.url = data.data
                     $("#profilePic").attr("action", data.data);
                 }
                 else
