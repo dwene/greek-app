@@ -594,14 +594,6 @@ App.controller('changePasswordController', function($scope, $http) {
                 headers: {'Content-Type': undefined},
                 transformRequest: angular.identity,
                 })
-            .success(function(data){
-                console.log("success");
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log("failure");
-                console.log(data);
-            });
         }
     });
 //        
