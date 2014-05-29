@@ -1,6 +1,4 @@
 import sys
-sys.path.insert(0, 'lib')
-import mandrill
 import endpoints
 import logging
 import datetime
@@ -17,6 +15,8 @@ import collections
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
 from google.appengine.api import images
+import urllib
+from google.appengine.api import urlfetch
 
 
 
@@ -100,10 +100,11 @@ class DateEncoder(json.JSONEncoder):
             return str(obj)
         return json.JSONEncoder.default(self, obj)
 
+
 def signup_email(url_key):
     key = ndb.Key(urlsafe=url_key)
     new_user = key.get()
-    to_email = new_user.email
+    to_email = [{'email': new_user.email, 'type': 'to', 'name': new_user.first_name}]
     token = new_user.organization.get().name
     token += new_user.last_name
     token += generate_token()
@@ -116,46 +117,56 @@ def signup_email(url_key):
     body = "Hello!\n"
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
     body += signup_link + "\n\n -NeteGreek Team"
+    to_send = {}
+    to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
+    message = {}
+    message["text"] = body
+    message["subject"] = subject
+    message["from_email"] = 'support@netegreek.com'
+    message["from_name"] = 'NeteGreek'
+    message["to"] = to_email
+    to_send["message"] = message
+    json_data = json.dumps(to_send)
     new_user.put()
-    send_mandrill_email(from_email, to_email, subject, body)
+    return json_data
+
 
 def send_mandrill_email(from_email, to_emails, subject, body):
-    mandrill_client = mandrill.Mandrill('4BrHR91AFDnpIpBc8BL4ww')
-    message = dict
+    to_send = {}
+    to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
+    message = {}
     message["text"] = body
     message["subject"] = subject
     message["from_email"] = from_email
     message["from_name"] = 'NeteGreek'
-    to = dict
-    to["email"] = to_emails
-    to["type"] = 'to'
-    message["to"] = [to]
-    result = mandrill_client.messages.send(message=json.dumps(message), async=False, ip_pool='Main Pool')
-    logging.error(result)
-
+    message["to"] = to_emails
+    to_send["message"] = message
+    json_data = json.dumps(to_send)
+    result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0//messages/send.json',
+                            payload=json_data,
+                            method=urlfetch.POST,
+                            headers={'Content-Type': 'application/json'})
     return
-
-
-
 
 
 def removal_email(key):
     user = key.get()
-    to_email = user.email
-    from_email = 'netegreek@greek-app.appspotmail.com'
+    to_email = [{'email': user.email, 'type': 'to', 'name': user.first_name}]
+    from_email = 'support@netegreek.com'
     subject = 'Removal from NeteGreek App'
     body = "Hello\n"
     body += "This if a notice that you have been removed from the organization '" + user.organization.get().name
     body += "' Please email your NeteGreek administrators for more information\n"
     body += "Have a great day\n\n"
     body+= "NeteGreek Team"
-    mail.send_mail(from_email, to_email, subject, body)
+    send_mandrill_email(from_email, to_email, subject, body)
+
 
 def forgotten_password_email(url_key):
     key = ndb.Key(urlsafe=url_key)
     user = key.get()
-    to_email = user.email
-    from_email = 'netegreek@greek-app.appspotmail.com'
+    to_email = [{'email': user.email, 'type': 'to', 'name': user.first_name}]
+    from_email = 'support@netegreek.com'
     subject = 'NeteGreek Password Reset'
     token = generate_token()
     user.current_token = token
@@ -165,10 +176,11 @@ def forgotten_password_email(url_key):
     body = 'Hello\n'
     body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
     body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
-    mail.send_mail(from_email, to_email, subject, body)
+    send_mandrill_email(from_email, to_email, subject, body)
+
 
 def testEmail():
-    from_email = 'netegreek@greek-app.appspotmail.com'
+    from_email = 'support@netegreek.com'
     body = "Hello! this is a test email! Have a great day!"
     to_email = 'derek.wene@yahoo.com'
     subject = 'test'
@@ -177,6 +189,15 @@ def testEmail():
 
 def dumpJSON(item):
     return json.dumps(item, cls=DateEncoder)
+
+
+def handle_result(rpc):
+    return
+
+
+# Use a helper function to define the scope of the callback.
+def create_callback(rpc):
+    return lambda: handle_result(rpc)
 
 
 def check_auth(user_name, token):
@@ -189,7 +210,6 @@ def check_auth(user_name, token):
 
 
 def check_if_info_set(key):
-
     return True
 
 
@@ -276,6 +296,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)
+        rpcs = []
         for user in clump['users']:
             new_user = User()
             new_user.first_name = user['first_name']
@@ -285,7 +306,17 @@ class RESTApi(remote.Service):
             new_user.organization = User.query(User.user_name == request.user_name).get().organization
             new_user.user_name = ''
             new_user.put()
-            signup_email(new_user.key.urlsafe())
+            json_data = signup_email(new_user.key.urlsafe())
+            rpc = urlfetch.create_rpc()
+            rpc.callback = create_callback(rpc)
+            urlfetch.make_fetch_call(rpc=rpc,
+                                     url='https://mandrillapp.com/api/1.0//messages/send.json',
+                                     payload=json_data,
+                                     method=urlfetch.POST,
+                                     headers={'Content-Type': 'application/json'})
+            rpcs.append(rpc)
+        for rpc in rpcs:
+            rpc.wait()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/get_users',
@@ -317,6 +348,7 @@ class RESTApi(remote.Service):
     def remove_user(self, request):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED)
+        if()
         request_user = User.query(User.user_name == request.user_name).get()
         if 'council' not in request_user.tag:
             return OutgoingMessage(error=INCORRECT_PERMS)
