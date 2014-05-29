@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, 'lib')
+import mandrill
 import endpoints
 import logging
 import datetime
@@ -13,7 +16,9 @@ import time
 import collections
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
-from  google.appengine.api import images
+from google.appengine.api import images
+
+
 
 WEB_CLIENT_ID = 'greek-app'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
@@ -112,7 +117,27 @@ def signup_email(url_key):
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
     body += signup_link + "\n\n -NeteGreek Team"
     new_user.put()
-    mail.send_mail(from_email, to_email, subject, body)
+    send_mandrill_email(from_email, to_email, subject, body)
+
+def send_mandrill_email(from_email, to_emails, subject, body):
+    mandrill_client = mandrill.Mandrill('4BrHR91AFDnpIpBc8BL4ww')
+    message = dict
+    message["text"] = body
+    message["subject"] = subject
+    message["from_email"] = from_email
+    message["from_name"] = 'NeteGreek'
+    to = dict
+    to["email"] = to_emails
+    to["type"] = 'to'
+    message["to"] = [to]
+    result = mandrill_client.messages.send(message=json.dumps(message), async=False, ip_pool='Main Pool')
+    logging.error(result)
+
+    return
+
+
+
+
 
 def removal_email(key):
     user = key.get()

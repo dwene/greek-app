@@ -18,7 +18,7 @@
 
 <br>
 
-<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
+<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(true)" class="form-horizontal" role="form" novalidate>
     
     
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">

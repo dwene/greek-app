@@ -772,6 +772,7 @@ App.controller('changePasswordController', function($scope, $http) {
         
         
         $scope.updateAccount = function(isValid){
+            console.log("in updateAccount");
             if(isValid){
                 $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
                 .success(function(data){
