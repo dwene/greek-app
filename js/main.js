@@ -313,6 +313,7 @@ App.controller('changePasswordController', function($scope, $http) {
           e.preventDefault()
           $(this).tab('show')
           $scope.getMembers();
+            console.log($scope.members)
         });
         
         //MANAGE MEMBERS TAB
@@ -321,10 +322,11 @@ App.controller('changePasswordController', function($scope, $http) {
         //$scope.members = JSON.parse(data);
 		//console.log($scope.members)
         
-        $scope.deleteAdd = function(add){
-              var index=$scope.adds.indexOf(add)
-              $scope.adds.splice(index,1);     
+        $scope.addTag = function(tag){
+        //get item.tag and add it to the tags for that member
         }
+        
+       
         
         //ADD MEMBERS TAB
         
@@ -352,10 +354,13 @@ App.controller('changePasswordController', function($scope, $http) {
             return o;
         };
     
-        //ng-click for the form to add one member at a time
-        
-        
-        
+        //remove someone from list before adding everyone
+         $scope.deleteAdd = function(add){
+              var index=$scope.adds.indexOf(add)
+              $scope.adds.splice(index,1);     
+        }
+         
+        //ng-click for the form to add one member at a time        
         $scope.addMember = function(){
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
