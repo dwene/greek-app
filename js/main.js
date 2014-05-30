@@ -1,9 +1,61 @@
-//Final/static variables
-TEMP_PROF_PIC="http://storage.googleapis.com/greek-app.appspot.com/smiley-face-text.jpg";
-
+//Final\static variables. These variables are used for cookies
+var USER_NAME = 'USER_NAME';
+var TOKEN = 'TOKEN';
+var PERMS = 'PERMS';
+var ALUMNI = 'alumni';
+var MEMBER = 'member';
+var LEADERSHIP = 'leadership';
+var COUNCIL = 'council';
+var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
 var App = angular.module('App', ['ngRoute']);
+
+    App.filter('multiSearch', function() { //provides single-search-box multi-term search functionality
+        return function (objects, searchValues, delimiter) {
+            if (!delimiter) {
+                delimiter="";
+            }
+            if (searchValues) {
+                var good = Array(0); //the list of objects that match ALL terms
+                var terms = String(searchValues).toUpperCase().split(delimiter); 
+                for (var w = 0; w < terms.length; w++) {
+                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
+                }
+                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
+                for (var j = 0; j < objects.length; j++) { //iterates through each object
+                    for (var t = 0; t < objects.length; t++) {
+                        truthArray[t] = 0; //initializes/resets the truthArray
+                    }
+                    for (var i = 0; i < terms.length; i++) {
+                        if (objects[j].attribute1) {
+                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute2) {
+                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute3) {
+                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                    }
+                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
+                        good.push(objects[j]); //add the object to the good list
+                    }
+                }
+                return good; //return the list of matching objects
+            }
+            else { //if there are no terms, return all objects
+                return objects;
+            }
+        }
+    });
+
 
     App.factory('formDataObject', function() {
             return function(data) {
@@ -88,7 +140,7 @@ var App = angular.module('App', ['ngRoute']);
                 controller : 'forgotPasswordController'
             })
             .when('/changepasswordfromtoken', {
-                templateUrl : 'Static/change_password.html',
+                templateUrl : 'Static/change_password_from_token.html',
                 controller : 'changePasswordFromTokenController'
             })
             .when('/app/changepassword', {
@@ -107,8 +159,8 @@ var App = angular.module('App', ['ngRoute']);
         }
         
         $scope.logout = function(){
-                $.removeCookie('USER_NAME');
-                $.removeCookie('TOKEN');
+                $.removeCookie(USER_NAME);
+                $.removeCookie(TOKEN);
                 window.location.replace("/#/login");
          }
     });
@@ -130,9 +182,9 @@ var App = angular.module('App', ['ngRoute']);
                 if(!checkResponseErrors(data))
                 {
                     returned_data = JSON.parse(data.data);
-                    $.cookie('USER_NAME', user_name);
-                    $.cookie('TOKEN',returned_data.token);
-                    $.cookie('GAPP_KEY', returned_data.perms);
+                    $.cookie(USER_NAME, user_name);
+                    $.cookie(TOKEN,returned_data.token);
+                    $.cookie(PERMS, returned_data.perms);
                     window.location.replace("/#/app");
                 }
                 else{
@@ -183,7 +235,7 @@ var App = angular.module('App', ['ngRoute']);
     });
 
     App.controller('changePasswordFromTokenController', function($scope, $http) {
-        $.cookie('TOKEN', getParameterByName('token'));
+        $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         
@@ -217,7 +269,8 @@ App.controller('changePasswordController', function($scope, $http) {
         $scope.changeFailed = false;
         
         $scope.changePassword = function(password) {
-            $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending({password: password}))
+            console.log($scope.item);
+            $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending($scope.item))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.passwordChanged = true;
@@ -304,7 +357,6 @@ App.controller('changePasswordController', function($scope, $http) {
 
 //controller for the main app page
     App.controller('appController', function($scope, $http) {
-        
         if(!checkLogin()){
         window.location.replace("/#/login");
         }
@@ -313,7 +365,7 @@ App.controller('changePasswordController', function($scope, $http) {
 
 //controller for the add members page
     App.controller('managemembersController', function($scope, $http) {
-        
+        checkPermissions(COUNCIL);
         //TABS
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
@@ -398,7 +450,7 @@ App.controller('changePasswordController', function($scope, $http) {
                     
                     var members = JSON.parse(data.data);
                     for(var i = 0; i<members.length; i++){
-                        if (members[i].user_name == $.cookie('USER_NAME')){
+                        if (members[i].user_name == $.cookie(USER_NAME)){
                             members.splice(i, 1);
                             break;
                         }
@@ -507,7 +559,7 @@ App.controller('changePasswordController', function($scope, $http) {
 //controller for new member page
     App.controller('newmemberController', function($scope, $http){
         $('.container').hide();
-        $.cookie('TOKEN', getParameterByName('token'))
+        $.cookie(TOKEN, getParameterByName('token'))
         console.log(getParameterByName('token'));
         $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
@@ -549,8 +601,9 @@ App.controller('changePasswordController', function($scope, $http) {
                 if (!checkResponseErrors(data))
                 {
                     console.log(data.data);
-                    $.cookie('TOKEN',data.data);
-                    $.cookie('USER_NAME', $scope.item.user_name);
+                    $.cookie(TOKEN,data.data.token);
+                    $.cookie(USER_NAME, $scope.item.user_name);
+                    $.cookie(PERMS, data.data.perms);
                     window.location.replace("/#/app/accountinfo");
                 }
                 else
@@ -719,7 +772,6 @@ App.controller('changePasswordController', function($scope, $http) {
                         }
                     }
                     $scope.directory = directory;
-                    
                 }
                 else
                 {
@@ -767,10 +819,7 @@ App.controller('changePasswordController', function($scope, $http) {
                             $scope.linkedin = $scope.member.linkedin;
                             break;
                         }
-                    }
-                    
-                    
-                    
+                    }                 
                 }
                 else
                 {
@@ -845,7 +894,7 @@ App.controller('changePasswordController', function($scope, $http) {
                 if (!checkResponseErrors(data))
                 {
                     //$scope.url = JSON.parse(data.data);
-                    window.location.replace("/#/app/directory/user/"+$.cookie('USER_NAME'));
+                    window.location.replace("/#/app/directory/user/"+$.cookie(USER_NAME));
                 }
                 else
                 {
@@ -874,23 +923,29 @@ App.controller('changePasswordController', function($scope, $http) {
 
 //checks to see if user is logged in or not
 function checkLogin(){
-    if($.cookie('USER_NAME') != undefined)
+    if($.cookie(USER_NAME) != undefined)
         return true;
     else
         return false;
 }
 
+function checkPermissions(perms){
+    if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
+        window.location.replace("/#/app/");
+    }
+}
+
 //use packageForSending(send_data) when $http.post in order to attach data to user
 function packageForSending(send_data){
     var output = 
-    {user_name:$.cookie("USER_NAME"),
-     token: $.cookie("TOKEN"),
+    {user_name:$.cookie(USER_NAME),
+     token: $.cookie(TOKEN),
      data: JSON.stringify(send_data)};
     return output;
 }
 
 function checkResponseErrors(received_data){
-    console.log(received_data)
+    console.log(JSON.parse(received_data.data))
     response = received_data;
     if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN')
     {

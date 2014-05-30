@@ -322,7 +322,7 @@ class RESTApi(remote.Service):
             rpc = urlfetch.create_rpc()
             rpc.callback = create_callback(rpc)
             urlfetch.make_fetch_call(rpc=rpc,
-                                     url='https://mandrillapp.com/api/1.0//messages/send.json',
+                                     url='https://mandrillapp.com/api/1.0/messages/send.json',
                                      payload=json_data,
                                      method=urlfetch.POST,
                                      headers={'Content-Type': 'application/json'})
@@ -541,7 +541,11 @@ class RESTApi(remote.Service):
         user = get_user(request.user_name, request.token)
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        new_pass = json.loads(request.data)["password"]
+        request_object = json.loads(request.data)
+        old_pass = request_object['old_password']
+        if not hashlib.sha224(old_pass + SALT).hexdigest() == user.hash_pass:
+            return OutgoingMessage(error=ERROR_BAD_ID)
+        new_pass = request_object["password"]
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
         user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
@@ -611,49 +615,6 @@ class RESTApi(remote.Service):
 
 APPLICATION = endpoints.api_server([RESTApi])
 
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/test_email',
-    #                   http_method='POST', name='auth.test_email')
-    # def test_email(self):
-    #     background_thread.BackgroundThread(target=testEmail, args=[]).start()
-    #     return OutgoingMessage(error='', data='OK')
-
-    #
-    #
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register',
-    #                   http_method='POST', name='auth.register')
-    # def add_users(self, request):
-    #
-    #     user = User()
-    #     user.user_name = request.user_name
-    #     user.first_name = request.first_name
-    #     user.last_name = request.last_name
-    #     user.email = request.email
-    #     user.hash_pass = hashlib.sha224(request.password + "this is a random string to help in the salting progress "
-    #                                                        "blah").hexdigest()
-    #     user.current_token = str(uuid.uuid4())
-    #     user.time_stamp = datetime.datetime.now()
-    #     user.put()
-    #     time.sleep(.25)
-    #     try:
-    #         return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
-    #     except:
-    #         return OutgoingMessage(message='error')
-    #
-    # @endpoints.method(USER_PASS, UserCreds, path='auth/login/{user_name}/{password}',
-    #                   http_method='GET', name='auth.login')
-    # def login_user(self, request):
-    #     user = User.query().filter(User.user_name == request.user_name).get()
-    #     logging.error(user)
-    #     if user:
-    #         if user.hash_pass == hashlib.sha224(request.password + "this is a random string to help in the salting"
-    #                                                                " progress blah").hexdigest():
-    #             user.current_token = str(uuid.uuid4())
-    #             user.time_stamp = datetime.datetime.now()
-    #             user.put()
-    #             time.sleep(.5)
-    #             return UserCreds(current_token=user.current_token, first_name=user.first_name, last_name=user.last_name)
-    #
-    #     return OutgoingMessage(message='error')
 
 
 
