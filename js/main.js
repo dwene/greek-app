@@ -819,7 +819,7 @@ var App = angular.module('App', ['ngRoute']);
         getUsers();
         $scope.getOrganizationTags = function(){
             //initialize ng-model variables to contain selected things
-            
+            $('#tag').val('');
             $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data))
@@ -846,7 +846,7 @@ var App = angular.module('App', ['ngRoute']);
                     if (!checkResponseErrors(data))
                     {
                         console.log('success');
-                        setTimeout(getUsers, 200);
+                        setTimeout($scope.getOrganizationTags, 200);
                     }
                     else
                     {
