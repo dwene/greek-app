@@ -421,6 +421,7 @@ App.controller('changePasswordController', function($scope, $http) {
                 {
                     console.log(data);
                     newmemberList = [];
+                    $scope.adds = null;
                     $("#result").text('');
                     $('#areAdded').text("members have been added");
                 }
