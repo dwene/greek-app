@@ -37,6 +37,8 @@ USERNAME_TAKEN = 'USERNAME_TAKEN'
 INCORRECT_PERMS = 'INCORECT_PERMISSIONS'
 INFO_NOT_FILLED_OUT = 'EMPTY_INFO'
 INVALID_EMAIL = 'INVALID_EMAIL'
+INVALID_USERNAME = 'INVALID_USERNAME'
+
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -81,7 +83,8 @@ class User(ndb.Model):
     pledge_class = ndb.StringProperty()
     is_alumni = ndb.BooleanProperty()
     organization = ndb.KeyProperty()
-    tag = ndb.StringProperty(repeated=True)
+    tags = ndb.StringProperty(repeated=True)
+    perms = ndb.StringProperty()
     prof_pic = ndb.BlobKeyProperty()
     status = ndb.StringProperty()
 
@@ -158,7 +161,7 @@ def removal_email(key):
     body += "This if a notice that you have been removed from the organization '" + user.organization.get().name
     body += "' Please email your NeteGreek administrators for more information\n"
     body += "Have a great day\n\n"
-    body+= "NeteGreek Team"
+    body += "NeteGreek Team"
     send_mandrill_email(from_email, to_email, subject, body)
 
 
@@ -202,11 +205,19 @@ def create_callback(rpc):
 
 def check_auth(user_name, token):
     user = User.query(User.user_name == user_name).get()
-    dt = (datetime.datetime.now() - user.timestamp)
-    if user.current_token == token and dt.days < 3:
-        return True
-    else:
-        return False
+    if (user.perms == 'council') or (user.perms == 'leadership') or (user.perms == 'member'):
+        dt = (datetime.datetime.now() - user.timestamp)
+        logging.error(user.timestamp)
+        if ((user.current_token == token) and (dt.days < 3)):
+
+            logging.error("I am so freaking awesome")
+            return True
+        else:
+            logging.error("token is " + token)
+            logging.error("token also is" + user.current_token)
+            logging.error("dt.days is" + str(dt.days))
+            logging.error("I suck even more")
+            return False
 
 
 def check_if_info_set(key):
@@ -264,12 +275,12 @@ class RESTApi(remote.Service):
             new_user.last_name = user['last_name']
             new_user.email = user['email']
             new_user.organization = new_org.key
-            new_user.tag = ['council']
+            new_user.perms = 'council'
             new_user.current_token = generate_token()
             new_user.class_year = int(user['class_year'])
             new_user.timestamp = datetime.datetime.now()
             new_user.put()
-            return OutgoingMessage(error='', data=new_user.current_token)
+            return OutgoingMessage(error='', data=dumpJSON({'token': new_user.current_token, 'perms': new_user.perms}))
         except:
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
@@ -284,7 +295,7 @@ class RESTApi(remote.Service):
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(data=user.current_token, error='')
+            return OutgoingMessage(data=dumpJSON({'token': user.current_token, 'perms': user.perms}), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
@@ -292,7 +303,7 @@ class RESTApi(remote.Service):
     def add_users(self, request):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED)
-        if 'council' not in User.query(User.user_name == request.user_name).get().tag:
+        if User.query(User.user_name == request.user_name).get().perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)
@@ -305,6 +316,7 @@ class RESTApi(remote.Service):
             new_user.class_year = int(user['class_year'])
             new_user.organization = User.query(User.user_name == request.user_name).get().organization
             new_user.user_name = ''
+            new_user.perms = 'member'
             new_user.put()
             json_data = signup_email(new_user.key.urlsafe())
             rpc = urlfetch.create_rpc()
@@ -325,8 +337,7 @@ class RESTApi(remote.Service):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED)
         request_user = User.query(User.user_name == request.user_name).get()
-        if 'council' not in request_user.tag:
-            logging.error(request_user.tag)
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS)
 
         organization_users = User.query(User.organization == request_user.organization).fetch()
@@ -340,7 +351,6 @@ class RESTApi(remote.Service):
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
             user_list.append(user_dict)
-
         return OutgoingMessage(error='', data=dumpJSON(user_list))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/remove_user',
@@ -348,22 +358,18 @@ class RESTApi(remote.Service):
     def remove_user(self, request):
         if not check_auth(request.user_name, request.token):
             return OutgoingMessage(error=TOKEN_EXPIRED)
-        if()
         request_user = User.query(User.user_name == request.user_name).get()
-        if 'council' not in request_user.tag:
+        if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         logging.error(request.data)
         user_info = json.loads(request.data)
         logging.error(user_info)
-        user_to_remove = User.query(ndb.AND(User.organization == request_user.organization,
-                                            User.email == user_info["email"],
-                                            User.first_name == user_info["first_name"],
-                                            User.last_name == user_info["last_name"])).get()
+        user_to_remove = ndb.Key(urlsafe=user_info["key"]).get()
         if user_to_remove:
             removal_email(user_to_remove.key)
             user_to_remove.key.delete()
             return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error='USER_NOT_FOUND', data='')
+        return OutgoingMessage(error=INVALID_USERNAME, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
                       http_method='POST', name='auth.new_user')
@@ -374,10 +380,10 @@ class RESTApi(remote.Service):
         if user and user.user_name == '':
             user_dict = user.to_dict()
             logging.error(user_dict)
-            user_dict["hash_pass"] = "xxx"
-            user_dict["current_token"] = "xxx"
-            user_dict["previous_token"] = "xxx"
-            user_dict["organization"] = "xxx"
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["previous_token"]
+            del user_dict["organization"]
             return OutgoingMessage(error='', data=dumpJSON(user_dict))
         return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
 
@@ -413,6 +419,7 @@ class RESTApi(remote.Service):
         del user_dict["previous_token"]
         del user_dict["organization"]
         del user_dict["timestamp"]
+        user_dict["key"] = user.key.urlsafe()
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
         else:
@@ -423,10 +430,45 @@ class RESTApi(remote.Service):
             del user_dict["prof_pic"]
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/manage_tag',
+                      http_method='POST', name='user.manage_tag')
+    def manage_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = dumpJSON(request.data)
+        user = ndb.Key(urlsafe=request_object["key"]).get()
+        if not user:
+            return OutgoingMessage(error=INVALID_USERNAME, data='')
+        if request_object["tag"] not in user.tags:
+            user.tags.append(request_object.tag)
+            user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/manage_perms',
+                      http_method='POST', name='user.manage_perms')
+    def manage_perms(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = dumpJSON(request.data)
+        user = ndb.Key(urlsafe=request_object["key"]).get()
+        if not user:
+            return OutgoingMessage(error=INVALID_USERNAME, data='')
+        if request_object["perms"] not in ["leadership", "council", "alumni", "member"]:
+            return OutgoingMessage(error=INVALID_FORMAT, data='')
+        user.perms = request_object["perms"]
+        user.put()
+        return OutgoingMessage(error='', data='OK')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
                       http_method='POST', name='user.update_user_directory_info')
     def update_user_directory_info(self, request):
-
         user = User.query(User.user_name == request.user_name).get()
         logging.error(user)
         user_data = json.loads(request.data)

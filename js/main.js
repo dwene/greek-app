@@ -16,7 +16,7 @@ var App = angular.module('App', ['ngRoute']);
         });
 
 //define routes and link to their controllers
-	App.config( function ($routeProvider) {
+	App.config(function ($routeProvider) {
 		$routeProvider
 			.when('/', {
 				templateUrl : 'Static/home.html',
@@ -125,8 +125,10 @@ var App = angular.module('App', ['ngRoute']);
             .success(function(data) {
                 if(!checkResponseErrors(data))
                 {
+                    returned_data = JSON.parse(data.data);
                     $.cookie('USER_NAME', user_name);
-                    $.cookie('TOKEN', data.data);
+                    $.cookie('TOKEN',returned_data.token);
+                    $.cookie('GAPP_KEY', returned_data.perms);
                     window.location.replace("/#/app");
                 }
                 else{
@@ -778,7 +780,6 @@ App.controller('changePasswordController', function($scope, $http) {
         
         
         $scope.updateAccount = function(isValid){
-            console.log("in updateAccount");
             if(isValid){
                 $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
                 .success(function(data){
