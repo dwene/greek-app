@@ -13,4 +13,5 @@ body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -web
 #memberAccount #addresses .col-sm-6:nth-child(1){position:relative; left:-10px;}
 #memberAccount #addresses .col-sm-6:nth-child(2){position:relative; left:15px;}
 h1{font-size:36px; font-weight:bold;}
-#addTag{display:inline;} #addTag input{width:100px; display:inline; margin:0 5px;}
+.addTags input{width:100px; display:inline; margin:0 5px;}
+

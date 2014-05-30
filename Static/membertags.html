@@ -1,6 +1,6 @@
 <div class="container">
             
-            <ul ng-repeat="tag in tags">
+            <ul ng-repeat="tag in tags" class="addTags">
 <!--     #FIXME           idk how to get the ng-true-value to dyanically equal the tag name -->
                 <input type="checkbox" ng-true-value="{tag}"> <li>{{ tag }}</li> <button ng-click="addselectedTags()">Add Tags</button><button ng-click="removeselectedTag()">Remove Tags</button>
             </ul>
