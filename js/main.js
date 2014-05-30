@@ -667,7 +667,7 @@ var App = angular.module('App', ['ngRoute']);
         //click the buttons to search for that button text
         $('#searchTags button').click(function(){
             var searchValue = $(this).text();
-            $('#directorySearch').val(searchValue);
+            $('#directorySearch').val(searchValue).change();
         });
         
     });
@@ -956,15 +956,16 @@ App.directive('match', function () {
         };
 });
 
-App.factory('formDataObject', function() {
-            return function(data) {
-                var fd = new FormData();
-                angular.forEach(data, function(value, key) {
-                    fd.append(key, value);
-                });
-                return fd;
-            };
-        });
+//NOTE do we use this anymore?
+// App.factory('formDataObject', function() {
+//             return function(data) {
+//                 var fd = new FormData();
+//                 angular.forEach(data, function(value, key) {
+//                     fd.append(key, value);
+//                 });
+//                 return fd;
+//             };
+//         });
 
 App.filter('multiSearch', function() { //NOTE does this work? : provides single-search-box multi-term search functionality
         return function (objects, searchValues, delimiter) {

@@ -93,6 +93,7 @@ class Organization(ndb.Model):
     name = ndb.StringProperty()
     school = ndb.StringProperty()
     type = ndb.StringProperty()
+    tags = ndb.StringProperty(repeated=True)
 
 
 class DateEncoder(json.JSONEncoder):
@@ -431,24 +432,6 @@ class RESTApi(remote.Service):
             del user_dict["prof_pic"]
         return OutgoingMessage(error='', data=dumpJSON(user_dict))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/manage_tag',
-                      http_method='POST', name='user.manage_tag')
-    def manage_tag(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
-        user = ndb.Key(urlsafe=request_object["key"]).get()
-        if not user:
-            return OutgoingMessage(error=INVALID_USERNAME, data='')
-        if request_object["tag"] not in user.tags:
-            user.tags.append(request_object.tag)
-            user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error=INVALID_FORMAT, data='')
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/manage_perms',
                       http_method='POST', name='user.manage_perms')
     def manage_perms(self, request):
@@ -612,6 +595,101 @@ class RESTApi(remote.Service):
                 del user_dict["prof_pic"]
             user_list.append(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_list))
+
+    #-------------------------
+    # TAGGING Endpoints
+    #-------------------------
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_organization_tag',
+                      http_method='POST', name='user.add_organization_tag')
+    def add_organization_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        organization = request_user.organization.get()
+        if not organization:
+            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
+        if request_object["tag"] not in organization.tags:
+            organization.tags.append(request_object["tag"])
+            organization.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_organization_tag',
+                      http_method='POST', name='user.remove_organization_tag')
+    def remove_organization_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        organization = request_user.organization.get()
+        if not organization:
+            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
+        if request_object["tag"] in organization.tags:
+            organization.tags.remove(request_object['tag'])
+            organization.put()
+            users = User.query(ndb.AND(User.tags == request_object["tag"],
+                               User.organization == request_user.organization)).fetch()
+            for user in users:
+                user.tags.remove(request_object['tag'])
+                user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/get_organization_tags',
+                      http_method='POST', name='user.add_organization_tag')
+    def add_organization_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        organization = request_user.organization.get()
+        if not organization:
+            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
+        return OutgoingMessage(error='', data=dumpJSON({'tags': organization.tags}))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_user_tag',
+                      http_method='POST', name='user.add_user_tag')
+    def add_user_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        user = ndb.Key(urlsafe=request_object["key"]).get()
+        if not user:
+            return OutgoingMessage(error=INVALID_USERNAME, data='')
+        organization = user.organization.get()
+        if (request_object["tag"] not in user.tags) and request_object["tag"] in organization.tags:
+            user.tags.append(request_object.tag)
+            user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_user_tag',
+                      http_method='POST', name='user.remove_user_tag')
+    def remove_user_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        user = ndb.Key(urlsafe=request_object["key"]).get()
+        if not user:
+            return OutgoingMessage(error=INVALID_USERNAME, data='')
+        if (request_object["tag"] in user.tags):
+            user.tags.remove(request_object.tag)
+            user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+
 
 APPLICATION = endpoints.api_server([RESTApi])
 

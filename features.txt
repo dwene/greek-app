@@ -15,13 +15,13 @@ Core Features
 
 >>Sprint 2 - LABELING<<
 
-- Member Filter
+- Member Filter :)
 
 - Member Tagging
 
-- Member Searching
+- Member Searching :/
 
-- Member Permissions
+- Member Permissions :)
 
 >>Sprint 3 - NOTIFY<<
 
