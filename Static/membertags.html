@@ -1,32 +1,31 @@
 <div class="container">
-            
-            <ul ng-repeat="tag in tags" class="addTags">
-<!--     #FIXME           idk how to get the ng-true-value to dyanically equal the tag name -->
-                <input type="checkbox" ng-true-value="{tag}"> <li>{{ tag }}</li> <button ng-click="addselectedTags()">Add Tags</button><button ng-click="removeselectedTag()">Remove Tags</button>
+            <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members">
+            <ul ng-repeat="tag in organizationTags" class="addTags">
+
+<!--     #CHANGES FIXED MO FO
+                -->
+                <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li> 
             </ul>
-            
-            <ul ng-repeat="member in members | orderBy:'last_name'">
+            <button ng-click="addTagsToUsers(selectedTags, selectedUsers)">Add Tags</button><button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)">Remove Tags</button>
+            <ul ng-repeat="member in members | orderBy:'last_name' | filter:search" style="border: 2px solid black;">
                     
                     <li>
+                    <input type="checkbox" ng-model = "selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
             Tags:   <ul class="memberTags" ng-repeat="tag in member.tags">
                         <li>{{ tag }}</li>
                     </ul>
                     <br>
-<!--     #FIXME               idk how to dynamically add the username here  -->
-                    <input type="checkbox" ng-true-value={member.username}> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
+<!--     #CHANGES FIXED MO FO
+                    -->
+                    
                     </li>
-                
             </ul>
             
-            
             <h2>Add/Remove Tags</h2>
-            <form id="addTag" ng-submit="addTag(tag)">
-            <div class="form-group" ng-class="{ 'has-error' : (memberAccount.tag.$invalid && !memberAccount.tag.$pristine) || (memberAccount.tag.$invalid && submitted)}">
-            <input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text" ng-pattern="/^[A-Za-z][A-Za-z0-9]*$/">
-            <p ng-show="(memberAccount.tag.$invalid && !memberAccount.tag.$pristine) || (memberAccount.tag.$invalid && submitted)" class="help-block">Sorry, tags with spaces are not allowed.</p>
-            </div>
-            <button type="submit" class="btn btn-default btn-sm">Add Tag</button>
-            
-            </form>
+            <form id="addTag" ng-submit="addOrganizationTag(item.tag)"><input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text"><button type="submit" class="btn btn-default btn-sm">Add Tag</button></form>
             
 </div>
+
+
+
+
