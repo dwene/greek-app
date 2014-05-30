@@ -67,6 +67,10 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/uploadprofilepicture.html',
                 controller : 'profilepictureController'  
             })
+            .when('/app/membertagging', {
+                templateUrl : 'Static/membertags.html',
+                controller : 'membertagsController'
+            })
             .when('/app/directory', {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
@@ -299,9 +303,9 @@ App.controller('changePasswordController', function($scope, $http) {
 //controller for the main app page
     App.controller('appController', function($scope, $http) {
         
-//        if(!checkLogin()){
-//        window.location.replace("/#/login");
-//        }
+        if(!checkLogin()){
+        window.location.replace("/#/login");
+        }
         
 	});
 
