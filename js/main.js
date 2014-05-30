@@ -743,7 +743,7 @@ App.controller('changePasswordController', function($scope, $http) {
         //click the buttons to search for that button text
         $('#searchTags button').click(function(){
             var searchValue = $(this).text();
-            $('#directorySearch').val(searchValue);
+            $('#directorySearch').val(searchValue).change();
         });
         
     });
