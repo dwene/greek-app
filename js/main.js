@@ -11,62 +11,6 @@ var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 //initialize app
 var App = angular.module('App', ['ngRoute']);
 
-    App.filter('multiSearch', function() { //provides single-search-box multi-term search functionality
-        return function (objects, searchValues, delimiter) {
-            if (!delimiter) {
-                delimiter="";
-            }
-            if (searchValues) {
-                var good = Array(0); //the list of objects that match ALL terms
-                var terms = String(searchValues).toUpperCase().split(delimiter); 
-                for (var w = 0; w < terms.length; w++) {
-                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
-                }
-                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
-                for (var j = 0; j < objects.length; j++) { //iterates through each object
-                    for (var t = 0; t < objects.length; t++) {
-                        truthArray[t] = 0; //initializes/resets the truthArray
-                    }
-                    for (var i = 0; i < terms.length; i++) {
-                        if (objects[j].attribute1) {
-                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                        if (truthArray[i] != 1 && objects[j].attribute2) {
-                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                        if (truthArray[i] != 1 && objects[j].attribute3) {
-                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                    }
-                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
-                        good.push(objects[j]); //add the object to the good list
-                    }
-                }
-                return good; //return the list of matching objects
-            }
-            else { //if there are no terms, return all objects
-                return objects;
-            }
-        }
-    });
-
-
-    App.factory('formDataObject', function() {
-            return function(data) {
-                var fd = new FormData();
-                angular.forEach(data, function(value, key) {
-                    fd.append(key, value);
-                });
-                return fd;
-            };
-        });
-
 //define routes and link to their controllers
 	App.config(function ($routeProvider) {
 		$routeProvider
@@ -131,6 +75,7 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
+        //NOTE what does this do?
             .when('/app/postNewKeyPictureLink', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'uploadImageController'
@@ -152,7 +97,7 @@ var App = angular.module('App', ['ngRoute']);
             });
 	});
 
-//controller for the navigation header
+//navigation header
     App.controller('navigationController', function($scope, $http){
         $scope.checkLogin = function(){
             return checkLogin();
@@ -165,14 +110,12 @@ var App = angular.module('App', ['ngRoute']);
          }
     });
 
-
-//controller for the home page
+//home page
     App.controller('homeController', function($scope, $http) {
         
 	});
 
-
-//controller for the login page
+//login page
 	App.controller('loginController', function($scope, $http) {
 
         $scope.login = function(user_name, password) {
@@ -207,7 +150,8 @@ var App = angular.module('App', ['ngRoute']);
         }
         
     });
-    
+
+//getting a forgotten password email
     App.controller('forgotPasswordController', function($scope, $http) {
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
@@ -234,6 +178,7 @@ var App = angular.module('App', ['ngRoute']);
         }
     });
 
+//changing a forgotten password
     App.controller('changePasswordFromTokenController', function($scope, $http) {
         $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
@@ -264,7 +209,8 @@ var App = angular.module('App', ['ngRoute']);
         
     });
 
-App.controller('changePasswordController', function($scope, $http) {
+//changing password
+    App.controller('changePasswordController', function($scope, $http) {
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         
@@ -293,13 +239,12 @@ App.controller('changePasswordController', function($scope, $http) {
         
     });
 
-
-//controller for the registration page
+//the registration page
     App.controller('registerController', function($scope, $http) {
         //this page passes parameters through a get method to register info
     });
 
-//controller for the register info page
+//the register info page
     App.controller('registerinfoController', function($scope, $http) {
     
         //ng-submit on form submit button click
@@ -346,7 +291,7 @@ App.controller('changePasswordController', function($scope, $http) {
     
 	});
 
-//controller for the payment page
+//the payment page
     App.controller('paymentController', function($scope, $http) {
         //skip payment page right now
         $scope.submitPayment = function(){
@@ -355,7 +300,7 @@ App.controller('changePasswordController', function($scope, $http) {
         
     });
 
-//controller for the main app page
+//the main app page
     App.controller('appController', function($scope, $http) {
         if(!checkLogin()){
         window.location.replace("/#/login");
@@ -363,7 +308,7 @@ App.controller('changePasswordController', function($scope, $http) {
         
 	});
 
-//controller for the add members page
+//the add members page
     App.controller('managemembersController', function($scope, $http) {
         checkPermissions(COUNCIL);
         //TABS
@@ -556,7 +501,7 @@ App.controller('changePasswordController', function($scope, $http) {
     
     });
 
-//controller for new member page
+//new member page
     App.controller('newmemberController', function($scope, $http){
         $('.container').hide();
         $.cookie(TOKEN, getParameterByName('token'))
@@ -584,12 +529,12 @@ App.controller('changePasswordController', function($scope, $http) {
         }
     });
 
-//controller for incorrect person page
+//incorrect person page
     App.controller('incorrectpersonController', function($scope, $http){
     
     });
 
-//controller for new member info page
+//new member info page
     App.controller('newmemberinfoController', function($scope, $http){
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
@@ -625,7 +570,7 @@ App.controller('changePasswordController', function($scope, $http) {
         
     });
 
-
+//adding profile pictures
     App.controller('profilepictureController', function($scope, $http){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
@@ -690,75 +635,8 @@ App.controller('changePasswordController', function($scope, $http) {
             });
         }
     });
-//        
-//        $scope.create = function(message){
-//            console.log(message);
-//            var deferred = $q.defer();
-//            $http({
-//               method: 'POST',
-//               url: $scope.url,
-//               data: message, // your original form data,
-//               transformRequest: formDataObject,  // this sends your data to the formDataObject provider that we are defining below.
-//               headers: {'Content-Type': undefined}
-//            }).
-//             success(function(data, status, headers, config){
-//               deferred.resolve(data);
-//                console.log(data);
-//             }).
-//             error(function(data, status, headers, config){
-//               deferred.reject(status);
-//                console.log(data);
-//             });
-//            return deferred.promise;
-//            };    
-//        
-//        
-        
-            
-//            $http.post($scope.url, newprofileImage)
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    console.log("WORKED: "+data)
-//                }
-//                else
-//                {
-//                   console.log("DIDNT WORK: " + data) 
-//                }
-//                
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' + data);
-//            });
-//            
-//            
-//            
-            
-            
-//            console.log($scope.image)
-//            $http.post($scope.url, $scope.image)
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    console.log("WORKED: "+data)
-//                }
-//                else
-//                {
-//                   console.log("DIDNT WORK: " + data) 
-//                }
-//                
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' + data);
-//            });
-//        }
-      
 
-
-
-
-
-
+//the directory
     App.controller('directoryController', function($scope, $http){
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
@@ -794,7 +672,7 @@ App.controller('changePasswordController', function($scope, $http) {
         
     });
 
-
+//member profiles
     App.controller('memberprofileController', function($scope, $http, $routeParams){
          var user_name = $routeParams.id;
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
@@ -839,7 +717,7 @@ App.controller('changePasswordController', function($scope, $http) {
         
     });
 
-
+//account info
     App.controller('accountinfoController', function($scope, $http) {
         $('.container').hide();
         $scope.updatedInfo = false;
@@ -893,7 +771,7 @@ App.controller('changePasswordController', function($scope, $http) {
         }
     });
 
-
+//upload image
     App.controller('uploadImageController', function($scope, $http){
         $http.post('/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
             .success(function(data){
@@ -918,11 +796,18 @@ App.controller('changePasswordController', function($scope, $http) {
     });
 
 
+//member tagging page
+    App.controller('membertagsController', function($scope, $http) {
 
-
-
-
-
+        $scope.addselectedTags = function(){
+        //#TODO find checked tags and add them to the checked members
+        }
+        
+        $scope.removeselectedTags = function(){
+        //#TODO find checked tags and removed them from the checked members
+        }
+        
+    });
 
 
 //More Functions
@@ -1053,7 +938,7 @@ function CSV2JSON(csv) {
     return str;
 }
 
-//Directives
+//Directives and other add ons
 App.directive('match', function () {
         return {
             require: 'ngModel',
@@ -1070,3 +955,58 @@ App.directive('match', function () {
             }
         };
 });
+
+App.factory('formDataObject', function() {
+            return function(data) {
+                var fd = new FormData();
+                angular.forEach(data, function(value, key) {
+                    fd.append(key, value);
+                });
+                return fd;
+            };
+        });
+
+App.filter('multiSearch', function() { //NOTE does this work? : provides single-search-box multi-term search functionality
+        return function (objects, searchValues, delimiter) {
+            if (!delimiter) {
+                delimiter="";
+            }
+            if (searchValues) {
+                var good = Array(0); //the list of objects that match ALL terms
+                var terms = String(searchValues).toUpperCase().split(delimiter); 
+                for (var w = 0; w < terms.length; w++) {
+                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
+                }
+                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
+                for (var j = 0; j < objects.length; j++) { //iterates through each object
+                    for (var t = 0; t < objects.length; t++) {
+                        truthArray[t] = 0; //initializes/resets the truthArray
+                    }
+                    for (var i = 0; i < terms.length; i++) {
+                        if (objects[j].attribute1) {
+                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute2) {
+                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute3) {
+                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                    }
+                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
+                        good.push(objects[j]); //add the object to the good list
+                    }
+                }
+                return good; //return the list of matching objects
+            }
+            else { //if there are no terms, return all objects
+                return objects;
+            }
+        }
+    });
