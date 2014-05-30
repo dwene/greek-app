@@ -58,7 +58,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         self.redirect('/?key=%s#/app/postNewKeyPictureLink' % blob_info.key())
 
 
-
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))

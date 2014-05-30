@@ -1,10 +1,10 @@
 <div class="container">
             
-            <ul ng-repeat="tag in tags">
+            <ul ng-repeat="tag in organizationTags">
 <!--     #FIXME           idk how to get the ng-true-value to dyanically equal the tag name -->
-                <input type="checkbox" ng-true-value="{tag}"> <li>{{ tag }}</li> <button ng-click="addselectedTags()">Add Tags</button><button ng-click="removeselectedTag()">Remove Tags</button>
+                <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li> 
             </ul>
-            
+            <button ng-click="addTagsToUsers(selectedTags, selectedUsers)">Add Tags</button><button ng-click="removeselectedTag()">Remove Tags</button>
             <ul ng-repeat="member in members | orderBy:'last_name'">
                     
                     <li>
@@ -13,12 +13,12 @@
                     </ul>
                     <br>
 <!--     #FIXME               idk how to dynamically add the username here  -->
-                    <input type="checkbox" ng-true-value={member.username}> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
+                    <input type="checkbox" ng-model = "selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
                     </li>
                 
             </ul>
             
             <h2>Add/Remove Tags</h2>
-            <form id="addTag" ng-submit="addTag(tag)"><input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text"><button type="submit" class="btn btn-default btn-sm">Add Tag</button></form>
+            <form id="addTag" ng-submit="addOrganizationTag(item.tag)"><input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text"><button type="submit" class="btn btn-default btn-sm">Add Tag</button></form>
             
 </div>

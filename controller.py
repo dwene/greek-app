@@ -642,8 +642,8 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error=INVALID_FORMAT, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/get_organization_tags',
-                      http_method='POST', name='user.add_organization_tag')
-    def add_organization_tag(self, request):
+                      http_method='POST', name='user.get_organization_tags')
+    def get_organization_tag(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
