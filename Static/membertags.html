@@ -1,6 +1,7 @@
 <div class="container">
             
-            <ul ng-repeat="tag in organizationTags">
+            <ul ng-repeat="tag in organizationTags" class="addTags">
+
 <!--     #FIXME           idk how to get the ng-true-value to dyanically equal the tag name -->
                 <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li> 
             </ul>
@@ -15,7 +16,6 @@
 <!--     #FIXME               idk how to dynamically add the username here  -->
                     <input type="checkbox" ng-model = "selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
                     </li>
-                
             </ul>
             
             <h2>Add/Remove Tags</h2>
