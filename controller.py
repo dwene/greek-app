@@ -652,26 +652,27 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
         return OutgoingMessage(error='', data=dumpJSON({'tags': organization.tags}))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_user_tag',
-                      http_method='POST', name='user.add_user_tag')
-    def add_user_tag(self, request):
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_users_tags',
+                      http_method='POST', name='user.add_users_tags')
+    def add_users_tags(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        user = ndb.Key(urlsafe=request_object["key"]).get()
-        if not user:
-            return OutgoingMessage(error=INVALID_USERNAME, data='')
-        organization = user.organization.get()
-        if (request_object["tag"] not in user.tags) and request_object["tag"] in organization.tags:
-            user.tags.append(request_object.tag)
+        organization = request_user.organization.get()
+        for key in request_object["keys"]:
+            user = ndb.Key(urlsafe=key).get()
+            if not user:
+                return OutgoingMessage(error=INVALID_USERNAME, data='')
+            for tag in request_object["tags"]:
+                if tag not in user.tags and tag in organization.tags:
+                    user.tags.append(tag)
             user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error=INVALID_FORMAT, data='')
+        return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_user_tag',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_users_tags',
                       http_method='POST', name='user.remove_user_tag')
     def remove_user_tag(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -680,14 +681,15 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        user = ndb.Key(urlsafe=request_object["key"]).get()
-        if not user:
-            return OutgoingMessage(error=INVALID_USERNAME, data='')
-        if (request_object["tag"] in user.tags):
-            user.tags.remove(request_object.tag)
+        for key in request_object["keys"]:
+            user = ndb.Key(urlsafe=key).get()
+            if not user:
+                return OutgoingMessage(error=INVALID_USERNAME, data='')
+            for tag in request_object["tags"]:
+                if tag in user.tags:
+                    user.tags.remove(tag)
             user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error=INVALID_FORMAT, data='')
+        return OutgoingMessage(error='', data='OK')
 
 
 

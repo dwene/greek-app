@@ -799,12 +799,15 @@ var App = angular.module('App', ['ngRoute']);
 //member tagging page
     App.controller('membertagsController', function($scope, $http) {
         function getUsers(){
+            $scope.selectedTags = {};
+            $scope.selectedUsers = {};
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     var members = JSON.parse(data.data);
                     $scope.members = members;
+                    console.log($scope.members);
                 }
                 else
                     console.log('ERROR: '+data);
@@ -813,10 +816,9 @@ var App = angular.module('App', ['ngRoute']);
                 console.log('Error: ' + data);
             });
         }
+        getUsers();
         $scope.getOrganizationTags = function(){
             //initialize ng-model variables to contain selected things
-            $scope.selectedTags = {};
-            $scope.selectedUsers = {};
             
             $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
                 .success(function(data){
@@ -844,6 +846,7 @@ var App = angular.module('App', ['ngRoute']);
                     if (!checkResponseErrors(data))
                     {
                         console.log('success');
+                        setTimeout(getUsers, 200);
                     }
                     else
                     {
@@ -876,12 +879,15 @@ var App = angular.module('App', ['ngRoute']);
         }
         
         
-        function addTagToUser(tag, key){
-            $http.post('/_ah/api/netegreek/v1/manage/add_user_tag', packageForSending({'tag': tag, 'key': key}))
+        function addTagsToUsers(tags, keys){
+            var to_send = {'tags': tags, 'keys': keys};
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        console.log('success')
+                        console.log('success');
+                        setTimeout(getUsers, 200);
                     }
                     else
                     {
@@ -894,12 +900,58 @@ var App = angular.module('App', ['ngRoute']);
         }
         
         $scope.addTagsToUsers = function(tags, users){
-        console.log(tags);
-        console.log(users);
-        
-        
+            console.log(tags);
+            console.log(users);
+            selected_tags = [];
+            selected_keys = [];
+            for (var subtag in tags){
+                if (tags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            for (var subuser in users){
+                if (users[subuser] == true){
+                    selected_keys.push(subuser)
+                }
+            }
+            addTagsToUsers(selected_tags, selected_keys);
         }
         
+        function removeTagsFromUsers(tags, keys){
+            $http.post('/_ah/api/netegreek/v1/manage/remove_user_tag', packageForSending({'tags': tags, 'keys': keys}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout(getUsers, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        $scope.removeTagsFromUsers = function(tags, users){
+            console.log(tags);
+            console.log(users);
+            selected_tags = [];
+            selected_keys = [];
+            for (var subtag in tags){
+                if (tags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            for (var subuser in users){
+                if (users[subuser] == true){
+                    selected_keys.push(subuser)
+                }
+            }
+            removeTagsFromUsers(selected_tags, selected_keys);
+        }
     });
 
 
