@@ -748,7 +748,6 @@ App.controller('changePasswordController', function($scope, $http) {
         
     });
 
-
     App.controller('memberprofileController', function($scope, $http, $routeParams){
          var user_name = $routeParams.id;
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
