@@ -18,7 +18,7 @@
 
 <br>
 
-<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(true)" class="form-horizontal" role="form" novalidate>
+<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
     
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
@@ -75,26 +75,26 @@
 
     <div class="col-sm-6 col-xs-12">
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.current_address.$invalid && !memberAccount.current_address.$pristine) || (memberAccount.current_address.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)}">
         <label for="currentAddress" class="control-label">Current Address</label>
         <div>
-          <input type="text" class="form-control" id="currentAddress" name="current_address" ng-model="item.current_address" placeholder="42 Wallaby Way" required>
+          <input type="text" class="form-control" id="currentAddress" name="address" ng-model="item.address" placeholder="42 Wallaby Way" required>
         </div>
-        <p ng-show="(memberAccount.current_address.$invalid && !memberAccount.current_address.$pristine) || (memberAccount.current_address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
+        <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.current_city.$invalid && !memberAccount.current_city.$pristine) || (memberAccount.current_city.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)}">
         <label for="currentCity" class="control-label">Current City</label>
         <div>
-          <input type="text" class="form-control" id="currentCity" name="current_city" ng-model="item.current_city" placeholder="Austin" required>
+          <input type="text" class="form-control" id="currentCity" name="city" ng-model="item.city" placeholder="Austin" required>
         </div>
-        <p ng-show="(memberAccount.current_city.$invalid && !memberAccount.current_city.$pristine) || (memberAccount.current_city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
+        <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.current_state.$invalid && !memberAccount.current_state.$pristine) || (memberAccount.current_state.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)}">
         <label for="currentState" class="control-label">Current State</label>
         <div>
-        <select class="form-control" id="currentState" name="current_state" ng-model="item.current_state" required>
+        <select class="form-control" id="currentState" name="state" ng-model="item.state" required>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -147,17 +147,17 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select>
-        <p ng-show="(memberAccount.current_state.$invalid && !memberAccount.current_state.$pristine) || (memberAccount.current_state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
+        <p ng-show="(memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
     </div>
     </div>
 
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.current_zip.$invalid && !memberAccount.current_zip.$pristine) || (memberAccount.current_zip.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)}">
         <label for="currentZip" class="control-label">Current Zip</label>
         <div>
-          <input type="number" class="form-control" id="currentZip" name="current_zip" ng-model="item.current_zip" placeholder="78759" ng-pattern="/[0-9]{5}/" required>
+          <input type="number" class="form-control" id="currentZip" name="zip" ng-model="item.zip" placeholder="78759" ng-pattern="/[0-9]{5}/" required>
         </div>
-        <p ng-show="(memberAccount.current_zip.$invalid && !memberAccount.current_zip.$pristine) || (memberAccount.current_zip.$invalid && submitted)" class="help-block">Please enter your current 5 digit zip code.</p>
+        <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your current 5 digit zip code.</p>
     </div>
     
     
@@ -165,26 +165,26 @@
     
     <div class="col-sm-6 col-xs-12">
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.permanent_address.$invalid && !memberAccount.permanent_address.$pristine) || (memberAccount.permanent_address.$invalid && submitted)}">
-        <label for="permanentAddress" class="control-label">Permanent Address</label>
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)}">
+        <label for="permAddress" class="control-label">Permanent Address</label>
         <div>
-          <input type="text" class="form-control" id="permanentAddress" name="permanent_address" ng-model="item.permanent_address" placeholder="42 Wallaby Way">
+          <input type="text" class="form-control" id="permAddress" name="perm_address" ng-model="item.perm_address" placeholder="42 Wallaby Way">
         </div>
-        <p ng-show="(memberAccount.permanent_address.$invalid && !memberAccount.permanent_address.$pristine) || (memberAccount.permanent_address.$invalid && submitted)" class="help-block">Please enter your permanent address.</p>
+        <p ng-show="(memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)" class="help-block">Please enter your permanent address.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.permanent_city.$invalid && !memberAccount.permanent_city.$pristine) || (memberAccount.permanent_city.$invalid && submitted)}">
-        <label for="permanentCity" class="control-label">Permanent City</label>
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)}">
+        <label for="permCity" class="control-label">Permanent City</label>
         <div>
-          <input type="text" class="form-control" id="permanentCity" name="permanent_city" ng-model="item.permanent_city" placeholder="Austin">
+          <input type="text" class="form-control" id="permCity" name="perm_city" ng-model="item.perm_city" placeholder="Austin">
         </div>
-        <p ng-show="(memberAccount.permanent_city.$invalid && !memberAccount.permanent_city.$pristine) || (memberAccount.permanent_city.$invalid && submitted)" class="help-block">Please enter your permanent city.</p>
+        <p ng-show="(memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)" class="help-block">Please enter your permanent city.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.permanent_state.$invalid && !memberAccount.permanent_state.$pristine) || (memberAccount.permanent_state.$invalid && submitted)}">
-        <label for="permanentState" class="control-label">Permanent State</label>
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)}">
+        <label for="permState" class="control-label">Permanent State</label>
         <div>
-        <select class="form-control" id="permanentState" name="permanent_state" ng-model="item.permanent_state">
+        <select class="form-control" id="permState" name="perm_state" ng-model="item.perm_state">
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -237,17 +237,17 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select>
-        <p ng-show="(memberAccount.v.$invalid && !memberAccount.permanent_state.$pristine) || (memberAccount.permanent_state.$invalid && submitted)" class="help-block">Please enter your permanent state.</p>
+        <p ng-show="(memberAccount.v.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)" class="help-block">Please enter your permanent state.</p>
     </div>
     </div>
 
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.permanent_zip.$invalid && !memberAccount.permanent_zip.$pristine) || (memberAccount.permanent_zip.$invalid && submitted)}">
-        <label for="permanentZip" class="control-label">Permanent Zip</label>
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)}">
+        <label for="permZip" class="control-label">Permanent Zip</label>
         <div>
-          <input type="number" class="form-control" id="permanentZip" name="permanent_zip" ng-model="item.permanent_zip" ng-pattern="/[0-9]{5}/" placeholder="78759">
+          <input type="number" class="form-control" id="permZip" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/" placeholder="78759">
         </div>
-        <p ng-show="(memberAccount.permanent_zip.$invalid && !memberAccount.permanent_zip.$pristine) || (memberAccount.permanent_zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
+        <p ng-show="(memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
     </div>
     
     

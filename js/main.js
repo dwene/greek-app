@@ -319,7 +319,6 @@ App.controller('changePasswordController', function($scope, $http) {
           e.preventDefault()
           $(this).tab('show')
           $scope.getMembers();
-            console.log($scope.members)
         });
         
         //MANAGE MEMBERS TAB
@@ -331,9 +330,23 @@ App.controller('changePasswordController', function($scope, $http) {
         $scope.addTag = function(tag){
         //get item.tag and add it to the tags for that member
         }
-        
-       
-        
+        $scope.updatePerms = function(key, perm){
+            var to_send = {'key': key, 'perms': perm};
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    console.log('success');
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+            
+        }
         //ADD MEMBERS TAB
         
         //initialize a member array
@@ -382,8 +395,16 @@ App.controller('changePasswordController', function($scope, $http) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    console.log(data);
-                    $scope.members = JSON.parse(data.data)
+                    
+                    var members = JSON.parse(data.data);
+                    for(var i = 0; i<members.length; i++){
+                        if (members[i].user_name == $.cookie('USER_NAME')){
+                            members.splice(i, 1);
+                            break;
+                        }
+                    }
+                    $scope.members = members;
+                    console.log($scope.members);
                 }
                 else
                     console.log('ERROR: '+data);
@@ -690,7 +711,15 @@ App.controller('changePasswordController', function($scope, $http) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.directory = JSON.parse(data.data)
+                    var directory = JSON.parse(data.data)
+                    for(var i = 0; i<directory.length; i++){
+                        if(directory[i].user_name == ''){
+                            directory.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    $scope.directory = directory;
+                    
                 }
                 else
                 {
@@ -726,17 +755,16 @@ App.controller('changePasswordController', function($scope, $http) {
                              //define profile information
                             $scope.firstName = $scope.member.first_name;
                             $scope.lastName = $scope.member.last_name;
+                            $scope.email = $scope.member.email;
                             $scope.birthday = $scope.member.dob;
                             $scope.phone = $scope.member.phone;
-                            $scope.currentAddress = $scope.member.current_address+" "+$scope.member.current_city+" "+$scope.member.current_state+" "+$scope.member.current_zip;
-                            $scope.permanentAddress = $scope.member.permanent_address+" "+$scope.member.permanent_city+" "+$scope.member.permanent_state+" "+$scope.member.permanent_zip;
+                            $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                            $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
                             $scope.website = $scope.member.website;
                             $scope.facebook = $scope.member.facebook;
                             $scope.twitter = $scope.member.twitter;
                             $scope.instagram = $scope.member.instagram;
                             $scope.linkedin = $scope.member.linkedin;
-                            
-                            console.log($scope.firstName);
                             break;
                         }
                     }
@@ -752,7 +780,8 @@ App.controller('changePasswordController', function($scope, $http) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-           
+        
+        
     });
 
 

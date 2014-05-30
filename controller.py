@@ -350,6 +350,7 @@ class RESTApi(remote.Service):
             del user_dict["organization"]
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
+            user_dict["key"] = user.key.urlsafe()
             user_list.append(user_dict)
         return OutgoingMessage(error='', data=dumpJSON(user_list))
 
@@ -438,7 +439,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = dumpJSON(request.data)
+        request_object = json.loads(request.data)
         user = ndb.Key(urlsafe=request_object["key"]).get()
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
@@ -456,7 +457,8 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = dumpJSON(request.data)
+        request_object = json.loads(request.data)
+        logging.error(request_object["key"])
         user = ndb.Key(urlsafe=request_object["key"]).get()
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
