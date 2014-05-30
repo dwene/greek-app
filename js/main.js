@@ -75,7 +75,7 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
-        //NOTE what does this do?
+        //#CHANGES there might be a better way to do this
             .when('/app/postNewKeyPictureLink', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'uploadImageController'
@@ -798,15 +798,160 @@ var App = angular.module('App', ['ngRoute']);
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http) {
-
-        $scope.addselectedTags = function(){
+        function getUsers(){
+            $scope.selectedTags = {};
+            $scope.selectedUsers = {};
+            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var members = JSON.parse(data.data);
+                    $scope.members = members;
+                    console.log($scope.members);
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        }
+        getUsers();
+        $scope.getOrganizationTags = function(){
+            //initialize ng-model variables to contain selected things
+            $('#tag').val('');
+            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.organizationTags = JSON.parse(data.data).tags;
+                        console.log($scope.organizationTags);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                    
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        $scope.getOrganizationTags();
+        $scope.addOrganizationTag = function(tag){
         //#TODO find checked tags and add them to the checked members
+            console.log(tag);
+            $http.post('/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({'tag': tag}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout($scope.getOrganizationTags, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                    
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
         }
         
-        $scope.removeselectedTags = function(){
+        $scope.removeOrganizationTags = function(){
         //#TODO find checked tags and removed them from the checked members
+            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tags', packageForSending({'tag': tag}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.organizationTags = JSON.parse(data.data).tags;
+                        console.log($scope.organizationTags);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
         }
         
+        
+        function addTagsToUsers(tags, keys){
+            var to_send = {'tags': tags, 'keys': keys};
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout(getUsers, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        $scope.addTagsToUsers = function(tags, users){
+            console.log(tags);
+            console.log(users);
+            selected_tags = [];
+            selected_keys = [];
+            for (var subtag in tags){
+                if (tags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            for (var subuser in users){
+                if (users[subuser] == true){
+                    selected_keys.push(subuser)
+                }
+            }
+            addTagsToUsers(selected_tags, selected_keys);
+        }
+        
+        function removeTagsFromUsers(tags, keys){
+            $http.post('/_ah/api/netegreek/v1/manage/remove_user_tag', packageForSending({'tags': tags, 'keys': keys}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout(getUsers, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        $scope.removeTagsFromUsers = function(tags, users){
+            console.log(tags);
+            console.log(users);
+            selected_tags = [];
+            selected_keys = [];
+            for (var subtag in tags){
+                if (tags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            for (var subuser in users){
+                if (users[subuser] == true){
+                    selected_keys.push(subuser)
+                }
+            }
+            removeTagsFromUsers(selected_tags, selected_keys);
+        }
     });
 
 
@@ -832,11 +977,11 @@ function packageForSending(send_data){
     {user_name:$.cookie(USER_NAME),
      token: $.cookie(TOKEN),
      data: JSON.stringify(send_data)};
+    console.log(output);
     return output;
 }
 
 function checkResponseErrors(received_data){
-    console.log(JSON.parse(received_data.data))
     response = received_data;
     if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN')
     {
@@ -956,18 +1101,7 @@ App.directive('match', function () {
         };
 });
 
-//NOTE do we use this anymore?
-// App.factory('formDataObject', function() {
-//             return function(data) {
-//                 var fd = new FormData();
-//                 angular.forEach(data, function(value, key) {
-//                     fd.append(key, value);
-//                 });
-//                 return fd;
-//             };
-//         });
-
-App.filter('multiSearch', function() { //NOTE does this work? : provides single-search-box multi-term search functionality
+App.filter('multiSearch', function() { //#FUTURE Search box filter
         return function (objects, searchValues, delimiter) {
             if (!delimiter) {
                 delimiter="";

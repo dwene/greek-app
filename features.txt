@@ -17,7 +17,7 @@ Core Features
 
 - Member Filter :)
 
-- Member Tagging
+- Member Tagging :)
 
 - Member Searching :/
 
