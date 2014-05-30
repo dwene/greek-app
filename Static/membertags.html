@@ -19,6 +19,13 @@
             </ul>
             
             <h2>Add/Remove Tags</h2>
-            <form id="addTag" ng-submit="addTag(tag)"><input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text"><button type="submit" class="btn btn-default btn-sm">Add Tag</button></form>
+            <form id="addTag" ng-submit="addTag(tag)">
+            <div class="form-group" ng-class="{ 'has-error' : (memberAccount.tag.$invalid && !memberAccount.tag.$pristine) || (memberAccount.tag.$invalid && submitted)}">
+            <input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text" ng-pattern="/^[A-Za-z][A-Za-z0-9]*$/">
+            <p ng-show="(memberAccount.tag.$invalid && !memberAccount.tag.$pristine) || (memberAccount.tag.$invalid && submitted)" class="help-block">Sorry, tags with spaces are not allowed.</p>
+            </div>
+            <button type="submit" class="btn btn-default btn-sm">Add Tag</button>
+            
+            </form>
             
 </div>
