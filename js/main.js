@@ -878,6 +878,27 @@ var App = angular.module('App', ['ngRoute']);
                 });
         }
         
+        //onclick checkmark tag
+        
+        //#TODO fix this to where it updates the ng-model
+        $('.memberTags').on('click', '.addTags li', function(){
+            
+            var checkbox = $(this).prev(':checkbox')
+                        
+                if ( checkbox.prop('checked') )
+                {
+                    checkbox.prop('checked', false).trigger('input');
+                    $(this).removeClass('checked');
+                }
+                else
+                {
+                    checkbox.prop('checked', true).trigger('input');
+                    $(this).addClass('checked');
+                }
+            
+        });
+       
+    
         
         function addTagsToUsers(tags, keys){
             var to_send = {'tags': tags, 'keys': keys};
@@ -918,7 +939,7 @@ var App = angular.module('App', ['ngRoute']);
         }
         
         function removeTagsFromUsers(tags, keys){
-            $http.post('/_ah/api/netegreek/v1/manage/remove_user_tag', packageForSending({'tags': tags, 'keys': keys}))
+            $http.post('/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': tags, 'keys': keys}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
