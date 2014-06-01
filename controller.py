@@ -26,15 +26,15 @@ IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID
 
 
-"""Password Salt"""
+# "Password Salt"
 SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
-"""error codes for returning errors"""
+# error codes for returning errors
 ERROR_BAD_ID = 'BAD_LOGIN'
 BAD_FIRST_TOKEN = 'BAD_FIRST_TOKEN'
-INVALID_FORMAT = "INVALID_FORMAT"
-TOKEN_EXPIRED = "TOKEN_EXPIRED"
+INVALID_FORMAT = 'INVALID_FORMAT'
+TOKEN_EXPIRED = 'TOKEN_EXPIRED'
 USERNAME_TAKEN = 'USERNAME_TAKEN'
-INCORRECT_PERMS = 'INCORECT_PERMISSIONS'
+INCORRECT_PERMS = 'INCORRECT_PERMISSIONS'
 INFO_NOT_FILLED_OUT = 'EMPTY_INFO'
 INVALID_EMAIL = 'INVALID_EMAIL'
 INVALID_USERNAME = 'INVALID_USERNAME'
@@ -50,7 +50,7 @@ class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
     data = messages.StringField(2)
 
-"""MODELS"""
+# """MODELS"""
 
 
 class User(ndb.Model):
@@ -87,6 +87,7 @@ class User(ndb.Model):
     perms = ndb.StringProperty()
     prof_pic = ndb.BlobKeyProperty()
     status = ndb.StringProperty()
+    position = ndb.StringProperty()
 
 
 class Organization(ndb.Model):
@@ -101,8 +102,7 @@ class DateEncoder(json.JSONEncoder):
         if hasattr(obj, 'isoformat'):
             return obj.isoformat()
         else:
-            return str(obj)
-        return json.JSONEncoder.default(self, obj)
+            return json.JSONEncoder.default(self, obj)
 
 
 def signup_email(url_key):
@@ -190,6 +190,11 @@ def testEmail():
     subject = 'test'
     mail.send_mail(from_email, to_email, subject, body)
 
+def check_form_status(user):
+    if user:
+        if user.address and user.state and user.dob and user.city and user.major:
+            return True
+        return False
 
 def dumpJSON(item):
     return json.dumps(item, cls=DateEncoder)
@@ -206,10 +211,11 @@ def create_callback(rpc):
 
 def check_auth(user_name, token):
     user = User.query(User.user_name == user_name).get()
-    if (user.perms == 'council') or (user.perms == 'leadership') or (user.perms == 'member'):
+   #if (user.perms == 'council') or (user.perms == 'leadership') or (user.perms == 'member'): #why did I do this?
+    if user:
         dt = (datetime.datetime.now() - user.timestamp)
         logging.error(user.timestamp)
-        if ((user.current_token == token) and (dt.days < 3)):
+        if (user.current_token == token) and (dt.days < 1):
 
             logging.error("I am so freaking awesome")
             return True
@@ -293,10 +299,13 @@ class RESTApi(remote.Service):
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
         if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
-            user.current_token = generate_token()
+            dt = (datetime.datetime.now() - user.timestamp)
+            if dt.seconds/60/60 > 18:
+                user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(data=dumpJSON({'token': user.current_token, 'perms': user.perms}), error='')
+            return_item = {'token': user.current_token, 'perms': user.perms, 'form_status': check_form_status(user)}
+            return OutgoingMessage(data=dumpJSON(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
@@ -502,6 +511,8 @@ class RESTApi(remote.Service):
                 user.status = value
             if key == "expected_graduation":
                 user.expected_graduation = value
+            if key == "position":
+                user.position = value
         user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -692,9 +703,4 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
 
-
 APPLICATION = endpoints.api_server([RESTApi])
-
-
-
-

@@ -483,22 +483,27 @@ var App = angular.module('App', ['ngRoute']);
             alert('you have not selected a file');
             }
             else{
-                //converts CSV file to JSON
-            
-                
-                var list1 = JSON.parse(CSV2JSON(filecontents));
-                    console.log(list1);
-                    console.log(newmemberList);
-                    
-                newmemberList = newmemberList.concat(list1);
+                //converts CSV file to array of usable objects
+                var csvMemberList = CSV2ARRAY(filecontents);
+                console.log(csvMemberList);
+                checkEmail = function(email){
+                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    return re.test(email);
+                }
+                for (var i = 0; i< csvMemberList.length; i++){
+                    if(!checkEmail(csvMemberList[i].email) && csvMemberList[i].first_name && csvMemberList[i].last_name && csvMemberList[i].class_year){
+                        csvMemberList.splice(i, 1);
+                        i--;
+                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+                    }
+                }  
+                newmemberList = newmemberList.concat(csvMemberList);
                 //outputs object to result
                 $('#result').text(JSON.stringify(newmemberList));
                 //define variable for ng-repeat
                 $scope.adds = newmemberList;
             }
-            
         };
-    
     });
 
 //new member page
@@ -1014,7 +1019,7 @@ function getParameterByName(name) {
     // This will parse a delimited string into an array of
     // arrays. The default delimiter is the comma, but this
     // can be overriden in the second argument.
-function CSVToArray(strData, strDelimiter) {
+function CSVReader(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
     // then default to comma.
     strDelimiter = (strDelimiter || ",");
@@ -1065,8 +1070,8 @@ function CSVToArray(strData, strDelimiter) {
     // Return the parsed data.
     return (arrData);
 }
-function CSV2JSON(csv) {
-    var array = CSVToArray(csv);
+function CSV2ARRAY(csv) {
+    var array = CSVReader(csv);
     var objArray = [];
     for (var i = 1; i < array.length; i++) {
         objArray[i - 1] = {};
@@ -1079,8 +1084,8 @@ function CSV2JSON(csv) {
     var json = JSON.stringify(objArray);
     console.log(json);
     var str = json.replace(/},/g, "},\r\n");
-
-    return str;
+    
+    return JSON.parse(str);
 }
 
 //Directives and other add ons
