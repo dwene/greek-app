@@ -93,8 +93,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
+<<<<<<< HEAD
         .state('directory.user', {
                 url : '/app/directory/user/:id',
+=======
+        .state('memberprofile', {
+                url : '/app/directory/:id',
+>>>>>>> FETCH_HEAD
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
@@ -689,7 +694,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/user/"+member.user_name);
+            window.location.replace("#/app/directory/"+member.user_name);
         }
         
         //click the buttons to search for that button text
@@ -701,8 +706,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
+<<<<<<< HEAD
     App.controller('memberprofileController', function($scope, $http, $stateParams){
          var user_name = $stateParams.id;
+=======
+    App.controller('memberProfileController', function($scope, $http, $stateParams){
+        console.log("I'm in the right place");
+        var user_name = $stateParams.id;
+        if(user_name.toString().length < 2){
+            window.location.replace('#/app/directory')
+        }
+        console.log('user_name: '+user_name);
+>>>>>>> FETCH_HEAD
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
