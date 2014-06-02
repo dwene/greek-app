@@ -34,19 +34,19 @@
                     <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/#/app/directory">Directory</a></li>
+                        <li><a ng-href="/#/app/directory">Directory</a></li>
                         <li class="divider" ></li>
-                        <li><a href="#/app/managemembers" ng-show = "checkPermissions('leadership')">Manage Members</a></li>
+                        <li><a ng-href="#/app/managemembers" ng-show = "checkPermissions('leadership')">Manage Members</a></li>
                         <li class="divider" "checkPermissions('leadership')"></li>
-                        <li><a href="#/app/accountinfo" ng-show = "checkPermissions('member')">Update Account</a></li>
+                        <li><a ng-href="#/app/accountinfo" ng-show = "checkPermissions('member')">Update Account</a></li>
                         
                     </ul>
                     </li>
                 </ul>
 
 				<ul ng-hide="checkLogin()" class="nav navbar-nav navbar-right">
-					<li><a href="#login">Login</a></li>
-					<li><a href="#register">Register</a></li>
+					<li><a ng-href="#login">Login</a></li>
+					<li><a ng-href="#register">Register</a></li>
 				</ul>
 
 				<button id="logoutbutton" ng-show="checkLogin()" ng-click="logout()" type="button" class="btn btn-danger pull-right">Log Out</button>
