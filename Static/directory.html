@@ -14,7 +14,7 @@
         <button class="btn btn-default btn-sm">Random</button>
     </div><br>
     <input id="directorySearch" type="search" ng-model="search" placeholder="Search...">
-    <ul ng-repeat="member in directory | orderBy:'last_name' | filter:search">
+    <ul ng-repeat="member in directory | orderBy:'last_name' | multiSearch:search" class="member">
 
         <li>
             <div>
