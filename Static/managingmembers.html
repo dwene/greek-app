@@ -1,1 +1,38 @@
-testing
+    <div class="container">
+        
+                <!-- HEADER AND TODO COUNT -->
+                <div class="jumbotron text-center">
+                    <h1>Manage Members</h1>
+                </div>
+        
+        </div>
+        
+        <div class="container">
+            
+            <ul ng-repeat="member in members | orderBy:'last_name'">
+                
+                    <li>
+                        Permissions: {{member.perms}}
+                        <form> 
+                            
+                            <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member.key, option)">
+                                <option value="council">council</option>
+                                <option value="member">member</option>
+                                <option value="leadership">leadership</option>
+                                <option value="alumni">alumni</option>
+                            </select>
+<!--
+                            <input ng-model="member.perms">
+                            <option value="council">council</option>
+                            <option value="member">member</option>
+                            <option value="alumni">alumni</option>
+                            </input>
+-->
+                        </form>
+                    <br>
+                    {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
+                    </li>
+                
+            </ul>
+            
+        </div>
