@@ -137,7 +137,9 @@ def alumni_signup_email(new_user):
     to_email = [{'email': new_user.email, 'type': 'to', 'name': new_user.first_name}]
     org = new_user.organization.get()
     token = org.name
-    token += new_user.last_name
+    token += new_user.email
+    token = token.replace("@", "")
+    token = token.replace(".", "")
     token += generate_token()
     token = token.replace(" ", "")
     new_user.current_token = token
@@ -146,8 +148,8 @@ def alumni_signup_email(new_user):
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
-    body += org.name + "at " + org.school + "has requested to add you to their database of alumni. If you would like" \
-                                            "to add yourself please go to the following link\n" + signup_link
+    body += org.name + " at " + org.school + "has requested to add you to their database of alumni. If you would like" \
+                                             " to add yourself please go to the following link\n"
     body += signup_link + "\n\n -NeteGreek Team"
     to_send = {}
     to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
