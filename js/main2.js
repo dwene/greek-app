@@ -9,104 +9,97 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router']);
+var App = angular.module('App', ['ngRoute', 'ui.router']);
 
-App.config(function($stateProvider, $urlRouterProvider) {
-    
-    $urlRouterProvider.otherwise("/");
-    
-      $stateProvider
-        .state('home', {
-                url: '/', 
+//define routes and link to their controllers
+	App.config(function ($routeProvider) {
+		$routeProvider
+			.when('/', {
 				templateUrl : 'Static/home.html',
 				controller  : 'homeController'
 			})
-        .state('login', {
-                url : '/login',
+			.when('/login', {
+
 				templateUrl : 'Static/login.html',
 				controller  : 'loginController'
 			})
-        .state('register', {
-                url : 'register',
+			.when('/register', {
 				templateUrl : 'Static/register.html',
 				controller  : 'registerController'
 			})
-        .state('registerinfo', {
-                url : '/registerinfo',
+            .when('/registerinfo', {
 				templateUrl : 'Static/registerinfo.html',
 				controller  : 'registerinfoController'
 			})
-        .state('payment', {
-                url : '/payment',
+            .when('/payment', {
 				templateUrl : 'Static/payment.html',
 				controller  : 'paymentController'
 			})
-        .state('app', {
-                url : '/app',
-                templateUrl : 'Static/app.html',
-                controller : 'appController'
-        })
-        .state('managemembers', {
-                url : '/app/managemembers',
+			.when('/app', {
+				templateUrl : 'Static/app.html',
+				controller  : 'appController'
+			})
+            .when('/app/managemembers', {
 				templateUrl : 'Static/managemembers.html',
 				controller  : 'managemembersController'
 			})
-        .state('newmember', {
-                url : '/newmember',
+            .when('/newmember', {
                 templateUrl : 'Static/newmember.html',
                 controller : 'newmemberController'
             })
-        .state('incorrectperson', {
-                url : '/incorrectperson',
+            .when('/incorrectperson', {
                 templateUrl : 'Static/incorrectperson.html',
                 controller : 'incorrectpersonController'
             })
-        .state('newmemberinfo', {
-                url : '/newmemberinfo',
+            .when('/newmemberinfo', {
                 templateUrl : 'Static/newmemberinfo.html',
                 controller : 'newmemberinfoController'
             })
-        .state('accountinfo', {
-                url : '/app/accountinfo',
+            .when('/app/accountinfo', {
                 templateUrl : 'Static/accountinfo.html',
                 controller : 'accountinfoController'
             })
-//        .state('uploadprofilepicture', {
-//                url : '/app/uploadprofilepicture'
-//                templateUrl : 'Static/uploadprofilepicture.html',
-//                controller : 'profilepictureController'  
-//            })
-        .state('directory', {
-                url : '/app/directory',
+            .when('/app/uploadprofilepicture', {
+                templateUrl : 'Static/uploadprofilepicture.html',
+                controller : 'profilepictureController'  
+            })
+            .when('/app/directory', {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
-        .state('directory.user', {
-                url : '/app/directory/user/:id'
+            .when('/app/directory/user/:id', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
         //#CHANGES there might be a better way to do this
-        .state('postNewKeyPictureLink', {
-                url : '/app/postNewKeyPictureLink',
+            .when('/app/postNewKeyPictureLink', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'uploadImageController'
             })
-        .state('forgotpassword', {
-                url : '/forgotpassword',
+            .when('/forgotpassword', {
                 templateUrl : 'Static/forgot_password.html',
                 controller : 'forgotPasswordController'
             })
-        .state('changepasswordfromtoken', {
-                url : '/changepasswordfromtoken',
+            .when('/changepasswordfromtoken', {
                 templateUrl : 'Static/change_password_from_token.html',
                 controller : 'changePasswordFromTokenController'
             })
-        .state('changepassword', {
-                url : '/app/changepassword',
+            .when('/app/changepassword', {
                 templateUrl : 'Static/change_password.html',
                 controller : 'changePasswordController'
             })
+            .otherwise({
+                redirectTo: '/'
+            });
+	});
+
+//define states and link to their templates
+    App.config(function($stateProvider) {
+      $stateProvider
+        .state('managemembers', {
+            url: "app/managemembers/manage",
+            templateUrl: "Static/managingmembers.html"
+        })
     });
 
 //navigation header
