@@ -471,7 +471,7 @@ class RESTApi(remote.Service):
         else:
             user_dict["has_registered"] = False
         try:
-            user_dict["prof_pic"] = images.get_serving_url(request_user.prof_pic)
+            user_dict["prof_pic"] = images.get_serving_url(request_user.prof_pic, secure_url=True)
         except:
             del user_dict["prof_pic"]
         return OutgoingMessage(error='', data=json_dump(user_dict))

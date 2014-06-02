@@ -35,10 +35,10 @@
                     <a class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="/#/app/directory">Directory</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/app/managemembers">Manage Members</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/app/accountinfo">Update Account</a></li>
+                        <li class="divider" ></li>
+                        <li><a href="#/app/managemembers" ng-show = "checkPermissions('leadership')">Manage Members</a></li>
+                        <li class="divider" "checkPermissions('leadership')"></li>
+                        <li><a href="#/app/accountinfo" ng-show = "checkPermissions('member')">Update Account</a></li>
                         
                     </ul>
                     </li>

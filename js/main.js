@@ -115,6 +115,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             return checkLogin();
         }
         
+        $scope.checkPermissions = function(perms){
+            return checkPermissions(perms);
+        }
+        
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
@@ -149,8 +153,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     
                 }
-                //debug credentials user:jakeruesink pass:jakeiscool
-
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -323,7 +325,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the add members page
     App.controller('managemembersController', function($scope, $http) {
-        checkPermissions(COUNCIL);
+        if (!checkPermissions(COUNCIL)){
+            window.location.replace('#/app');
+        }
         //TABS
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
@@ -1014,8 +1018,9 @@ function checkPermissions(perms){
         window.location.replace("/#/app/accountinfo");
     }
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
-        window.location.replace("/#/app/");
+        return false;
     }
+    return true;
     
 }
 
