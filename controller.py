@@ -358,12 +358,10 @@ class RESTApi(remote.Service):
         rpcs = []
         for user in clump['users']:
             new_user = User()
-            new_user.first_name = user['first_name']
-            new_user.last_name = user['last_name']
             new_user.email = user['email']
-            new_user.organization = User.query(User.user_name == request.user_name).get().organization
+            new_user.organization = request_user.organization
             new_user.user_name = ''
-            new_user.perms = 'member'
+            new_user.perms = 'alumni'
             new_user.put()
             json_data = alumni_signup_email(new_user)
             rpc = urlfetch.create_rpc()

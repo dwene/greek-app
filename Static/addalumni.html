@@ -1,0 +1,46 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>Add Alumni</h1>
+		</div>
+
+        </div>
+        
+            
+        <div class="container">
+            
+            <ul ng-repeat="add in adds | orderBy:'last_name'">
+                
+                    <li>{{ add.email }} <button class="btn btn-danger btn-sm" ng-click="deleteAdd(add)">delete</button></li>
+                
+            </ul>
+            <button ng-click="submitMembers()" class="btn btn-default">Submit Alumni</button>
+            
+            <hr>
+            
+            <p id='areAdded'></p>
+            <form id="addmembersForm" role="form">
+                <div class="form-group">
+                    <label for="uploadMembers">Upload CSV</label>
+                    <input type="file" id="uploadMembers" accept=".csv">
+                </div>
+                <div class="form-group">
+                    <button ng-click="addMembers()" class="btn btn-default">Add Alumni</button>
+                </div>
+                <p ng-show="memberSkippedNotifier">Some alumni may not have loaded due to an invalid format in the .csv file :(</p>
+            </form>
+            
+            <hr>
+            
+            <form id="addmemberForm" role="form">
+              <div class="form-group col-sm-3 col-xs-6">
+                <label for="email" class="control-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
+              </div>
+              <div class="form-group">
+                  <button ng-click="addMembers()" class="btn btn-default">Add Member</button>
+              </div>
+             </form>
+            
+        </div>
