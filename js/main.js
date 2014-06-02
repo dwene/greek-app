@@ -499,8 +499,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         
-        //reads the file as it's added into the file input
-        document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
+        //reads the file as it's added into the file input #TODO uncomment this code and make it work
+        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
         
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addMembers = function(){
@@ -706,18 +706,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-<<<<<<< HEAD
-    App.controller('memberprofileController', function($scope, $http, $stateParams){
-         var user_name = $stateParams.id;
-=======
     App.controller('memberProfileController', function($scope, $http, $stateParams){
-        console.log("I'm in the right place");
         var user_name = $stateParams.id;
         if(user_name.toString().length < 2){
             window.location.replace('#/app/directory')
         }
-        console.log('user_name: '+user_name);
->>>>>>> FETCH_HEAD
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1033,11 +1026,7 @@ function checkPermissions(perms){
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
         return false;
     }
-<<<<<<< HEAD
-=======
     return true;
-    
->>>>>>> secure urls for profile pictures
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
