@@ -51,18 +51,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl : 'Static/managemembers.html',
 				controller  : 'managemembersController'
 			})
-        .state('managemebers.managingmembers', {
-                url : '/manage',
-                templateUrl : 'Static/managingmembers.html'
-            })
-        .state('managemebers.addingmembers', {
-                url : '/add',
-                templateUrl : 'Static/addingmembers.html'
-            })
-        .state('managemebers.taggingmembers', {
-                url : '/tag',
-                templateUrl : 'Static/tagmembers.html'
-            })
+            .state('managemembers.perms', {
+                    url : '/perms',
+                    templateUrl : 'Static/managingmembers.html',
+                    controller: 'managemembersController'
+                })
+            .state('managemembers.add', {
+                    url : '/add',
+                    templateUrl : 'Static/addingmembers.html',
+                    controller: 'managemembersController'
+                })
+            .state('managemembers.tag', {
+                    url : '/tag',
+                    templateUrl : 'Static/taggingmembers.html',
+                    controller: 'membertagsController'
+                })
         .state('newmember', {
                 url : '/newmember',
                 templateUrl : 'Static/newmember.html',
@@ -499,7 +502,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         
         //reads the file as it's added into the file input
-        document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
+        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
         
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addMembers = function(){
