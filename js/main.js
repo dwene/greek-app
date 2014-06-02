@@ -93,8 +93,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
-        .state('directory.user', {
-                url : '/app/directory/user/:id',
+        .state('memberprofile', {
+                url : '/app/directory/:id',
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
@@ -125,6 +125,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('navigationController', function($scope, $http){
         $scope.checkLogin = function(){
             return checkLogin();
+        }
+        
+        $scope.checkPermissions = function(perms){
+            return checkPermissions(perms);
         }
         
         $scope.logout = function(){
@@ -670,7 +674,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var directory = JSON.parse(data.data)
+                    var directory = JSON.parse(data.data).members;
                     for(var i = 0; i<directory.length; i++){
                         if(directory[i].user_name == ''){
                             directory.splice(i, 1);
@@ -689,7 +693,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/user/"+member.user_name);
+            window.location.replace("#/app/directory/"+member.user_name);
         }
         
         //click the buttons to search for that button text
@@ -703,11 +707,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //member profiles
     App.controller('memberprofileController', function($scope, $http, $stateParams){
          var user_name = $stateParams.id;
+        if (user_name.toString().length < 2){
+            window.location.replace('/#/app/directory');
+        }
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.members = JSON.parse(data.data)
+                    $scope.members = JSON.parse(data.data).members;
                     console.log($scope.members);
                     for(var i = 0; i<$scope.members.length; i++)
                     {
