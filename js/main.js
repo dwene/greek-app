@@ -1016,8 +1016,9 @@ function checkLogin(){
 
 function checkPermissions(perms){
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
-        window.location.replace("/#/app/");
+        return false;
     }
+    return true;
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
