@@ -6,7 +6,7 @@ var ALUMNI = 'alumni';
 var MEMBER = 'member';
 var LEADERSHIP = 'leadership';
 var COUNCIL = 'council';
-var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
+var PERMS_LIST =  [MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
 var App = angular.module('App', ['ui.router']);
@@ -79,12 +79,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('directory', {
                 url : '/app/directory',
                 templateUrl : 'Static/directory.html',
-                controller : 'directoryController'  
+                controller : 'directoryController'
             })
-        .state('directory.user', {
-                url : '/app/directory/user/:id'
+        .state('memberprofile', {
+                url : '/app/directory/user/:id',
                 templateUrl : 'Static/memberprofile.html',
-                controller : 'memberprofileController'  
+                controller : 'memberProfileController'  
             })
         //#CHANGES there might be a better way to do this
         .state('postNewKeyPictureLink', {
@@ -691,8 +691,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-    App.controller('memberprofileController', function($scope, $http, $routeParams){
-         var user_name = $routeParams.id;
+    App.controller('memberProfileController', function($scope, $http, $routeParams){
+        console.log("I'm in the right place");
+        var user_name = $routeParams.id;
+        console.log($routeParams.id);
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
