@@ -52,15 +52,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				controller  : 'managemembersController'
 			})
         .state('managemebers.managingmembers', {
-                url : '/app/managemembers/manage',
+                url : '/manage',
                 templateUrl : 'Static/managingmembers.html'
             })
         .state('managemebers.addingmembers', {
-                url : '/app/managemembers/add',
+                url : '/add',
                 templateUrl : 'Static/addingmembers.html'
             })
         .state('managemebers.taggingmembers', {
-                url : '/app/managemembers/tag',
+                url : '/tag',
                 templateUrl : 'Static/tagmembers.html'
             })
         .state('newmember', {
@@ -93,9 +93,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
-
-        .state('memberprofile', {
-                url : '/app/directory/:id',
+        .state('directory.user', {
+                url : '/app/directory/user/:id',
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
@@ -126,10 +125,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('navigationController', function($scope, $http){
         $scope.checkLogin = function(){
             return checkLogin();
-        }
-        
-        $scope.checkPermissions = function(perms){
-            return checkPermissions(perms);
         }
         
         $scope.logout = function(){
@@ -166,6 +161,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     
                 }
+                //debug credentials user:jakeruesink pass:jakeiscool
+
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -336,9 +333,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the add members page
     App.controller('managemembersController', function($scope, $http) {
-        if (!checkPermissions(COUNCIL)){
-            window.location.replace('#/app');
-        }
+        checkPermissions(COUNCIL);
         //TABS
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
@@ -499,8 +494,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         
-        //reads the file as it's added into the file input #TODO uncomment this code and make it work
-        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
+        //reads the file as it's added into the file input
+        document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
         
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addMembers = function(){
@@ -694,7 +689,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/"+member.user_name);
+            window.location.replace("#/app/directory/user/"+member.user_name);
         }
         
         //click the buttons to search for that button text
@@ -706,11 +701,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-    App.controller('memberProfileController', function($scope, $http, $stateParams){
-        var user_name = $stateParams.id;
-        if(user_name.toString().length < 2){
-            window.location.replace('#/app/directory')
-        }
+    App.controller('memberprofileController', function($scope, $http, $stateParams){
+         var user_name = $stateParams.id;
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1024,9 +1016,8 @@ function checkLogin(){
 
 function checkPermissions(perms){
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
-        return false;
+        window.location.replace("/#/app/");
     }
-    return true;
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
