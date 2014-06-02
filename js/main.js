@@ -691,15 +691,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-    App.controller('memberProfileController', function($scope, $http, $routeParams){
+    App.controller('memberProfileController', function($scope, $http, $stateParams){
         console.log("I'm in the right place");
-        var user_name = $routeParams.id;
-        console.log($routeParams.id);
+        var user_name = $stateParams.id;
+        console.log('user_name: '+user_name);
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.members = JSON.parse(data.data)
+                    $scope.members = JSON.parse(data.data).members
                     console.log($scope.members);
                     for(var i = 0; i<$scope.members.length; i++)
                     {
