@@ -9,7 +9,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ngRoute']);
+var App = angular.module('App', ['ngRoute', 'ui.router']);
 
 //define routes and link to their controllers
 	App.config(function ($routeProvider) {
@@ -92,6 +92,15 @@ var App = angular.module('App', ['ngRoute']);
                 redirectTo: '/'
             });
 	});
+
+//define states and link to their templates
+    App.config(function($stateProvider) {
+      $stateProvider
+        .state('managemembers', {
+            url: "app/managemembers/manage",
+            templateUrl: "Static/managingmembers.html"
+        })
+    });
 
 //navigation header
     App.controller('navigationController', function($scope, $http){
@@ -209,7 +218,6 @@ var App = angular.module('App', ['ngRoute']);
     App.controller('changePasswordController', function($scope, $http) {
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
-        
         $scope.changePassword = function(password) {
             console.log($scope.item);
             $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending($scope.item))
