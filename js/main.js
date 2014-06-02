@@ -82,7 +82,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 controller : 'directoryController'
             })
         .state('memberprofile', {
-                url : '/app/directory/user/:id',
+                url : '/app/directory/:id',
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberProfileController'  
             })
@@ -679,7 +679,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/user/"+member.user_name);
+            window.location.replace("#/app/directory/"+member.user_name);
         }
         
         //click the buttons to search for that button text
@@ -694,6 +694,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('memberProfileController', function($scope, $http, $stateParams){
         console.log("I'm in the right place");
         var user_name = $stateParams.id;
+        if(user_name.toString().length < 2){
+            window.location.replace('#/app/directory')
+        }
         console.log('user_name: '+user_name);
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
