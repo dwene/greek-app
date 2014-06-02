@@ -6,7 +6,7 @@ var ALUMNI = 'alumni';
 var MEMBER = 'member';
 var LEADERSHIP = 'leadership';
 var COUNCIL = 'council';
-var PERMS_LIST =  [MEMBER, LEADERSHIP, COUNCIL];
+var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
 var App = angular.module('App', ['ui.router']);
@@ -51,6 +51,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl : 'Static/managemembers.html',
 				controller  : 'managemembersController'
 			})
+        .state('managemebers.managingmembers', {
+                url : '/app/managemembers/manage',
+                templateUrl : 'Static/managingmembers.html'
+            })
+        .state('managemebers.addingmembers', {
+                url : '/app/managemembers/add',
+                templateUrl : 'Static/addingmembers.html'
+            })
+        .state('managemebers.taggingmembers', {
+                url : '/app/managemembers/tag',
+                templateUrl : 'Static/tagmembers.html'
+            })
         .state('newmember', {
                 url : '/newmember',
                 templateUrl : 'Static/newmember.html',
@@ -79,12 +91,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('directory', {
                 url : '/app/directory',
                 templateUrl : 'Static/directory.html',
-                controller : 'directoryController'
+                controller : 'directoryController'  
             })
-        .state('memberprofile', {
+        .state('directory.user', {
                 url : '/app/directory/user/:id',
                 templateUrl : 'Static/memberprofile.html',
-                controller : 'memberProfileController'  
+                controller : 'memberprofileController'  
             })
         //#CHANGES there might be a better way to do this
         .state('postNewKeyPictureLink', {
@@ -282,10 +294,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         console.log(data);
                         window.location.replace("/#/payment");
-                        $.cookie(TOKEN,  data.data.token);
-                        $.cookie(USER_NAME, data_tosend.user.user_name);
-                        $.cookie(PERMS, data.token.perms);  
-                        $.cookie('EMPTY_DIRECTYORY_INFO', true);
+                        $.cookie("TOKEN",  data.data);
+                        $.cookie("USER_NAME", data_tosend.user.user_name);
                     }
                     else
                         console.log('ERROR: '+data);
@@ -667,7 +677,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             i--;
                         }
                     }
-                    $scope.directory = directory.members;
+                    $scope.directory = directory;
                 }
                 else
                 {
@@ -691,15 +701,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-    App.controller('memberProfileController', function($scope, $http, $stateParams){
-        console.log("I'm in the right place");
-        var user_name = $stateParams.id;
-        console.log('user_name: '+user_name);
+    App.controller('memberprofileController', function($scope, $http, $stateParams){
+         var user_name = $stateParams.id;
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.members = JSON.parse(data.data).members
+                    $scope.members = JSON.parse(data.data)
                     console.log($scope.members);
                     for(var i = 0; i<$scope.members.length; i++)
                     {
@@ -773,7 +781,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         console.log(data.data);
                         $scope.updatedInfo = true;
-                        $.cookie('EMPTY_DIRECTYORY_INFO', false);
                     }
                     else
                     {
@@ -815,6 +822,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
     });
+
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http) {
@@ -1007,13 +1015,9 @@ function checkLogin(){
 }
 
 function checkPermissions(perms){
-    if($.cookie('EMPTY_DIRECTYORY_INFO')){
-        window.location.replace("/#/app/accountinfo");
-    }
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
         window.location.replace("/#/app/");
     }
-    
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
@@ -1146,35 +1150,47 @@ App.directive('match', function () {
         };
 });
 
-
 App.filter('multiSearch', function() { //#FUTURE Search box filter
-        return function (objects, search) {
-            var searchValues = search;
-            if (!search){
-                return objects;
+        return function (objects, searchValues, delimiter) {
+            if (!delimiter) {
+                delimiter="";
             }
-            retList = [];
-            var searchArray = search.split(" ");
-            for (var oPos = 0; oPos < objects.length; oPos++){
-                var object = objects[oPos];
-                var oCheck;
-                for(var sPos = 0; sPos< searchArray.length; sPos++){
-                    var check = false;
-                    var searchItem = searchArray[sPos];
-                    for(var item in object){
-                        if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
-                            check = true;
-                            break;
+            if (searchValues) {
+                var good = Array(0); //the list of objects that match ALL terms
+                var terms = String(searchValues).toUpperCase().split(delimiter); 
+                for (var w = 0; w < terms.length; w++) {
+                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
+                }
+                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
+                for (var j = 0; j < objects.length; j++) { //iterates through each object
+                    for (var t = 0; t < objects.length; t++) {
+                        truthArray[t] = 0; //initializes/resets the truthArray
+                    }
+                    for (var i = 0; i < terms.length; i++) {
+                        if (objects[j].attribute1) {
+                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute2) {
+                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute3) {
+                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
                         }
                     }
-                    if(!check){
-                        break;
-                    }
-                    if(sPos == searchArray.length-1 && check){
-                        retList.push(object);
+                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
+                        good.push(objects[j]); //add the object to the good list
                     }
                 }
+                return good; //return the list of matching objects
             }
-            return retList;
+            else { //if there are no terms, return all objects
+                return objects;
+            }
         }
     });
