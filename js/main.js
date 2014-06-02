@@ -267,8 +267,10 @@ var App = angular.module('App', ['ngRoute']);
                     {
                         console.log(data);
                         window.location.replace("/#/payment");
-                        $.cookie("TOKEN",  data.data);
-                        $.cookie("USER_NAME", data_tosend.user.user_name);
+                        $.cookie(TOKEN,  data.data.token);
+                        $.cookie(USER_NAME, data_tosend.user.user_name);
+                        $.cookie(PERMS, data.token.perms);  
+                        $.cookie('EMPTY_DIRECTYORY_INFO', true);
                     }
                     else
                         console.log('ERROR: '+data);
@@ -817,7 +819,7 @@ var App = angular.module('App', ['ngRoute']);
                             i--;
                         }
                     }
-                    $scope.directory = directory;
+                    $scope.directory = directory.members;
                 }
                 else
                 {
@@ -921,6 +923,7 @@ var App = angular.module('App', ['ngRoute']);
                     {
                         console.log(data.data);
                         $scope.updatedInfo = true;
+                        $.cookie('EMPTY_DIRECTYORY_INFO', false);
                     }
                     else
                     {
@@ -962,7 +965,6 @@ var App = angular.module('App', ['ngRoute']);
         }
         
     });
-
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http) {
@@ -1155,9 +1157,13 @@ function checkLogin(){
 }
 
 function checkPermissions(perms){
+    if($.cookie('EMPTY_DIRECTYORY_INFO')){
+        window.location.replace("/#/app/accountinfo");
+    }
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
         window.location.replace("/#/app/");
     }
+    
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
@@ -1292,16 +1298,12 @@ App.directive('match', function () {
 
 App.filter('multiSearch', function() { //#FUTURE Search box filter
         return function (objects, search) {
-            console.log('objects');
-            console.log(objects);
             var searchValues = search;
             if (!search){
                 return objects;
             }
             retList = [];
             var searchArray = search.split(" ");
-            console.log('search:');
-            console.log(searchArray);
             for (var oPos = 0; oPos < objects.length; oPos++){
                 var object = objects[oPos];
                 var oCheck;
@@ -1311,7 +1313,6 @@ App.filter('multiSearch', function() { //#FUTURE Search box filter
                     for(var item in object){
                         if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
                             check = true;
-                            console.log(object[item]);
                             break;
                         }
                     }
@@ -1319,7 +1320,6 @@ App.filter('multiSearch', function() { //#FUTURE Search box filter
                         break;
                     }
                     if(sPos == searchArray.length-1 && check){
-                        console.log('adding to retlist');
                         retList.push(object);
                     }
                 }

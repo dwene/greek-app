@@ -50,7 +50,7 @@ class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
     data = messages.StringField(2)
 
-# """MODELS"""
+# MODELS
 
 
 class User(ndb.Model):
@@ -105,9 +105,7 @@ class DateEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-def signup_email(url_key):
-    key = ndb.Key(urlsafe=url_key)
-    new_user = key.get()
+def signup_email(new_user):
     to_email = [{'email': new_user.email, 'type': 'to', 'name': new_user.first_name}]
     token = new_user.organization.get().name
     token += new_user.last_name
@@ -120,6 +118,36 @@ def signup_email(url_key):
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
+    body += signup_link + "\n\n -NeteGreek Team"
+    to_send = {}
+    to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
+    message = {}
+    message["text"] = body
+    message["subject"] = subject
+    message["from_email"] = 'support@netegreek.com'
+    message["from_name"] = 'NeteGreek'
+    message["to"] = to_email
+    to_send["message"] = message
+    json_data = json.dumps(to_send)
+    new_user.put()
+    return json_data
+
+
+def alumni_signup_email(new_user):
+    to_email = [{'email': new_user.email, 'type': 'to', 'name': new_user.first_name}]
+    org = new_user.organization.get()
+    token = org.name
+    token += new_user.last_name
+    token += generate_token()
+    token = token.replace(" ", "")
+    new_user.current_token = token
+    logging.error(token)
+    signup_link = 'https://greek-app.appspot.com/?token='+token+'#/newalumni'
+    from_email = 'netegreek@greek-app.appspotmail.com'
+    subject = "Registration for NeteGreek App!"
+    body = "Hello!\n"
+    body += org.name + "at " + org.school + "has requested to add you to their database of alumni. If you would like" \
+                                            "to add yourself please go to the following link\n" + signup_link
     body += signup_link + "\n\n -NeteGreek Team"
     to_send = {}
     to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
@@ -153,8 +181,7 @@ def send_mandrill_email(from_email, to_emails, subject, body):
     return
 
 
-def removal_email(key):
-    user = key.get()
+def removal_email(user):
     to_email = [{'email': user.email, 'type': 'to', 'name': user.first_name}]
     from_email = 'support@netegreek.com'
     subject = 'Removal from NeteGreek App'
@@ -166,9 +193,7 @@ def removal_email(key):
     send_mandrill_email(from_email, to_email, subject, body)
 
 
-def forgotten_password_email(url_key):
-    key = ndb.Key(urlsafe=url_key)
-    user = key.get()
+def forgotten_password_email(user):
     to_email = [{'email': user.email, 'type': 'to', 'name': user.first_name}]
     from_email = 'support@netegreek.com'
     subject = 'NeteGreek Password Reset'
@@ -183,20 +208,14 @@ def forgotten_password_email(url_key):
     send_mandrill_email(from_email, to_email, subject, body)
 
 
-def testEmail():
-    from_email = 'support@netegreek.com'
-    body = "Hello! this is a test email! Have a great day!"
-    to_email = 'derek.wene@yahoo.com'
-    subject = 'test'
-    mail.send_mail(from_email, to_email, subject, body)
-
 def check_form_status(user):
     if user:
         if user.address and user.state and user.dob and user.city and user.major:
             return True
         return False
 
-def dumpJSON(item):
+
+def json_dump(item):
     return json.dumps(item, cls=DateEncoder)
 
 
@@ -207,24 +226,6 @@ def handle_result(rpc):
 # Use a helper function to define the scope of the callback.
 def create_callback(rpc):
     return lambda: handle_result(rpc)
-
-
-def check_auth(user_name, token):
-    user = User.query(User.user_name == user_name).get()
-   #if (user.perms == 'council') or (user.perms == 'leadership') or (user.perms == 'member'): #why did I do this?
-    if user:
-        dt = (datetime.datetime.now() - user.timestamp)
-        logging.error(user.timestamp)
-        if (user.current_token == token) and (dt.days < 1):
-
-            logging.error("I am so freaking awesome")
-            return True
-        else:
-            logging.error("token is " + token)
-            logging.error("token also is" + user.current_token)
-            logging.error("dt.days is" + str(dt.days))
-            logging.error("I suck even more")
-            return False
 
 
 def check_if_info_set(key):
@@ -240,6 +241,7 @@ def get_user(user_name, token):
         return user
     else:
         return None
+
 
 def username_available(user_name):
     if User.query(User.user_name == user_name).get():
@@ -287,7 +289,7 @@ class RESTApi(remote.Service):
             new_user.class_year = int(user['class_year'])
             new_user.timestamp = datetime.datetime.now()
             new_user.put()
-            return OutgoingMessage(error='', data=dumpJSON({'token': new_user.current_token, 'perms': new_user.perms}))
+            return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms}))
         except:
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
@@ -304,16 +306,17 @@ class RESTApi(remote.Service):
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return_item = {'token': user.current_token, 'perms': user.perms, 'form_status': check_form_status(user)}
-            return OutgoingMessage(data=dumpJSON(return_item), error='')
+            return_item = {'token': user.current_token, 'perms': user.perms}
+            return OutgoingMessage(data=json_dump(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
                       http_method='POST', name='auth.add_users')
     def add_users(self, request):
-        if not check_auth(request.user_name, request.token):
-            return OutgoingMessage(error=TOKEN_EXPIRED)
-        if User.query(User.user_name == request.user_name).get().perms != 'council':
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         logging.error(clump)
@@ -328,7 +331,41 @@ class RESTApi(remote.Service):
             new_user.user_name = ''
             new_user.perms = 'member'
             new_user.put()
-            json_data = signup_email(new_user.key.urlsafe())
+            json_data = signup_email(new_user)
+            rpc = urlfetch.create_rpc()
+            rpc.callback = create_callback(rpc)
+            urlfetch.make_fetch_call(rpc=rpc,
+                                     url='https://mandrillapp.com/api/1.0/messages/send.json',
+                                     payload=json_data,
+                                     method=urlfetch.POST,
+                                     headers={'Content-Type': 'application/json'})
+            rpcs.append(rpc)
+        for rpc in rpcs:
+            rpc.wait()
+        return OutgoingMessage(error='', data='OK')
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
+                      http_method='POST', name='auth.add_users')
+    def add_users(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        clump = json.loads(request.data)
+        logging.error(clump)
+        rpcs = []
+        for user in clump['users']:
+            new_user = User()
+            new_user.first_name = user['first_name']
+            new_user.last_name = user['last_name']
+            new_user.email = user['email']
+            new_user.organization = User.query(User.user_name == request.user_name).get().organization
+            new_user.user_name = ''
+            new_user.perms = 'member'
+            new_user.put()
+            json_data = alumni_signup_email(new_user)
             rpc = urlfetch.create_rpc()
             rpc.callback = create_callback(rpc)
             urlfetch.make_fetch_call(rpc=rpc,
@@ -344,9 +381,9 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/get_users',
                       http_method='POST', name='auth.get_users')
     def get_users(self, request):
-        if not check_auth(request.user_name, request.token):
-            return OutgoingMessage(error=TOKEN_EXPIRED)
-        request_user = User.query(User.user_name == request.user_name).get()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS)
 
@@ -362,14 +399,14 @@ class RESTApi(remote.Service):
             del user_dict["prof_pic"]
             user_dict["key"] = user.key.urlsafe()
             user_list.append(user_dict)
-        return OutgoingMessage(error='', data=dumpJSON(user_list))
+        return OutgoingMessage(error='', data=json_dump(user_list))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/remove_user',
                       http_method='POST', name='auth.remove_user')
     def remove_user(self, request):
-        if not check_auth(request.user_name, request.token):
-            return OutgoingMessage(error=TOKEN_EXPIRED)
-        request_user = User.query(User.user_name == request.user_name).get()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         logging.error(request.data)
@@ -377,7 +414,7 @@ class RESTApi(remote.Service):
         logging.error(user_info)
         user_to_remove = ndb.Key(urlsafe=user_info["key"]).get()
         if user_to_remove:
-            removal_email(user_to_remove.key)
+            removal_email(user_to_remove)
             user_to_remove.key.delete()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error=INVALID_USERNAME, data='')
@@ -395,7 +432,7 @@ class RESTApi(remote.Service):
             del user_dict["current_token"]
             del user_dict["previous_token"]
             del user_dict["organization"]
-            return OutgoingMessage(error='', data=dumpJSON(user_dict))
+            return OutgoingMessage(error='', data=json_dump(user_dict))
         return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_credentials',
@@ -419,27 +456,25 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user_directory_info',
                       http_method='POST', name='user.get_user_directory_info')
     def get_user_directory_info(self, request):
-        if not check_auth(request.user_name, request.token):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-
-        user = User.query(User.user_name == request.user_name).get()
-        logging.error(user.user_name)
-        user_dict = user.to_dict()
+        user_dict = request_user.to_dict()
         del user_dict["hash_pass"]
         del user_dict["current_token"]
         del user_dict["previous_token"]
         del user_dict["organization"]
         del user_dict["timestamp"]
-        user_dict["key"] = user.key.urlsafe()
+        user_dict["key"] = request_user.key.urlsafe()
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
         else:
             user_dict["has_registered"] = False
         try:
-            user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
+            user_dict["prof_pic"] = images.get_serving_url(request_user.prof_pic)
         except:
             del user_dict["prof_pic"]
-        return OutgoingMessage(error='', data=dumpJSON(user_dict))
+        return OutgoingMessage(error='', data=json_dump(user_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/manage_perms',
                       http_method='POST', name='user.manage_perms')
@@ -454,10 +489,44 @@ class RESTApi(remote.Service):
         user = ndb.Key(urlsafe=request_object["key"]).get()
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
-        if request_object["perms"] not in ["leadership", "council", "alumni", "member"]:
+        if request_object["perms"] not in ["leadership", "council", "member"]:
             return OutgoingMessage(error=INVALID_FORMAT, data='')
         user.perms = request_object["perms"]
         user.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/convert_to_alumni',
+                      http_method='POST', name='user.convert_to_alumni')
+    def convert_to_alumni(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        for key in request_object["keys"]:
+            user = ndb.Key(urlsafe=key).get()
+            if not user:
+                return OutgoingMessage(error=INVALID_USERNAME, data='')
+            user.perms = 'alumni'
+            user.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/revert_from_alumni',
+                      http_method='POST', name='user.revert_from_alumni')
+    def convert_to_alumni(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        for key in request_object["keys"]:
+            user = ndb.Key(urlsafe=key).get()
+            if not user:
+                return OutgoingMessage(error=INVALID_USERNAME, data='')
+            user.perms = 'member'
+            user.put()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
@@ -526,7 +595,7 @@ class RESTApi(remote.Service):
             user = User.query(User.user_name == user_data["user_name"]).get()
         if not user:
             return OutgoingMessage(error=INVALID_EMAIL, data='')
-        forgotten_password_email(user.key.urlsafe())
+        forgotten_password_email(user)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/change_password',
@@ -593,6 +662,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         organization_users = User.query(User.organization == user.organization).fetch()
         user_list = []
+        alumni_list = []
         for user in organization_users:
             user_dict = user.to_dict()
             del user_dict["hash_pass"]
@@ -604,8 +674,12 @@ class RESTApi(remote.Service):
                 user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
             except:
                 del user_dict["prof_pic"]
-            user_list.append(user_dict)
-        return OutgoingMessage(error='', data=dumpJSON(user_list))
+            if user_dict["perms"] == 'alumni':
+                alumni_list.append(user_dict);
+            else:
+                user_list.append(user_dict)
+        return_data = json_dump({'members': user_list, 'alumni': alumni_list})
+        return OutgoingMessage(error='', data=return_data)
 
     #-------------------------
     # TAGGING Endpoints
@@ -661,7 +735,7 @@ class RESTApi(remote.Service):
         organization = request_user.organization.get()
         if not organization:
             return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        return OutgoingMessage(error='', data=dumpJSON({'tags': organization.tags}))
+        return OutgoingMessage(error='', data=json_dump({'tags': organization.tags}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_users_tags',
                       http_method='POST', name='user.add_users_tags')
