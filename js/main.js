@@ -63,10 +63,6 @@ var App = angular.module('App', ['ngRoute']);
                 templateUrl : 'Static/uploadprofilepicture.html',
                 controller : 'profilepictureController'  
             })
-            .when('/app/membertagging', {
-                templateUrl : 'Static/membertags.html',
-                controller : 'membertagsController'
-            })
             .when('/app/directory', {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
