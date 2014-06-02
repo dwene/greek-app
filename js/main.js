@@ -1124,46 +1124,79 @@ App.directive('match', function () {
 });
 
 App.filter('multiSearch', function() { //#FUTURE Search box filter
-        return function (objects, searchValues, delimiter) {
-            if (!delimiter) {
-                delimiter="";
-            }
-            if (searchValues) {
-                var good = Array(0); //the list of objects that match ALL terms
-                var terms = String(searchValues).toUpperCase().split(delimiter); 
-                for (var w = 0; w < terms.length; w++) {
-                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
-                }
-                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
-                for (var j = 0; j < objects.length; j++) { //iterates through each object
-                    for (var t = 0; t < objects.length; t++) {
-                        truthArray[t] = 0; //initializes/resets the truthArray
-                    }
-                    for (var i = 0; i < terms.length; i++) {
-                        if (objects[j].attribute1) {
-                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                        if (truthArray[i] != 1 && objects[j].attribute2) {
-                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                        if (truthArray[i] != 1 && objects[j].attribute3) {
-                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                    }
-                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
-                        good.push(objects[j]); //add the object to the good list
-                    }
-                }
-                return good; //return the list of matching objects
-            }
-            else { //if there are no terms, return all objects
+        return function (objects, search) {
+            console.log('objects');
+            console.log(objects);
+            var searchValues = search;
+            if (!search){
                 return objects;
             }
+            retList = [];
+            var searchArray = search.split(" ");
+            console.log('search:');
+            console.log(searchArray);
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                var object = objects[oPos];
+                var oCheck;
+                for(var sPos = 0; sPos< searchArray.length; sPos++){
+                    var check = false;
+                    var searchItem = searchArray[sPos];
+                    for(var item in object){
+                        if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
+                            check = true;
+                            console.log(object[item]);
+                            break;
+                        }
+                    }
+                    if(!check){
+                        break;
+                    }
+                    if(sPos == searchArray.length-1 && check){
+                        console.log('adding to retlist');
+                        retList.push(object);
+                    }
+                }
+            }
+            return retList;
+//            if (!delimiter) {
+//                delimiter=" ";
+//            }
+//            if (searchValues) {
+//                var good = Array(0); //the list of objects that match ALL terms
+//                var terms = String(searchValues).toUpperCase().split(delimiter); 
+//                for (var w = 0; w < terms.length; w++) {
+//                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
+//                }
+//                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
+//                for (var j = 0; j < objects.length; j++) { //iterates through each object
+//                    for (var t = 0; t < objects.length; t++) {
+//                        truthArray[t] = 0; //initializes/resets the truthArray
+//                    }
+//                    for (var i = 0; i < terms.length; i++) {
+//                        if (objects[j].attribute1) {
+//                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
+//                                truthArray[i] = 1;
+//                            }
+//                        }
+//                        if (truthArray[i] != 1 && objects[j].attribute2) {
+//                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
+//                                truthArray[i] = 1;
+//                            }
+//                        }
+//                        if (truthArray[i] != 1 && objects[j].attribute3) {
+//                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
+//                                truthArray[i] = 1;
+//                            }
+//                        }
+//                    }
+//                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
+//                        good.push(objects[j]); //add the object to the good list
+//                    }
+//                }
+//                return good; //return the list of matching objects
+//            }
+//            else { //if there are no terms, return all objects
+//                return objects;
+//            }
         }
     });
