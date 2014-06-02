@@ -13,7 +13,8 @@ var App = angular.module('App', ['ui.router']);
 
 App.config(function($stateProvider, $urlRouterProvider) {
     
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/")
+    .when("/app/managemembers", "/app/managemembers/manage");
     
       $stateProvider
         .state('home', {
@@ -52,7 +53,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				controller  : 'managemembersController'
 			})
             .state('managemembers.perms', {
-                    url : '/perms',
+                    url : '/manage',
                     templateUrl : 'Static/managingmembers.html',
                     controller: 'managemembersController'
                 })
