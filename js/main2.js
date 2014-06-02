@@ -9,104 +9,97 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router']);
+var App = angular.module('App', ['ngRoute', 'ui.router']);
 
-App.config(function($stateProvider, $urlRouterProvider) {
-    
-    $urlRouterProvider.otherwise("/");
-    
-      $stateProvider
-        .state('home', {
-                url: '/', 
+//define routes and link to their controllers
+	App.config(function ($routeProvider) {
+		$routeProvider
+			.when('/', {
 				templateUrl : 'Static/home.html',
 				controller  : 'homeController'
 			})
-        .state('login', {
-                url : '/login',
+			.when('/login', {
+
 				templateUrl : 'Static/login.html',
 				controller  : 'loginController'
 			})
-        .state('register', {
-                url : 'register',
+			.when('/register', {
 				templateUrl : 'Static/register.html',
 				controller  : 'registerController'
 			})
-        .state('registerinfo', {
-                url : '/registerinfo',
+            .when('/registerinfo', {
 				templateUrl : 'Static/registerinfo.html',
 				controller  : 'registerinfoController'
 			})
-        .state('payment', {
-                url : '/payment',
+            .when('/payment', {
 				templateUrl : 'Static/payment.html',
 				controller  : 'paymentController'
 			})
-        .state('app', {
-                url : '/app',
-                templateUrl : 'Static/app.html',
-                controller : 'appController'
-        })
-        .state('managemembers', {
-                url : '/app/managemembers',
+			.when('/app', {
+				templateUrl : 'Static/app.html',
+				controller  : 'appController'
+			})
+            .when('/app/managemembers', {
 				templateUrl : 'Static/managemembers.html',
 				controller  : 'managemembersController'
 			})
-        .state('newmember', {
-                url : '/newmember',
+            .when('/newmember', {
                 templateUrl : 'Static/newmember.html',
                 controller : 'newmemberController'
             })
-        .state('incorrectperson', {
-                url : '/incorrectperson',
+            .when('/incorrectperson', {
                 templateUrl : 'Static/incorrectperson.html',
                 controller : 'incorrectpersonController'
             })
-        .state('newmemberinfo', {
-                url : '/newmemberinfo',
+            .when('/newmemberinfo', {
                 templateUrl : 'Static/newmemberinfo.html',
                 controller : 'newmemberinfoController'
             })
-        .state('accountinfo', {
-                url : '/app/accountinfo',
+            .when('/app/accountinfo', {
                 templateUrl : 'Static/accountinfo.html',
                 controller : 'accountinfoController'
             })
-//        .state('uploadprofilepicture', {
-//                url : '/app/uploadprofilepicture'
-//                templateUrl : 'Static/uploadprofilepicture.html',
-//                controller : 'profilepictureController'  
-//            })
-        .state('directory', {
-                url : '/app/directory',
+            .when('/app/uploadprofilepicture', {
+                templateUrl : 'Static/uploadprofilepicture.html',
+                controller : 'profilepictureController'  
+            })
+            .when('/app/directory', {
                 templateUrl : 'Static/directory.html',
                 controller : 'directoryController'  
             })
-        .state('directory.user', {
-                url : '/app/directory/user/:id'
+            .when('/app/directory/user/:id', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'memberprofileController'  
             })
         //#CHANGES there might be a better way to do this
-        .state('postNewKeyPictureLink', {
-                url : '/app/postNewKeyPictureLink',
+            .when('/app/postNewKeyPictureLink', {
                 templateUrl : 'Static/memberprofile.html',
                 controller : 'uploadImageController'
             })
-        .state('forgotpassword', {
-                url : '/forgotpassword',
+            .when('/forgotpassword', {
                 templateUrl : 'Static/forgot_password.html',
                 controller : 'forgotPasswordController'
             })
-        .state('changepasswordfromtoken', {
-                url : '/changepasswordfromtoken',
+            .when('/changepasswordfromtoken', {
                 templateUrl : 'Static/change_password_from_token.html',
                 controller : 'changePasswordFromTokenController'
             })
-        .state('changepassword', {
-                url : '/app/changepassword',
+            .when('/app/changepassword', {
                 templateUrl : 'Static/change_password.html',
                 controller : 'changePasswordController'
             })
+            .otherwise({
+                redirectTo: '/'
+            });
+	});
+
+//define states and link to their templates
+    App.config(function($stateProvider) {
+      $stateProvider
+        .state('managemembers', {
+            url: "app/managemembers/manage",
+            templateUrl: "Static/managingmembers.html"
+        })
     });
 
 //navigation header
@@ -282,10 +275,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         console.log(data);
                         window.location.replace("/#/payment");
-                        $.cookie(TOKEN,  data.data.token);
-                        $.cookie(USER_NAME, data_tosend.user.user_name);
-                        $.cookie(PERMS, data.token.perms);  
-                        $.cookie('EMPTY_DIRECTYORY_INFO', true);
+                        $.cookie("TOKEN",  data.data);
+                        $.cookie("USER_NAME", data_tosend.user.user_name);
                     }
                     else
                         console.log('ERROR: '+data);
@@ -667,7 +658,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             i--;
                         }
                     }
-                    $scope.directory = directory.members;
+                    $scope.directory = directory;
                 }
                 else
                 {
@@ -771,7 +762,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         console.log(data.data);
                         $scope.updatedInfo = true;
-                        $.cookie('EMPTY_DIRECTYORY_INFO', false);
                     }
                     else
                     {
@@ -813,6 +803,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
     });
+
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http) {
@@ -1005,13 +996,9 @@ function checkLogin(){
 }
 
 function checkPermissions(perms){
-    if($.cookie('EMPTY_DIRECTYORY_INFO')){
-        window.location.replace("/#/app/accountinfo");
-    }
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
         window.location.replace("/#/app/");
     }
-    
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
@@ -1144,35 +1131,47 @@ App.directive('match', function () {
         };
 });
 
-
 App.filter('multiSearch', function() { //#FUTURE Search box filter
-        return function (objects, search) {
-            var searchValues = search;
-            if (!search){
-                return objects;
+        return function (objects, searchValues, delimiter) {
+            if (!delimiter) {
+                delimiter="";
             }
-            retList = [];
-            var searchArray = search.split(" ");
-            for (var oPos = 0; oPos < objects.length; oPos++){
-                var object = objects[oPos];
-                var oCheck;
-                for(var sPos = 0; sPos< searchArray.length; sPos++){
-                    var check = false;
-                    var searchItem = searchArray[sPos];
-                    for(var item in object){
-                        if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
-                            check = true;
-                            break;
+            if (searchValues) {
+                var good = Array(0); //the list of objects that match ALL terms
+                var terms = String(searchValues).toUpperCase().split(delimiter); 
+                for (var w = 0; w < terms.length; w++) {
+                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
+                }
+                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
+                for (var j = 0; j < objects.length; j++) { //iterates through each object
+                    for (var t = 0; t < objects.length; t++) {
+                        truthArray[t] = 0; //initializes/resets the truthArray
+                    }
+                    for (var i = 0; i < terms.length; i++) {
+                        if (objects[j].attribute1) {
+                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute2) {
+                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
+                        }
+                        if (truthArray[i] != 1 && objects[j].attribute3) {
+                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
+                                truthArray[i] = 1;
+                            }
                         }
                     }
-                    if(!check){
-                        break;
-                    }
-                    if(sPos == searchArray.length-1 && check){
-                        retList.push(object);
+                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
+                        good.push(objects[j]); //add the object to the good list
                     }
                 }
+                return good; //return the list of matching objects
             }
-            return retList;
+            else { //if there are no terms, return all objects
+                return objects;
+            }
         }
     });
