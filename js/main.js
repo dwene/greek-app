@@ -390,6 +390,7 @@ var App = angular.module('App', ['ngRoute']);
                 {
                     
                     var members = JSON.parse(data.data);
+                    $scope.tagmembers = JSON.parse(data.data);
                     for(var i = 0; i<members.length; i++){
                         if (members[i].user_name == $.cookie(USER_NAME)){
                             members.splice(i, 1);
@@ -408,7 +409,6 @@ var App = angular.module('App', ['ngRoute']);
         
         }
         $scope.getMembers();
-        
         
         $scope.removeMember = function(user){
             $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
@@ -500,6 +500,173 @@ var App = angular.module('App', ['ngRoute']);
                 $scope.adds = newmemberList;
             }
         };
+        
+        
+        
+        //#CHANGES added the tagging controller stuff here
+        function getUsers(){
+            $scope.selectedTags = {};
+            $scope.selectedUsers = {};
+            $scope.getMembers();
+        }
+        $scope.getOrganizationTags = function(){
+            //initialize ng-model variables to contain selected things
+            $('#tag').val('');
+            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.organizationTags = JSON.parse(data.data).tags;
+                        console.log($scope.organizationTags);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                    
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        $scope.getOrganizationTags();
+        $scope.addOrganizationTag = function(tag){
+        //#TODO find checked tags and add them to the checked members
+            console.log(tag);
+            $http.post('/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({'tag': tag}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout($scope.getOrganizationTags, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                    
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        $scope.removeOrganizationTags = function(){
+        //#TODO find checked tags and removed them from the checked members
+            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tags', packageForSending({'tag': tag}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.organizationTags = JSON.parse(data.data).tags;
+                        console.log($scope.organizationTags);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        //onclick checkmark tag
+        
+        //#TODO fix this to where it updates the ng-model
+        $('.memberTags').on('click', '.addTags li', function(){
+            
+            var checkbox = $(this).prev(':checkbox')
+                        
+                if ( checkbox.prop('checked') )
+                {
+                    checkbox.prop('checked', false).trigger('input');
+                    $(this).removeClass('checked');
+                }
+                else
+                {
+                    checkbox.prop('checked', true).trigger('input');
+                    $(this).addClass('checked');
+                }
+            
+        });
+       
+    
+        
+        function addTagsToUsers(tags, keys){
+            var to_send = {'tags': tags, 'keys': keys};
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout(getUsers, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        $scope.addTagsToUsers = function(tags, users){
+            console.log(tags);
+            console.log(users);
+            selected_tags = [];
+            selected_keys = [];
+            for (var subtag in tags){
+                if (tags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            for (var subuser in users){
+                if (users[subuser] == true){
+                    selected_keys.push(subuser)
+                }
+            }
+            addTagsToUsers(selected_tags, selected_keys);
+        }
+        
+        function removeTagsFromUsers(tags, keys){
+            $http.post('/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': tags, 'keys': keys}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                        setTimeout(getUsers, 200);
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
+        $scope.removeTagsFromUsers = function(tags, users){
+            console.log(tags);
+            console.log(users);
+            selected_tags = [];
+            selected_keys = [];
+            for (var subtag in tags){
+                if (tags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            for (var subuser in users){
+                if (users[subuser] == true){
+                    selected_keys.push(subuser)
+                }
+            }
+            removeTagsFromUsers(selected_tags, selected_keys);
+        }
+        
+        
     });
 
 //new member page
@@ -1158,45 +1325,5 @@ App.filter('multiSearch', function() { //#FUTURE Search box filter
                 }
             }
             return retList;
-//            if (!delimiter) {
-//                delimiter=" ";
-//            }
-//            if (searchValues) {
-//                var good = Array(0); //the list of objects that match ALL terms
-//                var terms = String(searchValues).toUpperCase().split(delimiter); 
-//                for (var w = 0; w < terms.length; w++) {
-//                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
-//                }
-//                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
-//                for (var j = 0; j < objects.length; j++) { //iterates through each object
-//                    for (var t = 0; t < objects.length; t++) {
-//                        truthArray[t] = 0; //initializes/resets the truthArray
-//                    }
-//                    for (var i = 0; i < terms.length; i++) {
-//                        if (objects[j].attribute1) {
-//                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
-//                                truthArray[i] = 1;
-//                            }
-//                        }
-//                        if (truthArray[i] != 1 && objects[j].attribute2) {
-//                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
-//                                truthArray[i] = 1;
-//                            }
-//                        }
-//                        if (truthArray[i] != 1 && objects[j].attribute3) {
-//                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
-//                                truthArray[i] = 1;
-//                            }
-//                        }
-//                    }
-//                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
-//                        good.push(objects[j]); //add the object to the good list
-//                    }
-//                }
-//                return good; //return the list of matching objects
-//            }
-//            else { //if there are no terms, return all objects
-//                return objects;
-//            }
         }
     });

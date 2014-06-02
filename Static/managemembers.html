@@ -58,7 +58,7 @@
                         <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li> 
                     </ul>
                     <button ng-click="addTagsToUsers(selectedTags, selectedUsers)">Add Tags</button><button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)">Remove Tags</button>
-                    <ul ng-repeat="member in members | orderBy:'last_name' | filter:search" style="border: 2px solid black;">
+                    <ul ng-repeat="member in tagmembers | orderBy:'last_name' | filter:search" style="border: 2px solid black;">
 
                             <li>
                             <input type="checkbox" ng-model="selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
