@@ -73,7 +73,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('managealumni', {
                 url : '/app/managealumni',
 				templateUrl : 'Static/managealumni.html',
-				controller  : 'managealumniController'
 			})
             .state('managealumni.add' , {
                     url : '/add',

@@ -423,7 +423,6 @@ class RESTApi(remote.Service):
             user_dict = user.to_dict()
             del user_dict["hash_pass"]
             del user_dict["current_token"]
-            del user_dict["previous_token"]
             del user_dict["organization"]
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
@@ -464,7 +463,6 @@ class RESTApi(remote.Service):
             logging.error(user_dict)
             del user_dict["hash_pass"]
             del user_dict["current_token"]
-            del user_dict["previous_token"]
             del user_dict["organization"]
             return OutgoingMessage(error='', data=json_dump(user_dict))
         return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
@@ -496,7 +494,6 @@ class RESTApi(remote.Service):
         user_dict = request_user.to_dict()
         del user_dict["hash_pass"]
         del user_dict["current_token"]
-        del user_dict["previous_token"]
         del user_dict["organization"]
         del user_dict["timestamp"]
         user_dict["key"] = request_user.key.urlsafe()
@@ -707,7 +704,6 @@ class RESTApi(remote.Service):
             user_dict = user.to_dict()
             del user_dict["hash_pass"]
             del user_dict["current_token"]
-            del user_dict["previous_token"]
             del user_dict["organization"]
             del user_dict["timestamp"]
             try:
