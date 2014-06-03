@@ -1096,16 +1096,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $('.memberTags').on('click', '.addTags li', function(){
             
             var checkbox = $(this).prev(':checkbox')
+            var checkboxModel = $scope.selectedTags;
                         
                 if ( checkbox.prop('checked') )
                 {
-                    checkbox.prop('checked', false).trigger('input');
+                    //checkbox.prop('checked', false).trigger('input');
+                    checkboxModel = false;
                     $(this).removeClass('checked');
+                    $scope.$apply()
                 }
                 else
                 {
-                    checkbox.prop('checked', true).trigger('input');
+                    //checkbox.prop('checked', true).trigger('input');
+                    checkboxModel = true;
                     $(this).addClass('checked');
+                    $scope.$apply()
                 }
             
         });
