@@ -10,7 +10,10 @@
 
 <div class="container">
 
-<img ng-src = "{{item.prof_pic}}">
+<div class="profilepic" style="background-image:url({{item.prof_pic}});" >
+<!--<img ng-src="{{item.prof_pic}}">-->
+</div>
+
 <a ng-href="/#/app/uploadprofilepicture" class="btn btn-default">Change Profile Picture</a>
 <div class="row"> Username: {{userName}} </div>
 <div class="row"> Pledge Class: {{pledgeClass}} </div>
