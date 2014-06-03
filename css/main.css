@@ -19,8 +19,10 @@ h1{font-size:36px; font-weight:bold;}
 /*.addTags input{visibility:hidden; height:0px; width:0px;}*/
 
 .addTags li{cursor:pointer; -webkit-user-select:none; display:inline;}
-.addTags label{margin:8px 4px; display:inline-block;}
+.addTags label{margin:8px 4px; display:inline-block; position:relative; padding:.2em 1.5em .3em .6em;}
 .addTags input{display:none;}
+.removeTag{height: 100%; position: absolute; right: 0px; top: 0px; line-height: 17px; padding: 0px 2px;}
+.removeTag:hover{background:#d9534f; cursor:pointer;}
 
 .profilepic{
   display: block;
