@@ -1,3 +1,5 @@
+//#FIXME I tried to add a member last night and it add you as an alumni instead? I've created an addAlumni function and renamed that form correctly
+
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -14,7 +16,8 @@ var App = angular.module('App', ['ui.router']);
 App.config(function($stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise("/")
-    .when("/app/managemembers", "/app/managemembers/manage");
+    .when("/app/managemembers", "/app/managemembers/manage")
+    .when("/app/managealumni", "/app/managealumni/manage");
     
       $stateProvider
         .state('home', {
@@ -70,11 +73,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('managealumni', {
                 url : '/app/managealumni',
 				templateUrl : 'Static/managealumni.html',
-				controller  : 'managemembersController'
+				controller  : 'managealumniController'
 			})
             .state('managealumni.add' , {
                     url : '/add',
-                    templateUrl : 'Static/addalumni.html',
+                    templateUrl : 'Static/addingalumni.html',
                     controller: 'addAlumniController'
                 })
             .state('managealumni.manage' , {
@@ -102,11 +105,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/accountinfo.html',
                 controller : 'accountinfoController'
             })
-//        .state('uploadprofilepicture', {
-//                url : '/app/uploadprofilepicture'
-//                templateUrl : 'Static/uploadprofilepicture.html',
-//                controller : 'profilepictureController'  
-//            })
+        .state('uploadprofilepicture', {
+                url : '/app/uploadprofilepicture',
+                templateUrl : 'Static/uploadprofilepicture.html',
+                controller : 'profilepictureController'  
+            })
         .state('directory', {
                 url : '/app/directory',
                 templateUrl : 'Static/directory.html',
@@ -363,13 +366,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the add members page
     App.controller('managemembersController', function($scope, $http) {
         checkPermissions(COUNCIL);
-        //TABS
-        $('#managemembersTabs a').click(function (e) {
-          e.preventDefault()
-          $(this).tab('show')
-          //$scope.getMembers();
-        });
-        
+ 
         //MANAGE MEMBERS TAB
         
         //this goes inside the HTTP request
@@ -409,11 +406,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
          
         //ng-click for the form to add one member at a time        
-        $scope.addMember = function(){
+        $scope.addMember = function(isValid){
+            if(isValid){
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
-            $scope.adds = newmemberList;
+            $scope.adds = newmemberList;}
+            else{$scope.submitted = true;}
         };
         
         
@@ -620,11 +619,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
          
         //ng-click for the form to add one member at a time        
-        $scope.addMember = function(){
+        $scope.addAlumni = function(isValid){
+            if(isValid){
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
             $scope.adds = newmemberList;
+            }else{$scope.submitted = true;}
         };
         
         $scope.submitMembers = function(){
