@@ -86,7 +86,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     controller: 'managealumniController'
                 })
         .state('newmember', {
-                url : '/newmember',
+                url : '/newuser/:key',
                 templateUrl : 'Static/newmember.html',
                 controller : 'newmemberController'
             })
@@ -96,7 +96,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 controller : 'incorrectpersonController'
             })
         .state('newmemberinfo', {
-                url : '/newmemberinfo',
+                url : '/newuserinfo',
                 templateUrl : 'Static/newmemberinfo.html',
                 controller : 'newmemberinfoController'
             })
@@ -230,7 +230,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.emailFailed = true;
             });
 
-        
         }
     });
 
@@ -545,10 +544,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //new member page
-    App.controller('newmemberController', function($scope, $http){
+    App.controller('newmemberController', function($scope, $http, $stateProvider){
         $('.container').hide();
-        $.cookie(TOKEN, getParameterByName('token'))
-        console.log(getParameterByName('token'));
+        $.cookie(TOKEN, $stateProvider.key)
         $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -767,8 +765,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.user_is_taken = true;
                     }
                     console.log('ERROR: '+data);
-                }
-                
+                } 
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -956,7 +953,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         
-        
+        $scope.checkAlumni = function(){
+            return checkAlumni();
+        }
         $scope.updateAccount = function(isValid){
             if(isValid){
                 $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
@@ -1201,6 +1200,13 @@ function checkPermissions(perms){
         return false;
     }
     return true;
+}
+
+function checkAlumni(){
+    if ($.cookie(PERMS) == ALUMNI){
+        return true;
+    }
+    return false;
 }
 
 //use packageForSending(send_data) when $http.post in order to attach data to user

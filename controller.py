@@ -113,7 +113,7 @@ def member_signup_email(user, request_user):
     token = token.replace(" ", "")
     user['token'] = token
     logging.error(token)
-    signup_link = 'https://greek-app.appspot.com/?token='+token+'#/newmember'
+    signup_link = 'https://greek-app.appspot.com/#/newuser/'+token
     from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
@@ -143,7 +143,7 @@ def alumni_signup_email(user, request_user):
     token += generate_token()
     token = token.replace(" ", "")
     user['token'] = token
-    signup_link = 'https://greek-app.appspot.com/?token='+token+'#/newalumni'
+    signup_link = 'https://greek-app.appspot.com/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += org.name + " at " + org.school + "has requested to add you to their database of alumni. If you would like" \
