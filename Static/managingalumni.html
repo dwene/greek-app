@@ -1,0 +1,31 @@
+<div class="container">
+        
+                <!-- HEADER AND TODO COUNT -->
+                <div class="jumbotron text-center">
+                    <h1>Manage Alumni</h1>
+                </div>
+        
+        </div>
+        
+        <div class="container">
+            
+            <ul ng-repeat="alumnus in alumni | orderBy:'last_name'">
+                
+                    <li>
+                        <form> 
+                            
+<!--
+                            <input ng-model="member.perms">
+                            <option value="council">council</option>
+                            <option value="member">member</option>
+                            <option value="alumni">alumni</option>
+                            </input>
+-->
+                        </form>
+                    <br>
+                    {{ alumnus.first_name }}, {{ alumnus.last_name }}, {{ alumnus.class_year }}, {{ alumnus.email }}
+                    </li>
+                
+            </ul>
+            
+        </div>
