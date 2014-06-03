@@ -27,6 +27,7 @@ h1{font-size:36px; font-weight:bold;}
 .addTags .open .dropdown-toggle{background:#ccc;}
 .addTags .dropdown-toggle{height: 100%; position: absolute; right: 0px; top: 0px; padding: .3em .4em .5em .4em;}
 .addTags .dropdown-toggle:hover{background:#d9534f; cursor:pointer;}
+.dropdown-menu>li>a{cursor: pointer;}
 
 
 
