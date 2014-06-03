@@ -1093,24 +1093,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //onclick checkmark tag
         
         //#TODO fix this to where it updates the ng-model
-        $('.memberTags').on('click', '.addTags li', function(){
+        $('.memberTags').on('click', '.addTags label', function(){
             
-            var checkbox = $(this).prev(':checkbox')
-            var checkboxModel = $scope.selectedTags;
+            var checkbox = $(this).find(':checkbox');
                         
                 if ( checkbox.prop('checked') )
                 {
-                    //checkbox.prop('checked', false).trigger('input');
-                    checkboxModel = false;
-                    $(this).removeClass('checked');
-                    $scope.$apply()
+                    $(this).addClass('label-primary').removeClass('label-default');
                 }
                 else
                 {
-                    //checkbox.prop('checked', true).trigger('input');
-                    checkboxModel = true;
-                    $(this).addClass('checked');
-                    $scope.$apply()
+                    $(this).removeClass('label-primary').addClass('label-default');
                 }
             
         });
