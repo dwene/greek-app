@@ -360,7 +360,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $('#managemembersTabs a').click(function (e) {
           e.preventDefault()
           $(this).tab('show')
-          $scope.getMembers();
+          //$scope.getMembers();
         });
         
         //MANAGE MEMBERS TAB
