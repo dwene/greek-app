@@ -66,10 +66,20 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/taggingmembers.html',
                     controller: 'membertagsController'
                 })
-            .state('managemembers.addalumni' , {
-                    url : '/addalumni',
+        .state('managealumni', {
+                url : '/app/managealumni',
+				templateUrl : 'Static/managealumni.html',
+				controller  : 'managemembersController'
+			})
+            .state('managealumni.add' , {
+                    url : '/add',
                     templateUrl : 'Static/addalumni.html',
                     controller: 'addAlumniController'
+                })
+            .state('managealumni.manage' , {
+                    url : '/manage',
+                    templateUrl : 'Static/managingalumni.html',
+                    controller: 'managealumniController'
                 })
         .state('newmember', {
                 url : '/newmember',
@@ -414,7 +424,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     
-                    var members = JSON.parse(data.data);
+                    var members = JSON.parse(data.data).members;
                     for(var i = 0; i<members.length; i++){
                         if (members[i].user_name == $.cookie(USER_NAME)){
                             members.splice(i, 1);
@@ -558,6 +568,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //incorrect person page
     App.controller('incorrectpersonController', function($scope, $http){
     
+    });
+
+    App.controller('managealumniController', function($scope, $http){
+        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var alumni = JSON.parse(data.data).alumni;
+                    $scope.alumni = alumni;
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
     });
 
     App.controller('addAlumniController', function($scope, $http){
@@ -946,7 +974,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var members = JSON.parse(data.data);
+                    var members = JSON.parse(data.data).members;
                     $scope.members = members;
                     console.log($scope.members);
                 }
