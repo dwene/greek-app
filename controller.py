@@ -54,16 +54,23 @@ class OutgoingMessage(messages.Message):
 
 
 class User(ndb.Model):
+    #login stuff
     user_name = ndb.StringProperty()
     hash_pass = ndb.StringProperty()
     current_token = ndb.StringProperty()
-    previous_token = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
+    #general information
     first_name = ndb.StringProperty()
     last_name = ndb.StringProperty()
-    email = ndb.StringProperty()
     dob = ndb.DateProperty()
+    #school/work status
     major = ndb.StringProperty()
+    occupation = ndb.StringProperty()
+    employer = ndb.StringProperty()
+    class_year = ndb.IntegerProperty()
+    expected_graduation = ndb.DateProperty()
+    pledge_class = ndb.StringProperty()
+    #address stuff
     address = ndb.StringProperty()
     city = ndb.StringProperty()
     state = ndb.StringProperty()
@@ -72,16 +79,15 @@ class User(ndb.Model):
     perm_city = ndb.StringProperty()
     perm_state = ndb.StringProperty()
     perm_zip = ndb.IntegerProperty()
+    #contact info
+    email = ndb.StringProperty()
     phone = ndb.StringProperty()
     facebook = ndb.StringProperty()
     twitter = ndb.StringProperty()
     instagram = ndb.StringProperty()
     linkedin = ndb.StringProperty()
     website = ndb.StringProperty()
-    class_year = ndb.IntegerProperty()
-    expected_graduation = ndb.StringProperty()
-    pledge_class = ndb.StringProperty()
-    is_alumni = ndb.BooleanProperty()
+    #netegreek info
     organization = ndb.KeyProperty()
     tags = ndb.StringProperty(repeated=True)
     perms = ndb.StringProperty()
@@ -568,48 +574,54 @@ class RESTApi(remote.Service):
             logging.error(key + " " + str(value))
             if key == "email":
                 user.email = value
-            if key == "first_name":
+            elif key == "first_name":
                 user.first_name = value
-            if key == "last_name":
+            elif key == "last_name":
                 user.last_name = value
-            if key == "dob":
+            elif key == "dob":
                 user.dob = datetime.datetime.strptime(value, '%Y-%m-%d')
-            if key == "address":
+            elif key == "expected_graduation":
+                user.expected_graduation = datetime.datetime.strptime(value, '%Y-%m-%d')
+            elif key == "address":
                 user.address = value
-            if key == "city":
+            elif key == "city":
                 user.city = value
-            if key == "state":
+            elif key == "state":
                 user.state = value
-            if key == "zip":
-                user.zip = value
-            if key == "class_year":
-                user.class_year = value
-            if key == "phone":
+            elif key == "zip":
+                user.zip = int(value)
+            elif key == "class_year":
+                user.class_year = int(value)
+            elif key == "phone":
                 user.phone = value
-            if key == "facebook":
+            elif key == "facebook":
                 user.facebook = value
-            if key == "instagram":
+            elif key == "instagram":
                 user.instagram = value
-            if key == "twitter":
+            elif key == "twitter":
                 user.twitter = value
-            if key == "website":
+            elif key == "website":
                 user.website = value
-            if key == "perm_address":
+            elif key == "perm_address":
                 user.perm_address = value
-            if key == "perm_city":
+            elif key == "perm_city":
                 user.perm_city = value
-            if key == "perm_state":
+            elif key == "perm_state":
                 user.perm_state = value
-            if key == "perm_zip":
+            elif key == "perm_zip":
                 user.perm_zip = value
-            if key == "major":
+            elif key == "major":
                 user.major = value
-            if key == "status":
+            elif key == "status":
                 user.status = value
-            if key == "expected_graduation":
+            elif key == "expected_graduation":
                 user.expected_graduation = value
-            if key == "position":
+            elif key == "position":
                 user.position = value
+            elif key == "occupation":
+                user.occupation = value
+            elif key == "employer":
+                user.employer = value
         user.put()
         return OutgoingMessage(error='', data='OK')
 
