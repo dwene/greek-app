@@ -1109,7 +1109,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         });
        
-    
+        $scope.openRenameTagModal = function(){
+        $('#renameTagModal').modal();
+        }
+        
+        $scope.openDeleteTagModal = function(){
+        $('#deleteTagModal').modal();
+        }
         
         function addTagsToUsers(tags, keys){
             var to_send = {'tags': tags, 'keys': keys};

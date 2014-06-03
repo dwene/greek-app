@@ -3,7 +3,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 /*Page Styles*/
 body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -webkit-font-smoothing:antialiased;}
-
+body.modal-open{margin-right:0px;}
 /*Navigation Styles*/
 .dropdown{cursor:pointer;}
 
@@ -18,13 +18,17 @@ body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -web
 h1{font-size:36px; font-weight:bold;}
 /*.addTags input{visibility:hidden; height:0px; width:0px;}*/
 
-
-.addTags label{margin:8px 4px; display:inline-block; position:relative; padding:.4em 2em .4em .6em; cursor:pointer;}
-.addTags label:hover{background:#ccc;}
+.addTags .btn-group{ -webkit-user-select:none; display:inline-block; margin:8px 4px 0px 4px;}
+.addTags li{display:inline;}
+.addTags label{display:inline-block; cursor:pointer; position:relative; padding:.4em 2em .4em .6em;}
 .addTags .badge{border-radius:.25em;}
+.addTags label:hover{background:#ccc;}
 .addTags input{display:none;}
-.removeTag{height: 100%; position: absolute; right: 0px; top: 0px; padding: .4em .4em;}
-.removeTag:hover{background:#d9534f; cursor:pointer;}
+.addTags .open .dropdown-toggle{background:#ccc;}
+.addTags .dropdown-toggle{height: 100%; position: absolute; right: 0px; top: 0px; padding: .3em .4em .5em .4em;}
+.addTags .dropdown-toggle:hover{background:#d9534f; cursor:pointer;}
+
+
 
 .profilepic{
   display: block;

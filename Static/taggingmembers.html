@@ -5,10 +5,16 @@
 <button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Remove Tags</button>
                     
                     <ul class="addTags">
-                        <label ng-repeat="tag in organizationTags" class="label label-default"><input type="checkbox" ng-model="selectedTags[tag]">
-                        <li>{{ tag }}</li>
-                        <span class="badge removeTag" ng-click="removeTag()"><i class="fa fa-times"></i></span>
-                        </label>
+                        <div class="btn-group" ng-repeat="tag in organizationTags">
+                            <label class="label label-default" >
+                            <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li>
+                            </label>
+                            <div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-click="openRenameTagModal()">Rename Tag</a></li>
+                                <li><a ng-click="openDeleteTagModal()">Delete Tag</a></li>
+                            </ul>
+                        </div>
                     </ul>
 
                     
@@ -37,3 +43,43 @@
                     </form>
 
 </div>
+
+
+<div class="modal fade" id="renameTagModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Rename Tag</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Rename Tag</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="deleteTagModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Delete Tag</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Delete Tag</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
