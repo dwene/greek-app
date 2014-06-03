@@ -776,7 +776,7 @@ class RESTApi(remote.Service):
         organization = request_user.organization.get()
         if not organization:
             return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        if request_object["tag"] in organization.tags:
+        if request_object["old_tag"] in organization.tags:
             organization.tags.remove(request_object['old_tag'])
             organization.tags.append(request_object['new_tag'])
             organization.put()

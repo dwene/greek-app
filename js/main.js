@@ -1079,14 +1079,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         
-        $scope.removeOrganizationTags = function(){
+        $scope.removeOrganizationTag = function(){
         //#TODO find checked tags and removed them from the checked members
-            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tags', packageForSending({'tag': tag}))
+            $('#deleteTagModal').modal('hide')
+            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({'tag': $scope.modaledTag}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        $scope.organizationTags = JSON.parse(data.data).tags;
-                        console.log($scope.organizationTags);
                     }
                     else
                     {
@@ -1096,8 +1095,44 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
+            var idx = $scope.organizationTags.indexOf($scope.modaledTag)
+            $scope.organizationTags.splice(idx, 1);
+            var tag = $scope.modaledTag;
+            $scope.modaledTag = null;
+            for (var i = 0; i< $scope.members.length; i++){
+                if ($scope.members[i].tags.indexOf(tag) > -1){
+                    $scope.members[i].tags.splice($scope.members[i].tags.indexOf(tag), 1);
+                }
+            }
         }
         
+        $scope.renameOrganizationTag = function(new_tag){
+        //#TODO find checked tags and removed them from the checked members
+            $('#renameTagModal').modal('hide')
+            $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag, 'new_tag': new_tag}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            var tag = $scope.modaledTag;
+            $scope.rename = null;
+            var idx = $scope.organizationTags.indexOf(tag);
+            $scope.organizationTags[idx] = new_tag;
+            $scope.modaledTag = null;
+            for (var i = 0; i< $scope.members.length; i++){
+                if ($scope.members[i].tags.indexOf(tag) > -1){
+                    $scope.members[i].tags[$scope.members[i].tags.indexOf(tag)] = new_tag;
+                }
+            }
+        }
         //onclick checkmark tag
         
         //#TODO fix this to where it updates the ng-model
@@ -1116,12 +1151,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         });
        
-        $scope.openRenameTagModal = function(){
-        $('#renameTagModal').modal();
+        $scope.openRenameTagModal = function(tag){
+            $('#renameTagModal').modal();
+            $scope.modaledTag = tag;
         }
         
-        $scope.openDeleteTagModal = function(){
-        $('#deleteTagModal').modal();
+        $scope.openDeleteTagModal = function(tag){
+            $('#deleteTagModal').modal();
+            $scope.modaledTag = tag;
         }
         
         function addTagsToUsers(tags, keys){
