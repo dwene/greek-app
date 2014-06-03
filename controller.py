@@ -105,13 +105,13 @@ class DateEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-def signup_email(new_user):
-    to_email = [{'email': new_user.email, 'type': 'to', 'name': new_user.first_name}]
-    token = new_user.organization.get().name
-    token += new_user.last_name
+def member_signup_email(user, request_user):
+    to_email = [{'email': user['email'], 'type': 'to', 'name': user['first_name']}]
+    token = request_user.organization.get().name
+    token += user['last_name']
     token += generate_token()
     token = token.replace(" ", "")
-    new_user.current_token = token
+    user['token'] = token
     logging.error(token)
     signup_link = 'https://greek-app.appspot.com/?token='+token+'#/newmember'
     from_email = 'netegreek@greek-app.appspotmail.com'
@@ -129,23 +129,21 @@ def signup_email(new_user):
     message["to"] = to_email
     to_send["message"] = message
     json_data = json.dumps(to_send)
-    new_user.put()
-    return json_data
+    ret_data = {'json_data': json_data, 'user': user}
+    return ret_data
 
 
-def alumni_signup_email(new_user):
-    to_email = [{'email': new_user.email, 'type': 'to', 'name': new_user.first_name}]
-    org = new_user.organization.get()
+def alumni_signup_email(user, request_user):
+    to_email = [{'email': user['email'], 'type': 'to'}]
+    org = request_user.organization.get()
     token = org.name
-    token += new_user.email
+    token += user['email']
     token = token.replace("@", "")
     token = token.replace(".", "")
     token += generate_token()
     token = token.replace(" ", "")
-    new_user.current_token = token
-    logging.error(token)
+    user['token'] = token
     signup_link = 'https://greek-app.appspot.com/?token='+token+'#/newalumni'
-    from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += org.name + " at " + org.school + "has requested to add you to their database of alumni. If you would like" \
@@ -161,8 +159,8 @@ def alumni_signup_email(new_user):
     message["to"] = to_email
     to_send["message"] = message
     json_data = json.dumps(to_send)
-    new_user.put()
-    return json_data
+    ret_data = {'json_data': json_data, 'user': user}
+    return ret_data
 
 
 def send_mandrill_email(from_email, to_emails, subject, body):
@@ -221,13 +219,28 @@ def json_dump(item):
     return json.dumps(item, cls=DateEncoder)
 
 
-def handle_result(rpc):
-    return
+def wait_for_replies(rpcs):
+    error = []
+    sent = []
+    for item in rpcs:
+        try:
+            result = item['rpc'].get_result()
+            text = result.content
+            contents = json.loads(result.content)
+            logging.error(contents)
+            for content in contents:
+                if content['status'] == 'error':
+                    error.append(item['user'])
+                    logging.error('Im being added to error list')
+                else:
+                    sent.append(item['user'])
+                    logging.error('Im being added to sent list')
+        except:
+            error.append(item['user'])
+    return {'errors': error, 'sent': sent}
 
 
 # Use a helper function to define the scope of the callback.
-def create_callback(rpc):
-    return lambda: handle_result(rpc)
 
 
 def check_if_info_set(key):
@@ -315,6 +328,39 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
                       http_method='POST', name='auth.add_users')
     def add_users(self, request):
+        # request_user = get_user(request.user_name, request.token)
+        # if not request_user:
+        #     return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        # if request_user.perms != 'council':
+        #     return OutgoingMessage(error=INCORRECT_PERMS)
+        # clump = json.loads(request.data)
+        # logging.error(clump)
+        # rpcs = []
+        # for user in clump['users']:
+        #     new_user = User()
+        #     new_user.first_name = user['first_name']
+        #     new_user.last_name = user['last_name']
+        #     new_user.email = user['email']
+        #     new_user.class_year = int(user['class_year'])
+        #     new_user.organization = User.query(User.user_name == request.user_name).get().organization
+        #     new_user.user_name = ''
+        #     new_user.perms = 'member'
+        #     new_user.put()
+        #     json_data = signup_email(new_user)
+        #     rpc = urlfetch.create_rpc()
+        #     urlfetch.make_fetch_call(rpc=rpc,
+        #                              url='https://mandrillapp.com/api/1.0/messages/send.json',
+        #                              payload=json_data,
+        #                              method=urlfetch.POST,
+        #                              headers={'Content-Type': 'application/json'})
+        #     rpcs.append({'rpc': rpc, 'email': user['email']})
+        # errors = wait_for_replies(rpcs)
+        # if len(errors) > 0:
+        #     to_send = json_dump({'errors': errors})
+        #     return OutgoingMessage(data=to_send, errors='')
+        # else:
+        #     return OutgoingMessage(error='', data='OK')
+
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -324,59 +370,68 @@ class RESTApi(remote.Service):
         logging.error(clump)
         rpcs = []
         for user in clump['users']:
-            new_user = User()
-            new_user.first_name = user['first_name']
-            new_user.last_name = user['last_name']
-            new_user.email = user['email']
-            new_user.class_year = int(user['class_year'])
-            new_user.organization = User.query(User.user_name == request.user_name).get().organization
-            new_user.user_name = ''
-            new_user.perms = 'member'
-            new_user.put()
-            json_data = signup_email(new_user)
+            email_item = member_signup_email(user, request_user)
             rpc = urlfetch.create_rpc()
-            rpc.callback = create_callback(rpc)
             urlfetch.make_fetch_call(rpc=rpc,
                                      url='https://mandrillapp.com/api/1.0/messages/send.json',
-                                     payload=json_data,
+                                     payload=email_item['json_data'],
                                      method=urlfetch.POST,
                                      headers={'Content-Type': 'application/json'})
-            rpcs.append(rpc)
-        for rpc in rpcs:
-            rpc.wait()
-        return OutgoingMessage(error='', data='OK')
+            rpcs.append({'rpc': rpc, 'user': email_item['user']})
+        rpc_data = wait_for_replies(rpcs)
 
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
-                      http_method='POST', name='auth.add_users')
-    def add_users(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if request_user.perms != 'council':
-            return OutgoingMessage(error=INCORRECT_PERMS)
-        clump = json.loads(request.data)
-        logging.error(clump)
-        rpcs = []
-        for user in clump['users']:
+        for user in rpc_data['sent']:
             new_user = User()
             new_user.email = user['email']
             new_user.organization = request_user.organization
             new_user.user_name = ''
-            new_user.perms = 'alumni'
+            new_user.current_token = user['token']
+            new_user.first_name = user['first_name']
+            new_user.last_name = user['last_name']
+            new_user.class_year = user['class_year']
+            new_user.perms = 'member'
             new_user.put()
-            json_data = alumni_signup_email(new_user)
+
+        to_send = json_dump({'errors': rpc_data['errors']})
+        return OutgoingMessage(error='', data=to_send)
+
+
+
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
+                      http_method='POST', name='auth.add_alumni')
+    def add_alumni(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        clump = json.loads(request.data)
+        logging.error(clump)
+        rpcs = []
+        for user in clump['users']:
+            email_item = alumni_signup_email(user, request_user)
             rpc = urlfetch.create_rpc()
-            rpc.callback = create_callback(rpc)
             urlfetch.make_fetch_call(rpc=rpc,
                                      url='https://mandrillapp.com/api/1.0/messages/send.json',
-                                     payload=json_data,
+                                     payload=email_item['json_data'],
                                      method=urlfetch.POST,
                                      headers={'Content-Type': 'application/json'})
-            rpcs.append(rpc)
-        for rpc in rpcs:
-            rpc.wait()
-        return OutgoingMessage(error='', data='OK')
+            rpcs.append({'rpc': rpc, 'user': email_item['user']})
+        rpc_data = wait_for_replies(rpcs)
+
+        for user in rpc_data['sent']:
+            new_user = User()
+            new_user.email = user['email']
+            new_user.organization = request_user.organization
+            new_user.user_name = ''
+            new_user.current_token = user['token']
+            new_user.perms = 'alumni'
+            new_user.put()
+
+        to_send = json_dump({'errors': rpc_data['errors']})
+        return OutgoingMessage(error='', data=to_send)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/get_users',
                       http_method='POST', name='auth.get_users')

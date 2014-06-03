@@ -12,18 +12,10 @@
             <ul ng-repeat="alumnus in alumni | orderBy:'last_name'">
                 
                     <li>
-                        <form> 
-                            
-<!--
-                            <input ng-model="member.perms">
-                            <option value="council">council</option>
-                            <option value="member">member</option>
-                            <option value="alumni">alumni</option>
-                            </input>
--->
-                        </form>
+                        
                     <br>
                     {{ alumnus.first_name }}, {{ alumnus.last_name }}, {{ alumnus.class_year }}, {{ alumnus.email }}
+                    <button ng-click="removeAlumni(alumnus)">Delete Alumnus</button>
                     </li>
                 
             </ul>

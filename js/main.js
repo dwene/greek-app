@@ -464,11 +464,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
+                    var returned = JSON.parse(data.data)
+                    if(returned.errors){
+                        var errors_str = 'Errors with the following emails:\n';
+                        for(var i = 0; i< returned.errors.length; i++){
+                            errors_str += returned.errors[i].email + '\n';
+                        }
+                    alert(errors_str);
+                    }
                     console.log(data);
-                    newmemberList = [];
-                    $scope.adds = null;
-                    $("#result").text('');
-                    $('#areAdded').text("members have been added");
                 }
                 else
                     console.log('ERROR: '+data);
@@ -476,7 +480,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-            
+            newmemberList = [];
         }
         
         //this function sets up a filereader to read the CSV
@@ -565,21 +569,47 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('managealumniController', function($scope, $http){
-        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var alumni = JSON.parse(data.data).alumni;
-                    $scope.alumni = alumni;
-                }
-                else
-                {
-                    console.log("error: "+ data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+        function getUsers(){
+            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        var alumni = JSON.parse(data.data).alumni;
+                        $scope.alumni = alumni;
+                        console.log(alumni);
+                    }
+                    else
+                    {
+                        console.log("error: "+ data.error)
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        getUsers();
+        $scope.removeAlumni = function(alumnus){
+            var to_send = {'keys': [alumnus.key]}
+            $http.post('/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        for (var i = 0; i < $scope.alumni.length; i++){
+                            if ($scope.alumni[i]. key == alumnus.key){
+                                $scope.alumni.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        console.log("error: "+ data.error)
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
     });
 
     App.controller('addAlumniController', function($scope, $http){
@@ -623,15 +653,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.submitMembers = function(){
             
             var data_tosend = {users: newmemberList};
+            $scope.adds = null;
             $http.post('/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
+                    var returned = JSON.parse(data.data)
+                    if(returned.errors.length > 0){
+                        var errors_str = 'Errors with the following emails:\n';
+                        for(var i = 0; i< returned.errors.length; i++){
+                            errors_str += returned.errors[i].email + '\n';
+                        }
+                    alert(errors_str);
+                    }
                     console.log(data);
                     newmemberList = [];
-                    $scope.adds = null;
-                    $("#result").text('');
-                    $('#areAdded').text("members have been added");
                 }
                 else
                     console.log('ERROR: '+data);
@@ -639,7 +675,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-            
+            newmemberList = [];
         }
         
         //this function sets up a filereader to read the CSV
