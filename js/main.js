@@ -129,6 +129,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
     });
 
+//Set up run commands for the app
+    App.run(function ($rootScope, $state, $stateParams) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
+    });
+
 //navigation header
     App.controller('navigationController', function($scope, $http){
         $scope.checkLogin = function(){
