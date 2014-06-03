@@ -161,6 +161,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
+                $.removeCookie(PERMS);
                 window.location.replace("/#/login");
          }
     });
@@ -183,7 +184,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(USER_NAME, user_name);
                     $.cookie(TOKEN,returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
-                    window.location.replace("/#/app");
+                    if($.cookie('FORM_INFO_EMPTY') == 'true'){
+                       window.location.replace("#/app/accountinfo"); 
+                    }
+                    else{
+                        window.location.replace("#/app");
+                    }
                 }
                 else{
                 
@@ -543,9 +549,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //new member page
-    App.controller('newmemberController', function($scope, $http, $stateProvider){
+    App.controller('newmemberController', function($scope, $http, $stateParams){
         $('.container').hide();
-        $.cookie(TOKEN, $stateProvider.key)
+        $.cookie(TOKEN, $stateParams.key)
         $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -562,10 +568,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.correctPerson = function(){
-            window.location.replace("/#/newmemberinfo");
+            window.location.replace("#/newuserinfo");
         }
         $scope.incorrectPerson = function(){
-            window.location.replace("/#/incorrectperson");
+            window.location.replace("#/incorrectperson");
         }
     });
 
@@ -755,6 +761,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(TOKEN,data.data.token);
                     $.cookie(USER_NAME, $scope.item.user_name);
                     $.cookie(PERMS, data.data.perms);
+                    $.cookie('FORM_INFO_EMPTY', 'true');
                     window.location.replace("/#/app/accountinfo");
                 }
                 else

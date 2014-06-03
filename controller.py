@@ -569,6 +569,8 @@ class RESTApi(remote.Service):
         logging.error(user_data)
         for key, value in user_data.iteritems():
             logging.error(key + " " + str(value))
+            if not value:
+                continue
             if key == "email":
                 user.email = value
             elif key == "first_name":
@@ -758,6 +760,31 @@ class RESTApi(remote.Service):
                                User.organization == request_user.organization)).fetch()
             for user in users:
                 user.tags.remove(request_object['tag'])
+                user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=INVALID_FORMAT, data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/rename_organization_tag',
+                      http_method='POST', name='user.rename_organization_tag')
+    def rename_organization_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        organization = request_user.organization.get()
+        if not organization:
+            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
+        if request_object["tag"] in organization.tags:
+            organization.tags.remove(request_object['old_tag'])
+            organization.tags.append(request_object['new_tag'])
+            organization.put()
+            users = User.query(ndb.AND(User.tags == request_object["old_tag"],
+                               User.organization == request_user.organization)).fetch()
+            for user in users:
+                user.tags.remove(request_object['old_tag'])
+                user.tags.append(request_object['new_tag'])
                 user.put()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error=INVALID_FORMAT, data='')
