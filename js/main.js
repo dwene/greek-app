@@ -649,16 +649,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
          
         //ng-click for the form to add one member at a time        
-        $scope.addAlumni = function(isValid){
+        $scope.addAlumnus = function(isValid){
             if(isValid){
-            newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
+            newmemberList = newmemberList.concat($('#addalumniForm').serializeObject());
             $('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
             $scope.adds = newmemberList;
             }else{$scope.submitted = true;}
         };
         
-        $scope.submitMembers = function(){
+        $scope.submitAlumni = function(){
             
             var data_tosend = {users: newmemberList};
             $scope.adds = null;
@@ -707,7 +707,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
         
        //this function takes the CSV, converts it to JSON and outputs it
-        $scope.addMembers = function(){
+        $scope.addAlumni = function(){
             
             //check to see if file is being read
             if(filecontents == null){

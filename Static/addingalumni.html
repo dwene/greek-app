@@ -15,7 +15,7 @@
                     <li>{{ add.email }} <button class="btn btn-danger btn-sm" ng-click="deleteAdd(add)">delete</button></li>
                 
             </ul>
-            <button ng-click="submitMembers()" class="btn btn-default">Submit Alumni</button>
+            <button ng-click="submitAlumni()" class="btn btn-default">Submit Alumni</button>
             
             <hr>
             
@@ -26,14 +26,14 @@
                     <input type="file" id="uploadMembers" accept=".csv">
                 </div>
                 <div class="form-group">
-                    <button ng-click="addMembers()" class="btn btn-default">Add Alumni</button>
+                    <button ng-click="addAlumni()" class="btn btn-default">Add Alumni</button>
                 </div>
                 <p ng-show="memberSkippedNotifier">Some alumni may not have loaded due to an invalid format in the .csv file :(</p>
             </form>
             
             <hr>
             
-            <form id="addalumniForm" name="addalumniForm" ng-submit="addAlumni(addalumniForm.$valid)" role="form" novalidate>
+            <form id="addalumniForm" name="addalumniForm" ng-submit="addAlumnus(addalumniForm.$valid)" role="form" novalidate>
               <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.email.$invalid && !addalumniForm.email.$pristine) || (addalumniForm.email.$invalid && submitted)}">
                 <label for="email" class="control-label">Email</label>
                   <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>

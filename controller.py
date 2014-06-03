@@ -120,7 +120,7 @@ def member_signup_email(user, request_user):
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
     body += signup_link + "\n\n -NeteGreek Team"
     to_send = {}
-    to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
+    to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
     message = {}
     message["text"] = body
     message["subject"] = subject
@@ -150,7 +150,7 @@ def alumni_signup_email(user, request_user):
                                              " to add yourself please go to the following link\n"
     body += signup_link + "\n\n -NeteGreek Team"
     to_send = {}
-    to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
+    to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
     message = {}
     message["text"] = body
     message["subject"] = subject
@@ -165,7 +165,7 @@ def alumni_signup_email(user, request_user):
 
 def send_mandrill_email(from_email, to_emails, subject, body):
     to_send = {}
-    to_send["key"] = '4BrHR91AFDnpIpBc8BL4ww'
+    to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
     message = {}
     message["text"] = body
     message["subject"] = subject
