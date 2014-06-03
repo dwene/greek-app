@@ -1,5 +1,9 @@
-<a ui-sref=".perms">Manage Members</a>
-<a ui-sref=".tag">Tag Members</a>
-<a ui-sref=".add">Add Members</a>
-
+<div class="container">
+<ul class="nav nav-pills">
+    <li ng-class="{ active: $state.includes('managemembers.manage') }"><a ui-sref=".manage">Manage Members</a></li>
+    <li ng-class="{ active: $state.includes('managemembers.tag') }"><a ui-sref=".tag">Tag Members</a></li>
+    <li ng-class="{ active: $state.includes('managemembers.add') }"><a ui-sref=".add">Add Members</a></li>
+</ul>
+</div>
+<br>
 <div ui-view></div>
