@@ -5,7 +5,10 @@
 <button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Remove Tags</button>
                     
                     <ul class="addTags">
-                        <label ng-repeat="tag in organizationTags" class="label label-default"><input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li></label>
+                        <label ng-repeat="tag in organizationTags" class="label label-default">
+                        <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li>
+                        <span class="badge removeTag" ng-click="removeTag()"><i class="fa fa-times"></i></span>
+                        </label>
                     </ul>
 
                     
