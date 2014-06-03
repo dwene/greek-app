@@ -389,6 +389,7 @@ class RESTApi(remote.Service):
 
         organization_users = User.query(User.organization == request_user.organization).fetch()
         user_list = []
+        alumni_list = []
         for user in organization_users:
             user_dict = user.to_dict()
             del user_dict["hash_pass"]
@@ -398,8 +399,12 @@ class RESTApi(remote.Service):
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
             user_dict["key"] = user.key.urlsafe()
-            user_list.append(user_dict)
-        return OutgoingMessage(error='', data=json_dump(user_list))
+            if user_dict["perms"] == 'alumni':
+                alumni_list.append(user_dict)
+            else:
+                user_list.append(user_dict)
+            return_object = json_dump({'members': user_list, 'alumni': alumni_list})
+        return OutgoingMessage(error='', data=return_object)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/remove_user',
                       http_method='POST', name='auth.remove_user')

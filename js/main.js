@@ -418,7 +418,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     
-                    var members = JSON.parse(data.data);
+                    var members = JSON.parse(data.data).members;
                     for(var i = 0; i<members.length; i++){
                         if (members[i].user_name == $.cookie(USER_NAME)){
                             members.splice(i, 1);
@@ -565,7 +565,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('managealumniController', function($scope, $http){
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -968,7 +968,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var members = JSON.parse(data.data);
+                    var members = JSON.parse(data.data).members;
                     $scope.members = members;
                     console.log($scope.members);
                 }
