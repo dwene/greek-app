@@ -956,6 +956,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.checkAlumni = function(){
             return checkAlumni();
         }
+        $scope.checkPermissions = function(perms){
+            return checkPermissions(perms);
+        }
         $scope.updateAccount = function(isValid){
             if(isValid){
                 $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
