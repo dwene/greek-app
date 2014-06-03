@@ -18,10 +18,12 @@ body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -web
 h1{font-size:36px; font-weight:bold;}
 /*.addTags input{visibility:hidden; height:0px; width:0px;}*/
 
-.addTags li{cursor:pointer; -webkit-user-select:none; display:inline;}
-.addTags label{margin:8px 4px; display:inline-block; position:relative; padding:.2em 1.5em .3em .6em;}
+
+.addTags label{margin:8px 4px; display:inline-block; position:relative; padding:.4em 2em .4em .6em; cursor:pointer;}
+.addTags label:hover{background:#ccc;}
+.addTags .badge{border-radius:.25em;}
 .addTags input{display:none;}
-.removeTag{height: 100%; position: absolute; right: 0px; top: 0px; line-height: 17px; padding: 0px 2px;}
+.removeTag{height: 100%; position: absolute; right: 0px; top: 0px; padding: .4em .4em;}
 .removeTag:hover{background:#d9534f; cursor:pointer;}
 
 .profilepic{
