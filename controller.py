@@ -328,38 +328,6 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
                       http_method='POST', name='auth.add_users')
     def add_users(self, request):
-        # request_user = get_user(request.user_name, request.token)
-        # if not request_user:
-        #     return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        # if request_user.perms != 'council':
-        #     return OutgoingMessage(error=INCORRECT_PERMS)
-        # clump = json.loads(request.data)
-        # logging.error(clump)
-        # rpcs = []
-        # for user in clump['users']:
-        #     new_user = User()
-        #     new_user.first_name = user['first_name']
-        #     new_user.last_name = user['last_name']
-        #     new_user.email = user['email']
-        #     new_user.class_year = int(user['class_year'])
-        #     new_user.organization = User.query(User.user_name == request.user_name).get().organization
-        #     new_user.user_name = ''
-        #     new_user.perms = 'member'
-        #     new_user.put()
-        #     json_data = signup_email(new_user)
-        #     rpc = urlfetch.create_rpc()
-        #     urlfetch.make_fetch_call(rpc=rpc,
-        #                              url='https://mandrillapp.com/api/1.0/messages/send.json',
-        #                              payload=json_data,
-        #                              method=urlfetch.POST,
-        #                              headers={'Content-Type': 'application/json'})
-        #     rpcs.append({'rpc': rpc, 'email': user['email']})
-        # errors = wait_for_replies(rpcs)
-        # if len(errors) > 0:
-        #     to_send = json_dump({'errors': errors})
-        #     return OutgoingMessage(data=to_send, errors='')
-        # else:
-        #     return OutgoingMessage(error='', data='OK')
 
         request_user = get_user(request.user_name, request.token)
         if not request_user:
@@ -388,7 +356,7 @@ class RESTApi(remote.Service):
             new_user.current_token = user['token']
             new_user.first_name = user['first_name']
             new_user.last_name = user['last_name']
-            new_user.class_year = user['class_year']
+            new_user.class_year = int(user['class_year'])
             new_user.perms = 'member'
             new_user.put()
 

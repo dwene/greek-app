@@ -450,16 +450,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var index=$scope.members.indexOf(user);
-                    $scope.members.splice(index,1); 
                 }
                 else
                     console.log('ERROR: '+data);
             })
             .error(function(data) {
                 console.log('Error: ' + data);
-            });
-        
+            });    
+                for (var i = 0; i < $scope.members.length; i++){
+                    if ($scope.members[i].key == user.key){
+                        $scope.members.splice(i, 1);
+                        break;
+                    }
+                }
         }
         
         
@@ -471,7 +474,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     var returned = JSON.parse(data.data)
-                    if(returned.errors){
+                    if(returned.errors.length > 0){
                         var errors_str = 'Errors with the following emails:\n';
                         for(var i = 0; i< returned.errors.length; i++){
                             errors_str += returned.errors[i].email + '\n';
@@ -600,12 +603,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        for (var i = 0; i < $scope.alumni.length; i++){
-                            if ($scope.alumni[i]. key == alumnus.key){
-                                $scope.alumni.splice(i, 1);
-                                break;
-                            }
-                        }
                     }
                     else
                     {
@@ -615,7 +612,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
+                for (var i = 0; i < $scope.alumni.length; i++){
+                    if ($scope.alumni[i]. key == alumnus.key){
+                        $scope.alumni.splice(i, 1);
+                        break;
+                    }
+                }
+        
         }
+        
     });
 
     App.controller('addAlumniController', function($scope, $http){
