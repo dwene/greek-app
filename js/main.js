@@ -162,7 +162,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
                 $.removeCookie(PERMS);
-                window.location.replace("/#/login");
+                $.removeCookie('FORM_INFO_EMPTY')
+                window.location.assign("/#/login");
          }
     });
 
@@ -185,10 +186,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(TOKEN,returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
                     if($.cookie('FORM_INFO_EMPTY') == 'true'){
-                       window.location.replace("#/app/accountinfo"); 
+                       window.location.assign("#/app/accountinfo"); 
                     }
                     else{
-                        window.location.replace("#/app");
+                        window.location.assign("#/app");
                     }
                 }
                 else{
@@ -207,7 +208,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         };
 
         $scope.forgotPassword = function(){
-        window.location.replace('/#/forgotpassword'); 
+        window.location.assign('/#/forgotpassword'); 
         }
         
     });
@@ -315,7 +316,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
                 //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
     //            if(organization.name === null || organization.school === null || organization.type === null){
-    //                window.location.replace("/#/register");
+    //                window.location.assign("/#/register");
     //            }
                 //format data for the api
                 console.log(item);
@@ -329,7 +330,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data))
                     {
                         console.log(data);
-                        window.location.replace("/#/payment");
+                        window.location.assign("/#/payment");
                         $.cookie("TOKEN",  data.data);
                         $.cookie("USER_NAME", data_tosend.user.user_name);
                     }
@@ -354,7 +355,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('paymentController', function($scope, $http) {
         //skip payment page right now
         $scope.submitPayment = function(){
-            window.location.replace("/#/app/managemembers");
+            window.location.assign("/#/app/managemembers");
         };
         
     });
@@ -362,7 +363,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the main app page
     App.controller('appController', function($scope, $http) {
         if(!checkLogin()){
-        window.location.replace("/#/login");
+        window.location.assign("/#/login");
         }
         
 	});
@@ -568,10 +569,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.correctPerson = function(){
-            window.location.replace("#/newuserinfo");
+            window.location.assign("#/newuserinfo");
         }
         $scope.incorrectPerson = function(){
-            window.location.replace("#/incorrectperson");
+            window.location.assign("#/incorrectperson");
         }
     });
 
@@ -762,7 +763,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(USER_NAME, $scope.item.user_name);
                     $.cookie(PERMS, data.data.perms);
                     $.cookie('FORM_INFO_EMPTY', 'true');
-                    window.location.replace("/#/app/accountinfo");
+                    window.location.assign("/#/app/accountinfo");
                 }
                 else
                 {
@@ -873,7 +874,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("#/app/directory/"+member.user_name);
+            window.location.assign("#/app/directory/"+member.user_name);
         }
         
         //click the buttons to search for that button text
@@ -888,7 +889,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('memberprofileController', function($scope, $http, $stateParams){
          var user_name = $stateParams.id;
         if (user_name.toString().length < 2){
-            window.location.replace('/#/app/directory');
+            window.location.assign('/#/app/directory');
         }
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
@@ -909,8 +910,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             $scope.email = $scope.member.email;
                             $scope.birthday = $scope.member.dob;
                             $scope.phone = $scope.member.phone;
-                            $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                            $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                            $scope.currentAddress = $scope.member.address.toString()+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                            $scope.permanentAddress = $scope.member.perm_address.toString()+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
                             $scope.website = $scope.member.website;
                             $scope.facebook = $scope.member.facebook;
                             $scope.twitter = $scope.member.twitter;
@@ -973,6 +974,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         console.log(data.data);
                         $scope.updatedInfo = true;
+                        $.removeCookie('FORM_INFO_EMPTY')
                     }
                     else
                     {
@@ -998,7 +1000,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     //$scope.url = JSON.parse(data.data);
-                    window.location.replace("/#/app/directory/user/"+$.cookie(USER_NAME));
+                    window.location.assign("/#/app/directory/user/"+$.cookie(USER_NAME));
                 }
                 else
                 {
@@ -1010,7 +1012,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.showIndividual = function(member){
-            window.location.replace("/#/app/directory/user/"+member.user_name);
+            window.location.assign("/#/app/directory/user/"+member.user_name);
         }
         
     });
@@ -1241,8 +1243,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //checks to see if user is logged in or not
 function checkLogin(){
-    if($.cookie(USER_NAME) != undefined)
+    if($.cookie(USER_NAME) != undefined){
         return true;
+    }
     else
         return false;
 }
@@ -1275,7 +1278,7 @@ function checkResponseErrors(received_data){
     response = received_data;
     if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN')
     {
-        window.location.replace("/#/login");
+        window.location.assign("/#/login");
         return true;
     }
     else if(response.error == 'INVALID_FORMAT')
@@ -1391,47 +1394,37 @@ App.directive('match', function () {
         };
 });
 
-App.filter('multiSearch', function() { //#FUTURE Search box filter
-        return function (objects, searchValues, delimiter) {
-            if (!delimiter) {
-                delimiter="";
-            }
-            if (searchValues) {
-                var good = Array(0); //the list of objects that match ALL terms
-                var terms = String(searchValues).toUpperCase().split(delimiter); 
-                for (var w = 0; w < terms.length; w++) {
-                    terms[w] = terms[w].replace(/^\s+|\s+$/g,"");
-                }
-                var truthArray = Array(terms.length); //the truth array matches 1 to 1 to the terms. If an element in the truthArray is 0, the corresponding term wasn’t found
-                for (var j = 0; j < objects.length; j++) { //iterates through each object
-                    for (var t = 0; t < objects.length; t++) {
-                        truthArray[t] = 0; //initializes/resets the truthArray
-                    }
-                    for (var i = 0; i < terms.length; i++) {
-                        if (objects[j].attribute1) {
-                            if (String(objects[j].attribute1).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                        if (truthArray[i] != 1 && objects[j].attribute2) {
-                            if (String(objects[j].attribute2).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                        if (truthArray[i] != 1 && objects[j].attribute3) {
-                            if (String(objects[j].attribute3).toUpperCase().indexOf(terms[i]) != -1) {
-                                truthArray[i] = 1;
-                            }
-                        }
-                    }
-                    if (truthArray.indexOf(0) == -1) { //if there are no 0s, all terms are present and the object is good
-                        good.push(objects[j]); //add the object to the good list
+App.filter('multipleSearch', function() { 
+    return function (objects, search) {
+        var searchValues = search;
+        if (!search){
+            return objects;
+        }
+        retList = [];
+        var searchArray = search.split(" ");
+        for (var oPos = 0; oPos < objects.length; oPos++){
+            var object = objects[oPos];
+            for(var sPos = 0; sPos< searchArray.length; sPos++){
+                var check = false;
+                var searchItem = searchArray[sPos];
+                for(var item in object){
+                    if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
+                        check = true;
+                        break;
                     }
                 }
-                return good; //return the list of matching objects
-            }
-            else { //if there are no terms, return all objects
-                return objects;
+                if(!check){
+                    break;
+                }
+                if(sPos == searchArray.length-1 && check){
+                    console.log('adding to retlist');
+                    retList.push(object);
+                }
             }
         }
-    });
+        return retList;
+    }
+});
+
+
+
