@@ -329,10 +329,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        console.log(data);
-                        window.location.assign("/#/payment");
-                        $.cookie("TOKEN",  data.data);
+                        var responseData = JSON.parse(data.data);
+                        $.cookie(TOKEN,  responseData.token);
+                        $.cookie(PERMS, responseData.perms);
                         $.cookie("USER_NAME", data_tosend.user.user_name);
+                        window.location.assign("/#/payment");
                     }
                     else
                         console.log('ERROR: '+data);
@@ -379,6 +380,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
 		//console.log($scope.members)
         
         //ADD MEMBERS TAB
+        $scope.openDeleteMemberModal = function(user){
+            $('#deleteMemberModal').modal();
+            $scope.userToDelete = user;
+        }
         
         //initialize a member array
         var newmemberList = [];
@@ -451,6 +456,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         
         $scope.removeMember = function(user){
+            $('#deleteTagModal').modal('hide')
             $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
             .success(function(data){
                 if (!checkResponseErrors(data))

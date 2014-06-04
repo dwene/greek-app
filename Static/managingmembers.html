@@ -1,40 +1,58 @@
-    <div class="container">
-        
-                <!-- HEADER AND TODO COUNT -->
-                <div class="jumbotron text-center">
-                    <h1>Manage Members</h1>
-                </div>
-        
+<div class="container">
+
+        <!-- HEADER AND TODO COUNT -->
+        <div class="jumbotron text-center">
+            <h1>Manage Members</h1>
         </div>
-        
-        <div class="container">
-            
-            <ul ng-repeat="member in members | orderBy:'last_name'">
-                
-                    <li>
-                        Permissions: {{member.perms}}
-                        <form> 
-                            
-                            <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member.key, option)">
-                                <option value="council">council</option>
-                                <option value="member">member</option>
-                                <option value="leadership">leadership</option>
-                                <option value="alumni">alumni</option>
-                            </select>
-<!--
-                            <input ng-model="member.perms">
-                            <option value="council">council</option>
-                            <option value="member">member</option>
-                            <option value="alumni">alumni</option>
-                            </input>
--->
-                        </form>
-                        <button ng-click="removeMember(member)">Delete Member</button>
-                    <br>
-                    {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
-                    </li>
-                
-            </ul>
-            <p ng-show="members.length < 1">There are no members to manage!</p>
-            
-        </div>
+
+</div>
+
+<div class="container">
+    <ul ng-repeat="member in members | orderBy:'last_name'">
+
+            <li>
+                {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
+                <button ng-click="openDeleteMemberModal(member)">Delete Member</button>
+                <form> 
+
+                    <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member.key, option)">
+                        <option value="council">council</option>
+                        <option value="member">member</option>
+                        <option value="leadership">leadership</option>
+                        <option value="alumni">alumni</option>
+                    </select>
+                </form>
+
+            </li>
+
+    </ul>
+    <p ng-show="members.length < 1">There are no members to manage!</p>
+</div>
+
+<div class="modal fade" id="deleteMemberModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Delete {{userToDelete.first_name}} {{userToDelete.last_name}} ?</h4>
+      </div>
+      <div class="modal-body">
+        <div class="profilepic" style="background-image:url({{userToDelete.prof_pic}});" >
+    </div>    
+    
+    <div class="row"><h1>{{userToDelete.first_name}} {{userToDelete.last_name}}</h1></div>
+    <div class="row" ng-show="userToDelete.dob">Birthday: {{userToDelete.dob}}</div>
+    <div class="row" ng-show="userToDelete.phone">Phone: {{userToDelete.phone}}</div>
+    <div class="row" ng-show="userToDelete.email">Email: {{userToDelete.email}}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="removeMemeber(userToDelete)">Delete Member</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+    
+  
+  
+ 
