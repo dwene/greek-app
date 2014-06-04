@@ -1,24 +1,50 @@
 <div class="container">
-        
-                <!-- HEADER AND TODO COUNT -->
-                <div class="jumbotron text-center">
-                    <h1>Manage Alumni</h1>
-                </div>
-        
+
+        <!-- HEADER AND TODO COUNT -->
+        <div class="jumbotron text-center">
+            <h1>Manage Alumni</h1>
         </div>
+
+</div>
         
-        <div class="container">
-            
-            <ul ng-repeat="alumnus in alumni | orderBy:'last_name'">
-                
-                    <li>
-                        
-                    <br>
-                    {{ alumnus.first_name }}, {{ alumnus.last_name }}, {{ alumnus.class_year }}, {{ alumnus.email }}
-                    <button ng-click="removeAlumni(alumnus)">Delete Alumnus</button>
-                    </li>
-                
-            </ul>
-            <p ng-show="alumni.length < 1">There are no alumni to manage!</p>
-            
-        </div>
+<div class="container">
+
+    <ul ng-repeat="alumnus in alumni | orderBy:'last_name'">
+
+            <li>
+            <br>
+            {{ alumnus.email }}
+            <button ng-click="openDeleteAlumniModal(alumnus)">Delete Alumnus</button>
+            </li>
+
+    </ul>
+    <p ng-show="alumni.length < 1">There are no alumni to manage!</p>
+
+</div>
+
+
+
+
+<div class="modal fade" id="deleteAlumniModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Delete {{userToDelete.first_name}} {{userToDelete.last_name}} ?</h4>
+      </div>
+      <div class="modal-body">
+        <div class="profilepic" style="background-image:url({{userToDelete.prof_pic}});" >
+    </div>    
+    
+    <div class="row"><h1>{{userToDelete.first_name}} {{userToDelete.last_name}}</h1></div>
+    <div class="row" ng-show="userToDelete.dob">Birthday: {{userToDelete.dob}}</div>
+    <div class="row" ng-show="userToDelete.phone">Phone: {{userToDelete.phone}}</div>
+    <div class="row" ng-show="userToDelete.email">Email: {{userToDelete.email}}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="removeAlumni(userToDelete)">Delete Alumnus</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

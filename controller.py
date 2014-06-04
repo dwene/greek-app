@@ -398,6 +398,10 @@ class RESTApi(remote.Service):
         for user in rpc_data['sent']:
             new_user = User()
             new_user.email = user['email']
+            if 'first_name' in user:
+                new_user.first_name = user['first_name']
+            if 'last_name' in user:
+                new_user.last_name = user['last_name']
             new_user.organization = request_user.organization
             new_user.user_name = ''
             new_user.current_token = user['token']

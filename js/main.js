@@ -588,6 +588,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('managealumniController', function($scope, $http){
+        
+        $scope.openDeleteAlumniModal = function(user){
+            $('#deleteAlumniModal').modal();
+            $scope.userToDelete = user;
+        }
+        
         function getUsers(){
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
                 .success(function(data){
@@ -631,6 +637,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         }
         $scope.removeAlumni = function(alumnus){
+            $('#deleteAlumniModal').modal('hide');
             $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus))
             .success(function(data){
                 if (!checkResponseErrors(data))
