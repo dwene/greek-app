@@ -20,12 +20,13 @@ h1{font-size:36px; font-weight:bold;}
 
 .addTags .btn-group{ -webkit-user-select:none; display:inline-block; margin:8px 4px 0px 4px;}
 .addTags li{display:inline;}
-.addTags label{display:inline-block; cursor:pointer; position:relative; padding:.4em 2em .4em .6em;}
+.addTags label{display:inline-block; cursor:pointer; position:relative; padding:.4em 2em .4em 1.5em;}
 .addTags .badge{border-radius:.25em;}
 .addTags label:hover{background:#ccc;}
+.addTags .checkStatus{position:absolute; left:5px; top:6px;}
 .addTags input{display:none;}
 .addTags .open .dropdown-toggle{background:#ccc;}
-.addTags .dropdown-toggle{height: 100%; position: absolute; right: 0px; top: 0px; padding: .3em .4em .5em .4em;}
+.addTags .dropdown-toggle{height: 100%; position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;}
 .addTags .dropdown-toggle:hover{background:#d9534f; cursor:pointer;}
 .dropdown-menu>li>a{cursor: pointer;}
 

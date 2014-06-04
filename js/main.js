@@ -1168,10 +1168,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if ( checkbox.prop('checked') )
                 {
                     $(this).addClass('label-primary').removeClass('label-default');
+                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
                 }
                 else
                 {
                     $(this).removeClass('label-primary').addClass('label-default');
+                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
                 }
             
         });
