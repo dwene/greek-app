@@ -6,7 +6,7 @@
                     
                     <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in organizationTags">
-                            <label class="label label-default" >
+                            <label class="label label-default checkLabel" >
                             <i class="fa fa-square-o checkStatus"></i>
                             <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li>
                             </label>
@@ -23,15 +23,24 @@
                     <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members">
 <br><br>
 
-                    <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search" style="border: 2px solid black;">
-
+                    <ul>
+                        <div class="btn-group" ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
                             <li>
-                            <input type="checkbox" ng-model="selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
-                    Tags:   <ul class="memberTags" ng-repeat="tag in member.tags">
+                            <label class="label label-default checkLabel">
+                            <i class="fa fa-square-o checkStatus"></i>
+                            <input type="checkbox" ng-model="selectedUsers[member.key]">{{ member.first_name }} {{ member.last_name }}
+                            </label>
+                            <ul id="memberTags">
+                                <div class="btn-group" ng-repeat="tag in member.tags">
+                                <span class="label label-default userLabel">
                                 <li>{{ tag }}</li>
+                                </span>
+                                <div class="badge"><i class="fa fa-times"></i></div>
+                                </div>
                             </ul>
                             <br>
                             </li>
+                        </div>
                     </ul>
 
 <hr>
