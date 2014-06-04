@@ -31,7 +31,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				controller  : 'loginController'
 			})
         .state('register', {
-                url : 'register',
+                url : '/register',
 				templateUrl : 'Static/register.html',
 				controller  : 'registerController'
 			})
@@ -601,7 +601,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         getUsers();
-        $scope.removeAlumni = function(alumnus){
+        $scope.convertAlumniToMember = function(alumnus){
             var to_send = {'keys': [alumnus.key]}
             $http.post('/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
                 .success(function(data){
@@ -623,6 +623,29 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 }
         
+        }
+        $scope.removeAlumni = function(alumnus){
+            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });    
+            if ($scope.alumni.indexOf(alumnus) > -1){
+                    $scope.alumni.splice($scope.alumni.indexOf(alumnus), 1);
+            }
+            
+//            for (var i = 0; i < $scope.alumni.length; i++){
+//                if ($scope.alumni[i].key == alumnus.key){
+//                    $scope.alumni.splice(i, 1);
+//                    break;
+//                }
+//            }
         }
         
     });

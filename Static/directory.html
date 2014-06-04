@@ -10,11 +10,11 @@
 <div class="container">
     <div class="row" id="searchTags">
         <button class="btn btn-default btn-sm">Council</button>
-        <button class="btn btn-default btn-sm">Leader</button>
+        <button class="btn btn-default btn-sm">Leadership</button>
         <button class="btn btn-default btn-sm">Random</button>
     </div><br>
     <input id="directorySearch" type="search" ng-model="search" placeholder="Search...">
-    <ul ng-repeat="member in directory | orderBy:'last_name' | multiSearch:search" class="member">
+    <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
 
         <li>
             <div>

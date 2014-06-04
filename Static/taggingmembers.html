@@ -22,7 +22,7 @@
                     <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members">
 <br><br>
 
-                    <ul ng-repeat="member in members | orderBy:'last_name' | filter:search" style="border: 2px solid black;">
+                    <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search" style="border: 2px solid black;">
 
                             <li>
                             <input type="checkbox" ng-model="selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
