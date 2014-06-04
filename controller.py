@@ -549,7 +549,7 @@ class RESTApi(remote.Service):
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/revert_from_alumni',
                       http_method='POST', name='user.revert_from_alumni')
-    def convert_to_alumni(self, request):
+    def revert_from_alumni(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')

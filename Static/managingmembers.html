@@ -6,24 +6,28 @@
         </div>
 
 </div>
-
 <div class="container">
-    <ul ng-repeat="member in members | orderBy:'last_name'">
+    <input id="manageMembersSearch" type="search" ng-model="search" placeholder="Search Members">
+    <button ng-click="openConvertMembersModal()">Convert To Alumni</button>
+</div>
+<div class="container">
+    <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
 
-            <li>
-                {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
-                <button ng-click="openDeleteMemberModal(member)">Delete Member</button>
-                <form> 
+        <li>
+            {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
+            <button ng-click="openDeleteMemberModal(member)">Delete Member</button>
+            <input type="checkbox" ng-model="selectedMembers[member.key]">
+            <form> 
 
-                    <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member.key, option)">
-                        <option value="council">council</option>
-                        <option value="member">member</option>
-                        <option value="leadership">leadership</option>
-                        <option value="alumni">alumni</option>
-                    </select>
-                </form>
+                <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member.key, option)">
+                    <option value="council">council</option>
+                    <option value="member">member</option>
+                    <option value="leadership">leadership</option>
+                    <option value="alumni">alumni</option>
+                </select>
+            </form>
 
-            </li>
+        </li>
 
     </ul>
     <p ng-show="members.length < 1">There are no members to manage!</p>
@@ -48,6 +52,23 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" ng-click="removeMemeber(userToDelete)">Delete Member</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+    
+    
+    
+<div class="modal fade" id="convertMemberModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Are you sure you want to convert these members to alumni?</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="convertMembersToAlumni(selectedMembers)">Convert Members to Alumni</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

@@ -372,7 +372,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the add members page
     App.controller('managemembersController', function($scope, $http) {
         checkPermissions(COUNCIL);
- 
+        $scope.selectedMembers = {};
         //MANAGE MEMBERS TAB
         
         //this goes inside the HTTP request
@@ -383,6 +383,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.openDeleteMemberModal = function(user){
             $('#deleteMemberModal').modal();
             $scope.userToDelete = user;
+        }
+        
+        $scope.openConvertMembersModal = function(){
+            $('#convertMemberModal').modal();
         }
         
         //initialize a member array
@@ -425,8 +429,40 @@ App.config(function($stateProvider, $urlRouterProvider) {
             else{$scope.submitted = true;}
         };
         
-        
-        
+        $scope.convertMembersToAlumni = function(members){
+            keys = []
+            $('#convertMemberModal').modal('hide');
+            for (var key in members){
+                if (members[key] == true){
+                    keys.push(key);
+                }
+            }
+            var to_send = {'keys': keys};
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            $scope.selectedMembers = {};
+            for (var kIdx = 0; kIdx < keys.length; kIdx++){
+                for (var mIdx = 0; mIdx < $scope.members.length; mIdx ++){
+                    if($scope.members[mIdx].key == keys[kIdx]){
+                        $scope.members.splice(mIdx, 1);
+                        break;
+                    }
+                }
+            }
+        };
         
         $scope.getMembers = function(){
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
