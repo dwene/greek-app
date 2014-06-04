@@ -373,6 +373,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('managemembersController', function($scope, $http) {
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
+        $scope.checkPermissions = function(perms){
+            return checkPermissions(perms);
+        }
         //MANAGE MEMBERS TAB
         
         //this goes inside the HTTP request
@@ -627,7 +630,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.openDeleteAlumniModal = function(user){
             $('#deleteAlumniModal').modal();
-            $scope.userToDelete = user;
+            $scope.selectedUser = user;
+        }
+        
+        $scope.openConvertAlumniModal = function(user){
+            $('#convertAlumniModal').modal();
+            $scope.selectedUser = user;
         }
         
         function getUsers(){
@@ -649,7 +657,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         getUsers();
+        
+        
         $scope.convertAlumniToMember = function(alumnus){
+            $scope.selectedUser = {}
+            $('#convertAlumniModal').modal('hide');
             var to_send = {'keys': [alumnus.key]}
             $http.post('/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
                 .success(function(data){
@@ -670,9 +682,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         break;
                     }
                 }
-        
         }
         $scope.removeAlumni = function(alumnus){
+            $scope.selectedUser = {}
             $('#deleteAlumniModal').modal('hide');
             $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus))
             .success(function(data){
@@ -1353,10 +1365,7 @@ function checkResponseErrors(received_data){
     if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN')
     {
         window.location.assign("/#/login");
-        return true;
-    }
-    else if(response.error == 'INVALID_FORMAT')
-    {
+        console.log('ERROR: '+response.error);
         return true;
     }
     else if(response.error == '')
@@ -1365,6 +1374,7 @@ function checkResponseErrors(received_data){
     }
     else
     {
+        console.log('ERROR: '+response.error);
         return true;    
     }
 }
