@@ -12,9 +12,7 @@ var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
 var App = angular.module('App', ['ui.router']);
-
 App.config(function($stateProvider, $urlRouterProvider) {
-    
     $urlRouterProvider.otherwise("/")
     .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app/managealumni", "/app/managealumni/manage");
@@ -146,6 +144,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.run(function ($rootScope, $state, $stateParams) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+        $rootScope.directory = {};
+        console.log('rootscope changing');
     });
 
 //navigation header
@@ -934,19 +934,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the directory
-    App.controller('directoryController', function($scope, $http){
+    App.controller('directoryController', function($scope, $rootScope, $http){
+        $scope.directory = $rootScope.directory.members;
+        if (!$scope.directory){
+            $rootScope.loading = true;
+        }
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var directory = JSON.parse(data.data).members;
-                    for(var i = 0; i<directory.length; i++){
-                        if(directory[i].user_name == ''){
-                            directory.splice(i, 1);
-                            i--;
-                        }
-                    }
-                    $scope.directory = directory;
+                    var directory = JSON.parse(data.data)
+                    console.log(directory);
+                    $rootScope.directory = directory;
+                    $scope.directory = $rootScope.directory.members;
+                    $rootScope.loading = false;
+                    return $rootScope.directory;
                 }
                 else
                 {
@@ -956,7 +958,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-        
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
         }
@@ -970,17 +971,47 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-    App.controller('memberprofileController', function($scope, $http, $stateParams){
-         var user_name = $stateParams.id;
+    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http){
+        var user_name = $stateParams.id;
         if (user_name.toString().length < 2){
             window.location.assign('/#/app/directory');
+        }
+        
+        $scope.members = $rootScope.directory.members;
+        if ($scope.members){
+            console.log($scope.members);
+            for(var i = 0; i<$scope.members.length; i++)
+            {
+                if($scope.members[i].user_name == user_name)
+                {
+                    $scope.member = $scope.members[i];
+                    $scope.prof_pic = $scope.members[i].prof_pic;
+                    console.log($scope.members[i]);
+                     //define profile information
+                    $scope.firstName = $scope.member.first_name;
+                    $scope.lastName = $scope.member.last_name;
+                    $scope.email = $scope.member.email;
+                    $scope.birthday = $scope.member.dob;
+                    $scope.phone = $scope.member.phone;
+                    $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                    $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                    $scope.website = $scope.member.website;
+                    $scope.facebook = $scope.member.facebook;
+                    $scope.twitter = $scope.member.twitter;
+                    $scope.instagram = $scope.member.instagram;
+                    $scope.linkedin = $scope.member.linkedin;
+                    break;
+                }
+            }          
         }
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.members = JSON.parse(data.data).members;
-                    console.log($scope.members);
+                    var directory = JSON.parse(data.data)
+                    $rootScope.directory = directory;
+                    $rootScope.loading = false;
+                    $scope.members = directory.members;
                     for(var i = 0; i<$scope.members.length; i++)
                     {
                         if($scope.members[i].user_name == user_name)
@@ -994,16 +1025,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             $scope.email = $scope.member.email;
                             $scope.birthday = $scope.member.dob;
                             $scope.phone = $scope.member.phone;
-                            $scope.currentAddress = $scope.member.address.toString()+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                            $scope.permanentAddress = $scope.member.perm_address.toString()+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                            $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                            $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                            if ($scope.currentAddress.indexOf('null') > -1){
+                                $scope.currentAddress = null;
+                            }
+                            if ($scope.permanentAddress.indexOf('null') > -1){
+                                $scope.permanentAddress = null;
+                            }
                             $scope.website = $scope.member.website;
                             $scope.facebook = $scope.member.facebook;
                             $scope.twitter = $scope.member.twitter;
                             $scope.instagram = $scope.member.instagram;
                             $scope.linkedin = $scope.member.linkedin;
+
                             break;
                         }
-                    }                 
+                    }
                 }
                 else
                 {
@@ -1012,8 +1050,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             .error(function(data) {
                 console.log('Error: ' + data);
-            });
-        
+            });        
         
     });
 
@@ -1507,6 +1544,46 @@ App.filter('multipleSearch', function() {
             }
         }
         return retList;
+    }
+});
+
+App.factory('directoryService', function($rootScope, $http) {
+    if ($rootScope.directory === undefined){
+        $rootScope.loading = true;
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var directory = JSON.parse(data.data)
+                    $rootScope.directory = directory;
+                    $rootScope.loading = false;
+                    return $rootScope.directory;
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    }
+    else{
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $rootScope.directory = JSON.parse(data.data);
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        return $rootScope.directory;
     }
 });
 
