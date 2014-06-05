@@ -145,11 +145,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
+        $rootScope.users = {};
+        $rootScope.loading = false;
         console.log('rootscope changing');
     });
 
 //navigation header
-    App.controller('navigationController', function($scope, $http){
+    App.controller('navigationController', function($scope, $http, $rootScope){
         $scope.checkLogin = function(){
             return checkLogin();
         }
@@ -163,6 +165,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $.removeCookie(TOKEN);
                 $.removeCookie(PERMS);
                 $.removeCookie('FORM_INFO_EMPTY')
+                $rootScope.directory = {};
+                $rootScope.loading = false;
+                $rootScope.users = {};
                 window.location.assign("/#/login");
          }
     });
@@ -173,15 +178,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //login page
-	App.controller('loginController', function($scope, $http) {
-
+	App.controller('loginController', function($scope, $http, $rootScope) {
         $scope.login = function(user_name, password) {
+        $rootScope.loading = true;
         console.log(user_name + ' ' +password)
         $http.post('/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
             .success(function(data) {
                 if(!checkResponseErrors(data))
                 {
                     returned_data = JSON.parse(data.data);
+                    $rootScope.loading = false;
                     $.cookie(USER_NAME, user_name);
                     $.cookie(TOKEN,returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
@@ -370,12 +376,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //the add members page
-    App.controller('managemembersController', function($scope, $http) {
+    App.controller('managemembersController', function($scope, $http, $rootScope) {
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
         $scope.checkPermissions = function(perms){
             return checkPermissions(perms);
         }
+        function onPageLoad(){
+            if($rootScope.users.members){
+                assignAngularViewModels($rootScope.users.members);
+            }
+            else{
+                $rootScope.loading = true;
+                $scope.getMembers();
+            }
+        }
+        onPageLoad();
         //MANAGE MEMBERS TAB
         
         //this goes inside the HTTP request
@@ -467,21 +483,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         };
         
+        function assignAngularViewModels(members){
+            for(var i = 0; i< members.length; i++){
+                if (members[i].user_name == $.cookie(USER_NAME)){
+                    members.splice(i, 1);
+                    break;
+                }
+            }
+            $scope.members = members;
+            $rootScope.loading = false;
+        }
+        
         $scope.getMembers = function(){
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    
-                    var members = JSON.parse(data.data).members;
-                    for(var i = 0; i<members.length; i++){
-                        if (members[i].user_name == $.cookie(USER_NAME)){
-                            members.splice(i, 1);
-                            break;
-                        }
-                    }
-                    $scope.members = members;
-                    console.log($scope.members);
+                    $rootScope.users = JSON.parse(data.data);
+                    assignAngularViewModels($rootScope.users.members);
                 }
                 else
                     console.log('ERROR: '+data);
@@ -491,7 +510,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         }
-        $scope.getMembers();
         
         
         $scope.removeMember = function(user){
@@ -979,7 +997,28 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.members = $rootScope.directory.members;
         if ($scope.members){
-            console.log($scope.members);
+            loadMemberData();
+        }
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var directory = JSON.parse(data.data)
+                    $rootScope.directory = directory;
+                    $rootScope.loading = false;
+                    $scope.members = directory.members;
+                    loadMemberData();
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });        
+    
+        function loadMemberData(){
             for(var i = 0; i<$scope.members.length; i++)
             {
                 if($scope.members[i].user_name == user_name)
@@ -995,64 +1034,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.phone = $scope.member.phone;
                     $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
                     $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                    if ($scope.currentAddress.indexOf('null') > -1){
+                        $scope.currentAddress = null;
+                    }
+                    if ($scope.permanentAddress.indexOf('null') > -1){
+                        $scope.permanentAddress = null;
+                    }
                     $scope.website = $scope.member.website;
                     $scope.facebook = $scope.member.facebook;
                     $scope.twitter = $scope.member.twitter;
                     $scope.instagram = $scope.member.instagram;
                     $scope.linkedin = $scope.member.linkedin;
+
                     break;
                 }
-            }          
+            }
         }
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data)
-                    $rootScope.directory = directory;
-                    $rootScope.loading = false;
-                    $scope.members = directory.members;
-                    for(var i = 0; i<$scope.members.length; i++)
-                    {
-                        if($scope.members[i].user_name == user_name)
-                        {
-                            $scope.member = $scope.members[i];
-                            $scope.prof_pic = $scope.members[i].prof_pic;
-                            console.log($scope.members[i]);
-                             //define profile information
-                            $scope.firstName = $scope.member.first_name;
-                            $scope.lastName = $scope.member.last_name;
-                            $scope.email = $scope.member.email;
-                            $scope.birthday = $scope.member.dob;
-                            $scope.phone = $scope.member.phone;
-                            $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                            $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
-                            if ($scope.currentAddress.indexOf('null') > -1){
-                                $scope.currentAddress = null;
-                            }
-                            if ($scope.permanentAddress.indexOf('null') > -1){
-                                $scope.permanentAddress = null;
-                            }
-                            $scope.website = $scope.member.website;
-                            $scope.facebook = $scope.member.facebook;
-                            $scope.twitter = $scope.member.twitter;
-                            $scope.instagram = $scope.member.instagram;
-                            $scope.linkedin = $scope.member.linkedin;
-
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    console.log("error: "+ data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });        
-        
     });
+
+    
 
 //account info
     App.controller('accountinfoController', function($scope, $http) {
@@ -1515,7 +1515,7 @@ App.directive('match', function () {
         };
 });
 
-App.filter('multipleSearch', function() { 
+App.filter('multipleSearch', function(){ 
     return function (objects, search) {
         var searchValues = search;
         if (!search){

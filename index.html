@@ -58,8 +58,8 @@
 			</nav>
 </header>
         
-<div ui-view></div>
-        
+<div ui-view ng-hide="$root.loading"></div>
+<div ng-show="$root.loading">loading</div>
 <footer><br><br></footer>
         
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
