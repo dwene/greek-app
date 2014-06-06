@@ -36,8 +36,8 @@
                     <a class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a ng-href="/#/app/directory">Directory</a></li>
-                        <li class="divider"></li>
-                        <li><a ng-href="#/app/managemembers" ng-show="checkPermissions('leadership')">Manage Members</a></li>
+                        <li class="divider" ></li>
+                        <li><a ng-href="#/app/managemembers/tag" ng-show="checkPermissions('leadership')">Manage Members</a></li>
                         <li class="divider" "checkPermissions('leadership')"></li>
                         <li><a ng-href="#/app/managealumni" ng-show="checkPermissions('member')">Manage Alumni</a></li>
                         <li class="divider" "checkPermissions('leadership')"></li>
@@ -58,8 +58,8 @@
 			</nav>
 </header>
         
-<div ui-view></div>
-        
+<div ui-view ng-hide="$root.loading"></div>
+<div ng-show="$root.loading">loading</div>
 <footer><br><br></footer>
         
 <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->

@@ -15,6 +15,7 @@
             <br>
             {{ alumnus.email }}
             <button ng-click="openDeleteAlumniModal(alumnus)">Delete Alumnus</button>
+            <button ng-click="openConvertAlumniModal(alumnus)">Convert Alumnus</button>
             </li>
 
     </ul>
@@ -23,27 +24,52 @@
 </div>
 
 
-
-
 <div class="modal fade" id="deleteAlumniModal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Delete {{userToDelete.first_name}} {{userToDelete.last_name}} ?</h4>
+        <h4 class="modal-title">Delete {{selectedUser.first_name}} {{selectedUser.last_name}} ?</h4>
       </div>
       <div class="modal-body">
-        <div class="profilepic" style="background-image:url({{userToDelete.prof_pic}});" >
+        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic}});" >
     </div>    
     
-    <div class="row"><h1>{{userToDelete.first_name}} {{userToDelete.last_name}}</h1></div>
-    <div class="row" ng-show="userToDelete.dob">Birthday: {{userToDelete.dob}}</div>
-    <div class="row" ng-show="userToDelete.phone">Phone: {{userToDelete.phone}}</div>
-    <div class="row" ng-show="userToDelete.email">Email: {{userToDelete.email}}</div>
+    <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>
+    <div class="row" ng-show="selectedUser.dob">Birthday: {{selectedUser.dob}}</div>
+    <div class="row" ng-show="selectedUser.phone">Phone: {{selectedUser.phone}}</div>
+    <div class="row" ng-show="selectedUser.email">Email: {{selectedUser.email}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="removeAlumni(userToDelete)">Delete Alumnus</button>
+        <button type="button" class="btn btn-primary" ng-click="removeAlumni(selectedUser)">Delete Alumnus</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<div class="modal fade" id="convertAlumniModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Convert Alumnus to Member?</h4>
+      </div>
+      <div class="modal-body">
+        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic}});" >
+    </div>    
+    
+    <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>
+    <div class="row" ng-show="selectedUser.dob">Birthday: {{selectedUser.dob}}</div>
+    <div class="row" ng-show="selectedUser.phone">Phone: {{selectedUser.phone}}</div>
+    <div class="row" ng-show="selectedUser.email">Email: {{selectedUser.email}}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="convertAlumniToMember(selectedUser)">Convert Alumnus</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
