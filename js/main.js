@@ -473,17 +473,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         };
         
-        function assignAngularViewModels(members){
-            for(var i = 0; i< members.length; i++){
-                if (members[i].user_name == $.cookie(USER_NAME)){
-                    members.splice(i, 1);
-                    break;
-                }
-            }
-            $scope.members = members;
-            $rootScope.loading = false;
-        }
-        
         $scope.getMembers = function(){
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
@@ -501,6 +490,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         }
+        
+        function assignAngularViewModels(members){
+            for(var i = 0; i< members.length; i++){
+                if (members[i].user_name == $.cookie(USER_NAME)){
+                    members.splice(i, 1);
+                    break;
+                }
+            }
+            $scope.members = members;
+            $rootScope.loading = false;
+        }
+        
         function onPageLoad(){
             console.log('page is loading');
             if($rootScope.users.members){
@@ -647,7 +648,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
     });
 
-    App.controller('managealumniController', function($scope, $http){
+    App.controller('managealumniController', function($scope, $http, $rootScope){
         
         $scope.openDeleteAlumniModal = function(user){
             $('#deleteAlumniModal').modal();
@@ -659,14 +660,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.selectedUser = user;
         }
         
-        function getUsers(){
+        function getAlumni(){
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        var alumni = JSON.parse(data.data).alumni;
-                        $scope.alumni = alumni;
-                        console.log(alumni);
+                        $rootScope.users = JSON.parse(data.data);
+                        assignAngularViewModels($rootScope.users.alumni);
                     }
                     else
                     {
@@ -677,8 +677,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' + data);
                 });
         }
-        getUsers();
         
+        /*This function takes the data and assigns it to the DOM with angular models*/
+        function assignAngularViewModels(alumni){
+            $scope.alumni = alumni;
+            $rootScope.loading = false;
+        }
+        /*This function is the first function to run when the controller starts. This deals with caching data so we dont have to pull data evertytime we load the page*/
+        function onPageLoad(){
+            console.log('page is loading');
+            if($rootScope.users.alumni){
+                assignAngularViewModels($rootScope.users.alumni);
+                getAlumni();
+            }
+            else{
+                $rootScope.loading = true;
+                getAlumni();
+            }
+        }
+        onPageLoad();
         
         $scope.convertAlumniToMember = function(alumnus){
             $scope.selectedUser = {}
@@ -789,7 +806,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     alert(errors_str);
                     }
                     console.log(data);
-                    newmemberList = [];
                 }
                 else
                     console.log('ERROR: '+data);
@@ -798,6 +814,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
             newmemberList = [];
+            $scope.adds = [];
         }
         
         //this function sets up a filereader to read the CSV
@@ -1124,7 +1141,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     //$scope.url = JSON.parse(data.data);
-                    window.location.assign("/#/app/directory/user/"+$.cookie(USER_NAME));
+                    window.location.assign("/#/app/accountinfo");
                 }
                 else
                 {

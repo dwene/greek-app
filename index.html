@@ -37,11 +37,13 @@
                     <ul class="dropdown-menu">
                         <li><a ng-href="/#/app/directory">Directory</a></li>
                         <li class="divider" ></li>
+                        <li><a ng-href="#/app/accountinfo">Update Account</a></li>
+                        <li class="divider" "checkPermissions('leadership')"></li>
                         <li><a ng-href="#/app/managemembers/tag" ng-show="checkPermissions('leadership')">Manage Members</a></li>
                         <li class="divider" "checkPermissions('leadership')"></li>
-                        <li><a ng-href="#/app/managealumni" ng-show="checkPermissions('member')">Manage Alumni</a></li>
-                        <li class="divider" "checkPermissions('leadership')"></li>
-                        <li><a ng-href="#/app/accountinfo" ng-show="checkPermissions('member')">Update Account</a></li>
+                        <li><a ng-href="#/app/managealumni" ng-show="checkPermissions('leadership')">Manage Alumni</a></li>
+                        
+                        
                         
                         
                     </ul>

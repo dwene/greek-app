@@ -486,7 +486,7 @@ class RESTApi(remote.Service):
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(error='', data=user.current_token)
+            return OutgoingMessage(error='', data=json_dump({'token': user.current_token, 'perms': user.perms}))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user_directory_info',
@@ -717,7 +717,7 @@ class RESTApi(remote.Service):
             except:
                 del user_dict["prof_pic"]
             if user_dict["perms"] == 'alumni':
-                alumni_list.append(user_dict);
+                alumni_list.append(user_dict)
             else:
                 user_list.append(user_dict)
         return_data = json_dump({'members': user_list, 'alumni': alumni_list})
