@@ -7,52 +7,71 @@ body.modal-open{margin-right:0px;}
 /*Navigation Styles*/
 .dropdown{cursor:pointer;}
 
+/*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
 #addmemberForm button{float:right; margin-right:15px;}
 #correctPerson{text-align:center; margin-bottom:15px;}
-#logoutbutton{margin-top:7px;}
+#logoutbutton{margin:7px;}
 .form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
+
+@media screen and (max-width:764px){#memberAccount #addresses{padding:0px;}}
+@media screen and (min-width:764px){
 #memberAccount #addresses .col-sm-6:nth-child(1){position:relative; left:-10px;}
 #memberAccount #addresses .col-sm-6:nth-child(2){position:relative; left:15px;}
+}
 h1{font-size:36px; font-weight:bold;}
 /*.addTags input{visibility:hidden; height:0px; width:0px;}*/
 
+/*Directory Page*/
+.member:hover{background:lightblue; cursor:pointer;}
+.memberName{margin-left:10px;}
+
+/*Member Tagging Page*/
 .label{display:inline-block; position:relative; padding:.4em .4em .4em 1.5em;}
 .checkLabel, .memberTags .badge{cursor:pointer;}
 .memberTags .badge:hover{background:#d9534f;}
+.memberTags .btn-group{margin:2px;}
 .checkLabel li{display:inline;}
 .checkLabel input{display:none;}
 .checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
 .checkLabel:hover{background:#ccc;}
 
-.memberTags .btn-group{ -webkit-user-select:none; display:inline-block;}
-.memberTags .badge{height: 100%; position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em; border-radius:.25em; border-bottom-left-radius: 0;
-border-top-left-radius: 0;}
+#addremoveTags{margin:10px 0 0 0; padding:0px;}
 
-ul#memberTags{display:inline-block;}
+.memberTags .btn-group{-webkit-user-select:none;}
+.memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;
+border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
+
+
 #memberTags .label{padding:.4em 2em .4em .6em;}
-#memberTags .badge{padding: .4em;}
+#memberTags .badge{padding: .4em .4em .4em .3em;}
 
-
-.addTags .btn-group{margin:8px 4px 0px 4px;}
 .addTags .label{padding:.4em 2em .4em 1.5em;}
 .addTags .open .dropdown-toggle{background:#ccc;}
 .dropdown-menu>li>a{cursor: pointer;}
 
+#addTag button, #addTag input{display:inline-block;}
 
-
+/*Helper Classes*/
+.smallprofilepic{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin:-10px 0px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
+}
 .profilepic{
-  display: block;
-  width: 150px;
-  height: 150px;
-  margin: 1em auto;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  -webkit-border-radius: 99em;
-  -moz-border-radius: 99em;
-  border-radius: 99em;
-  border: 5px solid #eee;
-  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);  
+    display: block;
+    width: 150px;
+    height: 150px;
+    margin: 1em auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border: 5px solid #eee;
+    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);  
 }

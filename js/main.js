@@ -983,6 +983,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             $scope.birthday = $scope.member.dob;
                             $scope.phone = $scope.member.phone;
                             $scope.currentAddress = $scope.member.address.toString()+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                            //#FIXME toString() calls an error when null (it technically does what we want, but there's probably a way to check so it doesn't give an error)
                             $scope.permanentAddress = $scope.member.perm_address.toString()+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
                             $scope.website = $scope.member.website;
                             $scope.facebook = $scope.member.facebook;
@@ -1180,8 +1181,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         
-        $scope.renameOrganizationTag = function(new_tag){
+        $scope.renameOrganizationTag = function(new_tag, isValid){
         //#TODO find checked tags and removed them from the checked members
+            if(isValid){
             $('#renameTagModal').modal('hide')
             $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag, 'new_tag': new_tag}))
                 .success(function(data){
@@ -1205,6 +1207,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if ($scope.members[i].tags.indexOf(tag) > -1){
                     $scope.members[i].tags[$scope.members[i].tags.indexOf(tag)] = new_tag;
                 }
+            }
+            }
+            else{
+            $scope.submitted = true;
             }
         }
         //onclick checkmark tag

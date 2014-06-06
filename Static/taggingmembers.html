@@ -1,9 +1,7 @@
 <div class="container memberTags">
                     
                     
-<button ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Add Tags</button>
-<button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Remove Tags</button>
-                    
+                    <section>
                     <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in organizationTags">
                             <label class="label label-default checkLabel" >
@@ -17,20 +15,34 @@
                             </ul>
                         </div>
                     </ul>
-
                     
-<hr>                    
-                    <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members">
-<br><br>
+                    <div id="addremoveTags" class="btn-group">
+                        <button ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Add</button>
+                        <button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Remove</button>                    
+                    </div>
+                    </section>
 
+                    <hr>
+                    <section class="row">
+                    <div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                    <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members" class="form-control">
+                    </div>
+                    </div>
+                    </section>
+                    
+                    <section class="row">
                     <ul>
-                        <div class="btn-group" ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
-                            <li>
+                        <div ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
+                            <li class="col-xs-12 col-sm-2">
+                            <div class="btn-group">
                             <label class="label label-default checkLabel">
                             <i class="fa fa-square-o checkStatus"></i>
                             <input type="checkbox" ng-model="selectedUsers[member.key]">{{ member.first_name }} {{ member.last_name }}
                             </label>
-                            <ul id="memberTags">
+                            </div>
+                            </li>
+                            <ul id="memberTags" class="col-xs-12 col-sm-10">
                                 <div class="btn-group" ng-repeat="tag in member.tags">
                                 <span class="label label-default userLabel">
                                 <li>{{ tag }}</li>
@@ -38,19 +50,21 @@
                                 <div class="badge"><i class="fa fa-times"></i></div>
                                 </div>
                             </ul>
-                            <br>
-                            </li>
                         </div>
                     </ul>
+                    </section>
 
 <hr>
                     
                     <h2>Add/Remove Tags</h2>
-                    <form id="addTag" ng-submit="addOrganizationTag(item.tag)"><input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text">
-                        <div class="form-group">
+                    <div class="row">
+                    <form id="addTag" ng-submit="addOrganizationTag(item.tag)">
+                        <div class="form-group col-xs-12 col-sm-4">
+                        <input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
                         <button type="submit" class="btn btn-default btn-sm">Add Tag</button>
                         </div>
                     </form>
+                    </div>
 
 </div>
 
@@ -62,16 +76,23 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Rename Tag</h4>
       </div>
+    <form id="renameTagForm" name="renameTagForm" ng-submit="renameOrganizationTag(rename, renameTagForm.$valid)" novalidate>
       <div class="modal-body">
-        <form>
-            <label for="rename">New Tag Name</label>
-            <input type="text" name="rename" ng-model="rename">
-        </form>
+            <div class="form-group" ng-class="{ 'has-error' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
+            <label for="rename" class="col-xs-2">New Tag Name</label>
+            <div class="col-xs-10">
+            <input type="text" name="rename" ng-model="rename" class="form-control" required>
+            </div>
+            <p ng-show="(renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)" class="help-block">Please enter a new tag name.</p>
+            </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="renameOrganizationTag(rename)">Rename Tag</button>
+                          
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" for="" class="btn btn-primary">Rename Tag</button>
+        
       </div>
+    </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

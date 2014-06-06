@@ -15,11 +15,17 @@
 </div>
 
 <a ng-href="/#/app/uploadprofilepicture" class="btn btn-default">Change Profile Picture</a>
+
+<hr>
+
 <div class="row"> Username: {{userName}} </div>
 <div class="row"> Pledge Class: {{pledgeClass}} </div>
+
+<hr>
+
 <a ng-href="#/app/changepassword" class="btn btn-default">Change Password</a>
 
-<br>
+<hr>
 
 <form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
@@ -77,9 +83,9 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
         <label for="major" class="col-sm-2 control-label">Major</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="major" name="major" ng-model="item.major" placeholder="John" required>
+          <input type="text" class="form-control" id="major" name="major" ng-model="item.major" placeholder="Engineering" required>
         </div>
-        <p ng-show="(memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)" class="help-block">Please enter your first name.</p>
+        <p ng-show="(memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)" class="help-block">Please enter your field of study.</p>
     </div>
     
     
