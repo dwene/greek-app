@@ -41,11 +41,8 @@
                         <li class="divider" "checkPermissions('leadership')"></li>
                         <li><a ng-href="#/app/managemembers/tag" ng-show="checkPermissions('leadership')">Manage Members</a></li>
                         <li class="divider" "checkPermissions('leadership')"></li>
-                        <li><a ng-href="#/app/managealumni" ng-show="checkPermissions('leadership')">Manage Alumni</a></li>
-                        
-                        
-                        
-                        
+                        <li><a ng-href="#/app/managealumni" ng-show="checkPermissions('leadership')">Manage Alumni</a></li>            
+                        <li><a ng-click="logout()">Log Out</a></li>
                     </ul>
                     </li>
                 </ul>
@@ -55,7 +52,7 @@
 					<li><a ng-href="#register">Register</a></li>
 				</ul>
 
-				<button id="logoutbutton" ng-show="checkLogin()" ng-click="logout()" type="button" class="btn btn-danger pull-right">Log Out</button>
+<!--				<button id="logoutbutton" ng-show="checkLogin()" ng-click="logout()" type="button" class="btn btn-danger pull-right">Log Out</button>-->
 			</div>
 			</nav>
 </header>
@@ -64,13 +61,13 @@
 <div ng-show="$root.loading">loading</div>
 <footer><br><br></footer>
         
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<!--        <script src="js/vendor/jquery-1.10.1.min.js"></script>-->
+<!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+        <script src="js/vendor/jquery-1.10.1.min.js"></script>
         <script src="js/vendor/jquery.cookie.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/spin.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-<!--        <script src="js/vendor/angular.js"></script>-->
+<!--        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
+        <script src="js/vendor/angular.js"></script>
         <script src="js/vendor/angular-route.js"></script>
         <script src="js/vendor/angular-ui.js"></script>
         <script src="js/main.js"></script>

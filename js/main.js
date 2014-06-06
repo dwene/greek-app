@@ -1023,6 +1023,34 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
+//#FIXME... does this need to be deleted?
+$scope.members = JSON.parse(data.data).members;
+                    console.log($scope.members);
+                    for(var i = 0; i<$scope.members.length; i++)
+                    {
+                        if($scope.members[i].user_name == user_name)
+                        {
+                            $scope.member = $scope.members[i];
+                            $scope.prof_pic = $scope.members[i].prof_pic;
+                            console.log($scope.members[i]);
+                             //define profile information
+                            $scope.firstName = $scope.member.first_name;
+                            $scope.lastName = $scope.member.last_name;
+                            $scope.email = $scope.member.email;
+                            $scope.birthday = $scope.member.dob;
+                            $scope.phone = $scope.member.phone;
+                            $scope.currentAddress = $scope.member.address.toString()+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                            //#FIXME toString() calls an error when null (it technically does what we want, but there's probably a way to check so it doesn't give an error)
+                            $scope.permanentAddress = $scope.member.perm_address.toString()+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                            $scope.website = $scope.member.website;
+                            $scope.facebook = $scope.member.facebook;
+                            $scope.twitter = $scope.member.twitter;
+                            $scope.instagram = $scope.member.instagram;
+                            $scope.linkedin = $scope.member.linkedin;
+                            break;
+                        }
+                    }
+//#FIXME^^^
                     var directory = JSON.parse(data.data)
                     $rootScope.directory = directory;
                     $rootScope.loading = false;
@@ -1249,8 +1277,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         
-        $scope.renameOrganizationTag = function(new_tag){
+        $scope.renameOrganizationTag = function(new_tag, isValid){
         //#TODO find checked tags and removed them from the checked members
+            if(isValid){
             $('#renameTagModal').modal('hide')
             $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag, 'new_tag': new_tag}))
                 .success(function(data){
@@ -1274,6 +1303,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if ($scope.members[i].tags.indexOf(tag) > -1){
                     $scope.members[i].tags[$scope.members[i].tags.indexOf(tag)] = new_tag;
                 }
+            }
+            }
+            else{
+            $scope.submitted = true;
             }
         }
         //onclick checkmark tag
