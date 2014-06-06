@@ -1,4 +1,3 @@
-//#FIXME I tried to add a member last night and it add you as an alumni instead? I've created an addAlumni function and renamed that form correctly
 
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
@@ -141,11 +140,41 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams) {
+    App.run(function ($rootScope, $state, $stateParams, $http) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
         $rootScope.users = {};
+        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+        .success(function(data){
+            if (!checkResponseErrors(data))
+            {
+                $rootScope.users = JSON.parse(data.data);
+            }
+            else
+                console.log('ERROR: '+data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        .success(function(data){
+            if (!checkResponseErrors(data))
+            {
+                var directory = JSON.parse(data.data)
+                $rootScope.directory = directory;
+                $rootScope.loading = false;
+            }
+            else
+            {
+                console.log("error: "+ data.error)
+            }
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+        
         $rootScope.loading = false;
         console.log('rootscope changing');
     });
@@ -191,21 +220,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(USER_NAME, user_name);
                     $.cookie(TOKEN,returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
-                    if($.cookie('FORM_INFO_EMPTY') == 'true'){
-                       window.location.assign("#/app/accountinfo"); 
-                    }
-                    else{
-                        window.location.assign("#/app");
-                    }
+                    loadRootScopeVariables();
+                    window.location.assign("#/app");
                 }
                 else{
-                
                     if (data.error == "BAD_LOGIN"){
                         $scope.badLogin = true;
-                    }
-                    
+                    }   
                 }
-                //debug credentials user:jakeruesink pass:jakeiscool
 
             })
             .error(function(data) {
@@ -216,6 +238,39 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
         $scope.forgotPassword = function(){
         window.location.assign('/#/forgotpassword'); 
+        }
+        
+        function loadRootScopeVariables(){
+            
+        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+        .success(function(data){
+            if (!checkResponseErrors(data))
+            {
+                $rootScope.users = JSON.parse(data.data);
+            }
+            else
+                console.log('ERROR: '+data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        .success(function(data){
+            if (!checkResponseErrors(data))
+            {
+                var directory = JSON.parse(data.data)
+                $rootScope.directory = directory;
+                $rootScope.loading = false;
+            }
+            else
+            {
+                console.log("error: "+ data.error)
+            }
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
         }
         
     });
@@ -536,7 +591,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 }
         }
-        
         
         $scope.submitMembers = function(){
             
@@ -1203,7 +1257,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.getOrganizationTags();
         $scope.addOrganizationTag = function(tag){
-        //#TODO find checked tags and add them to the checked members
             console.log(tag);
             $http.post('/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({'tag': tag}))
                 .success(function(data){
@@ -1224,7 +1277,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.removeOrganizationTag = function(){
-        //#TODO find checked tags and removed them from the checked members
             $('#deleteTagModal').modal('hide')
             $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({'tag': $scope.modaledTag}))
                 .success(function(data){
@@ -1251,7 +1303,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.renameOrganizationTag = function(new_tag, isValid){
-        //#TODO find checked tags and removed them from the checked members
             if(isValid){
             $('#renameTagModal').modal('hide')
             $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag, 'new_tag': new_tag}))
@@ -1284,7 +1335,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         //onclick checkmark tag
         
-        //#TODO fix this to where it updates the ng-model
         $('.memberTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
