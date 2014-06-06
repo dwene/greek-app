@@ -38,10 +38,11 @@
                         <li><a ng-href="/#/app/directory">Directory</a></li>
                         <li class="divider" ></li>
                         <li><a ng-href="#/app/accountinfo">Update Account</a></li>
-                        <li class="divider" "checkPermissions('leadership')"></li>
-                        <li><a ng-href="#/app/managemembers/tag" ng-show="checkPermissions('leadership')">Manage Members</a></li>
-                        <li class="divider" "checkPermissions('leadership')"></li>
-                        <li><a ng-href="#/app/managealumni" ng-show="checkPermissions('leadership')">Manage Alumni</a></li>            
+                        <li class="divider" ng-show="checkPermissions('leadership')"></li>
+                        <li ng-show="checkPermissions('leadership')"><a ng-href="#/app/managemembers/tag">Manage Members</a></li>
+                        <li class="divider" ng-show="checkPermissions('leadership')"></li>
+                        <li ng-show="checkPermissions('leadership')"><a ng-href="#/app/managealumni" >Manage Alumni</a></li>
+                        <li class="divider" ></li>
                         <li><a ng-click="logout()">Log Out</a></li>
                     </ul>
                     </li>

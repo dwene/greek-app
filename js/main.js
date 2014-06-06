@@ -184,10 +184,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         console.log(user_name + ' ' +password)
         $http.post('/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
             .success(function(data) {
+                $rootScope.loading = false;
                 if(!checkResponseErrors(data))
                 {
                     returned_data = JSON.parse(data.data);
-                    $rootScope.loading = false;
                     $.cookie(USER_NAME, user_name);
                     $.cookie(TOKEN,returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
@@ -209,6 +209,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
             })
             .error(function(data) {
+                $rootScope.loading = false;
                 console.log('Error: ' + data);
             });
         };
@@ -1023,34 +1024,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-//#FIXME... does this need to be deleted?
-$scope.members = JSON.parse(data.data).members;
-                    console.log($scope.members);
-                    for(var i = 0; i<$scope.members.length; i++)
-                    {
-                        if($scope.members[i].user_name == user_name)
-                        {
-                            $scope.member = $scope.members[i];
-                            $scope.prof_pic = $scope.members[i].prof_pic;
-                            console.log($scope.members[i]);
-                             //define profile information
-                            $scope.firstName = $scope.member.first_name;
-                            $scope.lastName = $scope.member.last_name;
-                            $scope.email = $scope.member.email;
-                            $scope.birthday = $scope.member.dob;
-                            $scope.phone = $scope.member.phone;
-                            $scope.currentAddress = $scope.member.address.toString()+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                            //#FIXME toString() calls an error when null (it technically does what we want, but there's probably a way to check so it doesn't give an error)
-                            $scope.permanentAddress = $scope.member.perm_address.toString()+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
-                            $scope.website = $scope.member.website;
-                            $scope.facebook = $scope.member.facebook;
-                            $scope.twitter = $scope.member.twitter;
-                            $scope.instagram = $scope.member.instagram;
-                            $scope.linkedin = $scope.member.linkedin;
-                            break;
-                        }
-                    }
-//#FIXME^^^
                     var directory = JSON.parse(data.data)
                     $rootScope.directory = directory;
                     $rootScope.loading = false;
