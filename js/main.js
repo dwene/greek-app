@@ -382,16 +382,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.checkPermissions = function(perms){
             return checkPermissions(perms);
         }
-        function onPageLoad(){
-            if($rootScope.users.members){
-                assignAngularViewModels($rootScope.users.members);
-            }
-            else{
-                $rootScope.loading = true;
-                $scope.getMembers();
-            }
-        }
-        onPageLoad();
         //MANAGE MEMBERS TAB
         
         //this goes inside the HTTP request
@@ -500,6 +490,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     $rootScope.users = JSON.parse(data.data);
+                    console.log($rootScope.users);
                     assignAngularViewModels($rootScope.users.members);
                 }
                 else
@@ -510,7 +501,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         }
-        
+        function onPageLoad(){
+            console.log('page is loading');
+            if($rootScope.users.members){
+                assignAngularViewModels($rootScope.users.members);
+                $scope.getMembers();
+            }
+            else{
+                $rootScope.loading = true;
+                $scope.getMembers();
+            }
+        }
+        onPageLoad();
         
         $scope.removeMember = function(user){
             $('#deleteTagModal').modal('hide')
@@ -549,7 +551,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     alert(errors_str);
                     }
-                    console.log(data);
+                    $scope.members.concat(data_tosend.users);
                 }
                 else
                     console.log('ERROR: '+data);
@@ -557,6 +559,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+            $scope.adds = [];
             newmemberList = [];
         }
         
