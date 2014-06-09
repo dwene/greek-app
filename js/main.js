@@ -147,12 +147,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.users = {};
         $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
         .success(function(data){
-            if (!checkResponseErrors(data))
-            {
                 $rootScope.users = JSON.parse(data.data);
-            }
-            else
-                console.log('ERROR: '+data);
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -160,16 +155,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
         .success(function(data){
-            if (!checkResponseErrors(data))
-            {
-                var directory = JSON.parse(data.data)
+                var directory = JSON.parse(data.data);
                 $rootScope.directory = directory;
                 $rootScope.loading = false;
-            }
-            else
-            {
-                console.log("error: "+ data.error)
-            }
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -208,6 +196,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //login page
 	App.controller('loginController', function($scope, $http, $rootScope) {
+        //logout();
         $scope.login = function(user_name, password) {
         $rootScope.loading = true;
         console.log(user_name + ' ' +password)
@@ -584,12 +573,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });    
-                for (var i = 0; i < $scope.members.length; i++){
-                    if ($scope.members[i].key == user.key){
-                        $scope.members.splice(i, 1);
-                        break;
-                    }
+            for (var i = 0; i < $scope.members.length; i++){
+                if ($scope.members[i].key == user.key){
+                    $scope.members.splice(i, 1);
+                    break;
                 }
+            }
         }
         
         $scope.submitMembers = function(){
@@ -637,8 +626,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         
         //reads the file as it's added into the file input
-        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
-        
+
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addMembers = function(){
             
@@ -704,7 +692,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('managealumniController', function($scope, $http, $rootScope){
-        
+         var formObject = document.getElementById('uploadMembers');
+        if(formObject){
+            formObject.addEventListener('change', readSingleFile, false);}
         $scope.openDeleteAlumniModal = function(user){
             $('#deleteAlumniModal').modal();
             $scope.selectedUser = user;
@@ -890,7 +880,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         
         //reads the file as it's added into the file input
-        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
+        document.getElementById('uploadAlumni').addEventListener('change', readSingleFile, false);
         
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addAlumni = function(){
@@ -1663,6 +1653,3 @@ App.factory('directoryService', function($rootScope, $http) {
         return $rootScope.directory;
     }
 });
-
-
-
