@@ -1,4 +1,4 @@
-
+//#TODO Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -218,7 +218,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     returned_data = JSON.parse(data.data);
                     $.cookie(USER_NAME, user_name);
-                    $.cookie(TOKEN,returned_data.token);
+                    $.cookie(TOKEN, returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
                     loadRootScopeVariables();
                     window.location.assign("#/app");
@@ -935,11 +935,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    console.log(data.data);
-                    $.cookie(TOKEN,data.data.token);
+                    var returned_data = JSON.parse(data.data);
+                    $.cookie(TOKEN,returned_data.token);
                     $.cookie(USER_NAME, $scope.item.user_name);
-                    $.cookie(PERMS, data.data.perms);
+                    $.cookie(PERMS, returned_data.perms);
                     $.cookie('FORM_INFO_EMPTY', 'true');
+                    console.log($.cookie(TOKEN));
                     window.location.assign("/#/app/accountinfo");
                 }
                 else
