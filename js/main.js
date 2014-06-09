@@ -49,8 +49,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         })
         .state('managemembers', {
                 url : '/app/managemembers',
-				templateUrl : 'Static/managemembers.html',
-				controller  : 'managemembersController'
+				templateUrl : 'Static/managemembers.html'//,
+//				controller  : 'managemembersController'
 			})
             .state('managemembers.manage', {
                     url : '/manage',
@@ -109,7 +109,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('directory', {
                 url : '/app/directory',
                 templateUrl : 'Static/directory.html',
-                controller : 'directoryController'  
+            })
+            .state('directory.members', {
+                url : '/members',
+                templateUrl : 'Static/memberdirectory.html',
+                controller : 'membersDirectoryController'  
+            })
+            .state('directory.alumni', {
+                url : '/alumni',
+                templateUrl : 'Static/alumnidirectory.html',
+                controller : 'alumniDirectoryController'  
             })
         .state('memberprofile', {
                 url : '/app/directory/:id',
@@ -1018,7 +1027,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the directory
-    App.controller('directoryController', function($scope, $rootScope, $http){
+    App.controller('membersDirectoryController', function($scope, $rootScope, $http){
         $scope.directory = $rootScope.directory.members;
         if (!$scope.directory){
             $rootScope.loading = true;
@@ -1031,6 +1040,42 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log(directory);
                     $rootScope.directory = directory;
                     $scope.directory = $rootScope.directory.members;
+                    $rootScope.loading = false;
+                    return $rootScope.directory;
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        $scope.showIndividual = function(member){
+            window.location.assign("#/app/directory/"+member.user_name);
+        }
+        
+        //click the buttons to search for that button text
+        $('#searchTags button').click(function(){
+            var searchValue = $(this).text();
+            $('#directorySearch').val(searchValue).change();
+        });
+        
+    });
+
+    App.controller('alumniDirectoryController', function($scope, $rootScope, $http){
+        $scope.directory = $rootScope.directory.alumni;
+        if (!$scope.directory){
+            $rootScope.loading = true;
+        }
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var directory = JSON.parse(data.data)
+                    console.log(directory);
+                    $rootScope.directory = directory;
+                    $scope.directory = $rootScope.directory.alumni;
                     $rootScope.loading = false;
                     return $rootScope.directory;
                 }
