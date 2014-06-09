@@ -1326,6 +1326,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         //onclick checkmark tag
         
+        //#TODO After submitting new tags to members, the organization tags are still selected. need some sort of change here
         $('.memberTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
