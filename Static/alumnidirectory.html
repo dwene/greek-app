@@ -1,0 +1,33 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>Alumni Directory</h1>
+		</div>
+
+</div>
+
+<div class="container">
+    
+    <section id="searchTags">
+        
+        <div class="btn-group">
+            <button class="btn btn-default btn-sm">Council</button>
+            <button class="btn btn-default btn-sm">Leadership</button>
+        </div>
+        
+    <div class="form-group">
+    <input id="directorySearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
+    </div>
+    
+    </section>
+    
+    <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
+
+        <li class="member" ng-click="showIndividual(member)">
+        <hr>
+            <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>    <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+        <hr>
+        </li>
+    </ul>
+</div>

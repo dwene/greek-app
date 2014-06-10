@@ -1,40 +1,10 @@
 <div class="container">
-
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>Directory</h1>
-		</div>
-
+<ul class="nav nav-pills">
+    <li ng-class="{ active: $state.includes('directory.members') }"><a ui-sref=".members">Members</a></li>
+    <li ng-class="{ active: $state.includes('directory.alumni') }"><a ui-sref=".alumni">Alumni</a></li>
+</ul>
 </div>
 
-<div class="container" id="directory">
-    
-    <section id="searchTags">
-        
-        <div class="btn-group">
-            <button class="btn btn-default btn-sm">Council</button>
-            <button class="btn btn-default btn-sm">Leadership</button>
-        </div>
-        
-    <div class="form-group">
-    <input id="directorySearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
-    </div>
-    
-    </section>
-    
-    <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
+<br>
+<div ui-view></div>
 
-        <li class="member" ng-click="showIndividual(member)">
-        <hr>
-            <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
-            
-            <div class="directoryContent">
-            <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-            <span ng-repeat="tag in member.tags"> <span class="directoryTags">{{tag}}</span> </span>
-            <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
-            </div>
-            
-        <hr>
-        </li>
-    </ul>
-</div>

@@ -1,5 +1,6 @@
 //#FIXME when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
+//#TODO Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
 
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
@@ -51,8 +52,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         })
         .state('managemembers', {
                 url : '/app/managemembers',
-				templateUrl : 'Static/managemembers.html',
-				controller  : 'managemembersController'
+				templateUrl : 'Static/managemembers.html'//,
+//				controller  : 'managemembersController'
 			})
             .state('managemembers.manage', {
                     url : '/manage',
@@ -111,7 +112,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('directory', {
                 url : '/app/directory',
                 templateUrl : 'Static/directory.html',
-                controller : 'directoryController'  
+            })
+            .state('directory.members', {
+                url : '/members',
+                templateUrl : 'Static/memberdirectory.html',
+                controller : 'membersDirectoryController'  
+            })
+            .state('directory.alumni', {
+                url : '/alumni',
+                templateUrl : 'Static/alumnidirectory.html',
+                controller : 'alumniDirectoryController'  
             })
         .state('memberprofile', {
                 url : '/app/directory/:id',
@@ -149,12 +159,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.users = {};
         $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
         .success(function(data){
-            if (!checkResponseErrors(data))
-            {
                 $rootScope.users = JSON.parse(data.data);
-            }
-            else
-                console.log('ERROR: '+data);
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -162,16 +167,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
         .success(function(data){
-            if (!checkResponseErrors(data))
-            {
-                var directory = JSON.parse(data.data)
+                var directory = JSON.parse(data.data);
                 $rootScope.directory = directory;
                 $rootScope.loading = false;
-            }
-            else
-            {
-                console.log("error: "+ data.error)
-            }
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -210,6 +208,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //login page
 	App.controller('loginController', function($scope, $http, $rootScope) {
+        //logout();
         $scope.login = function(user_name, password) {
         $rootScope.loading = true;
         console.log(user_name + ' ' +password)
@@ -220,7 +219,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     returned_data = JSON.parse(data.data);
                     $.cookie(USER_NAME, user_name);
-                    $.cookie(TOKEN,returned_data.token);
+                    $.cookie(TOKEN, returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
                     loadRootScopeVariables();
                     window.location.assign("#/app");
@@ -586,12 +585,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });    
-                for (var i = 0; i < $scope.members.length; i++){
-                    if ($scope.members[i].key == user.key){
-                        $scope.members.splice(i, 1);
-                        break;
-                    }
+            for (var i = 0; i < $scope.members.length; i++){
+                if ($scope.members[i].key == user.key){
+                    $scope.members.splice(i, 1);
+                    break;
                 }
+            }
         }
         
         $scope.submitMembers = function(){
@@ -639,8 +638,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         
         //reads the file as it's added into the file input
-        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
-        
+
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addMembers = function(){
             
@@ -706,7 +704,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('managealumniController', function($scope, $http, $rootScope){
-        
+         var formObject = document.getElementById('uploadMembers');
+        if(formObject){
+            formObject.addEventListener('change', readSingleFile, false);}
         $scope.openDeleteAlumniModal = function(user){
             $('#deleteAlumniModal').modal();
             $scope.selectedUser = user;
@@ -892,7 +892,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         
         //reads the file as it's added into the file input
-        //document.getElementById('uploadMembers').addEventListener('change', readSingleFile, false);
+        document.getElementById('uploadAlumni').addEventListener('change', readSingleFile, false);
         
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addAlumni = function(){
@@ -937,11 +937,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    console.log(data.data);
-                    $.cookie(TOKEN,data.data.token);
+                    var returned_data = JSON.parse(data.data);
+                    $.cookie(TOKEN,returned_data.token);
                     $.cookie(USER_NAME, $scope.item.user_name);
-                    $.cookie(PERMS, data.data.perms);
+                    $.cookie(PERMS, returned_data.perms);
                     $.cookie('FORM_INFO_EMPTY', 'true');
+                    console.log($.cookie(TOKEN));
                     window.location.assign("/#/app/accountinfo");
                 }
                 else
@@ -1029,7 +1030,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the directory
-    App.controller('directoryController', function($scope, $rootScope, $http){
+    App.controller('membersDirectoryController', function($scope, $rootScope, $http){
         $scope.directory = $rootScope.directory.members;
         if (!$scope.directory){
             $rootScope.loading = true;
@@ -1042,6 +1043,42 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log(directory);
                     $rootScope.directory = directory;
                     $scope.directory = $rootScope.directory.members;
+                    $rootScope.loading = false;
+                    return $rootScope.directory;
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        $scope.showIndividual = function(member){
+            window.location.assign("#/app/directory/"+member.user_name);
+        }
+        
+        //click the buttons to search for that button text
+        $('#searchTags button').click(function(){
+            var searchValue = $(this).text();
+            $('#directorySearch').val(searchValue).change();
+        });
+        
+    });
+
+    App.controller('alumniDirectoryController', function($scope, $rootScope, $http){
+        $scope.directory = $rootScope.directory.alumni;
+        if (!$scope.directory){
+            $rootScope.loading = true;
+        }
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var directory = JSON.parse(data.data)
+                    console.log(directory);
+                    $rootScope.directory = directory;
+                    $scope.directory = $rootScope.directory.alumni;
                     $rootScope.loading = false;
                     return $rootScope.directory;
                 }
@@ -1337,6 +1374,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         //onclick checkmark tag
         
+        //#TODO After submitting new tags to members, the organization tags are still selected. need some sort of change here
         $('.memberTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
@@ -1664,6 +1702,3 @@ App.factory('directoryService', function($rootScope, $http) {
         return $rootScope.directory;
     }
 });
-
-
-

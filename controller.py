@@ -698,8 +698,8 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data=images.get_serving_url(user.prof_pic))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
-                      http_method='POST', name='auth.get_directory_info')
-    def get_directory_info(self, request):
+                      http_method='POST', name='auth.directory')
+    def directory(self, request):
         user = get_user(request.user_name, request.token)
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
