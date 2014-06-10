@@ -7,7 +7,7 @@
 
 </div>
 
-<div class="container">
+<div class="container" id="directory">
     
     <section id="searchTags">
         
@@ -26,7 +26,14 @@
 
         <li class="member" ng-click="showIndividual(member)">
         <hr>
-            <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>    <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+            <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
+            
+            <div class="directoryContent">
+            <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+            <span ng-repeat="tag in member.tags"> <span class="directoryTags">{{tag}}</span> </span>
+            <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
+            </div>
+            
         <hr>
         </li>
     </ul>

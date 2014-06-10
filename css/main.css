@@ -24,8 +24,13 @@ h1{font-size:36px; font-weight:bold;}
 /*.addTags input{visibility:hidden; height:0px; width:0px;}*/
 
 /*Directory Page*/
-.member:hover{background:lightblue; cursor:pointer;}
-.memberName{margin-left:10px;}
+#directory .member{position:relative;}
+#directory .member:hover{background:lightblue; cursor:pointer;}
+.directoryContent{margin-left:60px;}
+.directoryTags{font-size:12px; font-style: italic;}
+.directoryStatus{width:100%; margin-top:4px; display:block; font-size:12px;}
+.directoryStatus:before{content:'"';}
+.directoryStatus:after{content:'"';}
 
 /*Member Tagging Page*/
 .label{display:inline-block; position:relative; padding:.4em .4em .4em 1.5em;}
@@ -56,9 +61,11 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 /*Helper Classes*/
 .smallprofilepic{
     display: inline-block;
+    position:absolute;
     width: 40px;
     height: 40px;
-    margin:-10px 0px;
+    top:50%;
+    margin:-20px 0 0 10px;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
