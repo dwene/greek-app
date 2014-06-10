@@ -27,11 +27,11 @@
 			<nav class="navbar navbar-default" ng-controller="navigationController as navigation">
 			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="/" ng-hide="checkLogin()">NeteGreek</a>
-					<a class="navbar-brand" href="/#/app" ng-show="checkLogin()">NeteGreek</a>
+					<a class="navbar-brand" href="/" ng-hide="$root.checkLogin()">NeteGreek</a>
+					<a class="navbar-brand" href="/#/app" ng-show="$root.checkLogin()">NeteGreek</a>
 				</div>
 				
-				<ul class="nav navbar-nav pull-right"  ng-show="checkLogin()">
+				<ul class="nav navbar-nav pull-right"  ng-show="$root.checkLogin()">
                     
                     <li><a ng-href="/#/app/directory/members">Directory</a></li>
                     
@@ -39,22 +39,22 @@
                     <a class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a ng-href="#/app/accountinfo">Update Account</a></li>
-                        <li class="divider" ng-show="checkPermissions('leadership')"></li>
-                        <li ng-show="checkPermissions('leadership')"><a ng-href="#/app/managemembers/tag">Manage Members</a></li>
-                        <li class="divider" ng-show="checkPermissions('leadership')"></li>
-                        <li ng-show="checkPermissions('leadership')"><a ng-href="#/app/managealumni" >Manage Alumni</a></li>
+                        <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
+                        <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managemembers/tag">Manage Members</a></li>
+                        <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
+                        <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managealumni" >Manage Alumni</a></li>
                         <li class="divider" ></li>
                         <li><a ng-click="logout()">Log Out</a></li>
                     </ul>
                     </li>
                 </ul>
 
-				<ul ng-hide="checkLogin()" class="nav navbar-nav navbar-right">
+				<ul ng-hide="$root.checkLogin()" class="nav navbar-nav navbar-right">
 					<li><a ng-href="#login">Login</a></li>
 					<li><a ng-href="#register">Register</a></li>
 				</ul>
 
-<!--				<button id="logoutbutton" ng-show="checkLogin()" ng-click="logout()" type="button" class="btn btn-danger pull-right">Log Out</button>-->
+<!--				<button id="logoutbutton" ng-show="$root.checkLogin()" ng-click="logout()" type="button" class="btn btn-danger pull-right">Log Out</button>-->
 			</div>
 			</nav>
 </header>

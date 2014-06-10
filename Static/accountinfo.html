@@ -89,7 +89,7 @@
     </div>
     
     
-    <div id="leadership_fields" ng-show="checkPermissions('leadership')">
+    <div id="leadership_fields" ng-show="$root.checkPermissions('leadership')">
         <div class="form-group" ng-class="{ 'has-error' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}" >
             <label for="position" class="col-sm-2 control-label">Leadership Position</label>
             <div class="col-sm-10">

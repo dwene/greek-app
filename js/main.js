@@ -177,17 +177,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $rootScope.loading = false;
         console.log('rootscope changing');
+        $rootScope.checkPermissions = function(perms){
+            return checkPermissions(perms);
+        }
+        $rootScope.checkLogin = function(){
+            return checkLogin();
+        }        
     });
 
 //navigation header
     App.controller('navigationController', function($scope, $http, $rootScope){
-        $scope.checkLogin = function(){
-            return checkLogin();
-        }
         
-        $scope.checkPermissions = function(perms){
-            return checkPermissions(perms);
-        }
         
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
@@ -436,7 +436,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.status_updated = true;
+                    $scope.statusUpdated = true;
+                    $('#status').val("");
                 }
                 else
                     console.log('ERROR: '+data);
@@ -452,9 +453,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('managemembersController', function($scope, $http, $rootScope) {
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
-        $scope.checkPermissions = function(perms){
-            return checkPermissions(perms);
-        }
+
         //MANAGE MEMBERS TAB
         
         //this goes inside the HTTP request
@@ -1214,9 +1213,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.checkAlumni = function(){
             return checkAlumni();
         }
-        $scope.checkPermissions = function(perms){
-            return checkPermissions(perms);
-        }
+
         $scope.updateAccount = function(isValid){
             if(isValid){
                 $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))

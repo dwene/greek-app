@@ -8,9 +8,10 @@
 </div>
 
 <div class="container">
-<form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
-    <input type="text" placeholder="update your status here" class="form-control" ng-model="status">
+<form ng-show="$root.checkPermissions('leadership')" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
+    <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">
     <button class="btn btn-default" type="submit">Update Status</button>
 </form>
+<p ng-show="statusUpdated">Status has been updated!</p>
 
 </div>
