@@ -1,6 +1,6 @@
-//#FIXME when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
+//#TODO Check if this is now fixed: when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
-//#TODO Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
+//#FIXME Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
 
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
@@ -52,8 +52,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         })
         .state('managemembers', {
                 url : '/app/managemembers',
-				templateUrl : 'Static/managemembers.html'//,
-//				controller  : 'managemembersController'
+				templateUrl : 'Static/managemembers.html',
+				controller  : 'managemembersController'
 			})
             .state('managemembers.manage', {
                     url : '/manage',
@@ -131,7 +131,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //#CHANGES there might be a better way to do this
         .state('postNewKeyPictureLink', {
                 url : '/app/postNewKeyPictureLink',
-                templateUrl : 'Static/memberprofile.html',
+                templateUrl : '',
                 controller : 'uploadImageController'
             })
         .state('forgotpassword', {
@@ -1374,7 +1374,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         //onclick checkmark tag
         
-        //#TODO After submitting new tags to members, the organization tags are still selected. need some sort of change here
+        //#FIXME After submitting new tags to members, the organization tags are still selected. need some sort of change here
         $('.memberTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
