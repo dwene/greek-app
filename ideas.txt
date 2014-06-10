@@ -1,0 +1,39 @@
+It might be good to consider working with SeedSumo.
+Pros: facilities, extra money, good connections, more validation, access to mentors
+Cons: give up some equity, not needed for success
+
+
+Look into enabling compression and how caching works in modern browsers.
+
+$ROOT.SCOPE
+    Data needed to load at beginning:
+    - Logged in user information
+    - Directory List
+
+HOME
+    We'll need an attractive page front with a CTA and some good reviews.
+    Also need to have an about page with more information and maybe a video.
+
+REGISTERINFO
+    I was having a problem where the register accountinfo page would take me to the login screen.
+
+PAYMENT
+    Freemium Model - allow organizations to use the directory for free
+    if they want to use other feature sets such as the messaging, events, or polls then they can pay $2/member/month
+    (try the first semester at 50% discount)
+    If we go with a freemium model we can move the payments section into the dropdown menu.
+    
+APP
+    I'm thinking the home page will be like an inbox for all the notifications for that user.
+    
+MANAGE MEMBERS
+    We'll have to think through how we transfer members to alumni and such.
+    What other things can we do with members.
+    Add to COUNCIL, LEADERSHIP or remove their permissions.
+    Set pledge class? Edit account information?
+    
+UPLOAD PROFILE PICTURE
+    Do we want to set a max file size on the profile pictures?
+    Do we want to resize the picture and possibly save different sizes for performance?
+
+

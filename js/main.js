@@ -1,4 +1,7 @@
+//#FIXME when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
+//#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#TODO Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
+
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
