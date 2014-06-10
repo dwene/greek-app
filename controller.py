@@ -723,6 +723,7 @@ class RESTApi(remote.Service):
         return_data = json_dump({'members': user_list, 'alumni': alumni_list})
         return OutgoingMessage(error='', data=return_data)
 
+
     #-------------------------
     # TAGGING Endpoints
     #-------------------------
@@ -841,6 +842,23 @@ class RESTApi(remote.Service):
                 if tag in user.tags:
                     user.tags.remove(tag)
             user.put()
+        return OutgoingMessage(error='', data='OK')
+
+    #-------------------------
+    # TAGGING Endpoints
+    #-------------------------
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_status',
+                      http_method='POST', name='user.remove_user_tag')
+    def remove_user_tag(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        request_user.status = request_object['status']
+        request_user.put()
         return OutgoingMessage(error='', data='OK')
 
 

@@ -1,7 +1,7 @@
 //#TODO Check if this is now fixed: when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#FIXME Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
-
+//#FIXME Look on production in tagging members with user:djrobotfreak pass:password Members are not displaying correctly
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -428,6 +428,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('appController', function($scope, $http) {
         if(!checkLogin()){
         window.location.assign("/#/login");
+        }
+        
+        $scope.updateStatus = function(status){
+        var to_send = {'status': status};
+        $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.status_updated = true;
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });    
         }
         
 	});
