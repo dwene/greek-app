@@ -1068,10 +1068,34 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the directory
     App.controller('membersDirectoryController', function($scope, $rootScope, $http){
         console.log('made it to the controller');
-        $scope.directory = $rootScope.directory.members;
-        if (!$scope.directory){
-            $rootScope.loading = true;
+        $scope.directory.council = [];
+        $scope.directory.leadership = [];
+        $scope.directory.members = [];
+        function splitMembers(){
+            var council = [];
+            var leadership = [];
+            var members = [];
+            if ($rootScope.directory.members){
+                for (var i = 0; i< $rootScope.directory.members.length; i++){
+                    if ($rootScope.directory.members[i].perms == MEMBER){
+                        members.append($rootScope.directory.members[i]);
+                        break;
+                    }
+                    if ($rootScope.directory.members[i].perms == LEADERSHIP){
+                        leadership.append($rootScope.directory.members[i]);
+                        break;
+                    }
+                    if ($rootScope.directory.members[i].perms == COUNCIL){
+                        council.append($rootScope.directory.members[i]);
+                        break;
+                    }
+                }
+                $scope.directory.council = council;
+                $scope.directory.leadership = leadership;
+                $scope.directory.members = members;
+            }
         }
+        splitMembers();
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1081,7 +1105,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.directory = directory;
                     $scope.directory = $rootScope.directory.members;
                     $rootScope.loading = false;
-                    return $rootScope.directory;
+                    splitMembers();
                 }
                 else
                 {
