@@ -42,7 +42,7 @@ h1{font-size:36px; font-weight:bold;}
 .checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
 .checkLabel:hover{background:#ccc;}
 
-#addremoveTags{margin:10px 0 0 0; padding:0px;}
+#addTags{margin:10px 0 0 0; padding:0px;}
 
 .memberTags .btn-group{-webkit-user-select:none;}
 .memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;
