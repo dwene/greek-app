@@ -796,7 +796,7 @@ class RESTApi(remote.Service):
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/get_organization_tags',
                       http_method='POST', name='user.get_organization_tags')
-    def get_organization_tag(self, request):
+    def get_organization_tags(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -826,8 +826,8 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_users_tags',
-                      http_method='POST', name='user.remove_user_tag')
-    def remove_user_tag(self, request):
+                      http_method='POST', name='user.remove_users_tag')
+    def remove_users_tag(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -845,12 +845,12 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     #-------------------------
-    # TAGGING Endpoints
+    # UPDATE STATUS ENDPOINT
     #-------------------------
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_status',
-                      http_method='POST', name='user.remove_user_tag')
-    def remove_user_tag(self, request):
+                      http_method='POST', name='user.update_status')
+    def update_status(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')

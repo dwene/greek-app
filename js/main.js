@@ -1,7 +1,6 @@
 //#TODO Check if this is now fixed: when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#FIXME Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
-//#FIXME Look on production in tagging members with user:djrobotfreak pass:password Members are not displaying correctly
 //Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -17,9 +16,10 @@ var App = angular.module('App', ['ui.router']);
 App.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/")
     .when("/app/managemembers", "/app/managemembers/manage")
+    .when("/app", "/app/home")
     .when("/app/managealumni", "/app/managealumni/manage");
     
-      $stateProvider
+      $stateProvider 
         .state('home', {
                 url: '/', 
 				templateUrl : 'Static/home.html',
@@ -45,137 +45,172 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl : 'Static/payment.html',
 				controller  : 'paymentController'
 			})
-        .state('app', {
-                url : '/app',
-                templateUrl : 'Static/app.html',
-                controller : 'appController'
-        })
-        .state('managemembers', {
-                url : '/app/managemembers',
-				templateUrl : 'Static/managemembers.html',
-				controller  : 'managemembersController'
-			})
-            .state('managemembers.manage', {
-                    url : '/manage',
-                    templateUrl : 'Static/managingmembers.html',
-                    controller: 'managemembersController'
-                })
-            .state('managemembers.add', {
-                    url : '/add',
-                    templateUrl : 'Static/addingmembers.html',
-                    controller: 'managemembersController'
-                })
-            .state('managemembers.tag', {
-                    url : '/tag',
-                    templateUrl : 'Static/taggingmembers.html',
-                    controller: 'membertagsController'
-                })
-        .state('managealumni', {
-                url : '/app/managealumni',
-				templateUrl : 'Static/managealumni.html',
-			})
-            .state('managealumni.add' , {
-                    url : '/add',
-                    templateUrl : 'Static/addingalumni.html',
-                    controller: 'addAlumniController'
-                })
-            .state('managealumni.manage' , {
-                    url : '/manage',
-                    templateUrl : 'Static/managingalumni.html',
-                    controller: 'managealumniController'
-                })
-        .state('newmember', {
-                url : '/newuser/:key',
-                templateUrl : 'Static/newmember.html',
-                controller : 'newmemberController'
-            })
-        .state('incorrectperson', {
-                url : '/incorrectperson',
-                templateUrl : 'Static/incorrectperson.html',
-                controller : 'incorrectpersonController'
-            })
         .state('newmemberinfo', {
                 url : '/newuserinfo',
                 templateUrl : 'Static/newmemberinfo.html',
                 controller : 'newmemberinfoController'
             })
-        .state('accountinfo', {
-                url : '/app/accountinfo',
-                templateUrl : 'Static/accountinfo.html',
-                controller : 'accountinfoController'
-            })
-        .state('uploadprofilepicture', {
-                url : '/app/uploadprofilepicture',
-                templateUrl : 'Static/uploadprofilepicture.html',
-                controller : 'profilepictureController'  
-            })
-        .state('directory', {
-                url : '/app/directory',
-                templateUrl : 'Static/directory.html',
-            })
-            .state('directory.members', {
-                url : '/members',
-                templateUrl : 'Static/memberdirectory.html',
-                controller : 'membersDirectoryController'  
-            })
-            .state('directory.alumni', {
-                url : '/alumni',
-                templateUrl : 'Static/alumnidirectory.html',
-                controller : 'alumniDirectoryController'  
-            })
-        .state('memberprofile', {
-                url : '/app/directory/:id',
-                templateUrl : 'Static/memberprofile.html',
-                controller : 'memberprofileController'  
-            })
-        //#CHANGES there might be a better way to do this
-        .state('postNewKeyPictureLink', {
-                url : '/app/postNewKeyPictureLink',
-                templateUrl : '',
-                controller : 'uploadImageController'
-            })
+        .state('newmember', {
+                    url : '/newuser/:key',
+                    templateUrl : 'Static/newmember.html',
+                    controller : 'newmemberController'
+                })
         .state('forgotpassword', {
-                url : '/forgotpassword',
-                templateUrl : 'Static/forgot_password.html',
-                controller : 'forgotPasswordController'
-            })
+                    url : '/forgotpassword',
+                    templateUrl : 'Static/forgot_password.html',
+                    controller : 'forgotPasswordController'
+                })
         .state('changepasswordfromtoken', {
-                url : '/changepasswordfromtoken',
-                templateUrl : 'Static/change_password_from_token.html',
-                controller : 'changePasswordFromTokenController'
-            })
-        .state('changepassword', {
-                url : '/app/changepassword',
-                templateUrl : 'Static/change_password.html',
-                controller : 'changePasswordController'
-            })
+                    url : '/changepasswordfromtoken',
+                    templateUrl : 'Static/change_password_from_token.html',
+                    controller : 'changePasswordFromTokenController'
+                })
+        .state('app', {
+                url : '/app',
+                templateUrl : 'Static/app.html',
+                controller : 'appController'
+        })
+            .state('app.home', {
+                url : '/home',
+                templateUrl : 'Static/apphome.html',
+                controller : 'appHomeController'
+        })
+            .state('app.managemembers', {
+                    url : '/managemembers',
+                    templateUrl : 'Static/managemembers.html',
+                    controller  : 'managemembersController'
+                })
+                .state('app.managemembers.manage', {
+                        url : '/manage',
+                        templateUrl : 'Static/managingmembers.html',
+                        controller: 'managemembersController'
+                    })
+                .state('app.managemembers.add', {
+                        url : '/add',
+                        templateUrl : 'Static/addingmembers.html',
+                        controller: 'managemembersController'
+                    })
+                .state('app.managemembers.tag', {
+                        url : '/tag',
+                        templateUrl : 'Static/taggingmembers.html',
+                        controller: 'membertagsController'
+                    })
+            .state('app.managealumni', {
+                    url : '/amanagealumni',
+                    templateUrl : 'Static/managealumni.html',
+                })
+                .state('app.managealumni.add' , {
+                        url : '/add',
+                        templateUrl : 'Static/addingalumni.html',
+                        controller: 'addAlumniController'
+                    })
+                .state('app.managealumni.manage' , {
+                        url : '/manage',
+                        templateUrl : 'Static/managingalumni.html',
+                        controller: 'managealumniController'
+                    })
+            .state('app.incorrectperson', {
+                    url : '/incorrectperson',
+                    templateUrl : 'Static/incorrectperson.html',
+                    controller : 'incorrectpersonController'
+                })
+            .state('app.accountinfo', {
+                    url : '/accountinfo',
+                    templateUrl : 'Static/accountinfo.html',
+                    controller : 'accountinfoController'
+                })
+            .state('app.uploadprofilepicture', {
+                    url : '/uploadprofilepicture',
+                    templateUrl : 'Static/uploadprofilepicture.html',
+                    controller : 'profilepictureController'  
+                })
+            .state('app.directory', {
+                    url : '/directory',
+                    templateUrl : 'Static/directory.html',
+                })
+                .state('app.directory.members', {
+                    url : '/members',
+                    templateUrl : 'Static/memberdirectory.html',
+                    controller : 'membersDirectoryController'  
+                })
+                .state('app.directory.alumni', {
+                    url : '/alumni',
+                    templateUrl : 'Static/alumnidirectory.html',
+                    controller : 'alumniDirectoryController'  
+                })
+            .state('app.memberprofile', {
+                    url : '/directory/:id',
+                    templateUrl : 'Static/memberprofile.html',
+                    controller : 'memberprofileController'  
+                })
+            //#CHANGES there might be a better way to do this
+            .state('app.postNewKeyPictureLink', {
+                    url : '/postNewKeyPictureLink',
+                    templateUrl : '',
+                    controller : 'uploadImageController'
+                })
+            .state('app.changepassword', {
+                    url : '/changepassword',
+                    templateUrl : 'Static/change_password.html',
+                    controller : 'changePasswordController'
+                })
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $http) {
+    App.run(function ($rootScope, $state, $stateParams, $http, $q) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
         $rootScope.users = {};
-        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
-        .success(function(data){
+        
+        
+        function executePosts() {
+          var deferred = $q.defer();
+          var done = 0;
+          function checkIfDone() {
+            done++;
+            if (done==2) deferred.resolve(); 
+          }
+          $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                //console.log(data.data);
                 $rootScope.users = JSON.parse(data.data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
-
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-        .success(function(data){
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+          $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                //console.log(data.data);
                 var directory = JSON.parse(data.data);
                 $rootScope.directory = directory;
-                $rootScope.loading = false;
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+          return deferred.promise;
+        }
         
-        $rootScope.loading = false;
+        $rootScope.loadData = function(){
+            $rootScope.loading = true;
+            executePosts().then(function() {
+                for (var i = 0; i< $rootScope.directory.members.length; i++){
+                    if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+                        $rootScope.me = $rootScope.directory.members[i];
+                        console.log($rootScope.me);
+                        break;
+                    }
+                }
+                $rootScope.loading = false;
+            });
+        }
+        
+        if ($.cookie(USER_NAME)){
+            $rootScope.loadData();
+        }
+        
         console.log('rootscope changing');
         $rootScope.checkPermissions = function(perms){
             return checkPermissions(perms);
@@ -187,8 +222,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //navigation header
     App.controller('navigationController', function($scope, $http, $rootScope){
-        
-        
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
@@ -206,9 +239,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
 	});
 
+    App.controller('appController', function($scope, $http) {
+        if(!checkLogin()){
+            window.location.assign("/#/login");
+        }
+	});
+
 //login page
 	App.controller('loginController', function($scope, $http, $rootScope) {
-        //logout();
+        $.removeCookie(USER_NAME);
+        $.removeCookie(TOKEN);
+        $.removeCookie(PERMS);
+        $.removeCookie('FORM_INFO_EMPTY')
+        $rootScope.directory = {};
+        $rootScope.loading = false;
+        $rootScope.users = {};
         $scope.login = function(user_name, password) {
         $rootScope.loading = true;
         console.log(user_name + ' ' +password)
@@ -221,7 +266,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(USER_NAME, user_name);
                     $.cookie(TOKEN, returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
-                    loadRootScopeVariables();
+                    $rootScope.loadData();
                     window.location.assign("#/app");
                 }
                 else{
@@ -239,39 +284,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
         $scope.forgotPassword = function(){
         window.location.assign('/#/forgotpassword'); 
-        }
-        
-        function loadRootScopeVariables(){
-            
-        $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
-        .success(function(data){
-            if (!checkResponseErrors(data))
-            {
-                $rootScope.users = JSON.parse(data.data);
-            }
-            else
-                console.log('ERROR: '+data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
-
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-        .success(function(data){
-            if (!checkResponseErrors(data))
-            {
-                var directory = JSON.parse(data.data)
-                $rootScope.directory = directory;
-                $rootScope.loading = false;
-            }
-            else
-            {
-                console.log("error: "+ data.error)
-            }
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
         }
         
     });
@@ -363,7 +375,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the registration page
-    App.controller('registerController', function($scope, $http) {
+    App.controller('registerController', function($scope, $http, $rootScope) {
+        $.removeCookie(USER_NAME);
+        $.removeCookie(TOKEN);
+        $.removeCookie(PERMS);
+        $.removeCookie('FORM_INFO_EMPTY')
+        $rootScope.directory = {};
+        $rootScope.loading = false;
+        $rootScope.users = {};
         //this page passes parameters through a get method to register info
     });
 
@@ -396,6 +415,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(TOKEN,  responseData.token);
                         $.cookie(PERMS, responseData.perms);
                         $.cookie("USER_NAME", data_tosend.user.user_name);
+                        $scope.loadData();
                         window.location.assign("/#/payment");
                     }
                     else
@@ -425,19 +445,20 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the main app page
-    App.controller('appController', function($scope, $http) {
+    App.controller('appHomeController', function($scope, $http,$rootScope) {
         if(!checkLogin()){
-        window.location.assign("/#/login");
+            window.location.assign("/#/login");
         }
-        
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.statusUpdated = true;
                     $('#status').val("");
+                    if ($rootScope.me){
+                        $rootScope.me.status = status;
+                    }
                 }
                 else
                     console.log('ERROR: '+data);
@@ -1046,6 +1067,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the directory
     App.controller('membersDirectoryController', function($scope, $rootScope, $http){
+        console.log('made it to the controller');
         $scope.directory = $rootScope.directory.members;
         if (!$scope.directory){
             $rootScope.loading = true;
@@ -1474,19 +1496,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.removeTagsFromUsers = function(tags, users){
             console.log(tags);
             console.log(users);
-            selected_tags = [];
-            selected_keys = [];
-            for (var subtag in tags){
-                if (tags[subtag] == true){
-                    selected_tags.push(subtag);
-                }
-            }
-            for (var subuser in users){
-                if (users[subuser] == true){
-                    selected_keys.push(subuser)
-                }
-            }
-            removeTagsFromUsers(selected_tags, selected_keys);
+            removeTagsFromUsers(tags, users);
         }
     });
 

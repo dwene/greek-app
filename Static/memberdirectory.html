@@ -22,7 +22,7 @@
     
     </section>
     
-    <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
+    <ul ng-repeat="member in directory | orderBy:'perms' | multipleSearch:search">
 
         <li class="member" ng-click="showIndividual(member)">
         <hr>

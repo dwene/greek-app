@@ -1,0 +1,19 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>The App</h1>
+		</div>
+
+</div>
+
+<div class="container">
+    <div ng-show="$root.checkPermissions('leadership')" id="statusContainer">
+        <h2>Status: {{$root.me.status}}</h2>
+        <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
+            <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">
+            <button class="btn btn-default" type="submit">Update Status</button>
+        </form>
+        <p ng-show="statusUpdated">Status has been updated!</p>
+    </div>
+</div>

@@ -34,22 +34,24 @@
                     <section class="row">
                     <ul>
                         <div ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
-                            <li class="col-xs-12 col-sm-2">
-                            <div class="btn-group">
-                            <label class="label label-default checkLabel">
-                            <i class="fa fa-square-o checkStatus"></i>
-                            <input type="checkbox" ng-model="selectedUsers[member.key]">{{ member.first_name }} {{ member.last_name }}
-                            </label>
-                            </div>
-                            </li>
-                            <ul id="memberTags" class="col-xs-12 col-sm-10">
-                                <div class="btn-group" ng-repeat="tag in member.tags">
-                                <span class="label label-default userLabel">
-                                <li>{{ tag }}</li>
-                                </span>
-                                <div class="badge"><i class="fa fa-times"></i></div>
+                            <div class="row">
+                                <li class="col-xs-12 col-sm-2">
+                                <div class="btn-group">
+                                <label class="label label-default checkLabel">
+                                <i class="fa fa-square-o checkStatus"></i>
+                                <input type="checkbox" ng-model="selectedUsers[member.key]">{{ member.first_name }} {{ member.last_name }}
+                                </label>
                                 </div>
-                            </ul>
+                                </li>
+                                <ul id="memberTags" class="col-xs-12 col-sm-10">
+                                    <div class="btn-group" ng-repeat="tag in member.tags">
+                                    <span class="label label-default userLabel">
+                                    <li>{{ tag }}</li>
+                                    </span>
+                                    <div class="badge" ng-click="removeTagsFromUsers([tag], [member.key])"><i class="fa fa-times"></i></div>
+                                    </div>
+                                </ul>
+                            </div>
                         </div>
                     </ul>
                     </section>
