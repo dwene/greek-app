@@ -1404,6 +1404,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             
         });
+        
+        function clearCheckLabels(){
+        $('.checkLabel.label-primary').find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+        $('.checkLabel.label-primary').removeClass('label-primary').addClass('label-default');
+        }
        
         $scope.openRenameTagModal = function(tag){
             $('#renameTagModal').modal();
@@ -1451,6 +1456,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             addTagsToUsers(selected_tags, selected_keys);
+            clearCheckLabels();
         }
         
         function removeTagsFromUsers(tags, keys){
@@ -1487,6 +1493,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             removeTagsFromUsers(selected_tags, selected_keys);
+            clearCheckLabels();
         }
     });
 
