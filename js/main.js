@@ -96,7 +96,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         controller: 'membertagsController'
                     })
             .state('app.managealumni', {
-                    url : '/amanagealumni',
+                    url : '/managealumni',
                     templateUrl : 'Static/managealumni.html',
                 })
                 .state('app.managealumni.add' , {
