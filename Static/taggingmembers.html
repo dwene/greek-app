@@ -1,10 +1,13 @@
 <div class="container memberTags">
                     
                     
-                    <section>
+                    <section class="row">
+                    
+                    <div class="col-xs-12 col-sm-9">
+                    
                     <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in organizationTags">
-                            <label class="label label-default checkLabel" >
+                            <label class="label label-default checkLabel">
                             <i class="fa fa-square-o checkStatus"></i>
                             <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li>
                             </label>
@@ -20,9 +23,27 @@
                         <button ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Add</button>
                         <button ng-click="removeTagsFromUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm">Remove</button>                    
                     </div>
+                    
+                    </div>
+                    
+                    <div class="col-xs-12 col-sm-3">
+                    
+                    <h2>Add/Remove Tags</h2>
+                    <div class="row">
+                    <form id="addTag" ng-submit="addOrganizationTag(item.tag)">
+                        <div class="form-group">
+                        <input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
+                        <button type="submit" class="btn btn-default btn-sm">Add Tag</button>
+                        </div>
+                    </form>
+                    </div>
+                    
+                    </div>
+                    
                     </section>
-
+                    
                     <hr>
+                    
                     <section class="row">
                     <div class="col-xs-12 col-sm-4">
                     <div class="form-group">
@@ -56,17 +77,7 @@
                     </ul>
                     </section>
 
-<hr>
-                    
-                    <h2>Add/Remove Tags</h2>
-                    <div class="row">
-                    <form id="addTag" ng-submit="addOrganizationTag(item.tag)">
-                        <div class="form-group col-xs-12 col-sm-4">
-                        <input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
-                        <button type="submit" class="btn btn-default btn-sm">Add Tag</button>
-                        </div>
-                    </form>
-                    </div>
+
 
 </div>
 
