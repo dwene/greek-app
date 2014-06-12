@@ -521,6 +521,9 @@ class RESTApi(remote.Service):
         del user_dict["current_token"]
         del user_dict["organization"]
         del user_dict["timestamp"]
+        del user_dict["notifications"]
+        del user_dict["new_notifications"]
+        del user_dict["hidden_notifications"]
         user_dict["key"] = request_user.key.urlsafe()
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
@@ -878,8 +881,6 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
         request_user.status = request_object['status']
         request_user.put()

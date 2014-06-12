@@ -69,6 +69,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 url : '/app',
                 templateUrl : 'Static/app.html',
                 controller : 'appController'
+            
         })
             .state('app.home', {
                 url : '/home',
@@ -172,6 +173,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         
         function executePosts() {
+            
           var deferred = $q.defer();
           var done = 0;
           function checkIfDone() {
@@ -202,8 +204,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 $rootScope.notifications =JSON.parse(data.data).notifications;
-                console.log('NOTIFICATIONS');
-                console.log($rootScope.notifications);
+                $rootScope.updateNotificationBadge();
                 checkIfDone();
             })
             .error(function(data) {
@@ -215,6 +216,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $rootScope.loadData = function(){
+            
             $rootScope.loading = true;
             executePosts().then(function() {
                 for (var i = 0; i< $rootScope.directory.members.length; i++){
@@ -231,14 +233,35 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if ($.cookie(USER_NAME)){
             $rootScope.loadData();
         }
+        $rootScope.updateNotifications = function(){
+            $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+            .success(function(data){
+                $rootScope.notifications =JSON.parse(data.data).notifications;
+                $rootScope.updateNotificationBadge();
+               
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+             console.log('I did stuff');
+        }
         
-        console.log('rootscope changing');
         $rootScope.checkPermissions = function(perms){
             return checkPermissions(perms);
         }
         $rootScope.checkLogin = function(){
             return checkLogin();
-        }        
+        }
+        
+        $rootScope.updateNotificationBadge = function(){
+            var count = 0;
+            for (var i = 0; i< $rootScope.notifications.length; i++){
+                if ($rootScope.notifications[i].new){
+                    count ++;
+                }
+            }
+            $rootScope.notification_count = count;
+        }
     });
 
 //navigation header
@@ -260,10 +283,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
 	});
 
-    App.controller('appController', function($scope, $http) {
+    App.controller('appController', function($scope, $http, $interval, $rootScope) {
         if(!checkLogin()){
             window.location.assign("/#/login");
         }
+        $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 15000);
 	});
 
 //login page
@@ -492,13 +516,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.openNotificationModal = function(notify){
             $('#notificationModal').modal();
             $scope.selectedNotification = notify;
+            $scope.selectedNotification.new = false;
+            $rootScope.updateNotificationBadge();
+            var key = $scope.selectedNotification.key;
+            $http.post('/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
         }
         
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
-            $scope.selectedNotification.new = false;
-            var key = $scope.selectedNotification.key;
-            $http.post('/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
         }
 	});
 
@@ -1610,8 +1635,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     .error(function(data) {
                         console.log('Error: ' + data);
                     });
-                $scope.title = '';
-                $scope.content = '';
             }
             else{ $scope.submitted = true; }
         }
