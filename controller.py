@@ -940,11 +940,11 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if request_user.new_notifications:
-            new_notification_future = Notification.query(Notification.key.IN(request_user.new_notifications)).fetch_async()
+            new_notification_future = Notification.query(Notification.key.IN(
+                request_user.new_notifications)).fetch_async()
         if request_user.notifications:
             notifications_future = Notification.query(Notification.key.IN(
                 request_user.notifications)).order(Notification.timestamp).fetch_async(20)
-        out_new_notifications = []
         out_notifications = []
         logging.error(request_user.new_notifications)
         if request_user.new_notifications:
@@ -958,7 +958,9 @@ class RESTApi(remote.Service):
                     note["sender"] = sender.first_name + " " + sender.last_name
                 else:
                     del note["sender"]
-                out_new_notifications.append(note)
+                note["new"] = True
+                note["key"] = notify.key.urlsafe()
+                out_notifications.append(note)
         if request_user.notifications:
             notifications = notifications_future.get_result()
             for notify in notifications:
@@ -968,9 +970,25 @@ class RESTApi(remote.Service):
                     note["sender"] = sender.first_name + " " + sender.last_name
                 else:
                     del note["sender"]
+                note["new"] = False
+                note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
-        out = {'new_notifications': out_new_notifications, 'notifications': out_notifications}
+        out = {'notifications': out_notifications}
         return OutgoingMessage(error='', data=json_dump(out))
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
+                      http_method='POST', name='notifications.seen')
+    def see_notification(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["notification"])
+        if key in request_user.new_notifications:
+            request_user.new_notifications.remove(key)
+            request_user.notifications.append(key)
+            request_user.put()
+        return OutgoingMessage(error='', data='OK')
 
 APPLICATION = endpoints.api_server([RESTApi])

@@ -201,7 +201,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-                $rootScope.notifications =JSON.parse(data.data);
+                $rootScope.notifications =JSON.parse(data.data).notifications;
                 console.log('NOTIFICATIONS');
                 console.log($rootScope.notifications);
                 checkIfDone();
@@ -496,7 +496,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
-            $scope.selectedNotification = notify;
+            $scope.selectedNotification.new = false;
+            var key = $scope.selectedNotification.key;
+            $http.post('/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
         }
 	});
 

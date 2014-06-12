@@ -18,26 +18,15 @@
     </div>
     <div>
         <h2>Notifications</h2>
-        <ul ng-repeat="notify in $root.notifications.new_notifications | orderBy : '-timestamp'">
+        <ul ng-repeat="notify in $root.notifications | orderBy : '-timestamp'">
             <li class="notify" ng-click="openNotificationModal(notify)">
             <hr>
                 <div class="notificationContent">
                 <span class="notificationTitle">{{notify.title}}</span>
-                <span class="notificationType">{{notify.type}}</span>
+                <span class="notificationType" ng-show="notify.new">NEW</span>
                 <span class="notificationSender" ng-show="notify.sender">{{notify.sender}}</span>
                 </div>
 
-            <hr>
-            </li>
-        </ul>
-        <ul ng-repeat="notify in $root.notifications.notifications | orderBy:'timestamp'">
-            <li class="notification" ng-click="openNotificationModal(notify)">
-            <hr>
-                <div class="messageContent">
-                <span class="notificationTitle">{{notify.title}}</span>
-                <span class="notificationType">{{notify.type}}</span>
-                <span class="notificationSender" ng-show="notify.sender">{{notify.sender}}</span>
-                </div>
             <hr>
             </li>
         </ul>
