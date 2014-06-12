@@ -1612,6 +1612,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     });
                 $scope.title = '';
                 $scope.content = '';
+                $scope.messagingForm.$setPristine();
+                
             }
             else{ $scope.submitted = true; }
         }
