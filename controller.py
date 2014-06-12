@@ -911,10 +911,10 @@ class RESTApi(remote.Service):
         users = User.query(ndb.OR(User.tags.IN(tags['org_tags']))).fetch()
         notification = Notification()
         notification.type = 'message'
-        notification.content = data.content
+        notification.content = data['content']
         notification.timestamp = datetime.datetime.now()
         notification.sender = request_user.key
-        notification.title = data.title
+        notification.title = data['title']
         for user in users:
             user.new_notifications.append(notification)
             user.put_async()

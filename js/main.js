@@ -1567,7 +1567,43 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member messaging page
     App.controller('messagingController', function($scope, $http) {
-    
+        if (!checkPermissions('leadership')){
+            window.location.assign("/#/app");
+        }
+        $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.tags = JSON.parse(data.data)
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        $scope.sendMessage = function(){
+            var to_send = {title: 'title', content: 'content', tags: 'tags'}
+            $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        //Message has been sent
+                        console.log('message sent');
+                    }
+                    else
+                    {
+                        console.log("error: "+ data.error)
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
     });
 
 //More Functions
