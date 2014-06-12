@@ -1067,32 +1067,39 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the directory
     App.controller('membersDirectoryController', function($scope, $rootScope, $http){
-        console.log('made it to the controller');
-        $scope.directory.council = [];
-        $scope.directory.leadership = [];
-        $scope.directory.members = [];
         function splitMembers(){
             var council = [];
             var leadership = [];
             var members = [];
+            console.log()
             if ($rootScope.directory.members){
+                console.log('HOWDY')
                 for (var i = 0; i< $rootScope.directory.members.length; i++){
                     if ($rootScope.directory.members[i].perms == MEMBER){
-                        members.append($rootScope.directory.members[i]);
-                        break;
+                        members.push($rootScope.directory.members[i]);
+                        continue;
                     }
                     if ($rootScope.directory.members[i].perms == LEADERSHIP){
-                        leadership.append($rootScope.directory.members[i]);
-                        break;
+                        leadership.push($rootScope.directory.members[i]);
+                        continue;
                     }
                     if ($rootScope.directory.members[i].perms == COUNCIL){
-                        council.append($rootScope.directory.members[i]);
-                        break;
+                        console.log('hi')
+                        council.push($rootScope.directory.members[i]);
+                        continue;
                     }
                 }
-                $scope.directory.council = council;
-                $scope.directory.leadership = leadership;
-                $scope.directory.members = members;
+                $scope.directory = [];
+                if (council.length > 0){
+                    $scope.directory.push({name: 'Council', data: council});             
+                }
+                if (leadership.length > 0){
+                    $scope.directory.push({name: 'Leadership', data: leadership});               
+                }
+                if (members.length > 0){
+                    $scope.directory.push({name: 'Members', data: members});          
+                }
+                console.log($scope.directory);
             }
         }
         splitMembers();
@@ -1717,6 +1724,48 @@ App.filter('multipleSearch', function(){
         return retList;
     }
 });
+
+
+App.filter('directorySearch', function(){ 
+    return function (in_objects, search) {
+        var searchValues = search;
+        if (!search){
+            return in_objects;
+        }
+        var out_objects = [];
+        console.log(in_objects.length);
+        for(var j = 0; j < in_objects.length; j++){
+            var objects = in_objects[j].data;
+            retList = [];
+            var searchArray = search.split(" ");
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                var object = objects[oPos];
+                for(var sPos = 0; sPos< searchArray.length; sPos++){
+                    var check = false;
+                    var searchItem = searchArray[sPos];
+                    for(var item in object){
+                        if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
+                            check = true;
+                            break;
+                        }
+                    }
+                    if(!check){
+                        break;
+                    }
+                    if(sPos == searchArray.length-1 && check){
+                        retList.push(object);
+                    }
+                }
+            }
+            if (retList.length > 0){
+                in_objects[j].data = retList;
+            }
+        }
+        console.log('finished directorySearch');
+        return in_objects;
+    }
+});
+
 
 App.factory('directoryService', function($rootScope, $http) {
     if ($rootScope.directory === undefined){
