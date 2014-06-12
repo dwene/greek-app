@@ -935,29 +935,33 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        new_notifications = Notification.query(Notification.key.IN(request_user.new_notifications)).fetch_async()
-        notifications = Notification.query(Notification.key.IN(
-            request_user.notifications)).order(Notification.timestamp).fetch_async(20)
-        new_notifications.get_result()
+        if request_user.new_notifications:
+            new_notifications = Notification.query(Notification.key.IN(request_user.new_notifications)).fetch_async()
+        if request_user.notifications:
+            notifications = Notification.query(Notification.key.IN(
+                request_user.notifications)).order(Notification.timestamp).fetch_async(20)
         out_new_notifications = []
-        for notify in new_notifications:
-            note = notify.to_dict()
-            sender = notify.sender.get()
-            if sender:
-                note["sender"] = sender.first_name + " " + sender.last_name
-            else:
-                del note["sender"]
-            out_new_notifications.append(note)
-        notifications.get_result()
         out_notifications = []
-        for notify in notifications:
-            note = notify.to_dict()
-            sender = notify.sender.get()
-            if sender:
-                note["sender"] = sender.first_name + " " + sender.last_name
-            else:
-                del note["sender"]
-            out_notifications.append(note)
+        if request_user.new_notifications:
+            new_notifications.get_result()
+            for notify in new_notifications:
+                note = notify.to_dict()
+                sender = notify.sender.get()
+                if sender:
+                    note["sender"] = sender.first_name + " " + sender.last_name
+                else:
+                    del note["sender"]
+                out_new_notifications.append(note)
+        if request_user.new_notifications:
+            notifications.get_result()
+            for notify in notifications:
+                note = notify.to_dict()
+                sender = notify.sender.get()
+                if sender:
+                    note["sender"] = sender.first_name + " " + sender.last_name
+                else:
+                    del note["sender"]
+                out_notifications.append(note)
         out = {'new_notifications': out_new_notifications, 'notifications': out_notifications}
         return OutgoingMessage(error='', data=json_dump(out))
 

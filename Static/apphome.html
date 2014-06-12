@@ -16,4 +16,13 @@
         </form>
         <p ng-show="statusUpdated">Status has been updated!</p>
     </div>
+    <div>
+        <h2>Notifications</h2>
+        <div ng-repeat="notify in new_notifications | orderBy:'timestamp'">
+            {{notify.content}}
+        </div>
+        <div ng-repeat="notify in notifications | orderBy:'timestamp'">
+            {{notify.content}}
+        </div>
+    </div>
 </div>

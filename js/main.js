@@ -169,7 +169,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
           var done = 0;
           function checkIfDone() {
             done++;
-            if (done==2) deferred.resolve(); 
+            if (done==3) deferred.resolve(); 
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
@@ -179,6 +179,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             .error(function(data) {
                 console.log('Error: ' + data);
+                checkIfDone();
             });
           $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
@@ -189,7 +190,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             .error(function(data) {
                 console.log('Error: ' + data);
+                checkIfDone();
             });
+          $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+            .success(function(data){
+                $rootScope.notifications =JSON.parse(data.data);
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                checkIfDone();
+            });  
+            
           return deferred.promise;
         }
         
