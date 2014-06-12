@@ -12,7 +12,7 @@ body.modal-open{margin-right:0px;}
 #addmemberForm button{float:right; margin-right:15px;}
 #correctPerson{text-align:center; margin-bottom:15px;}
 #logoutbutton{margin:7px;}
-.form-control{height:34px !important;}
+input.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
 
 @media screen and (max-width:764px){#memberAccount #addresses{padding:0px;}}
@@ -57,6 +57,9 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 .dropdown-menu>li>a{cursor: pointer;}
 
 #addTag button, #addTag input{display:inline-block;}
+
+/*Messaging Page*/
+textarea.form-control{height:auto; max-width:100%;}
 
 /*Helper Classes*/
 .smallprofilepic{
