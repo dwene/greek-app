@@ -1583,16 +1583,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         
-        $scope.sendMessage = function(isValid, tags){
+        $scope.sendMessage = function(isValid){
             if (isValid){
                 var selected_tags = [];
-                for (var subtag in tags){
-                    if (tags[subtag] == true){
+                for (var subtag in $scope.organizationTags){
+                    if ($scope.organizationTags[subtag] == true){
                         selected_tags.push(subtag);
                     }
                 }
-                console.log(selected_tags);
-                var tags = {org_tags: selected_tags};
+                var tags = {org_tags: ['tag1']};
                 var to_send = {title: $scope.title, content: $scope.content, tags: tags}
                 $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                     .success(function(data){

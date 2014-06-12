@@ -18,7 +18,7 @@
     </div>
     <div>
         <h2>Notifications</h2>
-        <ul ng-repeat="notify in $root.notifications.new_notifications | orderBy:'timestamp'">
+        <ul ng-repeat="notify in $root.notifications.new_notifications | orderBy : '-timestamp'">
             <li class="member" ng-click="openNotificationModal(notify)">
             <hr>
                 <div class="directoryContent">
