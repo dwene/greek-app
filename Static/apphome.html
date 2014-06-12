@@ -8,22 +8,25 @@
 </div>
 
 <div class="container">
-    <div ng-show="$root.checkPermissions('leadership')" id="statusContainer">
-        <h2>Status: {{$root.me.status}}</h2>
+    <div id="statusContainer">
+        <h2 class="well well-sm">Current Status:  <span class="currentStatus">{{$root.me.status}}</span></h2>
         <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
-            <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">
-            <button class="btn btn-default" type="submit">Update Status</button>
+            <div class="input-group">
+              <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">Update Status</button>
+              </span>
+            </div>
         </form>
         <p ng-show="statusUpdated">Status has been updated!</p>
     </div>
     <div>
-        <h2>Notifications</h2>
         <ul ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
-            <li class="notification" ng-click="openNotificationModal(notify)">
+            <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)">
             <hr>
                 <div class="notificationContent">
                 <span class="notificationTitle">{{notify.title}}</span>
-                <span class="notificationType" ng-show="notify.new">NEW</span>
+<!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
                 <span class="notificationSender" ng-show="notify.sender">{{notify.sender}}</span>
                 </div>
 

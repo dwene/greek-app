@@ -287,7 +287,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if(!checkLogin()){
             window.location.assign("/#/login");
         }
-        $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 15000);
+        $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 20000);
 	});
 
 //login page
@@ -1635,6 +1635,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     .error(function(data) {
                         console.log('Error: ' + data);
                     });
+                $scope.title = '';
+                $scope.content = '';
+                $scope.messagingForm.$setPristine();
+                
             }
             else{ $scope.submitted = true; }
         }
