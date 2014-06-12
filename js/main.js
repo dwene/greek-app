@@ -167,6 +167,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
         $rootScope.users = {};
+        $rootScope.notification_count = "0";
+
         
         
         function executePosts() {
@@ -1467,9 +1469,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         //onclick checkmark tag
-        
-        //#FIXME After submitting new tags to members, the organization tags are still selected. need some sort of change here
-        $('.memberTags').on('click', '.checkLabel', function(){
+                $('.memberTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
                         
@@ -1485,11 +1485,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             
         });
-        
-        function clearCheckLabels(){
-        $('.checkLabel.label-primary').find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-        $('.checkLabel.label-primary').removeClass('label-primary').addClass('label-default');
-        }
        
         $scope.openRenameTagModal = function(tag){
             $('#renameTagModal').modal();
@@ -1588,33 +1583,56 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         
-        $scope.sendMessage = function(){
-            var selected_tags = [];
-            for (var subtag in $scope.organizationTags){
-                if ($scope.organizationTags[subtag] == true){
-                    selected_tags.push(subtag);
+        $scope.sendMessage = function(isValid){
+            if (isValid){
+                var selected_tags = [];
+                for (var subtag in $scope.organizationTags){
+                    if ($scope.organizationTags[subtag] == true){
+                        selected_tags.push(subtag);
+                    }
                 }
+                var tags = {org_tags: ['tag1']};
+                var to_send = {title: $scope.title, content: $scope.content, tags: tags}
+                $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
+                    .success(function(data){
+                        if (!checkResponseErrors(data))
+                        {
+                            //Message has been sent
+                            console.log('message sent');
+                        }
+                        else
+                        {
+                            console.log("error: "+ data.error)
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                    });
+                $scope.title = '';
+                $scope.content = '';
             }
-            var tags = {org_tags: ['tag1']};
-            var to_send = {title: $scope.title, content: $scope.content, tags: tags}
-            $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        //Message has been sent
-                        console.log('message sent');
-                    }
-                    else
-                    {
-                        console.log("error: "+ data.error)
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-            $scope.title = '';
-            $scope.content = '';
+            else{ $scope.submitted = true; }
         }
+        
+        //onclick checkmark tag
+        $('.messagingTags').on('click', '.checkLabel', function(){
+            
+            var checkbox = $(this).find(':checkbox');
+                        
+                if ( checkbox.prop('checked') )
+                {
+                    $(this).addClass('label-primary').removeClass('label-default');
+                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+                }
+                else
+                {
+                    $(this).removeClass('label-primary').addClass('label-default');
+                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+                }
+            
+        });
+        
+
         
     });
 
@@ -1628,6 +1646,12 @@ function checkLogin(){
     else
         return false;
 }
+
+//clears all checked labels
+    function clearCheckLabels(){
+    $('.checkLabel.label-primary').find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+    $('.checkLabel.label-primary').removeClass('label-primary').addClass('label-default');
+    }
 
 function checkPermissions(perms){
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
