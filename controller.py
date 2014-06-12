@@ -976,7 +976,6 @@ class RESTApi(remote.Service):
         out = {'notifications': out_notifications}
         return OutgoingMessage(error='', data=json_dump(out))
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
                       http_method='POST', name='notifications.seen')
     def see_notification(self, request):

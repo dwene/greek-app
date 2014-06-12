@@ -1585,11 +1585,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         
-        $scope.sendMessage = function(isValid){
+        $scope.sendMessage = function(isValid, tags){
             if (isValid){
                 var selected_tags = [];
-                for (var subtag in $scope.organizationTags){
-                    if ($scope.organizationTags[subtag] == true){
+                for (var subtag in tags){
+                    if (tags[subtag] == true){
                         selected_tags.push(subtag);
                     }
                 }
