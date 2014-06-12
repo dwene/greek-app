@@ -36,7 +36,7 @@ h1{font-size:36px; font-weight:bold;}
 .label{display:inline-block; position:relative; padding:.4em .4em .4em 1.5em;}
 .checkLabel, .memberTags .badge{cursor:pointer;}
 .memberTags .badge:hover{background:#d9534f;}
-.memberTags .btn-group{margin:2px;}
+.memberTags .btn-group, .messagingTags .btn-group{margin:2px;}
 .checkLabel li{display:inline;}
 .checkLabel input{display:none;}
 .checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
