@@ -200,6 +200,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 $rootScope.notifications =JSON.parse(data.data);
+                console.log('NOTIFICATIONS');
+                console.log($rootScope.notifications);
                 checkIfDone();
             })
             .error(function(data) {
@@ -1570,11 +1572,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
+        $scope.selectedTags = {};
         $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.tags = JSON.parse(data.data).org_tags;
+                    $scope.organizationTags = JSON.parse(data.data).org_tags;
                 }
                 else
                 {
@@ -1586,7 +1589,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.sendMessage = function(){
-            var to_send = {title: 'title', content: 'content', tags: 'tags'}
+            var selected_tags = [];
+            for (var subtag in $scope.organizationTags){
+                if ($scope.organizationTags[subtag] == true){
+                    selected_tags.push(subtag);
+                }
+            }
+            var tags = {org_tags: ['tag1']};
+            var to_send = {title: $scope.title, content: $scope.content, tags: tags}
             $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
@@ -1602,6 +1612,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
+            $scope.title = '';
+            $scope.content = '';
         }
         
     });

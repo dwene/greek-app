@@ -448,6 +448,9 @@ class RESTApi(remote.Service):
             del user_dict["organization"]
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
+            del user_dict["notifications"]
+            del user_dict["new_notifications"]
+            del user_dict["hidden_notifications"]
             user_dict["key"] = user.key.urlsafe()
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
@@ -908,6 +911,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         data = json.loads(request.data)
         tags = data['tags']
+        logging.error(tags['org_tags'])
         users = User.query(ndb.OR(User.tags.IN(tags['org_tags']))).fetch()
         notification = Notification()
         notification.type = 'message'
@@ -915,14 +919,14 @@ class RESTApi(remote.Service):
         notification.timestamp = datetime.datetime.now()
         notification.sender = request_user.key
         notification.title = data['title']
+        notification.put()
         for user in users:
-            user.new_notifications.append(notification)
-            user.put_async()
-            if user.notification_email:
-                name = request_user.first_name + ' ' + request_user.last_name
-                notification_email(title=notification.title, content=notification.content,
-                                   email=user.email, sender=name)
-            user.get_result()
+            user.new_notifications.append(notification.key)
+            user.put()
+            # if user.notification_email:
+            #     name = request_user.first_name + ' ' + request_user.last_name
+            #     notification_email(title=notification.title, content=notification.content,
+            #                        email=user.email, sender=name)
         return OutgoingMessage(error='', data='OK')
 
     #-------------------------
@@ -936,24 +940,27 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if request_user.new_notifications:
-            new_notifications = Notification.query(Notification.key.IN(request_user.new_notifications)).fetch_async()
+            new_notification_future = Notification.query(Notification.key.IN(request_user.new_notifications)).fetch_async()
         if request_user.notifications:
-            notifications = Notification.query(Notification.key.IN(
+            notifications_future = Notification.query(Notification.key.IN(
                 request_user.notifications)).order(Notification.timestamp).fetch_async(20)
         out_new_notifications = []
         out_notifications = []
+        logging.error(request_user.new_notifications)
         if request_user.new_notifications:
-            new_notifications.get_result()
+            new_notifications = new_notification_future.get_result()
+            logging.error(new_notifications)
             for notify in new_notifications:
                 note = notify.to_dict()
+                logging.error(note)
                 sender = notify.sender.get()
                 if sender:
                     note["sender"] = sender.first_name + " " + sender.last_name
                 else:
                     del note["sender"]
                 out_new_notifications.append(note)
-        if request_user.new_notifications:
-            notifications.get_result()
+        if request_user.notifications:
+            notifications = notifications_future.get_result()
             for notify in notifications:
                 note = notify.to_dict()
                 sender = notify.sender.get()
