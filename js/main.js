@@ -1574,7 +1574,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.tags = JSON.parse(data.data)
+                    $scope.tags = JSON.parse(data.data).org_tags;
                 }
                 else
                 {
