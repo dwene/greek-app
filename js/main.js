@@ -1593,7 +1593,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         selected_tags.push(subtag);
                     }
                 }
-                var tags = {org_tags: ['tag1']};
+                var tags = {org_tags: selected_tags};
                 var to_send = {title: $scope.title, content:$scope.content, tags: tags}
                 $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                     .success(function(data){
