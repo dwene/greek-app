@@ -94,6 +94,17 @@ class User(ndb.Model):
     prof_pic = ndb.BlobKeyProperty()
     status = ndb.StringProperty()
     position = ndb.StringProperty()
+    notifications = ndb.KeyProperty(repeated=True)
+    new_notifications = ndb.KeyProperty(repeated=True)
+    hidden_notifications = ndb.KeyProperty(repeated=True)
+
+
+class Notification(ndb.Model):
+    title = ndb.StringProperty()
+    type = ndb.StringProperty()
+    content = ndb.StringProperty()
+    sender = ndb.KeyProperty()
+    timestamp = ndb.DateTimeProperty()
 
 
 class Organization(ndb.Model):
@@ -197,6 +208,13 @@ def removal_email(user):
     body += "Have a great day\n\n"
     body += "NeteGreek Team"
     send_mandrill_email(from_email, to_email, subject, body)
+
+
+def notification_email(title, content, sender, email):
+    subject = "NeteGreek Notification: " + title
+    body = content
+    body += '\nSender: ' + sender
+    mail.send_mail('support@netegreek.com', email, subject, body)
 
 
 def forgotten_password_email(user):
@@ -712,6 +730,9 @@ class RESTApi(remote.Service):
             del user_dict["current_token"]
             del user_dict["organization"]
             del user_dict["timestamp"]
+            del user_dict["notifications"]
+            del user_dict["new_notifications"]
+            del user_dict["hidden_notifications"]
             try:
                 user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
             except:
@@ -860,6 +881,85 @@ class RESTApi(remote.Service):
         request_user.status = request_object['status']
         request_user.put()
         return OutgoingMessage(error='', data='OK')
+
+    #-------------------------
+    # MESSAGING ENDPOINTS
+    #-------------------------
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/get_tags',
+                      http_method='POST', name='message.get_tags')
+    def get_tags(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        org_tags = request_user.organization.get().tags
+        event_tags = []  # TODO: set this up with organization events
+        return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags, 'event_tags': event_tags}))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
+                      http_method='POST', name='message.send_message')
+    def send_message(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        tags = data['tags']
+        users = User.query(ndb.OR(User.tags.IN(tags['org_tags']))).fetch()
+        notification = Notification()
+        notification.type = 'message'
+        notification.content = data.content
+        notification.timestamp = datetime.datetime.now()
+        notification.sender = request_user.key
+        notification.title = data.title
+        for user in users:
+            user.new_notifications.append(notification)
+            user.put_async()
+            if user.notification_email:
+                name = request_user.first_name + ' ' + request_user.last_name
+                notification_email(title=notification.title, content=notification.content,
+                                   email=user.email, sender=name)
+            user.get_result()
+        return OutgoingMessage(error='', data='OK')
+
+    #-------------------------
+    # NOTIFICATION ENDPOINTS
+    #-------------------------
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
+                      http_method='POST', name='notifications.get')
+    def get_notifications(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        new_notifications = Notification.query(Notification.key.IN(request_user.new_notifications)).fetch_async()
+        notifications = Notification.query(Notification.key.IN(
+            request_user.notifications)).order(Notification.timestamp).fetch_async(20)
+        new_notifications.get_result()
+        out_new_notifications = []
+        for notify in new_notifications:
+            note = notify.to_dict()
+            sender = notify.sender.get()
+            if sender:
+                note["sender"] = sender.first_name + " " + sender.last_name
+            else:
+                del note["sender"]
+            out_new_notifications.append(note)
+        notifications.get_result()
+        out_notifications = []
+        for notify in notifications:
+            note = notify.to_dict()
+            sender = notify.sender.get()
+            if sender:
+                note["sender"] = sender.first_name + " " + sender.last_name
+            else:
+                del note["sender"]
+            out_notifications.append(note)
+        out = {'new_notifications': out_new_notifications, 'notifications': out_notifications}
+        return OutgoingMessage(error='', data=json_dump(out))
 
 
 APPLICATION = endpoints.api_server([RESTApi])
