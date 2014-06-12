@@ -18,11 +18,49 @@
     </div>
     <div>
         <h2>Notifications</h2>
-        <div ng-repeat="notify in new_notifications | orderBy:'timestamp'">
-            {{notify.content}}
-        </div>
-        <div ng-repeat="notify in notifications | orderBy:'timestamp'">
-            {{notify.content}}
-        </div>
+        <ul ng-repeat="notify in $root.notifications.new_notifications | orderBy:'timestamp'">
+            <li class="member" ng-click="openNotificationModal(notify)">
+            <hr>
+                <div class="directoryContent">
+                <span class="memberName">{{notify.title}}</span>
+                <span class="directoryTags">{{notify.type}}</span>
+                <span class="directoryStatus" ng-show="notify.sender">{{notify.sender}}</span>
+                </div>
+
+            <hr>
+            </li>
+        </ul>
+        <ul ng-repeat="notify in $root.notifications.notifications | orderBy:'timestamp'">
+            <li class="member" ng-click="openNotificationModal(notify)">
+            <hr>
+                <div class="directoryContent">
+                <span class="memberName">{{notify.title}}</span>
+                <span class="directoryTags">{{notify.type}}</span>
+                <span class="directoryStatus" ng-show="notify.sender">{{notify.sender}}</span>
+                </div>
+            <hr>
+            </li>
+        </ul>
     </div>
 </div>
+
+
+
+
+<div class="modal fade" id="notificationModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{{selectedNotification.title}}</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{selectedNotification.content}}</p>
+        <p>From: {{selectedNotification.sender}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="closeNotificationModal()">OK</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

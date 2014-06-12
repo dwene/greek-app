@@ -462,7 +462,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http,$rootScope) {
+    App.controller('appHomeController', function($scope, $http, $rootScope) {
         if(!checkLogin()){
             window.location.assign("/#/login");
         }
@@ -485,6 +485,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });    
         }
         
+        $scope.openNotificationModal = function(notify){
+            $('#notificationModal').modal();
+            $scope.selectedNotification = notify;
+        }
+        
+        $scope.closeNotificationModal = function(notify){
+            $('#notificationModal').modal('hide');
+            $scope.selectedNotification = notify;
+        }
 	});
 
 //the add members page
