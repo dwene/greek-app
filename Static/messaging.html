@@ -19,7 +19,7 @@
         </div>
     </ul>
     
-    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid)" novalidate>
+    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid, selectedTags)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
             <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
             <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
