@@ -61,6 +61,17 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
 
+
+/*Notification Page*/
+.notification{cursor: pointer;}
+.notification:hover{background: lightblue;}
+.notificationContent{padding-left:10px;}
+.notificationTitle{font-weight:bold; font-size:18px; margin:-5px 0 5px 0;}
+.notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
+.notificationType:before, .notificationType:after{content:'"';}
+.notificationSender{font-size:12px; font-style:italic;}
+.notificationSender:before {content:'sent by: '}
+
 /*Helper Classes*/
 .smallprofilepic{
     display: inline-block;
