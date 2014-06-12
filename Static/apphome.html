@@ -19,11 +19,11 @@
     <div>
         <h2>Notifications</h2>
         <ul ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
-            <li class="notification" ng-click="openNotificationModal(notify)">
+            <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)">
             <hr>
                 <div class="notificationContent">
                 <span class="notificationTitle">{{notify.title}}</span>
-                <span class="notificationType" ng-show="notify.new">NEW</span>
+<!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
                 <span class="notificationSender" ng-show="notify.sender">{{notify.sender}}</span>
                 </div>
 

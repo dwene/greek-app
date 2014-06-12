@@ -64,7 +64,8 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Notification Page*/
 .notification{cursor:pointer;}
-.notification:hover{background: lightblue;}
+.notification.new{background:lightgray;}
+.notification:hover{background:lightblue;}
 .notificationContent{padding-left:10px;}
 .notificationTitle{font-weight:bold; font-size:18px; margin:-5px 0 5px 0;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
