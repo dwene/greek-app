@@ -167,6 +167,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
         $rootScope.users = {};
+        $rootScope.notification_count = "0";
+
         
         
         function executePosts() {
