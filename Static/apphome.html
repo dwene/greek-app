@@ -9,7 +9,7 @@
 
 <div class="container">
     <div id="statusContainer">
-        <h2 class="well well-sm">Current Status: {{$root.me.status}}</h2>
+        <h2 class="well well-sm">Current Status:  <span class="currentStatus">{{$root.me.status}}</span></h2>
         <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
             <div class="input-group">
               <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">

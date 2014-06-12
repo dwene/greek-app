@@ -62,7 +62,11 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 textarea.form-control{height:auto; max-width:100%;}
 
 
-/*Notification Page*/
+/*App Home Page*/
+#statusContainer h2{font-size:14px; font-weight:bold;}
+.currentStatus{font-style:italic;}
+.currentStatus:before, .currentStatus:after{content:'"';}
+
 .notification{cursor:pointer;}
 .notification.new{background:lightgray;}
 .notification:hover{background:lightblue;}
