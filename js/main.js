@@ -1578,7 +1578,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         
-        $scope.sendMessage = function(){
+        $scope.sendMessage = function(isValid){
+            
+            if(isValid){
             var to_send = {title: 'title', content: 'content', tags: 'tags'}
             $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                 .success(function(data){
@@ -1594,7 +1596,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
-                });
+                });}
+            else{ $scope.submitted = true; }
         }
         
         //onclick checkmark tag
