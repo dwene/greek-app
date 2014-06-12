@@ -74,7 +74,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 url : '/home',
                 templateUrl : 'Static/apphome.html',
                 controller : 'appHomeController'
-        })
+            })
             .state('app.managemembers', {
                     url : '/managemembers',
                     templateUrl : 'Static/managemembers.html',
@@ -153,6 +153,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     url : '/changepassword',
                     templateUrl : 'Static/change_password.html',
                     controller : 'changePasswordController'
+                })
+            .state('app.messaging', {
+                    url : '/messaging',
+                    templateUrl : 'Static/messaging.html',
+                    controller : 'messagingController'
                 })
     });
 
@@ -1551,6 +1556,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     });
 
+//member messaging page
+    App.controller('messagingController', function($scope, $http) {
+    
+    });
 
 //More Functions
 
