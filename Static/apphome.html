@@ -18,7 +18,7 @@
     </div>
     <div>
         <h2>Notifications</h2>
-        <ul ng-repeat="notify in $root.notifications | orderBy : '-timestamp'">
+        <ul ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
             <li class="notify" ng-click="openNotificationModal(notify)">
             <hr>
                 <div class="notificationContent">
@@ -42,6 +42,7 @@
       </div>
       <div class="modal-body">
         <p style="white-space: pre;">{{selectedNotification.content}}</p>
+        <br>
         <p>From: {{selectedNotification.sender}}</p>
       </div>
       <div class="modal-footer">
