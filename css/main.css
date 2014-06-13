@@ -111,23 +111,29 @@ textarea.form-control{height:auto; max-width:100%;}
 }
 
 /*ng-animation code*/
+.ng-enter,.ng-leave{position:absolute; left:0px; right:0px;}
 
 .fadingIn.ng-enter {
--webkit-animation: fadeIn 1s;
--moz-animation: fadeIn 1s;
--ms-animation: fadeIn 1s;
- animation: fadeIn 1s;
+-webkit-animation: fadeIn .5s;
+-moz-animation: fadeIn .5s;
+-ms-animation: fadeIn .5s;
+ animation: fadeIn .5s;
+}
+
+.fadingOut.ng-leave {
+-webkit-animation: fadeOut .5s;
+-moz-animation: fadeOut .5s;
+-ms-animation: fadeOut .5s;
+ animation: fadeOut .5s;
 }
 
 .fadingInLeftBig.ng-enter{
-    position:absolute; left:0px; right:0px;
 -webkit-animation: fadeInLeftBig .5s;
 -moz-animation: fadeInLeftBig .5s;
 -ms-animation: fadeInLeftBig .5s;
  animation: fadeInLeftBig .5s;
 }
 .fadingOutRightBig.ng-leave{
-    position:absolute; left:0px; right:0px;
 -webkit-animation: fadeOutRightBig .5s;
 -moz-animation: fadeOutRightBig .5s;
 -ms-animation: fadeOutRightBig .5s;
