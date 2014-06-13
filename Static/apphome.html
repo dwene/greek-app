@@ -25,12 +25,11 @@
             <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
             <hr>
                 <div class="notificationContent">
+                <button type="button" class="close" ng-click="hideNotification(notify)">hide</button>
                 <span class="notificationTitle">{{notify.title}}</span>
 <!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
                 <span class="notificationSender" ng-show="notify.sender">{{notify.sender}}</span>
                 </div>
-                <button ng-click="hideNotification(notify)">Delete</button>
-
             <hr>
             </li>
         </ul>
