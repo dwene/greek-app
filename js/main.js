@@ -1309,20 +1309,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
 
 //account info
-    App.controller('accountinfoController', function($scope, $http) {
-        $('.container').hide();
+    App.controller('accountinfoController', function($scope, $http, $rootScope) {
         $scope.updatedInfo = false;
-        
+        $scope.item = $rootScope.me;
         $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.item = JSON.parse(data.data);
-                    console.log($scope.item);
-                    $('.container').fadeIn();
+                    $rootScope.me = JSON.parse(data.data);
                     //define items
-                    $scope.userName = $scope.item.user_name;
-                    $scope.pledgeClass = $scope.item.pledge_class;
+                    $scope.userName = $rootScope.me.user_name;
+                    $scope.pledgeClass = $rootScope.me.pledge_class;
+                    $scope.item = $rootScope.me;
                 }
                 else
                 {
@@ -1343,7 +1341,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        console.log(data.data);
                         $scope.updatedInfo = true;
                         $.removeCookie('FORM_INFO_EMPTY')
                     }
