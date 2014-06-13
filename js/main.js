@@ -2,6 +2,7 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#FIXME Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
 //Final\static variables. These variables are used for cookies
+//#TODO form validation on messaging with checkboxes
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -1322,7 +1323,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
 
 //account info
-    App.controller('accountinfoController', function($scope, $http, $rootScope) {
+    App.controller('accountinfoController', function($scope, $http, $rootScope){
         $scope.updatedInfo = false;
         $scope.item = $rootScope.me;
         $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
@@ -1627,6 +1628,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('messagingController', function($scope, $http, $q) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
+        }
+        $scope.checkedTags = '';
+        $scope.updateCheckedTags = function(){
+            console.log('checked tags function');
+            var selected_tags = ''
+                for (var subtag in $scope.selectedTags){
+                    if ($scope.selectedTags[subtag] == true){
+                        selected_tags += subtag.toString() + ' ';
+                    }
+                }
+            $scope.checkedTags = selected_tags;
+            console.log(selected_tags);
+            //#FIXME This doesnt work rawr. It's always one behind.
         }
         function onFirstLoad(){
             $scope.loading = true;
