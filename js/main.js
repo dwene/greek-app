@@ -1675,7 +1675,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
-                            //Message has been sent
+                            $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
+                            .success(function(data){
+                                if (!checkResponseErrors(data))
+                                {
+                                    $scope.sentMessages = JSON.parse(data.data);
+                                    console.log($scope.sentMessages);
+                                }
+                                else
+                                {
+                                    console.log("error: "+ data.error)
+                                }
+                            })
                             console.log('message sent');
                         }
                         else

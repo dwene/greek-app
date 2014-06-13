@@ -105,6 +105,7 @@ class Notification(ndb.Model):
     type = ndb.StringProperty()
     content = ndb.StringProperty()
     sender = ndb.KeyProperty()
+    sender_name = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
 
 
@@ -913,12 +914,14 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         data = json.loads(request.data)
         tags = data['tags']
-        users = User.query(ndb.OR(User.tags.IN(tags['org_tags']))).fetch()
+        users = User.query(ndb.AND(User.tags.IN(tags['org_tags']),
+                                   User.organization == request_user.organization)).fetch()
         notification = Notification()
         notification.type = 'message'
         notification.content = data['content']
         notification.timestamp = datetime.datetime.now()
         notification.sender = request_user.key
+        notification.sender_name = request_user.first_name + ' ' + request_user.last_name
         notification.title = data['title']
         notification.put()
         request_user.sent_notifications.append(notification.key)
@@ -960,10 +963,6 @@ class RESTApi(remote.Service):
                 note = notify.to_dict()
                 logging.error(note)
                 sender = notify.sender.get()
-                if sender:
-                    note["sender"] = sender.first_name + " " + sender.last_name
-                else:
-                    del note["sender"]
                 note["new"] = True
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)

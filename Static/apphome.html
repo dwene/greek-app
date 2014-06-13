@@ -28,7 +28,7 @@
                 <button type="button" class="close" ng-click="hideNotification(notify)">hide</button>
                 <span class="notificationTitle">{{notify.title}}</span>
 <!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
-                <span class="notificationSender" ng-show="notify.sender">{{notify.sender}}</span>
+                <span class="notificationSender" ng-show="notify.sender_name">{{notify.sender_name}}</span>
                 </div>
             <hr>
             </li>
@@ -46,7 +46,7 @@
       <div class="modal-body">
         <p style="white-space: pre;">{{selectedNotification.content}}</p>
         <br>
-        <p>From: {{selectedNotification.sender}}</p>
+        <p>From: {{selectedNotification.sender_name}}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="closeNotificationModal()">OK</button>
