@@ -12,7 +12,8 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
-        <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/animate.css">
+<!--        <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>-->
 <!--        #FUTURE  need to make sure font-awesome is updated-->
         <link rel="stylesheet" href="css/fontawesome.min.css">
         <!--[if lt IE 9]>
@@ -54,9 +55,9 @@
                         <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
                         <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managemembers/tag">Manage Members</a></li>
                         <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
-                        <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managealumni" >Manage Alumni</a></li>
+                        <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managealumni">Manage Alumni</a></li>
                         <li class="divider" ></li>
-                        <li><a ng-click="logout()">Log Out</a></li>
+                        <li><a ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
                     </ul>
                     </li>
                 </ul>
@@ -73,8 +74,8 @@
 			</nav>
 </header>
         
-<div ui-view ng-hide="$root.loading"></div>
-<div ng-show="$root.loading">loading</div>
+<div ui-view ng-hide="$root.loading" class="fadingIn"></div>
+<div ng-show="$root.loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <footer><br><br></footer>
         
 <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
@@ -84,8 +85,9 @@
         <script src="js/vendor/spin.js"></script>
 <!--        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
         <script src="js/vendor/angular.js"></script>
-        <script src="js/vendor/angular-route.js"></script>
+<!--        <script src="js/vendor/angular-route.js"></script>-->
         <script src="js/vendor/angular-ui.js"></script>
+        <script src="js/vendor/angular-animate.js"></script>
         <script src="js/main.js"></script>
 
 <!--
