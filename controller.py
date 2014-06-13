@@ -97,6 +97,7 @@ class User(ndb.Model):
     notifications = ndb.KeyProperty(repeated=True)
     new_notifications = ndb.KeyProperty(repeated=True)
     hidden_notifications = ndb.KeyProperty(repeated=True)
+    sent_notifications = ndb.KeyProperty(repeated=True)
 
 
 class Notification(ndb.Model):
@@ -118,6 +119,8 @@ class DateEncoder(json.JSONEncoder):
     def default(self, obj):
         if hasattr(obj, 'isoformat'):
             return obj.isoformat()
+        elif isinstance(obj, ndb.Key):
+            return ''
         else:
             return json.JSONEncoder.default(self, obj)
 
@@ -441,6 +444,7 @@ class RESTApi(remote.Service):
         organization_users = User.query(User.organization == request_user.organization).fetch()
         user_list = []
         alumni_list = []
+        return_object = ''
         for user in organization_users:
             user_dict = user.to_dict()
             del user_dict["hash_pass"]
@@ -448,9 +452,6 @@ class RESTApi(remote.Service):
             del user_dict["organization"]
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            del user_dict["hidden_notifications"]
             user_dict["key"] = user.key.urlsafe()
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
@@ -912,7 +913,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         data = json.loads(request.data)
         tags = data['tags']
-        logging.error(tags['org_tags'])
         users = User.query(ndb.OR(User.tags.IN(tags['org_tags']))).fetch()
         notification = Notification()
         notification.type = 'message'
@@ -921,9 +921,14 @@ class RESTApi(remote.Service):
         notification.sender = request_user.key
         notification.title = data['title']
         notification.put()
+        request_user.sent_notifications.append(notification.key)
+        request_user.put()
+        futures = []
         for user in users:
             user.new_notifications.append(notification.key)
-            user.put()
+            futures.append(user.put_async())
+        for future in futures:
+            future.get_result()
             # if user.notification_email:
             #     name = request_user.first_name + ' ' + request_user.last_name
             #     notification_email(title=notification.title, content=notification.content,
@@ -1010,5 +1015,57 @@ class RESTApi(remote.Service):
             request_user.put()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
+                      http_method='POST', name='notifications.revoke')
+    def revoke_notification(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["message"])
+        if key in request_user.sent_notifications:
+            futures = []
+            request_user.sent_notifications.remove(key)
+            futures.append(request_user.put_async())
+            notified_users = User.query(User.notifications == key).fetch_async()
+            new_notified_users = User.query(User.new_notifications == key).fetch_async()
+            hidden_notified_users = User.query(User.hidden_notifications == key).fetch_async()
+            users = notified_users.get_result()
+            for user in users:
+                user.notifications.remove(key)
+                futures.append(user.put_async())
+            users_new = new_notified_users.get_result()
+            for user in users_new:
+                user.new_notifications.remove(key)
+                futures.append(user.put_async())
+            users_hidden = hidden_notified_users.get_result()
+            for user in users_hidden:
+                user.hidden_notifications.remove(key)
+                futures.append(user.put_async())
+            futures.append(key.delete_async())
+            for future in futures:
+                future.get_result()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/recently_sent',
+                      http_method='POST', name='notifications.recently_sent')
+    def recently_sent_notification(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        if not request_user.sent_notifications:
+            return OutgoingMessage(error='', data=json_dump(''))
+        sent_notifications = Notification.query(Notification.key.IN(request_user.sent_notifications)).fetch()
+        out_message = []
+        for notification in sent_notifications:
+            note_dict = notification.to_dict()
+            note_dict["key"] = notification.key.urlsafe()
+            out_message.append(note_dict)
+        return OutgoingMessage(error='', data=json_dump(out_message))
 
 APPLICATION = endpoints.api_server([RESTApi])

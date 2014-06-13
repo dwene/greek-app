@@ -13,7 +13,7 @@
 <div class="container">
     <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
 
-        <li>
+        <li ng-hide="member.user_name == $root.me.user_name">
             {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
             <button ng-click="openDeleteMemberModal(member)">Delete Member</button>
             <input type="checkbox" ng-model="selectedMembers[member.key]">
