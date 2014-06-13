@@ -14,6 +14,7 @@ var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 //initialize app
 var App = angular.module('App', ['ui.router', 'ngAnimate']);
 App.config(function($stateProvider, $urlRouterProvider) {
+    
     $urlRouterProvider.otherwise("/")
     .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app", "/app/home")
@@ -2016,3 +2017,4 @@ App.factory('directoryService', function($rootScope, $http) {
         return $rootScope.directory;
     }
 });
+

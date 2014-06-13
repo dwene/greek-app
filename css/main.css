@@ -115,3 +115,10 @@ textarea.form-control{height:auto; max-width:100%;}
 -ms-animation: fadeIn 1s;
  animation: fadeIn 1s;
 }
+
+.fadingInLeftBig.ng-enter{
+-webkit-animation: fadeInLeftBig 1s;
+-moz-animation: fadeInLeftBig 1s;
+-ms-animation: fadeInLeftBig 1s;
+ animation: fadeInLeftBig 1s;
+}
