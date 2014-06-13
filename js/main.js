@@ -647,12 +647,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         function assignAngularViewModels(members){
-            for(var i = 0; i< members.length; i++){
-                if (members[i].user_name == $.cookie(USER_NAME)){
-                    members.splice(i, 1);
-                    break;
-                }
-            }
+//            for(var i = 0; i< members.length; i++){
+//                if (members[i].user_name == $.cookie(USER_NAME)){
+//                    members.splice(i, 1);
+//                    break;
+//                }
+//            }
             $scope.members = members;
             $rootScope.loading = false;
         }
@@ -1385,13 +1385,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function getUsers(){
             $scope.selectedTags = {};
             $scope.selectedUsers = {};
-
+            
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     var users = JSON.parse(data.data)
-                    console.log(users);
                     $rootScope.users = users;
                 }
                 else
