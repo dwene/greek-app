@@ -275,6 +275,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //navigation header
     App.controller('navigationController', function($scope, $http, $rootScope){
+        
+        //closes the navigation if open and an li is clicked
+        var navMain = $("#mainNavigation");
+        navMain.on('click', 'li:not(.dropdown)', function(){
+            if( navMain.hasClass('in') ){
+                     navMain.collapse('hide');
+            }
+            else{
+            //do nothing
+            }
+        });
+        
+        
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
