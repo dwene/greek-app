@@ -21,8 +21,8 @@
         <p ng-show="statusUpdated">Status has been updated!</p>
     </div>
     <div>
-        <ul ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
-            <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)">
+        <ul>
+            <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
             <hr>
                 <div class="notificationContent">
                 <span class="notificationTitle">{{notify.title}}</span>
