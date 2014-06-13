@@ -211,7 +211,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
                 checkIfDone();
             });  
-            
+            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
+                    }
+                });
           return deferred.promise;
         }
         
