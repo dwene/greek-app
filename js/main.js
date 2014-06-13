@@ -1595,12 +1595,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http) {
+    App.controller('messagingController', function($scope, $http, $q) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
-        $scope.selectedTags = {};
-        $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+        function onFirstLoad(){
+            $scope.loading = true;
+            var deferred = $q.defer();
+            var done = 0;
+            function checkIfDone() {
+                done++;
+                if (done==2) deferred.resolve(); 
+            }
+            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1614,6 +1621,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+            $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.sentMessages = JSON.parse(data.data);
+                    console.log($scope.sentMessages);
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+            return deferred.promise;
+        }
+        onFirstLoad().then(function(){$scope.loading=false;})
+        $scope.selectedTags = {};
+        
         
         $scope.sendMessage = function(isValid, tags){
             if (isValid){
@@ -1647,6 +1674,31 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             else{ $scope.submitted = true; }
         }
+        
+        $scope.deleteMessage = function(message){
+            $('#messageModal').modal('hide');
+            var to_send = {message: message.key}
+            $http.post('/_ah/api/netegreek/v1/message/delete', packageForSending(to_send))
+                    .success(function(data){
+                        if (!checkResponseErrors(data))
+                        {
+                            console.log('message removed');
+                        }
+                        else
+                        {
+                            console.log("error: "+ data.error)
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                    });
+            $scope.sentMessages.splice($scope.sentMessages.indexOf(message), 1);
+        }
+        $scope.openMessageModal = function(message){
+            $('#messageModal').modal();
+            $scope.selectedMessage = message;
+        }
+        
         
         //onclick checkmark tag
         $('.messagingTags').on('click', '.checkLabel', function(){
