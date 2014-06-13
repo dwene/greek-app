@@ -111,7 +111,7 @@ textarea.form-control{height:auto; max-width:100%;}
 }
 
 /*ng-animation code*/
-.ng-enter,.ng-leave{position:absolute; left:0px; right:0px;}
+.ng-enter,.ng-leave{position:absolute !important; left:0px; right:0px;}
 
 .fadingIn.ng-enter {
 -webkit-animation: fadeIn .5s;
