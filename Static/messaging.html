@@ -11,7 +11,7 @@
 <div class="container">
     
     <ul class="messagingTags">
-        <div class="btn-group" ng-repeat="tag in organizationTags">
+        <div class="btn-group" ng-repeat="tag in $root.tags.organizationTags">
             <label class="label label-default checkLabel">
             <i class="fa fa-square-o checkStatus"></i>
             <input type="checkbox" ng-model="selectedTags[tag]"> <li>{{ tag }}</li>
