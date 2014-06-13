@@ -243,7 +243,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-             console.log('I did stuff');
         }
         
         $rootScope.checkPermissions = function(perms){
@@ -520,6 +519,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
             $http.post('/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
+        }
+        
+        $scope.hideNotification = function(notify){
+            var key = notify.key;
+            $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+            $scope.notifications.splice($scope.notifications.indexOf(notify), 1);
         }
         
         $scope.closeNotificationModal = function(notify){

@@ -991,4 +991,24 @@ class RESTApi(remote.Service):
             request_user.put()
         return OutgoingMessage(error='', data='OK')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hide',
+                      http_method='POST', name='notifications.hide')
+    def hide_notification(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["notification"])
+        if key in request_user.notifications:
+            request_user.notifications.remove(key)
+            request_user.hidden_notifications.append(key)
+            request_user.put()
+            return OutgoingMessage(error='', data='OK')
+        if key in request_user.new_notifications:
+            request_user.new_notifications.remove(key)
+            request_user.hidden_notifications.append(key)
+            request_user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data='OK')
+
 APPLICATION = endpoints.api_server([RESTApi])
