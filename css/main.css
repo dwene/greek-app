@@ -70,7 +70,8 @@ textarea.form-control{height:auto; max-width:100%;}
 .notification{cursor:pointer;}
 .notification.new{background:lightgray;}
 .notification:hover{background:lightblue;}
-.notificationContent{padding-left:10px;}
+.notificationContent{margin:-15px 10px -10px 10px;}
+.notificationContent .close{font-size:12px;}
 .notificationTitle{font-weight:bold; font-size:18px; margin:-5px 0 5px 0;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
 .notificationType:before, .notificationType:after{content:'"';}
