@@ -245,6 +245,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
         
+        $rootScope.refreshPage = function(){
+            window.location.reload();
+        }
+        
         $rootScope.checkPermissions = function(perms){
             return checkPermissions(perms);
         }
@@ -1318,7 +1322,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     console.log('ERROR: '+data);
                 }
-                
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -1406,12 +1409,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#tag').val('');
             $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
                 .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
+                    if (!checkResponseErrors(data)){
                         $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
                     }
-                    else
-                    {
+                    else{
                         console.log('ERROR: '+data);
                     }
                     
@@ -1448,13 +1449,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#deleteTagModal').modal('hide')
             $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({'tag': $scope.modaledTag}))
                 .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                    }
-                    else
-                    {
-                        console.log('ERROR: '+data);
-                    }
+                    if(checkResponseErrors(data)){openErrorModal(data.error)}
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
@@ -1798,6 +1793,10 @@ function checkResponseErrors(received_data){
         console.log('ERROR: '+response.error);
         return true;    
     }
+}
+
+function openErrorModal(error){
+    $('#errorModal').modal();
 }
 
 //easy way to get parameters from URL (use for non-sensitive info)

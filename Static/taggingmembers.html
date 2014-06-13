@@ -64,7 +64,7 @@
                                 </div>
                                 </li>
                                 <ul id="memberTags" class="col-xs-12 col-sm-10">
-                                    <div class="btn-group" ng-repeat="tag in member.tags">
+                                    <div class="btn-group" ng-repeat="tag in member.tags | orderBy:'toString()'">
                                     <span class="label label-default userLabel">
                                     <li>{{ tag }}</li>
                                     </span>
