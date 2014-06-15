@@ -1649,7 +1649,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             function checkIfDone() {
                 done++;
                 if (done==2) deferred.resolve(); 
-            }
+            }//#TODO change the tags to have 2 fields, one for name, one for checked/unchecked. This would work better with the ng-model
             $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
