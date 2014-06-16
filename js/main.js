@@ -1704,16 +1704,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.sendMessage = function(isValid, tags){
             if (isValid){
-                var selected_tags = [];
-                for (var i = 0; i < tags.length; i++){
-                    if (tags[i].checked){
-                        selected_tags.push(tags[i].name);
-                        console.log('Adding:' + tags.name)
+                var selected_org_tags = [];
+                var selected_perms_tags = [];
+                for (var i = 0; i < tags.organizationTags.length; i++){
+                    if (tags.organizationTags[i].checked){
+                        selected_org_tags.push(tags.organizationTags[i].name);
                     }
                 }
-                console.log(tags)
-                console.log(selected_tags);
-                var out_tags = {org_tags: selected_tags};
+                for (var i = 0; i < tags.permsTags.length; i++){
+                    if (tags.permsTags[i].checked){
+                        if (tags.permsTags[i].name == "All Members"){
+                            selected_perms_tags.push('council');
+                            selected_perms_tags.push('member');
+                            selected_perms_tags.push('leadership');
+                            break;
+                        }
+                        selected_perms_tags.push(tags.permsTags[i].name);
+                    }
+                }
+                var out_tags = {org_tags: selected_org_tags, perms_tags: selected_perms_tags};
                 var to_send = {title: $scope.title, content:$scope.content, tags: out_tags}
                 $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                     .success(function(data){
@@ -1994,8 +2003,6 @@ App.filter('multipleSearch', function(){
     return function (objects, tags) {
         if (!tags){return null;}
             var tags_list = []
-            console.log("tags")
-            console.log(tags);
         if (tags.organizationTags){
             for (var i = 0; i < tags.organizationTags.length; i++){
                 if (tags.organizationTags[i].checked){
@@ -2005,14 +2012,17 @@ App.filter('multipleSearch', function(){
         }
         if (tags.permsTags){
             for (var j = 0; j < tags.permsTags.length; j++){
-                if (tags.permsTags[i].checked){
-                    if (tags.permsTags[i].name == "All Members"){
+                if (tags.permsTags[j].checked){
+                    if (tags.permsTags[j].name == "All Members"){
                         tags_list.push("member");
                         tags_list.push("leadership");
                         tags_list.push("council");
                     }
+                    if (tags.permsTags[j].name == "Members"){
+                        tags_list.push("member");
+                    }
                     else{
-                    tags_list.push(tags.permsTags[i].name)}
+                    tags_list.push(tags.permsTags[j].name)}
                 }
             }
         }
@@ -2020,19 +2030,23 @@ App.filter('multipleSearch', function(){
             for (var j = 0; j < tags_list.length; j++){
                 out_string += tags_list[j] + ' ';
             }
-
         var search = out_string;
         if (!search){
             return null;
         }
         retList = [];
+        
         var searchArray = search.split(" ");
         for (var oPos = 0; oPos < objects.length; oPos++){
             var object = objects[oPos];
             for(var sPos = 0; sPos< searchArray.length; sPos++){
                 var check = false;
                 var searchItem = searchArray[sPos];
-                if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object.name) == -1){
+                if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
+                    retList.push(object);
+                    break;
+                }
+                if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
                     retList.push(object);
                     break;
                 }

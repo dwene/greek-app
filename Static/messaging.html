@@ -20,8 +20,8 @@
         </div>
         </div>
     </ul>
-    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
-    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid,tags.organizationTags)" novalidate>
+    <span ng-repeat="member in $root.users.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
+    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid,tags)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
             <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
             <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>

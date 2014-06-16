@@ -329,31 +329,31 @@ def get_users_from_tags(tags, organization, keys_only):
     _keys_only = False
     if keys_only:
         _keys_only = True
-    if tags["org_tags"]:
+    if "org_tags" in tags and len(tags["org_tags"]):
         org_tag_users_future = User.query(ndb.AND(User.tags.IN(tags["org_tags"]),
-                                                  User.organization == organization)).fetch_async(keys_only=_keys_only)
-    if tags["perms_tags"]:
-        perms_tag_users_future = User.query(ndb.AND(User.perms.IN(tags["perm_tags"]),
-                                                    User.organization == organization)).fetch_async(keys_only=_keys_only)
-    if tags["event_tags"]:
+                                                  User.organization == organization)).fetch_async(keys_only=True)
+    if "perms_tags" in tags and len(tags["perms_tags"]):
+        perms_tag_users_future = User.query(ndb.AND(User.perms.IN(tags["perms_tags"]),
+                                                    User.organization == organization)).fetch_async(keys_only=True)
+    if "event_tags" in tags and len(tags["event_tags"]):
         events_future = Event.query(ndb.AND(Event.tag_name.IN(tags["event_tags"]),
                                             Event.organization == organization)).fetch_async(projection=[Event.going])
-    if tags["org_tags"]:
+    if "org_tags" in tags and len(tags["org_tags"]):
         org_tag_users = org_tag_users_future.get_result()
         out_list = out_list + list(set(org_tag_users) - set(out_list))
 
-    if tags["perms_tags"]:
+    if "perms_tags" in tags and len(tags["perms_tags"]):
         perms_tag_users = perms_tag_users_future.get_result()
         out_list = out_list + list(set(perms_tag_users) - set(out_list))
 
-    if tags["event_tags"]:
+    if "event_tags" in tags and len(tags["event_tags"]):
         event_tag_users = events_future.get_result()
         users = []
         for event in event_tag_users:
             users = users + list(set(event) - set(out_list))
-        if not _keys_only:
-            users = ndb.get_multi(users)
-        out_list = out_list + list(set(users) - set(out_list))
+
+    if not _keys_only:
+        out_list = ndb.get_multi(out_list)
     return out_list
 
 
@@ -978,8 +978,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         data = json.loads(request.data)
         tags = data['tags']
-        users = User.query(ndb.AND(User.tags.IN(tags['org_tags']),
-                                   User.organization == request_user.organization)).fetch()
+        users = get_users_from_tags(tags, request_user.organization, False)
         notification = Notification()
         notification.type = 'message'
         notification.content = data['content']
