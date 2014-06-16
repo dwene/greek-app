@@ -1689,13 +1689,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.sendMessage = function(isValid, tags){
             if (isValid){
                 var selected_tags = [];
-                for (var subtag in tags){
-                    if (tags[subtag] == true){
-                        selected_tags.push(subtag);
+                for (var i = 0; i < tags.length; i++){
+                    if (tags[i].checked){
+                        selected_tags.push(tags[i].name);
+                        console.log('Adding:' + tags.name)
                     }
                 }
-                var tags = {org_tags: selected_tags};
-                var to_send = {title: $scope.title, content:$scope.content, tags: tags}
+                console.log(tags)
+                console.log(selected_tags);
+                var out_tags = {org_tags: selected_tags};
+                var to_send = {title: $scope.title, content:$scope.content, tags: out_tags}
                 $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data))
@@ -1996,17 +1999,9 @@ App.filter('multipleSearch', function(){
             for(var sPos = 0; sPos< searchArray.length; sPos++){
                 var check = false;
                 var searchItem = searchArray[sPos];
-                for(var item in object){
-                    if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
-                        check = true;
-                        break;
-                    }
-                }
-                if(!check){
-                    break;
-                }
-                if(sPos == searchArray.length-1 && check){
+                if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object.name) == -1){
                     retList.push(object);
+                    break;
                 }
             }
         }
