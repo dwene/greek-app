@@ -98,6 +98,7 @@ class User(ndb.Model):
     new_notifications = ndb.KeyProperty(repeated=True)
     hidden_notifications = ndb.KeyProperty(repeated=True)
     sent_notifications = ndb.KeyProperty(repeated=True)
+    events = ndb.KeyProperty(repeated=True)
 
 
 class Notification(ndb.Model):
@@ -107,6 +108,21 @@ class Notification(ndb.Model):
     sender = ndb.KeyProperty()
     sender_name = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
+
+
+class Event(ndb.Model):
+    name = ndb.StringProperty()
+    description = ndb.StringProperty()
+    time_start = ndb.DateTimeProperty()
+    time_end = ndb.DateTimeProperty()
+    time_created = ndb.DateTimeProperty()
+    creator = ndb.KeyProperty()
+    tag_name = ndb.StringProperty()
+    going = ndb.KeyProperty(repeated=True)
+    invited = ndb.KeyProperty(repeated=True)
+    not_going = ndb.KeyProperty(repeated=True)
+    images = ndb.BlobKeyProperty(repeated=True)
+    organization = ndb.KeyProperty()
 
 
 class Organization(ndb.Model):
@@ -121,7 +137,7 @@ class DateEncoder(json.JSONEncoder):
         if hasattr(obj, 'isoformat'):
             return obj.isoformat()
         elif isinstance(obj, ndb.Key):
-            return ''
+            return obj.urlsafe()
         else:
             return json.JSONEncoder.default(self, obj)
 
@@ -304,6 +320,42 @@ def get_key_from_token(token):
     if user:
         return user.key
     return 0
+
+def get_users_from_tags(tags, organization, keys_only):
+    # org_tag_users = []
+    # event_tag_users = []
+    # perms_tag_users = []
+    out_list = []
+    _keys_only = False
+    if keys_only:
+        _keys_only = True
+    if tags["org_tags"]:
+        org_tag_users_future = User.query(ndb.AND(User.tags.IN(tags["org_tags"]),
+                                                  User.organization == organization)).fetch_async(keys_only=_keys_only)
+    if tags["perms_tags"]:
+        perms_tag_users_future = User.query(ndb.AND(User.perms.IN(tags["perm_tags"]),
+                                                    User.organization == organization)).fetch_async(keys_only=_keys_only)
+    if tags["event_tags"]:
+        events_future = Event.query(ndb.AND(Event.tag_name.IN(tags["event_tags"]),
+                                            Event.organization == organization)).fetch_async(projection=[Event.going])
+    if tags["org_tags"]:
+        org_tag_users = org_tag_users_future.get_result()
+        out_list = out_list + list(set(org_tag_users) - set(out_list))
+
+    if tags["perms_tags"]:
+        perms_tag_users = perms_tag_users_future.get_result()
+        out_list = out_list + list(set(perms_tag_users) - set(out_list))
+
+    if tags["event_tags"]:
+        event_tag_users = events_future.get_result()
+        users = []
+        for event in event_tag_users:
+            users = users + list(set(event) - set(out_list))
+        if not _keys_only:
+            users = ndb.get_multi(users)
+        out_list = out_list + list(set(users) - set(out_list))
+    return out_list
+
 
 @endpoints.api(name='netegreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
@@ -733,22 +785,23 @@ class RESTApi(remote.Service):
         user_list = []
         alumni_list = []
         for user in organization_users:
-            user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            del user_dict["hidden_notifications"]
-            try:
-                user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
-            except:
-                del user_dict["prof_pic"]
-            if user_dict["perms"] == 'alumni':
-                alumni_list.append(user_dict)
-            else:
-                user_list.append(user_dict)
+            if user.user_name:
+                user_dict = user.to_dict()
+                del user_dict["hash_pass"]
+                del user_dict["current_token"]
+                del user_dict["organization"]
+                del user_dict["timestamp"]
+                del user_dict["notifications"]
+                del user_dict["new_notifications"]
+                del user_dict["hidden_notifications"]
+                try:
+                    user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
+                except:
+                    del user_dict["prof_pic"]
+                if user_dict["perms"] == 'alumni':
+                    alumni_list.append(user_dict)
+                else:
+                    user_list.append(user_dict)
         return_data = json_dump({'members': user_list, 'alumni': alumni_list})
         return OutgoingMessage(error='', data=return_data)
 
@@ -900,12 +953,20 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        org_tags = request_user.organization.get().tags
+        org_tags_future = request_user.organization.get_async()
+        event_tags_future = Event.query(Event.organization == request_user.organization).fetch_async()
+        org_tags = org_tags_future.get_result().tags
         org_tags_list = []
         for tag in org_tags:
             org_tags_list.append({"name": tag})
-        event_tags = []  # TODO: set this up with organization events
-        return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list, 'event_tags': event_tags}))
+        event_tags = event_tags_future.get_result()
+        event_tags_list = []
+        for event in event_tags:
+            event_tags_list.append(event.tag_name)
+        perm_tags_list = [{"name": 'Council'}, {"name": 'Leadership'}, {"name": 'Members'}, {"name": 'All Members'}]
+        return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
+                                                         'event_tags': event_tags_list,
+                                                         'perm_tags': perm_tags_list}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')
@@ -1084,4 +1145,76 @@ class RESTApi(remote.Service):
             out_message.append(note_dict)
         return OutgoingMessage(error='', data=json_dump(out_message))
 
+    #-------------------------
+    # EVENT ENDPOINTS
+    #-------------------------
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/create',
+                      http_method='POST', name='event.create')
+    def create_event(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        event_data = json.loads(request.data)
+        new_event = Event()
+        new_event.creator = request_user.key
+        new_event.description = event_data["description"]
+        new_event.name = event_data["name"]
+        new_event.time_created = datetime.datetime.now()
+        new_event.tag_name = event_data["tag_name"]
+        new_event.invited = get_users_from_tags(tags={"org_tags": event_data["org_tags"],
+                                                "perms_tags": event_data["perms_tags"]},
+                                                organization=request_user.organization,
+                                                keys_only=True)
+        new_event.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/rsvp',
+                      http_method='POST', name='event.rsvp')
+    def rsvp_event(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        event_data = json.loads(request.data)
+        event = ndb.Key(urlsafe=event_data["key"]).get()
+        if event_data["rsvp"] == "going":
+            if request_user.key in event.not_going:
+                event.not_going.remove(request_user.key)
+            if request_user.key not in event.going:
+                event.going.append(request_user.key)
+            event.put()
+        elif event_data["rsvp"] == "not_going":
+            if request_user.key in event.going:
+                event.going.remove(request_user.key)
+            if request_user.key not in event.not_going:
+                event.not_going.append(request_user.key)
+            event.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/get_events',
+                      http_method='POST', name='event.get_events')
+    def get_events(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        events = Event.query().order('time_start').fetch(30)
+        out_events = []
+        for event in events:
+            out_events.append(event.to_dict())
+        return OutgoingMessage(error='', data=json_dump(out_events))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/get_event_details',
+                      http_method='POST', name='event.get_event_details')
+    def get_event_details(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        event_key = json.loads(request.data)["key"]
+
+        return OutgoingMessage(error='', data=json_dump(out_events))
+
 APPLICATION = endpoints.api_server([RESTApi])
+
+

@@ -4,6 +4,7 @@
 //#TODO get it to where you can see all messages after they're hidden
 //Final\static variables. These variables are used for cookies
 //#TODO form validation on messaging with checkboxes
+//#TODO: implement datepicker for accountinfo page http://angular-ui.github.io/bootstrap/#/datepicker
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -1649,13 +1650,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var tag_list = [];
-                    var tag_data = JSON.parse(data.data).org_tags;
-                    for(var i = 0; i < tag_data.length; i++){
-                        tag_list.push({name: tag_data, checked: false})
+                    var org_tag_list = [];
+                    var tag_data = JSON.parse(data.data);
+                    console.log(tag_data);
+                    for(var i = 0; i < tag_data.org_tags.length; i++){
+                        org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
                     }
-                    $scope.tags.organizationTags = tag_list;
-                    $rootScope.tags.organizationTags = JSON.parse(data.data).org_tags;
+                    perms_tag_list = [];
+                    console.log(tag_data.perm_tags);
+                    for (var i = 0; i < tag_data.perm_tags.length; i++){
+                        perms_tag_list.push({name: tag_data.perm_tags[i].name, checked: false})
+                    }
+                    $scope.tags.organizationTags = org_tag_list;
+                    $scope.tags.permsTags = perms_tag_list;
+                    console.log("scope.tags.organizationTags");
+                    console.log($scope.tags)
                 }
                 else
                 {
@@ -1978,11 +1987,28 @@ App.filter('multipleSearch', function(){
     return function (objects, tags) {
         if (!tags){return null;}
             var tags_list = []
-            for (var i = 0; i < tags.length; i++){
-                if (tags[i].checked){
-                    tags_list.push(tags[i].name);
+            console.log("tags")
+            console.log(tags);
+        if (tags.organizationTags){
+            for (var i = 0; i < tags.organizationTags.length; i++){
+                if (tags.organizationTags[i].checked){
+                    tags_list.push(tags.organizationTags[i].name);
                 }
             }
+        }
+        if (tags.permsTags){
+            for (var j = 0; j < tags.permsTags.length; j++){
+                if (tags.permsTags[i].checked){
+                    if (tags.permsTags[i].name == "All Members"){
+                        tags_list.push("member");
+                        tags_list.push("leadership");
+                        tags_list.push("council");
+                    }
+                    else{
+                    tags_list.push(tags.permsTags[i].name)}
+                }
+            }
+        }
             out_string = '';
             for (var j = 0; j < tags_list.length; j++){
                 out_string += tags_list[j] + ' ';

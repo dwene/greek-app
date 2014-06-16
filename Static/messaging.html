@@ -11,14 +11,16 @@
 <div class="container">
     
     <ul class="messagingTags">
-        <div class="btn-group" ng-repeat="tag in tags.organizationTags">
+       <div ng-repeat = "type in tags">
+        <div class="btn-group" ng-repeat="tag in type">
             <label class="label label-default checkLabel">
             <i class="fa fa-square-o checkStatus"></i>
-            <input type="checkbox" ng-model="tag.checked"> <li>{{ tag.name }}</li>
+            <input type="checkbox" ng-model="tag.checked"> <li>{{tag.name}}</li>
             </label>
         </div>
+        </div>
     </ul>
-    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags.organizationTags">{{member.first_name}} {{member.last_name}}</span>
+    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid,tags.organizationTags)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
             <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
