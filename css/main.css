@@ -4,8 +4,19 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 /*Page Styles*/
 body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -webkit-font-smoothing:antialiased;}
 body.modal-open{margin-right:0px;}
+
 /*Navigation Styles*/
 .dropdown{cursor:pointer;}
+.navbar-brand .badge{font-size:12px; position:relative; top:-2px;}
+@media screen and (max-width:768px){
+    nav.navbar{position:fixed; top:0px; width:100%;}
+    #mainSection, #loadingScreen{margin-top:82px;}
+}
+/*Nav Pills*/
+@media screen and (max-width:768px){
+.nav-pills{font-size:12px;}
+}
+
 
 /*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
@@ -15,8 +26,8 @@ body.modal-open{margin-right:0px;}
 input.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
 
-@media screen and (max-width:764px){#memberAccount #addresses{padding:0px;}}
-@media screen and (min-width:764px){
+@media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
+@media screen and (min-width:768px){
 #memberAccount #addresses .col-sm-6:nth-child(1){position:relative; left:-10px;}
 #memberAccount #addresses .col-sm-6:nth-child(2){position:relative; left:15px;}
 }
