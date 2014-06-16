@@ -1626,25 +1626,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http, $q) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
-        $scope.checkedTags = '';
-        $scope.updateCheckedTags = function(){
-            console.log('checked tags function');
-            var selected_tags = ''
-                for (var subtag in $scope.selectedTags){
-                    if ($scope.selectedTags[subtag] == true){
-                        selected_tags += subtag.toString() + ' ';
-                    }
-                }
-            $scope.checkedTags = selected_tags;
-            console.log(selected_tags);
-            //#FIXME This doesnt work rawr. It's always one behind.
-        }
         function onFirstLoad(){
             $scope.loading = true;
+            var tag_list = [];
+            if ($rootScope.tags.organizationTags){
+                for(var i = 0; i < $rootScope.tags.organizationTags.length; i++){
+                    tag_list.push({name: $rootScope.tags.organizationTags, checked: false})
+                }
+                $scope.tags.organizationTags = tag_list;
+            }
             var deferred = $q.defer();
             var done = 0;
             function checkIfDone() {
@@ -1655,7 +1649,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.organizationTags = JSON.parse(data.data).org_tags;
+                    var tag_list = [];
+                    var tag_data = JSON.parse(data.data).org_tags;
+                    for(var i = 0; i < tag_data.length; i++){
+                        tag_list.push({name: tag_data, checked: false})
+                    }
+                    $scope.tags.organizationTags = tag_list;
+                    $rootScope.tags.organizationTags = JSON.parse(data.data).org_tags;
                 }
                 else
                 {
@@ -1749,6 +1749,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     });
             $scope.sentMessages.splice($scope.sentMessages.indexOf(message), 1);
         }
+        
         $scope.openMessageModal = function(message){
             $('#messageModal').modal();
             $scope.selectedMessage = message;
@@ -1964,6 +1965,47 @@ App.filter('multipleSearch', function(){
                 }
                 if(sPos == searchArray.length-1 && check){
                     console.log('adding to retlist');
+                    retList.push(object);
+                }
+            }
+        }
+        return retList;
+    }
+});App.filter('tagDirectorySearch', function(){ 
+    return function (objects, tags) {
+        if (!tags){return null;}
+            var tags_list = []
+            for (var i = 0; i < tags.length; i++){
+                if (tags[i].checked){
+                    tags_list.push(tags[i].name);
+                }
+            }
+            out_string = '';
+            for (var j = 0; j < tags_list.length; j++){
+                out_string += tags_list[j] + ' ';
+            }
+
+        var search = out_string;
+        if (!search){
+            return null;
+        }
+        retList = [];
+        var searchArray = search.split(" ");
+        for (var oPos = 0; oPos < objects.length; oPos++){
+            var object = objects[oPos];
+            for(var sPos = 0; sPos< searchArray.length; sPos++){
+                var check = false;
+                var searchItem = searchArray[sPos];
+                for(var item in object){
+                    if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
+                        check = true;
+                        break;
+                    }
+                }
+                if(!check){
+                    break;
+                }
+                if(sPos == searchArray.length-1 && check){
                     retList.push(object);
                 }
             }

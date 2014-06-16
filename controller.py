@@ -901,8 +901,11 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         org_tags = request_user.organization.get().tags
+        org_tags_list = []
+        for tag in org_tags:
+            org_tags_list.append({"name": tag})
         event_tags = []  # TODO: set this up with organization events
-        return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags, 'event_tags': event_tags}))
+        return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list, 'event_tags': event_tags}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')

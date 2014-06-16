@@ -11,15 +11,15 @@
 <div class="container">
     
     <ul class="messagingTags">
-        <div class="btn-group" ng-repeat="tag in $root.tags.organizationTags">
+        <div class="btn-group" ng-repeat="tag in tags.organizationTags">
             <label class="label label-default checkLabel">
             <i class="fa fa-square-o checkStatus"></i>
-            <input type="checkbox" ng-model="selectedTags[tag]" ng-click="updateCheckedTags()"> <li>{{ tag }}</li>
+            <input type="checkbox" ng-model="tag.checked"> <li>{{ tag.name }}</li>
             </label>
         </div>
     </ul>
-<!--    <span ng-repeat="member in $root.directory.members | multipleSearch:checkedTags">{{member.first_name}} {{member.last_name}}</span>-->
-    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid, selectedTags)" novalidate>
+    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags.organizationTags">{{member.first_name}} {{member.last_name}}</span>
+    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
             <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
             <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
