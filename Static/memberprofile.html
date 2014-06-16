@@ -1,5 +1,9 @@
-<div class="container">
-
+<div id="memberProfile" class="container">
+    
+    <div id="profileContent"> 
+    
+    <button onclick="window.history.back()" class="btn btn-default"><i class="fa fa-reply"></i> Back</button>
+    
     <div class="profilepic" style="background-image:url({{prof_pic}});" >
     <!--    <img ng-src = "{{prof_pic}}" style = "width: 200px;">-->
     </div>    
@@ -15,4 +19,7 @@
     <div class="row" ng-show="twitter.length > 0">Twitter: {{twitter}}</div>
     <div class="row" ng-show="instagram.length > 0">Instagram: {{instagram}}</div>
     <div class="row" ng-show="linkedin.length > 0">LinkedIn: {{linkedin}}</div>
+    
+    </div>
+    
 </div>

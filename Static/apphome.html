@@ -1,15 +1,9 @@
 <div class="container">
-
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>The App</h1>
-		</div>
-
-</div>
-
-<div class="container">
-    <div id="statusContainer">
+    <div id="statusContainer" class="row">
+        <div class="col-xs-12 col-sm-6">
         <h2 ng-show="$root.me.status.length" class="well well-sm">Current Status:  <span class="currentStatus">{{$root.me.status}}</span></h2>
+        </div>
+        <div class="col-xs-12 col-sm-6">
         <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
             <div class="input-group">
               <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">
@@ -18,19 +12,22 @@
               </span>
             </div>
         </form>
-        <p ng-show="statusUpdated">Status has been updated!</p>
+<!--        <p ng-show="statusUpdated">Status has been updated!</p>-->
+        </div>
     </div>
     <div>
         <ul>
             <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
-            <hr>
+            
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="hideNotification(notify)">hide</button>
                 <span class="notificationTitle">{{notify.title}}</span>
+<!--                #TODO add more content to the notifications-->
+<!--                <span class="notificationPreview">{{notification.preview}}</span>-->
 <!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
-                <span class="notificationSender" ng-show="notify.sender_name">{{notify.sender_name}}</span>
+                <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
-            <hr>
+            
             </li>
         </ul>
     </div>
@@ -46,7 +43,7 @@
       <div class="modal-body">
         <p style="white-space: pre;">{{selectedNotification.content}}</p>
         <br>
-        <p>From: {{selectedNotification.sender_name}}</p>
+        <span class="notificationSender">sent by: {{selectedNotification.sender_name}}</span>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="closeNotificationModal()">OK</button>
