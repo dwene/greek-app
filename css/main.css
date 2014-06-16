@@ -85,7 +85,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 
 /*App Home Page*/
-#statusContainer h2{font-size:14px; font-weight:bold;}
+#statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
 .currentStatus{font-style:italic;}
 .currentStatus:before, .currentStatus:after{content:'"';}
 
@@ -103,6 +103,9 @@ textarea.form-control{height:auto; max-width:100%;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
+
+#showHiddenButton{float:right;}
+#showHidden{position:relative; width:100%; overflow:hidden;}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}

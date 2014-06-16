@@ -1,5 +1,5 @@
 <div class="container">
-    <div id="statusContainer" class="row">
+    <section id="statusContainer" class="row">
         <div class="col-xs-12 col-sm-6">
         <h2 ng-show="$root.me.status.length" class="well well-sm">Current Status:  <span class="currentStatus">{{$root.me.status}}</span></h2>
         </div>
@@ -14,8 +14,23 @@
         </form>
 <!--        <p ng-show="statusUpdated">Status has been updated!</p>-->
         </div>
-    </div>
-    <div>
+    </section>
+    <hr>
+    <section id="notifications">
+
+    <button id="showHiddenButton" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#showHidden">Show Hidden</button>
+
+    <p ng-show="!$root.notifications.length">There are no new notifications!</p>
+            
+
+    <section id="showHidden" class="collapse">
+<!--       #TODO replace this with repeat for hidden notificaitons-->
+        <hr>
+        <p style="text-align:center;">testing - replace me</p>
+        <hr>
+    </section>
+        
+                        
         <ul>
             <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
             
@@ -30,7 +45,7 @@
             
             </li>
         </ul>
-    </div>
+    </section>
 </div>
 
 <div class="modal fade" id="notificationModal">

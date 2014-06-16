@@ -556,6 +556,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
         }
+        
+       $('#showHiddenButton').click(function () {
+          $(this).text(function(i, text){
+              return text === "Show Hidden" ? "Hide Hidden" : "Show Hidden";
+          })
+       });
+        
 	});
 
 //the add members page
