@@ -175,7 +175,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     controller : 'eventsController'
                 })
 //            .state('app.events', {
-//                    url : '/events/:key',
+//                    url : '/events/:tag',
 //                    templateUrl : 'Static/eventinfo.html',
 //                    controller : 'eventInfoController'
 //                })
@@ -1863,6 +1863,52 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
 	});
+
+    App.controller('eventController', function($scope, $http) {              
+                //send the organization and user date from registration pages
+                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $scope.events = JSON.parse(data.data);
+                    }
+                    else
+                        console.log('ERROR: '+data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            $scope.showEvent = function(event){
+                window.location.assign('#/app/events/' + event.tag_name);
+            }
+        
+	});
+
+
+    App.controller('eventInfoController', function($scope, $http, $stateParams) {      
+        var event_tag = $stateParams.tag;
+        $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        var events = JSON.parse(data.data);
+                        for (var i = 0; i < events.length; i++){
+                            if (events[i].tag_name == event_tag){
+                                $scope.event = events[i];
+                                break;
+                            }
+                        }
+                        for (var j = 0; j < $scope.event.going.length; j++){
+                            
+                        }
+                    }
+                    else
+                        console.log('ERROR: '+data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+	});
+
+
 
 //More Functions
 

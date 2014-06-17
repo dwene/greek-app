@@ -1211,7 +1211,7 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        events = Event.query(Event.key.IN(request_user.events)).order('time_start').fetch(30)
+        events = Event.query(request_user.key.IN(Event.invited)).order('time_start').fetch(30)
         out_events = []
         for event in events:
             out_events.append(event.to_dict())
@@ -1225,7 +1225,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         event_key = json.loads(request.data)["key"]
 
-        return OutgoingMessage(error='', data=json_dump(out_events))
+        return OutgoingMessage(error='', data='')
 
 APPLICATION = endpoints.api_server([RESTApi])
 
