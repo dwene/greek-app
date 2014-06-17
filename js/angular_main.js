@@ -189,6 +189,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.users = {};
         $rootScope.notification_count = "0";
         $rootScope.tags = {};
+        $rootScope.updatingNotifications = false;
         
         
         function executePosts() {
@@ -331,7 +332,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign("/#/login");
         }
         if(!$rootScope.updatingNotifications){
-            $rootScope.updateNotifications = true;
+            $rootScope.updatingNotifications = true;
         $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 20000);}
         
 	});
