@@ -330,7 +330,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if(!checkLogin()){
             window.location.assign("/#/login");
         }
-        $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 20000);
+        if(!$rootScope.updatingNotifications){
+            $rootScope.updateNotifications = true;
+        $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 20000);}
         
 	});
 
