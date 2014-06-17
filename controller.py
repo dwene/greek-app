@@ -111,13 +111,13 @@ class Notification(ndb.Model):
 
 
 class Event(ndb.Model):
-    name = ndb.StringProperty()
+    title = ndb.StringProperty()
     description = ndb.StringProperty()
     time_start = ndb.DateTimeProperty()
     time_end = ndb.DateTimeProperty()
     time_created = ndb.DateTimeProperty()
     creator = ndb.KeyProperty()
-    tag_name = ndb.StringProperty()
+    tag = ndb.StringProperty()
     going = ndb.KeyProperty(repeated=True)
     invited = ndb.KeyProperty(repeated=True)
     not_going = ndb.KeyProperty(repeated=True)
@@ -336,7 +336,7 @@ def get_users_from_tags(tags, organization, keys_only):
         perms_tag_users_future = User.query(ndb.AND(User.perms.IN(tags["perms_tags"]),
                                                     User.organization == organization)).fetch_async(keys_only=True)
     if "event_tags" in tags and len(tags["event_tags"]):
-        events_future = Event.query(ndb.AND(Event.tag_name.IN(tags["event_tags"]),
+        events_future = Event.query(ndb.AND(Event.tag.IN(tags["event_tags"]),
                                             Event.organization == organization)).fetch_async(projection=[Event.going])
     if "org_tags" in tags and len(tags["org_tags"]):
         org_tag_users = org_tag_users_future.get_result()
@@ -962,7 +962,7 @@ class RESTApi(remote.Service):
         event_tags = event_tags_future.get_result()
         event_tags_list = []
         for event in event_tags:
-            event_tags_list.append(event.tag_name)
+            event_tags_list.append(event.tag)
         perm_tags_list = [{"name": 'Council'}, {"name": 'Leadership'}, {"name": 'Members'}, {"name": 'All Members'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
@@ -1147,7 +1147,6 @@ class RESTApi(remote.Service):
     #-------------------------
     # EVENT ENDPOINTS
     #-------------------------
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/create',
                       http_method='POST', name='event.create')
     def create_event(self, request):
@@ -1160,26 +1159,27 @@ class RESTApi(remote.Service):
         new_event = Event()
         new_event.creator = request_user.key
         new_event.description = event_data["description"]
-        new_event.name = event_data["name"]
+        new_event.title = event_data["title"]
+        new_event.time_start = datetime.datetime.strptime(event_data["time_start"], '%m/%d/%Y %I:%M %p')
+        new_event.time_end = datetime.datetime.strptime(event_data["time_end"], '%m/%d/%Y %I:%M %p')
         new_event.time_created = datetime.datetime.now()
-        new_event.tag_name = event_data["tag_name"]
-        new_event.invited = get_users_from_tags(tags={"org_tags": event_data["org_tags"],
-                                                "perms_tags": event_data["perms_tags"]},
+        new_event.tag = event_data["tag"]
+        new_event.invited = get_users_from_tags(tags=event_data["tags"],
                                                 organization=request_user.organization,
                                                 keys_only=True)
         new_event.put()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_tag_availability',
-                      http_method='POST', name='event.create')
-    def create_event(self, request):
+                      http_method='POST', name='event.check_tag_availability')
+    def check_tag_availability(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         tag = json.loads(request.data)
-        if Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag_name == tag)).get():
+        if Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag == tag)).get():
             return OutgoingMessage(error=USERNAME_TAKEN, data='')
         return OutgoingMessage(error='', data='OK')
 

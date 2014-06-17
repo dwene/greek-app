@@ -1649,18 +1649,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http, $q, $rootScope) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope, tagsService) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
         function onFirstLoad(){
             $scope.loading = true;
             var tag_list = [];
-            if ($rootScope.tags.organizationTags){
-                for(var i = 0; i < $rootScope.tags.organizationTags.length; i++){
-                    tag_list.push({name: $rootScope.tags.organizationTags, checked: false})
-                }
-                $scope.tags.organizationTags = tag_list;
+            if ($rootScope.tags){
+                $scope.tags = arrangeTagData($rootScope.tags);
             }
             var deferred = $q.defer();
             var done = 0;
@@ -1670,26 +1667,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }//#TODO change the tags to have 2 fields, one for name, one for checked/unchecked. This would work better with the ng-model
             $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var org_tag_list = [];
+                if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
-                    console.log(tag_data);
-                    for(var i = 0; i < tag_data.org_tags.length; i++){
-                        org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
-                    }
-                    perms_tag_list = [];
-                    console.log(tag_data.perm_tags);
-                    for (var i = 0; i < tag_data.perm_tags.length; i++){
-                        perms_tag_list.push({name: tag_data.perm_tags[i].name, checked: false})
-                    }
-                    $scope.tags.organizationTags = org_tag_list;
-                    $scope.tags.permsTags = perms_tag_list;
-                    console.log("scope.tags.organizationTags");
-                    console.log($scope.tags)
+                    $scope.tags = arrangeTagData(tag_data);
+                    $rootScope.tags = tag_data;
                 }
-                else
-                {
+                else{
                     console.log("error: "+ data.error)
                 }
             })
@@ -1822,15 +1805,34 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 
-    App.controller('newEventController', function($scope, $http) {
-        $scope.addEvent = function(isValid){
-        if(isValid){                
-                //send the organization and user date from registration pages
+    App.controller('newEventController', function($scope, $http, $rootScope) {
+//        if ($rootScope.tags){
+//            $scope.tags = arrangeTagData($rootScope.tags);
+//        }
+        
+        $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    var tag_data = JSON.parse(data.data);
+                    $scope.tags = arrangeTagData(tag_data);
+                    $rootScope.tags = tag_data;
+                }
+                else{
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        $scope.addEvent = function(isValid, event){
+            console.log(event);
+        if(isValid){
+                event.tags = getCheckedTags($scope.tags);
+                console.log(event.tags);
                 $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
                 .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        
+                    if (!checkResponseErrors(data)){
                         console.log("event added")
                     }
                     else
@@ -1839,16 +1841,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-                
-        }
+            $scope.event = {}
+            }
             else{
-            $scope.submitted = true;
+                $scope.submitted = true;
             }
             
         }
         $scope.checkTagAvailability = function(tag){
-            tag.start_time = moment(tag.start_time).format();
-            tag.end_time = moment(tag.end_time).format();
             $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -1864,6 +1864,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' + data);
                 });
         }
+                $('.eventTags').on('click', '.checkLabel', function(){
+            
+            var checkbox = $(this).find(':checkbox');
+                        
+                if ( checkbox.prop('checked') )
+                {
+                    $(this).addClass('label-primary').removeClass('label-default');
+                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+                }
+                else
+                {
+                    $(this).removeClass('label-primary').addClass('label-default');
+                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+                }
+            
+        });
+        
+        
 	});
 
     App.controller('eventController', function($scope, $http) {              
@@ -1970,6 +1988,51 @@ function checkResponseErrors(received_data){
         console.log('ERROR: '+response.error);
         return true;    
     }
+}
+//This function is used to arrange the tag data so that we can use checkboxes with it
+function arrangeTagData(tag_data){
+    var org_tag_list = [];
+    var tags = {};
+    for(var i = 0; i < tag_data.org_tags.length; i++){
+        org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
+    }
+    perms_tag_list = [];
+    for (var i = 0; i < tag_data.perm_tags.length; i++){
+        perms_tag_list.push({name: tag_data.perm_tags[i].name, checked: false})
+    }
+    tags.organizationTags = org_tag_list;
+    tags.permsTags = perms_tag_list;
+    tags.eventTags = [];
+    return tags;
+}
+//This should be called at the beginning of any controller that uses the checkbox tags
+function clearCheckedTags(tags){
+    for (var i = 0; i < tags.organizationTags.length; i++)
+        tags.organizationTags[i].checked = false;
+    for (var i = 0; i < tags.permsTags.length; i++)
+        tags.permsTags[i].checked = false;
+    for (var i = 0; i < tags.eventTags.length; i++)
+        tags.eventTags[i].checked = false;
+    return tags;
+}
+
+function getCheckedTags(tags){
+    var org_tags= [];
+    var perms_tags = [];
+    var event_tags = [];
+    for (var i = 0; i < tags.organizationTags.length; i++){
+        if (tags.organizationTags[i].checked)
+            org_tags.push(tags.organizationTags[i].name);
+    }
+    for (var i = 0; i < tags.eventTags.length; i++){
+        if (tags.eventTags[i].checked)
+            event_tags.push(tags.eventTags[i].name);
+    }
+    for (var i = 0; i < tags.permsTags.length; i++){
+        if (tags.permsTags[i].checked)
+            perms_tags.push(tags.permsTags[i].name);
+    }
+    return {org_tags: org_tags, event_tags: event_tags, perms_tags: perms_tags};
 }
 
 function openErrorModal(error){
@@ -2243,4 +2306,5 @@ App.factory('directoryService', function($rootScope, $http) {
         return $rootScope.directory;
     }
 });
+
 
