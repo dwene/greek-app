@@ -36,15 +36,15 @@
 </section>
 
 <section id="recentlySentMessages" class="container">
-<!--    #FIXME idk what the notify.length should be -->
-    <h2 ng-show="notify.length > 0">Recently Sent Messages: <br></h2>
+<!--    #FIXME idk what the notify.leng-->
+<!--    <h2 ng-show="notify.length > 0">Recently Sent Messages: <br></h2>-->
     <ul ng-repeat="notify in sentMessages | orderBy : '-timestamp' | limitTo: 5">
         <li class="notification" ng-class="{ new : notify.new }">
             <div class="notificationContent">
             <span class="notificationTitle">{{notify.title}}</span>
             <span style="white-space: pre;">{{notify.content}}</span>
             </div>
-            <button ng-click="openMessageModal(notify)">Delete</button>
+            <button type="button" class="close" ng-click="openMessageModal(notify)">×</button>
         </li>
     </ul>
     
