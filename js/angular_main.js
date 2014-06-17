@@ -1807,7 +1807,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         
         //onclick checkmark tag
-        $('.messagingTags').on('click', '.checkLabel', function(){
+        $('#messagingTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
                         

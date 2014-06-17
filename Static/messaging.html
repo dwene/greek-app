@@ -10,17 +10,21 @@
 
 <section class="container">
     
-    <ul class="messagingTags">
-       <div ng-repeat = "type in tags">
-        <div class="btn-group" ng-repeat="tag in type">
-            <label class="label label-default checkLabel">
-            <i class="fa fa-square-o checkStatus"></i>
-            <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
-            </label>
-        </div>
+    <ul id="messagingTags">
+        <div ng-repeat="type in tags">
+            <div class="btn-group" ng-repeat="tag in type">
+                <label class="label label-default checkLabel">
+                    <i class="fa fa-square-o checkStatus"></i>
+                <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
+                </label>
+            </div>
         </div>
     </ul>
-    <span ng-repeat="member in $root.users.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
+    
+    <div id="messageList" class="well" ng-repeat="member in $root.users.members | tagDirectorySearch:tags">
+        <span class="messagePerson label label-primary">{{member.first_name}} {{member.last_name}}</span>
+    </div>
+    
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid,tags)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
             <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
@@ -41,10 +45,10 @@
     <ul ng-repeat="notify in sentMessages | orderBy : '-timestamp' | limitTo: 5">
         <li class="notification" ng-class="{ new : notify.new }">
             <div class="notificationContent">
+                <button type="button" class="close" ng-click="openMessageModal(notify)">delete</button>
             <span class="notificationTitle">{{notify.title}}</span>
             <span style="white-space: pre;">{{notify.content}}</span>
             </div>
-            <button type="button" class="close" ng-click="openMessageModal(notify)">×</button>
         </li>
     </ul>
     

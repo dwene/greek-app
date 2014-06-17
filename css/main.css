@@ -55,7 +55,8 @@ h1{font-size:36px; font-weight:bold;}
 
 
 /*Member Tagging Page*/
-.label{display:inline-block; position:relative; padding:.4em .4em .4em 1.5em;}
+.label{display:inline-block; position:relative; padding:.4em;}
+.checkLabel{padding:.4em .4em .4em 1.5em;}
 .checkLabel, .memberTags .badge{cursor:pointer;}
 .memberTags .badge:hover{background:#d9534f;}
 .memberTags .btn-group, .messagingTags .btn-group{margin:2px;}
@@ -83,7 +84,11 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
 #recentlySentMessages{margin-top:20px;}
-
+#messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
+#messagingTags{margin-bottom:5px;}
+#messagingTags .btn-group{margin-bottom:5px;}
+#messagingTags .btn-group .checkLabel{margin:0 2px;}
+.messagePerson{margin-bottom:4px;}
 /*App Home Page*/
 #statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
 #statusContainer .close{margin-top:-3px;}
