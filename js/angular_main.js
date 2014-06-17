@@ -555,6 +555,27 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         
+        $scope.clearStatus = function(){
+            
+            var status = "";
+            var to_send = {'status': status};
+            $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            }); 
+            $('#status').val("");
+            if ($rootScope.me){
+                $rootScope.me.status = status;
+            }            
+        }
+        
         $scope.openNotificationModal = function(notify){
             $('#notificationModal').modal();
             $scope.selectedNotification = notify;

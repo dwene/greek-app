@@ -8,7 +8,7 @@
 </div>
 
 
-<div class="container">
+<section class="container">
     
     <ul class="messagingTags">
        <div ng-repeat = "type in tags">
@@ -33,9 +33,11 @@
         <button type="submit" class="btn btn-default"><i class="fa fa-paper-plane"></i> Send</button>
     </form>
     
-</div>
-<div class="container">
-    <h1>Sent Messages</h1>
+</section>
+
+<section id="recentlySentMessages" class="container">
+<!--    #FIXME idk what the notify.length should be -->
+    <h2 ng-show="notify.length > 0">Recently Sent Messages: <br></h2>
     <ul ng-repeat="notify in sentMessages | orderBy : '-timestamp' | limitTo: 5">
         <li class="notification" ng-class="{ new : notify.new }">
             <div class="notificationContent">
@@ -47,7 +49,7 @@
     </ul>
     
     
-</div>
+</section>
 
 
 <div class="modal fade" id="messageModal">
