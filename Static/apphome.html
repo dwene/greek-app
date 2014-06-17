@@ -18,10 +18,7 @@
     <hr>
     <section id="notifications">
 
-    <button id="showHiddenButton" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#showHidden">Show Hidden</button>
-
-    <p ng-show="!$root.notifications.length">There are no new notifications!</p>
-            
+    <button id="showHiddenButton" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#showHidden">Show Hidden</button>            
 
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
@@ -45,6 +42,9 @@
             
             </li>
         </ul>
+        
+            <p ng-show="!$root.notifications.length">There are no new notifications!</p>
+        
     </section>
 </div>
 

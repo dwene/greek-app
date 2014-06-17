@@ -38,14 +38,11 @@
     <h1>Sent Messages</h1>
     <ul ng-repeat="notify in sentMessages | orderBy : '-timestamp' | limitTo: 5">
         <li class="notification" ng-class="{ new : notify.new }">
-        <hr>
             <div class="notificationContent">
             <span class="notificationTitle">{{notify.title}}</span>
             <span style="white-space: pre;">{{notify.content}}</span>
             </div>
             <button ng-click="openMessageModal(notify)">Delete</button>
-
-        <hr>
         </li>
     </ul>
     

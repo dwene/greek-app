@@ -10,15 +10,15 @@
     
     <div class="row"><h1>{{firstName}} {{lastName}}</h1></div>
     <div class="row">Birthday: {{birthday}}</div>
-    <div class="row">Phone: {{phone}}</div>
-    <div class="row">Email: {{email}}</div>
+    <div class="row">Phone: <a href="tel:{{phone}}">{{phone}}</a></div>
+    <div class="row">Email: <a href="mailto:{{email}}">{{email}}</a></div>
     <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
     <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>
-    <div class="row" ng-show="website.length > 0">Website: {{website}}</div>
-    <div class="row" ng-show="facebook.length > 0">Facebook: {{facebook}}</div>
-    <div class="row" ng-show="twitter.length > 0">Twitter: {{twitter}}</div>
-    <div class="row" ng-show="instagram.length > 0">Instagram: {{instagram}}</div>
-    <div class="row" ng-show="linkedin.length > 0">LinkedIn: {{linkedin}}</div>
+    <div class="row" ng-show="website.length > 0">Website: <a target="_blank" href="{{website}}">{{website}}</a></div>
+    <div class="row" ng-show="facebook.length > 0">Facebook: <a target="_blank" href="{{facebook}}">{{facebook}}</a></div>
+    <div class="row" ng-show="twitter.length > 0">Twitter: <a target="_blank" href="{{twitter}}">{{twitter}}</a></div>
+    <div class="row" ng-show="instagram.length > 0">Instagram: <a target="_blank" href="{{instagram}}">{{instagram}}</a></div>
+    <div class="row" ng-show="linkedin.length > 0">LinkedIn: <a target="_blank" href="{{linkedin}}">{{linkedin}}</a></div>
     
     </div>
     
