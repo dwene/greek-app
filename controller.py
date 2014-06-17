@@ -963,10 +963,10 @@ class RESTApi(remote.Service):
         event_tags_list = []
         for event in event_tags:
             event_tags_list.append(event.tag)
-        perm_tags_list = [{"name": 'Council'}, {"name": 'Leadership'}, {"name": 'Members'}, {"name": 'All Members'}]
+        perm_tags_list = [{"name": 'Council'}, {"name": 'Leadership'}, {"name": 'Everyone'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
-                                                         'perm_tags': perm_tags_list}))
+                                                         'perms_tags': perm_tags_list}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')

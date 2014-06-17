@@ -1672,7 +1672,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http, $q, $rootScope, tagsService) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
@@ -1693,6 +1693,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
                     $scope.tags = arrangeTagData(tag_data);
+                    console.log($scope.tags);
                     $rootScope.tags = tag_data;
                 }
                 else{
@@ -1734,7 +1735,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 for (var i = 0; i < tags.permsTags.length; i++){
                     if (tags.permsTags[i].checked){
-                        if (tags.permsTags[i].name == "All Members"){
+                        if (tags.permsTags[i].name == "Everyone"){
                             selected_perms_tags.push('council');
                             selected_perms_tags.push('member');
                             selected_perms_tags.push('leadership');
@@ -2019,12 +2020,16 @@ function checkResponseErrors(received_data){
 function arrangeTagData(tag_data){
     var org_tag_list = [];
     var tags = {};
-    for(var i = 0; i < tag_data.org_tags.length; i++){
-        org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
+    if (tag_data.org_tags){
+        for(var i = 0; i < tag_data.org_tags.length; i++){
+            org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
+        }
     }
     perms_tag_list = [];
-    for (var i = 0; i < tag_data.perm_tags.length; i++){
-        perms_tag_list.push({name: tag_data.perm_tags[i].name, checked: false})
+    if (tag_data.perms_tags){
+        for (var i = 0; i < tag_data.perms_tags.length; i++){
+            perms_tag_list.push({name: tag_data.perms_tags[i].name, checked: false})
+        }
     }
     tags.organizationTags = org_tag_list;
     tags.permsTags = perms_tag_list;
@@ -2208,7 +2213,7 @@ App.filter('multipleSearch', function(){
         if (tags.permsTags){
             for (var j = 0; j < tags.permsTags.length; j++){
                 if (tags.permsTags[j].checked){
-                    if (tags.permsTags[j].name == "All Members"){
+                    if (tags.permsTags[j].name == "Everyone"){
                         tags_list.push("member");
                         tags_list.push("leadership");
                         tags_list.push("council");
