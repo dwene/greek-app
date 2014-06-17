@@ -164,6 +164,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/messaging.html',
                     controller : 'messagingController'
                 })
+            .state('app.newevent', {
+                    url : '/newevent',
+                    templateUrl : 'Static/newevent.html',
+                    controller : 'newEventController'
+                })
+            .state('app.events', {
+                    url : '/events',
+                    templateUrl : 'Static/events.html',
+                    controller : 'eventsController'
+                })
+//            .state('app.events', {
+//                    url : '/events/:key',
+//                    templateUrl : 'Static/eventinfo.html',
+//                    controller : 'eventInfoController'
+//                })
     });
 
 //Set up run commands for the app
@@ -307,7 +322,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('homeController', function($scope, $http) {
         
 	});
-
+    
     App.controller('appController', function($scope, $http, $interval, $rootScope) {
         if(!checkLogin()){
             window.location.assign("/#/login");
@@ -1805,6 +1820,49 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
         
     });
+
+
+    App.controller('newEventController', function($scope, $http) {
+        $scope.addEvent = function(isValid){
+        if(isValid){                
+                //send the organization and user date from registration pages
+                $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        
+                        console.log("event added")
+                    }
+                    else
+                        console.log('ERROR: '+data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+                
+        }
+            else{
+            $scope.submitted = true;
+            }
+            
+        }
+        $scope.checkTagAvailability = function(tag){
+            $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $scope.available = true;
+                        $scope.not_available = false;
+                    }
+                    else{
+                        $scope.not_available = true;
+                        $scope.available = false;
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+	});
 
 //More Functions
 

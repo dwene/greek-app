@@ -1,0 +1,18 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>Events</h1>
+		</div>
+
+</div>
+
+<div class="container" id="directory">
+        <ul ng-repeat="event in events | orderBy:'time_start' | multipleSearch:search">
+            <li class="member" ng-click="showEvent(event)">
+                <div class="directoryContent">
+                <span class="memberName">{{event.name}}</span>
+                </div>
+            </li>
+        </ul>
+</div>

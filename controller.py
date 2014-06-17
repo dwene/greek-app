@@ -1170,6 +1170,19 @@ class RESTApi(remote.Service):
         new_event.put()
         return OutgoingMessage(error='', data='OK')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_tag_availability',
+                      http_method='POST', name='event.create')
+    def create_event(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        tag = json.loads(request.data)
+        if Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag_name == tag)).get():
+            return OutgoingMessage(error=USERNAME_TAKEN, data='')
+        return OutgoingMessage(error='', data='OK')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/rsvp',
                       http_method='POST', name='event.rsvp')
     def rsvp_event(self, request):
@@ -1198,7 +1211,7 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        events = Event.query().order('time_start').fetch(30)
+        events = Event.query(Event.key.IN(request_user.events)).order('time_start').fetch(30)
         out_events = []
         for event in events:
             out_events.append(event.to_dict())
