@@ -1847,6 +1847,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         }
         $scope.checkTagAvailability = function(tag){
+            tag.start_time = moment(tag.start_time).format();
+            tag.end_time = moment(tag.end_time).format();
             $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
