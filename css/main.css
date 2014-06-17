@@ -165,16 +165,16 @@ textarea.form-control{height:auto; max-width:100%;}
 }
 
 .fadingInLeftBig.ng-enter{
--webkit-animation: fadeInLeftBig .5s;
--moz-animation: fadeInLeftBig .5s;
--ms-animation: fadeInLeftBig .5s;
- animation: fadeInLeftBig .5s;
+-webkit-animation: fadeInRightBig .5s;
+-moz-animation: fadeInRightBig .5s;
+-ms-animation: fadeInRightBig .5s;
+ animation: fadeInRightBig .5s;
 }
 .fadingOutRightBig.ng-leave{
--webkit-animation: fadeOutRightBig .5s;
--moz-animation: fadeOutRightBig .5s;
--ms-animation: fadeOutRightBig .5s;
- animation: fadeOutRightBig .5;
+-webkit-animation: fadeOutLeftBig .5s;
+-moz-animation: fadeOutLeftBig .5s;
+-ms-animation: fadeOutLeftBig .5s;
+ animation: fadeOutLeftBig .5;
 }
 
 /*Specific Fixes*/
