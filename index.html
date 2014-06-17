@@ -16,6 +16,7 @@
 <!--        <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>-->
 <!--        #FUTURE  need to make sure font-awesome is updated-->
         <link rel="stylesheet" href="css/fontawesome.min.css">
+        <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
         <!--[if lt IE 9]>
             <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
         <![endif]-->
@@ -78,11 +79,27 @@
 <div ng-show="$root.loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <footer><br><br></footer>
         
+<div class="modal fade" id="errorModal" ng-click="$root.refreshPage()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="$root.refreshPage()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">An error occurred, please check your internet connection. This page will reload now.</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="$root.refreshPage()">OK</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        
 <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
         <script src="js/vendor/jquery-1.10.1.min.js"></script>
         <script src="js/vendor/jquery.cookie.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/spin.js"></script>
+        <script src="js/vendor/moment.min.js"></script>
+        <script src="js/vendor/bootstrap-datetimepicker.min.js"></script>
 <!--        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
         <script src="js/vendor/angular.js"></script>
 <!--        <script src="js/vendor/angular-route.js"></script>-->
@@ -101,19 +118,3 @@
     </body>
 </html>
 
-
-
-
-<div class="modal fade" id="errorModal" ng-click="$root.refreshPage()">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" ng-click="$root.refreshPage()" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">An error occurred, please check your internet connection. This page will reload now.</h4>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="$root.refreshPage()">OK</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
