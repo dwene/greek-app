@@ -89,6 +89,8 @@ textarea.form-control{height:auto; max-width:100%;}
 .currentStatus{font-style:italic;}
 .currentStatus:before, .currentStatus:after{content:'"';}
 
+#notifications ul{margin-top:20px;}
+
 .notification{cursor:pointer; position:relative;}
 .notification.new{background:lightgray;}
 .notification:hover{background:#EDEDED;}
@@ -104,7 +106,6 @@ textarea.form-control{height:auto; max-width:100%;}
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
 
-#showHiddenButton{float:right;}
 #showHidden{position:relative; width:100%; overflow:hidden;}
 
 /*Loading Screen*/

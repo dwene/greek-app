@@ -289,6 +289,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $rootScope.notification_count = count;
         }
+        
     });
 
 //navigation header
@@ -328,6 +329,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign("/#/login");
         }
         $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 20000);
+        
 	});
 
 //login page
@@ -1864,6 +1866,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' + data);
                 });
         }
+
                 $('.eventTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
@@ -1881,7 +1884,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         });
         
-        
+
+        $scope.$watch('event.tag', function() {
+        $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
+        });
 	});
 
     App.controller('eventController', function($scope, $http) {              
