@@ -22,7 +22,21 @@
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
         <hr>
-        <p style="text-align:center;">testing - replace me</p>
+       
+        <ul>
+            <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.hidden_notifications | orderBy : '-timestamp' | limitTo: 20">
+                <div class="notificationContent">
+                <span class="notificationTitle">{{notify.title}}</span>
+<!--                #TODO add more content to the notifications-->
+<!--                <span class="notificationPreview">{{notification.preview}}</span>-->
+<!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
+
+                <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
+                </div>
+            
+            </li>
+        </ul>
+
         <hr>
     </section>
         

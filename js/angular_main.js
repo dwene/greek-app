@@ -222,7 +222,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-                $rootScope.notifications =JSON.parse(data.data).notifications;
+                $rootScope.notifications = JSON.parse(data.data).notifications;
+                $rootScope.hidden_notifications = JSON.parse(data.data).hidden_notifications;
                 $rootScope.updateNotificationBadge();
                 checkIfDone();
             })
@@ -533,9 +534,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the main app page
     App.controller('appHomeController', function($scope, $http, $rootScope) {
-        if(!checkLogin()){
-            window.location.assign("/#/login");
-        }
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
@@ -588,7 +586,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.hideNotification = function(notify){
             var key = notify.key;
             $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
-            $scope.notifications.splice($scope.notifications.indexOf(notify), 1);
+            $rootScope.hidden_notifications.push(notify);
+            $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
         }
         
         $scope.closeNotificationModal = function(notify){

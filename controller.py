@@ -1017,6 +1017,9 @@ class RESTApi(remote.Service):
         if request_user.notifications:
             notifications_future = Notification.query(Notification.key.IN(
                 request_user.notifications)).order(Notification.timestamp).fetch_async(20)
+        if request_user.hidden_notifications:
+            hidden_notifications_future = Notification.query(Notification.key.IN(
+                request_user.hidden_notifications)).order(Notification.timestamp).fetch_async(20)
         out_notifications = []
         logging.error(request_user.new_notifications)
         if request_user.new_notifications:
@@ -1041,7 +1044,14 @@ class RESTApi(remote.Service):
                 note["new"] = False
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
-        out = {'notifications': out_notifications}
+        out_hidden_notifications = []
+        if request_user.hidden_notifications:
+            hidden_notifications = hidden_notifications_future.get_result()
+            for notify in hidden_notifications:
+                note = notify.to_dict()
+                note["key"] = notify.key.urlsafe()
+                out_hidden_notifications.append(note)
+        out = {'notifications': out_notifications, 'hidden_notifications': out_hidden_notifications}
         return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
