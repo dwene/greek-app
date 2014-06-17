@@ -623,6 +623,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#convertMemberModal').modal();
         }
         
+        $scope.updatePerms = function(key, option){
+            var to_send = {key: key, perms: option};
+            $http.post('/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        console.log('success');
+                    }
+                    else{
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
         //initialize a member array
         var newmemberList = [];
         //initialize a filecontents variable
