@@ -1866,6 +1866,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' + data);
                 });
         }
+        
+        $scope.$watch('event.tag', function() {
+        $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
+        });
 	});
 
     App.controller('eventController', function($scope, $http) {              

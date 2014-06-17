@@ -94,13 +94,13 @@
         <div class="col-sm-10">
         <div class="input-group">
          <span class="input-group-addon">#</span>
-          <input type="text" class="form-control tagInput" id="tag" name="tag" ng-model="event.tag" placeholder="BowlingSocial2014" required>
+          <input type="text" class="form-control tagInput" id="tag" name="tag" ng-model="event.tag" ng-trim="false" placeholder="BowlingSocial2014" required>
           <span class="input-group-btn">
            <button ng-click="checkTagAvailability(event.tag)" class="btn btn-default" type="button">Check availability</button>
           </span>
         </div>
         </div>
-        <p ng-show="(newEvent.tag.$invalid && !newEvent.tag.$pristine) || (newEvent.tag.$invalid && submitted) || ((event.tag.indexOf(' ') > -1 && submitted))" class="help-block">Please enter a tag for the event. Tags should not have any spaces.</p>
+        <p ng-show="(newEvent.tag.$invalid && !newEvent.tag.$pristine) || (newEvent.tag.$invalid && submitted)" class="help-block">Please enter a tag for the event.</p>
     </div>
     
     <p ng-show="tag_available">That will work!</p>
@@ -136,15 +136,15 @@
     })
     
     //don't allow spaces on tag inputs
-    $('.tagInput').on({
-      keydown: function(e) {
-        if (e.which === 32)
-          return false;
-      },
-      change: function() {
-        this.value = this.value.replace(/\s/g, "");
-      }
-    });
+//    $('.tagInput').on({
+//      keydown: function(e) {
+//        if (e.which === 32)
+//          return false;
+//      },
+//      change: function() {
+//        this.value = this.value.replace(/\s/g, "");
+//      }
+//    });
     
     });
 </script>
