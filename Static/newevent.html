@@ -65,23 +65,23 @@
           
             <div class="date" id="timestartPicker">
                 <div class="input-group">
-                <input type="text" data-format="dd/MM/yyyy hh:mm:ss" class="form-control" id="time_start" name="time_start" ng-model="event.time_start" placeholder="" required/>
+                <input type="text" class="form-control" id="time_start" name="time_start" ng-model="event.time_start" placeholder="" required/>
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
             
             <script type="text/javascript">
-            $(function () {
-                $('#timestartPicker').datetimepicker({
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-arrow-up",
-                    down: "fa fa-arrow-down"
-                }
+                $(function () {
+                    $('#timestartPicker').datetimepicker({
+                    icons: {
+                        time: "fa fa-clock-o",
+                        date: "fa fa-calendar",
+                        up: "fa fa-arrow-up",
+                        down: "fa fa-arrow-down"
+                    }
+                });
             });
-            });
-        </script>
+            </script>
         
         </div>
         <p ng-show="(newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted)" class="help-block">Please enter start date and time.</p>
@@ -90,7 +90,27 @@
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted)}">
         <label for="time_end" class="col-sm-2 control-label">Time End</label>
         <div class="col-sm-10">
-          <input type="text" data-format="dd/MM/yyyy hh:mm:ss" class="form-control" id="time_end" name="time_end" ng-model="event.time_end" placeholder="" required/>
+        
+            <div class="date" id="timeendPicker">  
+                <div class="input-group">
+                <input type="text" class="form-control" id="time_end" name="time_end" ng-model="event.time_end" placeholder="" required/>
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                    $(function () {
+                        $('#timeendPicker').datetimepicker({
+                        icons: {
+                            time: "fa fa-clock-o",
+                            date: "fa fa-calendar",
+                            up: "fa fa-arrow-up",
+                            down: "fa fa-arrow-down"
+                        }
+                    });
+                });
+            </script>
+        
         </div>
         <p ng-show="(newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted)" class="help-block">Please enter end date and time.</p>
     </div>
