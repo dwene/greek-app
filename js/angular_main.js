@@ -1811,7 +1811,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //        if ($rootScope.tags){
 //            $scope.tags = arrangeTagData($rootScope.tags);
 //        }
-        
+        $scope.event = {};
+        $scope.event.tag = '';
+        $scope.$watch('event.tag', function() {
+            $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
+        });
         $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data)){
@@ -1831,7 +1835,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             console.log(event);
         if(isValid){
                 event.tags = getCheckedTags($scope.tags);
-                console.log(event.tags);
                 $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -1884,10 +1887,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         });
         
-
-        $scope.$watch('event.tag', function() {
-        $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
-        });
 	});
 
     App.controller('eventController', function($scope, $http) {              
