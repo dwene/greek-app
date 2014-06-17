@@ -202,7 +202,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 //console.log(data.data);
-                $rootScope.users = JSON.parse(data.data);
+                if (!checkResponseErrors(data)){
+                $rootScope.users = JSON.parse(data.data);}
                 checkIfDone();
             })
             .error(function(data) {
