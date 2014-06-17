@@ -1223,7 +1223,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var council = [];
             var leadership = [];
             var members = [];
-            console.log()
             if ($rootScope.directory.members){
                 console.log('HOWDY')
                 for (var i = 0; i< $rootScope.directory.members.length; i++){
@@ -1255,25 +1254,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         splitMembers();
-//        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    var directory = JSON.parse(data.data)
-//                    console.log(directory);
-//                    $rootScope.directory = directory;
-//                    $scope.directory = $rootScope.directory.members;
-//                    $rootScope.loading = false;
-//                    splitMembers();
-//                }
-//                else
-//                {
-//                    console.log("error: "+ data.error)
-//                }
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' + data);
-//            });
+        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var directory = JSON.parse(data.data)
+                    console.log(directory);
+                    $rootScope.directory = directory;
+                    $scope.directory = $rootScope.directory.members;
+                    $rootScope.loading = false;
+                    splitMembers();
+                }
+                else
+                {
+                    console.log("error: "+ data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
         }
