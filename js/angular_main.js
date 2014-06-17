@@ -1360,6 +1360,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.prof_pic = $scope.members[i].prof_pic;
                     console.log($scope.members[i]);
                      //define profile information
+                    $scope.status = $scope.member.status;
                     $scope.firstName = $scope.member.first_name;
                     $scope.lastName = $scope.member.last_name;
                     $scope.email = $scope.member.email;
