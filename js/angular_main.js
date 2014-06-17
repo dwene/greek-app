@@ -289,6 +289,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $rootScope.notification_count = count;
         }
+        
     });
 
 //navigation header
@@ -328,6 +329,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign("/#/login");
         }
         $interval(function(){$rootScope.updateNotifications(); console.log('I did stuff2');}, 20000);
+        
 	});
 
 //login page
