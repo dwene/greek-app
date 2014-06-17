@@ -1235,25 +1235,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         splitMembers();
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data)
-                    console.log(directory);
-                    $rootScope.directory = directory;
-                    $scope.directory = $rootScope.directory.members;
-                    $rootScope.loading = false;
-                    splitMembers();
-                }
-                else
-                {
-                    console.log("error: "+ data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+//        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    var directory = JSON.parse(data.data)
+//                    console.log(directory);
+//                    $rootScope.directory = directory;
+//                    $scope.directory = $rootScope.directory.members;
+//                    $rootScope.loading = false;
+//                    splitMembers();
+//                }
+//                else
+//                {
+//                    console.log("error: "+ data.error)
+//                }
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
         }
@@ -1271,25 +1271,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (!$scope.directory){
             $rootScope.loading = true;
         }
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data)
-                    console.log(directory);
-                    $rootScope.directory = directory;
-                    $scope.directory = $rootScope.directory.alumni;
-                    $rootScope.loading = false;
-                    return $rootScope.directory;
-                }
-                else
-                {
-                    console.log("error: "+ data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+//        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    var directory = JSON.parse(data.data)
+//                    console.log(directory);
+//                    $rootScope.directory = directory;
+//                    $scope.directory = $rootScope.directory.alumni;
+//                    $rootScope.loading = false;
+//                    return $rootScope.directory;
+//                }
+//                else
+//                {
+//                    console.log("error: "+ data.error)
+//                }
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
         }

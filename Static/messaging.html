@@ -21,8 +21,8 @@
         </div>
     </ul>
     
-    <div id="messageList" class="well" ng-repeat="member in $root.users.members | tagDirectorySearch:tags">
-        <span class="messagePerson label label-primary">{{member.first_name}} {{member.last_name}}</span>
+    <div id="messageList" class="well">
+        <span class="messagePerson label label-primary"  ng-repeat="member in $root.users.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
     </div>
     
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid,tags)" novalidate>
