@@ -1410,7 +1410,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 
 //member tagging page
-    App.controller('membertagsController', function($scope, $http, $rootScope) {
+    App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
         Load.then(function(){
         function getUsers(){
             $scope.selectedTags = {};
@@ -1831,8 +1831,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
-                            window.location.assign('#/app/events/'+event.tag);
-                            $scope.loading = false;
+                            setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
                         }
                         else
                             console.log('ERROR: '+data);
@@ -1912,30 +1911,71 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 
-    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, Load){
+    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load){
         Load.then(function(){
         var event_tag = $stateParams.tag;
         if (!$rootScope.events){
             $scope.loading = true;
+            tryLoadEvent();
         }
         else{
-            getEventAndSetInfo();   
+            var events = $rootScope.events;
+            var event = undefined;
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == $stateParams.tag){
+                    event = events[i];
+                    console.log(event);
+                    break;
+                }
+            }
+            if (event === undefined){
+                setTimeout(function(){tryLoadEvent()}, 500);
+            }
+            else{
+                getEventAndSetInfo(event);
+            }  
         }
-        $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        var events = JSON.parse(data.data);
-                        $rootScope.events = events;
-                        getEventAndSetInfo();
-                    }
-                    else
-                        console.log('ERROR: '+data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-
-        function getEventAndSetInfo(){
+        
+	   });
+        function tryLoadEvent(){
+            LoadEvents().then(function(){
+            var events = $rootScope.events;
+            var event = undefined;
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == $stateParams.tag){
+                    event = events[i];
+                    console.log(event);
+                    break;
+                }
+            }
+            if (event === undefined){
+                setTimeout(function(){tryLoadEvent()}, 500);
+            }
+            else{
+                getEventAndSetInfo(event);
+            }
+            });
+            function LoadEvents(){
+                var requestDefer = $q.defer();
+                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            var events = JSON.parse(data.data);
+                            $rootScope.events = events;
+                        }
+                        else{
+                            console.log('ERROR: '+data);
+                        }
+                        requestDefer.resolve();
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                        requestDefer.resolve();
+                    });
+                return requestDefer.promise;
+                }
+        }   
+    function getEventAndSetInfo(event){
             function getUsersFromKey(key){
                 for (var i = 0; i < $rootScope.directory.members.length; i++){
                     console.log($rootScope.directory.members[i].key);
@@ -1944,15 +1984,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 }
                 return null;
-            }
-            var events = $rootScope.events;
-            var event = {};
-            for (var i = 0; i < events.length; i++){
-                if (events[i].tag == event_tag){
-                    event = events[i];
-                    console.log(event);
-                    break;
-                }
             }
             event.going_list = []
             event.invited_list = []
@@ -1970,7 +2001,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.loading = false;
             console.log(event); 
         }
-	});
 	});
 
 
