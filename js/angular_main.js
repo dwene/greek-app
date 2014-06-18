@@ -216,6 +216,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 //console.log(data.data);
                 var directory = JSON.parse(data.data);
                 $rootScope.directory = directory;
+                console.log("DIRECTORY");
+                console.log($rootScope.directory);
                 checkIfDone();
             })
             .error(function(data) {
@@ -1250,7 +1252,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (members.length > 0){
                     $scope.directory.push({name: 'Members', data: members});          
                 }
-                console.log($scope.directory);
             }
         }
         splitMembers();

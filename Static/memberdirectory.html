@@ -15,9 +15,9 @@
     
     </section>
     
-    <section ng-repeat="group in $root.directory">
-        <h2 ng-show="group[0]">{{group[0].perms}}</h2>
-        <ul ng-repeat="member in group | orderBy:'last_name' | multipleSearch:search">
+    <section ng-repeat="group in directory">
+        <h2 ng-show="">{{group.name}}</h2>
+        <ul ng-repeat="member in group.data | orderBy:'last_name' | multipleSearch:search">
 
             <li class="member" ng-click="showIndividual(member)">
             
