@@ -13,7 +13,7 @@
         <ul ng-repeat="event in events | orderBy:'time_start' | multipleSearch:search">
             <li class="member" ng-click="showEvent(event)">
                 <div class="directoryContent">
-                <span class="memberName">{{event.name}}</span>
+                <span class="memberName">{{event.title}}</span>
                 </div>
             </li>
         </ul>

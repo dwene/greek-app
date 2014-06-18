@@ -769,7 +769,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         key = json.loads(request.data)["key"]
         old_key = user.prof_pic
-        if old_key:
+        if old_key and blobstore.BlobInfo.get(old_key):
             blobstore.BlobInfo.get(old_key).delete()
         user.prof_pic = blobstore.BlobKey(key)
         user.put()
@@ -785,23 +785,23 @@ class RESTApi(remote.Service):
         user_list = []
         alumni_list = []
         for user in organization_users:
-            if user.user_name:
-                user_dict = user.to_dict()
-                del user_dict["hash_pass"]
-                del user_dict["current_token"]
-                del user_dict["organization"]
-                del user_dict["timestamp"]
-                del user_dict["notifications"]
-                del user_dict["new_notifications"]
-                del user_dict["hidden_notifications"]
-                try:
-                    user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
-                except:
-                    del user_dict["prof_pic"]
-                if user_dict["perms"] == 'alumni':
-                    alumni_list.append(user_dict)
-                else:
-                    user_list.append(user_dict)
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["organization"]
+            del user_dict["timestamp"]
+            del user_dict["notifications"]
+            del user_dict["new_notifications"]
+            del user_dict["hidden_notifications"]
+            user_dict["key"] = user.key.urlsafe()
+            try:
+                user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
+            except:
+                del user_dict["prof_pic"]
+            if user_dict["perms"] == 'alumni':
+                alumni_list.append(user_dict)
+            else:
+                user_list.append(user_dict)
         return_data = json_dump({'members': user_list, 'alumni': alumni_list})
         return OutgoingMessage(error='', data=return_data)
 
@@ -1174,9 +1174,12 @@ class RESTApi(remote.Service):
         new_event.time_end = datetime.datetime.strptime(event_data["time_end"], '%m/%d/%Y %I:%M %p')
         new_event.time_created = datetime.datetime.now()
         new_event.tag = event_data["tag"]
+        new_event.organization = request_user.organization
         new_event.invited = get_users_from_tags(tags=event_data["tags"],
                                                 organization=request_user.organization,
                                                 keys_only=True)
+        logging.error('tags' + json_dump(event_data["tags"]))
+        logging.error(new_event.invited)
         new_event.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -1189,7 +1192,8 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         tag = json.loads(request.data)
-        if Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag == tag)).get():
+        event = Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag == tag)).get()
+        if event:
             return OutgoingMessage(error=USERNAME_TAKEN, data='')
         return OutgoingMessage(error='', data='OK')
 
@@ -1221,7 +1225,7 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        events = Event.query(request_user.key.IN(Event.invited)).order('time_start').fetch(30)
+        events = Event.query(Event.organization == request_user.organization).order(Event.time_start).fetch(30)
         out_events = []
         for event in events:
             out_events.append(event.to_dict())

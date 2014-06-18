@@ -174,11 +174,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/events.html',
                     controller : 'eventsController'
                 })
-//            .state('app.events', {
-//                    url : '/events/:tag',
-//                    templateUrl : 'Static/eventinfo.html',
-//                    controller : 'eventInfoController'
-//                })
+            .state('app.eventInfo', {
+                    url : '/events/:tag',
+                    templateUrl : 'Static/eventinfo.html',
+                    controller : 'eventInfoController'
+                })
     });
 
 //Set up run commands for the app
@@ -191,77 +191,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.tags = {};
         $rootScope.updatingNotifications = false;
         
-        
-        function executePosts() {
-            
-          var deferred = $q.defer();
-          var done = 0;
-          function checkIfDone() {
-            done++;
-            if (done==3) deferred.resolve(); 
-          }
-          $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
-            .success(function(data){
-                //console.log(data.data);
-                if (!checkResponseErrors(data)){
-                $rootScope.users = JSON.parse(data.data);}
-                checkIfDone();
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-                checkIfDone();
-            });
-          $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                //console.log(data.data);
-                var directory = JSON.parse(data.data);
-                $rootScope.directory = directory;
-                console.log("DIRECTORY");
-                console.log($rootScope.directory);
-                checkIfDone();
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-                checkIfDone();
-            });
-          $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
-            .success(function(data){
-                $rootScope.notifications = JSON.parse(data.data).notifications;
-                $rootScope.hidden_notifications = JSON.parse(data.data).hidden_notifications;
-                $rootScope.updateNotificationBadge();
-                checkIfDone();
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-                checkIfDone();
-            });  
-            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
-                    }
-                });
-          return deferred.promise;
-        }
-        
-        $rootScope.loadData = function(){
-            
-            $rootScope.loading = true;
-            executePosts().then(function() {
-                for (var i = 0; i< $rootScope.directory.members.length; i++){
-                    if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-                        $rootScope.me = $rootScope.directory.members[i];
-                        console.log($rootScope.me);
-                        break;
-                    }
-                }
-                $rootScope.loading = false;
-            });
-        }
-        
-        if ($.cookie(USER_NAME)){
-            $rootScope.loadData();
-        }
         $rootScope.updateNotifications = function(){
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
@@ -281,6 +210,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.checkPermissions = function(perms){
             return checkPermissions(perms);
         }
+        
         $rootScope.checkLogin = function(){
             return checkLogin();
         }
@@ -294,7 +224,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $rootScope.notification_count = count;
         }
-        
     });
 
 //navigation header
@@ -383,7 +312,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //getting a forgotten password email
-    App.controller('forgotPasswordController', function($scope, $http) {
+    App.controller('forgotPasswordController', function($scope, $http, Load) {
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
             if (email === undefined){
@@ -409,7 +338,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //changing a forgotten password
-    App.controller('changePasswordFromTokenController', function($scope, $http) {
+    App.controller('changePasswordFromTokenController', function($scope, $http, Load) {
         $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
@@ -440,7 +369,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //changing password
-    App.controller('changePasswordController', function($scope, $http) {
+    App.controller('changePasswordController', function($scope, $http, Load) {
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
@@ -469,7 +398,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the registration page
-    App.controller('registerController', function($scope, $http, $rootScope) {
+    App.controller('registerController', function($scope, $http, $rootScope, Load) {
+        Load.then(function(){
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
@@ -478,10 +408,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.loading = false;
         $rootScope.users = {};
         //this page passes parameters through a get method to register info
+        });
     });
 
 //the register info page
-    App.controller('registerinfoController', function($scope, $http) {
+    App.controller('registerinfoController', function($scope, $http, Load) {
     
         //ng-submit on form submit button click
         $scope.registerinfoClick = function(item, isValid){
@@ -1153,7 +1084,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //adding profile pictures
-    App.controller('profilepictureController', function($scope, $http){
+    App.controller('profilepictureController', function($scope, $http, Load){
+    Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1217,9 +1149,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
     });
+    });
 
 //the directory
-    App.controller('membersDirectoryController', function($scope, $rootScope, $http){
+    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load){
+    Load.then(function(){
         function splitMembers(){
             var council = [];
             var leadership = [];
@@ -1284,8 +1218,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         });
         
     });
+    });
 
-    App.controller('alumniDirectoryController', function($scope, $rootScope, $http){
+    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load){
+    Load.then(function(){    
         $scope.directory = $rootScope.directory.alumni;
         if (!$scope.directory){
             $rootScope.loading = true;
@@ -1320,9 +1256,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         });
         
     });
+    });
 
 //member profiles
-    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http){
+    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load){
+    Load.then(function(){
         var user_name = $stateParams.id;
         if (user_name.toString().length < 2){
             window.location.assign('/#/app/directory');
@@ -1385,11 +1323,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
     });
+    });
 
     
 
 //account info
-    App.controller('accountinfoController', function($scope, $http, $rootScope){
+    App.controller('accountinfoController', function($scope, $http, $rootScope, Load){
+    Load.then(function(){
         $scope.updatedInfo = false;
         $scope.item = $rootScope.me;
         $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
@@ -1440,9 +1380,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
     });
+    });
 
 //upload image
     App.controller('uploadImageController', function($scope, $http){
+    Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1464,10 +1406,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
     });
+    });
 
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope) {
+        Load.then(function(){
         function getUsers(){
             $scope.selectedTags = {};
             $scope.selectedUsers = {};
@@ -1689,9 +1633,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
             clearCheckLabels();
         }
     });
+    });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http, $q, $rootScope) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load) {
+    Load.then(function(){    
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
@@ -1846,96 +1792,111 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
         
     });
+    });
 
 
-    App.controller('newEventController', function($scope, $http, $rootScope) {
+    App.controller('newEventController', function($scope, $http, $rootScope, Load) {
 //        if ($rootScope.tags){
 //            $scope.tags = arrangeTagData($rootScope.tags);
 //        }
-        $scope.event = {};
-        $scope.event.tag = '';
-        $scope.$watch('event.tag', function() {
-            $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
-        });
-        $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    var tag_data = JSON.parse(data.data);
-                    $scope.tags = arrangeTagData(tag_data);
-                    $rootScope.tags = tag_data;
-                }
-                else{
-                    console.log("error: "+ data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
+        Load.then(function(){
+            $scope.event = {};
+            $scope.event.tag = '';
+            $scope.$watch('event.tag', function() {
+                $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
             });
-        
-        $scope.addEvent = function(isValid, event){
-            console.log(event);
-        if(isValid){
-                event.tags = getCheckedTags($scope.tags);
-                $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
+            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        console.log("event added")
-                    }
-                    else
-                        console.log('ERROR: '+data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-            $scope.event = {}
-            }
-            else{
-                $scope.submitted = true;
-            }
-            
-        }
-        $scope.checkTagAvailability = function(tag){
-            $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.available = true;
-                        $scope.not_available = false;
+                        var tag_data = JSON.parse(data.data);
+                        $scope.tags = arrangeTagData(tag_data);
+                        $rootScope.tags = tag_data;
                     }
                     else{
-                        $scope.not_available = true;
-                        $scope.available = false;
+                        console.log("error: "+ data.error)
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-        }
 
-                $('.eventTags').on('click', '.checkLabel', function(){
-            
-            var checkbox = $(this).find(':checkbox');
-                        
-                if ( checkbox.prop('checked') )
-                {
-                    $(this).addClass('label-primary').removeClass('label-default');
-                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+            $scope.addEvent = function(isValid, event){
+                    console.log($scope.tags);
+                    event.tags = getCheckedTags($scope.tags);
+                    console.log(event.tags);
+            if(isValid){
+                    console.log($scope.tags);
+                    event.tags = getCheckedTags($scope.tags);
+                    console.log(event.tags);
+                    $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            window.location.assign('#/app/events/'+event.tag);
+                            $scope.loading = false;
+                        }
+                        else
+                            console.log('ERROR: '+data);
+                        $scope.loading = false;
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                        $scope.loading = false;
+                    });
+                $scope.loading = true;
+                $scope.unavailable = false;
+                $scope.available = false;
                 }
-                else
-                {
-                    $(this).removeClass('label-primary').addClass('label-default');
-                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+                else{
+                    $scope.submitted = true;
                 }
-            
+
+            }
+            $scope.checkTagAvailability = function(tag){
+                $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            $scope.available = true;
+                            $scope.unavailable = false;
+                        }
+                        else{
+                            $scope.unavailable = true;
+                            $scope.available = false;
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                    });
+            }
+
+                    $('.eventTags').on('click', '.checkLabel', function(){
+
+                var checkbox = $(this).find(':checkbox');
+
+                    if ( checkbox.prop('checked') )
+                    {
+                        $(this).addClass('label-primary').removeClass('label-default');
+                        $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+                    }
+                    else
+                    {
+                        $(this).removeClass('label-primary').addClass('label-default');
+                        $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+                    }
+
+            });
         });
-        
-	});
 
-    App.controller('eventController', function($scope, $http) {              
+    });
+
+    App.controller('eventsController', function($scope, $http, Load) {
+        Load.then(function(){
                 //send the organization and user date from registration pages
                 $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.events = JSON.parse(data.data);
+                        console.log("EVENTS");
+                        console.log($scope.events);
                     }
                     else
                         console.log('ERROR: '+data);
@@ -1944,27 +1905,28 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' + data);
                 });
             $scope.showEvent = function(event){
-                window.location.assign('#/app/events/' + event.tag_name);
+                window.location.assign('#/app/events/' + event.tag);
             }
         
+	   });
 	});
 
 
-    App.controller('eventInfoController', function($scope, $http, $stateParams) {      
+    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, Load){
+        Load.then(function(){
         var event_tag = $stateParams.tag;
+        if (!$rootScope.events){
+            $scope.loading = true;
+        }
+        else{
+            getEventAndSetInfo();   
+        }
         $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         var events = JSON.parse(data.data);
-                        for (var i = 0; i < events.length; i++){
-                            if (events[i].tag_name == event_tag){
-                                $scope.event = events[i];
-                                break;
-                            }
-                        }
-                        for (var j = 0; j < $scope.event.going.length; j++){
-                            
-                        }
+                        $rootScope.events = events;
+                        getEventAndSetInfo();
                     }
                     else
                         console.log('ERROR: '+data);
@@ -1972,6 +1934,43 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
+
+        function getEventAndSetInfo(){
+            function getUsersFromKey(key){
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    console.log($rootScope.directory.members[i].key);
+                    if ($rootScope.directory.members[i].key == key){
+                        return $rootScope.directory.members[i];
+                    }
+                }
+                return null;
+            }
+            var events = $rootScope.events;
+            var event = {};
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == event_tag){
+                    event = events[i];
+                    console.log(event);
+                    break;
+                }
+            }
+            event.going_list = []
+            event.invited_list = []
+            event.not_going_list = []
+            for (var i = 0; i < event.going.length; i++){
+                event.going_list.push(getUsersFromKey(event.going[i]));
+            }
+            for (var i = 0; i < event.not_going.length; i++){
+                event.not_going_list.push(getUsersFromKey(event.not_going[i]));
+            }
+            for (var i = 0; i < event.invited.length; i++){
+                event.invited_list.push(getUsersFromKey(event.invited[i]));
+            }
+            $scope.event = event;
+            $scope.loading = false;
+            console.log(event); 
+        }
+	});
 	});
 
 
@@ -2067,6 +2066,7 @@ function clearCheckedTags(tags){
 }
 
 function getCheckedTags(tags){
+    console.log(tags);
     var org_tags= [];
     var perms_tags = [];
     var event_tags = [];
@@ -2079,8 +2079,15 @@ function getCheckedTags(tags){
             event_tags.push(tags.eventTags[i].name);
     }
     for (var i = 0; i < tags.permsTags.length; i++){
-        if (tags.permsTags[i].checked)
-            perms_tags.push(tags.permsTags[i].name);
+        if (tags.permsTags[i].checked){
+            if(tags.permsTags[i].name == "Everyone"){
+               perms_tags.push(COUNCIL);
+                perms_tags.push(LEADERSHIP);
+                perms_tags.push(MEMBER);
+            }
+            else{
+            perms_tags.push(tags.permsTags[i].name);}
+        }
     }
     return {org_tags: org_tags, event_tags: event_tags, perms_tags: perms_tags};
 }
@@ -2356,5 +2363,75 @@ App.factory('directoryService', function($rootScope, $http) {
         return $rootScope.directory;
     }
 });
+
+App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
+    var defer = $q.defer();
+    console.log("Loading Data")
+    function executePosts() {
+          var deferred = $q.defer();
+          var done = 0;
+          function checkIfDone() {
+            done++;
+            if (done==3) deferred.resolve(); 
+          }
+          $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                //console.log(data.data);
+                if (!checkResponseErrors(data)){
+                $rootScope.users = JSON.parse(data.data);}
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                checkIfDone();
+            });
+          $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            .success(function(data){
+                //console.log(data.data);
+                var directory = JSON.parse(data.data);
+                $rootScope.directory = directory;
+                console.log("DIRECTORY");
+                console.log($rootScope.directory);
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                checkIfDone();
+            });
+          $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+            .success(function(data){
+                $rootScope.notifications = JSON.parse(data.data).notifications;
+                $rootScope.hidden_notifications = JSON.parse(data.data).hidden_notifications;
+                $rootScope.updateNotificationBadge();
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                checkIfDone();
+            });  
+            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
+                    }
+                });
+          return deferred.promise;
+        }
+        
+            $rootScope.loading = true;
+            executePosts().then(function() {
+                for (var i = 0; i< $rootScope.directory.members.length; i++){
+                    if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+                        $rootScope.me = $rootScope.directory.members[i];
+                        break;
+                    }
+                }
+                $rootScope.loading = false;
+                defer.resolve(); 
+        });
+
+    return defer.promise;
+});
+
 
 

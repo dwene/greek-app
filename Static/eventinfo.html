@@ -1,0 +1,36 @@
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+
+
+<div ng-hide="loading" class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>{{event.title}}</h1>
+		</div>
+
+</div>
+
+<div class="container">
+    <p>Name: {{event.title}}</p>
+    <p>Desciption: {{event.description}}</p>
+    <p>Going</p>
+    <ul ng-repeat = "person in event.going_list">
+        <li>
+            {{person.first_name}}
+        </li>
+    </ul>
+    <p>Not Going</p>
+    <ul ng-repeat = "person in event.not_going_list">
+        <li>
+            {{person.first_name}}
+        </li>
+    </ul>
+    <p>Invited</p>
+    <ul ng-repeat = "person in event.invited_list">
+    <li>
+        {{person.first_name}}
+    </li>
+    </ul> 
+        
+    
+</div>

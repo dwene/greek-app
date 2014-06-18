@@ -48,7 +48,7 @@
         </div>
         </div>
     </ul>
-    <span ng-repeat="member in $root.users.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
+    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
         <label for="title" class="col-sm-2 control-label">Title</label>
@@ -113,12 +113,12 @@
         <p ng-show="(newEvent.tag.$invalid && !newEvent.tag.$pristine) || (newEvent.tag.$invalid && submitted)" class="help-block">Please enter a tag for the event.</p>
     </div>
     
-    <p ng-show="tag_available">That will work!</p>
-    <p ng-show="tag_unavailable">That tag is already taken!</p>
+    <p ng-show="available">That will work!</p>
+    <p ng-show="unavailable">That tag is already taken!</p>
    
     <button type="submit" class="btn btn-default pull-right">Submit</button>
 </form>
- 
+ <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <script type="text/javascript">
     $(function(){
 

@@ -19,7 +19,7 @@
         <h2>{{group.name}}</h2>
         <ul ng-repeat="member in group.data | orderBy:'last_name' | multipleSearch:search">
 
-            <li class="member" ng-click="showIndividual(member)">
+            <li class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
             
                 <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
 
