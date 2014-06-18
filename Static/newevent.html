@@ -9,36 +9,7 @@
 
 <div class="container">
 
-<!--
-<div class="profilepic" style="background-image:url({{item.pic}});" >
-<img ng-src="{{item.prof_pic}}">
-</div>
--->
-
-<!--<a ng-href="/#/app/uploadprofilepicture" class="btn btn-default">Change Profile Picture</a>-->
-<!--<hr>-->
-
-<!--
-
-    <div class="container">
-    <div class="row">
-        <div class='col-sm-6'>
-            <div class="form-group">
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" />
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
-        </script>
-    </div>
-</div>
--->    <ul class="eventTags">
+    <ul id="eventTags">
        <div ng-repeat = "type in tags">
         <div class="btn-group" ng-repeat="tag in type">
             <label class="label label-default checkLabel">

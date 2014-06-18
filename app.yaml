@@ -5,9 +5,9 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /(.*\.(gif|png|jpg|ico|js|css|txt|json|wof|ttf|svg))
+- url: /(.*\.(gif|png|jpg|ico|js|css|txt|json|woff|ttf|svg))
   static_files: \1
-  upload: (.*\.(gif|png|jpg|ico|js|css|txt|json|wof|ttf|svg))
+  upload: (.*\.(gif|png|jpg|ico|js|css|txt|json|woff|ttf|svg))
   secure: always
 
 - url: /favicon\.ico

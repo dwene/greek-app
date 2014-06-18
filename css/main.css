@@ -99,11 +99,10 @@ textarea.form-control{height:auto; max-width:100%;}
 .currentStatus{font-style:italic;}
 .currentStatus:before, .currentStatus:after{content:'"';}
 
-
+/*Main App Page*/
 #notifications ul{margin-top:20px;}
-
 .notification{cursor:pointer; position:relative;}
-.notification.new{background:lightgray;}
+.notification.new{background:#EDEDED;}
 .notification:hover{background:#EDEDED;}
 .notification{border-top:1px solid #777;}
 .notification:last-child{border-bottom:1px solid #777;}
@@ -116,8 +115,21 @@ textarea.form-control{height:auto; max-width:100%;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
-
 #showHidden{position:relative; width:100%; overflow:hidden;}
+
+/*Events Page*/
+#newEventButton{margin-bottom:15px;}
+.event{cursor:pointer; position:relative;}
+.event:hover{background:#EDEDED;}
+.event{border-top:1px solid #777;}
+.event:last-child{border-bottom:1px solid #777;}
+.eventContent{padding:20px 10px;}
+.eventName{display:inline-block; width:100%; font-size:16px; font-weight:bold;}
+
+/*New Event Page*/
+#eventTags{margin-bottom:5px;}
+#eventTags .btn-group{margin-bottom:5px;}
+#eventTags .btn-group .checkLabel{margin:0 2px;}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
