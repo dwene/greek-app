@@ -510,7 +510,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(PERMS, responseData.perms);
                         $.cookie("USER_NAME", data_tosend.user.user_name);
                         $scope.loadData();
-                        window.location.assign("/#/payment");
+                        window.location.assign("/#/app/managemembers/add");
                     }
                     else
                         console.log('ERROR: '+data);
@@ -533,7 +533,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('paymentController', function($scope, $http) {
         //skip payment page right now
         $scope.submitPayment = function(){
-            window.location.assign("/#/app/managemembers");
         };
         
     });
