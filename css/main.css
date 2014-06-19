@@ -66,7 +66,8 @@ h1{font-size:36px; font-weight:bold;}
 .checkLabel li{display:inline;}
 .checkLabel input{display:none;}
 .checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
-.checkLabel:hover{background:#ccc;}
+.checkLabel.label-default:hover{background:#ccc;}
+.checkLabel.label-primary:hover{background:blue;}
 #addTagsButton{margin-bottom:15px;}
 
 #addTags{margin:10px 0 0 0; padding:0px;}
@@ -84,6 +85,13 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 .dropdown-menu>li>a{cursor: pointer;}
 
 #addTag button, #addTag input{display:inline-block;}
+
+/*Member Management Page*/
+
+#manageMembers li{margin:4px;}
+#manageMembers .form-inline{margin-bottom:10px;}
+.permsSelect{display:inline-block;}
+
 
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}

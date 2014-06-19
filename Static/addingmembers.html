@@ -1,59 +1,49 @@
 <div class="container">
 
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>Add Members</h1>
-		</div>
+    <ul ng-repeat="add in adds | orderBy:'last_name'">
 
+            <li>{{ add.first_name }}, {{ add.last_name }}, {{ add.class_year }}, {{ add.email }} <button class="btn btn-danger btn-sm" ng-click="deleteAdd(add)">delete</button></li>
+
+    </ul>
+    <button ng-click="submitMembers()" class="btn btn-default">Submit Members</button>
+
+    <hr>
+
+    <p id='areAdded'></p>
+    <form id="addmembersForm" role="form">
+        <div class="form-group">
+            <label for="uploadMembers">Upload CSV</label>
+            <input type="file" id="uploadMembers" accept=".csv">
         </div>
-        
-            
-        <div class="container">
-            
-            <ul ng-repeat="add in adds | orderBy:'last_name'">
-                
-                    <li>{{ add.first_name }}, {{ add.last_name }}, {{ add.class_year }}, {{ add.email }} <button class="btn btn-danger btn-sm" ng-click="deleteAdd(add)">delete</button></li>
-                
-            </ul>
-            <button ng-click="submitMembers()" class="btn btn-default">Submit Members</button>
-            
-            <hr>
-            
-            <p id='areAdded'></p>
-            <form id="addmembersForm" role="form">
-                <div class="form-group">
-                    <label for="uploadMembers">Upload CSV</label>
-                    <input type="file" id="uploadMembers" accept=".csv">
-                </div>
-                <div class="form-group">
-                    <button ng-click="addMembers()" class="btn btn-default">Add Members</button>
-                </div>
-                <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file :(</p>
-            </form>
-            
-            <hr>
-            
-            <form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid)" novalidate>
-                  <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addmemberForm.first_name.$invalid && !addmemberForm.first_name.$pristine) || (addmemberForm.first_name.$invalid && submitted)}">
-                    <label for="firstName" class="control-label">First Name*</label>
-                      <input type="text" class="form-control" id="firstName" name="first_name" ng-model="input.first_name" placeholder="John" required>
-                  </div>
-                  <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addmemberForm.last_name.$invalid && !addmemberForm.last_name.$pristine) || (addmemberForm.last_name.$invalid && submitted)}">
-                    <label for="lastName" class="control-label">Last Name*</label>
-                      <input type="text" class="form-control" id="lastName" name="last_name" ng-model="input.last_name" placeholder="Doe" required>
-                  </div>
-                  <div class="form-group col-sm-3 col-xs-6"  ng-class="{ 'has-error' : (addmemberForm.class_year.$invalid && !addmemberForm.class_year.$pristine) || (addmemberForm.class_year.$invalid && submitted)}">
-                    <label for="classYear" class="control-label">Class Year*</label>
-                      <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.class_year" placeholder="2014" value="2014" ng-pattern="/[0-9]{4}/" required>
-                  </div>
-                  <div class="form-group col-sm-3 col-xs-6"  ng-class="{ 'has-error' : (addmemberForm.email.$invalid && !addmemberForm.email.$pristine) || (addmemberForm.email.$invalid && submitted)}">
-                    <label for="email" class="control-label">Email*</label></label>
-                      <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
-                  </div>
-                  <div class="form-group" ng-class="{ 'has-error' : addmemberForm.$invalid && submitted}">
-                      <button class="btn btn-default">Add Member</button>
-                      <p ng-show="addmemberForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
-                  </div>
-             </form>
-            
+        <div class="form-group">
+            <button ng-click="addMembers()" class="btn btn-default">Add Members</button>
         </div>
+        <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file :(</p>
+    </form>
+
+    <hr>
+
+    <form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid)" novalidate>
+          <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addmemberForm.first_name.$invalid && !addmemberForm.first_name.$pristine) || (addmemberForm.first_name.$invalid && submitted)}">
+            <label for="firstName" class="control-label">First Name*</label>
+              <input type="text" class="form-control" id="firstName" name="first_name" ng-model="input.first_name" placeholder="John" required>
+          </div>
+          <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addmemberForm.last_name.$invalid && !addmemberForm.last_name.$pristine) || (addmemberForm.last_name.$invalid && submitted)}">
+            <label for="lastName" class="control-label">Last Name*</label>
+              <input type="text" class="form-control" id="lastName" name="last_name" ng-model="input.last_name" placeholder="Doe" required>
+          </div>
+          <div class="form-group col-sm-3 col-xs-6"  ng-class="{ 'has-error' : (addmemberForm.class_year.$invalid && !addmemberForm.class_year.$pristine) || (addmemberForm.class_year.$invalid && submitted)}">
+            <label for="classYear" class="control-label">Class Year*</label>
+              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.class_year" placeholder="2014" value="2014" ng-pattern="/[0-9]{4}/" required>
+          </div>
+          <div class="form-group col-sm-3 col-xs-6"  ng-class="{ 'has-error' : (addmemberForm.email.$invalid && !addmemberForm.email.$pristine) || (addmemberForm.email.$invalid && submitted)}">
+            <label for="email" class="control-label">Email*</label></label>
+              <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
+          </div>
+          <div class="form-group" ng-class="{ 'has-error' : addmemberForm.$invalid && submitted}">
+              <button class="btn btn-default">Add Member</button>
+              <p ng-show="addmemberForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
+          </div>
+     </form>
+
+</div>

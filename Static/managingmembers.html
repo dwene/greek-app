@@ -1,24 +1,28 @@
-<div class="container">
+<div id="manageMembers" class="container">
+    <div class="form-inline">
+    <div class="form-group">
+    <input id="manageMembersSearch" class="form-control" type="search" ng-model="search" placeholder="Search Members">
+    </div>
+    <button ng-click="openConvertMembersModal()" class="btn btn-default">Convert To Alumni</button>
+    <button ng-click="openDeleteMembersModal()" class="btn btn-default">Delete Members</button>
+    </div>
 
-        <!-- HEADER AND TODO COUNT -->
-        <div class="jumbotron text-center">
-            <h1>Manage Members</h1>
-        </div>
-
-</div>
-<div class="container">
-    <input id="manageMembersSearch" type="search" ng-model="search" placeholder="Search Members">
-    <button ng-click="openConvertMembersModal()">Convert To Alumni</button>
-</div>
-<div class="container">
     <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
 
         <li ng-hide="member.user_name == $root.me.user_name">
-            {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
-            <button ng-click="openDeleteMemberModal(member)">Delete Member</button>
-            <input type="checkbox" ng-model="selectedMembers[member.key]">
-            <form> 
-
+            
+            
+            <div class="btn-group">
+                <label class="label label-default checkLabel">
+                        <i class="fa fa-square-o checkStatus"></i>
+                        <input type="checkbox" ng-model="selectedMembers[member.key]">{{ member.first_name }} {{ member.last_name }}
+                </label>
+            </div>
+            
+            
+<!--            <button ng-click="openDeleteMemberModal(member)">Delete Member</button>-->
+<!--            <input type="checkbox" ng-model="selectedMembers[member.key]">-->
+            <form class="permsSelect">
                 <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member.key, option)">
                     <option value="council">council</option>
                     <option value="member">member</option>

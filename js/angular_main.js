@@ -538,6 +538,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the add members page
     App.controller('managemembersController', function($scope, $http, $rootScope) {
+        
+        //#FIXME When I refresh on the manage members page it shows your account, when I click into it though it does not.
+        
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
 
@@ -552,6 +555,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#deleteMemberModal').modal();
             $scope.userToDelete = user;
         }
+        //#TODO this should now be fixed to where it can delete multiple checked members in this modal
         
         $scope.openConvertMembersModal = function(){
             $('#convertMemberModal').modal();
@@ -711,6 +715,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         
+        
         $scope.submitMembers = function(){
             
             var data_tosend = {users: newmemberList};
@@ -787,6 +792,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.adds = newmemberList;
             }
         };
+        
+        //onclick checkmark tag
+        $('#manageMembers').on('click', '.checkLabel', function(){
+            
+            var checkbox = $(this).find(':checkbox');
+                        
+                if ( checkbox.prop('checked') )
+                {
+                    $(this).addClass('label-primary').removeClass('label-default');
+                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+                }
+                else
+                {
+                    $(this).removeClass('label-primary').addClass('label-default');
+                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+                }
+            
+        });
+        
     });
 
 //new member page
@@ -1468,7 +1492,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if ($rootScope.tags.organizationTags.indexOf(tag) == -1){
                 $rootScope.tags.organizationTags.push(tag);
             }
-        
+            $("#addTag input").val("");
         }
         
         $scope.removeOrganizationTag = function(){
@@ -1523,7 +1547,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         //onclick checkmark tag
-            $('.memberTags').on('click', '.checkLabel', function(){
+        $('.memberTags').on('click', '.checkLabel', function(){
             
             var checkbox = $(this).find(':checkbox');
                         

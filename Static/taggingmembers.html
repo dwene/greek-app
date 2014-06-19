@@ -11,13 +11,13 @@
                     
                     </div>
                     
-                    <div class="col-xs-12 col-sm-3">
-                    <form id="addTag" ng-submit="addOrganizationTag(item.tag)">
+                    <div class="col-xs-12 col-sm-4">
+                    <form id="addTag" name="addTag" ng-submit="addOrganizationTag(item.tag)">
                         <div class="form-group">
                             <div class="input-group">
                                 <input name="tag" id="tag" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
                                 <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default">Add Tag</button>
+                                <button type="submit" class="btn btn-default">Create Tag</button>
                             </div>
                         </span>
                         </div>
