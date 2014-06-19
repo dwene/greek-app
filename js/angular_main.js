@@ -1083,6 +1083,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //adding profile pictures
     App.controller('profilepictureController', function($scope, $http, Load){
+        
+    //#FIXME Load is not defined here :-(
     Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
