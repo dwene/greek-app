@@ -179,6 +179,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/eventinfo.html',
                     controller : 'eventInfoController'
                 })
+            .state('app.editEvent',{
+                    url : '/events/:tag/edit',
+                    templateUrl : 'Static/editevent.html',
+                    controller : 'editEventController'
+                
+                })
     });
 
 //Set up run commands for the app
@@ -289,7 +295,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $.cookie(USER_NAME, user_name);
                     $.cookie(TOKEN, returned_data.token);
                     $.cookie(PERMS, returned_data.perms);
-                    $rootScope.loadData();
                     window.location.assign("#/app");
                 }
                 else{
@@ -1926,6 +1931,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
+            
+            $scope.showDate = function(start, end){
+                var mStart = moment(start);
+                
+                if (mStart.diff(moment()) > 0){
+                   return moment(start).calendar(); 
+                }
+                var mEnd = moment(end);
+                if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
+                    return 'Happening Now';
+                }
+                if (mEnd.diff(moment()) < 0){
+                    return 'Already Happened';
+                }
+            }
             $scope.showEvent = function(event){
                 window.location.assign('#/app/events/' + event.tag);
             }
@@ -2009,7 +2029,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 return null;
             }
             event.going_list = []
-            event.invited_list = []
             event.not_going_list = []
             for (var i = 0; i < event.going.length; i++){
                 event.going_list.push(getUsersFromKey(event.going[i]));
@@ -2017,13 +2036,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
             for (var i = 0; i < event.not_going.length; i++){
                 event.not_going_list.push(getUsersFromKey(event.not_going[i]));
             }
-            for (var i = 0; i < event.invited.length; i++){
-                event.invited_list.push(getUsersFromKey(event.invited[i]));
-            }
             $scope.event = event;
+            console.log("EVENT")
+            console.log($scope.event);
             $scope.loading = false;
-            console.log(event); 
         }
+    $scope.submitEdits = function(){
+        $scope.loading = true;
+        $http.post('/_ah/api/netegreek/v1/event/editEvent', packageForSending($scope.event))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    window.location.assing('#/app/events');
+                }
+                else{
+                    console.log('ERROR: '+data);
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    }
 	});
 
 
@@ -2278,11 +2310,14 @@ App.filter('multipleSearch', function(){
         }
         return retList;
     }
-});App.filter('tagDirectorySearch', function(){ 
+});
+App.filter('tagDirectorySearch', function(){ 
     return function (objects, tags) {
         if (!tags){return null;}
+        console.log("I have tags");
             var tags_list = []
         if (tags.organizationTags){
+            console.log("I have organization Tags!")
             for (var i = 0; i < tags.organizationTags.length; i++){
                 if (tags.organizationTags[i].checked){
                     tags_list.push(tags.organizationTags[i].name);
@@ -2290,6 +2325,7 @@ App.filter('multipleSearch', function(){
             }
         }
         if (tags.permsTags){
+            console.log("I have perms Tags!")
             for (var j = 0; j < tags.permsTags.length; j++){
                 if (tags.permsTags[j].checked){
                     if (tags.permsTags[j].name == "Everyone"){
@@ -2297,7 +2333,7 @@ App.filter('multipleSearch', function(){
                         tags_list.push("leadership");
                         tags_list.push("council");
                     }
-                    if (tags.permsTags[j].name == "Members"){
+                    else if (tags.permsTags[j].name == "Members"){
                         tags_list.push("member");
                     }
                     else{
@@ -2334,6 +2370,41 @@ App.filter('multipleSearch', function(){
         return retList;
     }
 });
+
+App.filter('eventTagDirectorySearch', function(){ 
+    return function (objects, tags) {
+        if (!tags){return null;}
+        console.log("I have tags");
+        var tags_list = tags.org_tags.concat(tags.perms_tags);
+        out_string = '';
+        for (var j = 0; j < tags_list.length; j++){
+            out_string += tags_list[j] + ' ';
+        }
+        var search = out_string;
+        if (!search){
+            return null;
+        }
+        retList = [];
+        var searchArray = search.split(" ");
+        for (var oPos = 0; oPos < objects.length; oPos++){
+            var object = objects[oPos];
+            for(var sPos = 0; sPos< searchArray.length; sPos++){
+                var check = false;
+                var searchItem = searchArray[sPos];
+                if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
+                    retList.push(object);
+                    break;
+                }
+                if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
+                    retList.push(object);
+                    break;
+                }
+            }
+        }
+        return retList;
+    }
+});
+
 
 
 App.filter('directorySearch', function(){ 

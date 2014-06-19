@@ -3,7 +3,7 @@
 
 <div ng-hide="loading" class="container">
 
- <button onclick="window.history.back()" class="btn btn-default"><i class="fa fa-reply"></i> Back</button>
+ <button onclick="window.location.assign('#/app/events')" class="btn btn-default"><i class="fa fa-reply"></i> Back</button>
             <button onclick="editEvent(event)" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
 		
 		<!-- HEADER AND TODO COUNT -->
@@ -29,11 +29,5 @@
         </li>
     </ul>
     <p>Invited</p>
-    <ul ng-repeat = "person in event.invited_list">
-    <li>
-        {{person.first_name}}
-    </li>
-    </ul> 
-        
-    
+    <span ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
 </div>
