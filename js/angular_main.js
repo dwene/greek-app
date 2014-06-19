@@ -398,8 +398,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the registration page
-    App.controller('registerController', function($scope, $http, $rootScope, Load) {
-        Load.then(function(){
+    App.controller('registerController', function($scope, $http, $rootScope) {
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
@@ -408,7 +407,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.loading = false;
         $rootScope.users = {};
         //this page passes parameters through a get method to register info
-        });
     });
 
 //the register info page
@@ -1407,7 +1405,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
     });
     });
-
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
