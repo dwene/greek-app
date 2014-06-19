@@ -25,6 +25,7 @@ body.modal-open{margin-right:0px;}
 #logoutbutton{margin:7px;}
 input.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
+.navbar-collapse{max-height:100%;}
 
 @media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
@@ -58,7 +59,7 @@ h1{font-size:36px; font-weight:bold;}
 
 
 /*Member Tagging Page*/
-.label{display:inline-block; position:relative; padding:.4em;}
+.label{display:inline-block; position:relative; padding:.4em; margin:0px 2px; -webkit-user-select:none; user-select:none;}
 .checkLabel{padding:.4em .4em .4em 1.5em;}
 .checkLabel, .memberTags .badge{cursor:pointer;}
 .memberTags .badge:hover{background:#d9534f;}
@@ -86,6 +87,8 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 
 #addTag button, #addTag input{display:inline-block;}
 
+#createTags{margin-top:10px;}
+
 /*Member Management Page*/
 
 #manageMembers li{margin:4px;}
@@ -99,7 +102,6 @@ textarea.form-control{height:auto; max-width:100%;}
 #messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
 #messagingTags{margin-bottom:5px;}
 #messagingTags .btn-group{margin-bottom:5px;}
-#messagingTags .btn-group .checkLabel{margin:0 2px;}
 .messagePerson{margin-bottom:4px;}
 /*App Home Page*/
 #statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
