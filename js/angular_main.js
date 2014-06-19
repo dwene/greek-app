@@ -182,7 +182,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.editEvent',{
                     url : '/events/:tag/edit',
                     templateUrl : 'Static/editevent.html',
-                    controller : 'editEventController'
+                    controller : 'eventInfoController'
                 
                 })
     });
@@ -1412,7 +1412,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //upload image
-    App.controller('uploadImageController', function($scope, $http){
+    App.controller('uploadImageController', function($scope, $http, Load){
     Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
             .success(function(data){
@@ -1956,6 +1956,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load){
         Load.then(function(){
+        $scope.tags = arrangeTagData($rootScope.tags);
         var event_tag = $stateParams.tag;
         if (!$rootScope.events){
             $scope.loading = true;
@@ -2055,6 +2056,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+    }
+    $scope.editEvent = function(){
+        window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
     }
 	});
 
@@ -2496,7 +2500,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
           var done = 0;
           function checkIfDone() {
             done++;
-            if (done==3) deferred.resolve(); 
+            if (done==4) deferred.resolve(); 
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
@@ -2533,12 +2537,28 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
                 console.log('Error: ' + data);
                 checkIfDone();
             });  
-            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
-                    }
-                });
+//            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+//                .success(function(data){
+//                    if (!checkResponseErrors(data)){
+//                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
+//                    }
+//                });
+            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    var tag_data = JSON.parse(data.data);
+                    $rootScope.tags = tag_data;
+                }
+                else{
+                    console.log("error: "+ data.error)
+                }
+                checkIfDone();
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                checkIfDone();
+            });
+            
           return deferred.promise;
         }
         

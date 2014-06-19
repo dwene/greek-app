@@ -2,7 +2,7 @@
 
 <!--		 HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
-			<h1>New Event</h1>
+			<h1>{{event.title}}</h1>
 		</div>
 
 </div>
@@ -12,8 +12,8 @@
     <ul id="eventTags">
        <div ng-repeat = "type in tags">
         <div class="btn-group" ng-repeat="tag in type">
-            <label class="label label-default checkLabel">
-            <i class="fa fa-square-o checkStatus"></i>
+            <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
+            <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
             <input type="checkbox" ng-model="tag.checked"> <li>{{tag.name}}</li>
             </label>
         </div>
@@ -69,6 +69,7 @@
         </div>
         <p ng-show="(newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted)" class="help-block">Please enter end date and time.</p>
     </div>
+   <p>Tag: {{event.tag}}</p>
    
     <button type="submit" class="btn btn-default pull-right">Submit</button>
 </form>
