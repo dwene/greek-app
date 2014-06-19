@@ -1954,7 +1954,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 
-    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load){
+    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
         Load.then(function(){
         $scope.tags = arrangeTagData($rootScope.tags);
         var event_tag = $stateParams.tag;
@@ -2038,16 +2038,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 event.not_going_list.push(getUsersFromKey(event.not_going[i]));
             }
             $scope.event = event;
-            console.log("EVENT")
-            console.log($scope.event);
+            $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY HH:MM A');
+            $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY HH:MM A');  
+            console.log($scope.event.time_end);
             $scope.loading = false;
         }
-    $scope.submitEdits = function(){
+    $scope.submitEdits = function(isValid){
+        if (isValid){
         $scope.loading = true;
-        $http.post('/_ah/api/netegreek/v1/event/editEvent', packageForSending($scope.event))
+            var to_send = JSON.parse(JSON.stringify($scope.event));
+            to_send.time_end = $scope.time_end;
+            to_send.time_start = $scope.time_start;
+        $http.post('/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
-                    window.location.assing('#/app/events');
+                    getEvents;
+                    window.location.assign('#/app/events');
                 }
                 else{
                     console.log('ERROR: '+data);
@@ -2056,13 +2062,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+        }
     }
     $scope.editEvent = function(){
         window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
+        $scope.event = undefined;
     }
 	});
-
-
 
 //More Functions
 
@@ -2492,6 +2498,23 @@ App.factory('directoryService', function($rootScope, $http) {
     }
 });
 
+
+App.factory('getEvents', function($http, $rootScope){
+    $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+        .success(function(data){
+            if (!checkResponseErrors(data)){
+                var events = JSON.parse(data.data);
+                $rootScope.events = events;
+                $rootScope.event = undefined;
+            }
+            else{
+                console.log('ERROR: '+data);
+            }
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+});
 App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
     var defer = $q.defer();
     console.log("Loading Data")

@@ -1258,25 +1258,24 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_data = json.loads(request.data)
-        event_key = request_data["key"]
-        event = Event.query(ndb.And(Event.key == event_key, Event.organization == request_user.organization)).fetch()
+        event_tag = request_data["tag"]
+        event = Event.query(ndb.AND(Event.tag == event_tag, Event.organization == request_user.organization)).get()
         for key, value in request_data.iteritems():
-            if key == "time_start":
-                event.time_start = value
-            elif key == "time_end":
-                event.time_end = value
-            elif key == "title":
+            # if key == "time_start":
+            #     event.time_start = value
+            # elif key == "time_end":
+            #     event.time_end = value
+            if key == "title":
                 event.title = value
             elif key == "description":
                 event.description = value
             elif key == "tags":
-                for _key, _value in value:
-                    if _key == "org_tags":
-                        event.org_tags = _value
-                    if _key == "perms_tags":
-                        event.perms_tags = _value
-                        if EVERYONE in value:
-                            event.perms_tags = ['Everyone', 'council', 'leadership', 'member']
+                if "org_tags" in value:
+                    event.org_tags = value["org_tags"]
+                if "perms_tags" in value:
+                    event.perms_tags = value["perms_tags"]
+                    if EVERYONE in value["perms_tags"]:
+                        event.perms_tags = ['Everyone']
                 # invited_users = get_users_from_tags(tags=value,
                 #                                     organization=request_user.organization,
                 #                                     keys_only=True)

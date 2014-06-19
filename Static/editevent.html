@@ -20,7 +20,7 @@
         </div>
     </ul>
     <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
-    <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
+    <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
         <label for="title" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
@@ -46,7 +46,7 @@
           
             <div class="date" id="timestartPicker">
                 <div class="input-group">
-                <input type="text" class="form-control" id="time_start" name="time_start" ng-model="event.time_start" placeholder="" required/>
+                <input type="text" class="form-control" id="time_start" name="time_start" ng-model="time_start" placeholder="" required/>
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
@@ -61,7 +61,7 @@
         
             <div class="date" id="timeendPicker">  
                 <div class="input-group">
-                <input type="text" class="form-control" id="time_end" name="time_end" ng-model="event.time_end" placeholder="" required/>
+                <input type="text" class="form-control" id="time_end" name="time_end" ng-model="time_end" placeholder="" required/>
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
