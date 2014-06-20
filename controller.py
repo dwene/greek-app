@@ -567,6 +567,13 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data=json_dump({'token': user.current_token, 'perms': user.perms}))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_username',
+                      http_method='POST', name='user.check_username')
+    def check_username(self, request):
+        if username_available(json.loads(request.data)):
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error=USERNAME_TAKEN, data='')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user_directory_info',
                       http_method='POST', name='user.get_user_directory_info')
     def get_user_directory_info(self, request):

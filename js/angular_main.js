@@ -5,6 +5,8 @@
 //Final\static variables. These variables are used for cookies
 //#TODO form validation on messaging with checkboxes
 //#TODO: implement datepicker for accountinfo page http://angular-ui.github.io/bootstrap/#/datepicker
+//#TODO: add validation for the newmemberinfo page
+//#TODO: fix check username tags in newmemberinfo and registerinfo pages
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -427,8 +429,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign('#/register');
         }
         //ng-submit on form submit button click
+        
+        $scope.checkUserName = function(user){
+        $http.post('/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.available = true;
+                        $scope.unavailable = false;
+                    }
+                    else{
+                        console.log('ERROR: '+data);
+                        $scope.available = false;
+                        $scope.unavailable = true;}  
+                });
+        }
         $scope.registerinfoClick = function(item, isValid){
-            
+        
         if(isValid){
                 
             var organization = registerOrganizationService.get();
@@ -450,8 +467,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         window.location.assign("/#/app/managemembers/add");
                         $rootScope.refresh();
                     }
-                    else
-                        console.log('ERROR: '+data);
+                    else{
+                        if (data.error == 'USERNAME_TAKEN'){
+                            $scope.unavailable = true;
+                            $scope.available = false;
+                        }
+                    }
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
@@ -1072,6 +1093,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('newmemberinfoController', function($scope, $http){
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
+        $scope.checkUserName = function(user){
+        $http.post('/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.available = true;
+                        $scope.unavailable = false;
+                    }
+                    else{
+                        console.log('ERROR: '+data);
+                        $scope.available = false;
+                        $scope.unavailable = true;}  
+                });
+        }
+        
         $scope.createAccount = function(){
             $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
