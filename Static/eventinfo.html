@@ -21,8 +21,8 @@
         <input type="radio" id="notGoing" ng-model="going" name="going" value="no">
         </label>
         <div class="btn-group btn-group-lg">
-        <button class="btn btn-default" ng-class=" 'btn-primary' : going, 'btn-default' : notgoing " ng-click="">Yes</button>
-        <button class="btn btn-default" ng-click=" 'btn-default' : going,  'btn-primary' : notgoing ">No</button>
+        <button class="btn btn-primary" ng-class=" 'btn-primary' : going, 'btn-default' : notgoing " ng-click="">Yes</button>
+        <button class="btn btn-default" ng-class=" 'btn-default' : going,  'btn-primary' : notgoing ">No</button>
 
         </div>
         </span>
@@ -33,7 +33,7 @@
 		
 
     <p>Start: {{event.time_start | date:'EEEE MMM d, y h:mm a'}}</p>
-    <p>End: {{event.time_end | date:'EEEE MMM d, y h:mm a'}}}}</p>
+    <p>End: {{event.time_end | date:'EEEE MMM d, y h:mm a'}}</p>
     <p>Desciption: {{event.description}}</p>
 
     
