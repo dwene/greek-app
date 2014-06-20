@@ -313,17 +313,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.forgotPassword = function(){
         window.location.assign('/#/forgotpassword'); 
         }
-        
     });
 
 //getting a forgotten password email
-    App.controller('forgotPasswordController', function($scope, $http, Load) {
+    App.controller('forgotPasswordController', function($scope, $http, Load){
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
             if (email === undefined){
                 email = '';
             }
-            to_send = {email: email, user_name: user_name}
+            to_send = {email: email, user_name: user_name};
             console.log(to_send);
             $http.post('/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
             .success(function(data) {
@@ -352,7 +351,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $http.post('/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
-                    console.log(data)
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
                     $scope.user_name = data.data;
@@ -375,6 +373,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //changing password
     App.controller('changePasswordController', function($scope, $http, Load) {
+    Load.then(function(){    
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
@@ -397,7 +396,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.changeFailed = true;
                 $scope.passwordChanged = false;
             });              
-        } 
+        }
+    });
     });
 
 //the registration page
@@ -490,30 +490,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //skip payment page right now
         $scope.submitPayment = function(){
         };
-        
     });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http, $rootScope) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, Load) {
+        Load.then(function(){
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
-        $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                }
-                else
-                    console.log('ERROR: '+data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            }); 
+        $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
             $('#status').val("");
             if ($rootScope.me){
                 $rootScope.me.status = status;
             }
         }
-        
         $scope.clearStatus = function(){
             var status = "";
             var to_send = {'status': status};
@@ -559,11 +548,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
               return text === "Show Hidden" ? "Hide Hidden" : "Show Hidden";
           })
        });
-        
+       }); 
 	});
 
 //the add members page
-    App.controller('managemembersController', function($scope, $http, $rootScope) {
+    App.controller('managemembersController', function($scope, $http, $rootScope, Load) {
+        Load.then(function(){
         //#FIXME When I refresh on the manage members page it shows your account, when I click into it though it does not.
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
@@ -832,6 +822,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
                 }
         });
+        });
     });
 
 //new member page
@@ -866,7 +857,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
     });
 
-    App.controller('managealumniController', function($scope, $http, $rootScope){
+    App.controller('managealumniController', function($scope, $http, $rootScope, Load){
+        Load.then(function(){
          var formObject = document.getElementById('uploadMembers');
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
@@ -966,10 +958,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                }
 //            }
         }
-        
+       }); 
     });
 
-    App.controller('addAlumniController', function($scope, $http){
+    App.controller('addAlumniController', function($scope, $http, Load){
+        Load.then(function(){
         var newmemberList = [];
         //initialize a filecontents variable
         var filecontents;
@@ -1087,6 +1080,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.adds = newmemberList;
             }
         };
+    });
     });
 
 //new member info page

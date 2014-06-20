@@ -44,7 +44,7 @@
 			</div>
             <p ng-show="(registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
         <span class="form-control-feedback" ng-show="available" class="help-block">That will work!</span>
-        <span class="form-control-feedback" ng-show="unavailable" class="help-block">That user name is already taken!</span>
+        <span class="form-control-feedback" ng-show="unavailable" class="help-block">This user name too short or already taken (5 + characters required)</span>
         </div>
         
 <!--
