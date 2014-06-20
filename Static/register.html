@@ -4,12 +4,12 @@
 
 
 <div class="container">
-		<form id="registerForm" name="registerForm" method="get" action="/#/registerinfo" class="form-horizontal" role="form" novalidate>
+		<form id="registerForm" name="registerForm" ng-submit="continue(registerForm.$valid, data)" class="form-horizontal" role="form" novalidate>
 		
 		<div class="form-group" ng-class="{ 'has-error' : registerForm.org_name.$invalid && !registerForm.org_name.$pristine }">
 			<label for="orgName" class="col-sm-2 control-label">Organization Name</label>
 			<div class="col-sm-10">
-			  <input type="text" class="form-control" id="orgName" name="org_name" ng-model="item.org_name" placeholder="Greek Organization" required>
+			  <input type="text" class="form-control" id="orgName" name="org_name" ng-model="data.name" placeholder="Greek Organization" required>
 			</div>
 			<p ng-show="registerForm.org_name.$invalid && !registerForm.org_name.$pristine" class="help-block">An organization name is required.</p>
 		</div>
@@ -17,7 +17,7 @@
         <div class="form-group" ng-class="{ 'has-error' : registerForm.school_name.$invalid && !registerForm.school_name.$pristine }">
 			<label for="schoolName" class="col-sm-2 control-label">School Name</label>
 			<div class="col-sm-10">
-			  <input type="text" class="form-control" id="schoolName" name="school_name" ng-model="item.school_name" placeholder="Texas A&M" required>
+			  <input type="text" class="form-control" id="schoolName" name="school_name" ng-model="data.school" placeholder="Texas A&M" required>
 			</div>
             <p ng-show="registerForm.school_name.$invalid && !registerForm.school_name.$pristine" class="help-block">Your school name is required.</p>
         </div>
@@ -25,9 +25,9 @@
         <div class="form-group" ng-class="{ 'has-error' : registerForm.org_type.$invalid && !registerForm.org_type.$pristine }">
 			<label for="orgType" class="col-sm-2 control-label">Organization Type</label>
 			<div class="col-sm-10" id="orgType">
-			  <input type="radio" id="orgType1" name="org_type" ng-model="item.org_type" value="sorority" required><label for="orgType1">Sorority</label><br>
-			  <input type="radio" id="orgType2" name="org_type" ng-model="item.org_type" value="fraternity"><label for="orgType2">Fraternity</label><br>
-			  <input type="radio" id="orgType3" name="org_type" ng-model="item.org_type" value="coed"><label for="orgType3">Coed</label>
+			  <input type="radio" id="orgType1" name="org_type" ng-model="data.type" value="sorority" required><label for="orgType1">Sorority</label><br>
+			  <input type="radio" id="orgType2" name="org_type" ng-model="data.type" value="fraternity"><label for="orgType2">Fraternity</label><br>
+			  <input type="radio" id="orgType3" name="org_type" ng-model="data.type" value="coed"><label for="orgType3">Coed</label>
 			</div>
             <p ng-show="registerForm.org_type.$invalid && !registerForm.org_type.$pristine" class="help-block">Please select an organization type.</p>
         </div>

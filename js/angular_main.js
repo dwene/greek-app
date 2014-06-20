@@ -394,34 +394,44 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
                 $scope.changeFailed = true;
                 $scope.passwordChanged = false;
-            });            
-            
-        }
-        
+            });              
+        } 
     });
 
 //the registration page
-    App.controller('registerController', function($scope, $http, $rootScope) {
+    App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService) {
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
-        $.removeCookie('FORM_INFO_EMPTY')
+        $.removeCookie('FORM_INFO_EMPTY');
         $rootScope.directory = {};
         $rootScope.loading = false;
         $rootScope.users = {};
+        $scope.data = {};
+        $scope.continue = function(isValid, data){
+            $scope.error = false;
+            if(isValid){
+                registerOrganizationService.set(data);
+                window.location.assign('#/registerinfo');
+            }
+            else{
+                $scope.error = true;
+            }
+        }
         //this page passes parameters through a get method to register info
     });
 
 //the register info page
-    App.controller('registerinfoController', function($scope, $http) {
-    
+    App.controller('registerinfoController', function($scope, $http, registerOrganizationService) {
+        if (registerOrganizationService.get() === undefined){
+            window.location.assign('#/register');
+        }
         //ng-submit on form submit button click
         $scope.registerinfoClick = function(item, isValid){
             
         if(isValid){
-            
-            //define organization based on parameters passed from registration page
-                var organization = {name: getParameterByName('org_name'), school: getParameterByName('org_school'), type:getParameterByName('org_type')}
+                
+            var organization = registerOrganizationService.get();
                 //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
     //            if(organization.name === null || organization.school === null || organization.type === null){
     //                window.location.assign("/#/register");
@@ -438,6 +448,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(PERMS, responseData.perms);
                         $.cookie("USER_NAME", data_tosend.user.user_name);
                         window.location.assign("/#/app/managemembers/add");
+                        $rootScope.refresh();
                     }
                     else
                         console.log('ERROR: '+data);
@@ -799,9 +810,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $(this).removeClass('label-primary').addClass('label-default');
                     $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
                 }
-            
         });
-        
     });
 
 //new member page
@@ -2512,6 +2521,21 @@ App.factory('getEvents', function($http, $rootScope){
             console.log('Error: ' + data);
         });
 });
+
+
+App.factory('registerOrganizationService', function(){
+    var data = undefined;
+
+    return {
+        get: function () {
+            return data;
+        },
+        set: function (_data) {
+            data = _data;
+        }
+    };
+});
+
 App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
     var defer = $q.defer();
     console.log("Loading Data")
