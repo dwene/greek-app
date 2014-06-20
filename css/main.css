@@ -12,6 +12,9 @@ body.modal-open{margin-right:0px;}
     nav.navbar{position:fixed; top:0px; width:100%;}
     #mainSection, #loadingScreen{margin-top:82px;}
 }
+.leftButton{position:absolute; left:30px; top:10px;}
+.rightButton{position:absolute; right:30px; top:10px;}
+.container{position:relative;}
 /*Nav Pills*/
 @media screen and (max-width:768px){
 .nav-pills{font-size:12px;}
