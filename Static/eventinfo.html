@@ -13,27 +13,27 @@
 		</div>
 		
 
-    <p>Start: {{event.time_start}}</p>
-    <p>End: {{event.time_end}}</p>
+    <p>Start: {{event.time_start | date:'EEEE MMM d, y h:mm a'}}</p>
+    <p>End: {{event.time_end | date:'EEEE MMM d, y h:mm a'}}}}</p>
     <p>Desciption: {{event.description}}</p>
 
     
     <h3 class="page-header">Going</h3>
     <ul>
-        <li class="well well-sm" ng-repeat="person in event.going_list">
-            <span class="messagePerson label label-primary">{{person.first_name}} {{person.last_name}}</span>
+        <li class="well well-sm" >
+            <span class="messagePerson label label-primary" ng-repeat="person in event.going_list">{{person.first_name}} {{person.last_name}}</span>
         </li>
     </ul>
     <h3 class="page-header">Not Going</h3>
     <ul>
-        <li class="well well-sm" ng-repeat="person in event.not_going_list">
-            <span class="messagePerson label label-primary">{{person.first_name}} {{person.last_name}}</span>
+        <li class="well well-sm">
+            <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list">{{person.first_name}} {{person.last_name}}</span>
         </li>
     </ul>
     <h3 class="page-header">Invited</h3>
     <ul>
-        <li class="well well-sm" ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">
-                <span class="messagePerson label label-primary">{{member.first_name}} {{member.last_name}}</span>
+        <li class="well well-sm">
+                <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
         </li>
     </ul>
 </div>
