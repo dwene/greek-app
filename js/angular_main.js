@@ -246,7 +246,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         });
         
-        
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
@@ -414,7 +413,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the register info page
-    App.controller('registerinfoController', function($scope, $http, Load) {
+    App.controller('registerinfoController', function($scope, $http) {
     
         //ng-submit on form submit button click
         $scope.registerinfoClick = function(item, isValid){
@@ -438,7 +437,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(TOKEN,  responseData.token);
                         $.cookie(PERMS, responseData.perms);
                         $.cookie("USER_NAME", data_tosend.user.user_name);
-                        $scope.loadData();
                         window.location.assign("/#/app/managemembers/add");
                     }
                     else
@@ -1785,7 +1783,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#messageModal').modal();
             $scope.selectedMessage = message;
         }
-        
     });
     });
 
@@ -2454,14 +2451,14 @@ App.factory('directoryService', function($rootScope, $http) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var directory = JSON.parse(data.data)
+                    var directory = JSON.parse(data.data);
                     $rootScope.directory = directory;
                     $rootScope.loading = false;
                     return $rootScope.directory;
                 }
                 else
                 {
-                    console.log("error: "+ data.error)
+                    console.log("error: "+ data.error);
                 }
             })
             .error(function(data) {
@@ -2477,7 +2474,7 @@ App.factory('directoryService', function($rootScope, $http) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error)
+                    console.log("error: "+ data.error);
                 }
             })
             .error(function(data) {
@@ -2572,7 +2569,6 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
             
           return deferred.promise;
         }
-        
             $rootScope.loading = true;
             executePosts().then(function() {
                 for (var i = 0; i< $rootScope.directory.members.length; i++){
