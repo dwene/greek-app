@@ -9,16 +9,15 @@
 
 
 <section class="container">
-    
-    <ul id="messagingTags">
-        <div ng-repeat="type in tags">
-            <div class="btn-group" ng-repeat="tag in type">
-                <label class="label label-default checkLabel">
-                    <i class="fa fa-square-o checkStatus"></i>
-                <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
-                </label>
-            </div>
+    <ul id="eventTags">
+       <div ng-repeat = "type in tags">
+        <div class="btn-group" ng-repeat="tag in type">
+            <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
+            <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
+            <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
+            </label>
         </div>
+       </div>
     </ul>
     
     <div id="messageList" class="well">

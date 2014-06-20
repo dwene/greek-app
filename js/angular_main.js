@@ -256,7 +256,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $rootScope.loading = false;
                 $rootScope.users = {};
                 window.location.assign("/#/login");
-         }
+        }
     });
 
 //home page
@@ -309,7 +309,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         };
-
         $scope.forgotPassword = function(){
         window.location.assign('/#/forgotpassword'); 
         }
@@ -429,11 +428,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     //                window.location.assign("/#/register");
     //            }
                 //format data for the api
-                console.log(item);
                 data_tosend = {organization: organization, user: item}
-                
-                console.log(packageForSending(data_tosend));
-                
                 //send the organization and user date from registration pages
                 $http.post('/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
                 .success(function(data){
@@ -451,16 +446,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
-                });
-                
+                });  
         }
             else{
             //for validation purposes
             $scope.submitted = true;
             }
-        
         };
-    
 	});
 
 //the payment page
@@ -493,7 +485,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.clearStatus = function(){
-            
             var status = "";
             var to_send = {'status': status};
             $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
@@ -543,9 +534,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the add members page
     App.controller('managemembersController', function($scope, $http, $rootScope) {
-        
         //#FIXME When I refresh on the manage members page it shows your account, when I click into it though it does not.
-        
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
 
@@ -674,7 +663,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         }
-        
         function assignAngularViewModels(members){
 //            for(var i = 0; i< members.length; i++){
 //                if (members[i].user_name == $.cookie(USER_NAME)){
@@ -1798,27 +1786,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.selectedMessage = message;
         }
         
-        
-        //onclick checkmark tag
-        $('#messagingTags').on('click', '.checkLabel', function(){
-            
-            var checkbox = $(this).find(':checkbox');
-                        
-                if ( checkbox.prop('checked') )
-                {
-                    $(this).addClass('label-primary').removeClass('label-default');
-                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
-                }
-                else
-                {
-                    $(this).removeClass('label-primary').addClass('label-default');
-                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-                }
-            
-        });
-        
-
-        
     });
     });
 
@@ -1849,13 +1816,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
 
             $scope.addEvent = function(isValid, event){
-                    console.log($scope.tags);
+                if(isValid){
                     event.tags = getCheckedTags($scope.tags);
-                    console.log(event.tags);
-            if(isValid){
-                    console.log($scope.tags);
-                    event.tags = getCheckedTags($scope.tags);
-                    console.log(event.tags);
                     $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
@@ -2001,11 +1963,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
             function LoadEvents(){
                 var requestDefer = $q.defer();
+                
                 $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             var events = JSON.parse(data.data);
                             $rootScope.events = events;
+                            console.log("loading events");
                         }
                         else{
                             console.log('ERROR: '+data);
@@ -2101,6 +2065,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         if (!checkResponseErrors(data)){
                             var events = JSON.parse(data.data);
                             $rootScope.events = events;
+                            console.log("loading events");
                         }
                         else{
                             console.log('ERROR: '+data);
@@ -2285,8 +2250,7 @@ function getCheckedTags(tags){
     }
     for (var i = 0; i < tags.permsTags.length; i++){
         if (tags.permsTags[i].checked){
-            else{
-            perms_tags.push(tags.permsTags[i].name.toLowerCase());}
+            perms_tags.push(tags.permsTags[i].name.toLowerCase());
         }
     }
     return {org_tags: org_tags, event_tags: event_tags, perms_tags: perms_tags};
@@ -2429,10 +2393,8 @@ App.filter('multipleSearch', function(){
 App.filter('tagDirectorySearch', function(){ 
     return function (objects, tags) {
         if (!tags){return null;}
-        console.log("I have tags");
             var tags_list = []
         if (tags.organizationTags){
-            console.log("I have organization Tags!")
             for (var i = 0; i < tags.organizationTags.length; i++){
                 if (tags.organizationTags[i].checked){
                     tags_list.push(tags.organizationTags[i].name);
@@ -2440,7 +2402,6 @@ App.filter('tagDirectorySearch', function(){
             }
         }
         if (tags.permsTags){
-            console.log("I have perms Tags!")
             for (var j = 0; j < tags.permsTags.length; j++){
                 if (tags.permsTags[j].checked){
                     if (tags.permsTags[j].name == "Everyone"){
