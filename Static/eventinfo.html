@@ -10,6 +10,25 @@
 <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default rightButton"><i class="fa fa-edit"></i> Edit</button>
 			
 			<h1 class="text-center">{{event.title}}</h1>
+
+        <form class="inline-form">
+        <div class="form-group">
+        <span>Are you going?
+         <label for="yesGoing">
+        <input type="radio" id="yesGoing" ng-model="going" name="going" value="yes">
+        </label>
+        <label for="notGoing">
+        <input type="radio" id="notGoing" ng-model="going" name="going" value="no">
+        </label>
+        <div class="btn-group btn-group-lg">
+        <button class="btn btn-default" ng-class=" 'btn-primary' : going, 'btn-default' : notgoing " ng-click="">Yes</button>
+        <button class="btn btn-default" ng-click=" 'btn-default' : going,  'btn-primary' : notgoing ">No</button>
+
+        </div>
+        </span>
+        </div>
+        </form>
+			
 		</div>
 		
 
