@@ -1838,7 +1838,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 else{
                     $scope.submitted = true;
                 }
-
             }
             $scope.checkTagAvailability = function(tag){
                 $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
@@ -1856,23 +1855,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         console.log('Error: ' + data);
                     });
             }
-
-                    $('.eventTags').on('click', '.checkLabel', function(){
-
-                var checkbox = $(this).find(':checkbox');
-
-                    if ( checkbox.prop('checked') )
-                    {
-                        $(this).addClass('label-primary').removeClass('label-default');
-                        $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
-                    }
-                    else
-                    {
-                        $(this).removeClass('label-primary').addClass('label-default');
-                        $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-                    }
-
-            });
         });
 
     });

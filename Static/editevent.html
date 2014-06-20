@@ -14,12 +14,16 @@
         <div class="btn-group" ng-repeat="tag in type">
             <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
             <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
-            <input type="checkbox" ng-model="tag.checked"> <li>{{tag.name}}</li>
+            <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
             </label>
         </div>
         </div>
     </ul>
-    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
+    
+    <div id="messageList" class="well">
+        <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
+    </div>
+<!--    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>-->
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
         <label for="title" class="col-sm-2 control-label">Title</label>
