@@ -182,7 +182,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.editEvent',{
                     url : '/events/:tag/edit',
                     templateUrl : 'Static/editevent.html',
-                    controller : 'eventInfoController'
+                    controller : 'editEventsController'
                 
                 })
     });
@@ -1206,13 +1206,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 $scope.directory = [];
                 if (council.length > 0){
-                    $scope.directory.push({name: 'Council', data: council});             
+                    $scope.directory.push({name: 'council', data: council});             
                 }
                 if (leadership.length > 0){
-                    $scope.directory.push({name: 'Leadership', data: leadership});               
+                    $scope.directory.push({name: 'leadership', data: leadership});               
                 }
                 if (members.length > 0){
-                    $scope.directory.push({name: 'Members', data: members});          
+                    $scope.directory.push({name: 'member', data: members});          
                 }
             }
         }
@@ -2038,9 +2038,121 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 event.not_going_list.push(getUsersFromKey(event.not_going[i]));
             }
             $scope.event = event;
-            $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY HH:MM A');
-            $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY HH:MM A');  
+            $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
+            $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             console.log($scope.event.time_end);
+            $scope.loading = false;
+        }
+    $scope.editEvent = function(){
+        window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
+        $scope.event = undefined;
+    }
+	});
+    
+    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+        Load.then(function(){
+        $scope.tags = arrangeTagData($rootScope.tags);
+        var event_tag = $stateParams.tag;
+        if (!$rootScope.events){
+            $scope.loading = true;
+            tryLoadEvent();
+        }
+        else{
+            var events = $rootScope.events;
+            var event = undefined;
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == $stateParams.tag){
+                    event = events[i];
+                    console.log(event);
+                    break;
+                }
+            }
+            if (event === undefined){
+                setTimeout(function(){tryLoadEvent()}, 500);
+            }
+            else{
+                getEventAndSetInfo(event);
+            }  
+        }
+        
+	   });
+        function tryLoadEvent(){
+            LoadEvents().then(function(){
+            var events = $rootScope.events;
+            var event = undefined;
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == $stateParams.tag){
+                    event = events[i];
+                    console.log(event);
+                    break;
+                }
+            }
+            if (event === undefined){
+                setTimeout(function(){tryLoadEvent()}, 500);
+            }
+            else{
+                getEventAndSetInfo(event);
+            }
+            });
+            function LoadEvents(){
+                var requestDefer = $q.defer();
+                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            var events = JSON.parse(data.data);
+                            $rootScope.events = events;
+                        }
+                        else{
+                            console.log('ERROR: '+data);
+                        }
+                        requestDefer.resolve();
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                        requestDefer.resolve();
+                    });
+                return requestDefer.promise;
+                }
+        }   
+    function getEventAndSetInfo(event){
+            function getUsersFromKey(key){
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    console.log($rootScope.directory.members[i].key);
+                    if ($rootScope.directory.members[i].key == key){
+                        return $rootScope.directory.members[i];
+                    }
+                }
+                return null;
+            }
+            event.going_list = []
+            event.not_going_list = []
+            for (var i = 0; i < event.going.length; i++){
+                event.going_list.push(getUsersFromKey(event.going[i]));
+            }
+            for (var i = 0; i < event.not_going.length; i++){
+                event.not_going_list.push(getUsersFromKey(event.not_going[i]));
+            }
+            $scope.event = event;
+            $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
+            $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
+            console.log($scope.event.time_end);
+        
+            for (var i = 0; i < $scope.tags.organizationTags.length; i++){
+                for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
+                    if ($scope.event.tags.org_tags[j] == $scope.tags.organizationTags[i].name){
+                        $scope.tags.organizationTags[i].checked = true;
+                    }
+                }
+            }
+            for (var i = 0; i < $scope.tags.permsTags.length; i++){
+                for (var j = 0; j < $scope.event.tags.perms_tags.length; j++){
+                    if ($scope.event.tags.perms_tags[j] == $scope.tags.permsTags[i].name.toLowerCase()){
+                        $scope.tags.permsTags[i].checked = true;
+                    }
+                }
+            }
+            console.log($scope.tags);
+            console.log($scope.event.tags);
             $scope.loading = false;
         }
     $scope.submitEdits = function(isValid){
@@ -2049,6 +2161,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var to_send = JSON.parse(JSON.stringify($scope.event));
             to_send.time_end = $scope.time_end;
             to_send.time_start = $scope.time_start;
+            to_send.tags = getCheckedTags($scope.tags);
+            console.log(to_send.tags);
         $http.post('/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
@@ -2063,10 +2177,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         }
-    }
-    $scope.editEvent = function(){
-        window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
-        $scope.event = undefined;
     }
 	});
 
@@ -2175,13 +2285,8 @@ function getCheckedTags(tags){
     }
     for (var i = 0; i < tags.permsTags.length; i++){
         if (tags.permsTags[i].checked){
-            if(tags.permsTags[i].name == "Everyone"){
-               perms_tags.push(COUNCIL);
-                perms_tags.push(LEADERSHIP);
-                perms_tags.push(MEMBER);
-            }
             else{
-            perms_tags.push(tags.permsTags[i].name);}
+            perms_tags.push(tags.permsTags[i].name.toLowerCase());}
         }
     }
     return {org_tags: org_tags, event_tags: event_tags, perms_tags: perms_tags};
@@ -2505,7 +2610,6 @@ App.factory('getEvents', function($http, $rootScope){
             if (!checkResponseErrors(data)){
                 var events = JSON.parse(data.data);
                 $rootScope.events = events;
-                $rootScope.event = undefined;
             }
             else{
                 console.log('ERROR: '+data);

@@ -1261,11 +1261,11 @@ class RESTApi(remote.Service):
         event_tag = request_data["tag"]
         event = Event.query(ndb.AND(Event.tag == event_tag, Event.organization == request_user.organization)).get()
         for key, value in request_data.iteritems():
-            # if key == "time_start":
-            #     event.time_start = value
-            # elif key == "time_end":
-            #     event.time_end = value
-            if key == "title":
+            if key == "time_start":
+                event.time_start = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
+            elif key == "time_end":
+                event.time_end = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
+            elif key == "title":
                 event.title = value
             elif key == "description":
                 event.description = value
