@@ -21,7 +21,8 @@
     </ul>
 
     <div id="messageList" class="well">
-    <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>
+        <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.directory.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>
+        <span ng-hide="selectedMembers.length">No one is selected.</span>
     </div>
 
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
