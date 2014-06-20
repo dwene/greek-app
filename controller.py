@@ -1226,9 +1226,9 @@ class RESTApi(remote.Service):
                       http_method='POST', name='event.get_events')
     def get_events(self, request):
         request_user = get_user(request.user_name, request.token)
-        if not request_user.length > 0:
+        if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if request_user.tags:
+        if request_user.tags.length > 0:
             events = Event.query(ndb.AND(Event.organization == request_user.organization,
                                      ndb.OR(Event.org_tags.IN(request_user.tags),
                                             Event.perms_tags == request_user.perms,
