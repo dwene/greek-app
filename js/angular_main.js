@@ -1537,6 +1537,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.submitted = true;
             }
         }
+        
+        $scope.$watch('item.tag', function() {
+                $scope.item.tag = $scope.item.tag.replace(/\s+/g,'');
+        });
+        
         //onclick checkmark tag
         $('.memberTags').on('click', '.checkLabel', function(){
             
@@ -1837,6 +1842,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             $scope.checkTagAvailability = function(tag){
+                
+                if (tag = ""){
+                    $scope.isEmpty = true;
+                }
+                else{
+                    $scope.isEmpty = false;
                 $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
@@ -1851,6 +1862,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     .error(function(data) {
                         console.log('Error: ' + data);
                     });
+                }
             }
         });
 

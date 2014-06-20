@@ -4,7 +4,7 @@
 <div ng-hide="loading" class="container">
 
  <button onclick="window.location.assign('#/app/events')" class="btn btn-default"><i class="fa fa-reply"></i> Back</button>
-            <button ng-click="editEvent()" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
+            <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
 		
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
