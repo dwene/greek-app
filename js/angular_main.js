@@ -1848,7 +1848,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else{
                     $scope.isEmpty = false;
-                $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
+                    $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             $scope.available = true;
