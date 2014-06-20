@@ -7,7 +7,7 @@
     <div class="profilepic" style="background-image:url({{prof_pic}});" >
     <!--    <img ng-src = "{{prof_pic}}" style = "width: 200px;">-->
     </div>    
-    <div class="row"><span class="status">{{status}}</span></div>
+    <div class="row" ng-show="status.length"><span class="status">{{status}}</span></div>
     <div class="row"><h1>{{firstName}} {{lastName}}</h1></div>
     <div class="row">Birthday: {{birthday}}</div>
     <div class="row">Phone: <a href="tel:{{phone}}">{{phone}}</a></div>
