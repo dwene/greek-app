@@ -17,16 +17,16 @@
         </ul>
 -->
        
-        <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
+        <ul >
 
-            <li class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
+            <li ng-repeat="member in users | orderBy:'rsvp'" class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
             
                 <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
 
                 <div class="directoryContent">
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
-                <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
+                <span ng-show="member.attendance_data">In: {{member.attendance_data.time_in}}  Out: {{member.attendance_data.time_out}}</span>
+                <button class="btn btn-default" ng-click = "checkIn(member)">Check In</button><button class="btn btn-default" ng-click = "checkOut(member)">Check Out</button>
                 </div>
             
             <button ng-click="checkIn(member)" class="btn btn-lg btn-success"><i class="fa fa-key"></i></button>

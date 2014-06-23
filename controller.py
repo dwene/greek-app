@@ -150,6 +150,8 @@ class DateEncoder(json.JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, ndb.Key):
             return obj.urlsafe()
+        elif isinstance(obj, ndb.BlobKey):
+            return images.get_serving_url(obj, secure_url=True)
         else:
             return json.JSONEncoder.default(self, obj)
 
@@ -1313,11 +1315,35 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_tag = json.loads(request.data)
         event_key = Event.query(Event.tag == event_tag).get().key
-        attendance_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key)).fetch()
+        users_future = User.query(User.organization == request_user.organization).fetch_async()
+        attendance_data_future = AttendanceData.query(ndb.AND(AttendanceData.event == event_key)).fetch_async()
+        event_future = Event.query(Event.tag == event_tag).get_async()
+        users = users_future.get_result()
+        attendance_data = attendance_data_future.get_result()
+        event = event_future.get_result()
         data_list = []
-        for att in attendance_data:
-            att_dict = att.to_dict()
-            data_list.append(att_dict)
+        for user in users:
+            user_dict = user.to_dict()
+            user_dict["key"] = user.key
+            if user.key in event.going:
+                user_dict["rsvp"] = 'going'
+            elif user.key in event.not_going:
+                user_dict["rsvp"] = 'not_going'
+            else:
+                user_dict["rsvp"] = 'unknown'
+            for att in attendance_data:
+                if att.user == user.key:
+                    user_dict["attendance_data"] = att.to_dict()
+            data_list.append(user_dict)
+        # for att in attendance_data:
+        #     att_dict = att.to_dict()
+        #     for user in users:
+        #         if user.key == att.user:
+        #             att_dict["user"] = user.to_dict()
+        #             if user.key in event.going:
+        #                 att_dict["going"] = True
+        #             elif user.key in event.not_going:
+
         return OutgoingMessage(error='', data=json_dump(data_list))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_in',
