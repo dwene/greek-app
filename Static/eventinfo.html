@@ -15,21 +15,13 @@
         <form class="inline-form">
         <div class="form-group">
         <span>Are you going?
-         <label for="yesGoing">
-        <input type="radio" id="yesGoing" ng-model="going" name="going">
-        </label>
-        <label for="notGoing">
-        <input type="radio" id="notGoing" ng-model="not_going" name="not_going">
-        </label>
         <div class="btn-group btn-group-lg">
-        <button class="btn btn-primary" ng-class=" 'btn-primary' : going, 'btn-default' : not_going " ng-click="rsvp(true)">Yes</button>
-        <button class="btn btn-default" ng-class=" 'btn-default' : going,  'btn-primary' : not_going " ng-click="rsvp(false)">No</button>
-            Going: {{going}}, Not Going: {{not_going}}
+        <button class="btn btn-primary" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
+        <button class="btn btn-default" ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>
         </div>
         </span>
         </div>
         </form>
-			
 		</div>
 		
 
