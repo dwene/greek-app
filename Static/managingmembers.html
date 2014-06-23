@@ -4,12 +4,11 @@
     <input id="manageMembersSearch" class="form-control" type="search" ng-model="search" placeholder="Search Members">
     </div>
     <button ng-click="openConvertMembersModal()" class="btn btn-default">Convert To Alumni</button>
-    <button ng-click="openDeleteMembersModal()" class="btn btn-default">Delete Members</button>
     </div>
 
-    <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
+    <ul>
 
-        <li ng-hide="member.user_name == $root.me.user_name">
+        <li ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search" ng-hide="member.user_name == $root.me.user_name">
             
             
             <div class="btn-group">
@@ -29,6 +28,9 @@
                     <option value="leadership">leadership</option>
                 </select>
             </form>
+            
+            <button ng-click="openDeleteMemberModal()" class="btn btn-danger btn-sm trash"><i class="fa fa-trash-o"></i></button>
+
 
         </li>
 
