@@ -4,13 +4,11 @@
     <input id="manageMembersSearch" class="form-control" type="search" ng-model="search" placeholder="Search Members">
     </div>
     <button ng-click="openConvertMembersModal()" class="btn btn-default">Convert To Alumni</button>
-    <button ng-click="openDeleteMembersModal()" class="btn btn-default">Delete Members</button>
+    <button ng-click="openDeleteMemberModal()" class="btn btn-default">Delete Members</button>
     </div>
-
     <ul ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search">
 
         <li ng-hide="member.user_name == $root.me.user_name">
-            
             
             <div class="btn-group">
                 <label class="label label-default checkLabel">
@@ -18,7 +16,6 @@
                         <input type="checkbox" ng-model="selectedMembers[member.key]">{{ member.first_name }} {{ member.last_name }}
                 </label>
             </div>
-            
             
 <!--            <button ng-click="openDeleteMemberModal(member)">Delete Member</button>-->
 <!--            <input type="checkbox" ng-model="selectedMembers[member.key]">-->
@@ -68,6 +65,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Are you sure you want to convert these members to alumni?</h4>
+        <div ng-repeat="member in selectedMembers">{{member.first_name}} {{member.last_name}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

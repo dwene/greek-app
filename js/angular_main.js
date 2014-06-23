@@ -2013,10 +2013,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.going = false;
                 }
             }
+            $scope.creator = getUsersFromKey(event.creator);
             $scope.event = event;
             $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
             $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
-            console.log($scope.event.time_end);
             $scope.loading = false;
         }
         $scope.editEvent = function(){
