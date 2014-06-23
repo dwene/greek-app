@@ -110,7 +110,6 @@ textarea.form-control{height:auto; max-width:100%;}
 #statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
 #statusContainer .close{margin-top:-3px;}
 .currentStatus{font-style:italic;}
-.currentStatus:before, .currentStatus:after{content:'"';}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
@@ -123,7 +122,6 @@ textarea.form-control{height:auto; max-width:100%;}
 .notificationContent .close{font-size:12px; top:-10px; position:relative; z-index:100;}
 .notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-15px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
-.notificationType:before, .notificationType:after{content:'"';}
 .notificationSender{font-size:12px; font-style:italic; text-align:right;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
@@ -147,6 +145,13 @@ textarea.form-control{height:auto; max-width:100%;}
 #eventTags .btn-group .checkLabel{margin:0 2px;}
 
 /*Edit Event Page*/
+
+/*Check In Page*/
+.checkin{border-top:1px solid #777; padding:10px;}
+.checkin:last-child{border-bottom:1px solid #777;}
+/*makes room for the picture*/ .checkinContent{margin-left:60px; margin-right:100px; min-height:60px;}
+.checkinContent .btn-group{position:absolute; right:20px; top:50%; margin-top:-23px;}
+.checkinContent .memberName{font-size:18px;}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
