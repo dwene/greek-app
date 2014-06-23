@@ -1995,10 +1995,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
             event.going_list = []
             event.not_going_list = []
             for (var i = 0; i < event.going.length; i++){
-                event.going_list.push(getUsersFromKey(event.going[i]));
+                var user_push = getUsersFromKey(event.going[i])
+                event.going_list.push(user_push);
+                console.log(user_push.user_name);
+                console.log($rootScope.me.user_name);
+                if (user_push.user_name == $rootScope.me.user_name){
+                    $scope.going = true;
+                    $scope.not_going = false;
+                }
             }
             for (var i = 0; i < event.not_going.length; i++){
-                event.not_going_list.push(getUsersFromKey(event.not_going[i]));
+                var user_push = getUsersFromKey(event.not_going[i])
+                event.not_going_list.push(user_push);
+                if (user_push.user_name == $rootScope.me.user_name){
+                    $scope.not_going = true;
+                    $scope.going = false;
+                }
             }
             $scope.event = event;
             $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
@@ -2009,6 +2021,37 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.editEvent = function(){
             window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
             $scope.event = undefined;
+        }
+        $scope.rsvp = function(rsvp){
+            console.log($scope.event.key);
+            var to_send = {key: $scope.event.key};
+            console.log("what is going on");
+            if (rsvp){
+                to_send.rsvp = 'going';
+            }
+            else{
+                to_send.rsvp = 'not_going';
+            }
+            to_send.key = $scope.event.key;
+            $http.post('/_ah/api/netegreek/v1/event/rsvp', packageForSending(to_send))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            if (rsvp){
+                                $scope.going = true;
+                                $scope.not_going = false;
+                            }
+                            else{
+                                $scope.going = false;
+                                $scope.not_going = true;
+                            }
+                        }
+                        else{
+                            console.log('ERROR: '+data);
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                    });
         }
 	});
     

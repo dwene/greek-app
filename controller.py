@@ -1248,6 +1248,7 @@ class RESTApi(remote.Service):
         for event in events:
             dict_event = event.to_dict()
             dict_event["tags"] = {"org_tags": event.org_tags, "perms_tags": event.perms_tags}
+            dict_event["key"] = event.key
             out_events.append(dict_event)
 
         return OutgoingMessage(error='', data=json_dump(out_events))
