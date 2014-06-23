@@ -2197,8 +2197,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         }
-        $scope.checkIn = function(member, checkStatus){
-            if(checkStatus && member.attendance_data.time_in){
+        $scope.checkIn = function(member, checkStatus){ //#TODO: fix controller so we can check in more than once
+            if(checkStatus && member.attendance_data && member.attendance_data.time_in){
                 $('#checkInModal').modal();
                 $scope.selectedUser = member;
                 return;
@@ -2219,7 +2219,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
         $scope.checkOut = function(member, checkStatus){
-            if(checkStatus && member.attendance_data.time_out){
+            if(checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in){
                 $('#checkOutModal').modal();
                 $scope.selectedUser = member;
                 return;
