@@ -1,9 +1,10 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#TODO get it to where you can see all messages after they're hidden
-//Final\static variables. These variables are used for cookies
+
 //#TODO form validation on messaging with checkboxes
 //#TODO: add validation for the newmemberinfo page
-//#TODO: fix check username tags in newmemberinfo and registerinfo pages
+
+//Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -229,6 +230,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $rootScope.notification_count = count;
         }
+        
+        $rootScope.OK = true;
     });
 
 //navigation header
