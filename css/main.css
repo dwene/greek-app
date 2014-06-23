@@ -33,6 +33,9 @@ body.modal-open{margin-right:0px;}
 #messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 
+/*Edit Event Page*/
+
+
 /*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
 #addmemberForm button{float:right; margin-right:15px;}
@@ -123,7 +126,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .notification{border-top:1px solid #777;}
 .notification:last-child{border-bottom:1px solid #777;}
 .notificationContent{padding:20px 10px;}
-.notificationContent .close{font-size:12px; position:relative; z-index:100;}
+.notificationContent .close{font-size:12px; top:-10px; position:relative; z-index:100;}
 .notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-15px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
 .notificationType:before, .notificationType:after{content:'"';}
