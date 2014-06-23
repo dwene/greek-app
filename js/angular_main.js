@@ -708,7 +708,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         onPageLoad();
         
         $scope.removeMember = function(user){
-            $('#deleteTagModal').modal('hide')
+            $('#deleteTagModal').modal('hide');
             $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
             .success(function(data){
                 if (!checkResponseErrors(data))
