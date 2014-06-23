@@ -24,15 +24,12 @@
                 <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
 
                 <div class="directoryContent">
-                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-                <span ng-show="member.attendance_data">In: {{member.attendance_data.time_in}}  Out: {{member.attendance_data.time_out}}</span>
-                <button class="btn btn-default" ng-click = "checkIn(member)">Check In</button><button class="btn btn-default" ng-click = "checkOut(member)">Check Out</button>
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span><br>
+                <span ng-show="member.attendance_data">In: {{member.attendance_data.time_in}}  Out: {{member.attendance_data.time_out}}</span><br>
+                <button class="btn btn-lg btn-success" ng-click="checkIn(member)"><i class="fa fa-key"></i></button><button class="btn btn-lg btn-danger" ng-click="checkOut(member)"><i class="fa fa-leaf"></i></button>
                 </div>
-            
-            <button ng-click="checkIn(member)" class="btn btn-lg btn-success"><i class="fa fa-key"></i></button>
-            <button ng-click="checkOut(member)" class="btn btn-lg btn-danger"><i class="fa fa-leaf"></i></button>
-            
-            </li>
+
+                </li>
         </ul>
        
 </div>
