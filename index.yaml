@@ -1,0 +1,16 @@
+indexes:
+
+- kind: Event
+  properties:
+  - name: organization
+  - name: perms_tags
+  - name: time_start
+    direction: desc
+
+- kind: Event
+  properties:
+  - name: organization
+  - name: perms_tags
+  - name: org_tags
+  - name: time_start
+    direction: desc
