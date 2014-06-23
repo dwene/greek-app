@@ -9,7 +9,7 @@
                     <li>
                     <input type="checkbox" ng-model="selectedUsers[member.key]"> {{ member.first_name }}, {{ member.last_name }}, {{ member.class_year }}, {{ member.email }}
             Tags:   <ul class="memberTags" ng-repeat="tag in member.tags">
-                        <li>{{ tag }}</li>
+                        <li>#{{ tag }}</li>
                     </ul>
                     <br>
                     </li>
