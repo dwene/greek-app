@@ -276,7 +276,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         if(!$rootScope.updatingNotifications){
             $rootScope.updatingNotifications = true;
-        $interval(function(){$rootScope.updateNotifications();}, 20000);}
+        $interval(function(){$rootScope.updateNotifications();}, 40000);}
         
 	});
 
@@ -2197,7 +2197,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         }
-        $scope.checkIn = function(member){
+        $scope.checkIn = function(member, checkStatus){
+            if(checkStatus && member.attendance_data.time_in){
+                $('#checkInModal').modal();
+                $scope.selectedUser = member;
+                return;
+            }
+            $('#checkInModal').modal('hide');
             var to_send = {event_tag: $stateParams.tag, user_key: member.key};
             $http.post('/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
             .success(function(data){
@@ -2212,7 +2218,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         }
-        $scope.checkOut = function(member){
+        $scope.checkOut = function(member, checkStatus){
+            if(checkStatus && member.attendance_data.time_out){
+                $('#checkOutModal').modal();
+                $scope.selectedUser = member;
+                return;
+            }
+            $('#checkOutModal').modal('hide');
             var to_send = {event_tag: $stateParams.tag, user_key: member.key};
             $http.post('/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
             .success(function(data){
