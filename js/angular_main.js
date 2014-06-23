@@ -1103,6 +1103,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.createAccount = function(isValid){
+            
             if(isValid){
             $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
@@ -1136,6 +1137,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             else{
             $scope.submitted = true;
             }
+        }
         
     });
 
