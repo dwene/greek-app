@@ -12,7 +12,7 @@ body.modal-open{margin-right:0px;}
     nav.navbar{position:fixed; top:0px; width:100%;}
     #mainSection, #loadingScreen{margin-top:82px;}
 }
-.leftButton{position:absolute; left:30px; top:10px;}
+.backbutton{position:absolute; left:30px; top:10px;}
 .rightButton{position:absolute; right:30px; top:10px;}
 .container{position:relative;}
 /*Nav Pills*/
@@ -33,9 +33,6 @@ body.modal-open{margin-right:0px;}
 #messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 
-/*Edit Event Page*/
-
-
 /*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
 #addmemberForm button{float:right; margin-right:15px;}
@@ -44,6 +41,7 @@ body.modal-open{margin-right:0px;}
 input.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
 .navbar-collapse{max-height:100%;}
+.well, .jumbotron{position:relative;}
 
 @media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
@@ -64,16 +62,12 @@ h1{font-size:36px; font-weight:bold;}
 #directory .memberName{font-size:18px;}
 .directoryTags{font-size:12px; font-style: italic;}
 .directoryStatus{width:100%; margin-top:4px; display:block; font-size:16px;}
-.directoryStatus:before{content:'"';}
-.directoryStatus:after{content:'"';}
 #directory h2{text-transform:uppercase; font-weight:bold; text-indent:10px; margin-bottom:4px;}
 
 /*Member Profile Page*/
-#profileContent{border:1px solid #777; position:relative; padding:20px; border-radius: 15px; max-width:400px; margin:0 auto;}
-#profileContent button{position:relative; top:-10px; left:-10px;}
+#profileContent{position:relative; margin:0 auto;}
 #profileContent .row{margin:0px; padding:0px;}
 #profileContent .status{text-align:center; width:100%; display:inline-block; font-size:18px; margin:10px 0px 5px;}
-#profileContent .status:before, #profileContent .status:after{content:'"';}
 
 
 /*Member Tagging Page*/
@@ -138,6 +132,8 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Events Page*/
 #newEventButton{margin-bottom:15px;}
+#eventcheckinButton{position:absolute; right:20px; bottom:10px;}
+
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}
 .event{border-top:1px solid #777;}
@@ -149,6 +145,8 @@ textarea.form-control{height:auto; max-width:100%;}
 #eventTags{margin-bottom:5px;}
 #eventTags .btn-group{margin-bottom:5px;}
 #eventTags .btn-group .checkLabel{margin:0 2px;}
+
+/*Edit Event Page*/
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
@@ -171,7 +169,7 @@ textarea.form-control{height:auto; max-width:100%;}
     display: block;
     width: 150px;
     height: 150px;
-    margin: 0em auto;
+    margin: 0px auto 10px auto;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -185,9 +183,18 @@ font-size: 14px;
 }
 
 .refresh{
-padding: 2px 7px;
-font-size: 18px;
+padding: 0px 2px;
+font-size: 16px;
+display:inline-block;
+opacity:0;
+transition:opacity .2s linear;
+-webkit-transform: translateZ(0);
+-webkit-backface-visibility: hidden;
 }
+
+nav.navbar-default:hover .refresh{opacity:1;}
+.fa-spin.fa-refresh{-webkit-animation-duration: 1s; /* Safari and Chrome */
+    animation-duration: 1s;}
 
 /*ng-animation code*/
 .ng-enter,.ng-leave{position:absolute !important; left:0px; right:0px;}

@@ -206,7 +206,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $rootScope.notifications =JSON.parse(data.data).notifications;
                 $rootScope.updateNotificationBadge();
                 setTimeout(function(){
-               $('.fa-refresh').removeClass('fa-spin')},950);
+               $('.fa-refresh').removeClass('fa-spin')},930);
                 
             })
             .error(function(data) {

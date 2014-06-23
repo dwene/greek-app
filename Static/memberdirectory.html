@@ -25,7 +25,7 @@
                 <div class="directoryContent">
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
                 <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
-                <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
                 </div>
 
             
