@@ -12,7 +12,7 @@
 
                 <div class="checkinContent">
 
-                <span class="memberName">{{member.first_name}} {{member.last_name}}</span><br>
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span> is <span class="rsvpStatus">{{member.rsvp}}</span><br>
                 <span ng-show="member.attendance_data">In: {{member.attendance_data.time_in | date: 'short'}}<br>
                 Out: {{member.attendance_data.time_out | date: 'short'}}</span><br>
                 

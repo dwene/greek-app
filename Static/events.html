@@ -9,7 +9,7 @@
 
 
 <section class="container" id="events">
-        <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">Add New Event</a> 
+        <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-plus-square"></i> New Event</a> 
         <ul>
             <li class="event" ng-repeat="event in events | orderBy:'-time_start' | multipleSearch:search" ng-click="showEvent(event)">
                 <div class="eventContent">
