@@ -144,6 +144,12 @@ class Organization(ndb.Model):
     tags = ndb.StringProperty(repeated=True)
 
 
+class CST(datetime.tzinfo):
+    def utcoffset(self, dt):
+      return datetime.timedelta(hours=-5)
+    def dst(self, dt):
+        return datetime.timedelta(0)
+
 class DateEncoder(json.JSONEncoder):
     def default(self, obj):
         if hasattr(obj, 'isoformat'):
@@ -1360,6 +1366,7 @@ class RESTApi(remote.Service):
         att_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key,
                                                 AttendanceData.user == user_key)).get()
         if att_data:
+            att_data.time_in = datetime.datetime.now()
             return OutgoingMessage(error='', data='OK')  # They are already checked in
         else:
             att_data = AttendanceData()
