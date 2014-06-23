@@ -1756,6 +1756,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 for (var i = 0; i < tags.organizationTags.length; i++){
                     if (tags.organizationTags[i].checked){
                         selected_org_tags.push(tags.organizationTags[i].name);
+                        tags.organizationTags[i].checked = false;
                     }
                 }
                 for (var i = 0; i < tags.permsTags.length; i++){
@@ -1767,6 +1768,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             break;
                         }
                         selected_perms_tags.push(tags.permsTags[i].name);
+                        tags.permsTags[i].checked = false;
                     }
                 }
                 var out_tags = {org_tags: selected_org_tags, perms_tags: selected_perms_tags};
@@ -1775,6 +1777,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
+                            setTimeout(function(){
                             $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
                             .success(function(data){
                                 if (!checkResponseErrors(data))
@@ -1787,6 +1790,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                     console.log("error: "+ data.error)
                                 }
                             })
+                            },2000);
                             console.log('message sent');
                         }
                         else

@@ -17,7 +17,8 @@
     <hr>
     <section id="notifications">
 
-    <button id="showHiddenButton" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#showHidden">Show Hidden</button>            
+    <button id="showHiddenButton" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#showHidden">Show Hidden</button>
+    <button id="refreshNotifications" ng-click="$root.updateNotifications()" class="btn btn-default btn-sm" style="float:right;">refresh</button>            
 
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
