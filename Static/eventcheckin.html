@@ -13,8 +13,8 @@
                 <div class="checkinContent">
 
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span> is <span class="rsvpStatus">{{member.rsvp}}</span><br>
-                <span ng-show="member.attendance_data">In: {{formatDate(member.attendance_data.time_in)}}<br>
-                Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
+                <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
+                <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
                 
                     <div class="btn-group">
                     <button class="btn btn-lg btn-success" ng-click="checkIn(member, true)"><i class="fa fa-key"></i></button>
