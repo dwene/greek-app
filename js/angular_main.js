@@ -1001,6 +1001,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             //define variable for ng-repeat
             $scope.adds = newmemberList;
             }else{$scope.submitted = true;}
+            $('#addalumniForm').find('input').val('');
         };
         
         $scope.submitAlumni = function(){

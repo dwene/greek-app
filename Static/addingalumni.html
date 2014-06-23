@@ -12,7 +12,7 @@
             
             <ul ng-repeat="add in adds | orderBy:'last_name'">
                 
-                    <li>{{ add.email }} <button class="btn btn-danger btn-sm" ng-click="deleteAdd(add)">delete</button></li>
+                    <li>{{ add.email }} <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
                 
             </ul>
             <button ng-click="submitAlumni()" class="btn btn-default">Submit Alumni</button>
