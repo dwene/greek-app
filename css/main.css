@@ -184,6 +184,11 @@ padding: 0px 5px;
 font-size: 14px;
 }
 
+.refresh{
+padding: 2px 7px;
+font-size: 18px;
+}
+
 /*ng-animation code*/
 .ng-enter,.ng-leave{position:absolute !important; left:0px; right:0px;}
 

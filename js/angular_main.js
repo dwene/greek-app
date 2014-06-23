@@ -196,11 +196,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.updatingNotifications = false;
         
         $rootScope.updateNotifications = function(){
+            $('.fa-refresh').addClass('fa-spin');
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 $rootScope.notifications =JSON.parse(data.data).notifications;
                 $rootScope.updateNotificationBadge();
-               
+                setTimeout(function(){
+               $('.fa-refresh').removeClass('fa-spin')},950);
+                
             })
             .error(function(data) {
                 console.log('Error: ' + data);
