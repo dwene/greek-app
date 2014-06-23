@@ -1941,12 +1941,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.showEvent = function(event){
                 window.location.assign('#/app/events/' + event.tag);
             }
-        
 	   });
 	});
 
 
     App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+        $scope.going = false;
+        $scope.not_going = false;
         Load.then(function(){
         $scope.tags = arrangeTagData($rootScope.tags);
         var event_tag = $stateParams.tag;
