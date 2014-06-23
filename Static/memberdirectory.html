@@ -17,9 +17,8 @@
     
     <section ng-repeat="group in directory">
         <h2 class="page-header">{{group.name}}</h2>
-        <ul ng-repeat="member in group.data | orderBy:'last_name' | multipleSearch:search">
-
-            <li class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
+        <ul>
+            <li ng-repeat="member in group.data | orderBy:'last_name' | multipleSearch:search" class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
             
                 <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
 

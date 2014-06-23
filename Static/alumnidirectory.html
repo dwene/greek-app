@@ -11,9 +11,9 @@
     
     </section>
     
-    <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
+    <ul>
 
-        <li class="member" ng-click="showIndividual(member)">
+        <li ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search" class="member" ng-click="showIndividual(member)">
         <hr>
             <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>    <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
         <hr>

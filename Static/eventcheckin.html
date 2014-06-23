@@ -28,7 +28,9 @@
                 <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
                 <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
                 </div>
-
+            
+            <button ng-click="checkIn(member)" class="btn btn-lg btn-success"><i class="fa fa-key"></i></button>
+            <button ng-click="checkOut(member)" class="btn btn-lg btn-danger"><i class="fa fa-leaf"></i></button>
             
             </li>
         </ul>
