@@ -2240,7 +2240,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
         $scope.formatDate = function(date){
-            console.log(date);
             return moment(date).subtract('hours', 5).format('lll');
             
         }
