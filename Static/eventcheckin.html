@@ -1,0 +1,36 @@
+<div class="container">
+<!--
+       <ul ng-repeat="member in datas | orderBy:'last_name' | multipleSearch:search">
+
+            <li class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
+            
+                <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
+
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
+                </div>
+
+            
+            </li>
+        </ul>
+-->
+       
+        <ul ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search">
+
+            <li class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
+            
+                <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
+
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">{{member.status}}</span>
+                </div>
+
+            
+            </li>
+        </ul>
+       
+</div>

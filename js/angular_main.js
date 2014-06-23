@@ -181,7 +181,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     url : '/events/:tag/edit',
                     templateUrl : 'Static/editevent.html',
                     controller : 'editEventsController'
-                
+                })
+            .state('app.eventCheckin',{
+                    url : '/events/:tag/checkin',
+                    templateUrl : 'Static/eventcheckin.html',
+                    controller : 'eventCheckInController'
                 })
     });
 
@@ -2173,6 +2177,87 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     }
 	});
+
+    App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope) {
+        $scope.loading = true;
+        Load.then(function(){    
+            var event_tag = $stateParams.tag;
+        });
+        function tryLoadEvent(){
+            LoadEvents();
+            function LoadEvents(){
+                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            var events = JSON.parse(data.data);
+                            $rootScope.events = events;
+                            getEventAndSetInfo(events);
+                        }
+                        else{
+                            console.log('ERROR: '+data);
+                        }
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                    });
+                }
+        }   
+        function getEventAndSetInfo(events){
+            function getUsersFromKey(key){
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    console.log($rootScope.directory.members[i].key);
+                    if ($rootScope.directory.members[i].key == key){
+                        return $rootScope.directory.members[i];
+                    }
+                }
+                return null;
+            }
+            var event = undefined;
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == $stateParams.tag){
+                    event = events[i];
+                    break;
+                }
+            }
+            if (event === undefined){
+                setTimeout(function(){tryLoadEvent()}, 500);
+                return;
+            }
+            event.going_list = []
+            for (var i = 0; i < event.going.length; i++){
+                event.going_list.push(getUsersFromKey(event.going[i]));
+            }
+            $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending(event_tag))
+                .success(function(data) {
+                    if(!checkResponseErrors(data)){
+                        var datas = JSON.parse(data.data);
+                        console.log($scope.data);
+                        var directory = []
+                        for(var i = 0; i < $rootScope.directory.members.length; i++){
+                            var check = false;
+                            for (var dataIter = 0; dataIter < datas.length; dataIter++){
+                                if (datas[dataIter].user == $rootScope.directory.members[i].key){
+                                    check = true;
+                                    break;
+                                }
+                            }
+                            if (!check){
+                                directory.push($rootScope.directory.members[i])
+                            }
+                        }
+                        $scope.data_directory = datas;
+                        $scope.directory = directory;
+                        console.log("EventCheckInInfo:")
+                        console.log(datas);
+                        console.log(directory);
+                        $scope.event = event;
+                    }
+                })           
+            
+            
+        }
+    });
+
 
 //More Functions
 

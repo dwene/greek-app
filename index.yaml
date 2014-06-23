@@ -14,3 +14,10 @@ indexes:
   - name: org_tags
   - name: time_start
     direction: desc
+
+- kind: Event
+  properties:
+  - name: going
+  - name: organization
+  - name: time_start
+    direction: desc

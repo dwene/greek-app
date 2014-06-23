@@ -126,6 +126,15 @@ class Event(ndb.Model):
     not_going = ndb.KeyProperty(repeated=True)
     images = ndb.BlobKeyProperty(repeated=True)
     organization = ndb.KeyProperty()
+    attendance_data = ndb.KeyProperty(repeated=True)
+
+
+class AttendanceData(ndb.Model):
+    user = ndb.KeyProperty()
+    time_in = ndb.DateTimeProperty()
+    time_out = ndb.DateTimeProperty()
+    event = ndb.KeyProperty()
+    note = ndb.StringProperty()
 
 
 class Organization(ndb.Model):
@@ -1253,15 +1262,6 @@ class RESTApi(remote.Service):
 
         return OutgoingMessage(error='', data=json_dump(out_events))
 
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='event/get_event_details',
-    #                   http_method='POST', name='event.get_event_details')
-    # def get_event_details(self, request):
-    #     request_user = get_user(request.user_name, request.token)
-    #     if not request_user:
-    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-    #     event_key = json.loads(request.data)["key"]
-    #
-    #     return OutgoingMessage(error='', data='')
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/edit_event',
                       http_method='POST', name='event.edit_event')
     def edit_event(self, request):
@@ -1301,6 +1301,74 @@ class RESTApi(remote.Service):
                 #     for _key in list(not_going_difference):
                 #         event.not_going.remove(_key)
         event.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/get_check_in_info',
+                      http_method='POST', name='event.get_check_in_info')
+    def get_check_in_info(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        event_tag = json.loads(request.data)
+        event_key = Event.query(Event.tag == event_tag).get().key
+        attendance_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key)).fetch()
+        data_list = []
+        for att in attendance_data:
+            att_dict = att.to_dict()
+            data_list.append(att_dict)
+        return OutgoingMessage(error='', data=json_dump(data_list))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_in',
+                      http_method='POST', name='event.check_in')
+    def check_in(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        user_key = ndb.Key(urlsafe=data["user_key"])
+        event_key = Event.query(Event.tag == data["event_tag"]).get().key
+        att_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key,
+                                                AttendanceData.user == user_key)).get()
+        if att_data:
+            return OutgoingMessage(error='', data='OK')  # They are already checked in
+        else:
+            att_data = AttendanceData()
+            att_data.user = user_key
+            att_data.event = event_key
+            att_data.time_in = datetime.datetime.now()
+            if "note" in data:
+                att_data.note = data["note"]
+            att_data.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_out',
+                      http_method='POST', name='event.check_out')
+    def check_out(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        user_key = ndb.Key(urlsafe=data["user_key"])
+        event_key = Event.query(Event.tag == data["event_tag"]).get().key
+        att_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key,
+                                                AttendanceData.user == user_key)).get()
+        if att_data:
+            att_data.time_out = datetime.datetime.now()
+            att_data.put()
+        else:
+            att_data = AttendanceData()
+            att_data.user = user_key
+            att_data.event = event_key
+            att_data.time_out = datetime.datetime.now()
+            if "note" in data:
+                att_data.note = data["note"]
+            att_data.put()
         return OutgoingMessage(error='', data='OK')
 
 APPLICATION = endpoints.api_server([RESTApi])
