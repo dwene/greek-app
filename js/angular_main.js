@@ -187,6 +187,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/eventcheckin.html',
                     controller : 'eventCheckInController'
                 })
+            .state('app.eventCheckinReport',{
+                //#TODO put this into each individual event :tag
+                    url : '/events/checkinreport',
+                    templateUrl : 'Static/eventcheckinreport.html',
+                    controller : 'eventCheckInReportController'
+                })
     });
 
 //Set up run commands for the app
@@ -2245,6 +2251,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         }
     });
+
+App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope) {
+        $scope.loading = true;
+        Load.then(function(){
+            
+        });
+  });
 
 
 //More Functions

@@ -152,7 +152,6 @@ textarea.form-control{height:auto; max-width:100%;}
 /*makes room for the picture*/ .checkinContent{margin-left:60px; margin-right:100px; min-height:60px; position:relative;}
 .checkinContent .btn-group{position:absolute; right:-100px; top:50%; margin-top:-23px;}
 .checkinContent .memberName{font-size:18px;}
-.checkin .smallprofilepic{margin:0px !important;}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
