@@ -16,14 +16,13 @@
         <div class="form-group">
         <span>Are you going?
         <div class="btn-group btn-group-lg">
-        <button class="btn btn-primary" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
-        <button class="btn btn-default" ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>
+        <button class="btn" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
+        <button class="btn" ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>
         </div>
         </span>
         </div>
         </form>
 		</div>
-		
 
     <p>Start: {{event.time_start | date:'EEEE MMM d, y h:mm a'}}</p>
     <p>End: {{event.time_end | date:'EEEE MMM d, y h:mm a'}}</p>
