@@ -179,6 +179,11 @@ textarea.form-control{height:auto; max-width:100%;}
     box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);  
 }
 
+.trash{
+padding: 0px 5px;
+font-size: 14px;
+}
+
 /*ng-animation code*/
 .ng-enter,.ng-leave{position:absolute !important; left:0px; right:0px;}
 
