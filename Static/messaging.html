@@ -40,8 +40,7 @@
 </section>
 
 <section id="recentlySentMessages" class="container">
-<!--    #FIXME idk what the notify.leng-->
-<!--    <h2 ng-show="notify.length > 0">Recently Sent Messages: <br></h2>-->
+    <h2 class="page-header" ng-hide="notify.length">Recently Sent Messages: <br></h2>
     <ul>
         <li ng-repeat="notify in sentMessages | orderBy : '-timestamp' | limitTo: 5" class="notification" ng-class="{ new : notify.new }">
             <div class="notificationContent">
