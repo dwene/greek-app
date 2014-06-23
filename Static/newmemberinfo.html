@@ -9,9 +9,9 @@
 
 
 <div class="container">
-<form id="newmemberAccount" class="form-horizontal" role="form">
+<form id="newmemberAccount" name="newmemberAccount" ng-submit="createAccount(newmemberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
-    <div class="form-group" ng-class="{ 'has-success' : available}">
+    <div class="form-group" ng-class="{'has-success' : available, 'has-error' : (newmemberAccount.user_name.$invalid && !newmemberAccount.user_name.$pristine) || (newmemberAccount.user_name.$invalid && submitted)}">
         <label for="userName" class="col-sm-2 control-label">User Name</label>
         <div class="col-sm-10 input-group">
           <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
@@ -23,19 +23,19 @@
         <span class="form-control-feedback" ng-show="unavailable" class="help-block">This user name too short or already taken (5 + characters required)</span>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" ng-class="{'has-error' : (newmemberAccount.password.$invalid && !newmemberAccount.password.$pristine) || (newmemberAccount.password.$invalid && submitted)}">
         <label for="password" class="col-sm-2 control-label">Password</label>
         <div class="col-sm-10">
           <input type="password" class="form-control" id="password" name="password" ng-model="item.password" placeholder="***********" required>
         </div>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" ng-class="{'has-error' : (newmemberAccount.repeat_password.$invalid && !newmemberAccount.repeat_password.$pristine) || (newmemberAccount.repeat_password.$invalid && submitted)}">
         <label for="repeatPassword" class="col-sm-2 control-label">Repeat Password</label>
         <div class="col-sm-10">
-          <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="item.repeat_password" placeholder="***********" required>
+          <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="item.repeat_password" match="item.password" placeholder="***********" required>
         </div>
     </div>
-    <button type="submit" ng-click="createAccount()" ng-disabled="waiting_for_response" class="btn btn-default pull-right">Submit</button>
+    <button type="submit" ng-disabled="waiting_for_response" class="btn btn-default pull-right">Submit</button>
 </form>
 </div>

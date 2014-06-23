@@ -1,12 +1,9 @@
 //#TODO Check if this is now fixed: when trying to register, the token expires on the register infopage and tries to get me to log in before I've made an account
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#FIXME Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
-//#TODO get it to where you can see all messages after they're hidden
-//Final\static variables. These variables are used for cookies
-//#TODO form validation on messaging with checkboxes
-//#TODO: implement datepicker for accountinfo page http://angular-ui.github.io/bootstrap/#/datepicker
-//#TODO: add validation for the newmemberinfo page
 //#TODO: fix check username tags in newmemberinfo and registerinfo pages
+
+//Final\static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -1104,7 +1101,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         
-        $scope.createAccount = function(){
+        $scope.createAccount = function(isValid){
+            if(isValid){
             $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
             $http.post('/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
@@ -1131,9 +1129,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-            //now logged in
-        $scope.waiting_for_response = false;
-        }
+                //now logged in
+            $scope.waiting_for_response = false;
+            }
+            else{
+            $scope.submitted = true;
+            }
         
     });
 
