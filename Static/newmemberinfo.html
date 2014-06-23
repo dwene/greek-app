@@ -11,9 +11,9 @@
 <div class="container">
 <form id="newmemberAccount" class="form-horizontal" role="form">
     
-    <div class="form-group">
+    <div class="form-group" ng-class="{ 'has-success' : available}">
         <label for="userName" class="col-sm-2 control-label">User Name</label>
-        <div class="col-sm-10">
+        <div class="col-sm-10 input-group">
           <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
           <span class="input-group-btn">
            <button ng-click="checkUserName(item.user_name)" class="btn btn-default" type="button">Check</button>

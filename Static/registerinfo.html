@@ -30,47 +30,18 @@
             <p ng-show="(registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)" class="help-block">Please enter your class year.</p>
         </div>
         
-        
-        
-        
-        
         <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}">
 			<label for="userName" class="col-sm-2 control-label">User Name</label>
-			<div class="col-sm-10">
+			<div class="col-sm-10 input-group">
 			  <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
-        <span class="input-group-btn">
-           <button ng-click="checkUserName(item.user_name)" class="btn btn-default" type="button">Check</button>
-        </span>
+                <span class="input-group-btn">
+                   <button ng-click="checkUserName(item.user_name)" class="btn btn-default" type="button">Check</button>
+                </span>
 			</div>
             <p ng-show="(registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
         <span class="form-control-feedback" ng-show="available" class="help-block">That will work!</span>
         <span class="form-control-feedback" ng-show="unavailable" class="help-block">This user name too short or already taken (5 + characters required)</span>
         </div>
-        
-<!--
-        <div class="form-group has-feedback" ng-class="{ 'has-error' : (newEvent.tag.$invalid && !newEvent.tag.$pristine) || (newEvent.tag.$invalid && submitted) || unavailable, 'has-success' : available}">
-        <label for="tag" class="col-sm-2 control-label">Event Tag</label>
-        <div class="col-sm-10">
-        <div class="input-group">
-        <input type="text" class="form-control tagInput" id="tag" name="tag" ng-model="event.tag" ng-trim="false" placeholder="BowlingSocial2014" required>
-        <span class="input-group-btn">
-           <button ng-click="checkTagAvailability(event.tag)" class="btn btn-default" type="button">Check availability</button>
-        </span>
-        </div>
-        
-        <span class="form-control-feedback" ng-show="(newEvent.tag.$invalid && !newEvent.tag.$pristine) || (newEvent.tag.$invalid && submitted)" class="help-block">Please enter a tag for the event.</span>
-        <span class="form-control-feedback" ng-show="isEmpty" class="help-block">Please enter a user name</span>
-        <span class="form-control-feedback" ng-show="available" class="help-block">That will work!</span>
-        <span class="form-control-feedback" ng-show="unavailable" class="help-block">That user name is already taken!</span>
-    
-        </div>
-        
-    </div>
--->
-        
-        
-        
-        
         
         
         <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)}">
