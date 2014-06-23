@@ -629,6 +629,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             //define variable for ng-repeat
             $scope.adds = newmemberList;}
             else{$scope.submitted = true;}
+            $('#addmemberForm').find('input').val('');
         };
         
         $scope.convertMembersToAlumni = function(members){
