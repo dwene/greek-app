@@ -2188,6 +2188,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);
+                    console.log($scope.users);
                 }
                 else{
                     console.log('ERROR: '+data);
