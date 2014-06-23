@@ -4,7 +4,6 @@
 //#TODO get it to where you can see all messages after they're hidden
 //Final\static variables. These variables are used for cookies
 //#TODO form validation on messaging with checkboxes
-//#TODO: implement datepicker for accountinfo page http://angular-ui.github.io/bootstrap/#/datepicker
 //#TODO: add validation for the newmemberinfo page
 //#TODO: fix check username tags in newmemberinfo and registerinfo pages
 var USER_NAME = 'USER_NAME';
