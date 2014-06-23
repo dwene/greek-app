@@ -189,7 +189,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
             .state('app.eventCheckinReport',{
                 //#TODO put this into each individual event :tag
-                    url : '/events/checkinreport',
+                    url : '/checkinreport',
                     templateUrl : 'Static/eventcheckinreport.html',
                     controller : 'eventCheckInReportController'
                 })
