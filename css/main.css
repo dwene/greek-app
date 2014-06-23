@@ -183,6 +183,10 @@ font-size: 14px;
 }
 
 .refresh{
+position:absolute;
+margin-left:-10px;
+top:18px;
+cursor:pointer;
 padding: 0px 2px;
 font-size: 16px;
 display:inline-block;
@@ -190,6 +194,10 @@ opacity:0;
 transition:opacity .2s linear;
 -webkit-transform: translateZ(0);
 -webkit-backface-visibility: hidden;
+}
+
+@media screen and (max-width:768px){
+.refresh{opacity:1 !important;}
 }
 
 nav.navbar-default:hover .refresh{opacity:1;}
