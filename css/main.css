@@ -149,9 +149,10 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Check In Page*/
 .checkin{border-top:1px solid #777; padding:10px;}
 .checkin:last-child{border-bottom:1px solid #777;}
-/*makes room for the picture*/ .checkinContent{margin-left:60px; margin-right:100px; min-height:60px;}
-.checkinContent .btn-group{position:absolute; right:20px; top:50%; margin-top:-23px;}
+/*makes room for the picture*/ .checkinContent{margin-left:60px; margin-right:100px; min-height:60px; position:relative;}
+.checkinContent .btn-group{position:absolute; right:-100px; top:50%; margin-top:-23px;}
 .checkinContent .memberName{font-size:18px;}
+.checkin .smallprofilepic{margin:0px !important;}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
