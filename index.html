@@ -41,8 +41,11 @@
 					<a class="navbar-brand" href="/" ng-hide="$root.checkLogin()">NeteGreek</a>
 					<a class="navbar-brand" href="/#/app/home" ng-show="$root.checkLogin()"><i class="fa fa-home"></i> NeteGreek
 					<span class="badge" ng-bind="$root.notification_count"></span>
-				    <span id="refreshNotifications" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
 					</a>
+				
+                <span id="refreshNotifications" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
+	
+					
 				</div>
 				<div class="collapse navbar-collapse" id="mainNavigation">
 				<ul class="nav navbar-nav navbar-right" ng-hide="!$root.checkLogin()">
