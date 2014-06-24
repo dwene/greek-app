@@ -33,6 +33,7 @@ body.modal-open{margin-right:0px;}
 #messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 #messageContent{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
+
 /*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
 #addmemberForm button{float:right; margin-right:15px;}
@@ -42,6 +43,9 @@ input.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
 .navbar-collapse{max-height:100%;}
 .well, .jumbotron{position:relative;}
+@media screen and (max-width: 768px){
+.jumbotron {padding-top: 50px; padding-bottom: 50px;}
+}
 
 @media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
