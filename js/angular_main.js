@@ -242,7 +242,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.notification_count = count;
         }
         
-        $rootScope.OK = true;
+        $rootScope.showNav = true;
     });
 
 //navigation header
@@ -2098,15 +2098,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
 	   });
-        
-    $scope.deleteEvent = function(){
-        $http.post('/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
-        .success(function(data){
-            if (!checkResponseErrors(data)){
-                window.location.replace('#/app/events');
-            }
-        });
-    }
+    
+        $scope.openDeleteEventModal = function(){
+            $('#deleteEventModal').modal();
+        }
+        $scope.deleteEvent = function(){
+            $('#deleteEventModal').modal('hide');
+            $http.post('/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    window.location.replace('#/app/events');
+                    for (var i = 0; i < $rootScope.events.length; i++){
+                        if ($rootScope.events[i].tag == $stateParams.tag){
+                            $rootScope.events.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            });
+        }
         function tryLoadEvent(count){
             LoadEvents();
             function LoadEvents(){
