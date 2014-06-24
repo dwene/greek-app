@@ -260,6 +260,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         });
         
+        $('.navbar-brand').on('click', function(){
+            if( navMain.hasClass('in') ){
+                     navMain.collapse('hide');
+            }
+            else{
+            //do nothing
+            }
+        });
+        
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
