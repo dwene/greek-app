@@ -1,3 +1,6 @@
+<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+
 <div class="container" ng-hide="loading || eventNotFound">
 
 <!--		 HEADER AND TODO COUNT -->
@@ -6,11 +9,6 @@
 			<p>#{{event.tag}}</p>
 		</div>
 
-</div>
-<div ng-show="eventNotFound">Event not found :(</div>
- <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-
-<div class="container" ng-hide="loading || eventNotFound">
 
     <ul id="eventTags">
        <div ng-repeat = "type in tags">
