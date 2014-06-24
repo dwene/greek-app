@@ -43,7 +43,7 @@
 					<span class="badge" ng-bind="$root.notification_count"></span>
 					</a>
 				
-                <span id="refreshNotifications" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
+                <span id="refreshNotifications" ng-show="$root.checkLogin()" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
 	
 					
 				</div>

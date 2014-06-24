@@ -19,7 +19,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/")
     .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app", "/app/home")
-    .when("/app/managealumni", "/app/managealumni/manage");
+    .when("/app/managealumni", "/app/managealumni/manage")
+    .when("/app/directory", "/app/directory/members");
     
       $stateProvider 
         .state('home', {
