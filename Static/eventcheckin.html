@@ -1,4 +1,6 @@
-<div class="container">
+<div ng-show="loading" ng-hide="eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="eventNotFound">Event not found :(</div>
+<div class="container" ng-hide="loading || eventNotFound">
 
 <div class="form-group">
     <input id="checkinSearch" type="search" ng-model="search" placeholder="Search..." class="form-control">

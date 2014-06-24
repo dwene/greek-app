@@ -1971,12 +1971,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
         $scope.going = false;
         $scope.not_going = false;
+        $scope.loading = true;
         Load.then(function(){
         $scope.tags = arrangeTagData($rootScope.tags);
         var event_tag = $stateParams.tag;
-        tryLoadEvent();
+        tryLoadEvent(0);
 	   });
-        function tryLoadEvent(){
+        function tryLoadEvent(count){
             LoadEvents();
             function LoadEvents(){
                 $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
@@ -1984,7 +1985,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         if (!checkResponseErrors(data)){
                             var events = JSON.parse(data.data);
                             $rootScope.events = events;
-                            getEventAndSetInfo(events);
+                            getEventAndSetInfo(events, count);
                         }
                         else{
                             console.log('ERROR: '+data);
@@ -1995,7 +1996,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     });
             }
         }   
-        function getEventAndSetInfo(events){
+        function getEventAndSetInfo(events, count){
             function getUsersFromKey(key){
                 for (var i = 0; i < $rootScope.directory.members.length; i++){
                     console.log($rootScope.directory.members[i].key);
@@ -2013,8 +2014,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             if (event === undefined){
-                setTimeout(function(){tryLoadEvent()}, 500);
+                if (count < 3){
+                    console.log(count);
+                setTimeout(function(){tryLoadEvent(count+1)}, 500);
                 return;
+                }
+                else{
+                    $scope.eventNotFound = true;
+                    $scope.loading = false;
+                    return;
+                }
             }
             event.going_list = []
             event.not_going_list = []
@@ -2083,10 +2092,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 
     App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+        $scope.loading = true;
         Load.then(function(){
         $scope.tags = arrangeTagData($rootScope.tags);
         var event_tag = $stateParams.tag;
-        tryLoadEvent();
+        tryLoadEvent(0);
 	   });
         
     $scope.deleteEvent = function(){
@@ -2097,7 +2107,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         });
     }
-        function tryLoadEvent(){
+        function tryLoadEvent(count){
             LoadEvents();
             function LoadEvents(){
                 $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
@@ -2105,7 +2115,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         if (!checkResponseErrors(data)){
                             var events = JSON.parse(data.data);
                             $rootScope.events = events;
-                            getEventAndSetInfo(events);
+                            getEventAndSetInfo(events, count);
                         }
                         else{
                             console.log('ERROR: '+data);
@@ -2116,7 +2126,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     });
                 }
         }   
-        function getEventAndSetInfo(events){
+        function getEventAndSetInfo(events, count){
             function getUsersFromKey(key){
                 for (var i = 0; i < $rootScope.directory.members.length; i++){
                     console.log($rootScope.directory.members[i].key);
@@ -2134,8 +2144,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             if (event === undefined){
-                setTimeout(function(){tryLoadEvent()}, 500);
+                if (count < 2){
+                    console.log(count);
+                setTimeout(function(){tryLoadEvent(count+1)}, 500);
                 return;
+                }
+                else{
+                    $scope.eventNotFound = true;
+                    $scope.loading = false;
+                    return;
+                }
             }
             event.going_list = []
             event.not_going_list = []
@@ -2203,13 +2221,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);
+                    $scope.loading = false;
                 }
                 else{
                     console.log('ERROR: '+data);
+                    $scope.eventNotFound = true;
+                    $scope.loading = false;
                 }
             })
             .error(function(data) {
                 console.log('Error: ' + data);
+                $scope.loading = false;
+                $scope.eventNotFound = true;
             });
         }
         $scope.checkIn = function(member, checkStatus){ //#TODO: fix controller so we can check in more than once

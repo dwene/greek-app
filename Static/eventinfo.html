@@ -1,7 +1,7 @@
-<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="loading" ng-hide="eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="eventNotFound">Event not found :(</div>
 
-
-<div ng-hide="loading" class="container">
+<div ng-hide="loading || eventNotFound" class="container">
 	
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron">
