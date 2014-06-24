@@ -1226,7 +1226,7 @@ class RESTApi(remote.Service):
         new_event.org_tags = event_data["tags"]["org_tags"]
         new_event.perms_tags = event_data["tags"]["perms_tags"]
         new_event.going = [request_user.key]
-        if EVERYONE in event_data["tags"]["perms_tags"]:
+        if EVERYONE.lower() in event_data["tags"]["perms_tags"]:
             new_event.perms_tags = ['council', 'leadership', 'member']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         notification = Notification()
