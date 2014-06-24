@@ -62,7 +62,7 @@
                         <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
                         <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managealumni"><i class="fa fa-graduation-cap"></i> Alumni</a></li>
                         <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
-                        <li><a ng-href="#/payment"><i class="fa fa-arrow-circle-up"></i> Upgrade</a></li>
+                        <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/payment"><i class="fa fa-arrow-circle-up"></i> Upgrade</a></li>
                         <li class="divider" ></li>
                         <li><a ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
                     </ul>

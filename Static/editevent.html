@@ -104,7 +104,28 @@
 <script type="text/javascript">
     $(function(){
 
+  $('#datestartPicker').datetimepicker({
+        pickTime: false,
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+    });
+    
     $('#timestartPicker').datetimepicker({
+        pickDate: false,
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+    });
+    
+    $('#dateendPicker').datetimepicker({
+        pickTime: false,
         icons: {
             time: "fa fa-clock-o",
             date: "fa fa-calendar",
@@ -114,6 +135,7 @@
     });
 
     $('#timeendPicker').datetimepicker({
+        pickDate: false,
         icons: {
             time: "fa fa-clock-o",
             date: "fa fa-calendar",
