@@ -66,7 +66,7 @@
       </div>
       <div class="modal-body">
         <h3>{{selectedMessage.title}}</h3><br>
-        <p style="white-space: pre;">{{selectedMessage.content}}</p>        
+        <p ng-bind-html="selectedMessage.content"></p>        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="deleteMessage(selectedMessage)">Delete</button>

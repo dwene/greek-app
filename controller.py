@@ -106,7 +106,7 @@ class User(ndb.Model):
 class Notification(ndb.Model):
     title = ndb.StringProperty()
     type = ndb.StringProperty()
-    content = ndb.StringProperty()
+    content = ndb.TextProperty()
     sender = ndb.KeyProperty()
     sender_name = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
@@ -114,7 +114,7 @@ class Notification(ndb.Model):
 
 class Event(ndb.Model):
     title = ndb.StringProperty()
-    description = ndb.StringProperty()
+    description = ndb.TextProperty()
     time_start = ndb.DateTimeProperty()
     time_end = ndb.DateTimeProperty()
     time_created = ndb.DateTimeProperty()
@@ -353,8 +353,12 @@ def get_users_from_tags(tags, organization, keys_only):
         org_tag_users_future = User.query(ndb.AND(User.tags.IN(tags["org_tags"]),
                                                   User.organization == organization)).fetch_async(keys_only=True)
     if "perms_tags" in tags and len(tags["perms_tags"]):
-        perms_tag_users_future = User.query(ndb.AND(User.perms.IN(tags["perms_tags"]),
-                                                    User.organization == organization)).fetch_async(keys_only=True)
+        if "everyone" in tags["perms_tags"] or "Everyone" in tags["perms_tags"]:
+            perms_tag_users_future = User.query(ndb.AND(User.perms.IN(['member', 'leadership', 'council']),
+                                                        User.organization == organization)).fetch_async(keys_only=True)
+        else:
+            perms_tag_users_future = User.query(ndb.AND(User.perms.IN(tags["perms_tags"]),
+                                                        User.organization == organization)).fetch_async(keys_only=True)
     if "event_tags" in tags and len(tags["event_tags"]):
         events_future = Event.query(ndb.AND(Event.tag.IN(tags["event_tags"]),
                                             Event.organization == organization)).fetch_async(projection=[Event.going])
@@ -374,6 +378,7 @@ def get_users_from_tags(tags, organization, keys_only):
 
     if not _keys_only:
         out_list = ndb.get_multi(out_list)
+    logging.error(out_list)
     return out_list
 
 
@@ -1207,7 +1212,22 @@ class RESTApi(remote.Service):
         new_event.going = [request_user.key]
         if EVERYONE in event_data["tags"]["perms_tags"]:
             new_event.perms_tags = ['Everyone']
-        new_event.put()
+        users = get_users_from_tags(event_data["tags"], request_user.organization, False)
+        notification = Notification()
+        notification.title = event_data["title"]
+        notification.type = 'event'
+        notification.content = "You have been invited to the event: " + event_data["title"]
+        notification.content += ". Please check out your events page for more information!"
+        notification.sender_name = "NeteGreek Notification Service"
+        notification.sender = new_event.creator
+        notification.timestamp = datetime.datetime.now()
+        notification.put()
+        future_list = [new_event.put_async()]
+        for user in users:
+            user.new_notifications.append(notification.key)
+            future_list.append(user.put_async())
+        for item in future_list:
+            item.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_tag_availability',
