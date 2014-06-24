@@ -111,6 +111,7 @@ class Notification(ndb.Model):
     sender = ndb.KeyProperty()
     sender_name = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
+    link = ndb.StringProperty()
 
 
 class Event(ndb.Model):
@@ -1226,7 +1227,7 @@ class RESTApi(remote.Service):
         new_event.perms_tags = event_data["tags"]["perms_tags"]
         new_event.going = [request_user.key]
         if EVERYONE in event_data["tags"]["perms_tags"]:
-            new_event.perms_tags = ['Everyone']
+            new_event.perms_tags = ['council', 'leadership', 'member']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         notification = Notification()
         notification.title = event_data["title"]
@@ -1236,6 +1237,7 @@ class RESTApi(remote.Service):
         notification.sender_name = "NeteGreek Notification Service"
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
+        notification.link = '#/app/events/'+new_event.tag
         notification.put()
         future_list = [new_event.put_async()]
         for user in users:

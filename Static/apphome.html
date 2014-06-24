@@ -72,6 +72,7 @@
         <span class="notificationSender">sent by: {{selectedNotification.sender_name}}</span>
       </div>
       <div class="modal-footer">
+        <a type="button" class="btn btn-info" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</a>
         <button type="button" class="btn btn-primary" ng-click="closeNotificationModal()">OK</button>
       </div>
     </div><!-- /.modal-content -->
