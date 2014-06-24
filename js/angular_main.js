@@ -2088,6 +2088,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         var event_tag = $stateParams.tag;
         tryLoadEvent();
 	   });
+        
+    $scope.deleteEvent = function(){
+        $http.post('/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
+        .success(function(data){
+            if (!checkResponseErrors(data)){
+                window.location.replace('#/app/events');
+            }
+        });
+    }
         function tryLoadEvent(){
             LoadEvents();
             function LoadEvents(){

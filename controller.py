@@ -1404,6 +1404,22 @@ class RESTApi(remote.Service):
             att_data.put()
         return OutgoingMessage(error='', data='OK')
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='event/delete',
+                      http_method='POST', name='event.delete')
+    def delete_event(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        event = Event.query(ndb.AND(Event.tag == data["tag"], Event.organization == request_user.organization)).get()
+        event_data = AttendanceData.query(AttendanceData.event == event.key).fetch(keys_only=True)
+        ndb.delete_multi(event_data)
+        event.key.delete()
+        return OutgoingMessage(error='', data='OK')
+
 APPLICATION = endpoints.api_server([RESTApi])
 
 
