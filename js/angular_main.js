@@ -1894,7 +1894,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.addEvent = function(isValid, event){
                 if(isValid){
                     event.tags = getCheckedTags($scope.tags);
-                    $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(event))
+                    var to_send = JSON.parse(JSON.stringify(event));
+                    to_send.time_start = event.date_start + " " + event.time_start;
+                    to_send.time_end = event.date_end + " " + event.time_end;
+                    console.log(to_send.time_end);
+                    $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
@@ -2186,20 +2190,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 event.not_going_list.push(getUsersFromKey(event.not_going[i]));
             }
             $scope.event = event;
-            $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
-            if (!event.time_start){
-                $scope.default_time_start = "";
-            }
-            else{
-                $scope.default_time_start = moment($scope.event.time_start).format('MM/DD/YYYY');
-            }
-            if (!event.time_end){
-                $scope.default_time_start = "";
-            }
-            else{
-                $scope.default_time_end = moment($scope.event.time_end).format('MM/DD/YYYY');
-            }
-            $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
+            $scope.time_start = moment($scope.event.time_start).format('hh:mm A');
+            $scope.date_start = moment($scope.event.time_start).format('MM/DD/YYYY');
+            $scope.time_end = moment($scope.event.time_end).format('hh:mm A');  
+            $scope.date_end = moment($scope.event.time_end).format('MM/DD/YYYY');  
             console.log($scope.event.time_end);
 
             for (var i = 0; i < $scope.tags.organizationTags.length; i++){
@@ -2224,8 +2218,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (isValid){
         $scope.loading = true;
             var to_send = JSON.parse(JSON.stringify($scope.event));
-            to_send.time_end = $scope.time_end;
-            to_send.time_start = $scope.time_start;
+            to_send.time_start = $scope.date_start + " " + $scope.time_start;
+            to_send.time_end = $scope.date_end + " " + $scope.time_end;
             to_send.tags = getCheckedTags($scope.tags);
             console.log(to_send.tags);
         $http.post('/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
