@@ -1382,6 +1382,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log($scope.members[i]);
                      //define profile information
                     $scope.status = $scope.member.status;
+                    var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
                     $scope.firstName = $scope.member.first_name;
                     $scope.lastName = $scope.member.last_name;
                     $scope.email = $scope.member.email;
@@ -2185,6 +2187,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.event = event;
             $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
+            if (!event.time_start){
+                $scope.default_time_start = "";
+            }
+            else{
+                $scope.default_time_start = moment($scope.event.time_start).format('MM/DD/YYYY');
+            }
+            if (!event.time_end){
+                $scope.default_time_start = "";
+            }
+            else{
+                $scope.default_time_end = moment($scope.event.time_end).format('MM/DD/YYYY');
+            }
             $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             console.log($scope.event.time_end);
 

@@ -70,7 +70,8 @@ class User(ndb.Model):
     occupation = ndb.StringProperty()
     employer = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
-    expected_graduation = ndb.DateProperty()
+    grad_month = ndb.IntegerProperty()
+    grad_year = ndb.IntegerProperty()
     pledge_class = ndb.StringProperty()
     #address stuff
     address = ndb.StringProperty()
@@ -142,6 +143,7 @@ class Organization(ndb.Model):
     school = ndb.StringProperty()
     type = ndb.StringProperty()
     tags = ndb.StringProperty(repeated=True)
+    paid = ndb.BooleanProperty(default=False)
 
 
 class CST(datetime.tzinfo):
@@ -412,6 +414,17 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms}))
         except:
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='organization/info',
+                      http_method='POST', name='auth.organization_info')
+    def organization_info(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        organization = request_user.organization.get()
+        out = dict(name=organization.name, school=organization.school)
+        out["paid"] = organization.paid
+        return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
                       http_method='POST', name='auth.login')
@@ -693,8 +706,10 @@ class RESTApi(remote.Service):
                 user.last_name = value
             elif key == "dob":
                 user.dob = datetime.datetime.strptime(value, '%Y-%m-%d')
-            elif key == "expected_graduation":
-                user.expected_graduation = datetime.datetime.strptime(value, '%Y-%m-%d')
+            elif key == "grad_month":
+                user.grad_month = int(value)
+            elif key == "grad_year":
+                user.grad_year = int(value)
             elif key == "address":
                 user.address = value
             elif key == "city":

@@ -73,14 +73,34 @@
         <p ng-show="(memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)" class="help-block">Please enter your birthday.</p>
     </div>
     
-    
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.expected_graduation.$invalid && !memberAccount.expected_graduation.$pristine) || (memberAccount.expected_graduation.$invalid && submitted)}">
-        <label for="graduationDate" class="col-sm-2 control-label">Graduation Date</label>
+        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted)}">
+        <label for="currentState" class="col-sm-2 control-label">Graduation Month</label>
         <div class="col-sm-10">
-          <input type="date" class="form-control" id="graduationDate" name="expected_graduation" ng-model="item.expected_graduation" placeholder="mm/dd/yyyy" ng-required="!checkAlumni()">
-        </div>
-        <p ng-show="(memberAccount.expected_graduation.$invalid && !memberAccount.expected_graduation.$pristine) || (memberAccount.expected_graduation.$invalid && submitted)" class="help-block">Please enter your graduation date.</p>
+        <select class="form-control" id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni()">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">Septempber</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+        <p ng-show="(memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted)" class="help-block">Please enter your graduation month.</p>
+    </div>
     </div> 
+    
+<div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted)}">
+        <label for="grad_year" class="col-sm-2 control-label">Graduation Year</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" id="grad_year" name="grad_year" ng-model="item.grad_year" placeholder="2014" ng-required = "checkAlumni()">
+        </div>
+        <p ng-show="(memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted)" class="help-block">Please enter your graduation year.</p>
+    </div>
 
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
         <label for="major" class="col-sm-2 control-label">Major</label>

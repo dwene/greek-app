@@ -10,7 +10,7 @@
 
     
 			<h1 class="text-center">{{firstName}} {{lastName}}</h1>
-			<p class="text-center">"{{status}}"</p>
+			<p class="text-center" ng-show="status">"{{status}}"</p>
     </div>
     
     
@@ -20,6 +20,7 @@
     <div class="row">Birthday: {{birthday}}</div>
     <div class="row">Phone: <a href="tel:{{phone}}">{{phone}}</a></div>
     <div class="row">Email: <a href="mailto:{{email}}">{{email}}</a></div>
+    <div class="row" ng-show="graduation">Expected Graduation: {{graduation}}</div>
     <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
     <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>
     <div class="row" ng-show="website.length > 0">Website: <a target="_blank" href="{{website}}">{{website}}</a></div>
