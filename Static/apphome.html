@@ -39,7 +39,7 @@
         
         <div class="pager">
             <button class="previous" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><a>&larr; Newest</a></button>
-            <button class="next" ng-disabled="currentPage >= $root.hidden_notifications.length/maxPageLength - 1" ng-click="currentPage=currentPage+1"><a>Older &rarr;</a></button>
+            <button class="next" ng-disabled="currentPage >= $root.hidden_notifications.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1"><a>Older &rarr;</a></button>
         </div>
         <hr>
     </section>
