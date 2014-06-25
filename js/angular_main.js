@@ -1790,12 +1790,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 for (var i = 0; i < tags.permsTags.length; i++){
                     if (tags.permsTags[i].checked){
-                        if (tags.permsTags[i].name == "Everyone"){
-                            selected_perms_tags.push('council');
-                            selected_perms_tags.push('member');
-                            selected_perms_tags.push('leadership');
-                            break;
-                        }
                         selected_perms_tags.push(tags.permsTags[i].name);
                         tags.permsTags[i].checked = false;
                     }
@@ -1895,8 +1889,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if(isValid){
                     event.tags = getCheckedTags($scope.tags);
                     var to_send = JSON.parse(JSON.stringify(event));
-                    to_send.time_start = event.date_start + " " + event.time_start;
-                    to_send.time_end = event.date_end + " " + event.time_end;
+                    to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
+                    to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
                     console.log(to_send.time_end);
                     $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
                     .success(function(data){
@@ -1964,12 +1958,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
             
             $scope.showDate = function(start, end){
-                var mStart = moment(start);
+                var mStart = momentInTimezone(start);
                 
                 if (mStart.diff(moment()) > 0){
-                   return moment(start).calendar(); 
+                   return mStart.calendar(); 
                 }
-                var mEnd = moment(end);
+                var mEnd = momentInTimezone(end);
                 if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
                     return 'Happening Now';
                 }
@@ -2063,8 +2057,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.creator = getUsersFromKey(event.creator);
             $scope.event = event;
-            $scope.time_start = moment($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
-            $scope.time_end = moment($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
+            $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
+            $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             $scope.loading = false;
         }
         $scope.editEvent = function(){
@@ -2190,10 +2184,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 event.not_going_list.push(getUsersFromKey(event.not_going[i]));
             }
             $scope.event = event;
-            $scope.time_start = moment($scope.event.time_start).format('hh:mm A');
-            $scope.date_start = moment($scope.event.time_start).format('MM/DD/YYYY');
-            $scope.time_end = moment($scope.event.time_end).format('hh:mm A');  
-            $scope.date_end = moment($scope.event.time_end).format('MM/DD/YYYY');  
+            $scope.time_start = momentInTimezone($scope.event.time_start).format('hh:mm A');
+            $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
+            $scope.time_end = momentInTimezone($scope.event.time_end).format('hh:mm A');  
+            $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
             console.log($scope.event.time_end);
 
             for (var i = 0; i < $scope.tags.organizationTags.length; i++){
@@ -2218,8 +2212,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (isValid){
         $scope.loading = true;
             var to_send = JSON.parse(JSON.stringify($scope.event));
-            to_send.time_start = $scope.date_start + " " + $scope.time_start;
-            to_send.time_end = $scope.date_end + " " + $scope.time_end;
+            to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
+            to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
             to_send.tags = getCheckedTags($scope.tags);
             console.log(to_send.tags);
         $http.post('/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
@@ -2306,7 +2300,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
         $scope.formatDate = function(date){
-            return moment(date).subtract('hours', 5).format('lll');
+            return momentInTimezone(date).format('lll');
             
         }
     });
@@ -2536,6 +2530,12 @@ function CSV2ARRAY(csv) {
     var str = json.replace(/},/g, "},\r\n");
     
     return JSON.parse(str);
+}
+function momentInTimezone(date){
+    return moment(date).add('hours',moment().tz(jstz.determine().name()).format('ZZ')/100);
+}
+function momentUTCTime(date){
+    return moment(date).subtract('hours', moment().tz(jstz.determine().name()).format('ZZ')/100); 
 }
 
 //Directives and other add ons
