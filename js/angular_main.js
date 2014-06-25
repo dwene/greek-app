@@ -2595,7 +2595,6 @@ App.filter('multipleSearch', function(){
 App.filter('startFrom', function() {
     return function(input, start) {
         start = +start; //parse to int
-        console.log(start);
         if (input){
         return input.slice(start);}
         return input;

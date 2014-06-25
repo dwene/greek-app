@@ -32,7 +32,7 @@ body.modal-open{margin-right:0px;}
 /*Message and Events Person Well*/
 #messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
-#messageContent{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
+.preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 
 /*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
