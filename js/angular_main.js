@@ -516,6 +516,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the main app page
     App.controller('appHomeController', function($scope, $http, $rootScope, Load) {
         Load.then(function(){
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.maxPageNumber = 5;
+        
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
@@ -2587,6 +2591,17 @@ App.filter('multipleSearch', function(){
         return retList;
     }
 });
+
+App.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        console.log(start);
+        if (input){
+        return input.slice(start);}
+        return input;
+    }
+});
+
 App.filter('tagDirectorySearch', function(){ 
     return function (objects, tags) {
         if (!tags){return null;}

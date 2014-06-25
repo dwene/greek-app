@@ -24,7 +24,7 @@
         <hr>
        
         <ul>
-            <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.hidden_notifications | orderBy : '-timestamp' | limitTo: 20">
+            <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.hidden_notifications | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber">
                 <div class="notificationContent">
                 <span class="notificationTitle">{{notify.title}}</span>
 <!--                #TODO add more content to the notifications-->
@@ -37,10 +37,10 @@
             </li>
         </ul>
         
-        <ul class="pager">
-            <li class="previous disabled" ng-click="showNewer()"><a>&larr; Newest</a></li>
-            <li class="next" ng-click="showOlder()"><a>Older &rarr;</a></li>
-        </ul>
+        <div class="pager">
+            <button class="previous" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><a>&larr; Newest</a></button>
+            <button class="next" ng-disabled="currentPage >= $root.hidden_notifications.length/maxPageLength - 1" ng-click="currentPage=currentPage+1"><a>Older &rarr;</a></button>
+        </div>
         <hr>
     </section>
 
