@@ -1734,6 +1734,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
         }
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.maxPageNumber = 5;
         function onFirstLoad(){
             $scope.loading = true;
             var tag_list = [];
