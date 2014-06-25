@@ -1,8 +1,8 @@
 <div class="container">
-<ul class="nav nav-pills">
+<ul class="nav nav-pills" ng-show="$root.checkPermissions('council')">
     <li ng-class="{ active: $state.includes('app.managemembers.tag') }"><a ui-sref=".tag">Tag Members</a></li>
-    <li ng-show="$root.checkPermissions('council')" ng-class="{ active: $state.includes('app.managemembers.manage') }"><a ui-sref=".manage">Manage Members</a></li>
-    <li ng-show="$root.checkPermissions('council')" ng-class="{ active: $state.includes('app.managemembers.add') }"><a ui-sref=".add">Add Members</a></li>
+    <li ng-class="{ active: $state.includes('app.managemembers.manage') }"><a ui-sref=".manage">Manage Members</a></li>
+    <li ng-class="{ active: $state.includes('app.managemembers.add') }"><a ui-sref=".add">Add Members</a></li>
 </ul>
 </div>
 <br>
