@@ -48,7 +48,7 @@
             <div class="notificationContent">
                 <button type="button" class="close" ng-click="openMessageModal(notify)">delete</button>
             <span class="notificationTitle">{{notify.title}}</span>
-            <span>{{notify.content | limitTo: 100}}<p ng-show="notify.content.length > 100">...</p></span>
+            <span>{{notify.content | limitTo: 100}}<span ng-show="notify.content.length > 100">...</span></span>
             </div>
         </li>
     </ul>
