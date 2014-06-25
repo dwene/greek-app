@@ -1335,7 +1335,7 @@ class RESTApi(remote.Service):
                 if "perms_tags" in value:
                     event.perms_tags = value["perms_tags"]
                     if EVERYONE in value["perms_tags"]:
-                        event.perms_tags = ['Everyone']
+                        event.perms_tags = ['everyone']
                 # invited_users = get_users_from_tags(tags=value,
                 #                                     organization=request_user.organization,
                 #                                     keys_only=True)

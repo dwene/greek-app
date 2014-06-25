@@ -67,8 +67,11 @@
     
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
         <label for="dob" class="col-sm-2 control-label">Birthday</label>
-        <div class="col-sm-10">
-          <input type="date" class="form-control" id="dob" name="dob" ng-model="item.dob" placeholder="mm/dd/yyyy" required>
+        <div class="col-sm-10" id="dob" data-date-format="MM-DD-YYYY">
+        <div class="input-group">
+          <input type="text" class="form-control" name="dob" placeholder="1992-01-15" ng-model="item.dob" required>
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          </div>
         </div>
         <p ng-show="(memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)" class="help-block">Please enter your birthday.</p>
     </div>
@@ -460,7 +463,26 @@
         </div>
         <p ng-show="(memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>
+    <script type="text/javascript">
+    $(function(){
+
+  $('#dob').datetimepicker({
+        pickTime: false,
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+    });
+    //updates the model for date inputs               
+    $('.date input').focusout(function(){
+     $(this).trigger('input');
+    })
     
+    
+    });
+</script>
     
 
     <button type="submit" class="btn btn-default pull-right">Submit</button>
