@@ -48,7 +48,7 @@
             <div class="notificationContent">
                 <button type="button" class="close" ng-click="openMessageModal(notify)">delete</button>
             <span class="notificationTitle">{{notify.title}}</span>
-            <span class="preText">{{notify.content}}</span>
+            <span>{{notify.content | limitTo: 100}}<p ng-show="notify.content.length > 100">...</p></span>
             </div>
         </li>
     </ul>
@@ -70,7 +70,7 @@
       </div>
       <div class="modal-body">
         <h3>{{selectedMessage.title}}</h3><br>
-        <p style="white-space: pre;">{{selectedMessage.content}}</p>        
+        <p  class="preText">{{selectedMessage.content}}</p>        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="deleteMessage(selectedMessage)">Delete</button>
