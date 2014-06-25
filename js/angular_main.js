@@ -2663,6 +2663,10 @@ App.filter('eventTagDirectorySearch', function(){
             for(var sPos = 0; sPos< searchArray.length; sPos++){
                 var check = false;
                 var searchItem = searchArray[sPos];
+                if (searchItem.toString().toLowerCase() == 'everyone'){
+                    return objects;
+                }
+                
                 if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
                     retList.push(object);
                     break;
