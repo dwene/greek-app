@@ -21,3 +21,10 @@ indexes:
   - name: organization
   - name: time_start
     direction: desc
+    
+- kind: Event
+  properties:
+  - name: org_tags
+  - name: organization
+  - name: time_start
+    direction: desc
