@@ -132,6 +132,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
 #showHidden{position:relative; width:100%; overflow:hidden;}
+.pager li{cursor:pointer;}
 
 /*Events Page*/
 #newEventButton{margin-bottom:15px;}
