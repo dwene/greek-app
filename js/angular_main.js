@@ -150,7 +150,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             //#CHANGES there might be a better way to do this
             .state('app.postNewKeyPictureLink', {
                     url : '/postNewKeyPictureLink',
-                    templateUrl : '',
+                    templateUrl : 'Static/loading.html',
                     controller : 'uploadImageController'
                 })
             .state('app.changepassword', {
