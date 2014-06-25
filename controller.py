@@ -1293,12 +1293,12 @@ class RESTApi(remote.Service):
             events = Event.query(ndb.AND(Event.organization == request_user.organization,
                                      ndb.OR(Event.org_tags.IN(request_user.tags),
                                             Event.perms_tags == request_user.perms,
-                                            'everyone' in Event.perms_tags,
+                                            Event.perms_tags == 'everyone',
                                             Event.going == request_user.key))).order(-Event.time_start).fetch(30)
         else:
             events = Event.query(ndb.AND(Event.organization == request_user.organization,
                                      ndb.OR(Event.perms_tags == request_user.perms,
-                                            'everyone' in Event.perms_tags,
+                                            Event.perms_tags == 'everyone',
                                             Event.going == request_user.key))).order(-Event.time_start).fetch(30)
         out_events = []
         for event in events:
