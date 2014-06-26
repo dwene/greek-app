@@ -4,6 +4,8 @@ import logging
 import datetime
 import hashlib
 import uuid
+import braintree
+import requests
 from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
@@ -18,13 +20,15 @@ from google.appengine.api import images
 import urllib
 from google.appengine.api import urlfetch
 
-
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id="b9hg6czg7dy9njgm",
+                                  public_key="wy5t8dq5rbs9x53j",
+                                  private_key="d71fe8c3b083f72653e0b9a6004ba9a6")
 
 WEB_CLIENT_ID = 'greek-app'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
 IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID
-
 
 # "Password Salt"
 SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
@@ -388,7 +392,81 @@ def get_users_from_tags(tags, organization, keys_only):
 @endpoints.api(name='netegreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
 class RESTApi(remote.Service):
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test',
+                      http_method='POST', name='auth.braintree')
+    def braintree(self, request):
+
+        result = braintree.Transaction.sale({
+        "amount": "100000.00",
+        "credit_card": {
+            "number": "4111111111111111",
+            "expiration_month": "05",
+            "expiration_year": "2020"
+        }
+        })
+        if result.is_success:
+            out = "success!: " + result.transaction.id
+        elif result.transaction:
+            out = "Error processing transaction:"
+            out += "  message: " + result.message
+            out += "  code:    " + result.transaction.processor_response_code
+            out += "  text:    " + result.transaction.processor_response_text
+        else:
+            out = "message: " + result.message
+            for error in result.errors.deep_errors:
+                out += "attribute: " + error.attribute
+                out += "  code: " + error.code
+                out += "  message: " + error.message
+        return OutgoingMessage(error='', data=json_dump(out))
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test_subscription',
+                      http_method='POST', name='auth.braintree_subscription')
+    def braintree_subscription(self, request):
+        out = ''
+        out2 = ''
+        result = braintree.Customer.create({
+            "first_name": 'Derek',
+            "last_name": 'Wene',
+            "credit_card": {
+                "billing_address": {
+                    "postal_code": '77840'
+                },
+                "number": "4111111111111111",
+                "expiration_month": "05",
+                "expiration_year": "2020",
+                "cvv": '000'
+            }
+        })
+        if result.is_success:
+            customer = braintree.Customer.find(result.customer.id)
+            payment_method_token = customer.credit_cards[0].token
+            result2 = braintree.Subscription.create({
+            "payment_method_token": payment_method_token,
+            "plan_id": "normal_monthly_plan"
+            })
+            if result2.is_success:
+                out2 = 'Successfully added to test plan!'
+            else:
+                out2 = 'not added to plan'
+            out = "success "
+        elif result.transaction:
+            out = "Error processing transaction:"
+            out += "  message: " + result.message
+            out += "  code:    " + result.transaction.processor_response_code
+            out += "  text:    " + result.transaction.processor_response_text
+        else:
+            out = "message: " + result.message
+            for error in result.errors.deep_errors:
+                out += "attribute: " + error.attribute
+                out += "  code: " + error.code
+                out += "  message: " + error.message
+        return OutgoingMessage(error='', data=json_dump([out, out2]))
+
+
     # USER REQUESTS
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_organization',
                       http_method='POST', name='auth.register_organization')
     def register_organization(self, request):

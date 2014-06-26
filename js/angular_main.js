@@ -363,7 +363,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //changing a forgotten password
-    App.controller('changePasswordFromTokenController', function($scope, $http, Load) {
+    App.controller('changePasswordFromTokenController', function($scope, $http) {
         $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
