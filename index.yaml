@@ -28,3 +28,9 @@ indexes:
   - name: organization
   - name: time_start
     direction: desc
+    
+- kind: Notification
+  properties:
+  - name: key
+  - name: timestamp
+    direction: desc

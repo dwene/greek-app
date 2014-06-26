@@ -1194,7 +1194,8 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         if not request_user.sent_notifications:
             return OutgoingMessage(error='', data=json_dump(''))
-        sent_notifications = Notification.query(Notification.key.IN(request_user.sent_notifications)).fetch()
+        sent_notifications = Notification.query(Notification.key.IN(request_user.sent_notifications)).order(
+                                                                    -Notification.timestamp).fetch(30)
         out_message = []
         for notification in sent_notifications:
             note_dict = notification.to_dict()
