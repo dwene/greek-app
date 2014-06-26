@@ -2078,7 +2078,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.editEvent = function(){
             window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
-            $scope.event = undefined;
         }
         $scope.rsvp = function(rsvp){
             console.log($scope.event.key);
