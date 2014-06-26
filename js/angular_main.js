@@ -1393,7 +1393,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                      //define profile information
                     $scope.status = $scope.member.status;
                     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
+                    if ($scope.member.grad_month && $scope.member.grad_year){
+                        $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
+                    }
                     $scope.firstName = $scope.member.first_name;
                     $scope.lastName = $scope.member.last_name;
                     $scope.email = $scope.member.email;

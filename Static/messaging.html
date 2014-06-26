@@ -44,7 +44,7 @@
 <section id="recentlySentMessages" class="container">
     <h2 class="page-header" ng-hide="notify.length">Recently Sent Messages: <br></h2>
     <ul>
-        <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | orderBy : '-timestamp' | limitTo: maxPageNumber" class="notification" ng-class="{ new : notify.new }">
+        <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification" ng-class="{ new : notify.new }">
             <div class="notificationContent">
                 <button type="button" class="close" ng-click="openMessageModal(notify)">delete</button>
             <span class="notificationTitle">{{notify.title}}</span>
