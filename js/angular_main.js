@@ -449,6 +449,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (registerOrganizationService.get() === undefined){
             window.location.assign('#/register');
         }
+        $scope.$watch('user_name', function() {
+                $scope.user_name = $scope.user_name.replace(/\s+/g,'');
+        });
         //ng-submit on form submit button click
         
         $scope.checkUserName = function(user){
@@ -1114,6 +1117,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('newmemberinfoController', function($scope, $http){
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
+        $scope.$watch('item.user_name', function() {
+            $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
+        });
         $scope.checkUserName = function(user){
         $http.post('/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
                 .success(function(data){

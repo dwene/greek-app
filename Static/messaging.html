@@ -44,7 +44,7 @@
 <section id="recentlySentMessages" class="container">
     <h2 class="page-header" ng-hide="notify.length">Recently Sent Messages: <br></h2>
     <ul>
-        <li ng-repeat="notify in sentMessages | orderBy : '-timestamp' | limitTo: 5" class="notification" ng-class="{ new : notify.new }">
+        <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | orderBy : '-timestamp' | limitTo: maxPageNumber" class="notification" ng-class="{ new : notify.new }">
             <div class="notificationContent">
                 <button type="button" class="close" ng-click="openMessageModal(notify)">delete</button>
             <span class="notificationTitle">{{notify.title}}</span>
@@ -55,7 +55,7 @@
     
     <div class="pagerButtons">
             <button class="previous btn btn-default btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">&larr; Newer</button>
-            <button class="next btn btn-default btn-sm" ng-disabled="currentPage >= $root.hidden_notifications.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1">Older &rarr;</button>
+            <button class="next btn btn-default btn-sm" ng-disabled="currentPage >= sentMessages.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1">Older &rarr;</button>
     </div>
     
 </section>
