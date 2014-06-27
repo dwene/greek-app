@@ -5,7 +5,9 @@
 
 
     <div class="container">
-       <p>{{subscription.credit_card.masked_number}}</p>
-        <p>{{subscription_raw}}</p>
+        <p>Next Billing Date: {{subscription.next_billing_date}}</p>
+        <img ng-src="{{subscription.credit_card.image_url}}"><span>{{subscription.credit_card.masked_number}}</span>
+        <p>Expires: {{subscription.credit_card.expiration}}</p>
+        <button class="btn btn-default">Cancel Subscription</button>
     </div>
 </div>

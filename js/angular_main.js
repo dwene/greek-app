@@ -1196,8 +1196,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //adding profile pictures
     App.controller('profilepictureController', function($scope, $http, Load){
-        
-    //#FIXME Load is not defined here :-(
+
     Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
@@ -2341,30 +2340,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
 App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope) {
         $scope.loading = true;
         Load.then(function(){
-            
             $scope.createReport = function(){
-            
                 var doc = new jsPDF();
-
                 // We'll make our own renderer to skip this editor
                 var specialElementHandlers = {
                     '#editor': function(element, renderer){
                         return true;
                     }
                 };
-
                 // All units are in the set measurement for the document
                 // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
                 doc.fromHTML($('#report').get(0), 15, 15, {
                     'width': 170, 
                     'elementHandlers': specialElementHandlers
                 });
-                
-                doc.output('dataurlnewwindow');
-
-                
+                doc.output('dataurlnewwindow'); 
             }
-            
         });
   });
 
@@ -2634,7 +2625,7 @@ App.directive('datePicker', function(){
     template: '<div class="date" id="{{this_id}}"> <div class="input-group"><input type="text" class="form-control" id="{{this_name}}" name="{{this_name}}" ng-model="event.{{this_name}}" required/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></div>',
     controller: ['$scope', function($scope){
         //#FIXME how do I get this_name to be attr of name from the directive date-picker
-            $scope.this_name = scope.$eval(attrs.name);
+            $scope.this_name = $scope.$eval(attrs.name);
     }],
     link: function(scope, element, attrs){
 

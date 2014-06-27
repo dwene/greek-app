@@ -153,14 +153,8 @@ class Organization(ndb.Model):
     subscription_id = ndb.StringProperty()
     customer_id = ndb.StringProperty()
     payment_token = ndb.StringProperty()
-
-
-class PaymentInfo(ndb.Model):
-    customer_id = ndb.StringProperty()
-    payment_start = ndb.DateProperty()
-    payment_next = ndb.DateProperty()
-    payment_end = ndb.DateProperty()
-    organization = ndb.KeyProperty()
+    cancel_subscription = ndb.DateProperty(default=datetime.date(5000, 01, 01))
+    trial_period = ndb.BooleanProperty(default=True)
 
 
 class CST(datetime.tzinfo):
@@ -412,12 +406,12 @@ class RESTApi(remote.Service):
     def braintree(self, request):
 
         result = braintree.Transaction.sale({
-        "amount": "100000.00",
-        "credit_card": {
-            "number": "4111111111111111",
-            "expiration_month": "05",
-            "expiration_year": "2020"
-        }
+            "amount": "100000.00",
+            "credit_card": {
+                "number": "4111111111111111",
+                "expiration_month": "05",
+                "expiration_year": "2020"
+            }
         })
         if result.is_success:
             out = "success!: " + result.transaction.id
@@ -467,7 +461,6 @@ class RESTApi(remote.Service):
                 out += "  message: " + error.message
         return OutgoingMessage(error='', data=json_dump([out, out2]))
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test_update_subscription',
                       http_method='POST', name='auth.test_update_subscription')
     def test_update_subscription(self, request):
@@ -492,7 +485,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         organization = request_user.organization.get()
         data = json.loads(request.data)
-        if not organization.customer_id and not organization.subscription_id:
+        if not organization.payment_token and not organization.subscription_id:
             customer_result = braintree.Customer.create({
                 "first_name": data["first_name"],
                 "last_name": data["last_name"],
@@ -507,24 +500,32 @@ class RESTApi(remote.Service):
                 }
             })
             if not customer_result.is_success:
-                #verification = customer_result.credit_card_verification
-                #outgoing_message = "Credit Card Verification: " + verification.status + " Reason: "
-                #outgoing_message += verification.gateway_rejection_reason
                 return OutgoingMessage(error='INVALID_CARD', data=customer_result.message)
+
             organization.customer_id = customer_result.customer.id
-            customer = braintree.Customer.find(organization.customer_id)
+            organization.payment_token = customer_result.customer.credit_cards[0].token
+
+        if organization.trial_period:
             subscription_result = braintree.Subscription.create({
-                "payment_method_token": customer.credit_cards[0].token,
+                "payment_method_token": organization.payment_token,
                 "plan_id": "normal_monthly_plan"
             })
-            if not subscription_result.is_success:
-                organization.put()
-                return OutgoingMessage(error='SUBSCRIPTION_ERROR', data=subscription_result.message)
-            organization.payment_token = customer.credit_cards[0].token
-            organization.subscription_id = subscription_result.subscription.id
-            organization.subscribed = True
+        else:
+            subscription_result = braintree.Subscription.create({
+                "payment_method_token": organization.payment_token,
+                "plan_id": "normal_monthly_plan",
+                "trial_period": False
+            })
+        if not subscription_result.is_success:
             organization.put()
-            return OutgoingMessage(error='', data='OK')
+            return OutgoingMessage(error='SUBSCRIPTION_ERROR', data=subscription_result.message)
+        organization.subscription_id = subscription_result.subscription.id
+        organization.subscribed = True
+        organization.trial_period = False
+        organization.cancel_subscription = datetime.date(5000, 01, 01)
+        organization.put()
+        return OutgoingMessage(error='', data='OK')
+
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/change_card_number',
                       http_method='POST', name='pay.change_card_number')
@@ -583,11 +584,31 @@ class RESTApi(remote.Service):
         credit_card = braintree.CreditCard.find(organization.payment_token)
         card = dict()
         card["masked_number"] = credit_card.masked_number
-        card["expiration_month"] = credit_card.expiration_date
+        card["expiration"] = credit_card.expiration_date
         card["cardholder_name"] = credit_card.cardholder_name
         card["image_url"] = credit_card.image_url
         message["credit_card"] = card
         return OutgoingMessage(error='', data=json_dump(message))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/cancel_subscription',
+                      http_method='POST', name='pay.cancel_subscription')
+    def cancel_subscription(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        organization = request_user.organization.get()
+        if not organization.customer_id:
+            return OutgoingMessage(error=NOT_SUBSCRIBED)
+        subscription = braintree.Subscription.find(organization.subscription_id)
+        organization.cancel_subscription = datetime.date.strptime(subscription.next_billing_date, '%Y-%m-%d')
+        result = braintree.Subscription.cancel(organization.subscription_id)
+        if result.is_success:
+            organization.subscription = ''
+            organization.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='SUBSCRIPTION_CANCELLATION_FAIL', data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/is_subscribed',
                       http_method='POST', name='pay.is_subscribed')
