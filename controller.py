@@ -155,7 +155,7 @@ class Organization(ndb.Model):
     payment_token = ndb.StringProperty()
     cancel_subscription = ndb.DateProperty(default=datetime.date(5000, 01, 01))
     trial_period = ndb.BooleanProperty(default=True)
-
+    cost = ndb.FloatProperty(default=1.0)
 
 class CST(datetime.tzinfo):
     def utcoffset(self, dt):
@@ -485,7 +485,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         organization = request_user.organization.get()
         data = json.loads(request.data)
-        if not organization.payment_token and not organization.subscription_id:
+        if not organization.customer_id and not organization.subscription_id:
             customer_result = braintree.Customer.create({
                 "first_name": data["first_name"],
                 "last_name": data["last_name"],
@@ -501,20 +501,35 @@ class RESTApi(remote.Service):
             })
             if not customer_result.is_success:
                 return OutgoingMessage(error='INVALID_CARD', data=customer_result.message)
-
             organization.customer_id = customer_result.customer.id
             organization.payment_token = customer_result.customer.credit_cards[0].token
-
+        elif not organization.subscription_id and len(data) > 0:
+            card_result = braintree.CreditCard.create({
+                "customer_id": organization.customer_id,
+                "number": data["number"],
+                "expiration_month": data["exp_month"],
+                "expiration_year": data["exp_year"],
+                "cvv": data["cvv"],
+                "options": {
+                    "verify_card": True
+                }
+            })
+            if card_result.is_success:
+                organization.payment_token = card_result.credit_card.token
+            else:
+                OutgoingMessage(error='CARD_ERROR', data=card_result.message)
         if organization.trial_period:
             subscription_result = braintree.Subscription.create({
                 "payment_method_token": organization.payment_token,
                 "plan_id": "normal_monthly_plan"
             })
         else:
+            user_count = len(User.query(User.organization == request_user.organization).fetch(projection=[]))
             subscription_result = braintree.Subscription.create({
                 "payment_method_token": organization.payment_token,
                 "plan_id": "normal_monthly_plan",
-                "trial_period": False
+                "trial_period": False,
+                "price": user_count * organization.cost
             })
         if not subscription_result.is_success:
             organization.put()
@@ -577,10 +592,12 @@ class RESTApi(remote.Service):
         if not organization.customer_id:
             return OutgoingMessage(error=NOT_SUBSCRIBED)
         message = dict()
-        subscription = braintree.Subscription.find(organization.subscription_id)
-        message["paid_through_date"] = subscription.paid_through_date
-        message["subscription_price"] = str(subscription.price)
-        message["next_billing_date"] = subscription.next_billing_date
+        message["no_subscription"] = True
+        if organization.subscription_id:
+            subscription = braintree.Subscription.find(organization.subscription_id)
+            message["paid_through_date"] = subscription.paid_through_date
+            message["subscription_price"] = str(subscription.price)
+            message["next_billing_date"] = subscription.next_billing_date
         credit_card = braintree.CreditCard.find(organization.payment_token)
         card = dict()
         card["masked_number"] = credit_card.masked_number
