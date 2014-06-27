@@ -2570,6 +2570,17 @@ App.directive('match', function () {
         };
 });
 
+
+App.directive('helloWorld', function() {
+  return {
+    scope: {},  // use a new isolated scope
+    restrict: 'AE',
+    replace: 'true',
+    template: '<h3>Hello World!!</h3>'
+  };
+});
+
+
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {
         var searchValues = search;
