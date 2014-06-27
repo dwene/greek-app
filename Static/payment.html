@@ -8,16 +8,24 @@
 <!--      action needs to be: action="/create_transaction" method="POST" -->
       <form id="braintree-payment-form">
         <p>
+          <label>First Name</label>
+          <input type="text" size="20" autocomplete="off" ng-model="pay.first_name" />
+        </p>
+        <p>
+          <label>Last Name</label>
+          <input type="text" size="20" autocomplete="off" ng-model="pay.last_name" />
+        </p>
+        <p>
           <label>Card Number</label>
-          <input type="text" size="20" autocomplete="off" data-encrypted-name="number" />
+          <input type="text" size="20" autocomplete="off" ng-model="pay.number" />
         </p>
         <p>
           <label>CVV</label>
-          <input type="text" size="4" autocomplete="off" data-encrypted-name="cvv" />
+          <input type="text" size="4" autocomplete="off" ng-model="pay.cvv" />
         </p>
         <p>
           <label>Expiration (MM/YYYY)</label>
-          <input type="text" size="2" data-encrypted-name="month" /> / <input type="text" size="4" data-encrypted-name="year" />
+          <input type="number" size="2" ng-model="pay.exp_month" /> / <input type="text" size="4" ng-model="pay.exp_year" />
         </p>
         <button type="submit" ng-click="submitPayment()" class="btn btn-default">Save Payment Info</button>
       </form>

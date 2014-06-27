@@ -194,6 +194,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/eventcheckinreport.html',
                     controller : 'eventCheckInReportController'
                 })
+            .state('app.subscriptionInfo',{
+                //#TODO put this into each individual event :tag
+                    url : '/subscriptioninfo',
+                    templateUrl : 'Static/subscriptioninfo.html',
+                    controller : 'subscriptionInfoController'
+                })
     });
 
 //Set up run commands for the app
@@ -445,7 +451,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the register info page
-    App.controller('registerinfoController', function($scope, $http, registerOrganizationService) {
+    App.controller('registerinfoController', function($scope, $http, registerOrganizationService, $rootScope) {
         if (registerOrganizationService.get() === undefined){
             window.location.assign('#/register');
         }
@@ -512,7 +518,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the payment page
     App.controller('paymentController', function($scope, $http) {
         //skip payment page right now
+        $scope.pay = {};
         $scope.submitPayment = function(){
+            
+            $http.post('/_ah/api/netegreek/v1/pay/subscribe', packageForSending($scope.pay))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    window.location.assign("#/app");
+                }
+                else
+                    console.log('ERROR: '+JSON.stringify(data));
+            })
+            .error(function(data) {
+                console.log('Error: ' + JSON.stringify(data));
+            }); 
         };
     });
 
@@ -1252,7 +1272,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var leadership = [];
             var members = [];
             if ($rootScope.directory.members){
-                console.log('HOWDY')
                 for (var i = 0; i< $rootScope.directory.members.length; i++){
                     if ($rootScope.directory.members[i].perms == MEMBER){
                         members.push($rootScope.directory.members[i]);
@@ -2350,6 +2369,30 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
   });
 
 
+    App.controller('subscriptionInfoController', function($scope, $http, Load, $rootScope) {
+        $scope.loading = true;
+        Load.then(function(){
+            if (!$rootScope.subscribed){
+                window.location.assign('#/app/payment');
+            }
+            $http.post('/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    $scope.subscription = JSON.parse(data.data);
+                    $scope.subscription_raw = data.data;
+                    $scope.loading = false;
+                }
+                else{
+                    console.log('ERROR: '+data);
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        });
+	});
+
+
 //More Functions
 
 //checks to see if user is logged in or not
@@ -2857,7 +2900,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
           var done = 0;
           function checkIfDone() {
             done++;
-            if (done==4) deferred.resolve(); 
+            if (done==5) deferred.resolve(); 
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
@@ -2913,6 +2956,20 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
             })
             .error(function(data) {
                 console.log('Error: ' + data);
+                checkIfDone();
+            });
+            console.log('hi');
+            $http.post('/_ah/api/netegreek/v1/pay/is_subscribed', packageForSending(''))
+            .success(function(data){
+                console.log('hi');
+                if (!checkResponseErrors(data)){
+                    var subscribed = JSON.parse(data.data);
+                    $rootScope.subscribed = subscribed;
+                    console.log(subscribed);
+                }
+                checkIfDone();
+            })
+            .error(function(data) {
                 checkIfDone();
             });
             
