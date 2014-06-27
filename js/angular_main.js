@@ -2553,7 +2553,7 @@ function momentUTCTime(date){
 }
 
 //Directives and other add ons
-App.directive('match', function () {
+App.directive('match', function(){
         return {
             require: 'ngModel',
             restrict: 'A',
@@ -2571,13 +2571,32 @@ App.directive('match', function () {
 });
 
 
-App.directive('helloWorld', function() {
+App.directive('timePicker', function(){
   return {
     scope: {},  // use a new isolated scope
+    restrict: 'E',
+    replace: 'true',
+    template: '<h3>Hello World!!</h3>',
+    link: function(){
+    
+    }
+  };
+});
+
+App.directive('datePicker', function(){
+  return {
+    scope: {},
     restrict: 'AE',
     replace: 'true',
-    template: '<h3>Hello World!!</h3>'
-  };
+    template: '<div class="date" id="{{this_id}}"> <div class="input-group"><input type="text" class="form-control" id="{{this_name}}" name="{{this_name}}" ng-model="event.{{this_name}}" required/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></div>',
+    controller: ['$scope', function($scope){
+        //#FIXME how do I get this_name to be attr of name from the directive date-picker
+            $scope.this_name = scope.$eval(attrs.name);
+    }],
+    link: function(scope, element, attrs){
+
+    }
+  }
 });
 
 
