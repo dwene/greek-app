@@ -2585,17 +2585,18 @@ App.directive('timePicker', function(){
 
 App.directive('datePicker', function(){
   return {
-    scope: {},
+    scope: {
+        name : '@'
+    },
     restrict: 'AE',
     replace: 'true',
-    template: '<div class="date" id="{{this_id}}"> <div class="input-group"><input type="text" class="form-control" id="{{this_name}}" name="{{this_name}}" ng-model="event.{{this_name}}" required/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></div>',
-    controller: ['$scope', function($scope){
-        //#FIXME how do I get this_name to be attr of name from the directive date-picker
-            $scope.this_name = scope.$eval(attrs.name);
-    }],
-    link: function(scope, element, attrs){
-
-    }
+    template: '<div class="date"><div class="input-group"><input type="text" class="form-control" id="{{name}}" name="{{name}}" ng-model="$parent.event.date_end" required/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></div>'
+//    controller: ['$scope', function($scope){
+//        $scope.this_name = this_name;
+//    }],
+//    link: function(scope, element, attrs){
+//        var this_name = attrs.name;
+//    }
   }
 });
 
