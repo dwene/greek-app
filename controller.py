@@ -592,12 +592,13 @@ class RESTApi(remote.Service):
         if not organization.customer_id:
             return OutgoingMessage(error=NOT_SUBSCRIBED)
         message = dict()
-        message["no_subscription"] = True
         if organization.subscription_id:
             subscription = braintree.Subscription.find(organization.subscription_id)
             message["paid_through_date"] = subscription.paid_through_date
             message["subscription_price"] = str(subscription.price)
             message["next_billing_date"] = subscription.next_billing_date
+        else:
+            message["no_subscription"] = True
         credit_card = braintree.CreditCard.find(organization.payment_token)
         card = dict()
         card["masked_number"] = credit_card.masked_number
@@ -634,7 +635,7 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         organization = request_user.organization.get()
-        return OutgoingMessage(error='', data=json_dump(organization.subscribed))
+        return OutgoingMessage(error='', data=json_dump(True))
 
     # USER REQUESTS
 
