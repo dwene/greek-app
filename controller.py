@@ -42,6 +42,7 @@ INCORRECT_PERMS = 'INCORRECT_PERMISSIONS'
 INFO_NOT_FILLED_OUT = 'EMPTY_INFO'
 INVALID_EMAIL = 'INVALID_EMAIL'
 INVALID_USERNAME = 'INVALID_USERNAME'
+NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 
 
 EVERYONE = 'Everyone'
@@ -148,14 +149,21 @@ class Organization(ndb.Model):
     school = ndb.StringProperty()
     type = ndb.StringProperty()
     tags = ndb.StringProperty(repeated=True)
-    paid = ndb.BooleanProperty(default=False)
-
+    subscribed = ndb.BooleanProperty(default=False)
+    subscription_id = ndb.StringProperty()
+    customer_id = ndb.StringProperty()
+    payment_token = ndb.StringProperty()
+    cancel_subscription = ndb.DateProperty(default=datetime.date(5000, 01, 01))
+    trial_period = ndb.BooleanProperty(default=True)
+    cost = ndb.FloatProperty(default=1.0)
 
 class CST(datetime.tzinfo):
     def utcoffset(self, dt):
-      return datetime.timedelta(hours=-5)
+        return datetime.timedelta(hours=-5)
+
     def dst(self, dt):
         return datetime.timedelta(0)
+
 
 class DateEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -398,12 +406,12 @@ class RESTApi(remote.Service):
     def braintree(self, request):
 
         result = braintree.Transaction.sale({
-        "amount": "100000.00",
-        "credit_card": {
-            "number": "4111111111111111",
-            "expiration_month": "05",
-            "expiration_year": "2020"
-        }
+            "amount": "100000.00",
+            "credit_card": {
+                "number": "4111111111111111",
+                "expiration_month": "05",
+                "expiration_year": "2020"
+            }
         })
         if result.is_success:
             out = "success!: " + result.transaction.id
@@ -430,9 +438,6 @@ class RESTApi(remote.Service):
             "first_name": 'Derek',
             "last_name": 'Wene',
             "credit_card": {
-                "billing_address": {
-                    "postal_code": '77840'
-                },
                 "number": "4111111111111111",
                 "expiration_month": "05",
                 "expiration_year": "2020",
@@ -447,15 +452,7 @@ class RESTApi(remote.Service):
             "plan_id": "normal_monthly_plan"
             })
             if result2.is_success:
-                out2 = 'Successfully added to test plan!'
-            else:
-                out2 = 'not added to plan'
-            out = "success "
-        elif result.transaction:
-            out = "Error processing transaction:"
-            out += "  message: " + result.message
-            out += "  code:    " + result.transaction.processor_response_code
-            out += "  text:    " + result.transaction.processor_response_text
+                return OutgoingMessage(error='', data='OK')
         else:
             out = "message: " + result.message
             for error in result.errors.deep_errors:
@@ -464,6 +461,181 @@ class RESTApi(remote.Service):
                 out += "  message: " + error.message
         return OutgoingMessage(error='', data=json_dump([out, out2]))
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test_update_subscription',
+                      http_method='POST', name='auth.test_update_subscription')
+    def test_update_subscription(self, request):
+
+        #org = Organization.query(Organization.name == 'testorg123').get()
+        #subscription = braintree.Subscription.find(org.subscription_id)
+        result = braintree.Subscription.update('g23762', {
+            "price": "14.00"
+        })
+        if result.is_success:
+            return OutgoingMessage(error='', data='OK')
+        else:
+            return OutgoingMessage(error='Something wrong..', data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/subscribe',
+                      http_method='POST', name='pay.subscribe')
+    def subscribe(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        organization = request_user.organization.get()
+        data = json.loads(request.data)
+        if not organization.customer_id and not organization.subscription_id:
+            customer_result = braintree.Customer.create({
+                "first_name": data["first_name"],
+                "last_name": data["last_name"],
+                "credit_card": {
+                    "number": data["number"],
+                    "expiration_month": data["exp_month"],
+                    "expiration_year": data["exp_year"],
+                    "cvv": data["cvv"],
+                    "options": {
+                        "verify_card": True
+                    }
+                }
+            })
+            if not customer_result.is_success:
+                return OutgoingMessage(error='INVALID_CARD', data=customer_result.message)
+            organization.customer_id = customer_result.customer.id
+            organization.payment_token = customer_result.customer.credit_cards[0].token
+        elif not organization.subscription_id and len(data) > 0:
+            card_result = braintree.CreditCard.create({
+                "customer_id": organization.customer_id,
+                "number": data["number"],
+                "expiration_month": data["exp_month"],
+                "expiration_year": data["exp_year"],
+                "cvv": data["cvv"],
+                "options": {
+                    "verify_card": True
+                }
+            })
+            if card_result.is_success:
+                organization.payment_token = card_result.credit_card.token
+            else:
+                OutgoingMessage(error='CARD_ERROR', data=card_result.message)
+        if organization.trial_period:
+            subscription_result = braintree.Subscription.create({
+                "payment_method_token": organization.payment_token,
+                "plan_id": "normal_monthly_plan"
+            })
+        else:
+            user_count = len(User.query(User.organization == request_user.organization).fetch(projection=[]))
+            subscription_result = braintree.Subscription.create({
+                "payment_method_token": organization.payment_token,
+                "plan_id": "normal_monthly_plan",
+                "trial_period": False,
+                "price": user_count * organization.cost
+            })
+        if not subscription_result.is_success:
+            organization.put()
+            return OutgoingMessage(error='SUBSCRIPTION_ERROR', data=subscription_result.message)
+        organization.subscription_id = subscription_result.subscription.id
+        organization.subscribed = True
+        organization.trial_period = False
+        organization.cancel_subscription = datetime.date(5000, 01, 01)
+        organization.put()
+        return OutgoingMessage(error='', data='OK')
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/change_card_number',
+                      http_method='POST', name='pay.change_card_number')
+    def change_card_number(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        organization = request_user.organization.get()
+        if not organization.customer_id:
+            return OutgoingMessage(error=NOT_SUBSCRIBED)
+
+        data = json.loads(request.data)
+        if not organization.customer_id and not organization.subscription_id:
+            card_result = braintree.CreditCard.create({
+                "customer_id": organization.customer_id,
+                "number": data["number"],
+                "expiration_month": data["exp_month"],
+                "expiration_year": data["exp_year"],
+                "cvv": data["cvv"],
+                "options": {
+                    "verify_card": True
+                }
+            })
+            if not card_result.is_success:
+                return OutgoingMessage(error='INVALID CARD', data=card_result.message)
+
+            subscription_result = braintree.Subscription.update(organization.subscription_id,{
+                "payment_method_token": card_result.credit_card.token,
+            })
+            if not subscription_result.is_success:
+                organization.put()
+                return OutgoingMessage(error='SUBSCRIPTION_ERROR', data=subscription_result.message)
+            organization.payment_token = card_result.credit_card.token
+            organization.subscription_id = subscription_result.subscription.id
+            organization.put()
+            return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/subscription_info',
+                      http_method='POST', name='pay.subscription_info')
+    def subscription_info(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        organization = request_user.organization.get()
+        if not organization.customer_id:
+            return OutgoingMessage(error=NOT_SUBSCRIBED)
+        message = dict()
+        if organization.subscription_id:
+            subscription = braintree.Subscription.find(organization.subscription_id)
+            message["paid_through_date"] = subscription.paid_through_date
+            message["subscription_price"] = str(subscription.price)
+            message["next_billing_date"] = subscription.next_billing_date
+        else:
+            message["no_subscription"] = True
+        credit_card = braintree.CreditCard.find(organization.payment_token)
+        card = dict()
+        card["masked_number"] = credit_card.masked_number
+        card["expiration"] = credit_card.expiration_date
+        card["cardholder_name"] = credit_card.cardholder_name
+        card["image_url"] = credit_card.image_url
+        message["credit_card"] = card
+        return OutgoingMessage(error='', data=json_dump(message))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/cancel_subscription',
+                      http_method='POST', name='pay.cancel_subscription')
+    def cancel_subscription(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if request_user.perms != 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS)
+        organization = request_user.organization.get()
+        if not organization.customer_id:
+            return OutgoingMessage(error=NOT_SUBSCRIBED)
+        subscription = braintree.Subscription.find(organization.subscription_id)
+        organization.cancel_subscription = datetime.date.strptime(subscription.next_billing_date, '%Y-%m-%d')
+        result = braintree.Subscription.cancel(organization.subscription_id)
+        if result.is_success:
+            organization.subscription = ''
+            organization.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='SUBSCRIPTION_CANCELLATION_FAIL', data='')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/is_subscribed',
+                      http_method='POST', name='pay.is_subscribed')
+    def is_subscribed(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        organization = request_user.organization.get()
+        return OutgoingMessage(error='', data=json_dump(True))
 
     # USER REQUESTS
 
