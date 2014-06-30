@@ -21,7 +21,7 @@
             <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
         <![endif]-->
     </head>
-    <body ng-app="App">
+    <body ng-app="App" ng-controller="indexController as main">
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
@@ -81,11 +81,9 @@
 			</div>
 			</nav>
 </header>
-        
 <div ui-view ng-hide="$root.loading" id="mainSection" class="fadingIn fadingOut"></div>
 <div ng-show="$root.loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<footer><br><br></footer>
-        
+<footer><br><br></footer> 
 <div class="modal fade" id="errorModal" ng-click="$root.refreshPage()">
   <div class="modal-dialog">
     <div class="modal-content">
