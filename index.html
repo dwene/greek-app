@@ -81,9 +81,12 @@
 			</div>
 			</nav>
 </header>
+
 <div ui-view ng-hide="$root.loading" id="mainSection" class="fadingIn fadingOut"></div>
 <div ng-show="$root.loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+
 <footer><br><br></footer> 
+
 <div class="modal fade" id="errorModal" ng-click="$root.refreshPage()">
   <div class="modal-dialog">
     <div class="modal-content">

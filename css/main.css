@@ -30,8 +30,7 @@ body.modal-open{margin-right:0px;}
 .checkLabel.label-primary:hover{background:blue;}
 
 /*Message and Events Person Well*/
-#selectedList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
-.noneSelected{line-height:25px;}
+#messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 
@@ -246,6 +245,14 @@ nav.navbar-default:hover .refresh{opacity:1;}
 -moz-animation: fadeOutLeftBig .5s;
 -ms-animation: fadeOutLeftBig .5s;
  animation: fadeOutLeftBig .5;
+}
+
+.collapseOut.ng-leave{
+-webkit-animation: flipOutX .5s;
+-moz-animation: flipOutX .5s;
+-ms-animation: flipOutX .5s;
+ animation: flipOutX .5;
+}
 }
 
 /*Specific Fixes*/

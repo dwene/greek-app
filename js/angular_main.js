@@ -535,7 +535,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http, $rootScope, Load) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
         Load.then(function(){
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -580,9 +580,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.hideNotification = function(notify){
             var key = notify.key;
+            
+            $timeout(function(){
             $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
             $rootScope.hidden_notifications.push(notify);
             $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
+            }, 500);
         }
         
         $scope.closeNotificationModal = function(notify){
