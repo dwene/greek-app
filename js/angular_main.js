@@ -253,7 +253,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //navigation header
-    App.controller('navigationController', function($scope, $http, $rootScope){
+    App.controller('navigationController', function($scope, $http, $rootScope, LoadScreen){
         
         //closes the navigation if open and an li is clicked
         var navMain = $("#mainNavigation");
@@ -281,61 +281,62 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $.removeCookie(PERMS);
                 $.removeCookie('FORM_INFO_EMPTY')
                 $rootScope.directory = {};
-                $rootScope.loading = false;
+                LoadScreen.stop();
                 $rootScope.users = {};
                 window.location.assign("/#/login");
         }
     });
-
-//home page
-    App.controller('homeController', function($scope, $http) {
-        
+    App.controller('indexController', function($scope, $http, LoadScreen) {
 	});
+//home page
+//    App.controller('homeController', function($scope, $http) {
+//        
+//	});
     
-    App.controller('appController', function($scope, $http, $interval, $rootScope) {
-        if(!checkLogin()){
-            window.location.assign("/#/login");
-        }
-        if(!$rootScope.updatingNotifications){
-            $rootScope.updatingNotifications = true;
-        $interval(function(){$rootScope.updateNotifications();}, 40000);}
-        
+    App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen) {
+        Load.then(function(){
+            if(!checkLogin()){
+                window.location.assign("/#/login");
+            }
+            if(!$rootScope.updatingNotifications){
+                $rootScope.updatingNotifications = true;
+            $interval(function(){$rootScope.updateNotifications();}, 40000);}
+            LoadScreen.stop();
+        })
 	});
 
 //login page
-	App.controller('loginController', function($scope, $http, $rootScope) {
+	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen) {
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
         $.removeCookie('FORM_INFO_EMPTY')
         $rootScope.directory = {};
-        $rootScope.loading = false;
+        LoadScreen.stop();
         $rootScope.users = {};
-        $scope.login = function(user_name, password) {
-        $rootScope.loading = true;
-        console.log(user_name + ' ' +password)
-        $http.post('/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
-            .success(function(data) {
-                $rootScope.loading = false;
-                if(!checkResponseErrors(data))
-                {
-                    returned_data = JSON.parse(data.data);
-                    $.cookie(USER_NAME, user_name);
-                    $.cookie(TOKEN, returned_data.token);
-                    $.cookie(PERMS, returned_data.perms);
-                    window.location.assign("#/app");
-                }
-                else{
-                    if (data.error == "BAD_LOGIN"){
-                        $scope.badLogin = true;
-                    }   
-                }
-
-            })
-            .error(function(data) {
-                $rootScope.loading = false;
-                console.log('Error: ' + data);
-            });
+        $scope.login = function(user_name, password){
+            LoadScreen.start();
+            $http.post('/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
+                .success(function(data) {
+                    if(!checkResponseErrors(data))
+                    {
+                        returned_data = JSON.parse(data.data);
+                        $.cookie(USER_NAME, user_name);
+                        $.cookie(TOKEN, returned_data.token);
+                        $.cookie(PERMS, returned_data.perms);
+                        window.location.assign("#/app");
+                    }
+                    else{
+                        if (data.error == "BAD_LOGIN"){
+                            $scope.badLogin = true;
+                            LoadScreen.stop();
+                        }   
+                    }
+                })
+                .error(function(data) {
+                    $scope.login(user_name, password);
+                    console.log('Error: ' + data);
+                });
         };
         $scope.forgotPassword = function(){
         window.location.assign('/#/forgotpassword'); 
@@ -343,7 +344,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //getting a forgotten password email
-    App.controller('forgotPasswordController', function($scope, $http, Load){
+    App.controller('forgotPasswordController', function($scope, $http){
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
             if (email === undefined){
@@ -364,7 +365,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
                 $scope.emailFailed = true;
             });
-
         }
     });
 
@@ -393,9 +393,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.changeFailed = true;
                 $scope.passwordChanged = false;
             });            
-            
         }
-        
     });
 
 //changing password
@@ -428,15 +426,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the registration page
-    App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService) {
+    App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
         $.removeCookie('FORM_INFO_EMPTY');
         $rootScope.directory = {};
-        $rootScope.loading = false;
         $rootScope.users = {};
         $scope.data = {};
+        LoadScreen.stop();
         $scope.continue = function(isValid, data){
             $scope.error = false;
             if(isValid){
@@ -600,7 +598,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //the add members page
-    App.controller('managemembersController', function($scope, $http, $rootScope, Load) {
+    App.controller('managemembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
         Load.then(function(){
         //#FIXME When I refresh on the manage members page it shows your account, when I click into it though it does not.
         checkPermissions(COUNCIL);
@@ -740,7 +738,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                }
 //            }
             $scope.members = members;
-            $rootScope.loading = false;
+            LoadScreen.stop();
         }
         
         function onPageLoad(){
@@ -750,7 +748,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.getMembers();
             }
             else{
-                $rootScope.loading = true;
+                LoadScreen.start();
                 $scope.getMembers();
             }
         }
@@ -942,7 +940,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         /*This function takes the data and assigns it to the DOM with angular models*/
         function assignAngularViewModels(alumni){
             $scope.alumni = alumni;
-            $rootScope.loading = false;
+            LoadScreen.stop();
         }
         /*This function is the first function to run when the controller starts. This deals with caching data so we dont have to pull data evertytime we load the page*/
         function onPageLoad(){
@@ -952,7 +950,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 getAlumni();
             }
             else{
-                $rootScope.loading = true;
+                LoadScreen.start();
                 getAlumni();
             }
         }
@@ -1264,7 +1262,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the directory
-    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load){
+    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
     Load.then(function(){
         function splitMembers(){
             var council = [];
@@ -1307,7 +1305,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log(directory);
                     $rootScope.directory = directory;
                     $scope.directory = $rootScope.directory.members;
-                    $rootScope.loading = false;
+                    LoadScreen.stop();
                     splitMembers();
                 }
                 else
@@ -1331,11 +1329,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
     });
 
-    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load){
+    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
     Load.then(function(){    
         $scope.directory = $rootScope.directory.alumni;
         if (!$scope.directory){
-            $rootScope.loading = true;
+            LoadScreen.start();
         }
 //        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
 //            .success(function(data){
@@ -1345,7 +1343,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                    console.log(directory);
 //                    $rootScope.directory = directory;
 //                    $scope.directory = $rootScope.directory.alumni;
-//                    $rootScope.loading = false;
+//                    LoadScreen.start();
 //                    return $rootScope.directory;
 //                }
 //                else
@@ -1387,7 +1385,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     var directory = JSON.parse(data.data)
                     $rootScope.directory = directory;
-                    $rootScope.loading = false;
+                    LoadScreen.stop();
                     $scope.members = directory.members;
                     loadMemberData();
                 }
@@ -2844,16 +2842,16 @@ App.filter('directorySearch', function(){
 });
 
 
-App.factory('directoryService', function($rootScope, $http) {
+App.factory('directoryService', function($rootScope, $http, LoadScreen) {
     if ($rootScope.directory === undefined){
-        $rootScope.loading = true;
+        LoadScreen.start();
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     var directory = JSON.parse(data.data);
                     $rootScope.directory = directory;
-                    $rootScope.loading = false;
+                    LoadScreen.stop();
                     return $rootScope.directory;
                 }
                 else
@@ -2915,7 +2913,21 @@ App.factory('registerOrganizationService', function(){
     };
 });
 
-App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
+App.factory('LoadScreen', function($rootScope){
+    return {
+        start: function () {
+            $rootScope.loading = true;
+        },
+        stop: function () {
+            $rootScope.loading = false;
+        },
+        check: function(){
+            $rootScope.loading;
+        }
+    };
+});
+
+App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     var defer = $q.defer();
     console.log("Loading Data")
     function executePosts() {
@@ -2998,7 +3010,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
             
           return deferred.promise;
         }
-            $rootScope.loading = true;
+            LoadScreen.start();
             executePosts().then(function() {
                 for (var i = 0; i< $rootScope.directory.members.length; i++){
                     if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
@@ -3006,7 +3018,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope){
                         break;
                     }
                 }
-                $rootScope.loading = false;
+                LoadScreen.stop();
                 defer.resolve(); 
         });
 
