@@ -638,7 +638,7 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         organization = request_user.organization.get()
-        return OutgoingMessage(error='', data=json_dump(True))
+        return OutgoingMessage(error='', data=json_dump(organization.subscribed))
 
     # USER REQUESTS
 

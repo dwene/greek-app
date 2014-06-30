@@ -2389,8 +2389,9 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 $http.post('/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        loadSubscriptionInfo();
+                        setTimeout(function(){$rootScope.refreshPage();}, 250);
                     }
+                    
                     else{
                         console.log('ERROR: '+data);
                     }
@@ -2410,7 +2411,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        loadSubscriptionInfo();
+                        setTimeout(function(){$rootScope.refreshPage();}, 250);
                     }
                     else
                         console.log('ERROR: '+JSON.stringify(data));
