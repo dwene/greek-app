@@ -2608,6 +2608,7 @@ App.directive('timePicker', function($compile){
     scope: {},
     restrict: 'E',
     replace: 'true',
+    require: '^ngModel',
     template: '<div class="date"></div>',
     link: function (scope, element, attrs) {
         
@@ -2615,7 +2616,7 @@ App.directive('timePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="event.'+this_name+'" required/>'
+                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'").datetimepicker({'
@@ -2638,6 +2639,7 @@ App.directive('datePicker', function($compile){
     scope: {},
     restrict: 'E',
     replace: 'true',
+    require: '^ngModel',
     template: '<div class="date"></div>',
     link: function (scope, element, attrs) {
         
@@ -2645,7 +2647,7 @@ App.directive('datePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="event.'+this_name+'" required/>'
+                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'").datetimepicker({'

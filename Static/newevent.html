@@ -46,13 +46,13 @@
         <label for="time_start" class="col-sm-2 control-label">Time Start</label>
         <div class="col-xs-6 col-sm-5">
 
-        <date-picker id="datestartPicker" name="date_start"></date-picker>
+        <date-picker id="datestartPicker" ng-model="date_start" name="date_start"></date-picker>
         
         </div>
         
         <div class="col-xs-6 col-sm-5">
 
-        <time-picker id="timestartPicker" name="time_start"></time-picker>
+        <time-picker id="timestartPicker" ng-model="time_start" name="time_start"></time-picker>
         
         </div>
         <p ng-show="((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))" class="help-block">Please enter start date and time.</p>
@@ -62,12 +62,12 @@
         <label for="time_end" class="col-sm-2 control-label">Time End</label>
         <div class="col-xs-6 col-sm-5">
         
-        <date-picker id="dateendPicker" name="date_end"></date-picker>
+        <date-picker id="dateendPicker" ng-model="date_end" name="date_end"></date-picker>
         
         </div>
         <div class="col-xs-6 col-sm-5">
 
-        <time-picker id="timeendPicker" name="time_end"></time-picker>
+        <time-picker id="timeendPicker" ng-model="time_end" name="time_end"></time-picker>
         
         </div>
         <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
