@@ -20,6 +20,8 @@
     <div class="row">Birthday: {{birthday}}</div>
     <div class="row">Phone: <a href="tel:{{phone}}">{{phone}}</a></div>
     <div class="row">Email: <a href="mailto:{{email}}">{{email}}</a></div>
+    <div class="row" ng-show="major">Major: {{major}}</div>
+    <div class="row" ng-show="position">Position: {{position}}</div>
     <div class="row" ng-show="graduation">Expected Graduation: {{graduation}}</div>
     <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
     <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>

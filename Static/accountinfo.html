@@ -67,9 +67,9 @@
     
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
         <label for="dob" class="col-sm-2 control-label">Birthday</label>
-        <div class="col-sm-10" id="dob" data-date-format="MM-DD-YYYY">
+        <div class="col-sm-10" id="dob">
         <div class="input-group">
-          <input type="text" class="form-control" name="dob" placeholder="1992-01-15" ng-model="item.dob" required>
+          <input type="text" class="form-control" name="dob" placeholder="05/25/1993" ng-model="item.dob" required>
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>

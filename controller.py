@@ -878,6 +878,7 @@ class RESTApi(remote.Service):
         del user_dict["new_notifications"]
         del user_dict["hidden_notifications"]
         user_dict["key"] = request_user.key.urlsafe()
+        user_dict["dob"] = user_dict["dob"].strftime("%m/%d/%Y")
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
         else:
@@ -959,7 +960,7 @@ class RESTApi(remote.Service):
             elif key == "last_name":
                 user.last_name = value
             elif key == "dob":
-                user.dob = datetime.datetime.strptime(value, '%Y-%m-%d')
+                user.dob = datetime.datetime.strptime(value, '%m/%d/%Y')
             elif key == "grad_month":
                 user.grad_month = int(value)
             elif key == "grad_year":
@@ -1087,6 +1088,7 @@ class RESTApi(remote.Service):
         alumni_list = []
         for user in organization_users:
             user_dict = user.to_dict()
+            user_dict["dob"] = user_dict["dob"].strftime("%m/%d/%Y")
             del user_dict["hash_pass"]
             del user_dict["current_token"]
             del user_dict["organization"]
