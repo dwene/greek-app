@@ -284,6 +284,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 LoadScreen.stop();
                 $rootScope.users = {};
                 window.location.assign("/#/login");
+                $rootScope.refreshPage();
         }
     });
     App.controller('indexController', function($scope, $http, LoadScreen) {
@@ -2807,7 +2808,7 @@ App.filter('startFrom', function() {
     }
 });
 
-App.filter('tagDirectorySearch', function(){ 
+App.filter('tagDirectorySearch', function(){
     return function (objects, tags) {
         if (!tags){return null;}
             var tags_list = []
