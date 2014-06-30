@@ -1917,7 +1917,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
 
             $scope.addEvent = function(isValid, event){
+                console.log($scope.test_model);
                 if(isValid){
+                    
                     event.tags = getCheckedTags($scope.tags);
                     var to_send = JSON.parse(JSON.stringify(event));
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
@@ -2605,10 +2607,11 @@ App.directive('match', function(){
 
 App.directive('timePicker', function($compile){
   return {
-    scope: {},
+    scope: {
+        ngModel:"="
+    },
     restrict: 'E',
     replace: 'true',
-    require: '^ngModel',
     template: '<div class="date"></div>',
     link: function (scope, element, attrs) {
         
@@ -2636,10 +2639,11 @@ App.directive('timePicker', function($compile){
 
 App.directive('datePicker', function($compile){
   return {
-    scope: {},
+    scope: {
+        ngModel:"="
+    },
     restrict: 'E',
     replace: 'true',
-    require: '^ngModel',
     template: '<div class="date"></div>',
     link: function (scope, element, attrs) {
         
