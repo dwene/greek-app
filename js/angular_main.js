@@ -2607,7 +2607,9 @@ App.directive('match', function(){
 
 App.directive('timePicker', function($compile){
   return {
-    scope: {},
+    scope: {
+        ngModel : '='
+    },
     restrict: 'E',
     replace: 'true',
     template: '<div class="date"></div>',
@@ -2617,7 +2619,7 @@ App.directive('timePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="event.'+this_name+'" required/>'
+                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'").datetimepicker({'
@@ -2628,16 +2630,21 @@ App.directive('timePicker', function($compile){
                         +'up: "fa fa-arrow-up",'
                         +'down: "fa fa-arrow-down"'
                         +'}});'
+                        +'$("#'+this_id+' input").focusout(function(){'
+                        +'$(this).trigger("change");'
+                        +'});'
                         +'</script>'
                         );
-//#TODO might not need this line        $compile(element.contents())(scope)
+        $compile(element.contents())(scope)
      }
   }
 });
 
 App.directive('datePicker', function($compile){
   return {
-    scope: {},
+    scope: {
+        ngModel : '='
+    },
     restrict: 'E',
     replace: 'true',
     template: '<div class="date"></div>',
@@ -2647,7 +2654,7 @@ App.directive('datePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="event.'+this_name+'" required/>'
+                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'").datetimepicker({'
@@ -2658,12 +2665,57 @@ App.directive('datePicker', function($compile){
                         +'up: "fa fa-arrow-up",'
                         +'down: "fa fa-arrow-down"'
                         +'}});'
+                        +'$("#'+this_id+' input").focusout(function(){'
+                        +'$(this).trigger("change");'
+                        +'});'
                         +'</script>'
                         );
-//#TODO might not need this line        $compile(element.contents())(scope)
+        $compile(element.contents())(scope)
      }
   }
 });
+
+App.directive('selectingUsers', function($compile){
+  return {
+    restrict: 'E',
+    replace: 'true',
+    template: '<div></div>',
+    transclude: true,
+    link: function (scope, element, attrs) {
+        
+        element.append('<ul id="messagingTags">'
+                        +'<div ng-repeat="type in tags">'
+                        +'<div class="btn-group" ng-repeat="tag in type">'
+                        +'<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+                        +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
+                        +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
+                        +'</label></div></div></ul>'
+                        +'<div id="selectedList" class="well">'
+                        +'<span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>'
+                        +'<span class="noneSelected" ng-hide="selectedMembers.length">No one is selected.</span>'
+                        +'</div>'
+                        );
+        
+        $compile(element.contents())(scope)
+     }
+  }
+});
+
+//    <ul id="messagingTags">
+//       <div ng-repeat="type in tags">
+//        <div class="btn-group" ng-repeat="tag in type">
+//            <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
+//            <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
+//            <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
+//            </label>
+//        </div>
+//       </div>
+//    </ul>
+//    
+//    <div id="messageList" class="well">
+//        <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>
+//        <span ng-hide="selectedMembers.length">No one is selected.</span>
+//    </div>
 
 
 App.filter('multipleSearch', function(){ 

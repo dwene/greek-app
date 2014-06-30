@@ -30,7 +30,8 @@ body.modal-open{margin-right:0px;}
 .checkLabel.label-primary:hover{background:blue;}
 
 /*Message and Events Person Well*/
-#messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
+#selectedList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
+.noneSelected{line-height:25px;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 

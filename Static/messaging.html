@@ -9,8 +9,12 @@
 
 
 <section class="container">
-    <ul id="eventTags">
-       <div ng-repeat = "type in tags">
+    
+<selecting-users id="messagingTags"></selecting-users>
+
+<!--
+    <ul id="messagingTags">
+       <div ng-repeat="type in tags">
         <div class="btn-group" ng-repeat="tag in type">
             <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
             <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
@@ -24,6 +28,7 @@
         <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>
         <span ng-hide="selectedMembers.length">No one is selected.</span>
     </div>
+-->
     
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">

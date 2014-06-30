@@ -9,8 +9,11 @@
 
 <div class="container">
     
+<selecting-users id="eventTags"></selecting-users>
+    
+<!--
     <ul id="eventTags">
-       <div ng-repeat = "type in tags">
+       <div ng-repeat="type in tags">
         <div class="btn-group" ng-repeat="tag in type">
             <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
             <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
@@ -20,10 +23,11 @@
         </div>
     </ul>
 
-    <div id="messageList" class="well">
+    <div id="selectedList" class="well">
         <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.directory.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>
         <span ng-hide="selectedMembers.length">No one is selected.</span>
     </div>
+-->
 
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
@@ -43,31 +47,31 @@
     </div>   
     
     <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
-        <label for="time_start" class="col-sm-2 control-label">Time Start</label>
-        <div class="col-xs-6 col-sm-5">
+        <label for="date_start" class="col-xs-2 control-label">Start</label>
+        <div class="col-xs-5 col-sm-5">
 
-        <date-picker id="datestartPicker" name="date_start"></date-picker>
+        <date-picker id="datestartPicker" name="date_start"  ng-model="event.date_start"></date-picker>
         
         </div>
         
-        <div class="col-xs-6 col-sm-5">
+        <div class="col-xs-5 col-sm-5">
 
-        <time-picker id="timestartPicker" name="time_start"></time-picker>
+        <time-picker id="timestartPicker" name="time_start" ng-model="event.time_start"></time-picker>
         
         </div>
         <p ng-show="((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))" class="help-block">Please enter start date and time.</p>
     </div>   
     
     <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))}">
-        <label for="time_end" class="col-sm-2 control-label">Time End</label>
-        <div class="col-xs-6 col-sm-5">
+        <label for="date_end" class="col-xs-2 control-label">End</label>
+        <div class="col-xs-5 col-sm-5">
         
-        <date-picker id="dateendPicker" name="date_end"></date-picker>
+        <date-picker id="dateendPicker" name="date_end" ng-model="event.date_end"></date-picker>
         
         </div>
-        <div class="col-xs-6 col-sm-5">
+        <div class="col-xs-5 col-sm-5">
 
-        <time-picker id="timeendPicker" name="time_end"></time-picker>
+        <time-picker id="timeendPicker" name="time_end" ng-model="event.time_end"></time-picker>
         
         </div>
         <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
@@ -97,16 +101,4 @@
     <button type="submit" class="btn btn-default pull-right" ng-disabled= "!selectedMembers.length || !newEvent.$valid">Submit</button>
 </form>
  <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<!--
-<script type="text/javascript">
-    $(function(){
-    
-    //updates the model for date inputs               
-    $('.date input').focusout(function(){
-     $(this).trigger('input');
-    })
-    
-    });
-</script>
--->
 </div>
