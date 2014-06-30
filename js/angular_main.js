@@ -2605,32 +2605,63 @@ App.directive('match', function(){
 });
 
 
-App.directive('timePicker', function(){
+App.directive('timePicker', function($compile){
   return {
-    scope: {},  // use a new isolated scope
+    scope: {},
     restrict: 'E',
     replace: 'true',
-    template: '<h3>Hello World!!</h3>',
-    link: function(){
-    
-    }
-  };
+    template: '<div class="date"></div>',
+    link: function (scope, element, attrs) {
+        
+        var this_name = attrs.name;
+        var this_id = attrs.id;
+        
+        element.append('<div class="input-group">'
+                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="event.'+this_name+'" required/>'
+                        +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
+                        +'<script type="text/javascript">'
+                        +'$("#'+this_id+'").datetimepicker({'
+                        +'pickDate: false,'
+                        +'icons: {'
+                        +'time: "fa fa-clock-o",'
+                        +'date: "fa fa-calendar",'
+                        +'up: "fa fa-arrow-up",'
+                        +'down: "fa fa-arrow-down"'
+                        +'}});'
+                        +'</script>'
+                        );
+//#TODO might not need this line        $compile(element.contents())(scope)
+     }
+  }
 });
 
-App.directive('datePicker', function(){
+App.directive('datePicker', function($compile){
   return {
-    scope: {
-        name : '@'
-    },
-    restrict: 'AE',
+    scope: {},
+    restrict: 'E',
     replace: 'true',
-    template: '<div class="date"><div class="input-group"><input type="text" class="form-control" id="{{name}}" name="{{name}}" ng-model="$parent.event.date_end" required/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></div>'
-//    controller: ['$scope', function($scope){
-//        $scope.this_name = this_name;
-//    }],
-//    link: function(scope, element, attrs){
-//        var this_name = attrs.name;
-//    }
+    template: '<div class="date"></div>',
+    link: function (scope, element, attrs) {
+        
+        var this_name = attrs.name;
+        var this_id = attrs.id;
+        
+        element.append('<div class="input-group">'
+                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="event.'+this_name+'" required/>'
+                        +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
+                        +'<script type="text/javascript">'
+                        +'$("#'+this_id+'").datetimepicker({'
+                        +'pickTime: false,'
+                        +'icons: {'
+                        +'time: "fa fa-clock-o",'
+                        +'date: "fa fa-calendar",'
+                        +'up: "fa fa-arrow-up",'
+                        +'down: "fa fa-arrow-down"'
+                        +'}});'
+                        +'</script>'
+                        );
+//#TODO might not need this line        $compile(element.contents())(scope)
+     }
   }
 });
 

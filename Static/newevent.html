@@ -42,30 +42,17 @@
         <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
     </div>   
     
-    
-    
-
     <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
         <label for="time_start" class="col-sm-2 control-label">Time Start</label>
         <div class="col-xs-6 col-sm-5">
-          
-            <div class="date" id="datestartPicker">
-                <div class="input-group">
-                <input type="text" class="form-control" id="date_start" name="date_start" ng-model="event.date_start" placeholder="" required/>
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
+
+        <date-picker id="datestartPicker" name="date_start"></date-picker>
         
         </div>
         
         <div class="col-xs-6 col-sm-5">
-          
-            <div class="date" id="timestartPicker">
-                <div class="input-group">
-                <input type="text" class="form-control" id="time_start" name="time_start" ng-model="event.time_start" placeholder="" required/>
-                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                </div>
-            </div>
+
+        <time-picker id="timestartPicker" name="time_start"></time-picker>
         
         </div>
         <p ng-show="((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))" class="help-block">Please enter start date and time.</p>
@@ -75,24 +62,12 @@
         <label for="time_end" class="col-sm-2 control-label">Time End</label>
         <div class="col-xs-6 col-sm-5">
         
-<!--        <date-picker id="dateendPicker" name="date_end"></date-picker>-->
-        
-            <div class="date" id="dateendPicker">  
-                <div class="input-group">
-                <input type="text" class="form-control" id="date_end" name="date_end" ng-model="event.date_end" placeholder="" required/>
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
+        <date-picker id="dateendPicker" name="date_end"></date-picker>
         
         </div>
         <div class="col-xs-6 col-sm-5">
-        
-            <div class="date" id="timeendPicker">  
-                <div class="input-group">
-                <input type="text" class="form-control" id="time_end" name="time_end" ng-model="event.time_end" placeholder="" required/>
-                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                </div>
-            </div>
+
+        <time-picker id="timeendPicker" name="time_end"></time-picker>
         
         </div>
         <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
@@ -122,66 +97,16 @@
     <button type="submit" class="btn btn-default pull-right" ng-disabled= "!selectedMembers.length || !newEvent.$valid">Submit</button>
 </form>
  <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<!--
 <script type="text/javascript">
     $(function(){
-
-    $('#datestartPicker').datetimepicker({
-        pickTime: false,
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        }
-    });
-    
-    $('#timestartPicker').datetimepicker({
-        pickDate: false,
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        }
-    });
-    
-    $('#dateendPicker').datetimepicker({
-        pickTime: false,
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        }
-    });
-
-    $('#timeendPicker').datetimepicker({
-        pickDate: false,
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        }
-    });
     
     //updates the model for date inputs               
     $('.date input').focusout(function(){
      $(this).trigger('input');
     })
     
-    //don't allow spaces on tag inputs
-//    $('.tagInput').on({
-//      keydown: function(e) {
-//        if (e.which === 32)
-//          return false;
-//      },
-//      change: function() {
-//        this.value = this.value.replace(/\s/g, "");
-//      }
-//    });
-    
     });
 </script>
-
+-->
 </div>
