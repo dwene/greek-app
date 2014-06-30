@@ -524,12 +524,13 @@ class RESTApi(remote.Service):
                 "plan_id": "normal_monthly_plan"
             })
         else:
-            user_count = len(User.query(User.organization == request_user.organization).fetch(projection=[]))
+            user_count = len(User.query(User.organization == request_user.organization).fetch(projection=
+                                                                                              [User.first_name]))
             subscription_result = braintree.Subscription.create({
                 "payment_method_token": organization.payment_token,
                 "plan_id": "normal_monthly_plan",
                 "trial_period": False,
-                "price": user_count * organization.cost
+                "price": str(float(user_count) * float(organization.cost))
             })
         if not subscription_result.is_success:
             organization.put()
@@ -589,16 +590,17 @@ class RESTApi(remote.Service):
         if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         organization = request_user.organization.get()
-        if not organization.customer_id:
-            return OutgoingMessage(error=NOT_SUBSCRIBED)
         message = dict()
         if organization.subscription_id:
             subscription = braintree.Subscription.find(organization.subscription_id)
+            logging.error(subscription)
+            logging.error(organization.subscription_id)
             message["paid_through_date"] = subscription.paid_through_date
             message["subscription_price"] = str(subscription.price)
             message["next_billing_date"] = subscription.next_billing_date
         else:
             message["no_subscription"] = True
+            message["premium_end"] = organization.cancel_subscription
         credit_card = braintree.CreditCard.find(organization.payment_token)
         card = dict()
         card["masked_number"] = credit_card.masked_number
@@ -620,10 +622,11 @@ class RESTApi(remote.Service):
         if not organization.customer_id:
             return OutgoingMessage(error=NOT_SUBSCRIBED)
         subscription = braintree.Subscription.find(organization.subscription_id)
-        organization.cancel_subscription = datetime.date.strptime(subscription.next_billing_date, '%Y-%m-%d')
+        if subscription:
+            organization.cancel_subscription = subscription.next_billing_date
         result = braintree.Subscription.cancel(organization.subscription_id)
         if result.is_success:
-            organization.subscription = ''
+            organization.subscription_id = ''
             organization.put()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error='SUBSCRIPTION_CANCELLATION_FAIL', data='')

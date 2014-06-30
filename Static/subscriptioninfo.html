@@ -1,8 +1,12 @@
+
+<div ui-view ng-hide="loading" id="mainSection" class="fadingIn fadingOut"></div>
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>   
+
+   
 <div ng-hide="loading">
     <div class="jumbotron text-center">
             <h1>Subscription Information</h1>
     </div>
-
 
     <div class="container">
        <div ng-hide ="subscription.no_subscription">
@@ -11,8 +15,8 @@
         
         <img ng-src="{{subscription.credit_card.image_url}}"><span>{{subscription.credit_card.masked_number}}</span>
         <p>Expires: {{subscription.credit_card.expiration}}</p>
-        <button ng-hide="subscription.no_subscription" class="btn btn-default">Cancel Subscription</button>
-        <button ng-show="subscription.no_subscription" class="btn btn-default">Subscribe with this card</button>
+        <button ng-hide="subscription.no_subscription" class="btn btn-default" ng-click="cancelSubscription()">Cancel Subscription</button>
+        <button ng-show="subscription.no_subscription" class="btn btn-default" ng-click="subscribe()">Subscribe with this card</button>
         <div ng-show="subscription.no_subscription">
 <!--      action needs to be: action="/create_transaction" method="POST" -->
           <form id="braintree-payment-form">
@@ -36,7 +40,8 @@
               <label>Expiration (MM/YYYY)</label>
               <input type="number" size="2" ng-model="pay.exp_month" /> / <input type="text" size="4" ng-model="pay.exp_year" />
             </p>
-            <button type="submit" ng-click="submitPayment()" class="btn btn-default">Save Payment Info</button>
+            <p ng-show="$scope.error">{{error}}</p>
+            <button type="submit" ng-click="subscribe(pay)" class="btn btn-default">Save Payment Info</button>
           </form>
         </div>
     </div>

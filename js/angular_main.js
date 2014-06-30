@@ -2366,23 +2366,65 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
             if (!$rootScope.subscribed){
                 window.location.assign('#/app/payment');
             }
-            $http.post('/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    $scope.subscription = JSON.parse(data.data);
-                    $scope.subscription_raw = data.data;
+            loadSubscriptionInfo();
+            function loadSubscriptionInfo(){
+                $http.post('/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $scope.subscription = JSON.parse(data.data);
+                        $scope.subscription_raw = data.data;
+                        $scope.loading = false;
+                        $scope.pay = {};
+                    }
+                    else{
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            }
+            $scope.cancelSubscription = function(){
+                $scope.loading = true;
+                $http.post('/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        loadSubscriptionInfo();
+                    }
+                    else{
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            }
+            
+            $scope.subscribe = function(paymentData){
+                var toSend = "";
+                if (paymentData){
+                    toSend = paymentData;
+                }
+                $scope.loading = true;
+                $http.post('/_ah/api/netegreek/v1/pay/subscribe', packageForSending(toSend))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        loadSubscriptionInfo();
+                    }
+                    else
+                        console.log('ERROR: '+JSON.stringify(data));
                     $scope.loading = false;
-                }
-                else{
-                    console.log('ERROR: '+data);
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+                    $scope.error = JSON.stringify(data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + JSON.stringify(data));
+                }); 
+            };
+            
+            
         });
 	});
-
 
 //More Functions
 
