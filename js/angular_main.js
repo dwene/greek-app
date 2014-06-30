@@ -2679,22 +2679,23 @@ App.directive('selectingUsers', function($compile){
   return {
     restrict: 'E',
     replace: 'true',
-    template: '<div></div>',
+//    template: '<div></div>',
+    templateUrl: '/Static/templates/selectingmembers.html',
     transclude: true,
     link: function (scope, element, attrs) {
         
-        element.append('<ul id="messagingTags">'
-                        +'<div ng-repeat="type in tags">'
-                        +'<div class="btn-group" ng-repeat="tag in type">'
-                        +'<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-                        +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-                        +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
-                        +'</label></div></div></ul>'
-                        +'<div id="selectedList" class="well">'
-                        +'<span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>'
-                        +'<span class="noneSelected" ng-hide="selectedMembers.length">No one is selected.</span>'
-                        +'</div>'
-                        );
+//        element.append('<ul id="messagingTags">'
+//                        +'<div ng-repeat="type in tags">'
+//                        +'<div class="btn-group" ng-repeat="tag in type">'
+//                        +'<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+//                        +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
+//                        +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
+//                        +'</label></div></div></ul>'
+//                        +'<div id="selectedList" class="well">'
+//                        +'<span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>'
+//                        +'<span class="noneSelected" ng-hide="selectedMembers.length">No one is selected.</span>'
+//                        +'</div>'
+//                        );
         
         $compile(element.contents())(scope)
      }
