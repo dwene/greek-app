@@ -1145,7 +1145,6 @@ class RESTApi(remote.Service):
         alumni_list = []
         for user in organization_users:
             user_dict = user.to_dict()
-            user_dict["dob"] = user_dict["dob"].strftime("%m/%d/%Y")
             del user_dict["hash_pass"]
             del user_dict["current_token"]
             del user_dict["organization"]
