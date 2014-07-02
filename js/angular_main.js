@@ -2500,15 +2500,21 @@ function arrangeTagData(tag_data){
             org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
         }
     }
-    perms_tag_list = [];
+    var perms_tag_list = [];
     if (tag_data.perms_tags){
         for (var i = 0; i < tag_data.perms_tags.length; i++){
             perms_tag_list.push({name: tag_data.perms_tags[i].name, checked: false})
         }
     }
+    var event_tag_list = [];
+    if (tag_data.event_tags){
+        for (var i = 0; i < tag_data.event_tags.length; i++){
+            event_tag_list.push({name: tag_data.event_tags[i].name, checked: false})
+        }
+    }
     tags.organizationTags = org_tag_list;
     tags.permsTags = perms_tag_list;
-    tags.eventTags = [];
+    tags.eventTags = event_tag_list;
     return tags;
 }
 //This should be called at the beginning of any controller that uses the checkbox tags
@@ -2842,6 +2848,13 @@ App.filter('tagDirectorySearch', function(){
                 }
             }
         }
+        if (tags.eventTags){
+            for (var i = 0; i < tags.eventTags.length; i++){
+                if (tags.eventTags[i].checked){
+                    tags_list.push(tags.eventTags[i].name);
+                }
+            }
+        }
             out_string = '';
             for (var j = 0; j < tags_list.length; j++){
                 out_string += tags_list[j] + ' ';
@@ -2862,7 +2875,11 @@ App.filter('tagDirectorySearch', function(){
                     retList.push(object);
                     break;
                 }
-                if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
+                else if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
+                    retList.push(object);
+                    break;
+                }
+                else if(object.event_tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
                     retList.push(object);
                     break;
                 }
@@ -3088,6 +3105,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
                     $rootScope.tags = tag_data;
+                    console.log(tag_data);
                 }
                 else{
                     console.log("error: "+ data.error)

@@ -13,7 +13,7 @@ import json
 import pickle
 from google.appengine.ext import ndb
 import time
-import collections
+from dateutil.relativedelta import relativedelta
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
 from google.appengine.api import images
@@ -46,6 +46,7 @@ NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 
 
 EVERYONE = 'Everyone'
+
 
 class IncomingMessage(messages.Message):
     user_name = messages.StringField(1)
@@ -107,6 +108,7 @@ class User(ndb.Model):
     hidden_notifications = ndb.KeyProperty(repeated=True)
     sent_notifications = ndb.KeyProperty(repeated=True)
     events = ndb.KeyProperty(repeated=True)
+    recently_used_tags = ndb.StringProperty(repeated=True)
 
 
 class Notification(ndb.Model):
@@ -157,12 +159,44 @@ class Organization(ndb.Model):
     trial_period = ndb.BooleanProperty(default=True)
     cost = ndb.FloatProperty(default=1.0)
 
-class CST(datetime.tzinfo):
-    def utcoffset(self, dt):
-        return datetime.timedelta(hours=-5)
 
-    def dst(self, dt):
-        return datetime.timedelta(0)
+class Poll(ndb.Model):
+    questions = ndb.KeyProperty(repeated=True)
+    results_org_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
+    results_perms_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
+    results_event_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
+    name = ndb.StringProperty()
+    description = ndb.TextProperty()
+    organization = ndb.KeyProperty()
+    invited_org_tags = ndb.StringProperty(repeated=True)
+    invited_perms_tags = ndb.StringProperty(repeated=True)
+    invited_event_tags = ndb.StringProperty(repeated=True)
+    start_time = ndb.DateTimeProperty()
+    end_time = ndb.DateProperty()
+    allow_changes = ndb.BooleanProperty(default=True)
+
+
+class Question(ndb.Model):
+    type = ndb.StringProperty()
+    worded_question = ndb.StringProperty()
+    choices = ndb.StringProperty(repeated=True)
+    responses = ndb.KeyProperty(repeated=True)
+    poll = ndb.KeyProperty()
+
+
+class Response(ndb.Model):
+    user = ndb.KeyProperty()
+    answer = ndb.StringProperty(repeated=True)
+    timestamp = ndb.DateTimeProperty()
+    question = ndb.KeyProperty()
+
+
+# class CST(datetime.tzinfo):
+#     def utcoffset(self, dt):
+#         return datetime.timedelta(hours=-5)
+#
+#     def dst(self, dt):
+#         return datetime.timedelta(0)
 
 
 class DateEncoder(json.JSONEncoder):
@@ -356,6 +390,7 @@ def get_key_from_token(token):
         return user.key
     return 0
 
+
 def get_users_from_tags(tags, organization, keys_only):
     # org_tag_users = []
     # event_tag_users = []
@@ -395,6 +430,18 @@ def get_users_from_tags(tags, organization, keys_only):
         out_list = ndb.get_multi(out_list)
     logging.error(out_list)
     return out_list
+
+
+def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
+    if user.perms in perms_tags or 'everyone' in perms_tags:
+        return True
+    elif len(frozenset(user.tags).intersection(org_tags)) > 0:
+        return True
+    else:
+        user_event_tags = Event.query(Event.going == user.key).fetch(projection=[Event.tag])
+        if len(frozenset(user_event_tags).intersection(event_tags)) > 0:
+            return True
+    return False
 
 
 @endpoints.api(name='netegreek', version='v1', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
@@ -735,10 +782,6 @@ class RESTApi(remote.Service):
         to_send = json_dump({'errors': rpc_data['errors']})
         return OutgoingMessage(error='', data=to_send)
 
-
-
-
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
                       http_method='POST', name='auth.add_alumni')
     def add_alumni(self, request):
@@ -785,8 +828,12 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS)
-
-        organization_users = User.query(User.organization == request_user.organization).fetch()
+        event_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+                                        Event.time_end < datetime.datetime.today() +
+                                        relativedelta(months=1))).fetch_async(projection=[Event.going, Event.tag])
+        organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
+        organization_users = organization_users_future.get_result()
+        event_list = event_list_future.get_result()
         user_list = []
         alumni_list = []
         return_object = ''
@@ -797,6 +844,11 @@ class RESTApi(remote.Service):
             del user_dict["organization"]
             del user_dict["timestamp"]
             del user_dict["prof_pic"]
+            event_tags = list()
+            for event in event_list:
+                if user.key in event.going:
+                    event_tags.append(event.tag)
+            user_dict["event_tags"] = event_tags
             user_dict["key"] = user.key.urlsafe()
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
@@ -866,6 +918,7 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user_directory_info',
                       http_method='POST', name='user.get_user_directory_info')
     def get_user_directory_info(self, request):
+
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -877,8 +930,7 @@ class RESTApi(remote.Service):
         del user_dict["notifications"]
         del user_dict["new_notifications"]
         del user_dict["hidden_notifications"]
-        user_dict["key"] = request_user.key.urlsafe()
-        user_dict["dob"] = user_dict["dob"].strftime("%m/%d/%Y")
+        del user_dict["events"]
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
         else:
@@ -1080,10 +1132,15 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
                       http_method='POST', name='auth.directory')
     def directory(self, request):
-        user = get_user(request.user_name, request.token)
-        if not user:
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization_users = User.query(User.organization == user.organization).fetch()
+        organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
+        event_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+                                        Event.time_end < datetime.datetime.today() + relativedelta(months=1))
+                                        ).fetch_async(projection=[Event.going, Event.tag])
+        organization_users = organization_users_future.get_result()
+        event_list = event_list_future.get_result()
         user_list = []
         alumni_list = []
         for user in organization_users:
@@ -1096,6 +1153,13 @@ class RESTApi(remote.Service):
             del user_dict["notifications"]
             del user_dict["new_notifications"]
             del user_dict["hidden_notifications"]
+            event_tags = list()
+            for event in event_list:
+                if user.key in event.going:
+                    event_tags.append(event.tag)
+            user_dict["event_tags"] = event_tags
+            user_dict["key"] = user.key.urlsafe()
+            user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
             user_dict["key"] = user.key.urlsafe()
             try:
                 user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
@@ -1254,22 +1318,24 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
         org_tags_future = request_user.organization.get_async()
         event_tags_future = Event.query(Event.organization == request_user.organization).fetch_async()
         org_tags = org_tags_future.get_result().tags
-        org_tags_list = []
+        org_tags_list = list()
         for tag in org_tags:
             org_tags_list.append({"name": tag})
-        event_tags = event_tags_future.get_result()
-        event_tags_list = []
-        for event in event_tags:
-            event_tags_list.append(event.tag)
+        events = event_tags_future.get_result()
+        event_tags_list = list()
+        for event in events:
+            event_tags_list.append({"name": event.tag})
+        recent_tags_list = list()
+        for tag in request_user.recently_used_tags:
+            recent_tags_list.append({"name": tag})
         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
-                                                         'perms_tags': perm_tags_list}))
+                                                         'perms_tags': perm_tags_list,
+                                                         'recent_tags': recent_tags_list}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')
@@ -1281,6 +1347,11 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         data = json.loads(request.data)
         tags = data['tags']
+        for tag in data['tags']['org_tags']:
+            if tag not in request_user.recently_used_tags:
+                request_user.recently_used_tags.insert(0, tag)
+            if len(request_user.recently_used_tags) > 5:
+                request_user.recently_used_tags = request_user.recently_used_tags[:5]
         users = get_users_from_tags(tags, request_user.organization, False)
         notification = Notification()
         notification.type = 'message'
@@ -1480,6 +1551,11 @@ class RESTApi(remote.Service):
         new_event.tag = event_data["tag"]
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
+        for tag in new_event.org_tags:
+            if tag not in request_user.recently_used_tags:
+                request_user.recently_used_tags.insert(0, tag)
+            if len(request_user.recently_used_tags) > 5:
+                request_user.recently_used_tags = request_user.recently_used_tags[:5]
         new_event.perms_tags = event_data["tags"]["perms_tags"]
         new_event.going = [request_user.key]
         if EVERYONE.lower() in event_data["tags"]["perms_tags"] or 'Everyone' in event_data["tags"]["perms_tags"]:
@@ -1495,7 +1571,7 @@ class RESTApi(remote.Service):
         notification.timestamp = datetime.datetime.now()
         notification.link = '#/app/events/'+new_event.tag
         notification.put()
-        future_list = [new_event.put_async()]
+        future_list = [new_event.put_async(), request_user.put_async()]
         for user in users:
             user.new_notifications.append(notification.key)
             future_list.append(user.put_async())
@@ -1713,6 +1789,95 @@ class RESTApi(remote.Service):
         event_data = AttendanceData.query(AttendanceData.event == event.key).fetch(keys_only=True)
         ndb.delete_multi(event_data)
         event.key.delete()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/create',
+                      http_method='POST', name='poll.create')
+    def create_poll(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        poll = Poll()
+        poll.name = data["name"]
+        if 'description' in data:
+            poll.description = data["description"]
+        poll.invited_tags = data["invited_tags"]
+        poll.results_tags = data["results_tags"]
+        poll.organization = request_user.organization
+        poll.start_time = data["start_time"]
+        poll.end_time = data["end_time"]
+        key = poll.put()
+        async_list = list()
+        for question in data["questions"]:
+            q = Question()
+            q.worded_question = question["worded_question"]
+            q.poll = key
+            q.choices = question["choices"]
+            q.type = question["type"]
+            async_list.append(q.put_async())
+        for item in async_list:
+            poll.questions.append(item.get_result().key)
+        poll.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/edit_question',
+                      http_method='POST', name='poll.edit_question')
+    def edit_question(self, request):
+        data = json.loads(request.data)
+        question_future = ndb.Key(urlsafe=data["key"]).get_async()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        question = question_future.get_result()
+        question.worded_question = data["worded_question"]
+        question.type = data["type"]
+        question.choices = data["choices"]
+        question.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/answer_questions',
+                      http_method='POST', name='poll.question.edit')
+    def edit_question(self, request):
+        data = json.loads(request.data)
+        question_future = ndb.Key(urlsafe=data["key"]).get_async()
+        poll_future = Poll.query(Poll.questions == data["key"]).get_async()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        poll = poll_future.get_result()
+        if not check_if_user_in_tags(user=request_user, org_tags=poll.invited_org_tags,
+                                     perms_tags=poll.invited_perms_tags, event_tags=poll.invited_event_tags):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        question = question_future.get_result()
+        question.worded_question = data["worded_question"]
+        question.type = data["type"]
+        question.choices = data["choices"]
+        question.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/answer_questions',
+                      http_method='POST', name='poll.question.edit')
+    def edit_question(self, request):
+        data = json.loads(request.data)
+        question_future = ndb.Key(urlsafe=data["key"]).get_async()
+        poll_future = Poll.query(Poll.questions == data["key"]).get_async()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        poll = poll_future.get_result()
+        if not check_if_user_in_tags(user=request_user, org_tags=poll.invited_org_tags,
+                                     perms_tags=poll.invited_perms_tags, event_tags=poll.invited_event_tags):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        question = question_future.get_result()
+        question.worded_question = data["worded_question"]
+        question.type = data["type"]
+        question.choices = data["choices"]
+        question.put()
         return OutgoingMessage(error='', data='OK')
 
 APPLICATION = endpoints.api_server([RESTApi])
