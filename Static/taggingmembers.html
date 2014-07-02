@@ -21,10 +21,7 @@
                                 </li>
                                 <ul id="memberTags" class="col-xs-12 col-sm-8 col-md-10">
                                     <div class="btn-group" ng-repeat="tag in member.tags | orderBy:'toString()'">
-                                    <span class="label label-default userLabel">
-                                    <li>#{{ tag }}</li>
-                                    </span>
-                                    <div class="badge" ng-click="removeTagsFromUsers([tag], [member.key])"><i class="fa fa-times"></i></div>
+                                        <nete-tag options="delete"></nete-tag>
                                     </div>
                                 </ul>
                             </div>
@@ -35,6 +32,8 @@
                             <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in $root.tags.organizationTags">
+                        <nete-tag options="all"></nete-tag>
+<!--
                             <label class="label label-default checkLabel">
                             <i class="fa fa-square-o checkStatus"></i>
                             <input type="checkbox" ng-model="selectedTags[tag]"> <li>#{{ tag }}</li>
@@ -44,6 +43,7 @@
                                 <li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>
                                 <li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>
                             </ul>
+-->
                         </div>
                     </ul>
                     </div>

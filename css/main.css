@@ -15,10 +15,30 @@ body.modal-open{margin-right:0px;}
 .backbutton{position:absolute; left:30px; top:10px;}
 .rightButton{position:absolute; right:30px; top:10px;}
 .container{position:relative;}
+
+    /*Dropdown Menu*/
+
+.dropdown-toggle{-ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
+
+nav.navbar-default .dropdown-menu {
+    -webkit-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+    opacity: 0;
+    height:0px;
+    display: block;
+    overflow:hidden;
+}
+nav.navbar-default .open .dropdown-menu {
+    opacity: 1;
+    height:218px;
+}
+
 /*Nav Pills*/
 @media screen and (max-width:768px){
 .nav-pills{font-size:12px;}
 }
+
+
 /*Labels and Tags*/
 .label{display:inline-block; position:relative; padding:.4em; margin:0px 2px; -webkit-user-select:none; user-select:none;}
 .checkLabel{padding:.4em .4em .4em 1.5em;}

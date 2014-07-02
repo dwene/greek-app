@@ -2555,10 +2555,7 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-    // Source: http://www.bennadel.com/blog/1504-Ask-Ben-Parsing-CSV-Strings-With-Javascript-Exec-Regular-Expression-Command.htm
-    // This will parse a delimited string into an array of
-    // arrays. The default delimiter is the comma, but this
-    // can be overriden in the second argument.
+// Source: http://www.bennadel.com/blog/1504-Ask-Ben-Parsing-CSV-Strings-With-Javascript-Exec-Regular-Expression-Command.htm
 function CSVReader(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
     // then default to comma.
@@ -2610,6 +2607,7 @@ function CSVReader(strData, strDelimiter) {
     // Return the parsed data.
     return (arrData);
 }
+
 function CSV2ARRAY(csv) {
     var array = CSVReader(csv);
     var objArray = [];
@@ -2627,9 +2625,11 @@ function CSV2ARRAY(csv) {
     
     return JSON.parse(str);
 }
+
 function momentInTimezone(date){
     return moment(date).add('hours',moment().tz(jstz.determine().name()).format('ZZ')/100);
 }
+
 function momentUTCTime(date){
     return moment(date).subtract('hours', moment().tz(jstz.determine().name()).format('ZZ')/100); 
 }
@@ -2651,7 +2651,6 @@ App.directive('match', function(){
             }
         };
 });
-
 
 App.directive('timePicker', function($compile){
   return {
@@ -2727,45 +2726,53 @@ App.directive('selectingUsers', function($compile){
   return {
     restrict: 'E',
     replace: 'true',
-//    template: '<div></div>',
     templateUrl: '/Static/templates/selectingmembers.html',
     transclude: true,
     link: function (scope, element, attrs) {
-        
-//        element.append('<ul id="messagingTags">'
-//                        +'<div ng-repeat="type in tags">'
-//                        +'<div class="btn-group" ng-repeat="tag in type">'
-//                        +'<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-//                        +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-//                        +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
-//                        +'</label></div></div></ul>'
-//                        +'<div id="selectedList" class="well">'
-//                        +'<span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>'
-//                        +'<span class="noneSelected" ng-hide="selectedMembers.length">No one is selected.</span>'
-//                        +'</div>'
-//                        );
-        
         $compile(element.contents())(scope)
      }
   }
 });
 
-//    <ul id="messagingTags">
-//       <div ng-repeat="type in tags">
-//        <div class="btn-group" ng-repeat="tag in type">
-//            <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
-//            <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
-//            <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
-//            </label>
-//        </div>
-//       </div>
-//    </ul>
-//    
-//    <div id="messageList" class="well">
-//        <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.users.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>
-//        <span ng-hide="selectedMembers.length">No one is selected.</span>
-//    </div>
-
+App.directive('neteTag', function($compile){
+    return{
+        restrict: 'E',
+        replace: 'true',
+        template: '<div></div>',
+        link: function(scope, element, attrs){
+        
+            if (attrs.options == 'all'){
+                element.append(  '<label class="label label-default checkLabel">'
+                                +'<i class="fa fa-square-o checkStatus"></i>'
+                                +'<input type="checkbox" ng-model="selectedTags[tag]"> <li>#{{ tag }}</li>'
+                                +'</label>'
+                                +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'
+                                +'<ul class="dropdown-menu" role="menu">'
+                                +'<li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>'
+                                +'<li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>'
+                                +'</ul>'
+                );
+            }
+            else if(attrs.options == 'delete'){
+                element.append(  '<span class="label label-default userLabel">'
+                                +'<li>#{{ tag }}</li>'
+                                +'</span>'
+                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [member.key])"><i class="fa fa-times"></i></div>'  
+                );
+                }
+            else{
+                element.append(  '<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+                                +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
+                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
+                                +'</label>'
+                );
+            }
+            
+            $compile(element.contents())(scope)
+            
+        }
+    }
+});
 
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {
@@ -2902,8 +2909,6 @@ App.filter('eventTagDirectorySearch', function(){
     }
 });
 
-
-
 App.filter('directorySearch', function(){ 
     return function (in_objects, search) {
         var searchValues = search;
@@ -2943,7 +2948,6 @@ App.filter('directorySearch', function(){
         return in_objects;
     }
 });
-
 
 App.factory('directoryService', function($rootScope, $http, LoadScreen) {
     if ($rootScope.directory === undefined){
@@ -2985,7 +2989,6 @@ App.factory('directoryService', function($rootScope, $http, LoadScreen) {
     }
 });
 
-
 App.factory('getEvents', function($http, $rootScope){
     $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
         .success(function(data){
@@ -3001,7 +3004,6 @@ App.factory('getEvents', function($http, $rootScope){
             console.log('Error: ' + data);
         });
 });
-
 
 App.factory('registerOrganizationService', function(){
     var data = undefined;

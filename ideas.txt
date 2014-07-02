@@ -37,3 +37,30 @@ UPLOAD PROFILE PICTURE
     Do we want to resize the picture and possibly save different sizes for performance?
 
 
+DESIGN
+
+Let's focus on the navigation and then 2 views to start.
+Then based off of how we theme those we can design any outstanding elements based off of how we do them.
+The apphome page and the tagging members page.
+
+Navigation
+    - Logo
+    - notification number
+    - refresh button
+    - menu items look and location
+    - dropdown
+
+Apphome page elements.
+    - update status
+    - hidden messages
+    - notification list
+    - empty notification state
+    - modal pop-up
+    
+Tagging members page.
+    - search members
+    - member list with checkbox and tags listed
+    - add tags checking system
+    - create tag area
+    
+    
