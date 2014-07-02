@@ -29,6 +29,13 @@ indexes:
   - name: time_start
     direction: desc
     
+- kind: Event
+  properties:
+  - name: organization
+  - name: time_end
+  - name: going
+  - name: tag
+    
 - kind: Notification
   properties:
   - name: key

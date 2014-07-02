@@ -1369,10 +1369,6 @@ class RESTApi(remote.Service):
             futures.append(user.put_async())
         for future in futures:
             future.get_result()
-            # if user.notification_email:
-            #     name = request_user.first_name + ' ' + request_user.last_name
-            #     notification_email(title=notification.title, content=notification.content,
-            #                        email=user.email, sender=name)
         return OutgoingMessage(error='', data='OK')
 
     #-------------------------
@@ -1395,7 +1391,6 @@ class RESTApi(remote.Service):
             hidden_notifications_future = Notification.query(Notification.key.IN(
                 request_user.hidden_notifications)).order(Notification.timestamp).fetch_async(20)
         out_notifications = []
-        logging.error(request_user.new_notifications)
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
             logging.error(new_notifications)
@@ -1840,18 +1835,15 @@ class RESTApi(remote.Service):
         question.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/answer_questions',
-                      http_method='POST', name='poll.question.edit')
-    def edit_question(self, request):
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/edit_poll',
+                      http_method='POST', name='poll.edit_poll')
+    def edit_poll(self, request):
         data = json.loads(request.data)
         question_future = ndb.Key(urlsafe=data["key"]).get_async()
-        poll_future = Poll.query(Poll.questions == data["key"]).get_async()
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        poll = poll_future.get_result()
-        if not check_if_user_in_tags(user=request_user, org_tags=poll.invited_org_tags,
-                                     perms_tags=poll.invited_perms_tags, event_tags=poll.invited_event_tags):
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         question = question_future.get_result()
         question.worded_question = data["worded_question"]
@@ -1861,11 +1853,14 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/answer_questions',
-                      http_method='POST', name='poll.question.edit')
-    def edit_question(self, request):
+                      http_method='POST', name='poll.answer_questions')
+    def answer_questions(self, request):
         data = json.loads(request.data)
-        question_future = ndb.Key(urlsafe=data["key"]).get_async()
-        poll_future = Poll.query(Poll.questions == data["key"]).get_async()
+        key_list = list()
+        for question in data["questions"]:
+            key_list.append(ndb.Key(urlsafe=question["key"]))
+        questions_future = Question.query(Question.key in key_list).fetch_async()
+        poll_future = Poll.query(Poll.questions.IN(key_list)).get_async()
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -1873,12 +1868,39 @@ class RESTApi(remote.Service):
         if not check_if_user_in_tags(user=request_user, org_tags=poll.invited_org_tags,
                                      perms_tags=poll.invited_perms_tags, event_tags=poll.invited_event_tags):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        question = question_future.get_result()
-        question.worded_question = data["worded_question"]
-        question.type = data["type"]
-        question.choices = data["choices"]
-        question.put()
+        future_list = list()
+        for question_f in questions_future:
+            question = question_f.get_result()
+            question.worded_question = data["worded_question"]
+            question.type = data["type"]
+            question.choices = data["choices"]
+            future_list.append(question.put_async())
+        for item in future_list:
+            item.get_result()
         return OutgoingMessage(error='', data='OK')
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/get_results',
+    #                   http_method='POST', name='poll.get_results')
+    # def get_results(self, request):
+    #     data = json.loads(request.data)
+    #     poll = ndb.Key(urlsafe=data["key"]).get()
+    #     questions = ndb.get_multi(poll.questions)
+    #     question_list = list()
+    #     out_list = list()
+    #     for question in questions:
+    #         question_list.append({"question": question,
+    #                               "responses": Response.query(Response.key in question.responses
+    #                              ).fetch_async(projection=[Response.answer])})
+    #     for question in question_list:
+    #         responses = question["responses"].get_result()
+    #         if question["question"].type == 'multiple':
+    #             answer_list = list()
+    #             for response in responses:
+    #     # responses_future = Response.query(Response.question in poll.questions).fetch()
+
+
+
+
 
 APPLICATION = endpoints.api_server([RESTApi])
 
