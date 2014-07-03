@@ -190,7 +190,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
             .state('app.eventCheckinReport',{
                 //#TODO put this into each individual event :tag
-                    url : '/checkinreport',
+                    url : '/events/:tag/report',
                     templateUrl : 'Static/eventcheckinreport.html',
                     controller : 'eventCheckInReportController'
                 })
@@ -203,7 +203,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout) {
+    App.run(function ($rootScope, $state, $stateParams, $http, $q) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
@@ -227,7 +227,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $rootScope.notifications[i].collapseOut = true;
                     }
                 }
-
                 for (var i = 0; i < $rootScope.notifications.length; i++){
                         $rootScope.notifications[i].collapseOut = true;  
                 }
@@ -261,7 +260,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $rootScope.notification_count = count;
         }
-        
         $rootScope.showNav = true;
     });
 
@@ -2355,6 +2353,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
 App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope) {
         $scope.loading = true;
         Load.then(function(){
+            getCheckInData();
+            function getCheckInData(){
+            $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    $scope.users = JSON.parse(data.data);
+                    $scope.loading = false;
+                }
+                else{
+                    console.log('ERROR: '+data);
+                    $scope.eventNotFound = true;
+                    $scope.loading = false;
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+                $scope.loading = false;
+                $scope.eventNotFound = true;
+            });
+        }
             $scope.createReport = function(){
                 var doc = new jsPDF();
                 // We'll make our own renderer to skip this editor
@@ -2371,16 +2389,15 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 });
                 doc.output('dataurlnewwindow'); 
             }
+            $scope.formatDate = function(date){
+                return momentInTimezone(date).format('lll');
+            }
         });
   });
-
 
     App.controller('subscriptionInfoController', function($scope, $http, Load, $rootScope) {
         $scope.loading = true;
         Load.then(function(){
-            if (!$rootScope.subscribed){
-                window.location.assign('#/app/payment');
-            }
             loadSubscriptionInfo();
             function loadSubscriptionInfo(){
                 $http.post('/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))

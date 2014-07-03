@@ -17,6 +17,12 @@
 <!--        #FUTURE  need to make sure font-awesome is updated-->
         <link rel="stylesheet" href="css/fontawesome.min.css">
         <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+        <script src="js/vendor/jquery-1.10.1.min.js"></script>
+        <!--        Angular scripts-->
+        <script src="js/vendor/angular.js"></script>
+<!--        <script src="js/vendor/angular-route.js"></script>-->
+        <script src="js/vendor/angular-ui.js"></script>
+        <script src="js/vendor/angular-animate.js"></script>
         <!--[if lt IE 9]>
             <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
         <![endif]-->
@@ -27,7 +33,7 @@
         <![endif]-->
 
 <header>
-			<nav class="navbar navbar-default" ng-show="$root.showNav" ng-controller="navigationController as navigation">
+			<nav class="navbar navbar-default" ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
 			<div class="container">
 				<div class="navbar-header">
 					
@@ -102,7 +108,6 @@
 </div><!-- /.modal -->
         
 <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
-        <script src="js/vendor/jquery-1.10.1.min.js"></script>
         <script src="js/vendor/jquery.cookie.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/spin.js"></script>
@@ -112,11 +117,6 @@
         <script src="js/vendor/bootstrap-datetimepicker.min.js"></script>
         <script src="js/vendor/jstz-1.0.4.min.js"></script>
 <!--        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
-<!--        Angular scripts-->
-        <script src="js/vendor/angular.js"></script>
-<!--        <script src="js/vendor/angular-route.js"></script>-->
-        <script src="js/vendor/angular-ui.js"></script>
-        <script src="js/vendor/angular-animate.js"></script>
 <!--        Angular Strap if Needed-->
 <!--        <script src="js/vendor/angular-strap.min.js"></script>-->
 <!--        <script src="js/vendor/angular-strap.tpl.js"></script>-->
