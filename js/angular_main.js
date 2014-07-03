@@ -2345,7 +2345,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     });
 
-App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope) {
+App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter) {
         $scope.loading = true;
         Load.then(function(){
             getCheckInData();
@@ -2395,6 +2395,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 if (!users){
                     users = $scope.users;
                 }
+                users = $filter('orderBy')(users, "['rsvp', 'last_name']");
                 // We'll make our own renderer to skip this editor
                 var specialElementHandlers = {
                     '#editor': function(element, renderer){
@@ -2402,19 +2403,28 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     }
                 };
                 doc.setFontSize(30);
-                doc.text(20, 20, 'Report for '+ $stateParams.tag);
-                var current_line = 30;
+                doc.text(10, 20, 'Report for '+ $stateParams.tag);
+                var current_line = 20;
+                var shifted = 20;
+                for (var j = 0; j < 100; j++){
                 for (var i = 0; i < users.length; i++){
                 doc.setFontSize(15);
-                doc.text(20, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
+                doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
                 doc.setFontSize(10);
-                doc.text(25, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
-                doc.text(25, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
-                    current_line += 15;
-                    if (current_line > 400){
-                        current_line = 20;
-                        doc.addPage();
-                    }
+                doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
+                doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
+                doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+                    current_line += 0;
+                if (current_line > 250 && shifted > 20){
+                    current_line = 20;
+                    shifted = 20;
+                    doc.addPage();
+                }
+                else if(current_line > 250){
+                    current_line = 20;
+                    shifted = 110;
+                }
+                }
                 }
 //                doc.text(20, 20, 'Do you like that?');
                 // All units are in the set measurement for the document
@@ -2427,6 +2437,14 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
             }
             $scope.formatDate = function(date){
                 return momentInTimezone(date).format('lll');
+            }
+            $scope.timeDifference = function(start, end){
+                var mStart = moment(start);
+                var mEnd = moment(end);
+                var hours = mEnd.diff(mStart, 'hours');
+                var intermediate = mEnd.subtract(hours, 'hours');
+                var minutes = intermediate.diff(mStart, 'minutes');
+                return hours + ':' + ("0" + minutes).slice(-2);
             }
         });
   });
@@ -2484,14 +2502,11 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                         console.log('ERROR: '+JSON.stringify(data));
                         $scope.loading = false;
                         $scope.error = JSON.stringify(data);}
-                    
                 })
                 .error(function(data) {
                     console.log('Error: ' + JSON.stringify(data));
                 }); 
-            };
-            
-            
+            };  
         });
 	});
 
