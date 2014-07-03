@@ -2845,8 +2845,8 @@ App.directive('neteTag', function($compile){
         link: function(scope, element, attrs){
         
             if (attrs.options == 'all'){
-                element.append(  '<label class="label label-default checkLabel">'
-                                +'<i class="fa fa-square-o checkStatus"></i>'
+                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+                                +'<i class="fa fa-square-o checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
                                 +'<input type="checkbox" ng-model="tag.checked"> <li>#{{ tag.name }}</li>'
                                 +'</label>'
                                 +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'

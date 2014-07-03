@@ -31,18 +31,7 @@
                         </ul>
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in $root.tags.org_tags">
-                        <nete-tag options="check"></nete-tag>
-<!--
-                            <label class="label label-default checkLabel">
-                            <i class="fa fa-square-o checkStatus"></i>
-                            <input type="checkbox" ng-model="selectedTags[tag]"> <li>#{{ tag }}</li>
-                            </label>
-                            <div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>
-                                <li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>
-                            </ul>
--->
+                        <nete-tag options="all"></nete-tag>
                         </div>
                     </ul>
                     </div>
