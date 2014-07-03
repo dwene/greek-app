@@ -1532,16 +1532,27 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
         Load.then(function(){
+            console.log($rootScope.tags);
         function getUsers(){
             $scope.selectedTags = {};
             $scope.selectedUsers = {};
-            
+            $scope.users;
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var users = JSON.parse(data.data)
+                    var users = JSON.parse(data.data);
+                    var out_users = [];
+                    for (var i = 0; i < users.members.length; i ++){
+                        var user = users.members[i];
+                        user.name = users.members[i].first_name + " " + users.members[i].last_name;
+                        user.checked = false;
+                        out_users.push(user);
+                    }
+                    $scope.users = out_users;
                     $rootScope.users = users;
+                    console.log("HERE");
+                    console.log($scope.users);
                 }
                 else
                     console.log('ERROR: '+data);
@@ -1554,15 +1565,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.getOrganizationTags = function(){
             //initialize ng-model variables to contain selected things
             $('#tag').val('');
-            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+            $http.post('/_ah/api/netegreek/v1/messaging/get_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
+                        var org_tags = JSON.parse(data.data).org_tags;
+                        var out_tags = [];
+                        for (var i = 0; i < org_tags.length; i++){
+                            out_tags.push({"name": org_tags[i], "checked": false});
+                        }
+                        $rootScope.tags.org_tags = out_tags;
                     }
                     else{
                         console.log('ERROR: '+data);
                     }
-                    
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
@@ -1586,8 +1601,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-            if ($rootScope.tags.organizationTags.indexOf(tag) == -1){
-                $rootScope.tags.organizationTags.push(tag);
+            if ($rootScope.tags.org_tags.indexOf(tag) == -1){
+                $rootScope.tags.org_tags.push(tag);
             }
             $("#addTag input").val("");
         }
@@ -1601,12 +1616,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-            var idx = $rootScope.tags.organizationTags.indexOf($scope.modaledTag)
-            $rootScope.tags.organizationTags.splice(idx, 1);
+            var idx = $rootScope.tags.org_tags.indexOf($scope.modaledTag)
+            $rootScope.tags.org_tags.splice(idx, 1);
             var tag = $scope.modaledTag;
             $scope.modaledTag = null;
             for (var i = 0; i< $rootScope.users.members.length; i++){
-                if ($rootScope.users.members[i].tags.indexOf(tag) > -1){
+                if ($rootScope.users.members[i].tags.indexOf(tag.name) > -1){
                     $rootScope.users.members[i].tags.splice($rootScope.users.members[i].tags.indexOf(tag), 1);
                 }
             }
@@ -1630,8 +1645,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     });
                 var tag = $scope.modaledTag;
                 $scope.rename = null;
-                var idx = $rootScope.tags.organizationTags.indexOf(tag);
-                $rootScope.tags.organizationTags[idx] = new_tag;
+                var idx = $rootScope.tags.org_tags.indexOf(tag);
+                $rootScope.tags.org_tags[idx] = new_tag;
                 $scope.modaledTag = null;
                 for (var i = 0; i< $rootScope.users.members.length; i++){
                     if ($rootScope.users.members[i].tags.indexOf(tag) > -1){
@@ -1645,26 +1660,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.$watch('item.tag', function() {
-                $scope.item.tag = $scope.item.tag.replace(/\s+/g,'');
+            $scope.item.tag = $scope.item.tag.replace(/\s+/g,'');
         });
         
         //onclick checkmark tag
-        $('.memberTags').on('click', '.checkLabel', function(){
-            
-            var checkbox = $(this).find(':checkbox');
-                        
-                if ( checkbox.prop('checked') )
-                {
-                    $(this).addClass('label-primary').removeClass('label-default');
-                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
-                }
-                else
-                {
-                    $(this).removeClass('label-primary').addClass('label-default');
-                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-                }
-            
-        });
+//        $('.memberTags').on('click', '.checkLabel', function(){
+//            
+//            var checkbox = $(this).find(':checkbox');
+//                        
+//                if ( checkbox.prop('checked') )
+//                {
+//                    $(this).addClass('label-primary').removeClass('label-default');
+//                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+//                }
+//                else
+//                {
+//                    $(this).removeClass('label-primary').addClass('label-default');
+//                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+//                }
+//            
+//        });
        
         $scope.openRenameTagModal = function(tag){
             $('#renameTagModal').modal();
@@ -1718,9 +1733,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             console.log(users);
             selected_tags = [];
             selected_keys = [];
-            for (var subtag in tags){
-                if (tags[subtag] == true){
-                    selected_tags.push(subtag);
+            for (var i = 0; i < tags.length; i++){
+                if (tags[i].checked){
+                    selected_tags.push(tag);
                 }
             }
             for (var subuser in users){
@@ -2832,7 +2847,7 @@ App.directive('neteTag', function($compile){
             if (attrs.options == 'all'){
                 element.append(  '<label class="label label-default checkLabel">'
                                 +'<i class="fa fa-square-o checkStatus"></i>'
-                                +'<input type="checkbox" ng-model="selectedTags[tag]"> <li>#{{ tag }}</li>'
+                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{ tag.name }}</li>'
                                 +'</label>'
                                 +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'
                                 +'<ul class="dropdown-menu" role="menu">'

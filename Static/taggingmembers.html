@@ -9,15 +9,10 @@
                     </div>
                     </div>
                     <ul>
-                        <div ng-repeat="member in $root.users.members | orderBy:'last_name' | multipleSearch:search">
+                        <div ng-repeat="tag in users | orderBy:'last_name' | multipleSearch:search">
                             <div class="row">
                                 <li class="col-xs-12 col-sm-4 col-md-2">
-                                <div class="btn-group">
-                                <label class="label label-default checkLabel">
-                                <i class="fa fa-square-o checkStatus"></i>
-                                <input type="checkbox" ng-model="selectedUsers[member.key]">{{ member.first_name }} {{ member.last_name }}
-                                </label>
-                                </div>
+                                    <nete-tag options="check"></nete-tag>
                                 </li>
                                 <ul id="memberTags" class="col-xs-12 col-sm-8 col-md-10">
                                     <div class="btn-group" ng-repeat="tag in member.tags | orderBy:'toString()'">
@@ -35,8 +30,8 @@
                            <nete-tag ng-repeat="tag in selectedTags"></nete-tag>
                         </ul>
                         <ul class="addTags">
-                        <div class="btn-group" ng-repeat="tag in $root.tags.organizationTags">
-                        <nete-tag options="all"></nete-tag>
+                        <div class="btn-group" ng-repeat="tag in $root.tags.org_tags">
+                        <nete-tag options="check"></nete-tag>
 <!--
                             <label class="label label-default checkLabel">
                             <i class="fa fa-square-o checkStatus"></i>
