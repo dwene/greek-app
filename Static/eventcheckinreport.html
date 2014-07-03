@@ -23,7 +23,7 @@
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span><br>
                 <span>In: {{formatDate(member.attendance_data.time_in)}}</span><br>
                 <span>Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
-                
+                <span>Duration: {{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span><br>
                 </div>
                 </li>
         </ul>
