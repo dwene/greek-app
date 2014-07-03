@@ -2406,25 +2406,29 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 doc.text(10, 20, 'Report for '+ $stateParams.tag);
                 var current_line = 20;
                 var shifted = 20;
-                for (var j = 0; j < 100; j++){
                 for (var i = 0; i < users.length; i++){
-                doc.setFontSize(15);
-                doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
-                doc.setFontSize(10);
-                doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
-                doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
-                doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
-                    current_line += 0;
-                if (current_line > 250 && shifted > 20){
-                    current_line = 20;
-                    shifted = 20;
-                    doc.addPage();
-                }
-                else if(current_line > 250){
-                    current_line = 20;
-                    shifted = 110;
-                }
-                }
+                    doc.setFontSize(15);
+                    doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
+                    doc.setFontSize(10);
+                    if (users[i].attendance_data.time_in){
+                    doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
+                    }
+                    if (users[i].attendance_data.time_out){
+                    doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
+                    }
+                    if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
+                        doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+                    }
+                        current_line += 0;
+                    if (current_line > 250 && shifted > 20){
+                        current_line = 20;
+                        shifted = 20;
+                        doc.addPage();
+                    }
+                    else if(current_line > 250){
+                        current_line = 20;
+                        shifted = 110;
+                    }
                 }
 //                doc.text(20, 20, 'Do you like that?');
                 // All units are in the set measurement for the document
