@@ -1158,7 +1158,10 @@ class RESTApi(remote.Service):
                     event_tags.append(event.tag)
             user_dict["event_tags"] = event_tags
             user_dict["key"] = user.key.urlsafe()
-            user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+            if user.dob:
+                user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+            else:
+                del user_dict["dob"]
             user_dict["key"] = user.key.urlsafe()
             try:
                 user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
