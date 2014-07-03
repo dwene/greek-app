@@ -2868,6 +2868,28 @@ App.directive('neteTag', function($compile){
     }
 });
 
+App.directive('typeAhead', function($compile){
+    return{
+        restrict: 'E',
+        replace: 'true',
+        template: '<div></div>',
+        link: function(scope, element, attrs){
+        
+        var placeholder = attrs.placeholder;
+        var this_id = attrs.id;
+  
+                element.append(
+                '<input type="text" class="form-control typeahead" placeholder="'+placeholder+'">'
+                );
+                        
+            
+            
+            $compile(element.contents())(scope)
+        }
+    }
+});
+
+
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {
         var searchValues = search;

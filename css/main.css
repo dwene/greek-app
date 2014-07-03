@@ -97,6 +97,7 @@ h1{font-size:36px; font-weight:bold;}
 
 /*Member Tagging Page*/
 #addTagsButton{margin-bottom:15px;}
+#selectedTags{display:inline;}
 .memberTags .badge:hover{background:#d9534f;}
 .memberTags .btn-group, .messagingTags .btn-group{margin:2px;}
 
