@@ -221,12 +221,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 $rootScope.$apply();
                 $rootScope.notifications = JSON.parse(data.data).notifications;
-                
-                for (var i = 0; i < $rootScope.notifications.length; i++){
-                    if ($rootScope.notifications[i].new){
-                        $rootScope.notifications[i].collapseOut = true;
-                    }
-                }
 
                 for (var i = 0; i < $rootScope.notifications.length; i++){
                         $rootScope.notifications[i].collapseOut = true;  
@@ -3096,6 +3090,9 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 $rootScope.notifications = JSON.parse(data.data).notifications;
+                for (var i = 0; i < $rootScope.notifications.length; i++){
+                        $rootScope.notifications[i].collapseOut = true;  
+                }
                 $rootScope.hidden_notifications = JSON.parse(data.data).hidden_notifications;
                 $rootScope.updateNotificationBadge();
                 checkIfDone();

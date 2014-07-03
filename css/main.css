@@ -21,8 +21,8 @@ body.modal-open{margin-right:0px;}
 .dropdown-toggle{-ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
 
 nav.navbar-default .dropdown-menu {
-    -webkit-transition: all 300ms ease-out;
-    transition: all 300ms ease-out;
+    -webkit-transition: all .3s ease-out;
+    transition: all .3s ease-out;
     opacity: 0;
     height:0px;
     display: block;
@@ -50,9 +50,10 @@ nav.navbar-default .open .dropdown-menu {
 .checkLabel.label-primary:hover{background:blue;}
 
 /*Message and Events Person Well*/
-#messageList{margin-bottom:10px; padding:10px; max-height:80px; overflow-y:scroll;}
+#selectedList{margin-bottom:10px; padding:10px; min-height:60px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
+.noneSelected{position:absolute; left:10px; top:10px;}
 
 /*Random Fixes*/
 #registerForm #orgType input{margin-right:5px;}
@@ -136,22 +137,16 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
-.notification{cursor:pointer; position:relative; height:86px; 
-/*
-    -webkit-transition: height .3s ease-out;
-    transition: height .3s ease-out;
-*/
-}
-.notification.closed{height:0px;}
+.notification{cursor:pointer; position:relative; height:86px;}
 .notification.new{background:#EDEDED;}
 .notification:hover{background:#EDEDED;}
 .notification{border-top:1px solid #777;}
 .notification:last-child{border-bottom:1px solid #777;}
 .notificationContent{padding:20px 10px;}
-.notificationContent .close{font-size:12px; top:-10px; position:relative; z-index:100;}
+.notificationContent .close{font-size:12px; top:5px; right:10px; position:absolute; z-index:100;}
 .notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-15px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
-.notificationSender{font-size:12px; font-style:italic; text-align:right;}
+.notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
@@ -242,21 +237,22 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation-duration: 1s;}
 
 /*ng-animation code*/
-.fadingIn.ng-enter {
-    position:absolute !important; left:0px; right:0px;
+.fadingIn.ng-enter, .messagePerson.ng-enter{
 -webkit-animation: fadeIn .5s;
 -moz-animation: fadeIn .5s;
 -ms-animation: fadeIn .5s;
  animation: fadeIn .5s;
 }
 
-.fadingOut.ng-leave {
-    position:absolute !important; left:0px; right:0px;
+.fadingOut.ng-leave, .messagePerson.ng-leave{
 -webkit-animation: fadeOut .5s;
 -moz-animation: fadeOut .5s;
 -ms-animation: fadeOut .5s;
  animation: fadeOut .5s;
 }
+
+.fadingIn.ng-enter { position:absolute !important; left:0px; right:0px; }
+.fadingOut.ng-leave { position:absolute !important; left:0px; right:0px; }
 
 .fadingInLeftBig.ng-enter{
     position:absolute !important; left:0px; right:0px;
@@ -273,7 +269,7 @@ nav.navbar-default:hover .refresh{opacity:1;}
  animation: fadeOutLeftBig .5;
 }
 
-.collapseOut.ng-enter{-webkit-animation: flipInX .5s;
+.collapseOut.new.ng-enter{-webkit-animation: flipInX .5s;
 -moz-animation: flipInX .5s;
 -ms-animation: flipInX .5s;
  animation: flipInX .5;}
@@ -282,9 +278,9 @@ nav.navbar-default:hover .refresh{opacity:1;}
 -webkit-animation: flipOutX .5s;
 -moz-animation: flipOutX .5s;
 -ms-animation: flipOutX .5s;
- animation: flipOutX .5;
+animation: flipOutX .5;
 }
-}
+
 
 /*Specific Fixes*/
 .bootstrap-datetimepicker-widget .btn:active,
