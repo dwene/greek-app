@@ -10,10 +10,24 @@
 		<button class="btn btn-default" ng-click="createReport()">Download Report</button>
 </div>
 
-<div id="report" class="container">
+<div id="report" class="container" ng-hide="eventNotFound || loading">
 
 <h1>This is the report.</h1>
 
-<p>lorum ipsum</p>
+        <ul>
+
+            <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin">
+            
+                <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
+
+                <div class="checkinContent">
+
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span><br>
+                <span>In: {{formatDate(member.attendance_data.time_in)}}</span><br>
+                <span>Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
+                
+                </div>
+                </li>
+        </ul>
 
 </div>
