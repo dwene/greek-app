@@ -9,8 +9,6 @@
         <ul>
 
             <li ng-repeat="member in users | orderBy:'rsvp' | multipleSearch: search" class="checkin" ng-show="true" ng-click="showIndividual(member)">
-            
-                <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
 
                 <div class="checkinContent">
 

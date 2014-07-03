@@ -2368,20 +2368,61 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 $scope.eventNotFound = true;
             });
         }
-            $scope.createReport = function(){
+//            $scope.generateReport(){
+//                $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+//                .success(function(data){
+//                    if (!checkResponseErrors(data)){
+//                        users = JSON.parse(data.data);
+//                        $scope.loading = false;
+//                        createReport();
+//                    }
+//                    else{
+//                        console.log('ERROR: '+data);
+//                        $scope.eventNotFound = true;
+//                        $scope.loading = false;
+//                    }
+//                })
+//                .error(function(data) {
+//                    console.log('Error: ' + data);
+//                    $scope.loading = false;
+//                    $scope.eventNotFound = true;
+//                });
+//            }
+            
+            
+            $scope.createReport = function(users){
                 var doc = new jsPDF();
+                if (!users){
+                    users = $scope.users;
+                }
                 // We'll make our own renderer to skip this editor
                 var specialElementHandlers = {
                     '#editor': function(element, renderer){
                         return true;
                     }
                 };
+                doc.setFontSize(30);
+                doc.text(20, 20, 'Report for '+ $stateParams.tag);
+                var current_line = 30;
+                for (var i = 0; i < users.length; i++){
+                doc.setFontSize(15);
+                doc.text(20, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
+                doc.setFontSize(10);
+                doc.text(25, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
+                doc.text(25, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
+                    current_line += 15;
+                    if (current_line > 400){
+                        current_line = 20;
+                        doc.addPage();
+                    }
+                }
+//                doc.text(20, 20, 'Do you like that?');
                 // All units are in the set measurement for the document
                 // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-                doc.fromHTML($('#report').get(0), 15, 15, {
-                    'width': 170, 
-                    'elementHandlers': specialElementHandlers
-                });
+//                doc.fromHTML($('#report').get(0), 15, 15, {
+//                    'width': 170, 
+//                    'elementHandlers': specialElementHandlers
+//                });
                 doc.output('dataurlnewwindow'); 
             }
             $scope.formatDate = function(date){
