@@ -68,10 +68,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
         <label for="dob" class="col-sm-2 control-label">Birthday</label>
         <div class="col-sm-10" id="dob">
-        <div class="input-group">
-          <input type="text" class="form-control" name="dob" placeholder="05/25/1993" ng-model="item.dob" required>
-          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          </div>
+        <date-picker id="dob" name="dob" ng-model="item.dob"></date-picker>
         </div>
         <p ng-show="(memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)" class="help-block">Please enter your birthday.</p>
     </div>
@@ -425,7 +422,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
         <label for="website" class="col-sm-2 control-label">Website</label>
         <div class="col-sm-10">
-          <input type="url" class="form-control" id="website" name="website" ng-model="item.website" placeholder="http://johndoe.com">
+          <input type="text" class="form-control" id="website" name="website" ng-model="item.website" placeholder="johndoe.com">
         </div>
         <p ng-show="(memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>
@@ -435,7 +432,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
         <label for="facebook" class="col-sm-2 control-label">Facebook Profile</label>
         <div class="col-sm-10">
-          <input type="url" class="form-control" id="facebook" name="facebook" ng-model="item.facebook" placeholder="http://facebook.com/johndoe">
+          <input type="text" class="form-control" id="facebook" name="facebook" ng-model="item.facebook" placeholder="facebook.com/johndoe">
         </div>
         <p ng-show="(memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>    
@@ -443,7 +440,7 @@
     <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
         <label for="twitter" class="col-sm-2 control-label">Twitter Profile</label>
         <div class="col-sm-10">
-          <input type="url" class="form-control" id="twitter" name="twitter" ng-model="item.twitter" placeholder="http://twitter.com/johndoe">
+          <input type="text" class="form-control" id="twitter" name="twitter" ng-model="item.twitter" placeholder="twitter.com/johndoe">
         </div>
         <p ng-show="(memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>  
@@ -451,7 +448,7 @@
     <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
         <label for="instagram" class="col-sm-2 control-label">Instagram Profile</label>
         <div class="col-sm-10">
-          <input type="url" class="form-control" id="instagram" name="instagram" ng-model="item.instagram" placeholder="http://instagram.com/johndoe">
+          <input type="text" class="form-control" id="instagram" name="instagram" ng-model="item.instagram" placeholder="instagram.com/johndoe">
         </div>
         <p ng-show="(memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>
@@ -459,31 +456,11 @@
     <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
         <label for="linkedin" class="col-sm-2 control-label">LinkedIn Profile</label>
         <div class="col-sm-10">
-          <input type="url" class="form-control" id="linkedin" name="linkedin" ng-model="item.linkedin" placeholder="http://linkedin.com/johndoe">
+          <input type="text" class="form-control" id="linkedin" name="linkedin" ng-model="item.linkedin" placeholder="linkedin.com/johndoe">
         </div>
         <p ng-show="(memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>
-    <script type="text/javascript">
-    $(function(){
 
-  $('#dob').datetimepicker({
-        pickTime: false,
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        }
-    });
-    //updates the model for date inputs               
-    $('.date input').focusout(function(){
-     $(this).trigger('input');
-    })
-    
-    
-    });
-</script>
-    
 
     <button type="submit" class="btn btn-default pull-right">Submit</button>
     <p ng-show="updatedInfo">Account info updated!</p>

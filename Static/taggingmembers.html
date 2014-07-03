@@ -30,6 +30,9 @@
                     </div>
                     <div class="col-xs-5">
                             <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
+                        <ul id="selectedTags" ng-repeat="tag in selectedTags">
+                            selected tags: <nete-tag></nete-tag>
+                        </ul>
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in $root.tags.organizationTags">
                         <nete-tag options="all"></nete-tag>

@@ -2807,7 +2807,7 @@ App.directive('neteTag', function($compile){
     return{
         restrict: 'E',
         replace: 'true',
-        template: '<div></div>',
+        template: '',
         link: function(scope, element, attrs){
         
             if (attrs.options == 'all'){
@@ -2822,17 +2822,23 @@ App.directive('neteTag', function($compile){
                                 +'</ul>'
                 );
             }
+            else if(attrs.options == 'check'){
+                element.append(  '<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+                                +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
+                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
+                                +'</label>'
+                );
+            }
             else if(attrs.options == 'delete'){
                 element.append(  '<span class="label label-default userLabel">'
                                 +'<li>#{{ tag }}</li>'
                                 +'</span>'
                                 +'<div class="badge" ng-click="removeTagsFromUsers([tag], [member.key])"><i class="fa fa-times"></i></div>'  
                 );
-                }
+            }
             else{
-                element.append(  '<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-                                +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
+                element.append(  '<label class="label label-primary">'
+                                +'<li>#{{ tag.name }}</li>'
                                 +'</label>'
                 );
             }
