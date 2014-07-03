@@ -203,7 +203,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $http, $q) {
+    App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
@@ -216,12 +216,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('.fa-refresh').addClass('fa-spin');
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-                $rootScope.notifications =JSON.parse(data.data).notifications;
+                for (var i = 0; i < $rootScope.notifications.length; i++){
+                    $rootScope.notifications[i].collapseOut = false;
+                }
+                $rootScope.$apply();
+                $rootScope.notifications = JSON.parse(data.data).notifications;
+                
+                for (var i = 0; i < $rootScope.notifications.length; i++){
+                    if ($rootScope.notifications[i].new){
+                        $rootScope.notifications[i].collapseOut = true;
+                    }
+                }
+
+                for (var i = 0; i < $rootScope.notifications.length; i++){
+                        $rootScope.notifications[i].collapseOut = true;  
+                }
                 $rootScope.updateNotificationBadge();
                 setTimeout(function(){
-               $('.fa-refresh').removeClass('fa-spin')},930);
-                
-            })
+                    $('.fa-refresh').removeClass('fa-spin')},930);
+                })
             .error(function(data) {
                 console.log('Error: ' + data);
             });
@@ -536,7 +549,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, Load) {
         Load.then(function(){
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -581,12 +594,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.hideNotification = function(notify){
             var key = notify.key;
-            
-            $timeout(function(){
-            $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+            //$http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
             $rootScope.hidden_notifications.push(notify);
             $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
-            }, 500);
         }
         
         $scope.closeNotificationModal = function(notify){

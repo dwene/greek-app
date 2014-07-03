@@ -118,12 +118,10 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 #createTags{margin-top:10px;}
 
 /*Member Management Page*/
-
 #manageMembers li{margin:4px;}
 #manageMembers .form-inline{margin-bottom:10px;}
 .permsSelect{display:inline-block;}
 .addPerson{margin:4px;}
-
 
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
@@ -138,7 +136,13 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
-.notification{cursor:pointer; position:relative;}
+.notification{cursor:pointer; position:relative; height:86px; 
+/*
+    -webkit-transition: height .3s ease-out;
+    transition: height .3s ease-out;
+*/
+}
+.notification.closed{height:0px;}
 .notification.new{background:#EDEDED;}
 .notification:hover{background:#EDEDED;}
 .notification{border-top:1px solid #777;}
@@ -238,9 +242,8 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation-duration: 1s;}
 
 /*ng-animation code*/
-.ng-enter,.ng-leave{position:absolute !important; left:0px; right:0px;}
-
 .fadingIn.ng-enter {
+    position:absolute !important; left:0px; right:0px;
 -webkit-animation: fadeIn .5s;
 -moz-animation: fadeIn .5s;
 -ms-animation: fadeIn .5s;
@@ -248,6 +251,7 @@ nav.navbar-default:hover .refresh{opacity:1;}
 }
 
 .fadingOut.ng-leave {
+    position:absolute !important; left:0px; right:0px;
 -webkit-animation: fadeOut .5s;
 -moz-animation: fadeOut .5s;
 -ms-animation: fadeOut .5s;
@@ -255,17 +259,24 @@ nav.navbar-default:hover .refresh{opacity:1;}
 }
 
 .fadingInLeftBig.ng-enter{
+    position:absolute !important; left:0px; right:0px;
 -webkit-animation: fadeInRightBig .5s;
 -moz-animation: fadeInRightBig .5s;
 -ms-animation: fadeInRightBig .5s;
  animation: fadeInRightBig .5s;
 }
 .fadingOutRightBig.ng-leave{
+    position:absolute !important; left:0px; right:0px;
 -webkit-animation: fadeOutLeftBig .5s;
 -moz-animation: fadeOutLeftBig .5s;
 -ms-animation: fadeOutLeftBig .5s;
  animation: fadeOutLeftBig .5;
 }
+
+.collapseOut.ng-enter{-webkit-animation: flipInX .5s;
+-moz-animation: flipInX .5s;
+-ms-animation: flipInX .5s;
+ animation: flipInX .5;}
 
 .collapseOut.ng-leave{
 -webkit-animation: flipOutX .5s;

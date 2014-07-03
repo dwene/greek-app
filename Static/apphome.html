@@ -46,11 +46,11 @@
         <hr>
     </section>
 
-        <ul>
-            <li class="notification" ng-class="{ new : notify.new }" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
+        <ul>  <!--ng-class="{ new : notify.new }"-->
+            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.collapseOut}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
             
                 <div class="notificationContent">
-                <button type="button" class="close" ng-click="hideNotification(notify)">hide</button>
+                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();">hide</button>
                 <span class="notificationTitle">{{notify.title}}</span>
 <!--                #TODO add more content to the notifications-->
 <!--                <span class="notificationPreview">{{notification.preview}}</span>-->
