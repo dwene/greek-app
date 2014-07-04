@@ -2866,7 +2866,7 @@ App.directive('neteTag', function($compile){
                 element.append(  '<span class="label label-default userLabel">'
                                 +'<li>#{{ tag }}</li>'
                                 +'</span>'
-                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [member.key])"><i class="fa fa-times"></i></div>'  
+                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [user.key])"><i class="fa fa-times"></i></div>'  
                 );
             }
             else{
