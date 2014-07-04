@@ -1324,15 +1324,18 @@ class RESTApi(remote.Service):
         event_tags_future = Event.query(Event.organization == request_user.organization).fetch_async()
         org_tags = org_tags_future.get_result().tags
         org_tags_list = list()
+        for tag in request_user.recently_used_tags:
+            org_tags_list.append({"name": tag, "recent": True})
+            if tag in org_tags:
+                org_tags.remove(tag)
         for tag in org_tags:
-            org_tags_list.append({"name": tag})
+            org_tags_list.append({"name": tag, "recent": False})
         events = event_tags_future.get_result()
         event_tags_list = list()
         for event in events:
             event_tags_list.append({"name": event.tag})
         recent_tags_list = list()
-        for tag in request_user.recently_used_tags:
-            recent_tags_list.append({"name": tag})
+
         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
