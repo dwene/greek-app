@@ -9,13 +9,16 @@
                     </div>
                     </div>
                     <ul>
-                        <div ng-repeat="tag in users | orderBy:'last_name' | multipleSearch:search">
+                        <div ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
                             <div class="row">
-                                <li class="col-xs-12 col-sm-4 col-md-2">
-                                    <nete-tag options="check"></nete-tag>
-                                </li>
+<!--                                <li class="col-xs-12 col-sm-4 col-md-2">-->
+                                <label class="label checkLabel col-xs-12 col-sm-4 col-md-2" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
+                                <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
+                                <input type="checkbox" ng-model="user.checked"> <li>#{{user.name}}</li>
+                                </label>
+<!--                                    {{user.tags}}-->
                                 <ul id="memberTags" class="col-xs-12 col-sm-8 col-md-10">
-                                    <div class="btn-group" ng-repeat="tag in member.tags | orderBy:'toString()'">
+                                    <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
                                         <nete-tag options="delete"></nete-tag>
                                     </div>
                                 </ul>
@@ -30,8 +33,8 @@
                            <nete-tag ng-repeat="tag in selectedTags"></nete-tag>
                         </ul>
                         <ul class="addTags">
-                        <div class="btn-group" ng-repeat="tag in $root.tags.org_tags">
-                        <nete-tag options="check"></nete-tag>
+                        <div class="btn-group" ng-repeat="tag in org_tags">
+                        <nete-tag options="all"></nete-tag>
 <!--
                             <label class="label label-default checkLabel">
                             <i class="fa fa-square-o checkStatus"></i>

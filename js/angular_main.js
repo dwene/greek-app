@@ -1532,11 +1532,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
         Load.then(function(){
-            console.log($rootScope.tags);
         function getUsers(){
-            $scope.selectedTags = {};
-            $scope.selectedUsers = {};
-            $scope.users;
+            $scope.users = [];
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1550,6 +1547,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         out_users.push(user);
                     }
                     $scope.users = out_users;
+                    
                     $rootScope.users = users;
                     console.log("HERE");
                     console.log($scope.users);
@@ -1565,15 +1563,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.getOrganizationTags = function(){
             //initialize ng-model variables to contain selected things
             $('#tag').val('');
-            $http.post('/_ah/api/netegreek/v1/messaging/get_tags', packageForSending(''))
+            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         var org_tags = JSON.parse(data.data).org_tags;
                         var out_tags = [];
                         for (var i = 0; i < org_tags.length; i++){
-                            out_tags.push({"name": org_tags[i], "checked": false});
+                            org_tags[i].checked = false;
+                            out_tags.push(org_tags[i]);
                         }
-                        $rootScope.tags.org_tags = out_tags;
+                        $rootScope.tags = JSON.parse(data.data);
+                        $scope.org_tags = out_tags;
                     }
                     else{
                         console.log('ERROR: '+data);
@@ -1609,20 +1609,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.removeOrganizationTag = function(){
             $('#deleteTagModal').modal('hide')
-            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({'tag': $scope.modaledTag}))
+            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({'tag': $scope.modaledTag.name}))
                 .success(function(data){
                     if(checkResponseErrors(data)){openErrorModal(data.error)}
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-            var idx = $rootScope.tags.org_tags.indexOf($scope.modaledTag)
+            var idx = $rootScope.tags.org_tags.indexOf($scope.modaledTag);
             $rootScope.tags.org_tags.splice(idx, 1);
+            $scope.org_tags.splice($scope.org_tags.indexOf($scope.modaledTag), 1);
             var tag = $scope.modaledTag;
             $scope.modaledTag = null;
             for (var i = 0; i< $rootScope.users.members.length; i++){
                 if ($rootScope.users.members[i].tags.indexOf(tag.name) > -1){
-                    $rootScope.users.members[i].tags.splice($rootScope.users.members[i].tags.indexOf(tag), 1);
+                    $rootScope.users.members[i].tags.splice($rootScope.users.members[i].tags.indexOf(tag.name), 1);
+                }
+            }
+            for (var i = 0; i< $scope.users.length; i++){
+                if ($scope.users[i].tags.indexOf(tag.name) > -1){
+                    $scope.users[i].tags.splice($scope.users[i].tags.indexOf(tag.name), 1);
                 }
             }
         }
@@ -1630,7 +1636,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.renameOrganizationTag = function(new_tag, isValid){
             if(isValid){
                 $('#renameTagModal').modal('hide')
-                $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag, 'new_tag': new_tag}))
+                $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag.name, 'new_tag': new_tag}))
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
@@ -1646,11 +1652,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 var tag = $scope.modaledTag;
                 $scope.rename = null;
                 var idx = $rootScope.tags.org_tags.indexOf(tag);
-                $rootScope.tags.org_tags[idx] = new_tag;
+                $rootScope.tags.org_tags[idx] = {name:new_tag, checked:false};
+                $scope.org_tags[$scope.org_tags.indexOf(tag)] = {name:new_tag, checked:false};
                 $scope.modaledTag = null;
                 for (var i = 0; i< $rootScope.users.members.length; i++){
-                    if ($rootScope.users.members[i].tags.indexOf(tag) > -1){
-                        $rootScope.users.members[i].tags[$rootScope.users.members[i].tags.indexOf(tag)] = new_tag;
+                    if ($rootScope.users.members[i].tags.indexOf(tag.name) > -1){
+                        $rootScope.users.members[i].tags[$rootScope.users.members[i].tags.indexOf(tag.name)] = new_tag;
                     }
                 }
             }
@@ -1692,10 +1699,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         function addTagsToUsers(tags, keys){
-            $scope.selectedTags = {};
-            $scope.selectedUsers = {};
             var to_send = {'tags': tags, 'keys': keys};
-            console.log(to_send);
             $http.post('/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
@@ -1710,39 +1714,36 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-            for(var j = 0; j < keys.length; j++){
-                var key = keys[j];
-                console.log('key: ' + key);
-                for(var i = 0; i < $rootScope.users.members.length; i++){
-                    console.log($rootScope.users.members[i].first_name)
-                    console.log($rootScope.users.members[i].key);
-                    if ($rootScope.users.members[i].key == key){
-                        for(var k = 0; k < tags.length; k++){
-                            var tag = tags[k];
-                            if ($rootScope.users.members[i].tags.indexOf(tag) == -1){
-                                $rootScope.users.members[i].tags.push(tag);
-                            }
-                        }
+            for(var j = 0; j < $scope.users.length; j++){
+                var user = $scope.users[j];
+                console.log(user);
+                for(var i = 0; i < $scope.org_tags.length; i++){
+                    if ($scope.org_tags[i].checked && user.tags.indexOf($scope.org_tags[i].name) < 0){
+                        user.tags.push($scope.org_tags[i].name);
+                        console.log('tag name '+ $scope.org_tags[i].name);
                     }
                 }
             }
         }
         
-        $scope.addTagsToUsers = function(tags, users){
-            console.log(tags);
-            console.log(users);
+        $scope.addTagsToUsers = function(){
+            var tags = $scope.org_tags;
+            var users = $scope.users;
             selected_tags = [];
             selected_keys = [];
+            console.log($scope.org_tags);
             for (var i = 0; i < tags.length; i++){
                 if (tags[i].checked){
-                    selected_tags.push(tag);
+                    selected_tags.push(tags[i].name);
                 }
             }
-            for (var subuser in users){
-                if (users[subuser] == true){
-                    selected_keys.push(subuser)
+            for (var i = 0; i < users.length; i++){
+                if (users[i].checked){
+                    selected_keys.push(users[i].key);
                 }
             }
+            console.log(selected_keys);
+            console.log(selected_tags);
             addTagsToUsers(selected_tags, selected_keys);
             clearCheckLabels();
         }
@@ -1766,10 +1767,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.removeTagsFromUsers = function(tags, users){
-            console.log(tags);
-            console.log(users);
-            removeTagsFromUsers(tags, users);
 
+            removeTagsFromUsers(tags, users);
             clearCheckLabels();
         }
     });
@@ -2845,8 +2844,8 @@ App.directive('neteTag', function($compile){
         link: function(scope, element, attrs){
         
             if (attrs.options == 'all'){
-                element.append(  '<label class="label label-default checkLabel">'
-                                +'<i class="fa fa-square-o checkStatus"></i>'
+                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+                                +'<i class="fa fa-square-o checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
                                 +'<input type="checkbox" ng-model="tag.checked"> <li>#{{ tag.name }}</li>'
                                 +'</label>'
                                 +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'
