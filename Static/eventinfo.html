@@ -8,6 +8,8 @@
 			
 <button onclick="window.location.assign('#/app/events')" class="btn btn-default backbutton"><i class="fa fa-reply"></i> Back</button>
 <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default rightButton"><i class="fa fa-edit"></i> Edit</button>
+<button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default leftButton"><i class="fa fa-edit"></i>Report</button>
+
 <a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
 
 			<h1 class="text-center">{{event.title}}</h1>

@@ -1339,8 +1339,7 @@ class RESTApi(remote.Service):
         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
-                                                         'perms_tags': perm_tags_list,
-                                                         'recent_tags': recent_tags_list}))
+                                                         'perms_tags': perm_tags_list,}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')

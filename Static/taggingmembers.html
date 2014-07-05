@@ -28,11 +28,19 @@
                     </div>
                     <div class="col-xs-5">
                             <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
-                        <type-ahead id="tagsearch" placeholder="search for tags"></type-ahead>  
-                       
+<!--                        <type-ahead id="tagsearch" placeholder="search for tags" tag-data="org_tags"></type-ahead>  -->
+                            <form ng-submit="selectTagFromTypeAhead(selectedTagName);">
+                             <div class="form-group">
+                                <label><i class="fa fa-globe"></i> Tag:</label>
+<!--                                #TODO: get this typeahead to submit at the correct times-->
+                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" bs-typeahead>
+                              </div>
+                              </form>
+<!--
                         selected tags: <ul id="selectedTags">
                            <nete-tag ng-repeat="tag in selectedTags"></nete-tag>
                         </ul>
+-->
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in org_tags">
                         <nete-tag options="all"></nete-tag>

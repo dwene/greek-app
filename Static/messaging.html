@@ -10,7 +10,16 @@
 
 <section class="container">
 
-<selecting-users></selecting-users>
+<!--
+<ul>
+   <span>Recent: </span>
+    <nete-tag options="check" ng-repeat="tag in $root.tags.org_tags" ng-show="tag.recent"></nete-tag>
+</ul>
+<ul ng-repeat="type in $root.tags">
+    <nete-tag options="check" ng-repeat="tag in type" ng-hide="tag.recent"></nete-tag>
+</ul>
+-->
+<selecting-users ng-model="tags"></selecting-users>
 
     
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags)" novalidate>

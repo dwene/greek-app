@@ -13,7 +13,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate']);
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap']);
 App.config(function($stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise("/")
@@ -1531,7 +1531,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
+        $scope.typeAheadModel = function(item){
+            return JSON.stringify(['hi']);
+        }
+        $scope.selectTagFromTypeAhead = function(tag){
+            console.log('howdy');
+            for(var i = 0; i < $scope.tags.length; i ++){
+                if ($scope.tags[i].name == tag)  {
+                    $scope.tags[i].checked = true;
+
+                    return;
+                }
+                $scope.selectedTagName = "";
+            }
+        }
+        $scope.selectedTag = "";
+        $scope.test_string = ["howdy", "hello", "applesauce"];
         Load.then(function(){
+        
         function getUsers(){
             $scope.users = [];
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
@@ -1574,6 +1591,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                         $rootScope.tags = JSON.parse(data.data);
                         $scope.org_tags = out_tags;
+                        $rootScope.org_tag_data = $scope.org_tags;
                     }
                     else{
                         console.log('ERROR: '+data);
@@ -1786,9 +1804,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function onFirstLoad(){
             $scope.loading = true;
             var tag_list = [];
-            if ($rootScope.tags){
-                $scope.tags = arrangeTagData($rootScope.tags);
-            }
+            $scope.tags =$rootScope.tags;
             var deferred = $q.defer();
             var done = 0;
             function checkIfDone() {
@@ -1799,8 +1815,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
-                    $scope.tags = arrangeTagData(tag_data);
-                    console.log($scope.tags);
+                    $scope.tags = tag_data;
                     $rootScope.tags = tag_data;
                 }
                 else{
@@ -1835,31 +1850,20 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if (isValid){
                 var selected_org_tags = [];
                 var selected_perms_tags = [];
-                for (var i = 0; i < tags.organizationTags.length; i++){
-                    if (tags.organizationTags[i].checked){
-                        selected_org_tags.push(tags.organizationTags[i].name);
-                        tags.organizationTags[i].checked = false;
-                    }
-                }
-                for (var i = 0; i < tags.permsTags.length; i++){
-                    if (tags.permsTags[i].checked){
-                        selected_perms_tags.push(tags.permsTags[i].name);
-                        tags.permsTags[i].checked = false;
-                    }
-                }
-                var out_tags = {org_tags: selected_org_tags, perms_tags: selected_perms_tags};
+                tags = getCheckedTags($scope.tags);
+                var out_tags = tags;
                 var to_send = {title: $scope.title, content:$scope.content, tags: out_tags}
                 $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
+                            clearCheckedTags($scope.tags);
                             setTimeout(function(){
                             $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
                             .success(function(data){
                                 if (!checkResponseErrors(data))
                                 {
                                     $scope.sentMessages = JSON.parse(data.data);
-                                    console.log($scope.sentMessages);
                                 }
                                 else
                                 {
@@ -1920,15 +1924,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         Load.then(function(){
             $scope.event = {};
             $scope.event.tag = '';
+            $scope.tags = $rootScope.tags;
             $scope.$watch('event.tag', function() {
                 $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
             });
             $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        var tag_data = JSON.parse(data.data);
-                        $scope.tags = arrangeTagData(tag_data);
-                        $rootScope.tags = tag_data;
+                        $scope.tags = JSON.parse(data.data);
+                        $rootScope.tags = JSON.parse(data.data);
                     }
                     else{
                         console.log("error: "+ data.error)
@@ -1939,7 +1943,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
 
             $scope.addEvent = function(isValid, event){
-                console.log($scope.test_model);
                 if(isValid){
                     
                     event.tags = getCheckedTags($scope.tags);
@@ -1975,6 +1978,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else{
                     $scope.isEmpty = false;
+                    console.log('im here');
                     $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
@@ -2037,8 +2041,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.going = false;
         $scope.not_going = false;
         $scope.loading = true;
+        $scope.goToReport = function(){
+            window.location.assign("#/app/events/" + $stateParams.tag + "/report");
+        }
         Load.then(function(){
-        $scope.tags = arrangeTagData($rootScope.tags);
+        $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
 	   });
@@ -2158,7 +2165,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
         $scope.loading = true;
         Load.then(function(){
-        $scope.tags = arrangeTagData($rootScope.tags);
+        $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
 	   });
@@ -2244,22 +2251,20 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
             console.log($scope.event.time_end);
 
-            for (var i = 0; i < $scope.tags.organizationTags.length; i++){
+            for (var i = 0; i < $scope.tags.org_tags.length; i++){
                 for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
-                    if ($scope.event.tags.org_tags[j] == $scope.tags.organizationTags[i].name){
-                        $scope.tags.organizationTags[i].checked = true;
+                    if ($scope.event.tags.org_tags[j] == $scope.tags.org_tags[i].name){
+                        $scope.tags.org_tags[i].checked = true;
                     }
                 }
             }
-            for (var i = 0; i < $scope.tags.permsTags.length; i++){
+            for (var i = 0; i < $scope.tags.perms_tags.length; i++){
                 for (var j = 0; j < $scope.event.tags.perms_tags.length; j++){
-                    if ($scope.event.tags.perms_tags[j] == $scope.tags.permsTags[i].name.toLowerCase()){
-                        $scope.tags.permsTags[i].checked = true;
+                    if ($scope.event.tags.perms_tags[j] == $scope.tags.perms_tags[i].name.toLowerCase()){
+                        $scope.tags.perms_tags[i].checked = true;
                     }
                 }
             }
-            console.log($scope.tags);
-            console.log($scope.event.tags);
             $scope.loading = false;
         }
     $scope.submitEdits = function(isValid){
@@ -2424,14 +2429,16 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     doc.setFontSize(15);
                     doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
                     doc.setFontSize(10);
-                    if (users[i].attendance_data.time_in){
-                    doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
-                    }
-                    if (users[i].attendance_data.time_out){
-                    doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
-                    }
-                    if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
-                        doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+                    if (users[i].attendatnce_data){
+                        if (users[i].attendance_data.time_in){
+                        doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
+                        }
+                        if (users[i].attendance_data.time_out){
+                        doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
+                        }
+                        if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
+                            doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+                        }
                     }
                         current_line += 0;
                     if (current_line > 250 && shifted > 20){
@@ -2588,39 +2595,39 @@ function checkResponseErrors(received_data){
     }
 }
 //This function is used to arrange the tag data so that we can use checkboxes with it
-function arrangeTagData(tag_data){
-    var org_tag_list = [];
-    var tags = {};
-    if (tag_data.org_tags){
-        for(var i = 0; i < tag_data.org_tags.length; i++){
-            org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
-        }
-    }
-    var perms_tag_list = [];
-    if (tag_data.perms_tags){
-        for (var i = 0; i < tag_data.perms_tags.length; i++){
-            perms_tag_list.push({name: tag_data.perms_tags[i].name, checked: false})
-        }
-    }
-    var event_tag_list = [];
-    if (tag_data.event_tags){
-        for (var i = 0; i < tag_data.event_tags.length; i++){
-            event_tag_list.push({name: tag_data.event_tags[i].name, checked: false})
-        }
-    }
-    tags.organizationTags = org_tag_list;
-    tags.permsTags = perms_tag_list;
-    tags.eventTags = event_tag_list;
-    return tags;
-}
+//function arrangeTagData(tag_data){
+//    var org_tag_list = [];
+//    var tags = {};
+//    if (tag_data.org_tags){
+//        for(var i = 0; i < tag_data.org_tags.length; i++){
+//            org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
+//        }
+//    }
+//    var perms_tag_list = [];
+//    if (tag_data.perms_tags){
+//        for (var i = 0; i < tag_data.perms_tags.length; i++){
+//            perms_tag_list.push({name: tag_data.perms_tags[i].name, checked: false})
+//        }
+//    }
+//    var event_tag_list = [];
+//    if (tag_data.event_tags){
+//        for (var i = 0; i < tag_data.event_tags.length; i++){
+//            event_tag_list.push({name: tag_data.event_tags[i].name, checked: false})
+//        }
+//    }
+//    tags.organizationTags = org_tag_list;
+//    tags.permsTags = perms_tag_list;
+//    tags.eventTags = event_tag_list;
+//    return tags;
+//}
 //This should be called at the beginning of any controller that uses the checkbox tags
 function clearCheckedTags(tags){
-    for (var i = 0; i < tags.organizationTags.length; i++)
-        tags.organizationTags[i].checked = false;
-    for (var i = 0; i < tags.permsTags.length; i++)
-        tags.permsTags[i].checked = false;
-    for (var i = 0; i < tags.eventTags.length; i++)
-        tags.eventTags[i].checked = false;
+    for (var i = 0; i < tags.org_tags.length; i++)
+        tags.org_tags[i].checked = false;
+    for (var i = 0; i < tags.perms_tags.length; i++)
+        tags.perms_tags[i].checked = false;
+    for (var i = 0; i < tags.event_tags.length; i++)
+        tags.event_tags[i].checked = false;
     return tags;
 }
 
@@ -2629,17 +2636,17 @@ function getCheckedTags(tags){
     var org_tags= [];
     var perms_tags = [];
     var event_tags = [];
-    for (var i = 0; i < tags.organizationTags.length; i++){
-        if (tags.organizationTags[i].checked)
-            org_tags.push(tags.organizationTags[i].name);
+    for (var i = 0; i < tags.org_tags.length; i++){
+        if (tags.org_tags[i].checked)
+            org_tags.push(tags.org_tags[i].name);
     }
-    for (var i = 0; i < tags.eventTags.length; i++){
-        if (tags.eventTags[i].checked)
-            event_tags.push(tags.eventTags[i].name);
+    for (var i = 0; i < tags.event_tags.length; i++){
+        if (tags.event_tags[i].checked)
+            event_tags.push(tags.event_tags[i].name);
     }
-    for (var i = 0; i < tags.permsTags.length; i++){
-        if (tags.permsTags[i].checked){
-            perms_tags.push(tags.permsTags[i].name.toLowerCase());
+    for (var i = 0; i < tags.perms_tags.length; i++){
+        if (tags.perms_tags[i].checked){
+            perms_tags.push(tags.perms_tags[i].name.toLowerCase());
         }
     }
     return {org_tags: org_tags, event_tags: event_tags, perms_tags: perms_tags};
@@ -2829,6 +2836,10 @@ App.directive('selectingUsers', function($compile){
     restrict: 'E',
     replace: 'true',
     templateUrl: '/Static/templates/selectingmembers.html',
+    scope:{
+        ngModel: "=",
+        userCount:"="
+    },
     transclude: true,
     link: function (scope, element, attrs) {
         $compile(element.contents())(scope)
@@ -2886,11 +2897,20 @@ App.directive('typeAhead', function($compile){
     return{
         restrict: 'E',
         replace: 'true',
+        scope: {
+            tagData : '='
+        },
         template: '<div class="form-group"></div>',
         link: function(scope, element, attrs){
         
         var placeholder = attrs.placeholder;
         var this_id = attrs.id;
+        var string_list = "";
+            console.log('TAG DATA');
+            console.log(attrs.tagData);
+        for (var i = 0; i < attrs.tagData; i++){
+            string_list+="'"+attrs.tagData[i].name+"',";
+        }
   
                 element.append(
                 '<input type="text" class="form-control typeahead" autocomplete="off" placeholder="'+placeholder+'">'
@@ -2906,16 +2926,7 @@ App.directive('typeAhead', function($compile){
                     +'}});'
                     +'cb(matches);'
                     +'};};'
-                    +"var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',"
-                    +  "'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',"
-                    +  "'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',"
-                    +  "'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',"
-                    +  "'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',"
-                    +  "'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',"
-                    +  "'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',"
-                    +  "'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',"
-                    +  "'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'"
-                    +'];'
+                    + 'var states = ['+string_list+'];'
                     +"$('.typeahead').typeahead({"
                     + 'hint: true,'
                     +  'highlight: true,'
@@ -2981,33 +2992,33 @@ App.filter('tagDirectorySearch', function(){
     return function (objects, tags) {
         if (!tags){return null;}
             var tags_list = []
-        if (tags.organizationTags){
-            for (var i = 0; i < tags.organizationTags.length; i++){
-                if (tags.organizationTags[i].checked){
-                    tags_list.push(tags.organizationTags[i].name);
+        if (tags.org_tags){
+            for (var i = 0; i < tags.org_tags.length; i++){
+                if (tags.org_tags[i].checked){
+                    tags_list.push(tags.org_tags[i].name);
                 }
             }
         }
-        if (tags.permsTags){
-            for (var j = 0; j < tags.permsTags.length; j++){
-                if (tags.permsTags[j].checked){
-                    if (tags.permsTags[j].name == "Everyone"){
+        if (tags.perms_tags){
+            for (var j = 0; j < tags.perms_tags.length; j++){
+                if (tags.perms_tags[j].checked){
+                    if (tags.perms_tags[j].name == "Everyone"){
                         tags_list.push("member");
                         tags_list.push("leadership");
                         tags_list.push("council");
                     }
-                    else if (tags.permsTags[j].name == "Members"){
+                    else if (tags.perms_tags[j].name == "Members"){
                         tags_list.push("member");
                     }
                     else{
-                    tags_list.push(tags.permsTags[j].name)}
+                    tags_list.push(tags.perms_tags[j].name)}
                 }
             }
         }
-        if (tags.eventTags){
-            for (var i = 0; i < tags.eventTags.length; i++){
-                if (tags.eventTags[i].checked){
-                    tags_list.push(tags.eventTags[i].name);
+        if (tags.event_tags){
+            for (var i = 0; i < tags.event_tags.length; i++){
+                if (tags.event_tags[i].checked){
+                    tags_list.push(tags.event_tags[i].name);
                 }
             }
         }
