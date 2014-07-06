@@ -1,16 +1,10 @@
-<div class="container">
-
-		
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>Events</h1>
-		</div>
-</div>
-
-
 <section class="container" id="events">
-        <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
-        <ul>
+        <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <calendar id="calendar" name="calendar" ng-model="calendarDate"></calendar>
+            <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
+        </div>
+        <ul id="eventList" class="col-xs-12 col-sm-8">
             <li class="event" ng-repeat="event in events | orderBy:'-time_start' | multipleSearch:search" ng-click="showEvent(event)">
                 <div class="eventContent">
                 <span class="eventName">{{event.title}}</span>
@@ -18,4 +12,5 @@
                 </div>
             </li>
         </ul>
+        </div>
 </section>
