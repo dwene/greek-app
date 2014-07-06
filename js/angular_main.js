@@ -1394,6 +1394,28 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member profiles
     App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen){
+    $scope.saveVcard = function(){
+        var user = $scope.member;
+        var out_string = 'BEGIN:VCARD\nVERSION:4.0\nN:' + user.last_name + ';' + user.first_name + ';;;\n'; //name
+        out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n';//FN
+        out_string += 'TEL;TYPE=cell,voice;VALUE=uri:tel:+1-' + user.phone + '\n'; //Phone
+        out_string += 'EMAIL:' + user.email + '\n';
+        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
+        out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
+        console.log(user.prof_pic);
+        if (user.prof_pic.indexOf('jpg') > -1){
+            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
+        }
+        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('gif') > -1){
+            out_string += 'PHOTO;MEDIATYPE=image/gif:' + user.prof_pic + '\n';
+        }
+        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('png') > -1){
+            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
+        }
+        out_string += 'END:VCARD';
+        var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "contact.vcf");
+    }
     Load.then(function(){
         var user_name = $stateParams.id;
         if (user_name.toString().length < 2){
@@ -1404,26 +1426,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if ($scope.members){
             loadMemberData();
         }
-        $scope.saveVcard = function(){
-            var user = $scope.member;
-            var out_string = 'BEGIN:VCARD\nVERSION:4.0\nN:' + user.last_name + ';' + user.first_name + ';;;\n'; //name
-            out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n';//FN
-            out_string += 'TEL;TYPE=cell,voice;VALUE=uri:tel:+1-' + user.phone + '\n'; //Phone
-            out_string += 'EMAIL:' + user.email + '\n';
-            out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\n';
-            if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('jpg') > -1){
-                out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
-            }
-            else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('gif') > -1){
-                out_string += 'PHOTO;MEDIATYPE=image/gif:' + user.prof_pic + '\n';
-            }
-            else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('png') > -1){
-                out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
-            }
-            out_string += 'END:VCARD';
-            var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
-saveAs(blob, "contact.vcf");
-        }
+        
         
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
