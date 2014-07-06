@@ -12,8 +12,10 @@ body.modal-open{margin-right:0px;}
     nav.navbar{position:fixed; top:0px; width:100%;}
     #mainSection, #loadingScreen{margin-top:82px;}
 }
-.backbutton{position:absolute; left:30px; top:10px;}
-.rightButton{position:absolute; right:30px; top:10px;}
+.topLeft{position:absolute; left:20px; top:10px;}
+.topRight{position:absolute; right:20px; top:10px;}
+.bottomLeft{position: absolute; left:20px; bottom:10px;}
+.bottomRight{position:absolute; right:20px; bottom:10px;}
 .container{position:relative;}
 
     /*Dropdown Menu*/
@@ -158,7 +160,6 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Events Page*/
 #newEventButton{margin-bottom:15px;}
-#eventcheckinButton{position:absolute; right:20px; bottom:10px;}
 
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}
