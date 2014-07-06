@@ -2912,6 +2912,8 @@ App.directive('neteTag', function($compile){
 });
 
 
+
+
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {
         var searchValues = search;
