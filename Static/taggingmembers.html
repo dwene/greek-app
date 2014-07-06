@@ -30,36 +30,26 @@
                     <div class="col-xs-5">
                             <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
 <!--                        <type-ahead id="tagsearch" placeholder="search for tags" tag-data="org_tags"></type-ahead>  -->
-                            <form ng-submit="selectTagFromTypeAhead(selectedTagName);">
-                             <div class="form-group">
+                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="selectTagFromTypeAhead(selectedTagName);">
 <!--                                #TODO: get this typeahead to submit at the correct times-->
-                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag()">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" bs-typeahead>
-                            </div>
                             </form>
-                              </div>
-                              </form>
-<!--
-                        selected tags: <ul id="selectedTags">
-                           <nete-tag ng-repeat="tag in selectedTags"></nete-tag>
-                        </ul>
--->
+                            
+                        <hr>
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in org_tags">
                         <nete-tag options="all"></nete-tag>
-<!--
-                            <label class="label label-default checkLabel">
-                            <i class="fa fa-square-o checkStatus"></i>
-                            <input type="checkbox" ng-model="selectedTags[tag]"> <li>#{{ tag }}</li>
-                            </label>
-                            <div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>
-                                <li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>
-                            </ul>
--->
                         </div>
-                    </ul>
+                        </ul>
+                        
+                        <hr>
+                              
+                        selected tags: <ul id="selectedTags">
+                           <nete-tag ng-repeat="tag in selectedTags"></nete-tag>
+                        </ul>
+                        
+                        <hr>
+                        
                     </div>
                     
                     </section>
