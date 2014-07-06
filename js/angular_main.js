@@ -2911,59 +2911,6 @@ App.directive('neteTag', function($compile){
     }
 });
 
-App.directive('typeAhead', function($compile){
-    return{
-        restrict: 'E',
-        replace: 'true',
-        scope: {
-            tagData : '='
-        },
-        template: '<div class="form-group"></div>',
-        link: function(scope, element, attrs){
-        
-        var placeholder = attrs.placeholder;
-        var this_id = attrs.id;
-        var string_list = "";
-            console.log('TAG DATA');
-            console.log(attrs.tagData);
-        for (var i = 0; i < attrs.tagData; i++){
-            string_list+="'"+attrs.tagData[i].name+"',";
-        }
-  
-                element.append(
-                '<input type="text" class="form-control typeahead" autocomplete="off" placeholder="'+placeholder+'">'
-                    +'<script type="text/javascript">'
-                    +'var substringMatcher = function(strs) {'
-                    +'return function findMatches(q, cb) {'
-                    +'var matches, substringRegex;'
-                    +'matches = [];'
-                    +"substrRegex = new RegExp(q, 'i');"
-                    +'$.each(strs, function(i, str) {'
-                    +'if (substrRegex.test(str)) {'
-                    +'matches.push({ value: str });'
-                    +'}});'
-                    +'cb(matches);'
-                    +'};};'
-                    + 'var states = ['+string_list+'];'
-                    +"$('.typeahead').typeahead({"
-                    + 'hint: true,'
-                    +  'highlight: true,'
-                    +  'minLength: 1'
-                    +'},{'
-                    +  "name: 'states',"
-                    +  "displayKey: 'value',"
-                    +  'source: substringMatcher(states)'
-                    +'});'
-                    +'</script>'
-);
-                        
-            
-            
-            $compile(element.contents())(scope)
-        }
-    }
-});
-
 
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {

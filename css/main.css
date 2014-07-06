@@ -99,7 +99,7 @@ h1{font-size:36px; font-weight:bold;}
 #addTagsButton{margin-bottom:15px;}
 #selectedTags{display:inline;}
 .memberTags .badge:hover{background:#d9534f;}
-.memberTags .btn-group, .messagingTags .btn-group{margin:2px;}
+.memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
 
 #addTags{margin:10px 0 0 0; padding:0px;}
 

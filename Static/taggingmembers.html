@@ -11,13 +11,14 @@
                     <ul>
                         <div ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
                             <div class="row">
-<!--                                <li class="col-xs-12 col-sm-4 col-md-2">-->
-                                <label class="label checkLabel col-xs-12 col-sm-4 col-md-2" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
+                                <li class="col-sm-4 col-md-2">
+                                <label class="label checkLabel" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
                                 <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
-                                <input type="checkbox" ng-model="user.checked"> <li>#{{user.name}}</li>
+                                <input type="checkbox" ng-model="user.checked"> <span>#{{user.name}}</span>
                                 </label>
+                                </li>
 <!--                                    {{user.tags}}-->
-                                <ul id="memberTags" class="col-xs-12 col-sm-8 col-md-10">
+                                <ul id="memberTags" class="col-sm-8 col-md-10">
                                     <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
                                         <nete-tag options="delete"></nete-tag>
                                     </div>
@@ -31,9 +32,11 @@
 <!--                        <type-ahead id="tagsearch" placeholder="search for tags" tag-data="org_tags"></type-ahead>  -->
                             <form ng-submit="selectTagFromTypeAhead(selectedTagName);">
                              <div class="form-group">
-                                <label><i class="fa fa-globe"></i> Tag:</label>
 <!--                                #TODO: get this typeahead to submit at the correct times-->
+                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag()">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" bs-typeahead>
+                            </div>
+                            </form>
                               </div>
                               </form>
 <!--
