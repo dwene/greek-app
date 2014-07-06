@@ -1410,10 +1410,6 @@ class RESTApi(remote.Service):
             for notify in notifications:
                 note = notify.to_dict()
                 sender = notify.sender.get()
-                if sender:
-                    note["sender"] = sender.first_name + " " + sender.last_name
-                else:
-                    del note["sender"]
                 note["new"] = False
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)

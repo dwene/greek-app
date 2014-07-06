@@ -219,9 +219,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 for (var i = 0; i < $rootScope.notifications.length; i++){
                     $rootScope.notifications[i].collapseOut = false;
                 }
+                
                 $rootScope.$apply();
                 $rootScope.notifications = JSON.parse(data.data).notifications;
-
+                console.log($rootScope.notifications);
                 for (var i = 0; i < $rootScope.notifications.length; i++){
                         $rootScope.notifications[i].collapseOut = true;  
                 }
@@ -547,7 +548,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
-        
+//        $scope.getUser = function(notify){
+//            if(!notify.sender){
+//                return null;
+//            }
+//            for(var i = 0; i < $rootScope.users.members; i++){
+//                if ($rootScope.users.members[i].key == notify.sender){
+//                    return $rootScope.users.members[i];
+//                }
+//            }
+//        }
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
@@ -579,6 +589,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.openNotificationModal = function(notify){
             $('#notificationModal').modal();
             $scope.selectedNotification = notify;
+            $scope.selectedNotificationUser = undefined;
+            for(var i = 0; i < $rootScope.users.members.length; i++){
+                console.log($rootScope.users.members[i].key);
+                if ($rootScope.users.members[i].key == notify.sender){
+                    $scope.selectedNotificationUser = $rootScope.users.members[i];
+                    console.log('I found it!');
+                }
+            }
             $scope.selectedNotification.new = false;
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
