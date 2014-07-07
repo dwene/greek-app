@@ -189,7 +189,7 @@ angular.module('ui.rCalendar', [])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: '../template/rcalendar/calendar.html',
+            templateUrl: '../Static/templates/rcalendar/calendar.html',
             scope: {
                 calendarMode: '=',
                 rangeChanged: '&',
@@ -210,7 +210,7 @@ angular.module('ui.rCalendar', [])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: '../template/rcalendar/month.html',
+            templateUrl: '../Static/templates/rcalendar/month.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
                 scope.showWeeks = ctrl.showWeeks;
@@ -433,7 +433,7 @@ angular.module('ui.rCalendar', [])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: '../template/rcalendar/week.html',
+            templateUrl: '../Static/templates/rcalendar/week.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
                 $timeout(function () {
@@ -692,7 +692,7 @@ angular.module('ui.rCalendar', [])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: '../template/rcalendar/day.html',
+            templateUrl: '../Static/templates/rcalendar/day.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
                 $timeout(function () {
