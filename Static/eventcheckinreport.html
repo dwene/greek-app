@@ -4,10 +4,9 @@
 <div class="container">		
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
+					<button class="btn btn-default topRight" ng-click="createReport()">Download Report</button>
 			<h1>Report</h1>
 		</div>
-		
-		<button class="btn btn-default" ng-click="createReport()">Download Report</button>
 </div>
 
 <div id="report" class="container" ng-hide="eventNotFound || loading">

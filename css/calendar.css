@@ -1,12 +1,22 @@
-.nav-left {
-    text-align: left;
+#calendar{-ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
+
+.nav-left, .nav-right {
+    text-align: center;
+    position: absolute;
+    top:0px;
+}
+
+.nav-left{
+    left:0px;
 }
 
 .nav-right {
-    text-align: right;
+    right:0px;
 }
 
 .scrollable {
+    height: auto !important;
+    max-height: 200px;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -43,6 +53,7 @@
 
 .calendar-navbar {
     margin-bottom: 5px;
+    position: relative;
 }
 
 .calendar-event-wrap {
@@ -144,3 +155,6 @@
     }
 }
 
+/*Custom Edits*/
+
+table th{font-size:10px;}
