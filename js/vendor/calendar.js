@@ -34,6 +34,8 @@ angular.module('ui.rCalendar', [])
 
         $scope.today = function(){
             self.currentCalendarDate = new Date();
+            $scope.move(0);
+            console.log('today!');
         }
         self.init = function (ngModelCtrl_) {
             ngModelCtrl = ngModelCtrl_;
