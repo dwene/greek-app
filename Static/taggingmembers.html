@@ -32,7 +32,7 @@
 <!--                        <type-ahead id="tagsearch" placeholder="search for tags" tag-data="org_tags"></type-ahead>  -->
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="selectTagFromTypeAhead(selectedTagName);">
 <!--                                #TODO: get this typeahead to submit at the correct times-->
-                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" bs-typeahead>
+                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" ng-enter="checkTag()" bs-typeahead>
                             </form>
                             
                         <hr>
