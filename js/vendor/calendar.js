@@ -32,6 +32,9 @@ angular.module('ui.rCalendar', [])
         $scope.calendarMode = $scope.calendarMode || calendarConfig.calendarMode;
         self.currentCalendarDate = angular.isDefined($attrs.initDate) ? $scope.$parent.$eval($attrs.initDate) : new Date();
 
+        $scope.today = function(){
+            self.currentCalendarDate = new Date();
+        }
         self.init = function (ngModelCtrl_) {
             ngModelCtrl = ngModelCtrl_;
 
