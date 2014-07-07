@@ -286,7 +286,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
                 $.removeCookie(PERMS);
-                $.removeCookie('FORM_INFO_EMPTY')
+                $.removeCookie('FORM_INFO_EMPTY');
                 $rootScope.directory = {};
                 LoadScreen.stop();
                 $rootScope.users = {};
@@ -892,7 +892,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //new member page
     App.controller('newmemberController', function($scope, $http, $stateParams){
         $('.container').hide();
-        $.cookie(TOKEN, $stateParams.key)
+        logoutCookies();
+        $.cookie(TOKEN, $stateParams.key);
         $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -2594,6 +2595,13 @@ function checkPermissions(perms){
         return false;
     }
     return true;
+}
+
+function logoutCookies(){
+    $.removeCookie(USER_NAME);
+    $.removeCookie(TOKEN);
+    $.removeCookie(PERMS);
+    $.removeCookie('FORM_INFO_EMPTY');
 }
 
 function checkAlumni(){

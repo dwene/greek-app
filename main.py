@@ -26,10 +26,10 @@ from google.appengine.api import mail
 from google.appengine.api import urlfetch
 import json
 import logging
-
-
+import datetime
 import jinja2
 import webapp2
+
 
 def send_mandrill_email(from_email, to_email, subject, body):
     to_send = {}
@@ -49,6 +49,17 @@ def send_mandrill_email(from_email, to_email, subject, body):
                             headers={'Content-Type': 'application/json'})
     logging.error(result)
     return
+
+
+def get_user(user_name, token):
+    user = User.query(User.user_name == user_name).get()
+    if not user:
+        return None
+    dt = (datetime.datetime.now() - user.timestamp)
+    if user.current_token == token and dt.days < 3:
+        return user
+    else:
+        return None
 
 
 
@@ -78,8 +89,17 @@ class ProfilePictureHandler(webapp2.RequestHandler):
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
+        user_name = self.get_uploads('user_name')
+        token = self.get_uploads('token')
+        user = get_user(user_name, token)
+        if not user:
+            self.redirect('/')
         blob_info = upload_files[0]
-        self.redirect('/?key=%s#/app/postNewKeyPictureLink' % blob_info.key())
+        if blob_info:
+            blobstore.BlobInfo.get(user.prof_pic).delete()
+            user.prof_pic = blob_info.key()
+            user.put()
+        self.redirect('/' % blob_info.key())
 
 
 class TestCron(webapp2.RequestHandler):
