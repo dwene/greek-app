@@ -159,10 +159,13 @@ textarea.form-control{height:auto; max-width:100%;}
 .pagerButtons .next{float:right; margin-right:20px;}
 
 /*Events Page*/
+#newEventButton{margin-bottom:15px;}
+
+
+
+/*target these only on the event page
 #events .date{width:240px; height:260px;}
 #events .date .input-group{position:absolute; bottom:14px; left:125px; width:150px;}
-#newEventButton{margin-bottom:15px;}
-/*target these only on the event page*/
 .bootstrap-datetimepicker-widget.calendarpage{margin-top:-260px; -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.175); box-shadow: 0 1px 3px rgba(0,0,0,0.175);}
 .bootstrap-datetimepicker-widget.bottom.calendarpage:before, .bootstrap-datetimepicker-widget.bottom.calendarpage:after, .bootstrap-datetimepicker-widget.top.calendarpage:before, .bootstrap-datetimepicker-widget.top.calendarpage:after{display:none !important;} 
 @media screen and (min-width:768px) and (max-width:992px){
@@ -171,6 +174,7 @@ textarea.form-control{height:auto; max-width:100%;}
 @media screen and (max-width:768px){
 .bootstrap-datetimepicker-widget.calendarpage{position:absolute; left:50% !important; margin-left:-120px;}
 }
+*/
 
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}
