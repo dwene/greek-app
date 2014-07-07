@@ -13,7 +13,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap']);
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar']);
 App.config(function($stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise("/")
@@ -2040,8 +2040,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.events = JSON.parse(data.data);
-                        console.log("EVENTS");
-                        console.log($scope.events);
+                        $scope.eventSource = [];
+                        for (var i = 0; i< $scope.events.length; i++){
+                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end)});
+                        }
+                        console.log($scope.eventSource);
                     }
                     else
                         console.log('ERROR: '+data);
@@ -2865,42 +2868,44 @@ App.directive('datePicker', function($compile){
   }
 });
 
-App.directive('calendar', function($compile){
-  return {
-    scope: {
-        ngModel : '='
-    },
-    restrict: 'E',
-    replace: 'true',
-    template: '<div class="date"></div>',
-    link: function (scope, element, attrs) {
-        
-        var this_name = attrs.name;
-        
-        element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
-                        +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
-                        +'<script type="text/javascript">'
-                        +'$("#'+this_name+'").datetimepicker({'
-                        +'pickTime: false,'
-                        +'icons: {'
-                        +'time: "fa fa-clock-o",'
-                        +'date: "fa fa-calendar",'
-                        +'up: "fa fa-arrow-up",'
-                        +'down: "fa fa-arrow-down"'
-                        +'}});'
-                        +'$("#'+this_name+' input").focusout(function(){'
-                        +'$(this).trigger("change");'
-                        +'});'
-                        +'$(".bootstrap-datetimepicker-widget").addClass("calendarpage");'
-                        +'$("#'+this_name+'").data("DateTimePicker").hide = function () {};'
-                        +'$("#'+this_name+'").data("DateTimePicker").show();'
-                        +'</script>'
-                        );
-        $compile(element.contents())(scope)
-     }
-  }
-});
+//App.directive('calendar', function($compile){
+//  return {
+//    scope: {
+//        ngModel : '='
+//    },
+//    restrict: 'E',
+//    replace: 'true',
+//    template: '<div class="date"></div>',
+//    link: function (scope, element, attrs) {
+//        
+//        var this_name = attrs.name;
+//        
+//        element.append('<div class="input-group">'
+//                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
+//                        +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
+//                        +'<script type="text/javascript">'
+//                        +'$("#'+this_name+'").datetimepicker({'
+//                        +'pickTime: false,'
+//                        +'icons: {'
+//                        +'time: "fa fa-clock-o",'
+//                        +'date: "fa fa-calendar",'
+//                        +'up: "fa fa-arrow-up",'
+//                        +'down: "fa fa-arrow-down"'
+//                        +'}});'
+//                        +'$("#'+this_name+' input").focusout(function(){'
+//                        +'$(this).trigger("change");'
+//                        +'});'
+//                        +'$(".bootstrap-datetimepicker-widget").addClass("calendarpage");'
+//                        +'$("#'+this_name+'").data("DateTimePicker").hide = function () {};'
+//                        +'$("#'+this_name+'").data("DateTimePicker").show();'
+//                       
+//
+//                        +'</script>'
+//                        );
+//        $compile(element.contents())(scope)
+//     }
+//  }
+//});
 
 App.directive('selectingUsers', function($compile){
   return {

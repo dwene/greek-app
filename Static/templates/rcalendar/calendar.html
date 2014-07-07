@@ -1,0 +1,19 @@
+<div ng-switch="calendarMode">
+    <div class="calendar-navbar">
+        <div class="nav-left">
+            <button type="button" class="btn btn-default btn-sm" ng-click="move(-1)"><i
+                    class="fa fa-chevron-left"></i></button>
+        </div>
+        <div class="calendar-header">
+        <strong>{{title}} </strong>
+        <button class="btn btn-sm btn-default" ng-click="_refreshView()">Today</button>
+        </div>
+        <div class="nav-right">
+            <button type="button" class="btn btn-default btn-sm" ng-click="move(1)"><i
+                    class="fa fa-chevron-right"></i></button>
+        </div>
+    </div>
+    <dayview ng-switch-when="day"></dayview>
+    <monthview ng-switch-when="month"></monthview>
+    <weekview ng-switch-when="week"></weekview>
+</div>
