@@ -2042,7 +2042,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.events = JSON.parse(data.data);
                         $scope.eventSource = [];
                         for (var i = 0; i< $scope.events.length; i++){
-                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end)});
+                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});
                         }
                         console.log($scope.eventSource);
                     }
