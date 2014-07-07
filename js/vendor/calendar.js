@@ -38,7 +38,9 @@ angular.module('ui.rCalendar', [])
             console.log('today!');
         }
         
-        $scope.eventSelected = function(event){ console.log(event.title); }
+        $scope.eventSelected = function(event){
+            window.location.assign('#/app/events/'+event.tag);
+        }
         
         self.init = function (ngModelCtrl_) {
             ngModelCtrl = ngModelCtrl_;

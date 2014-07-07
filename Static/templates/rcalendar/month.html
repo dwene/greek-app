@@ -31,7 +31,7 @@
                         {{event.endTime|date: 'HH:mm'}}
                     </td>
                     <td ng-if="event.allDay" class="monthview-eventdetail-timecolumn">All day</td>
-                    <td class="event-detail" ng-click="eventSelected({event:event})">{{event.title}}</td>
+                    <td class="event-detail" ng-click="eventSelected(event)">{{event.title}}</td>
                 </tr>
                 <tr ng-if="!selectedDate.events"><td class="no-event-label">No Events</td></tr>
             </table>
