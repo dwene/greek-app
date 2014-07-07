@@ -2,8 +2,8 @@
         <div class="row">
         <div class="col-xs-12 col-sm-4">
 <!--            <calendar id="calendar" name="calendar" ng-model="calendarDate"></calendar>-->
-            <calendar calendar-mode="mode" event-source="eventSource">
             <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
+            <calendar calendar-mode="mode" event-source="eventSource">
         </div>
         <ul id="eventList" class="col-xs-12 col-sm-8">
             <li class="event" ng-repeat="event in events | orderBy:'-time_start' | multipleSearch:search" ng-click="showEvent(event)">
