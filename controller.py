@@ -1401,7 +1401,6 @@ class RESTApi(remote.Service):
             for notify in new_notifications:
                 note = notify.to_dict()
                 logging.error(note)
-                sender = notify.sender.get()
                 note["new"] = True
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
@@ -1409,7 +1408,6 @@ class RESTApi(remote.Service):
             notifications = notifications_future.get_result()
             for notify in notifications:
                 note = notify.to_dict()
-                sender = notify.sender.get()
                 note["new"] = False
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
