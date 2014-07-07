@@ -14,7 +14,7 @@
                 <small><em>{{ weekNumbers[$index] }}</em></small>
             </td>
             <td ng-repeat="dt in row track by dt.date" class="monthview-dateCell" ng-click="select(dt.date)"
-                ng-class="{'text-center':true, 'monthview-current': dt.current&&!dt.selected&&!dt.hasEvent,'monthview-secondary-with-event': dt.secondary&&dt.hasEvent, 'monthview-primary-with-event':!dt.secondary&&dt.hasEvent&&!dt.selected, 'monthview-selected': dt.selected}">
+                ng-class="{'text-center':true, 'monthview-current': dt.current&&!dt.selected,'monthview-secondary-with-event': dt.secondary&&dt.hasEvent, 'monthview-primary-with-event':!dt.secondary&&dt.hasEvent&&!dt.selected, 'monthview-selected': dt.selected}">
                 <div ng-class="{'text-muted':dt.secondary}">
                     {{dt.label}}
                 </div>

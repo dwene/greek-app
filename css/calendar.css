@@ -89,7 +89,7 @@
 }
 
 .monthview-selected {
-    background-color: #009900;
+    background-color: darkred;
     color: white;
 }
 
@@ -97,8 +97,12 @@
     background-color: lightgrey;
 }
 
+.monthview-current.monthview-primary-with-event{
+background-color:darkblue;
+}
+
 .monthview-eventdetail-timecolumn {
-    width: 110px;
+    width: 140px;
     overflow: hidden;
 }
 

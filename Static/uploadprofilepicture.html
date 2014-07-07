@@ -1,11 +1,32 @@
 <div class="container">  
 
+
+<form action="/upload" method="post" enctype="multipart/form-data"  id="profilePic">
+    
+    <input type="file" accept="image/*" image="image2" value="upload"
+    resize-max-height="640"
+    resize-max-width="640"
+    resize-quality="0.7" />
+    <hr>
+Original<br><img ng-show="image2" ng-src="{{image2.dataURL}}" type="{{image2.file.type}}">
+<hr>
+Resized<br><img ng-show="image2" ng-src="{{image2.resized.dataURL}}">
+<hr>
+
+    <input type="submit" name="submit" value="Upload" class="btn btn-default">
+
+</form>
+
+</div>
+
+<!--
 <form action="/upload" method="POST" enctype="multipart/form-data" id="profilePic">
         Upload File: <input type="file" name="file" accept="image/*"><br>
         <input type="submit" name="submit" value="Upload" class="btn btn-default">
 </form>
+-->
 
-</div>
+
 
 <!--
 <form id="newmemberAccount" ng-submit="uploadPicture()" class="form-horizontal" enctype="multipart/form-data" role="form">
