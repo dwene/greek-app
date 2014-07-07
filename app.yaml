@@ -31,6 +31,15 @@ handlers:
   script: main.app
   secure: always
 
+- url: /testcron
+  script: main.app
+  secure: always
+
+- url: /sendemails
+  script: main.app
+  secure: always
+
+
 - url: /_ah/spi/.*
   script: controller.APPLICATION
   secure: always

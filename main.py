@@ -21,11 +21,35 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+from ndbdatastore import *
+from google.appengine.api import mail
+from google.appengine.api import urlfetch
+import json
 import logging
 
 
 import jinja2
 import webapp2
+
+def send_mandrill_email(from_email, to_email, subject, body):
+    to_send = {}
+    email_out = [{'email': to_email, 'type': 'to'}]
+    to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
+    message = {}
+    message["text"] = body
+    message["subject"] = subject
+    message["from_email"] = from_email
+    message["from_name"] = 'NeteGreek'
+    message["to"] = email_out
+    to_send["message"] = message
+    json_data = json.dumps(to_send)
+    result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0/messages/send.json',
+                            payload=json_data,
+                            method=urlfetch.POST,
+                            headers={'Content-Type': 'application/json'})
+    logging.error(result)
+    return
+
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -58,6 +82,28 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         self.redirect('/?key=%s#/app/postNewKeyPictureLink' % blob_info.key())
 
 
+class TestCron(webapp2.RequestHandler):
+    def get(self):
+        logging.error('I am actually working wow...')
+
+
+class SendEmails(webapp2.RequestHandler):
+    def get(self):
+        emails = CronEmail.query(CronEmail.pending == True).fetch()
+        futures = []
+        logging.error('I made it to the send emails code')
+        for email in emails:
+            send_mandrill_email(from_email='support@netegreek.com', to_email=email.email,
+                                subject=email.title, body=email.content)
+
+            # mail.send_mail(sender="support@netegreek.com", to=str(email.email),
+            #                subject=str(email.title), body=str(email.content))
+            email.pending = False
+            futures.append(email.put_async())
+        for future in futures:
+            future.get_result()
+
+
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
@@ -66,5 +112,8 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/upload', UploadHandler)
+    ('/upload', UploadHandler),
+    ('/testcron', TestCron),
+    ('/sendemails', SendEmails)
+
 ], debug=True)

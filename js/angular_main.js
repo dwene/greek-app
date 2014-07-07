@@ -808,14 +808,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    var returned = JSON.parse(data.data)
-                    if(returned.errors.length > 0){
-                        var errors_str = 'Errors with the following emails:\n';
-                        for(var i = 0; i< returned.errors.length; i++){
-                            errors_str += returned.errors[i].email + '\n';
-                        }
-                    alert(errors_str);
-                    }
                     $scope.members.concat(data_tosend.users);
                 }
                 else
@@ -2903,8 +2895,6 @@ App.directive('calendar', function($compile){
                         +'$(".bootstrap-datetimepicker-widget").addClass("calendarpage");'
                         +'$("#'+this_name+'").data("DateTimePicker").hide = function () {};'
                         +'$("#'+this_name+'").data("DateTimePicker").show();'
-                       
-
                         +'</script>'
                         );
         $compile(element.contents())(scope)

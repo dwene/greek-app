@@ -5,14 +5,12 @@ import datetime
 import hashlib
 import uuid
 import braintree
-import requests
 from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
-import json
-import pickle
 from google.appengine.ext import ndb
-import time
+import json
+from ndbdatastore import *
 from dateutil.relativedelta import relativedelta
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
@@ -44,7 +42,6 @@ INVALID_EMAIL = 'INVALID_EMAIL'
 INVALID_USERNAME = 'INVALID_USERNAME'
 NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 
-
 EVERYONE = 'Everyone'
 
 
@@ -57,138 +54,6 @@ class IncomingMessage(messages.Message):
 class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
     data = messages.StringField(2)
-
-# MODELS
-
-
-class User(ndb.Model):
-    #login stuff
-    user_name = ndb.StringProperty()
-    hash_pass = ndb.StringProperty()
-    current_token = ndb.StringProperty()
-    timestamp = ndb.DateTimeProperty()
-    #general information
-    first_name = ndb.StringProperty()
-    last_name = ndb.StringProperty()
-    dob = ndb.DateProperty()
-    #school/work status
-    major = ndb.StringProperty()
-    occupation = ndb.StringProperty()
-    employer = ndb.StringProperty()
-    class_year = ndb.IntegerProperty()
-    grad_month = ndb.IntegerProperty()
-    grad_year = ndb.IntegerProperty()
-    pledge_class = ndb.StringProperty()
-    #address stuff
-    address = ndb.StringProperty()
-    city = ndb.StringProperty()
-    state = ndb.StringProperty()
-    zip = ndb.IntegerProperty()
-    perm_address = ndb.StringProperty()
-    perm_city = ndb.StringProperty()
-    perm_state = ndb.StringProperty()
-    perm_zip = ndb.IntegerProperty()
-    #contact info
-    email = ndb.StringProperty()
-    phone = ndb.StringProperty()
-    facebook = ndb.StringProperty()
-    twitter = ndb.StringProperty()
-    instagram = ndb.StringProperty()
-    linkedin = ndb.StringProperty()
-    website = ndb.StringProperty()
-    #netegreek info
-    organization = ndb.KeyProperty()
-    tags = ndb.StringProperty(repeated=True)
-    perms = ndb.StringProperty()
-    prof_pic = ndb.BlobKeyProperty()
-    status = ndb.StringProperty()
-    position = ndb.StringProperty()
-    notifications = ndb.KeyProperty(repeated=True)
-    new_notifications = ndb.KeyProperty(repeated=True)
-    hidden_notifications = ndb.KeyProperty(repeated=True)
-    sent_notifications = ndb.KeyProperty(repeated=True)
-    events = ndb.KeyProperty(repeated=True)
-    recently_used_tags = ndb.StringProperty(repeated=True)
-
-
-class Notification(ndb.Model):
-    title = ndb.StringProperty()
-    type = ndb.StringProperty()
-    content = ndb.TextProperty()
-    sender = ndb.KeyProperty()
-    sender_name = ndb.StringProperty()
-    timestamp = ndb.DateTimeProperty()
-    link = ndb.StringProperty()
-
-
-class Event(ndb.Model):
-    title = ndb.StringProperty()
-    description = ndb.TextProperty()
-    time_start = ndb.DateTimeProperty()
-    time_end = ndb.DateTimeProperty()
-    time_created = ndb.DateTimeProperty()
-    creator = ndb.KeyProperty()
-    tag = ndb.StringProperty()
-    going = ndb.KeyProperty(repeated=True)
-    org_tags = ndb.StringProperty(repeated=True)
-    perms_tags = ndb.StringProperty(repeated=True)
-    not_going = ndb.KeyProperty(repeated=True)
-    images = ndb.BlobKeyProperty(repeated=True)
-    organization = ndb.KeyProperty()
-    attendance_data = ndb.KeyProperty(repeated=True)
-
-
-class AttendanceData(ndb.Model):
-    user = ndb.KeyProperty()
-    time_in = ndb.DateTimeProperty()
-    time_out = ndb.DateTimeProperty()
-    event = ndb.KeyProperty()
-    note = ndb.StringProperty()
-
-
-class Organization(ndb.Model):
-    name = ndb.StringProperty()
-    school = ndb.StringProperty()
-    type = ndb.StringProperty()
-    tags = ndb.StringProperty(repeated=True)
-    subscribed = ndb.BooleanProperty(default=False)
-    subscription_id = ndb.StringProperty()
-    customer_id = ndb.StringProperty()
-    payment_token = ndb.StringProperty()
-    cancel_subscription = ndb.DateProperty(default=datetime.date(5000, 01, 01))
-    trial_period = ndb.BooleanProperty(default=True)
-    cost = ndb.FloatProperty(default=1.0)
-
-
-class Poll(ndb.Model):
-    questions = ndb.KeyProperty(repeated=True)
-    results_org_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
-    results_perms_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
-    results_event_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
-    name = ndb.StringProperty()
-    description = ndb.TextProperty()
-    organization = ndb.KeyProperty()
-    invited_org_tags = ndb.StringProperty(repeated=True)
-    invited_perms_tags = ndb.StringProperty(repeated=True)
-    invited_event_tags = ndb.StringProperty(repeated=True)
-    start_time = ndb.DateTimeProperty()
-    end_time = ndb.DateProperty()
-    allow_changes = ndb.BooleanProperty(default=True)
-
-
-class Question(ndb.Model):
-    type = ndb.StringProperty()
-    worded_question = ndb.StringProperty()
-    choices = ndb.StringProperty(repeated=True)
-    responses = ndb.KeyProperty(repeated=True)
-    poll = ndb.KeyProperty()
-
-
-class Response(ndb.Model):
-    user = ndb.KeyProperty()
-    answer = ndb.StringProperty(repeated=True)
-    timestamp = ndb.DateTimeProperty()
-    question = ndb.KeyProperty()
 
 
 # class CST(datetime.tzinfo):
@@ -212,7 +77,6 @@ class DateEncoder(json.JSONEncoder):
 
 
 def member_signup_email(user, request_user):
-    to_email = [{'email': user['email'], 'type': 'to', 'name': user['first_name']}]
     token = request_user.organization.get().name
     token += user['last_name']
     token += generate_token()
@@ -232,11 +96,8 @@ def member_signup_email(user, request_user):
     message["subject"] = subject
     message["from_email"] = 'support@netegreek.com'
     message["from_name"] = 'NeteGreek'
-    message["to"] = to_email
-    to_send["message"] = message
-    json_data = json.dumps(to_send)
-    ret_data = {'json_data': json_data, 'user': user}
-    return ret_data
+    message["to"] = user['email']
+    return message
 
 
 def alumni_signup_email(user, request_user):
@@ -754,20 +615,16 @@ class RESTApi(remote.Service):
         if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
-        logging.error(clump)
-        rpcs = []
+        futures = []
         for user in clump['users']:
             email_item = member_signup_email(user, request_user)
-            rpc = urlfetch.create_rpc()
-            urlfetch.make_fetch_call(rpc=rpc,
-                                     url='https://mandrillapp.com/api/1.0/messages/send.json',
-                                     payload=email_item['json_data'],
-                                     method=urlfetch.POST,
-                                     headers={'Content-Type': 'application/json'})
-            rpcs.append({'rpc': rpc, 'user': email_item['user']})
-        rpc_data = wait_for_replies(rpcs)
-
-        for user in rpc_data['sent']:
+            cron_email = CronEmail()
+            cron_email.title = email_item["subject"]
+            cron_email.content = email_item["text"]
+            cron_email.email = email_item["to"]
+            cron_email.type = 'new_member'
+            cron_email.pending = True
+            futures.append(cron_email.put_async())
             new_user = User()
             new_user.email = user['email']
             new_user.organization = request_user.organization
@@ -777,10 +634,10 @@ class RESTApi(remote.Service):
             new_user.last_name = user['last_name']
             new_user.class_year = int(user['class_year'])
             new_user.perms = 'member'
-            new_user.put()
-
-        to_send = json_dump({'errors': rpc_data['errors']})
-        return OutgoingMessage(error='', data=to_send)
+            futures.append(new_user.put_async())
+        for future in futures:
+            future.get_result()
+        return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
                       http_method='POST', name='auth.add_alumni')
