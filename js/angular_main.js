@@ -1,6 +1,7 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#FIXME 503 on update account info
 //#FIXME upload profile pic page
+//#TODO get label checked tags and checked people on manage people tags page
 //#TODO on calendar page change event time from 2400 to 12:00 PM format
 //#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
@@ -2959,51 +2960,76 @@ App.directive('selectingUsers', function($compile){
 App.directive('neteTag', function($compile){
     return{
         restrict: 'E',
-        replace: 'true',
-        template: '',
+        templateUrl: '../Static/templates/tags/nete-tag.html',
         link: function(scope, element, attrs){
-        
-            if (attrs.options == 'all'){
-                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-                                +'<i class="fa fa-square-o checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{ tag.name }}</li>'
-                                +'</label>'
-                                +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'
-                                +'<ul class="dropdown-menu" role="menu">'
-                                +'<li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>'
-                                +'<li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>'
-                                +'</ul>'
-                );
-            }
-            else if(attrs.options == 'check'){
-                element.append(  '<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-                                +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
-                                +'</label>'
-                );
-            }
-            else if(attrs.options == 'delete'){
-                element.append(  '<span class="label label-default userLabel">'
-                                +'<li>#{{ tag }}</li>'
-                                +'</span>'
-                                +'<div class="badge" ng-click="removeTagFromUser(tag, user)"><i class="fa fa-times"></i></div>'  
-                );
-            }
-            else{
-                element.append(  '<label class="label label-primary">'
-                                +'<li>#{{ tag.name }}</li>'
-                                +'</label>'
-                );
-            }
-            
             $compile(element.contents())(scope)
-            
+        }
+    }
+});
+
+App.directive('netetagCheck', function($compile){
+    return{
+        restrict: 'E',
+        templateUrl: '../Static/templates/tags/nete-tag-check.html',
+        link: function(scope, element, attrs){
+            $compile(element.contents())(scope)
+        }
+    }
+});
+
+App.directive('netetagDelete', function($compile){
+    return{
+        restrict: 'E',
+        templateUrl: '../Static/templates/tags/nete-tag-delete.html',
+        link: function(scope, element, attrs){
+            $compile(element.contents())(scope)
+        }
+    }
+});
+
+App.directive('netetagAll', function($compile){
+    return{
+        restrict: 'E',
+        templateUrl: '../Static/templates/tags/nete-tag-all.html',
+        link: function(scope, element, attrs){
+            $compile(element.contents())(scope)
         }
     }
 });
 
 
-
+//            if (attrs.options == 'all'){
+//                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+//                                +'<i class="fa fa-square-o checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
+//                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{ tag.name }}</li>'
+//                                +'</label>'
+//                                +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'
+//                                +'<ul class="dropdown-menu" role="menu">'
+//                                +'<li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>'
+//                                +'<li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>'
+//                                +'</ul>'
+//                );
+//            }
+//            else if(attrs.options == 'check'){
+//                element.append(  '<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
+//                                +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
+//                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
+//                                +'</label>'
+//                );
+//            }
+//            else if(attrs.options == 'delete'){
+//                element.append(  '<span class="label label-default userLabel">'
+//                                +'<li>#{{ tag }}</li>'
+//                                +'</span>'
+//                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [user.key])"><i class="fa fa-times"></i></div>'  
+//                );
+//            }
+//            else{
+//                element.append(  '<label class="label label-primary">'
+//                                +'<li>#{{ tag.name }}</li>'
+//                                +'</label>'
+//                );
+//            }
 
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {
