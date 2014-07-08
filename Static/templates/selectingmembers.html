@@ -2,11 +2,11 @@
     <ul id="messagingTags">
        <span>Recent: </span>
             <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
-                <nete-tag options="check" ng-show="tag.recent"></nete-tag>
+                <netetag-check ng-show="tag.recent"></netetag-check>
             </div>
         <div ng-repeat="type in ngModel">
             <div class="btn-group" ng-repeat="tag in type">
-                <nete-tag options="check" ng-hide="tag.recent"></nete-tag>
+                <netetag-check ng-hide="tag.recent"></netetag-check>
             </div>
         </div>
     </ul>

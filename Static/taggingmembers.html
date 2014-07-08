@@ -20,7 +20,7 @@
 <!--                                    {{user.tags}}-->
                                 <ul id="memberTags" class="col-sm-8 col-md-9">
                                     <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
-                                        <nete-tag options="delete"></nete-tag>
+                                        <netetag-delete></netetag-delete>
                                     </div>
                                 </ul>
                             </div>
@@ -36,7 +36,7 @@
                         
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in org_tags">
-                        <nete-tag options="all"></nete-tag>
+                        <netetag-all></netetag-all>
                         </div>
                         </ul>
                         
