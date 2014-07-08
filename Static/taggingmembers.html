@@ -11,14 +11,14 @@
                     <ul>
                         <div ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
                             <div class="row">
-                                <li class="col-sm-4 col-md-2">
+                                <li class="col-sm-4 col-md-3">
                                 <label class="label checkLabel" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
                                 <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
                                 <input type="checkbox" ng-model="user.checked"> <span>#{{user.name}}</span>
                                 </label>
                                 </li>
 <!--                                    {{user.tags}}-->
-                                <ul id="memberTags" class="col-sm-8 col-md-10">
+                                <ul id="memberTags" class="col-sm-8 col-md-9">
                                     <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
                                         <nete-tag options="delete"></nete-tag>
                                     </div>
@@ -28,28 +28,33 @@
                     </ul>
                     </div>
                     <div class="col-xs-5">
-                            <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
-<!--                        <type-ahead id="tagsearch" placeholder="search for tags" tag-data="org_tags"></type-ahead>  -->
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-<!--                                #TODO: get this typeahead to submit at the correct times-->
-                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" ng-enter="submitForm()" bs-typeahead>
+                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             </form>
                             
                         <hr>
+                        
                         <ul class="addTags">
                         <div class="btn-group" ng-repeat="tag in org_tags">
                         <nete-tag options="all"></nete-tag>
                         </div>
                         </ul>
                         
-                        <hr>
+                       <h2 class="page-header">ADD</h2>
                               
                         selected tags: <ul id="selectedTags">
-                           <nete-tag ng-repeat="tag in selectedTags"></nete-tag>
+                           <nete-tag ng-repeat="tag.checked in tags"></nete-tag>
+                        </ul>
+                        
+                        <h2 class="page-header">TO</h2>
+                        
+                        selected people: <ul>
+                            
                         </ul>
                         
                         <hr>
                         
+                        <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
                     </div>
                     
                     </section>

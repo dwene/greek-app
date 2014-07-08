@@ -1,8 +1,11 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
-//#FIXME Sometimes the nav bar doesnt load after being fored logged out and logging into another account.
-//#TODO: fix check username tags in newmemberinfo and registerinfo pages
+//#FIXME 503 on update account info
+//#FIXME upload profile pic page
+//#TODO on calendar page change event time from 2400 to 12:00 PM format
+//#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
-//Final\static variables. These variables are used for cookies
+
+//Final/static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -1584,10 +1587,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.test_string = ["howdy", "hello", "applesauce"];
         
         $scope.checkTag = function(tag){
-        console.log(tag)
-        }
-        $scope.submitForm = function(){
-            $('#tagtypeahead').submit();
+            if(tag.checked){
+                tag.checked = false;
+            }
+            else{
+                tag.checked = true;
+            }
+            $scope.selectedTagName = "";
+            console.log(tag)
         }
         
         Load.then(function(){
@@ -1730,24 +1737,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.$watch('item.tag', function() {
             $scope.item.tag = $scope.item.tag.replace(/\s+/g,'');
         });
-        
-        //onclick checkmark tag
-//        $('.memberTags').on('click', '.checkLabel', function(){
-//            
-//            var checkbox = $(this).find(':checkbox');
-//                        
-//                if ( checkbox.prop('checked') )
-//                {
-//                    $(this).addClass('label-primary').removeClass('label-default');
-//                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
-//                }
-//                else
-//                {
-//                    $(this).removeClass('label-primary').addClass('label-default');
-//                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-//                }
-//            
-//        });
        
         $scope.openRenameTagModal = function(tag){
             $('#renameTagModal').modal();
@@ -2887,7 +2876,7 @@ App.directive('datePicker', function($compile){
 //credit: http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs
 App.directive('ngEnter', function() {
         return function(scope, element, attrs) {
-            element.bind("keydown keypress", function(event) {
+            element.bind("keyup", function(event) {
                 if(event.which === 13) {
                     scope.$apply(function(){
                         scope.$eval(attrs.ngEnter, {'event': event});
