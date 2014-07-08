@@ -207,7 +207,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $http, $q) {
+    App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
@@ -220,17 +220,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('.fa-refresh').addClass('fa-spin');
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-                for (var i = 0; i < $rootScope.notifications.length; i++){
-                    $rootScope.notifications[i].collapseOut = false;
-                }
                 
-                $rootScope.$apply();
-                $rootScope.notifications = JSON.parse(data.data).notifications;
-                console.log($rootScope.notifications);
-                for (var i = 0; i < $rootScope.notifications.length; i++){
-                        $rootScope.notifications[i].collapseOut = true;  
-                }
-                $rootScope.updateNotificationBadge();
+                
+                $timeout(function(){
+                    for (var i = 0; i < $rootScope.notifications.length; i++){
+                        $rootScope.notifications[i].collapseOut = false;
+                    }
+                })
+                
+                $timeout(function(){
+                    $rootScope.notifications = JSON.parse(data.data).notifications;
+                    for (var i = 0; i < $rootScope.notifications.length; i++){
+                            $rootScope.notifications[i].collapseOut = true;  
+                    }
+                })
+                $timeout(function(){
+                    $rootScope.updateNotificationBadge();
+                })
                 setTimeout(function(){
                     $('.fa-refresh').removeClass('fa-spin')},930);
                 })

@@ -1200,8 +1200,6 @@ class RESTApi(remote.Service):
         event_tags_list = list()
         for event in events:
             event_tags_list.append({"name": event.tag})
-        recent_tags_list = list()
-
         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,

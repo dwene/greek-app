@@ -35,20 +35,21 @@
                         <hr>
                         
                         <ul class="addTags">
-                        <div class="btn-group" ng-repeat="tag in org_tags">
-                        <netetag-all></netetag-all>
+                        <div class="btn-group" ng-repeat = "tag in org_tags">
+                        <netetag-all ></netetag-all>
                         </div>
                         </ul>
                         
                        <h2 class="page-header">ADD</h2>
                               
                         selected tags: <ul id="selectedTags">
-                           <nete-tag ng-repeat="tag in tags"></nete-tag>
+                           <netetag-check ng-repeat = "tag in org_tags" ng-show="tag.checked"></netetag-check>
                         </ul>
                         
                         <h2 class="page-header">TO</h2>
                         
                         selected people: <ul>
+                           <netetag-check ng-repeat = "tag in users" ng-show="tag.checked"></netetag-check>
                             
                         </ul>
                         
