@@ -25,6 +25,7 @@ from ndbdatastore import *
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
 import json
+import braintree
 import logging
 import datetime
 import jinja2
@@ -62,6 +63,126 @@ def get_user(user_name, token):
         return None
 
 
+def check_birthdays():
+    today = datetime.date.today()
+    year = 0
+    while year < 100:
+        b_day_users = User.query(User.dob == datetime.date(today.year - year, today.month, today.day)).fetch()
+        futures = []
+        for user in b_day_users:
+            notify = Notification()
+            notify.content = 'Happy Birthday from NeteGreek!'
+            notify.sender_name = 'NeteGreek Team'
+            notify.title = 'Happy Birthday!'
+            notify.timestamp = datetime.datetime.now()
+            notify.put()
+            user.new_notifications.append(notify.key)
+            futures.append(user.put_async())
+            email = CronEmail()
+            email.type = 'birthday'
+            email.content = 'Happy Birthday from NeteGreek!'
+            email.title = 'Happy Birthday!'
+            email.pending = True
+            email.email = user.email
+            futures.append(email.put_async())
+        for future in futures:
+            future.get_result()
+        year += 1
+    return
+
+
+def check_subscriptions():
+    organizations = Organization.query().fetch()
+    for organization in organizations:
+        if organization.subscribed:
+            if organization.cancel_subscription:
+                if organization.cancel_subscription >= datetime.date.today():
+                    organization.subscribed = False
+                users = User.query(User.organization == organization.key).fetch()
+                for user in users:
+                    email = CronEmail()
+                    email.title = 'Subscription Canceled'
+                    email.content = """
+                    This is a notice that you are no longer a premium member with NeteGreek.
+
+                    If you would like to renew your premium membership with us please signup again at app.netegreek.com.
+
+                    -NeteGreek Team
+                    """
+                    email.email = user.email
+                    email.pending = True
+                    email.type = 'cancellation_notice'
+                    email.put()
+            elif organization.subscription_id:
+                subscription = braintree.Subscription.find(organization.subscription_id)
+                if subscription.days_past_due == 2 and not subscription.canceled and organization.subscribed:
+                    users = User.query(User.organization == organization.key).fetch()
+                    for user in users:
+                        email = CronEmail()
+                        email.title = 'Payments Missed'
+                        email.content = """
+                        This is a notice that your organization is now 2+ days late on payment.\n\n
+
+                        Please check to see if you have been billed for this month and contact us at support@netegreek.com
+                        if you believe you are receiving this in error. If not, please ensure that you have enough funds
+                        in the card's account to process this or change the card given on the subscription page.
+                        We will try to draw funds again tomorrow.\n\n
+
+                        Thanks!\n\n
+
+                        -NeteGreek Team
+                        """
+                        email.email = user.email
+                        email.pending = True
+                        email.type = 'late_payment_notice'
+                        email.put()
+                elif subscription.days_past_due >= 3 and not subscription.canceled and organization.subscribed:
+                    retry_result = braintree.Subscription.retry_charge(
+                        organization.subscription_id
+                    )
+                    if not retry_result.is_success:
+                        braintree.Subscription.cancel(organization.subscription_id)
+                        organization.subscription_id = None
+                        organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
+                        users = User.query(User.organization == organization.key).fetch()
+                        for user in users:
+                            email = CronEmail()
+                            email.title = 'Payments Missed'
+                            email.content = """
+                            This is a notice that your organization is now 4+ days late on payment.\n\n
+
+                            We have canceled your subscription and your premium access will be removed within 2 days
+                            unless your organization re-subscribes.\n\n
+
+                            -NeteGreek Team
+                            """
+                            email.email = user.email
+                            email.pending = True
+                            email.type = 'late_payment_notice2'
+                            email.put()
+                    elif subscription.days_past_due >= 4 and not subscription.canceled and organization.subscribed:
+                        braintree.Subscription.cancel(organization.subscription_id)
+                        organization.subscription_id = None
+                        organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
+                        users = User.query(User.organization == organization.key).fetch()
+                        for user in users:
+                            email = CronEmail()
+                            email.title = 'Payments Missed'
+                            email.content = """
+                            This is a notice that your organization is now 4+ days late on payment.\n\n
+
+                            We have canceled your subscription and your premium access will be removed within 2 days
+                            unless your organization re-subscribes.\n\n
+
+                            -NeteGreek Team
+                            """
+                            email.email = user.email
+                            email.pending = True
+                            email.type = 'late_payment_notice2'
+                            email.put()
+        organization.put()
+    return
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -79,7 +200,7 @@ class MainHandler(webapp2.RequestHandler):
 class ProfilePictureHandler(webapp2.RequestHandler):
     def get(self):
         upload_url = blobstore.create_upload_url('/upload')
-        logging.error(upload_url);
+        logging.error(upload_url)
         self.response.out.write('<html><body>')
         self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
         self.response.out.write("""Upload File: <input type="file" name="file"><br> <input type="submit"
@@ -88,27 +209,28 @@ class ProfilePictureHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
-        user_name = self.get_uploads('user_name')
-        token = self.get_uploads('token')
-        user = get_user(user_name, token)
-        if not user:
-            self.redirect('/')
+        upload_files = self.get_uploads('file') # 'file' is file upload field in the form
+        user_name = self.request.get('user_name')
         blob_info = upload_files[0]
-        if blob_info:
-            blobstore.BlobInfo.get(user.prof_pic).delete()
-            user.prof_pic = blob_info.key()
-            user.put()
-        self.redirect('/' % blob_info.key())
+        self.redirect('/?key=%s#/app/postNewKeyPictureLink' % blob_info.key())
 
 
-class TestCron(webapp2.RequestHandler):
+class MorningTasks(webapp2.RequestHandler):
     def get(self):
-        logging.error('I am actually working wow...')
+        if 'X-Appengine-Cron' not in self.request.headers:
+            return
+        check_birthdays()
+        check_subscriptions()
+        old_cron_email_tasks = CronEmail.query(CronEmail.timestamp > datetime.datetime.now() +
+                                               datetime.timedelta(days=20)).fetch(keys_only=True)
+        for key in old_cron_email_tasks:
+            key.delete()
 
 
 class SendEmails(webapp2.RequestHandler):
     def get(self):
+        if 'X-Appengine-Cron' not in self.request.headers:
+            return
         emails = CronEmail.query(CronEmail.pending == True).fetch()
         futures = []
         logging.error('I made it to the send emails code')
@@ -133,7 +255,7 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/upload', UploadHandler),
-    ('/testcron', TestCron),
-    ('/sendemails', SendEmails)
+    ('/sendemails', SendEmails),
+    ('/morningtasks', MorningTasks)
 
 ], debug=True)

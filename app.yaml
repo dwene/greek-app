@@ -31,11 +31,12 @@ handlers:
   script: main.app
   secure: always
 
-- url: /testcron
+
+- url: /sendemails
   script: main.app
   secure: always
 
-- url: /sendemails
+- url: /morningtasks
   script: main.app
   secure: always
 

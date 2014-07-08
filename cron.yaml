@@ -1,9 +1,9 @@
 cron:
-- description: test cron job
-  url: /testcron
-  schedule: every 1 minutes
-
 - description: send emails
   url: /sendemails
   schedule: every 5 minutes
+
+- description: morning tasks
+  url: /morningtasks
+  schedule: every day 03:00
 

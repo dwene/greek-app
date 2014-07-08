@@ -608,8 +608,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.hideNotification = function(notify){
             var key = notify.key;
-            //$http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+            $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
             $rootScope.hidden_notifications.push(notify);
+            if (notify.new){
+                notify.new = false;
+                $rootScope.updateNotificationBadge();
+            }
             $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
         }
         
@@ -1539,6 +1543,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
     });
+    $scope.getUser = function(){
+        return $.cookie(USER_NAME);
+    }
+    $scope.getToken = function(){
+        return $.cookie(TOKEN);
+    }
     });
 
 //upload image
@@ -2620,7 +2630,7 @@ function packageForSending(send_data){
 
 function checkResponseErrors(received_data){
     response = received_data;
-    if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN')
+    if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN' || response.error == 'BAD_FIRST_TOKEN')
     {
         window.location.assign("/#/login");
         console.log('ERROR: '+response.error);

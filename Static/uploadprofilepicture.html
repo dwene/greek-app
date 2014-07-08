@@ -3,11 +3,13 @@
 
 <form action="/upload" method="post" enctype="multipart/form-data"  id="profilePic">
     
-    <input type="file" accept="image/*" image="image2" value="upload"
+    <input type="file" name="file" accept="image/*" image="image2" value="upload"
     resize-max-height="640"
     resize-max-width="640"
     resize-quality="0.7" />
+
     <hr>
+    <input type="hidden" name="user_name" ng-value="getUser()">
 Original<br><img ng-show="image2" ng-src="{{image2.dataURL}}" type="{{image2.file.type}}">
 <hr>
 Resized<br><img ng-show="image2" ng-src="{{image2.resized.dataURL}}">

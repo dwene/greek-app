@@ -97,7 +97,7 @@ class Organization(ndb.Model):
     subscription_id = ndb.StringProperty()
     customer_id = ndb.StringProperty()
     payment_token = ndb.StringProperty()
-    cancel_subscription = ndb.DateProperty(default=datetime.date(5000, 01, 01))
+    cancel_subscription = ndb.DateProperty()
     trial_period = ndb.BooleanProperty(default=True)
     cost = ndb.FloatProperty(default=1.0)
 
@@ -139,3 +139,4 @@ class CronEmail(ndb.Model):
     email = ndb.StringProperty()
     content = ndb.TextProperty()
     title = ndb.StringProperty()
+    timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
