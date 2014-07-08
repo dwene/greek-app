@@ -1582,6 +1582,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.selectedTag = "";
         $scope.test_string = ["howdy", "hello", "applesauce"];
+        
+        $scope.checkTag = function(tag){
+        console.log(tag)
+        }
+        $scope.submitForm = function(){
+            $('#tagtypeahead').submit();
+        }
+        
         Load.then(function(){
         
         function getUsers(){

@@ -30,9 +30,9 @@
                     <div class="col-xs-5">
                             <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
 <!--                        <type-ahead id="tagsearch" placeholder="search for tags" tag-data="org_tags"></type-ahead>  -->
-                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="selectTagFromTypeAhead(selectedTagName);">
+                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
 <!--                                #TODO: get this typeahead to submit at the correct times-->
-                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" ng-enter="checkTag()" bs-typeahead>
+                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter tag" ng-enter="submitForm()" bs-typeahead>
                             </form>
                             
                         <hr>
