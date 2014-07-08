@@ -1,6 +1,7 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#FIXME 503 on update account info
 //#FIXME upload profile pic page
+//#TODO get label checked tags and checked people on manage people tags page
 //#TODO on calendar page change event time from 2400 to 12:00 PM format
 //#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
