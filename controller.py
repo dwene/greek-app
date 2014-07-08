@@ -79,14 +79,11 @@ class DateEncoder(json.JSONEncoder):
 def member_signup_email(user, token):
     user['token'] = token
     signup_link = 'https://greek-app.appspot.com/#/newuser/'+token
-    from_email = 'netegreek@greek-app.appspotmail.com'
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
     body += signup_link + "\n\n -NeteGreek Team"
-    to_send = {}
-    to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
-    message = {}
+    message = dict()
     message["text"] = body
     message["subject"] = subject
     message["from_email"] = 'support@netegreek.com'
@@ -105,7 +102,7 @@ def alumni_signup_email(user, request_user, token):
     body += org.name + " at " + org.school + "has requested to add you to their database of alumni. If you would like" \
                                              " to add yourself please go to the following link\n"
     body += signup_link + "\n\n -NeteGreek Team"
-    message = {}
+    message = dict()
     message["text"] = body
     message["subject"] = subject
     message["from_email"] = 'support@netegreek.com'
@@ -115,9 +112,9 @@ def alumni_signup_email(user, request_user, token):
 
 
 def send_mandrill_email(from_email, to_emails, subject, body):
-    to_send = {}
+    to_send = dict()
     to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
-    message = {}
+    message = dict()
     message["text"] = body
     message["subject"] = subject
     message["from_email"] = from_email
@@ -133,22 +130,14 @@ def send_mandrill_email(from_email, to_emails, subject, body):
 
 
 def removal_email(user):
-    to_email = [{'email': user.email, 'type': 'to', 'name': user.first_name}]
-    from_email = 'support@netegreek.com'
     subject = 'Removal from NeteGreek App'
     body = "Hello\n"
     body += "This if a notice that you have been removed from the organization '" + user.organization.get().name
     body += "' Please email your NeteGreek administrators for more information\n"
     body += "Have a great day\n\n"
     body += "NeteGreek Team"
-    send_mandrill_email(from_email, to_email, subject, body)
-
-
-def notification_email(title, content, sender, email):
-    subject = "NeteGreek Notification: " + title
-    body = content
-    body += '\nSender: ' + sender
-    mail.send_mail('support@netegreek.com', email, subject, body)
+    CronEmail(type='member_removal', title=subject, content=body, email=user.email,
+              pending=True, timestamp=datetime.datetime.now()).put()
 
 
 def forgotten_password_email(user):
@@ -178,8 +167,8 @@ def json_dump(item):
 
 
 def wait_for_replies(rpcs):
-    error = []
-    sent = []
+    error = list()
+    sent = list()
     for item in rpcs:
         try:
             result = item['rpc'].get_result()
@@ -237,10 +226,10 @@ def get_key_from_token(token):
 
 
 def get_users_from_tags(tags, organization, keys_only):
-    # org_tag_users = []
-    # event_tag_users = []
-    # perms_tag_users = []
-    out_list = []
+    # org_tag_users = list()
+    # event_tag_users = list()
+    # perms_tag_users = list()
+    out_list = list()
     _keys_only = False
     if keys_only:
         _keys_only = True
@@ -267,7 +256,7 @@ def get_users_from_tags(tags, organization, keys_only):
 
     if "event_tags" in tags and len(tags["event_tags"]):
         event_tag_users = events_future.get_result()
-        users = []
+        users = list()
         for event in event_tag_users:
             users = users + list(set(event) - set(out_list))
 
@@ -608,7 +597,7 @@ class RESTApi(remote.Service):
         if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
-        futures = []
+        futures = list()
         for user in clump['users']:
             token = generate_token()
             email_item = member_signup_email(user, token)
@@ -708,8 +697,8 @@ class RESTApi(remote.Service):
         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
         organization_users = organization_users_future.get_result()
         event_list = event_list_future.get_result()
-        user_list = []
-        alumni_list = []
+        user_list = list()
+        alumni_list = list()
         return_object = ''
         for user in organization_users:
             user_dict = user.to_dict()
@@ -722,6 +711,7 @@ class RESTApi(remote.Service):
             for event in event_list:
                 if user.key in event.going:
                     event_tags.append(event.tag)
+            del user_dict["recently_used_tags"]
             user_dict["event_tags"] = event_tags
             user_dict["key"] = user.key.urlsafe()
             if user_dict["perms"] == 'alumni':
@@ -1015,8 +1005,8 @@ class RESTApi(remote.Service):
                                         ).fetch_async(projection=[Event.going, Event.tag])
         organization_users = organization_users_future.get_result()
         event_list = event_list_future.get_result()
-        user_list = []
-        alumni_list = []
+        user_list = list()
+        alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
             del user_dict["hash_pass"]
@@ -1199,9 +1189,11 @@ class RESTApi(remote.Service):
         org_tags = org_tags_future.get_result().tags
         org_tags_list = list()
         for tag in request_user.recently_used_tags:
-            org_tags_list.append({"name": tag, "recent": True})
             if tag in org_tags:
+                org_tags_list.append({"name": tag, "recent": True})
                 org_tags.remove(tag)
+            else:
+                request_user.recently_used_tags.remove(tag)
         for tag in org_tags:
             org_tags_list.append({"name": tag, "recent": False})
         events = event_tags_future.get_result()
@@ -1241,7 +1233,7 @@ class RESTApi(remote.Service):
         notification.put()
         request_user.sent_notifications.append(notification.key)
         request_user.put()
-        futures = []
+        futures = list()
         for user in users:
             user.new_notifications.append(notification.key)
             futures.append(user.put_async())
@@ -1268,7 +1260,7 @@ class RESTApi(remote.Service):
         if request_user.hidden_notifications:
             hidden_notifications_future = Notification.query(Notification.key.IN(
                 request_user.hidden_notifications)).order(Notification.timestamp).fetch_async(20)
-        out_notifications = []
+        out_notifications = list()
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
             logging.error(new_notifications)
@@ -1285,7 +1277,7 @@ class RESTApi(remote.Service):
                 note["new"] = False
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
-        out_hidden_notifications = []
+        out_hidden_notifications = list()
         if request_user.hidden_notifications:
             hidden_notifications = hidden_notifications_future.get_result()
             for notify in hidden_notifications:
@@ -1336,7 +1328,7 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         hidden_notifications = Notification.query(Notification.key.IN(request_user.hidden_notifications)).fetch()
-        notifications = []
+        notifications = list()
         for notification in hidden_notifications:
             notify = notification.to_dict()
             notify["key"] = notification.key.urlsafe()
@@ -1354,7 +1346,7 @@ class RESTApi(remote.Service):
         data = json.loads(request.data)
         key = ndb.Key(urlsafe=data["message"])
         if key in request_user.sent_notifications:
-            futures = []
+            futures = list()
             request_user.sent_notifications.remove(key)
             futures.append(request_user.put_async())
             notified_users = User.query(User.notifications == key).fetch_async()
@@ -1389,7 +1381,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data=json_dump(''))
         sent_notifications = Notification.query(Notification.key.IN(request_user.sent_notifications)).order(
                                                                     -Notification.timestamp).fetch(30)
-        out_message = []
+        out_message = list()
         for notification in sent_notifications:
             note_dict = notification.to_dict()
             note_dict["key"] = notification.key.urlsafe()
@@ -1499,7 +1491,7 @@ class RESTApi(remote.Service):
                                      ndb.OR(Event.perms_tags == request_user.perms,
                                             Event.perms_tags == 'everyone',
                                             Event.going == request_user.key))).order(-Event.time_start).fetch(30)
-        out_events = []
+        out_events = list()
         for event in events:
             dict_event = event.to_dict()
             dict_event["tags"] = {"org_tags": event.org_tags, "perms_tags": event.perms_tags}
@@ -1565,7 +1557,7 @@ class RESTApi(remote.Service):
         users = users_future.get_result()
         attendance_data = attendance_data_future.get_result()
         event = event_future.get_result()
-        data_list = []
+        data_list = list()
         for user in users:
             user_dict = user.to_dict()
             user_dict["key"] = user.key

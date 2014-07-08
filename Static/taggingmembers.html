@@ -43,7 +43,7 @@
                        <h2 class="page-header">ADD</h2>
                               
                         selected tags: <ul id="selectedTags">
-                           <nete-tag ng-repeat="tag.checked in tags"></nete-tag>
+                           <nete-tag ng-repeat="tag in tags"></nete-tag>
                         </ul>
                         
                         <h2 class="page-header">TO</h2>
@@ -54,7 +54,7 @@
                         
                         <hr>
                         
-                        <button id="addTagsButton" ng-click="addTagsToUsers(selectedTags, selectedUsers)" class="btn btn-default btn-sm btn-block">Add Tags</button>
+                        <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block">Add Tags</button>
                     </div>
                     
                     </section>

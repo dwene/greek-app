@@ -1579,9 +1579,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
-        $scope.typeAheadModel = function(item){
-            return JSON.stringify(['hi']);
-        }
         $scope.selectTagFromTypeAhead = function(tag){
             console.log('howdy');
             for(var i = 0; i < $scope.tags.length; i ++){
@@ -1594,7 +1591,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         $scope.selectedTag = "";
-        $scope.test_string = ["howdy", "hello", "applesauce"];
         
         $scope.checkTag = function(tag){
             if(tag.checked){
@@ -1604,7 +1600,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 tag.checked = true;
             }
             $scope.selectedTagName = "";
-            console.log(tag)
+            console.log(tag);
         }
         
         Load.then(function(){
@@ -1624,10 +1620,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         out_users.push(user);
                     }
                     $scope.users = out_users;
-                    
                     $rootScope.users = users;
                     console.log("HERE");
-                    console.log($scope.users);
+                    console.log($rootScope.users);
                 }
                 else
                     console.log('ERROR: '+data);
@@ -1663,12 +1658,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.getOrganizationTags();
         $scope.addOrganizationTag = function(tag){
-            console.log(tag);
-            $http.post('/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({'tag': tag}))
+            $http.post('/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({tag: tag}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        console.log('success');
+                        if ($rootScope.tags.org_tags.indexOf(tag) == -1){
+                            $rootScope.tags.org_tags.push(tag);
+                        }
+                        if ($scope.org_tags.indexOf(tag) == -1){
+                            $scope.org_tags.push({name:tag, checked:false});
+                        }
                     }
                     else
                     {
@@ -1679,15 +1678,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
-            if ($rootScope.tags.org_tags.indexOf(tag) == -1){
-                $rootScope.tags.org_tags.push(tag);
-            }
+            
             $("#addTag input").val("");
         }
         
         $scope.removeOrganizationTag = function(){
             $('#deleteTagModal').modal('hide')
-            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({'tag': $scope.modaledTag.name}))
+            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({tag: $scope.modaledTag.name}))
                 .success(function(data){
                     if(checkResponseErrors(data)){openErrorModal(data.error)}
                 })
@@ -1714,7 +1711,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.renameOrganizationTag = function(new_tag, isValid){
             if(isValid){
                 $('#renameTagModal').modal('hide')
-                $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({'old_tag': $scope.modaledTag.name, 'new_tag': new_tag}))
+                $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({old_tag: $scope.modaledTag.name, new_tag: new_tag}))
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
@@ -1759,7 +1756,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         function addTagsToUsers(tags, keys){
-            var to_send = {'tags': tags, 'keys': keys};
+            var to_send = {tags: tags, keys: keys};
+            console.log(to_send);
             $http.post('/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
@@ -1778,7 +1776,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 var user = $scope.users[j];
                 console.log(user);
                 for(var i = 0; i < $scope.org_tags.length; i++){
-                    if ($scope.org_tags[i].checked && user.tags.indexOf($scope.org_tags[i].name) < 0){
+                    if ($scope.org_tags[i].checked && user.checked && user.tags.indexOf($scope.org_tags[i].name) < 0){
                         user.tags.push($scope.org_tags[i].name);
                         console.log('tag name '+ $scope.org_tags[i].name);
                     }
@@ -1808,13 +1806,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
             clearCheckLabels();
         }
         
-        function removeTagsFromUsers(tags, keys){
-            $http.post('/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': tags, 'keys': keys}))
+        function removeTagFromUser(tag, user){
+            $http.post('/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': [tag], 'keys': [user.key]}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        console.log('success');
-                        setTimeout(getUsers, 200);
+                        if (user.tags.indexOf(tag) > -1){
+                            user.tags.splice(user.tags.indexOf(tag), 1);
+                        }
                     }
                     else
                     {
@@ -1826,12 +1825,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         
-        $scope.removeTagsFromUsers = function(tags, users){
-
-            removeTagsFromUsers(tags, users);
+        $scope.removeTagFromUser = function(tag, user){
+            console.log(tag);
+            console.log(user);
+            removeTagFromUser(tag, user);
             clearCheckLabels();
         }
     });
+        function clearCheckLabels(){
+            for (var i = 0; i < $scope.users.length; i++){
+                $scope.users[i].checked = false;
+            }
+            for (var i = 0; i < $scope.org_tags.length; i++){
+                $scope.org_tags[i].checked = false;
+            }
+        }
     });
 
 //member messaging page
@@ -2592,10 +2600,6 @@ function checkLogin(){
 }
 
 //clears all checked labels
-    function clearCheckLabels(){
-    $('.checkLabel.label-primary').find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-    $('.checkLabel.label-primary').removeClass('label-primary').addClass('label-default');
-    }
 
 function checkPermissions(perms){
     if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
@@ -2982,7 +2986,7 @@ App.directive('neteTag', function($compile){
                 element.append(  '<span class="label label-default userLabel">'
                                 +'<li>#{{ tag }}</li>'
                                 +'</span>'
-                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [user.key])"><i class="fa fa-times"></i></div>'  
+                                +'<div class="badge" ng-click="removeTagFromUser(tag, user)"><i class="fa fa-times"></i></div>'  
                 );
             }
             else{
