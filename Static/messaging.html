@@ -34,7 +34,7 @@
     <ul>
         <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification collapseOut" ng-class="{ new : notify.new }">
             <div class="notificationContent">
-                <button type="button" class="close" ng-click="openMessageModal(notify)">delete</button>
+                <button type="button" class="close" ng-click="openMessageModal(notify)"><i class="fa fa-trash-o"></i></button>
             <span class="notificationTitle">{{notify.title}}</span>
             <span>{{notify.content | limitTo: 100}}<span ng-show="notify.content.length > 100">...</span></span>
             </div>

@@ -1,19 +1,34 @@
 <div class="container">
         
     <section id="statusContainer" class="row">
+       
+       <div class="col-xs-12 col-sm-3">
+       testing1
+       </div>
+       
+       <div class="col-xs-12 col-sm-3 pull-right">
+        testing2
+        </div>
+       
         <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-12">
         <h2 class="well well-sm">Current Status:  <span class="currentStatus">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()">×</button></h2>
         </div>
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-12">
         <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
             <div class="input-group">
               <input id="status" type="text" placeholder="update your status here" class="form-control" ng-model="status">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">Update Status</button>
+                <button class="btn btn-default" type="submit"><i class="fa fa-check"></i></button>
               </span>
             </div>
         </form>
         </div>
+        </div>
+        
+        
+        
+        
     </section>
     <hr>
     <section id="notifications">
@@ -50,7 +65,7 @@
             <li class="notification" ng-class="{new: notify.new, collapseOut: notify.collapseOut}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
             
                 <div class="notificationContent">
-                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();">hide</button>
+                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();"><i class="fa fa-times-circle"></i></button>
                 <span class="notificationTitle">{{notify.title}}</span>
 <!--                #TODO add more content to the notifications-->
 <!--                <span class="notificationPreview">{{notification.preview}}</span>-->

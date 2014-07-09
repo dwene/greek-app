@@ -23,16 +23,22 @@ body.modal-open{margin-right:0px;}
 .dropdown-toggle{-ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
 
 nav.navbar-default .dropdown-menu {
-    -webkit-transition: all .3s ease-out;
-    transition: all .3s ease-out;
-    opacity: 0;
+    -webkit-transition: max-height .3s ease-out;
+    transition: max-height .3s ease-out;
+    max-height:0px;
+    display:block;
+    pointer-events:none;
     height:0px;
-    display: block;
     overflow:hidden;
+    padding:0px;
+    border:0px;
 }
 nav.navbar-default .open .dropdown-menu {
-    opacity: 1;
-    height:218px;
+    max-height:300px;
+    height:auto;
+    pointer-events:all;
+    border: 1px solid rgba(0,0,0,0.15);
+    padding: 5px 0;
 }
 
 /*Nav Pills*/
@@ -103,17 +109,19 @@ h1{font-size:36px; font-weight:bold;}
 .memberTags .badge:hover{background:#d9534f;}
 .memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
 
-#addTags{margin:10px 0 0 0; padding:0px;}
-
 .memberTags .btn-group{-webkit-user-select:none;}
 .memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;
 border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
-
+.memberTags .page-header{margin: 20px 0 20px !important;}
 
 #memberTags .label{padding:.4em 2em .4em .6em;}
 #memberTags .badge{padding: .4em .4em .4em .3em;}
+@media screen and (max-width:768px){#memberTags{left: -2px;
+margin-top: 2px;}}
+#memberSelect row{margin:4px -15px 4px -15px;}
 
 .addTags .label{padding:.4em 2em .4em 1.5em;}
+.addTags .btn-group{margin:2px 0px;}
 .addTags .open .dropdown-toggle{background:#ccc;}
 .dropdown-menu>li>a{cursor: pointer;}
 
@@ -146,7 +154,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .notification{border-top:1px solid #777;}
 .notification:last-child{border-bottom:1px solid #777;}
 .notificationContent{padding:20px 10px;}
-.notificationContent .close{font-size:12px; top:5px; right:10px; position:absolute; z-index:100;}
+.notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100;}
 .notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-15px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
 .notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}

@@ -9,7 +9,7 @@
                     </div>
                     </div>
                     <ul>
-                        <div ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
+                        <div id="memberSelect" ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
                             <div class="row">
                                 <li class="col-sm-4 col-md-3">
                                 <label class="label checkLabel" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
@@ -42,15 +42,14 @@
                         
                        <h2 class="page-header">ADD</h2>
                               
-                        selected tags: <ul id="selectedTags">
+                        <ul id="selectedTags">
                            <netetag-check ng-repeat = "tag in org_tags" ng-show="tag.checked"></netetag-check>
                         </ul>
                         
                         <h2 class="page-header">TO</h2>
                         
-                        selected people: <ul>
+                        <ul>
                            <netetag-check ng-repeat = "tag in users" ng-show="tag.checked"></netetag-check>
-                            
                         </ul>
                         
                         <hr>
