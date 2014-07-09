@@ -17,7 +17,6 @@
                                 <input type="checkbox" ng-model="user.checked"> <span>#{{user.name}}</span>
                                 </label>
                                 </li>
-<!--                                    {{user.tags}}-->
                                 <ul id="memberTags" class="col-sm-8 col-md-9">
                                     <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
                                         <netetag-delete></netetag-delete>
@@ -30,31 +29,22 @@
                     <div class="col-xs-5">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
+                            <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
                             </form>
-                            
-                        <hr>
-                        
-                        <ul class="addTags">
-                        <div class="btn-group" ng-repeat = "tag in org_tags">
-                        <netetag-all ></netetag-all>
-                        </div>
-                        </ul>
-                        
+                                                    
                        <h2 class="page-header">ADD</h2>
                               
                         <ul id="selectedTags">
-                           <netetag-check ng-repeat = "tag in org_tags" ng-show="tag.checked"></netetag-check>
+                           <netetag-check ng-repeat="tag in selectedTags = (org_tags | checkedFilter)"></netetag-check>
                         </ul>
                         
                         <h2 class="page-header">TO</h2>
                         
                         <ul>
-                           <netetag-check ng-repeat = "tag in users" ng-show="tag.checked"></netetag-check>
+                           <netetag-check ng-repeat="tag in selectedUsers = (users | checkedFilter)"></netetag-check>
                         </ul>
-                        
-                        <hr>
-                        
-                        <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block">Add Tags</button>
+                                                
+                        <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</button>
                     </div>
                     
                     </section>
@@ -70,15 +60,15 @@
                                     <input name="tag" id="tag" ng-trim="false" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
                                     <span class="input-group-btn">
                                     <button type="submit" class="btn btn-default">Create Tag</button>
+                                     </span>
                                 </div>
-                            </span>
                             </div>
                         </form>
                         </div>    
                     </section>
 
 
-</div>
+
 
 
 <div class="modal fade" id="renameTagModal">
@@ -130,4 +120,26 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" id="seeallTags">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">All Tags</h4>
+      </div>
+      <div class="modal-body">
+            <ul class="addTags">
+                <div class="btn-group" ng-repeat="tag in org_tags | orderBy : 'name'">
+                    <netetag-all ></netetag-all>
+                </div>
+            </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+
+</div>

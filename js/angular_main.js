@@ -3100,6 +3100,20 @@ App.filter('startFrom', function() {
     }
 });
 
+
+App.filter('checkedFilter', function() {
+    return function(input) {
+        out = [];
+        for (var i = 0; i < input.length; i++){
+            if (input[i].checked){
+                out.push(input[i]);
+            }
+        }
+    
+    return out;
+    }
+});
+
 App.filter('tagDirectorySearch', function(){
     return function (objects, tags) {
         if (!tags){return null;}
