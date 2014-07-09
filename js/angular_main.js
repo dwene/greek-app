@@ -2103,6 +2103,29 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.goToReport = function(){
             window.location.assign("#/app/events/" + $stateParams.tag + "/report");
         }
+        $scope.saveEvent = function(){
+          /*BEGIN:VCALENDAR
+            VERSION:2.0
+            BEGIN:VEVENT
+            DTEND;TZID=America/Chicago:20140709T110000
+            SUMMARY:Test Event
+            DTSTART;TZID=America/Chicago:20140709T100000
+            DESCRIPTION:This is the description!
+            END:VEVENT
+            END:VCALENDAR*/
+            
+            
+        var event = $scope.event;
+        var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
+        out_string += 'DTSTART;TZID='+jstz.determine().name()+':'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'\n';
+        out_string += 'DTEND;TZID='+jstz.determine().name()+':'+moment(event.time_end).format('YYYYMMDDTHHmmss') + '\n';
+        
+        out_string += 'DESCRIPTION:'+event.description + '\n';
+        out_string += 'SUMMARY:'+event.title + '\n';    
+        out_string += 'END:VEVENT\nEND:VCALENDAR';
+        var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "event.ics");
+    }
         Load.then(function(){
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;

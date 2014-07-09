@@ -5,7 +5,7 @@
 	
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron">
-			
+		<button ng-click="saveEvent()" class="btn btn-info topRight" style="position:relative"><i class="fa fa-floppy-o"></i> Save Event</button>	
 <a ng-href="#/app/events" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
 <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-edit"></i> Edit</button>
 <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft"><i class="fa fa-edit"></i>Report</button>

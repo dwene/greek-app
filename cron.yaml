@@ -5,5 +5,8 @@ cron:
 
 - description: morning tasks
   url: /morningtasks
-  schedule: every day 03:00
+  schedule: every day 05:01
 
+- description: daily notifications emails
+  url: /dailynotifications
+  schedule: every day 02:00

@@ -246,7 +246,7 @@ class SendEmails(webapp2.RequestHandler):
             future.get_result()
 
 
-class SendTestEmail(webapp2.RequestHandler):
+class SendDailyNotificationsEmails(webapp2.RequestHandler):
     def get(self):
         users = User.query(User.daily_notifications == True).fetch()
         for user in users:
@@ -272,10 +272,11 @@ class SendTestEmail(webapp2.RequestHandler):
             message["html"] = out_string
             to_send["message"] = message
             json_data = json.dumps(to_send)
-            result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0/messages/send.json',
-                                    payload=json_data,
-                                    method=urlfetch.POST,
-                                    headers={'Content-Type': 'application/json'})
+            if len(notifications) > 0:
+                result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0/messages/send.json',
+                                        payload=json_data,
+                                        method=urlfetch.POST,
+                                        headers={'Content-Type': 'application/json'})
         return
     # message["html"] = """
             # <p>Dear Albert:</p>
@@ -302,7 +303,7 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/upload', UploadHandler),
     ('/sendemails', SendEmails),
-    ('/sendtestemail', SendTestEmail),
+    ('/dailynotifications', SendDailyNotificationsEmails),
     ('/morningtasks', MorningTasks)
 
 ], debug=True)

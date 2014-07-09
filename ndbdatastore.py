@@ -71,6 +71,8 @@ class Event(ndb.Model):
     time_end = ndb.DateTimeProperty()
     time_created = ndb.DateTimeProperty()
     creator = ndb.KeyProperty()
+    location = ndb.StringProperty()
+    address = ndb.StringProperty()
     tag = ndb.StringProperty()
     going = ndb.KeyProperty(repeated=True)
     org_tags = ndb.StringProperty(repeated=True)

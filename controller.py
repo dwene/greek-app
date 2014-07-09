@@ -1410,6 +1410,9 @@ class RESTApi(remote.Service):
         new_event.tag = event_data["tag"]
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
+        new_event.location = event_data["location"]
+        if 'address' in event_data:
+            new_event.address = event_data["address"]
         for tag in new_event.org_tags:
             if tag not in request_user.recently_used_tags:
                 request_user.recently_used_tags.insert(0, tag)
@@ -1520,6 +1523,10 @@ class RESTApi(remote.Service):
                 event.title = value
             elif key == "description":
                 event.description = value
+            elif key == "location":
+                event.location = value
+            elif key == 'address':
+                event.address = value
             elif key == "tags":
                 if "org_tags" in value:
                     event.org_tags = value["org_tags"]
