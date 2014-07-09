@@ -2117,9 +2117,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         var event = $scope.event;
         var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
-        out_string += 'DTSTART;TZID='+jstz.determine().name()+':'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'\n';
-        out_string += 'DTEND;TZID='+jstz.determine().name()+':'+moment(event.time_end).format('YYYYMMDDTHHmmss') + '\n';
-        
+        out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
+        out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
         out_string += 'DESCRIPTION:'+event.description + '\n';
         out_string += 'SUMMARY:'+event.title + '\n';    
         out_string += 'END:VEVENT\nEND:VCALENDAR';
