@@ -76,7 +76,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 url : '/app',
                 templateUrl : 'Static/app.html',
                 controller : 'appController'
-            
         })
             .state('app.home', {
                 url : '/home',

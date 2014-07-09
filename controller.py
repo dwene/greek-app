@@ -166,25 +166,24 @@ def json_dump(item):
     return json.dumps(item, cls=DateEncoder)
 
 
-def wait_for_replies(rpcs):
-    error = list()
-    sent = list()
-    for item in rpcs:
-        try:
-            result = item['rpc'].get_result()
-            text = result.content
-            contents = json.loads(result.content)
-            logging.error(contents)
-            for content in contents:
-                if content['status'] == 'error':
-                    error.append(item['user'])
-                    logging.error('Im being added to error list')
-                else:
-                    sent.append(item['user'])
-                    logging.error('Im being added to sent list')
-        except:
-            error.append(item['user'])
-    return {'errors': error, 'sent': sent}
+# def wait_for_replies(rpcs):
+#     error = list()
+#     sent = list()
+#     for item in rpcs:
+#         try:
+#             result = item['rpc'].get_result()
+#             contents = json.loads(result.content)
+#             logging.error(contents)
+#             for content in contents:
+#                 if content['status'] == 'error':
+#                     error.append(item['user'])
+#                     logging.error('Im being added to error list')
+#                 else:
+#                     sent.append(item['user'])
+#                     logging.error('Im being added to sent list')
+#         except:
+#             error.append(item['user'])
+#     return {'errors': error, 'sent': sent}
 
 
 # Use a helper function to define the scope of the callback.
@@ -795,6 +794,7 @@ class RESTApi(remote.Service):
         del user_dict["new_notifications"]
         del user_dict["hidden_notifications"]
         del user_dict["events"]
+        user_dict["dob"] = request_user.dob.strftime("%m/%d/%Y")
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
         else:
@@ -921,6 +921,8 @@ class RESTApi(remote.Service):
                 user.occupation = value
             elif key == "employer":
                 user.employer = value
+            elif key == "daily_notifications":
+                user.daily_notifications = bool(value)
         user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -1203,7 +1205,7 @@ class RESTApi(remote.Service):
         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
-                                                         'perms_tags': perm_tags_list,}))
+                                                         'perms_tags': perm_tags_list}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')
@@ -1480,15 +1482,15 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if len(request_user.tags) > 0:
             events = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                     ndb.OR(Event.org_tags.IN(request_user.tags),
-                                            Event.perms_tags == request_user.perms,
-                                            Event.perms_tags == 'everyone',
-                                            Event.going == request_user.key))).order(-Event.time_start).fetch(30)
+                                 ndb.OR(Event.org_tags.IN(request_user.tags),
+                                        Event.perms_tags == request_user.perms,
+                                        Event.perms_tags == 'everyone',
+                                        Event.going == request_user.key))).order(-Event.time_start).fetch(30)
         else:
             events = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                     ndb.OR(Event.perms_tags == request_user.perms,
-                                            Event.perms_tags == 'everyone',
-                                            Event.going == request_user.key))).order(-Event.time_start).fetch(30)
+                                 ndb.OR(Event.perms_tags == request_user.perms,
+                                        Event.perms_tags == 'everyone',
+                                        Event.going == request_user.key))).order(-Event.time_start).fetch(30)
         out_events = list()
         for event in events:
             dict_event = event.to_dict()
@@ -1759,9 +1761,6 @@ class RESTApi(remote.Service):
     #             answer_list = list()
     #             for response in responses:
     #     # responses_future = Response.query(Response.question in poll.questions).fetch()
-
-
-
 
 
 APPLICATION = endpoints.api_server([RESTApi])

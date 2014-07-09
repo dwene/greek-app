@@ -51,6 +51,7 @@ class User(ndb.Model):
     sent_notifications = ndb.KeyProperty(repeated=True)
     events = ndb.KeyProperty(repeated=True)
     recently_used_tags = ndb.StringProperty(repeated=True)
+    daily_notifications = ndb.BooleanProperty(default=True)
 
 
 class Notification(ndb.Model):

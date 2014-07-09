@@ -36,6 +36,10 @@ handlers:
   script: main.app
   secure: always
 
+- url: /sendtestemail
+  script: main.app
+  secure: always
+
 - url: /morningtasks
   script: main.app
   secure: always

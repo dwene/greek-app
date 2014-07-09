@@ -15,7 +15,10 @@
 </div>
 
 <a ng-href="/#/app/uploadprofilepicture" class="btn btn-default">Change Profile Picture</a>
-
+<select class="form-control"  ng-model="item.daily_notifications" ng-show="!checkAlumni()">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
 <!--
 <hr>
 

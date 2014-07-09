@@ -246,6 +246,52 @@ class SendEmails(webapp2.RequestHandler):
             future.get_result()
 
 
+class SendTestEmail(webapp2.RequestHandler):
+    def get(self):
+        users = User.query(User.daily_notifications == True).fetch()
+        for user in users:
+            notification_keys = user.notifications + user.new_notifications + user.hidden_notifications
+            now = datetime.datetime.now()
+            notifications = Notification.query(ndb.AND(Notification.timestamp > now + datetime.timedelta(days=-1),
+                                                       Notification.key.IN(notification_keys))).fetch()
+            to_send = dict()
+            email_out = [{'email': user.email, 'type': 'to'}]
+            to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
+            message = dict()
+            message["subject"] = 'Daily Notifications Update: ' + datetime.date.today().strftime('%A %B %m %Y')
+            message["from_email"] = 'support@netegreek.com'
+            message["from_name"] = 'NeteGreek'
+            message["to"] = email_out
+            out_string = "<html><head></head><body> <h1> Notifications for "
+            out_string += datetime.date.today().strftime('%A %B %m %Y') + "<hr></h1>"
+            for notification in notifications:
+                out_string += "<h3>" + notification.title + "</h3>"
+                out_string += "<p>" + notification.content.replace('\n', '<br />') + "</p>"
+                out_string += "<p><em>From: " + notification.sender_name + "</em></p><hr/>"
+            out_string += "</body></html>"
+            message["html"] = out_string
+            to_send["message"] = message
+            json_data = json.dumps(to_send)
+            result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0/messages/send.json',
+                                    payload=json_data,
+                                    method=urlfetch.POST,
+                                    headers={'Content-Type': 'application/json'})
+        return
+    # message["html"] = """
+            # <p>Dear Albert:</p>
+            #
+            # <p>Your example.com account has been approved.  You can now visit
+            # http://www.example.com/ and sign in using your Google Account to
+            # access new features.</p>
+            #
+            # <p>Please let us know if you have any questions.</p>
+            #
+            # <p>The example.com Team</p>
+            # <img src ="http://thumbs.dreamstime.com/x/emoticon-smiley-face-6800093.jpg" height="150">
+            # </body></html>
+            #  """
+
+
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
@@ -256,6 +302,7 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/upload', UploadHandler),
     ('/sendemails', SendEmails),
+    ('/sendtestemail', SendTestEmail),
     ('/morningtasks', MorningTasks)
 
 ], debug=True)
