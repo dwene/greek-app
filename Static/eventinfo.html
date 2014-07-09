@@ -5,8 +5,9 @@
 	
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron">
-		<button ng-click="saveEvent()" class="btn btn-info topRight" style="position:relative"><i class="fa fa-floppy-o"></i> Save Event</button>	
+			
 <a ng-href="#/app/events" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
+ <button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Event</button>
 <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-edit"></i> Edit</button>
 <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft"><i class="fa fa-edit"></i>Report</button>
 <a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomRight" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
@@ -31,6 +32,8 @@
     <p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
     <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p>
     <p>Desciption: {{event.description}}</p>
+    <p>Location: {{event.location}}</p>
+    <p ng-show="event.address">{{event.address}}</p>
 
     
     <h3 class="page-header">Going</h3>
