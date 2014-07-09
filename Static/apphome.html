@@ -31,14 +31,29 @@
         
         
     </section>
-    <hr>
+
     <section id="notifications">
 
-    <button id="showHiddenButton" class="btn btn-default btn-sm" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Hidden</button>
+        <ul>
+            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.collapseOut}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
+            
+                <div class="notificationContent">
+                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();"><i class="fa fa-times-circle"></i></button>
+                <span class="notificationTitle">{{notify.title}}</span>
+<!--                #TODO add more content to the notifications-->
+<!--                <span class="notificationPreview">{{notification.preview}}</span>-->
+<!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
+                <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
+                </div>
+            </li>
+        </ul>
+        
+            <p ng-show="!$root.notifications.length">There are no new notifications!</p>
+        
+    <button id="showHiddenButton" class="btn btn-default btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Hidden</button>
 
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
-        <hr>
        
         <ul>
             <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.hidden_notifications | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber">
@@ -59,24 +74,7 @@
             <button class="next btn btn-default btn-sm" ng-disabled="currentPage >= $root.hidden_notifications.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1">Older &rarr;</button>
             </div>
             
-        <hr>
     </section>
-
-        <ul>  <!--ng-class="{ new : notify.new }"-->
-            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.collapseOut}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
-            
-                <div class="notificationContent">
-                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();"><i class="fa fa-times-circle"></i></button>
-                <span class="notificationTitle">{{notify.title}}</span>
-<!--                #TODO add more content to the notifications-->
-<!--                <span class="notificationPreview">{{notification.preview}}</span>-->
-<!--                <span class="notificationType" ng-show="notify.new">NEW</span>-->
-                <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
-                </div>
-            </li>
-        </ul>
-        
-            <p ng-show="!$root.notifications.length">There are no new notifications!</p>
         
     </section>
 </div>
