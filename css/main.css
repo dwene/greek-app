@@ -145,6 +145,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
 #statusContainer .close{margin-top:-3px;}
 .currentStatus{font-style:italic;}
+#statusContainer h2{margin-top:0px;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
