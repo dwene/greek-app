@@ -10,24 +10,6 @@
 <div class="container">
     
 <selecting-users ng-model="tags"></selecting-users>
-    
-<!--
-    <ul id="eventTags">
-       <div ng-repeat="type in tags">
-        <div class="btn-group" ng-repeat="tag in type">
-            <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
-            <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
-            <input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>
-            </label>
-        </div>
-        </div>
-    </ul>
-
-    <div id="selectedList" class="well">
-        <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ( $root.directory.members | tagDirectorySearch:tags )">{{member.first_name}} {{member.last_name}}</span>
-        <span ng-hide="selectedMembers.length">No one is selected.</span>
-    </div>
--->
 
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
