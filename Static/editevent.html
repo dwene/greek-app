@@ -10,6 +10,7 @@
 		</div>
 
 
+<!--
     <ul id="eventTags">
        <div ng-repeat = "type in tags">
         <div class="btn-group" ng-repeat="tag in type">
@@ -25,8 +26,9 @@
         <span class="messagePerson label label-primary"  ng-repeat="member in selectedMembers = ($root.directory.members | tagDirectorySearch:tags)">{{member.first_name}} {{member.last_name}}</span>
         <span ng-hide="selectedMembers.length">No one is selected.</span>
     </div>
+-->
     
-    <selecting-users></selecting-users>
+    <selecting-users ng-model="tags"></selecting-users>
     
 <!--    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>-->
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
