@@ -19,6 +19,14 @@ body.modal-open{margin-right:0px;}
 .bottomRight{position:absolute; right:20px; bottom:10px;}
 .container{position:relative;}
 
+/*Maps*/
+
+map, div[map] {
+display: block;
+width: 600px;
+height: 400px;
+}
+
     /*Dropdown Menu*/
 
 .dropdown-toggle{-ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
