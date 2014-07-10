@@ -7,7 +7,7 @@
 		<div class="jumbotron">
 			
 <a ng-href="#/app/events" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
-<a ng-href="https://www.google.com/maps/place/{{mapEvent()}}" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Map Event</a>
+
  <button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Event</button>
 <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft"><i class="fa fa-edit"></i>Report</button>
 <a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft2" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
@@ -34,7 +34,7 @@
     <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p>
     <p>Desciption: {{event.description}}</p>
     <p>Location: {{event.location}}</p>
-    <p ng-show="event.address">Address: {{event.address}}</p>
+    <p ng-show="event.address"><a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">Address: {{event.address}}</a></p>
 
     
     <h3 class="page-header">Going</h3>

@@ -2126,7 +2126,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.mapEvent = function(){
-            return $scope.event.address.split(' ').join('+');
+            if ($scope.event.address){
+                return $scope.event.address.split(' ').join('+');
+            }
+            return " ";
         }
         Load.then(function(){
         $scope.tags = $rootScope.tags;
@@ -2203,6 +2206,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.creator = getUsersFromKey(event.creator);
             $scope.event = event;
+            if ($scope.event.address){
+                $scope.address_html = $scope.event.address.split(' ').join('+');
+            }
             $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
             $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             $scope.loading = false;
@@ -2513,7 +2519,8 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     doc.setFontSize(15);
                     doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
                     doc.setFontSize(10);
-                    if (users[i].attendatnce_data){
+                    if (users[i].attendance_data){
+                        console.log(users[i].attendance_data);
                         if (users[i].attendance_data.time_in){
                         doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
                         }
