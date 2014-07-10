@@ -17,7 +17,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload']);
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete']);
 App.config(function($stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise("/")
@@ -2253,7 +2253,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
 	   });
-    
+        
         $scope.openDeleteEventModal = function(){
             $('#deleteEventModal').modal();
         }
