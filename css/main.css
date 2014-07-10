@@ -15,6 +15,7 @@ body.modal-open{margin-right:0px;}
 .topLeft{position:absolute; left:20px; top:10px;}
 .topRight{position:absolute; right:20px; top:10px;}
 .bottomLeft{position: absolute; left:20px; bottom:10px;}
+.bottomLeft2{position:absolute; left:120px; bottom:10px;}
 .bottomRight{position:absolute; right:20px; bottom:10px;}
 .container{position:relative;}
 
@@ -166,7 +167,6 @@ textarea.form-control{height:auto; max-width:100%;}
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
 #showHidden{position:relative; width:100%; overflow:hidden;}
-#showHiddenButton{margin-top:5px;}
 .pagerButtons{margin-top:20px;}
 .pagerButtons .previous{margin-left:20px;}
 .pagerButtons .next{float:right; margin-right:20px;}

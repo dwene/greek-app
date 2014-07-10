@@ -9,9 +9,9 @@
 <a ng-href="#/app/events" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
 <a ng-href="https://www.google.com/maps/place/{{mapEvent()}}" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Map Event</a>
  <button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Event</button>
-<button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-edit"></i> Edit</button>
 <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft"><i class="fa fa-edit"></i>Report</button>
-<a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomRight" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
+<a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft2" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
+<button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomRight"><i class="fa fa-edit"></i> Edit</button>
 
 			<h1 class="text-center">{{event.title}}</h1>
 			<p class="text-center">#{{event.tag}}</p>
