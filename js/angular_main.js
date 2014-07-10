@@ -577,7 +577,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.clearStatus = function(){
             var status = "";
-            var to_send = {'status': status};
+            $scope.status = "";
+            var to_send = {status: status};
             $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -2104,27 +2105,29 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign("#/app/events/" + $stateParams.tag + "/report");
         }
         $scope.saveEvent = function(){
-          /*BEGIN:VCALENDAR
-            VERSION:2.0
-            BEGIN:VEVENT
-            DTEND;TZID=America/Chicago:20140709T110000
-            SUMMARY:Test Event
-            DTSTART;TZID=America/Chicago:20140709T100000
-            DESCRIPTION:This is the description!
-            END:VEVENT
-            END:VCALENDAR*/
-            
-            
-        var event = $scope.event;
-        var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
-        out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
-        out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
-        out_string += 'DESCRIPTION:'+event.description + '\n';
-        out_string += 'SUMMARY:'+event.title + '\n';    
-        out_string += 'END:VEVENT\nEND:VCALENDAR';
-        var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "event.ics");
-    }
+              /*BEGIN:VCALENDAR
+                VERSION:2.0
+                BEGIN:VEVENT
+                DTEND;TZID=America/Chicago:20140709T110000
+                SUMMARY:Test Event
+                DTSTART;TZID=America/Chicago:20140709T100000
+                DESCRIPTION:This is the description!
+                END:VEVENT
+                END:VCALENDAR*/
+            var event = $scope.event;
+            var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
+            out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
+            out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
+            out_string += 'DESCRIPTION:'+event.description + '\n';
+            out_string += 'SUMMARY:'+event.title + '\n';    
+            out_string += 'END:VEVENT\nEND:VCALENDAR';
+            var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, "event.ics");
+        }
+        
+        $scope.mapEvent = function(){
+            return $scope.event.address.split(' ').join('+');
+        }
         Load.then(function(){
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
