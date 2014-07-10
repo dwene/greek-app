@@ -2406,7 +2406,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.eventNotFound = true;
             });
         }
-        $scope.checkIn = function(member, checkStatus){ //#TODO: fix controller so we can check in more than once
+        $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
             if(checkStatus && member.attendance_data && member.attendance_data.time_in){
                 $('#checkInModal').modal();
                 $scope.selectedUser = member;
@@ -2414,6 +2414,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $('#checkInModal').modal('hide');
             var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+            if (clear){
+                to_send.clear = true;
+            }
             $http.post('/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
@@ -2427,7 +2430,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log('Error: ' + data);
             });
         }
-        $scope.checkOut = function(member, checkStatus){
+        $scope.checkOut = function(member, checkStatus, clear){
             if(checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in){
                 $('#checkOutModal').modal();
                 $scope.selectedUser = member;
@@ -2435,6 +2438,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $('#checkOutModal').modal('hide');
             var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+            if (clear){
+                to_send.clear = true;
+            }
             $http.post('/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){

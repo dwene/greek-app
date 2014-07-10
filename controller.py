@@ -1602,8 +1602,16 @@ class RESTApi(remote.Service):
         event_key = Event.query(Event.tag == data["event_tag"]).get().key
         att_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key,
                                                 AttendanceData.user == user_key)).get()
+        if "clear" in data:
+            if data["clear"] is True and att_data:
+                att_data.time_in = None
+                att_data.put()
+                return OutgoingMessage(error='', data='OK')
+            elif data["clear"] is True and not att_data:
+                return OutgoingMessage(error='', data='OK')
         if att_data:
             att_data.time_in = datetime.datetime.now()
+            att_data.put()
             return OutgoingMessage(error='', data='OK')  # They are already checked in
         else:
             att_data = AttendanceData()
@@ -1628,6 +1636,13 @@ class RESTApi(remote.Service):
         event_key = Event.query(Event.tag == data["event_tag"]).get().key
         att_data = AttendanceData.query(ndb.AND(AttendanceData.event == event_key,
                                                 AttendanceData.user == user_key)).get()
+        if "clear" in data:
+            if data["clear"] is True and att_data:
+                att_data.time_out = None
+                att_data.put()
+                return OutgoingMessage(error='', data='OK')
+            elif data["clear"] is True and not att_data:
+                return OutgoingMessage(error='', data='OK')
         if att_data:
             att_data.time_out = datetime.datetime.now()
             att_data.put()
