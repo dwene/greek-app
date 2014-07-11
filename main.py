@@ -33,10 +33,10 @@ import webapp2
 
 
 def send_mandrill_email(from_email, to_email, subject, body):
-    to_send = {}
+    to_send = dict()
     email_out = [{'email': to_email, 'type': 'to'}]
     to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
-    message = {}
+    message = dict()
     message["text"] = body
     message["subject"] = subject
     message["from_email"] = from_email
@@ -248,7 +248,7 @@ class SendEmails(webapp2.RequestHandler):
 
 class SendDailyNotificationsEmails(webapp2.RequestHandler):
     def get(self):
-        users = User.query(User.daily_notifications == True).fetch()
+        users = User.query(User.email_prefs == 'daily').fetch()
         for user in users:
             notification_keys = user.notifications + user.new_notifications + user.hidden_notifications
             now = datetime.datetime.now()

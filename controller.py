@@ -921,8 +921,8 @@ class RESTApi(remote.Service):
                 user.occupation = value
             elif key == "employer":
                 user.employer = value
-            elif key == "daily_notifications":
-                user.daily_notifications = bool(value)
+            elif key == "email_prefs":
+                user.email_prefs = value
         user.put()
         return OutgoingMessage(error='', data='OK')
 

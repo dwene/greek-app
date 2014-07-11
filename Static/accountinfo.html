@@ -15,10 +15,20 @@
 </div>
 
 <a ng-href="/#/app/uploadprofilepicture" class="btn btn-default">Change Profile Picture</a>
-<select class="form-control"  ng-model="item.daily_notifications" ng-show="!checkAlumni()">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-        </select>
+<button id="showHiddenButton" class="btn btn-default btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Settings</button>
+
+    <section id="showHidden" class="collapse">
+<!--       #TODO replace this with repeat for hidden notificaitons-->
+
+<label>Email Preferences: </label>
+<div class="btn-group">
+      <button type="button" ng-click="item.email_prefs = 'none'" ng-class = "{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
+      <button type="button" ng-click="item.email_prefs = 'daily'" ng-class = "{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
+      <button type="button" ng-click="item.email_prefs = 'notification'" ng-class = "{'btn-primary' : item.email_prefs === 'notification'}" class="btn btn-default">Notification</button>
+</div>  
+     <a ng-href="#/app/changepassword" class="btn btn-default" style="float:right">Change Password</a>       
+    </section>
+
 <!--
 <hr>
 
@@ -28,7 +38,7 @@
 <hr>
 -->
 
-<a ng-href="#/app/changepassword" class="btn btn-default">Change Password</a>
+
 
 <hr>
 
