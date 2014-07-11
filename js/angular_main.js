@@ -2212,6 +2212,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
             $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             $scope.loading = false;
+            
+            setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800);
+            
         }
         $scope.editEvent = function(){
             window.location.assign('#/app/events/'+$stateParams.tag+'/edit');

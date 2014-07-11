@@ -472,6 +472,7 @@ ngMap.directives.infoWindow.$inject = ['Attr2Options'];
  *   <div map center="[40.74, -74.18]" on-click="doThat()">
  *   </div>
  */
+
 ngMap.directives.map = function(Attr2Options, $parse, NavigatorGeolocation, GeoCoder, $compile) {
   var parser = Attr2Options;
 
@@ -498,6 +499,9 @@ ngMap.directives.map = function(Attr2Options, $parse, NavigatorGeolocation, GeoC
       el.style.height = "100%";
       element.prepend(el);
       scope.map = new google.maps.Map(el, {});
+//    google.maps.event.addListenerOnce(scope.map, 'idle', function() {
+//        google.maps.event.trigger(scope.map, 'resize');
+//    });
       console.log('scope.map', scope.map);
 
       /**
@@ -557,7 +561,7 @@ ngMap.directives.map.$inject = ['Attr2Options', '$parse', 'NavigatorGeolocation'
  * @property {Hash} infoWindows collection of InfoWindows initiated within `map` directive
  * @property {MarkerClusterer} markerClusterer MarkerClusterer initiated within `map` directive
  */
-ngMap.directives.MapController = function($scope) { 
+ngMap.directives.MapController = function($scope, $timeout, $watch) { 
 
   this.controls = {};
   this.markers = [];
@@ -583,7 +587,8 @@ ngMap.directives.MapController = function($scope) {
         google.maps.event.addListener($scope.map, eventName, events[eventName]);
       }
     }
-    $scope.$emit('mapInitialized', $scope.map);  
+    $scope.$emit('mapInitialized', $scope.map); 
+    google.maps.event.trigger($scope.map, 'resize');
   };
 
   /**
@@ -665,8 +670,20 @@ ngMap.directives.MapController = function($scope) {
     }
     return $scope.markerClusterer;
   };
+//    This is for fixing the load problem 
+  this.addMapListenerOnce = function(event, handler) {
+    google.maps.event.addListenerOnce(this._map, event, handler);
+  };
+    $timeout(function() {
+    // still need this.
+    google.maps.event.trigger($scope.map, 'resize'); 
+        console.log('resizing here in timeout')
+    }, 2000);
+//    $scope.$watch('position', function() {
+//       google.maps.event.trigger($scope.map, 'resize'); 
+//   });
 };
-ngMap.directives.MapController.$inject = ['$scope'];
+ngMap.directives.MapController.$inject = ['$scope', '$timeout'];
 
 /**
  * @ngdoc directive
