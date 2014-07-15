@@ -62,3 +62,8 @@ libraries:
 - name: pycrypto
   version: latest
 
+- name: PIL
+  version: latest
+
+
+

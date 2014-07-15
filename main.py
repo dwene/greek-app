@@ -21,6 +21,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.api import images, files
 from ndbdatastore import *
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
@@ -30,6 +31,7 @@ import logging
 import datetime
 import jinja2
 import webapp2
+import base64, re
 
 
 def send_mandrill_email(from_email, to_email, subject, body):
@@ -209,10 +211,50 @@ class ProfilePictureHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        upload_files = self.get_uploads('file') # 'file' is file upload field in the form
         user_name = self.request.get('user_name')
+        token = self.request.get('token')
+        user = get_user(user_name, token)
+        if not user:
+            self.redirect('/#/login')
+
+        # data_to_64 = re.search(r'base64,(.*)', data).group(1)
+        # decoded = data_to_64.decode('base64')
+        #
+        # # Create the file
+        # file_name = files.blobstore.create(mime_type='image/png')
+        #
+        # # Open the file and write to it
+        # with files.open(file_name, 'a') as f:
+        #     f.write(decoded)
+        #
+        # # Finalize the file. Do this before attempting to read it.
+        # files.finalize(file_name)
+        # key = files.blobstore.get_blob_key(file_name)
+        # self.redirect('/?key=%s#/app/postNewKeyPictureLink' % key)
+        upload_files = self.get_uploads('file') # 'file' is file upload field in the form
+        crop_data = json.loads(self.request.get('crop_data'))
         blob_info = upload_files[0]
-        self.redirect('/?key=%s#/app/postNewKeyPictureLink' % blob_info.key())
+        blob_key = blob_info.key()
+        if blob_key:
+            blob_info = blobstore.get(blob_key)
+
+            if blob_info:
+                img = images.Image(blob_key=blob_key)
+                img.crop(left_x=float(crop_data['x'])/float(crop_data['bx']),
+                         right_x=float(crop_data['x2'])/float(crop_data['bx']),
+                         top_y=float(crop_data['y'])/float(crop_data['by']),
+                         bottom_y=float(crop_data['y2'])/float(crop_data['by']))
+                thumbnail = img.execute_transforms(output_encoding=images.PNG)
+                file_name = files.blobstore.create(mime_type='image/png')
+                with files.open(file_name, 'a') as f:
+                    f.write(thumbnail)
+                files.finalize(file_name)
+                blobstore.delete(blob_key)
+                blobstore.delete(user.prof_pic)
+                user.prof_pic = files.blobstore.get_blob_key(file_name)
+                user.put()
+                self.redirect('/#/app/accountinfo')
+                return
 
 
 class MorningTasks(webapp2.RequestHandler):

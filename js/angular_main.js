@@ -17,7 +17,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'ngMap']);
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'ngMap', 'aj.crop']);
 App.config(function($stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise("/")
@@ -1243,7 +1243,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
-        
+            $scope.user_name = $.cookie(USER_NAME);
+            $scope.token = $.cookie(TOKEN);
+//        $scope.getUser = function(){
+//            console.log('Hey I got the username');
+//            return $.cookie(USER_NAME);
+//        }
+//        $scope.getToken = function(){
+//            return $.cookie(TOKEN);
+//        } 
 
         
         //initialize profile image variable

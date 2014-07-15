@@ -1,26 +1,38 @@
-<div class="container">  
+<div class="container" ng-controller="ProfilePicCtrl as P">  
 
 
-<form action="/upload" method="post" enctype="multipart/form-data"  id="profilePic">
+<!--    <input type="file" accept="image/*" capture="camera" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file" class="ng-scope ng-isolate-scope">-->
     
-    <input type="file" name="file" accept="image/*" image="image2" value="upload"
+<!--
     resize-max-height="640"
     resize-max-width="640"
-    resize-quality="0.7" />
-
+    resize-quality="0.7" 
+-->
+   <img-cropped src="imageSrc" selected="selected(cords)"></img-cropped>
+    <div id="cropped-image" ng-show="cropped" ng-style="{ width: P.picWidth + 'px', height: P.picHeight + 'px', overflow: 'hidden' }">
+    
+    <img id="preview" ng-src="{{ P.imageSrc }}">
+    </div>
+        <form action="/upload" method="post" enctype="multipart/form-data"  id="profilePic">
+        <input type="file" name="file" accept="image/*" value="upload" capture="camera" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
+<!--        <input name="file" accept="image/*" ng-model="P.imageSrc" style="display: none;">-->
+        <input name="user_name" ng-model="user_name" style="display: none;">
+        <input name="token" ng-model="token" style="display: none;">
+        <input name="crop_data" ng-model="P.cropData" style="display: none;">
+            {{P.cropData}}
+        <hr>
+    <!--
+    Original<br><img ng-show="image2" ng-src="{{image2.dataURL}}" type="{{image2.file.type}}">
     <hr>
-    <input type="hidden" name="user_name" ng-value="getUser()">
-Original<br><img ng-show="image2" ng-src="{{image2.dataURL}}" type="{{image2.file.type}}">
-<hr>
-Resized<br><img ng-show="image2" ng-src="{{image2.resized.dataURL}}">
-<hr>
-
-    <input type="submit" name="submit" value="Upload" class="btn btn-default">
-
-</form>
-
+    Resized<br><img ng-show="image2" ng-src="{{image2.resized.dataURL}}">
+    <hr>
+    -->
+    <!--    <div class="canvas-preview"></div>-->
+       <input type="submit" name="submit" value="Upload" class="btn btn-default">
+       </form>
+    
+    
 </div>
-
 <!--
 <form action="/upload" method="POST" enctype="multipart/form-data" id="profilePic">
         Upload File: <input type="file" name="file" accept="image/*"><br>

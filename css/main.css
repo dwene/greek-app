@@ -418,3 +418,10 @@ animation: flipOutX .5;
 #rtl-support .tt-dropdown-menu {
   text-align: right;
 }
+
+/*Angular Picture Cropping*/
+div#cropped-image {
+  height: 150px;
+  width: 150px;
+  overflow: hidden;
+}

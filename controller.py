@@ -794,7 +794,8 @@ class RESTApi(remote.Service):
         del user_dict["new_notifications"]
         del user_dict["hidden_notifications"]
         del user_dict["events"]
-        user_dict["dob"] = request_user.dob.strftime("%m/%d/%Y")
+        if user_dict["dob"]:
+            user_dict["dob"] = request_user.dob.strftime("%m/%d/%Y")
         if not user_dict["user_name"]:
             user_dict["has_registered"] = True
         else:
