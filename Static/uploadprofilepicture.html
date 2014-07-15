@@ -14,7 +14,7 @@
     <img id="preview" ng-src="{{ P.imageSrc }}">
     </div>
         <form action="/upload" method="post" enctype="multipart/form-data"  id="profilePic">
-        <input type="file" name="file" accept="image/*" value="upload" capture="camera" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
+        <input type="file" name="file" accept="image/*" value="upload" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
 <!--        <input name="file" accept="image/*" ng-model="P.imageSrc" style="display: none;">-->
         <input name="user_name" ng-model="user_name" style="display: none;">
         <input name="token" ng-model="token" style="display: none;">
