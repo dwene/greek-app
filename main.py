@@ -216,21 +216,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         user = get_user(user_name, token)
         if not user:
             self.redirect('/#/login')
-
-        # data_to_64 = re.search(r'base64,(.*)', data).group(1)
-        # decoded = data_to_64.decode('base64')
-        #
-        # # Create the file
-        # file_name = files.blobstore.create(mime_type='image/png')
-        #
-        # # Open the file and write to it
-        # with files.open(file_name, 'a') as f:
-        #     f.write(decoded)
-        #
-        # # Finalize the file. Do this before attempting to read it.
-        # files.finalize(file_name)
-        # key = files.blobstore.get_blob_key(file_name)
-        # self.redirect('/?key=%s#/app/postNewKeyPictureLink' % key)
         upload_files = self.get_uploads('file') # 'file' is file upload field in the form
         crop_data = json.loads(self.request.get('crop_data'))
         blob_info = upload_files[0]

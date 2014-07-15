@@ -134,6 +134,7 @@ class Response(ndb.Model):
     answer = ndb.StringProperty(repeated=True)
     timestamp = ndb.DateTimeProperty()
     question = ndb.KeyProperty()
+    poll = ndb.KeyProperty()
 
 
 class CronEmail(ndb.Model):

@@ -130,6 +130,8 @@ angular.module('App')
       console.log('getFile() called.');
       console.log(scope.ajModel);
       console.log(scope.file);
+        scope.cropData = false;
+        $scope.cropped = false;
       $scope.progress = 0;
       fileReader.readAsDataUrl(scope.file.file, $scope).then(function (result) {
         console.log('readAsDataUrl: result.length === ', result.length);
@@ -202,14 +204,11 @@ angular.module('App')
         , imageObj = $window.jQuery('img#preview')[0]
         ;
 
-
       $window.jQuery('.canvas-preview').children().remove();
       canvas.width = cords.w;
       canvas.height = cords.h;
       context.drawImage(imageObj, cords.x, cords.y, cords.w, cords.h, 0, 0, cords.w, cords.h);
       $window.jQuery('.canvas-preview').append(canvas);
-      console.log(imageObj);
-
 
       $window.jQuery('img#preview').css({
         width: Math.round(rx * cords.bx) + 'px',
