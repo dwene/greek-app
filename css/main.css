@@ -1,22 +1,28 @@
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}#top{width: 100%; height:500px;}
-
+html{display:none;}
 /*Page Styles*/
 body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -webkit-font-smoothing:antialiased;}
 body.modal-open{margin-right:0px;}
 
 /*Navigation Styles*/
 
-    /*Color*/
-    .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {color:white !important; transition:background linear .3s;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover{background:#551A8B;}
-        .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
-    .navbar {background:purple; border:0px;}
-    .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus{background-color:#551A8B !important;}
-    .navbar-default .navbar-brand:hover .badge{background:purple !important; }
+    /*Colors*/
+    .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
+    .navbar{border:0px;}
+    
+    /*Color Options*/
+        .purple .navbar, .purple .navbar-default .navbar-brand:hover .badge {background:purple !important;}
+        .purple .navbar-default .navbar-brand:hover, .purple .navbar-default .navbar-nav>li>a:hover, .purple .navbar .badge, .purple .navbar-default .navbar-nav>.open>a, .purple .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .purple .navbar-default .navbar-toggle:hover, .purple .navbar-default .navbar-toggle:focus{background:#551A8B;}
+    
+    /*Dark Theme Color*/
+    .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
+    .dark .navbar-default .navbar-brand, .dark .navbar-default .navbar-nav>li>a, .dark .navbar-default .navbar-brand .badge, .dark #refreshNotifications{color:white !important; transition:background linear .3s;}
     @media screen and (max-width:768px){
-        .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
+        .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
     }
+
+    
 
     /*Shape*/
     .navbar{border-radius:0px;
@@ -154,6 +160,10 @@ margin-top: 2px;}}
 #addTag button, #addTag input{display:inline-block;}
 
 #createTags{margin-top:10px;}
+
+.modal-title span{font-weight:bold !important;}
+#deleteTagModal{z-index:9999;}
+#renameTagModal{z-index:9999;}
 
 /*Member Management Page*/
 #manageMembers li{margin:4px;}

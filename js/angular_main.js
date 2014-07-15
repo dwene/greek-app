@@ -216,6 +216,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.tags = {};
         $rootScope.updatingNotifications = false;
         
+        //set color theme
+        $rootScope.purple = true;
+        $rootScope.dark = true;
+        
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
@@ -267,6 +271,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.notification_count = count;
         }
         $rootScope.showNav = true;
+        $("html").show();
     });
 
 //navigation header
@@ -1699,7 +1704,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.removeOrganizationTag = function(){
-            $('#deleteTagModal').modal('hide')
+            $('#deleteTagModal').modal('hide');
+            $('#seeallTags').modal();
             $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({tag: $scope.modaledTag.name}))
                 .success(function(data){
                     if(checkResponseErrors(data)){openErrorModal(data.error)}
@@ -1725,6 +1731,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.renameOrganizationTag = function(new_tag, isValid){
+            
             if(isValid){
                 $('#renameTagModal').modal('hide')
                 $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({old_tag: $scope.modaledTag.name, new_tag: new_tag}))
@@ -1764,11 +1771,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.openRenameTagModal = function(tag){
             $('#renameTagModal').modal();
             $scope.modaledTag = tag;
+            $('#seeallTags').modal('hide')
         }
         
         $scope.openDeleteTagModal = function(tag){
             $('#deleteTagModal').modal();
             $scope.modaledTag = tag;
+            $('#seeallTags').modal('hide');
         }
         
         function addTagsToUsers(tags, keys){
