@@ -94,7 +94,7 @@
                 </div>
                 <label ng-show="question.choices.length" class="col-sm-2 control-label">Choices</label>
                 <ul  ng-show="question.choices.length" class="col-sm-10" class="list-group">
-                    <li ng-repeat="choice in question.choices" class="list-group-item">{{ choice }} <button type="button" class="close" ng-click="removeOption()">×</button></li>
+                    <li ng-repeat="choice in question.choices" class="list-group-item">{{ choice }} <button type="button" class="close" ng-click="removeChoice(question, $index)">×</button></li>
                 </ul>
                 </div>
             </div>
