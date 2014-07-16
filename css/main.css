@@ -199,14 +199,19 @@ textarea.form-control{height:auto; max-width:100%;}
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
 #showHidden{position:relative; width:100%; overflow:hidden;}
+#showHiddenButton{margin-top:20px;}
 .pagerButtons{margin-top:20px;}
 .pagerButtons .previous{margin-left:20px;}
 .pagerButtons .next{float:right; margin-right:20px;}
 
 /*Events Page*/
 #newEventButton{margin-bottom:15px;}
+/*Event Info Page*/
+#goingForm .form-group{width: 260px; margin: 10px auto;}
 
-
+/*Account Info Page*/
+#changePasswordButton{margin:10px 0px 0px 0px;}
+#changeProfileButton{display:block; width:180px; margin:0px auto 20px auto;}
 
 /*target these only on the event page
 #events .date{width:240px; height:260px;}

@@ -16,9 +16,9 @@
 			<h1 class="text-center">{{event.title}}</h1>
 			<p class="text-center">#{{event.tag}}</p>
 
-        <form class="inline-form">
+        <form id="goingForm" class="inline-form" ng-hide="event.creator == $root.me.key">
         <div class="form-group">
-        <span ng-hide="event.creator == $root.me.key">Are you going?
+        <span>Are you going?
         <div class="btn-group btn-group-lg">
         <button class="btn" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
         <button class="btn"  ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>

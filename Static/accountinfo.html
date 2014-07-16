@@ -1,46 +1,21 @@
 <div class="container">
 
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>Account Info</h1>
-		</div>
+<section>
+    <h2 class="page-header">Settings</h2>
+    <label>Email Preferences: </label><br>
+    <div class="btn-group">
+          <button type="button" ng-click="item.email_prefs = 'none'" ng-class = "{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
+          <button type="button" ng-click="item.email_prefs = 'daily'" ng-class = "{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
+          <button type="button" ng-click="item.email_prefs = 'notification'" ng-class = "{'btn-primary' : item.email_prefs === 'notification'}" class="btn btn-default">All</button>
+    </div><br>
+    <a ng-href="#/app/changepassword" id="changePasswordButton" class="btn btn-default">Change Password</a>       
+</section>
 
-</div>
-
-
-<div class="container">
-
-<div class="profilepic" style="background-image:url({{item.prof_pic}});" >
-<!--<img ng-src="{{item.prof_pic}}">-->
-</div>
-
-<a ng-href="/#/app/uploadprofilepicture" class="btn btn-default">Change Profile Picture</a>
-<button id="showHiddenButton" class="btn btn-default btn-block" data-toggle="collapse" data-target="#showHidden">Show Settings</button>
-
-    <section id="showHidden" class="collapse">
-<!--       #TODO replace this with repeat for hidden notificaitons-->
-
-<label>Email Preferences: </label>
-<div class="btn-group">
-      <button type="button" ng-click="item.email_prefs = 'none'" ng-class = "{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
-      <button type="button" ng-click="item.email_prefs = 'daily'" ng-class = "{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
-      <button type="button" ng-click="item.email_prefs = 'notification'" ng-class = "{'btn-primary' : item.email_prefs === 'notification'}" class="btn btn-default">Notification</button>
-</div>  
-     <a ng-href="#/app/changepassword" class="btn btn-default" style="float:right">Change Password</a>       
-    </section>
-
-<!--
-<hr>
-
-<div class="row"> Username: {{userName}} </div>
-<div class="row"> Pledge Class: {{pledgeClass}} </div>
-
-<hr>
--->
-
-
-
-<hr>
+<section>
+    <h2 class="page-header">Account Info</h2>
+<div class="profilepic" style="background-image:url({{item.prof_pic}});" ></div>
+<a ng-href="/#/app/uploadprofilepicture" id="changeProfileButton" class="btn btn-default">Change Profile Picture</a>
+<!--<button id="showHiddenButton" class="btn btn-default btn-block" data-toggle="collapse" data-target="#showHidden">Show Settings</button>-->
 
 <form id="memberAccount" method="POST" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
@@ -475,9 +450,9 @@
     </div>
 
 
-    <button type="submit" class="btn btn-default pull-right">Submit</button>
+    <button type="submit" class="btn btn-default pull-right">Save Info</button>
     <p ng-show="updatedInfo">Account info updated!</p>
 </form>
- 
+</section>
     
 </div>

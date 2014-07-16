@@ -31,18 +31,22 @@
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
                             </form>
-                                                    
-                       <h2 class="page-header">ADD</h2>
+                        
+                        <p ng-hide="selectedTags.length || selectedUsers.length">Please select tags and members.</p>    
+                            
+                       <h2 class="page-header" ng-show="selectedTags.length">ADD</h2>
                               
                         <ul id="selectedTags">
                            <netetag-check ng-repeat="tag in selectedTags = (org_tags | checkedFilter)"></netetag-check>
                         </ul>
+                        <p ng-show="!selectedTags.length && selectedUsers.length">Please select tags.</p>
                         
-                        <h2 class="page-header">TO</h2>
+                        <h2 class="page-header" ng-show="selectedUsers.length">TO</h2>
                         
                         <ul>
                            <netetag-check ng-repeat="tag in selectedUsers = (users | checkedFilter)"></netetag-check>
                         </ul>
+                        <p ng-show="!selectedUsers.length && selectedTags.length">Please select members.</p>
                                                 
                         <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</button>
                     </div>
@@ -80,11 +84,8 @@
       </div>
     <form id="renameTagForm" name="renameTagForm" ng-submit="renameOrganizationTag(rename, renameTagForm.$valid)" novalidate>
       <div class="modal-body">
-            <div class="form-group" ng-class="{ 'has-error' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
-            <label for="rename" class="col-xs-2">New Tag Name</label>
-            <div class="col-xs-10">
-            <input type="text" name="rename" ng-model="rename" class="form-control" required>
-            </div>
+            <div ng-class="{ 'has-error' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
+            <input type="text" name="rename" ng-model="rename" class="form-control" placeholder="enter new tag name" required>
             <p ng-show="(renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)" class="help-block">Please enter a new tag name.</p>
             </div>
       </div>
