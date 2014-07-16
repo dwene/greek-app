@@ -2626,7 +2626,8 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
             $scope.poll.questions.splice(idx, 1);
         }
         $scope.addChoice = function(question, choice){
-            if (choice){
+            
+            if (choice && question.choices.indexOf(choice) == -1){
                 question.choices.push(choice);
             }
             question.temp_choice = undefined;
