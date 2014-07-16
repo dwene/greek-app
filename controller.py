@@ -1686,11 +1686,13 @@ class RESTApi(remote.Service):
         poll.name = data["name"]
         if 'description' in data:
             poll.description = data["description"]
-        poll.invited_tags = data["invited_tags"]
-        poll.results_tags = data["results_tags"]
+        poll.invited_org_tags = data["tags"]["org_tags"]
+        poll.invited_event_tags = data["tags"]["event_tags"]
+        poll.invited_perms_tags = data["tags"]["perms_tags"]
+        poll.results_tags = ['council']
         poll.organization = request_user.organization
-        poll.start_time = data["start_time"]
-        poll.end_time = data["end_time"]
+        # poll.time_start = datetime.datetime.strptime(data["time_start"], '%m/%d/%Y %I:%M %p')
+        # poll.time_end = datetime.datetime.strptime(data["time_end"], '%m/%d/%Y %I:%M %p')
         key = poll.put()
         async_list = list()
         for question in data["questions"]:
@@ -1701,7 +1703,7 @@ class RESTApi(remote.Service):
             q.type = question["type"]
             async_list.append(q.put_async())
         for item in async_list:
-            poll.questions.append(item.get_result().key)
+            poll.questions.append(item.get_result())
         poll.put()
         return OutgoingMessage(error='', data='OK')
 

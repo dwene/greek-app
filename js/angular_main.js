@@ -205,6 +205,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/subscriptioninfo.html',
                     controller : 'subscriptionInfoController'
                 })
+            .state('app.newPoll',{
+            //#TODO put this into each individual event :tag
+                url : '/newpoll',
+                templateUrl : 'Static/newpoll.html',
+                controller : 'newPollController'
+                })
+      
     });
 
 //Set up run commands for the app
@@ -2602,8 +2609,51 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
         });
   });
 
+
+    App.controller('newPollController', function($scope, $http, Load, $rootScope) {
+        $scope.poll = {}
+        $scope.poll.questions = [];
+        $scope.addQuestion = function(){
+            $scope.poll.questions.push({worded_question: '', type: '', choices: []});
+        }
+        $scope.removeQuestion = function(idx){
+            $scope.poll.questions.splice(idx, 1);
+        }
+        $scope.addChoice = function(question, choice){
+            if (choice){
+                question.choices.push(choice);
+            }
+            question.temp_choice = undefined;
+        }
+        $scope.createPoll = function(isValid){
+            var poll = $scope.poll;
+            poll.tags = getCheckedTags($scope.tags);
+            var to_send = JSON.parse(JSON.stringify(poll));
+//            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
+//            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
+            if (isValid){
+                $http.post('/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        window.location.assign('#/app/home');
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            }
+        }
+        Load.then(function(){
+            $scope.tags = $rootScope.tags;
+        });
+	});
+
+
     App.controller('subscriptionInfoController', function($scope, $http, Load, $rootScope) {
-        $scope.loading = true;
+//        $scope.loading = true;
         Load.then(function(){
             loadSubscriptionInfo();
             function loadSubscriptionInfo(){

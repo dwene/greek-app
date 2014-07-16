@@ -116,8 +116,7 @@ class Poll(ndb.Model):
     invited_org_tags = ndb.StringProperty(repeated=True)
     invited_perms_tags = ndb.StringProperty(repeated=True)
     invited_event_tags = ndb.StringProperty(repeated=True)
-    start_time = ndb.DateTimeProperty()
-    end_time = ndb.DateProperty()
+    open = ndb.BooleanProperty(default=True)
     allow_changes = ndb.BooleanProperty(default=True)
 
 
