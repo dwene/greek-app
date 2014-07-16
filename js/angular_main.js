@@ -199,11 +199,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl : 'Static/eventcheckinreport.html',
                     controller : 'eventCheckInReportController'
                 })
-            .state('app.subscriptionInfo',{
+            .state('app.admin',{
                 //#TODO put this into each individual event :tag
-                    url : '/subscriptioninfo',
-                    templateUrl : 'Static/subscriptioninfo.html',
-                    controller : 'subscriptionInfoController'
+                    url : '/admin',
+                    templateUrl : 'Static/admin.html',
+                    controller : 'adminController'
                 })
             .state('app.newPoll',{
             //#TODO put this into each individual event :tag
@@ -225,8 +225,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.updatingNotifications = false;
         
         //set color theme
-        $rootScope.purple = true;
-        $rootScope.dark = true;
+        $rootScope.color5 = true;
+        $rootScope.colorName = "";
         
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
@@ -1695,7 +1695,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             $rootScope.tags.org_tags.push(tag);
                         }
                         if ($scope.org_tags.indexOf(tag) == -1){
-                            $scope.org_tags.push({name:tag, checked:false});
+                            $scope.org_tags.push({name:tag, checked:true});
                         }
                     }
                     else
@@ -2651,8 +2651,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
         });
 	});
 
-
-    App.controller('subscriptionInfoController', function($scope, $http, Load, $rootScope) {
+    App.controller('adminController', function($scope, $http, Load, $rootScope) {
 //        $scope.loading = true;
         Load.then(function(){
             loadSubscriptionInfo();
@@ -2708,8 +2707,21 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 })
                 .error(function(data) {
                     console.log('Error: ' + JSON.stringify(data));
-                }); 
-            };  
+                });
+            };
+            
+            $scope.changeTheme = function(number){
+                var colorNumber = 'color'+number;
+                $scope.themeColor = colorNumber;
+                $rootScope.color = colorNumber;
+                if (number == 5){
+                $('body').addClass('dark');
+                }
+                else{
+                $('body').removeClass('dark');
+                }
+            }
+            
         });
 	});
 

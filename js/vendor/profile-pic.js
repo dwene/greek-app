@@ -178,16 +178,16 @@ angular.module('App')
       scope.picHeight = cords.h;
 
       console.log('scale');
-      if (scope.picWidth > 400) {
-        scale = (400 / scope.picWidth);
+      if (scope.picWidth > 300) {
+        scale = (300 / scope.picWidth);
         console.log(scope.picHeight);
         scope.picHeight *= scale;
         scope.picWidth *= scale;
         console.log(scale);
       }
 
-      if (scope.picHeight > 400) {
-        scale = (400 / scope.picHeight);
+      if (scope.picHeight > 300) {
+        scale = (300 / scope.picHeight);
         scope.picHeight *= scale;
         scope.picWidth *= scale;
         console.log(scale);

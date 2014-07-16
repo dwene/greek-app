@@ -2,11 +2,12 @@
 
 <section>
     <h2 class="page-header">Settings</h2>
-    <label>Email Preferences: </label><br>
+    
+    <span>Email Preferences: </span><br>
     <div class="btn-group">
-          <button type="button" ng-click="item.email_prefs = 'none'" ng-class = "{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
-          <button type="button" ng-click="item.email_prefs = 'daily'" ng-class = "{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
-          <button type="button" ng-click="item.email_prefs = 'notification'" ng-class = "{'btn-primary' : item.email_prefs === 'notification'}" class="btn btn-default">All</button>
+          <button type="button" ng-click="item.email_prefs = 'none'" ng-class="{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
+          <button type="button" ng-click="item.email_prefs = 'daily'" ng-class="{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
+          <button type="button" ng-click="item.email_prefs = 'notification'" ng-class="{'btn-primary' : item.email_prefs === 'notification'}" class="btn btn-default">All</button>
     </div><br>
     <a ng-href="#/app/changepassword" id="changePasswordButton" class="btn btn-default">Change Password</a>       
 </section>

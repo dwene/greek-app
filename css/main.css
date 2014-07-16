@@ -9,11 +9,11 @@ body.modal-open{margin-right:0px;}
 
     /*Colors*/
     .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
-    .navbar{border:0px;}
+    .navbar{border:0px; transition:background linear .3s;}
     
     /*Color Options*/
-        .purple .navbar, .purple .navbar-default .navbar-brand:hover .badge {background:purple !important;}
-        .purple .navbar-default .navbar-brand:hover, .purple .navbar-default .navbar-nav>li>a:hover, .purple .navbar .badge, .purple .navbar-default .navbar-nav>.open>a, .purple .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .purple .navbar-default .navbar-toggle:hover, .purple .navbar-default .navbar-toggle:focus{background:#551A8B;}
+        .color5 .navbar, .color5 .navbar-default .navbar-brand:hover .badge {background:purple !important;}
+        .color5 .navbar-default .navbar-brand:hover, .color5 .navbar-default .navbar-nav>li>a:hover, .color5 .navbar .badge, .color5 .navbar-default .navbar-nav>.open>a, .color5 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color5 .navbar-default .navbar-toggle:hover, .color5 .navbar-default .navbar-toggle:focus{background:#551A8B;}
     
     /*Dark Theme Color*/
     .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
@@ -181,7 +181,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
 #statusContainer .close{margin-top:-3px;}
 .currentStatus{font-style:italic;}
-#statusContainer h2{margin-top:0px;}
+#statusContainer h2{margin:0px 0px 10px 0px;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
@@ -213,18 +213,12 @@ textarea.form-control{height:auto; max-width:100%;}
 #changePasswordButton{margin:10px 0px 0px 0px;}
 #changeProfileButton{display:block; width:180px; margin:0px auto 20px auto;}
 
-/*target these only on the event page
-#events .date{width:240px; height:260px;}
-#events .date .input-group{position:absolute; bottom:14px; left:125px; width:150px;}
-.bootstrap-datetimepicker-widget.calendarpage{margin-top:-260px; -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.175); box-shadow: 0 1px 3px rgba(0,0,0,0.175);}
-.bootstrap-datetimepicker-widget.bottom.calendarpage:before, .bootstrap-datetimepicker-widget.bottom.calendarpage:after, .bootstrap-datetimepicker-widget.top.calendarpage:before, .bootstrap-datetimepicker-widget.top.calendarpage:after{display:none !important;} 
-@media screen and (min-width:768px) and (max-width:992px){
-#eventList{padding-left:40px;}
-}
-@media screen and (max-width:768px){
-.bootstrap-datetimepicker-widget.calendarpage{position:absolute; left:50% !important; margin-left:-120px;}
-}
-*/
+
+/*Upload Profile Page*/
+#crop{display:block; width:300px; margin:0 auto 10px auto;}
+#crop .page-header{padding-bottom: 5px; margin: 10px 0 5px;}
+
+/*Event Page*/
 
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}
@@ -246,6 +240,27 @@ textarea.form-control{height:auto; max-width:100%;}
 /*makes room for the picture*/ .checkinContent{margin-left:60px; margin-right:100px; min-height:60px; position:relative;}
 .checkinContent .btn-group{position:absolute; right:-100px; top:50%; margin-top:-23px;}
 .checkinContent .memberName{font-size:18px;}
+
+/*Admin Page*/
+#colorPicker{width:300px; height:290px;}
+.colorPick{margin:5px; border:1px solid black; padding:0px; height:57px; width:57px; display:inline-block;}
+.colorPick.selectedColor{border:1px solid white;}
+#color1{}
+#color2{}
+#color3{}
+#color4{}
+#color5{background:purple;}
+#color6{}
+#color7{}
+#color8{}
+#color9{}
+#color10{}
+#color11{}
+#color12{}
+#color13{}
+#color14{}
+#color15{}
+#color16{}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
