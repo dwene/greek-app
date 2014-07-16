@@ -181,7 +181,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
 #statusContainer .close{margin-top:-3px;}
 .currentStatus{font-style:italic;}
-#statusContainer h2{margin-top:0px;}
+#statusContainer h2{margin:0px 0px 10px 0px;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
@@ -213,18 +213,11 @@ textarea.form-control{height:auto; max-width:100%;}
 #changePasswordButton{margin:10px 0px 0px 0px;}
 #changeProfileButton{display:block; width:180px; margin:0px auto 20px auto;}
 
-/*target these only on the event page
-#events .date{width:240px; height:260px;}
-#events .date .input-group{position:absolute; bottom:14px; left:125px; width:150px;}
-.bootstrap-datetimepicker-widget.calendarpage{margin-top:-260px; -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.175); box-shadow: 0 1px 3px rgba(0,0,0,0.175);}
-.bootstrap-datetimepicker-widget.bottom.calendarpage:before, .bootstrap-datetimepicker-widget.bottom.calendarpage:after, .bootstrap-datetimepicker-widget.top.calendarpage:before, .bootstrap-datetimepicker-widget.top.calendarpage:after{display:none !important;} 
-@media screen and (min-width:768px) and (max-width:992px){
-#eventList{padding-left:40px;}
-}
-@media screen and (max-width:768px){
-.bootstrap-datetimepicker-widget.calendarpage{position:absolute; left:50% !important; margin-left:-120px;}
-}
-*/
+/*Upload Profile Page*/
+#crop{display:block; width:300px; margin:0 auto 10px auto;}
+#crop .page-header{padding-bottom: 5px; margin: 10px 0 5px;}
+
+/*Event Page*/
 
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}
