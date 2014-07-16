@@ -11,7 +11,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
         <label for="title" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="title" name="title" ng-model="poll.name" placeholder="Bowling Social" required>
+          <input type="text" class="form-control" id="title" name="title" ng-model="poll.name" placeholder="Questions for our Next Party" required>
         </div>
         <p ng-show="(newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
     </div>
@@ -19,7 +19,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
         <label for="description" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
-          <textarea class="form-control" id="description" name="description" ng-model="poll.description" placeholder="We are going bowling! Yay!" required></textarea>
+          <textarea class="form-control" id="description" name="description" ng-model="poll.description" placeholder="We are having a party. Yay!" required></textarea>
         </div>
         <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
     </div>     
@@ -64,9 +64,9 @@
         
         
             <div class="form-group" ng-class="{ 'has-error' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
-                <label for="title" class="col-sm-2 control-label">Worded Question</label>
+                <label for="title" class="col-sm-2 control-label">Question</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" name="title{{$index}}" ng-model="question.worded_question" placeholder="Bowling Social" required>
+                  <input type="text" class="form-control" name="title{{$index}}" ng-model="question.worded_question" placeholder="What kind of ice cream should we get?" required>
                 </div>
                 <p ng-show="(newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)" class="help-block">Please enter a question.</p>
             </div>
@@ -86,7 +86,7 @@
                    <label class="col-sm-2 control-label">Add Choices</label>
                     <div class="col-sm-10">
                             <div class="input-group">
-                            <input type="text" class="form-control" ng-model="question.temp_choice" placeholder="" ng-enter="addChoice(question, question.temp_choice);">
+                            <input type="text" class="form-control" ng-model="question.temp_choice" placeholder="enter multiple choice" ng-enter="addChoice(question, question.temp_choice);">
                             <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="addChoice(question, question.temp_choice);">Add</button></span>
                             </div>
                     </div>
