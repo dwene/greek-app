@@ -22,6 +22,7 @@ var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui
 App.config(function($stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise("/")
+    .when("/", "/app/home")
     .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app", "/app/home")
     .when("/app/managealumni", "/app/managealumni/manage")
