@@ -1,13 +1,9 @@
-<div class="container">
+<div id="newPoll" class="container">
 
 <!--		 HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
 			<h1>New Poll</h1>
 		</div>
-
-</div>
-
-<div class="container">
     
 <selecting-users ng-model="tags"></selecting-users>
 
@@ -60,40 +56,57 @@
         <p ng-show="((newPoll.date_end.$invalid && !newPoll.date_end.$pristine) || (newPoll.date_end.$invalid && submitted)) || ((newPoll.time_end.$invalid && !newPoll.time_end.$pristine) || (newPoll.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
     </div>
 -->
-    <i class="btn btn-default" ng-click="addQuestion()">Add Question</i>
-    <div ng-repeat = "question in poll.questions">
-        <hr>
-        <div class="form-group" ng-class="{ 'has-error' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
-            <label for="title" class="col-sm-2 control-label">Worded Question</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="title{{$index}}" ng-model="question.worded_question" placeholder="Bowling Social" required>
-            </div>
-            <p ng-show="(newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)" class="help-block">Please enter a question.</p>
-        </div>
-        <div class="form-group" ng-class="{ 'has-error' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
-            <label for="title" class="col-sm-2 control-label">Type</label>
-            <div class="col-sm-10">
-              <select type="text" class="form-control" name="type{{$index}}" ng-model="question.type" required>
-                <option value="text">Textbox</option>
-                <option value="multiple_choice">Multiple Choice</option>
-              </select>
-            </div>
-            <p ng-show="(newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)" class="help-block">Please enter a title.</p>
-        </div>
-        <div ng-show="question.type === 'multiple_choice'">
-           <label class="col-sm-2 control-label">Add Choices</label>
-            <span class="col-sm-10"><input type="text" class="form-control" ng-model="question.temp_choice" placeholder="" ng-enter="addChoice(question, question.temp_choice);"><i class="btn btn-default" ng-click="addChoice(question, question.temp_choice);">Add</i></span>
-            <div ng-repeat="choice in question.choices">
-            <label class="label label-primary">
-                <li>{{ choice }}</li>
-            </label>
-            </div>
-        </div>
-        <i class="btn btn-default" ng-click="removeQuestion($index)">Delete Question</i>
+    <div class="pollQuestion" ng-repeat="question in poll.questions">
+               
+        <button type="button" class="close" ng-click="removeQuestion($index)"><i class="fa fa-trash-o"></i></button>
         
+        <div class="pollQuestionContent">
+        
+        
+            <div class="form-group" ng-class="{ 'has-error' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
+                <label for="title" class="col-sm-2 control-label">Worded Question</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="title{{$index}}" ng-model="question.worded_question" placeholder="Bowling Social" required>
+                </div>
+                <p ng-show="(newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)" class="help-block">Please enter a question.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
+                <label for="title" class="col-sm-2 control-label">Type</label>
+                <div class="col-sm-10">
+                  <select type="text" class="form-control" name="type{{$index}}" ng-model="question.type" required>
+                    <option value="text">Textbox</option>
+                    <option value="multiple_choice">Multiple Choice</option>
+                  </select>
+                </div>
+                <p ng-show="(newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)" class="help-block">Please enter a title.</p>
+            </div>
+            <div ng-show="question.type === 'multiple_choice'">
+               <div class="row">
+                <div id="addchoices" ng-hide="question.choices.length > 4">
+                   <label class="col-sm-2 control-label">Add Choices</label>
+                    <div class="col-sm-10">
+                            <div class="input-group">
+                            <input type="text" class="form-control" ng-model="question.temp_choice" placeholder="" ng-enter="addChoice(question, question.temp_choice);">
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="addChoice(question, question.temp_choice);">Add</button></span>
+                            </div>
+                    </div>
+
+                </div>
+                <label ng-show="question.choices.length" class="col-sm-2 control-label">Choices</label>
+                <ul  ng-show="question.choices.length" class="col-sm-10" class="list-group">
+                    <li ng-repeat="choice in question.choices" class="list-group-item">{{ choice }} <button type="button" class="close" ng-click="removeOption()">×</button></li>
+                </ul>
+                </div>
+            </div>
+        
+        </div>
+                
     </div>
+
+    <button type="button" class="btn btn-default" ng-click="addQuestion()">Add Question</button>
+
    
-    <button type="submit" class="btn btn-default pull-right" ng-disabled= "!selectedMembers.length || !newPoll.$valid">Submit</button>
+    <button type="submit" class="btn btn-default pull-right" ng-disabled="!selectedMembers.length || !newPoll.$valid || !poll.questions.length">Submit</button>
 </form>
  <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 </div>
