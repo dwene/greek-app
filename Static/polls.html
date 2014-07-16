@@ -1,0 +1,19 @@
+<div class="container">
+
+<!--		 HEADER AND TODO COUNT -->
+		<div class="jumbotron text-center">
+			<h1>Polls</h1>
+<a ng-href="#/app/newpoll" class="btn btn-default topRight"><i class="fa fa-floppy-o"></i>New Poll</a>
+<!--<button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> </button>-->
+		</div>
+
+</div>
+<div class="container">
+
+<div ng-repeat="poll in polls">
+    {{poll.name}}
+    {{poll.description}}
+</div>
+
+</div>
+

@@ -211,6 +211,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/newpoll.html',
                 controller : 'newPollController'
                 })
+            .state('app.poll',{
+            //#TODO put this into each individual event :tag
+                url : '/polls',
+                templateUrl : 'Static/polls.html',
+                controller : 'pollController'
+                })
       
     });
 
@@ -2625,9 +2631,13 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
             }
             question.temp_choice = undefined;
         }
+        $scope.removeChoice = function(question, idx){
+            question.choices.splice(idx, 1);
+        }
         $scope.createPoll = function(isValid){
             var poll = $scope.poll;
             poll.tags = getCheckedTags($scope.tags);
+            console.log(poll.tags);
             var to_send = JSON.parse(JSON.stringify(poll));
 //            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
 //            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
@@ -2650,6 +2660,26 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
             $scope.tags = $rootScope.tags;
         });
 	});
+
+
+    App.controller('pollController', function($scope, $http, Load, $rootScope) {
+        
+        Load.then(function(){
+            $http.post('/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $scope.polls = JSON.parse(data.data);
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        });
+	});
+
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {
 //        $scope.loading = true;

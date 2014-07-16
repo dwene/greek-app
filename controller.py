@@ -1774,18 +1774,45 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        events = Event.query(request_user.key in Event.going).fetch(projection=[Event.tag])
+        events = Event.query(Event.going == request_user.key).fetch()
         event_tags = list()
         for event in events:
             event_tags.append(event.tag)
-        polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_org_tags == request_user.tags,
-                                          request_user.perms.IN(Poll.invited_perms_tags),
-                                          Poll.invited_event_tags in event_tags),
-                                   Poll.organization == request_user.organization)).fetch()
+        if event_tags:
+            polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+                                              Poll.invited_org_tags.IN(request_user.tags),
+                                              Poll.invited_perms_tags == request_user.perms,
+                                              Poll.invited_event_tags.IN(event_tags),
+                                              ),
+                                       Poll.organization == request_user.organization)).fetch()
+        else:
+            polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+                                              Poll.invited_org_tags.IN(request_user.tags),
+                                              Poll.invited_perms_tags == request_user.perms,
+                                              ),
+                                       Poll.organization == request_user.organization)).fetch()
         dict_polls = list()
         for poll in polls:
             dict_polls.append(poll.to_dict())
         return OutgoingMessage(error='', data=json_dump(dict_polls))
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/get_poll_info',
+                      http_method='POST', name='poll.get_poll_info')
+    def get_poll_info(self, request):
+        key = ndb.Key(urlsafe=json.loads(request.data)["key"])
+        poll_future = key.get_async()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        poll = poll_future.get_result()
+        if poll.organization is not request_user.organization:
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        questions = Question.query(Question.poll == key).fetch()
+        out = list()
+        for question in questions:
+            out.append(question.to_dict())
+        return OutgoingMessage(error='', data=json_dump(out))
         # if not check_if_user_in_tags(user=request_user, org_tags=Poll.invited_org_tags,
         #                              perms_tags=Poll.invited_perms_tags, event_tags=Poll.invited_event_tags):
 

@@ -118,6 +118,7 @@ class Poll(ndb.Model):
     invited_event_tags = ndb.StringProperty(repeated=True)
     open = ndb.BooleanProperty(default=True)
     allow_changes = ndb.BooleanProperty(default=True)
+    answered_users = ndb.KeyProperty(repeated=True)
 
 
 class Question(ndb.Model):
