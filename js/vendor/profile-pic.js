@@ -30,7 +30,7 @@ angular.module('aj.crop', [])
             return;
           }
 
-          element.after('<img style="max-width: 100%;"/>');
+          element.after('<img/>');
           myImg = element.next();
           myImg.attr('src', nv);
           $window.jQuery(myImg).Jcrop(
@@ -43,6 +43,7 @@ angular.module('aj.crop', [])
                 });
               }
             , aspectRatio: 1
+            , boxWidth: 300
             }
           , function () {
               // Use the API to get the real image size  

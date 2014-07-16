@@ -229,6 +229,8 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                          right_x=float(crop_data['x2'])/float(crop_data['bx']),
                          top_y=float(crop_data['y'])/float(crop_data['by']),
                          bottom_y=float(crop_data['y2'])/float(crop_data['by']))
+                img.resize(width=300, height=300)
+                img.im_feeling_lucky()
                 thumbnail = img.execute_transforms(output_encoding=images.PNG)
                 file_name = files.blobstore.create(mime_type='image/png')
                 with files.open(file_name, 'a') as f:

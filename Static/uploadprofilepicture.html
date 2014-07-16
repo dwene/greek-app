@@ -8,7 +8,7 @@
     resize-max-width="640"
     resize-quality="0.7" 
 -->
-   <img-cropped src="imageSrc" selected="selected(cords)"></img-cropped>
+   <img-cropped src="imageSrc" selected="selected(cords)" style="width: 300px; !important"></img-cropped>
     <div id="cropped-image" ng-show="cropped" ng-style="{ width: P.picWidth + 'px', height: P.picHeight + 'px', overflow: 'hidden' }">
     
     <img id="preview" ng-src="{{ P.imageSrc }}">

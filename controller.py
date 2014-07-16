@@ -1769,7 +1769,6 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/get_polls',
                       http_method='POST', name='poll.answer_questions')
     def answer_questions(self, request):
-        data = json.loads(request.data)
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
