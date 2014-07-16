@@ -104,6 +104,7 @@ input.form-control{height:34px !important;}
 @media screen and (max-width: 768px){
 .jumbotron {padding-top: 50px; padding-bottom: 50px;}
 }
+.fa-times-circle{width:16px;}
 
 @media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
