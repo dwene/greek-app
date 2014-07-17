@@ -260,8 +260,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $timeout(function(){
                     $rootScope.notifications = JSON.parse(data.data).notifications;
                     for (var i = 0; i < $rootScope.notifications.length; i++){
-                            $rootScope.notifications[i].collapseOut = true;  
+                        $rootScope.notifications[i].collapseOut = true; 
+//                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
+//                            function(all,text,char){
+//                                return text + "&shy;" + char;
+//                            });
+                        
                     }
+                    console.log('Notifications', $rootScope.notifications);
                 })
                 $timeout(function(){
                     $rootScope.updateNotificationBadge();
@@ -600,11 +606,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //        }
         
         //#FIXME content not defined here!!!! :-(
-        $scope.$watch('notify.content', function() {
-                $rootScope.notifications.notify.content = $rootScope.notifications.notify.content.replace(/(\\w{5})(\\w)/, "g", function(all,text,char){
-                    return text + "&shy;" + char;
-                });
-        });
+//        $scope.$watch('notify.content', function() {
+//                $rootScope.notifications.notify.content = $rootScope.notifications.notify.content.replace(/(\\w{5})(\\w)/, "g", function(all,text,char){
+//                    return text + "&shy;" + char;
+//                });
+//        });
                 
             
         $scope.updateStatus = function(status){
@@ -3315,9 +3321,9 @@ App.filter('removePassedEvents', function(){
             return objects;
         }
         for(var oPos = 0; oPos < objects.length; oPos++){
-//            if(objects[oPos].time_end < now){
+            if(moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) > 0){
                 retList.push(objects[oPos]);
-//            }
+            }
 //            if (objects[oPos].time_start < now && objects[oPos].time_end > now){
 //                retList.splice(0, 0, objects[oPos]);
 //            }
@@ -3594,7 +3600,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           var done = 0;
           function checkIfDone() {
             done++;
-            if (done==5) deferred.resolve(); 
+            if (done==6) deferred.resolve(); 
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
@@ -3623,8 +3629,9 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 $rootScope.notifications = JSON.parse(data.data).notifications;
+                
                 for (var i = 0; i < $rootScope.notifications.length; i++){
-                        $rootScope.notifications[i].collapseOut = true;  
+                        $rootScope.notifications[i].collapseOut = true; 
                 }
                 $rootScope.hidden_notifications = JSON.parse(data.data).hidden_notifications;
                 $rootScope.updateNotificationBadge();
@@ -3670,7 +3677,21 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
             .error(function(data) {
                 checkIfDone();
             });
-            
+            $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $rootScope.events = JSON.parse(data.data);
+                        console.log('events rootscope', $rootScope.events);
+                    }
+                    else{
+                        console.log('ERROR: '+data);
+                    }
+                    checkIfDone();
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                    checkIfDone();
+                });
           return deferred.promise;
         }
             LoadScreen.start();

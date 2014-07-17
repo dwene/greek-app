@@ -254,10 +254,11 @@ def get_users_from_tags(tags, organization, keys_only):
         out_list = out_list + list(set(perms_tag_users) - set(out_list))
 
     if "event_tags" in tags and len(tags["event_tags"]):
-        event_tag_users = events_future.get_result()
+        events = events_future.get_result()
         users = list()
-        for event in event_tag_users:
-            users = users + list(set(event) - set(out_list))
+        for event in events:
+            users = users + list(set(event.going) - set(out_list))
+        out_list = out_list + list(set(users) - set(out_list))
 
     if not _keys_only:
         out_list = ndb.get_multi(out_list)
