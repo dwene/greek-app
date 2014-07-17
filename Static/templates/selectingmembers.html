@@ -1,4 +1,9 @@
 <div><!--<selecting-users>-->
+   <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
+        <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
+        <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
+    </form>
+   
     <ul id="messagingTags">
        <span>Recent: </span>
             <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
