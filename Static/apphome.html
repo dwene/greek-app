@@ -5,12 +5,12 @@
     <div id="orgLetters" class="col-xs-12 col-sm-3">
        <h2 class="page-header">Organization Letters</h2>
     </div>
-       
     <div id="upcomingEvents" class="col-xs-12 col-sm-3 md-pull-right">
+       
         <h2 class="page-header">Upcoming Events</h2>
         <ul>
-            <li ng-repeat="event in $root.events | limitTo: 5 | removePassedEvents">
-                <p><span>{{event.title}}</span></p>
+            <li ng-repeat="event in $root.events | removePassedEvents |  limitTo: 3">
+                <p>{{event.title}}</p>
             </li>
         </ul>
     </div>
@@ -37,8 +37,8 @@
             <li class="notification" ng-class="{new: notify.new, collapseOut: notify.collapseOut}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();"><i class="fa fa-times-circle"></i></button>
-                <span class="notificationTitle"><i class="fa fa-circle"></i>{{notify.title}}</span>
-                    <span>{{notify.content | limitTo: 100}}<span ng-show="notify.content.length > 100">...</span></span>
+                <span class="notificationTitle preText"><i class="fa fa-circle"></i>{{notify.title}}</span>
+                    <span class="preText">{{notify.content | limitTo: 100}}<span ng-show="notify.content.length > 100">...</span></span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
             </li>
