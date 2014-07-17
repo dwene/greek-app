@@ -567,7 +567,8 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         organization = request_user.organization.get()
         out = dict(name=organization.name, school=organization.school)
-        out["paid"] = organization.paid
+        out["subscribed"] = organization.subscribed
+        out["color"] = organization.color
         return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
@@ -939,6 +940,21 @@ class RESTApi(remote.Service):
         if not user:
             return OutgoingMessage(error=INVALID_EMAIL, data='')
         forgotten_password_email(user)
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/set_colors',
+                      http_method='POST', name='auth.set_colors')
+    def set_colors(self, request):
+        data = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='OK')
+        organization = request_user.organization.get()
+        if not request_user.perms == 'council':
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        if 'color' in data:
+            organization.color = data["color"]
+            organization.put()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/change_password',

@@ -2821,6 +2821,21 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + JSON.stringify(data));
                 });
             };
+            $scope.saveColors = function(){
+                $http.post('/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $rootScope.refreshPage();
+                    }
+                    else{
+                        $scope.error = true;    
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + JSON.stringify(data));
+                });
+            }
             
             $scope.changeTheme = function(number){
                 var colorNumber = 'color'+number;
@@ -3664,13 +3679,17 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 checkIfDone();
             });
             console.log('hi');
-            $http.post('/_ah/api/netegreek/v1/pay/is_subscribed', packageForSending(''))
+            $http.post('/_ah/api/netegreek/v1/organization/info', packageForSending(''))
             .success(function(data){
                 console.log('hi');
                 if (!checkResponseErrors(data)){
-                    var subscribed = JSON.parse(data.data);
-                    $rootScope.subscribed = subscribed;
-                    console.log(subscribed);
+                    var info = JSON.parse(data.data);
+                    $rootScope.subscribed = true;
+//                    $rootScope.subscribed = info.subscribed;
+                    $rootScope.color = info.color;
+                    if ($rootScope.color == 'color5'){
+                        $('body').addClass('dark');
+                    }
                 }
                 checkIfDone();
             })
