@@ -240,10 +240,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.notification_count = "0";
         $rootScope.tags = {};
         $rootScope.updatingNotifications = false;
-        
+        $rootScope.allTags = [];
         //set color theme
         $rootScope.color5 = true;
         $rootScope.colorName = "";
+        $rootScope.allTagsList = function(){
+            
+        }
+        
+        $rootScope.$watch('tags', function(){
+                $rootScope.allTags = $rootScope.tags.org_tags.concat($rootScope.tags.perms_tags.concat($rootScope.tags.event_tags));
+        });
         
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
@@ -1919,7 +1926,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function onFirstLoad(){
             $scope.loading = true;
             var tag_list = [];
-            $scope.tags =$rootScope.tags;
+            $scope.tags = $rootScope.tags;
             var deferred = $q.defer();
             var done = 0;
             function checkIfDone() {
@@ -2821,21 +2828,6 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + JSON.stringify(data));
                 });
             };
-            $scope.saveColors = function(){
-                $http.post('/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $rootScope.refreshPage();
-                    }
-                    else{
-                        $scope.error = true;    
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' + JSON.stringify(data));
-                });
-            }
             
             $scope.changeTheme = function(number){
                 var colorNumber = 'color'+number;
@@ -3212,7 +3204,8 @@ App.directive('selectingUsers', function($compile){
     templateUrl: '/Static/templates/selectingmembers.html',
     scope:{
         ngModel: "=",
-        userCount:"="
+        userCount:"=",
+        allTagsList:"=",
     },
     transclude: true,
     link: function (scope, element, attrs) {
@@ -3679,17 +3672,13 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 checkIfDone();
             });
             console.log('hi');
-            $http.post('/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+            $http.post('/_ah/api/netegreek/v1/pay/is_subscribed', packageForSending(''))
             .success(function(data){
                 console.log('hi');
                 if (!checkResponseErrors(data)){
-                    var info = JSON.parse(data.data);
-                    $rootScope.subscribed = true;
-//                    $rootScope.subscribed = info.subscribed;
-                    $rootScope.color = info.color;
-                    if ($rootScope.color == 'color5'){
-                        $('body').addClass('dark');
-                    }
+                    var subscribed = JSON.parse(data.data);
+                    $rootScope.subscribed = subscribed;
+                    console.log(subscribed);
                 }
                 checkIfDone();
             })

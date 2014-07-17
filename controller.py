@@ -1775,6 +1775,8 @@ class RESTApi(remote.Service):
         poll = poll_future.get_result()
         if not poll.organization == request_user.organization:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        if not poll.open:
+            return OutgoingMessage(error='POLL_CLOSED', data='')
         questions = questions_future.get_result()
         responses = responses_future.get_result()
         if responses:
@@ -1896,8 +1898,6 @@ class RESTApi(remote.Service):
             responses_list = list()
             if question.type == 'multiple_choice':
                 results = dict()
-
-                # res = []
                 for choice in question.choices:
                     results[choice] = {'name': choice, 'count': 0}
                 for response in responses:
