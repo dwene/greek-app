@@ -203,9 +203,9 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .notification:first-child{border-top:1px solid #ccc;}
 .notification:last-child{border-bottom:1px solid #ccc;}
-.notificationContent{padding:30px 30px;}
+.notificationContent{padding:20px 30px;}
 .notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100;}
-.notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-10px;}
+.notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-5px;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
 .notification.new .notificationTitle i{display:block;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}

@@ -598,6 +598,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                }
 //            }
 //        }
+            
+        $scope.$watch('notify.content', function() {
+                $scope.notify.content = $scope.notify.content.replace(/(\\w{5})(\\w)/, "g", function(all,text,char){
+                    return text + "&shy;" + char;
+                  });
+        });    
+            
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
