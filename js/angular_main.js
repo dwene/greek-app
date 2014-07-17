@@ -598,12 +598,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                }
 //            }
 //        }
-            
+        
+        //#FIXME content not defined here!!!! :-(
         $scope.$watch('notify.content', function() {
-                $scope.notify.content = $scope.notify.content.replace(/(\\w{5})(\\w)/, "g", function(all,text,char){
+                $rootScope.notifications.notify.content = $rootScope.notifications.notify.content.replace(/(\\w{5})(\\w)/, "g", function(all,text,char){
                     return text + "&shy;" + char;
-                  });
-        });    
+                });
+        });
+                
             
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
