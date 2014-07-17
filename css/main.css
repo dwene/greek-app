@@ -75,6 +75,8 @@ nav.navbar-default .open .dropdown-menu {
 .nav-pills{font-size:12px;}
 }
 
+/*Page Headers*/
+h2.page-header{margin:0px 0px 10px 0px;}
 
 /*Labels and Tags*/
 .label{display:inline-block; position:relative; padding:.4em; margin:0px 2px; -webkit-user-select:none; user-select:none;}
@@ -93,6 +95,8 @@ nav.navbar-default .open .dropdown-menu {
 .noneSelected{position:absolute; left:10px; top:10px;}
 
 /*Random Fixes*/
+.btn{-webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-tap-highlight-color: transparent; 
+outline: 0px auto -webkit-focus-ring-color !important;}
 #registerForm #orgType input{margin-right:5px;}
 #addmemberForm button{float:right; margin-right:15px;}
 #correctPerson{text-align:center; margin-bottom:15px;}
@@ -179,10 +183,8 @@ textarea.form-control{height:auto; max-width:100%;}
 #messagingTags .btn-group{margin-bottom:5px;}
 
 /*App Home Page*/
-#statusContainer .well{font-size:14px; font-weight:bold; margin-bottom:0px;}
-#statusContainer .close{margin-top:-3px;}
+#statusContainer .close{margin:-2px 5px 0px 0px;}
 .currentStatus{font-style:italic;}
-#statusContainer h2{margin:0px 0px 10px 0px;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
@@ -200,7 +202,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
 #showHidden{position:relative; width:100%; overflow:hidden;}
-#showHiddenButton{margin-top:20px;}
+#showHiddenButton{margin-top:20px; border-top:1px solid #ccc; border-bottom:1px solid #ccc; background:none;}
 .pagerButtons{margin-top:20px;}
 .pagerButtons .previous{margin-left:20px;}
 .pagerButtons .next{float:right; margin-right:20px;}

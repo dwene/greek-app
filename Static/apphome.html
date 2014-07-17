@@ -11,10 +11,7 @@
     </div>
        
     <div id="changeStatus" class="col-xs-12 col-sm-6">
-       <h2 class="page-header">Change Status</h2>
-        <div class="col-xs-12">
-        <h2 class="well well-sm">Current Status:  <span class="currentStatus">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()">×</button></h2>
-        </div>
+       <h2 class="page-header">Current Status:  <span class="currentStatus" ng-show="$root.me.status.length">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()">×</button></h2>
         <div class="col-xs-12">
         <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
             <div class="input-group">
@@ -50,7 +47,7 @@
         
             <p ng-show="!$root.notifications.length">There are no new notifications!</p>
         
-    <button id="showHiddenButton" class="btn btn-default btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Hidden</button>
+    <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Hidden</button>
 
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->

@@ -1,14 +1,5 @@
-<div class="container">
-
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>Messaging page</h1>
-		</div>
-
-</div>
-
-
 <section class="container">
+<h2 class="page-header">Send a Message: <br></h2>
 
 <selecting-users ng-model="tags"></selecting-users>
 
@@ -30,7 +21,7 @@
 </section>
 
 <section id="recentlySentMessages" class="container">
-    <h2 class="page-header" ng-hide="notify.length">Recently Sent Messages: <br></h2>
+    <h2 class="page-header" ng-hide="notify.length">Recently Sent: <br></h2>
     <ul>
         <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification collapseOut" ng-class="{ new : notify.new }">
             <div class="notificationContent">
