@@ -19,4 +19,28 @@
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers = ( $root.users.members | tagDirectorySearch:ngModel)">{{member.first_name}} {{member.last_name}}</span>
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
     </div>
+    
+    
+<div class="modal fade" id="seeallTags">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">All Tags</h4>
+      </div>
+      <div class="modal-body">
+            <ul class="addTags">
+                <div class="btn-group" ng-repeat="tag in org_tags | orderBy : 'name'">
+                    <netetag-all ></netetag-all>
+                </div>
+            </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </div>
+
+
