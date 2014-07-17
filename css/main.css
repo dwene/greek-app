@@ -76,7 +76,7 @@ nav.navbar-default .open .dropdown-menu {
 }
 
 /*Page Headers*/
-h2.page-header{margin:0px 0px 10px 0px;}
+h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 
 /*Labels and Tags*/
 .label{display:inline-block; position:relative; padding:.4em; margin:0px 2px; -webkit-user-select:none; user-select:none;}
@@ -185,6 +185,11 @@ textarea.form-control{height:auto; max-width:100%;}
 /*App Home Page*/
 #statusContainer .close{margin:-2px 5px 0px 0px;}
 .currentStatus{font-style:italic;}
+@media screen and (max-width:768px){
+#statusContainer .page-header{padding-bottom:3px; margin-bottom:0px;}
+#statusContainer{margin-top:-10px;}
+#statusContainer section{margin-bottom:10px; border-bottom:1px solid #ccc; padding:10px;}
+}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
