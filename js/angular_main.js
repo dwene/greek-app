@@ -217,7 +217,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/polls.html',
                 controller : 'pollController'
                 })
-      
+            .state('app.pollinfo',{
+            //#TODO put this into each individual event :tag
+                url : '/polls/:key',
+                templateUrl : 'Static/pollinfo.html',
+                controller : 'pollInfoController'
+                })
     });
 
 //Set up run commands for the app
@@ -2681,6 +2686,25 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
         });
 	});
 
+    App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
+        console.log('I made it to the controller');
+        Load.then(function(){
+            var to_send = {key: $stateParams.key};
+            $http.post('/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $scope.poll = JSON.parse(data.data);
+                        console.log($scope.poll);
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        });
+	});
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {
 //        $scope.loading = true;
