@@ -11,6 +11,7 @@
         <ul>
             <li ng-repeat="event in $root.events | removePassedEvents |  limitTo: 3">
                 <p>{{event.title}}</p>
+
             </li>
         </ul>
     </div>
