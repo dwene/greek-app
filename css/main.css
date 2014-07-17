@@ -188,20 +188,33 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
+
 .notification{cursor:pointer; position:relative; height:86px;}
-.notification.new{background:#EDEDED;}
-.notification:hover{background:#EDEDED;}
-.notification{border-top:1px solid #777;}
-.notification:last-child{border-bottom:1px solid #777;}
-.notificationContent{padding:20px 10px;}
+
+    .notification{
+            background-image: -webkit-gradient(linear,left 0,left 100%,from(#fff),to(#f8f8f8));
+            background-image: -webkit-linear-gradient(top,#fff,0%,#f8f8f8,100%);
+            background-image: -moz-linear-gradient(top,#fff 0,#f8f8f8 100%);
+            background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
+            background-repeat: repeat-x;
+    }
+
+.notification:hover{background:#f6f6f6;}
+
+.notification:first-child{border-top:1px solid #ccc;}
+.notification:last-child{border-bottom:1px solid #ccc;}
+.notificationContent{padding:30px 30px;}
 .notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100;}
-.notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-15px;}
+.notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-10px;}
+.notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
+.notification.new .notificationTitle i{display:block;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
 .notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
 #notificationModal .notificationSender{font-size:14px; position:absolute; bottom:0px; right:15px;}
 #showHidden{position:relative; width:100%; overflow:hidden;}
+#showHidden ul{min-height:430px;}
 #showHiddenButton{margin-top:20px; border-top:1px solid #ccc; border-bottom:1px solid #ccc; background:none;}
 .pagerButtons{margin-top:20px;}
 .pagerButtons .previous{margin-left:20px;}
