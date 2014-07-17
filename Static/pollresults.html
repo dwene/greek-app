@@ -1,0 +1,19 @@
+<div class="container">
+   <form name="response_form"  ng-submit="submitResponse()">
+    <div ng-repeat = "question in poll.questions">
+        <p>{{question.worded_question}}</p>
+        <ul ng-show="question.type == 'multiple_choice'"> 
+            <li ng-repeat="response in question.response_data">
+                <p>{{response.name}} : {{response.count}}</p>
+            </li>
+        </ul>
+        <ul ng-show="question.type == 'text'"> 
+            <li ng-repeat="response in question.responses">
+                <p>{{response}}</p>
+                
+            </li>
+        </ul>
+       <hr> 
+    </div>
+    
+</div>

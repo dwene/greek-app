@@ -223,6 +223,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/pollinfo.html',
                 controller : 'pollInfoController'
                 })
+            .state('app.pollresults',{
+            //#TODO put this into each individual event :tag
+                url : '/polls/:key/results',
+                templateUrl : 'Static/pollresults.html',
+                controller : 'pollResultsController'
+                })
     });
 
 //Set up run commands for the app
@@ -2704,7 +2710,43 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + data);
                 });
         });
+        
+        $scope.submitResponse = function(){
+            var to_send = $scope.poll;
+            $http.post('/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                       $rootScope.refreshPage();
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
 	});
+
+    App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams) {
+        Load.then(function(){
+            var to_send = {key: $stateParams.key};
+            $http.post('/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $scope.poll = JSON.parse(data.data);
+                        console.log($scope.poll);
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        });
+    });
+        
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {
 //        $scope.loading = true;

@@ -1,6 +1,6 @@
-<div class="jumbotron">
+<div class="jumbotron container">
 			
-<a ng-href="#/app/events" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
+<a ng-href="#/app/polls" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
 
 <!-- <button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Event</button>-->
 <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft"><i class="fa fa-edit"></i>Report</button>
@@ -9,30 +9,25 @@
 			<h1 class="text-center">{{poll.name}}</h1>
 			<p class="text-center">#{{poll.description}}</p>
 </div>
-<!--
 <div class="container" ng-show="poll.response_status">
-   
     <div ng-repeat = "question in poll.questions">
         <p>{{question.worded_question}}</p>
-        {{question.type}}
-        {{question.choices}}
-        
+        <div ng-repeat="a in question.response.answer">
+            {{a}}
+        </div>
     </div>
-    
-    
 </div>
--->
 
 
-<div class="container" >
-   <form name="response_form">
+<div class="container" ng-hide="poll.response_status">
+   <form name="response_form"  ng-submit="submitResponse()">
     <div ng-repeat = "question in poll.questions">
         <p>{{question.worded_question}}</p>
         <div ng-show="question.type == 'text'"> 
-            <input type="text" ng-model="question.my_response">
+            <input type="text" ng-model="question.new_response">
         </div>
         <div ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
-            <input type="radio" ng-model="question.my_response" ng-value="choice"> {{choice}} <br/>
+            <input type="radio" ng-model="question.new_response" ng-value="choice"> {{choice}} <br/>
         </div>
        <hr> 
     </div>
