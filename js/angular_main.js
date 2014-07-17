@@ -3304,6 +3304,35 @@ App.filter('multipleSearch', function(){
     }
 });
 
+
+App.filter('removePassedEvents', function(){ 
+    return function (objects) {
+        var retList = [];
+        var now = new Date();
+        if (!objects){
+            return objects;
+        }
+        for(var oPos = 0; oPos < objects.length; oPos++){
+//            if(objects[oPos].time_end < now){
+                retList.push(objects[oPos]);
+//            }
+//            if (objects[oPos].time_start < now && objects[oPos].time_end > now){
+//                retList.splice(0, 0, objects[oPos]);
+//            }
+//            else if(objects[oPos].time_start > now){
+//                for(var rPos = 0; rPos < retList.length; rPos++){
+//                    if (retList[rPos].time_start < objects[oPos].time_start){
+//                        retList.splice(rPos, 0, objects[oPos]);
+//                        break;
+//                    }
+//                }
+//            }
+//            else if ()
+        }
+        return retList;
+    }
+});
+
 App.filter('startFrom', function() {
     return function(input, start) {
         start = +start; //parse to int

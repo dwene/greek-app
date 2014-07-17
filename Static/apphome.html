@@ -8,6 +8,11 @@
        
     <div id="upcomingEvents" class="col-xs-12 col-sm-3 md-pull-right">
         <h2 class="page-header">Upcoming Events</h2>
+        <ul>
+            <li ng-repeat="event in $root.events | limitTo: 5 | removePassedEvents">
+                <p><span>{{event.title}}</span></p>
+            </li>
+        </ul>
     </div>
        
     <div id="changeStatus" class="col-xs-12 col-sm-6">
@@ -23,9 +28,6 @@
         </form>
         </div>
     </div>
-        
-        
-        
         
     </section>
 

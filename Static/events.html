@@ -5,7 +5,7 @@
         </div>
         <ul id="eventList" class="col-xs-12 col-sm-6 col-lg-8">
             <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
-            <li class="event" ng-repeat="event in events | orderBy:'-time_start' | multipleSearch:search" ng-click="showEvent(event)">
+            <li class="event" ng-repeat="event in events | orderBy:'-time_start' | removePassedEvents | multipleSearch:search" ng-click="showEvent(event)">
                 <div class="eventContent">
                 <span class="eventName">{{event.title}}</span>
                 <span class="eventTime">{{showDate(event.time_start, event.time_end)}}</span>
