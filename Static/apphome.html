@@ -10,7 +10,7 @@
         <h2 class="page-header">Upcoming Events</h2>
         <ul>
             <li ng-repeat="event in $root.events | limitTo: 5 | removePassedEvents">
-                <p><span>{{event.title}}</span></p>
+                <span>{{event.title}}</span>
             </li>
         </ul>
     </div>

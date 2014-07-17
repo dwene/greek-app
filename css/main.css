@@ -189,7 +189,7 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
 
-.notification{cursor:pointer; position:relative; height:86px;}
+.notification{cursor:pointer; position:relative; min-height:86px;}
 
     .notification{
             background-image: -webkit-gradient(linear,left 0,left 100%,from(#fff),to(#f8f8f8));
