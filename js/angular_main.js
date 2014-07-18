@@ -2712,6 +2712,11 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + data);
                 });
         });
+        
+        $scope.showPoll = function(poll){
+                window.location.assign('#/app/polls/' + poll.key);
+        }
+        
 	});
 
     App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {

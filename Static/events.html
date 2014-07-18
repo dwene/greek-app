@@ -5,9 +5,15 @@
         </div>
         <ul id="eventList" class="col-xs-12 col-sm-6 col-lg-8">
             <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
-            <li class="event" ng-repeat="event in events | orderBy:'-time_start' | removePassedEvents | multipleSearch:search" ng-click="showEvent(event)">
-                <div class="eventContent">
-                <span class="eventName">{{event.title}}</span>
+            <a id="newEventButton" data-toggle="collapse" data-target="#showHidden" class="btn btn-default pull-right"><i class="fa fa-history"></i> Show Past</a>
+            
+            <div id="showHidden" class="collapse">
+            testing<br><br>
+            </div>
+            
+            <li class="notification" ng-repeat="event in events | orderBy:'-time_start' | removePassedEvents | multipleSearch:search" ng-click="showEvent(event)">
+                <div class="notificationContent">
+                <span class="notificationTitle">{{event.title}}</span>
                 <span class="eventTime">{{showDate(event.time_start, event.time_end)}}</span>
                 </div>
             </li>

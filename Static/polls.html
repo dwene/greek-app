@@ -11,9 +11,12 @@
 <div class="container">
 
 <div ng-repeat="poll in polls">
-    {{poll.name}}
-    {{poll.description}}
-    <a class="btn btn-default" ng-href="#/app/polls/{{poll.key}}">Go</a>
+  <div ng-click="showPoll(poll)" class="notification">
+       <div class="notificationContent">
+        <span class="notificationTitle preText">{{poll.name}}</span>
+        <span class="preText">{{poll.description}}</span>
+        </div>
+    </div>
 </div>
 
 </div>

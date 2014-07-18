@@ -10,7 +10,8 @@
        
         <h2 class="page-header">Upcoming Events</h2>
         <section>
-            <p ng-hide="$root.events.length">There are no upcoming events.</p>
+<!--  #FIXME how would this ng-hide work correctly?      -->
+<!--            <p ng-hide="$root.events.length">There are no upcoming events.</p>-->
             <ul>
                 <li ng-repeat="event in $root.events | removePassedEvents |  limitTo: 3">
                     <span>{{event.title}}</span>
