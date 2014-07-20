@@ -6,10 +6,10 @@
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron">
 			
-<a ng-href="#/app/events" class="btn btn-default topLeft"><i class="fa fa-reply"></i> Back</a>
+<a ng-href="#/app/events" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
 
  <button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Event</button>
-<button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft"><i class="fa fa-edit"></i>Report</button>
+<button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft">Report <i class="fa fa-edit"></i></button>
 <a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft2" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
 <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomRight"><i class="fa fa-edit"></i> Edit</button>
 
