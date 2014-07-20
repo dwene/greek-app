@@ -244,13 +244,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //set color theme
         $rootScope.color5 = true;
         $rootScope.colorName = "";
-        $rootScope.allTagsList = function(){
-            
-        }
         
-        $rootScope.$watch('tags', function(){
-                $rootScope.allTags = $rootScope.tags.org_tags.concat($rootScope.tags.perms_tags.concat($rootScope.tags.event_tags));
-        });
+        $rootScope.notifyConsole = function(){
+            console.log('I got clikced');
+        }
         
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
@@ -3202,7 +3199,7 @@ App.directive('ngEnter', function() {
 //  }
 //});
 
-App.directive('selectingUsers', function($compile){
+App.directive('selectingUsers', function(){
   return {
     restrict: 'E',
     replace: 'true',
@@ -3210,11 +3207,33 @@ App.directive('selectingUsers', function($compile){
     scope:{
         ngModel: "=",
         userCount:"=",
-        allTagsList:"=",
     },
     transclude: true,
     link: function (scope, element, attrs) {
-        $compile(element.contents())(scope)
+        scope.selectTagFromTypeAhead = function(tag){
+            console.log('searching for',tag);
+            var tagTypes = [scope.ngModel.org_tags, scope.ngModel.perms_tags, scope.ngModel.event_tags];
+            for (var j = 0; j < tagTypes.length; j++){
+                console.log(tagTypes[j]);
+                for(var i = 0; i < tagTypes[j].length; i++){
+                    console.log(tagTypes[j][i]);
+                    if (tagTypes[j][i].name == tag.name)  {
+                        console.log('I found the tag!');
+                        tagTypes[j][i].checked = true;
+                        break;
+                    }
+                }
+                scope.selectedTagName = "";
+            }
+        }
+        scope.clickNofity = function(){
+            console.log('clicked');
+        }
+        scope.$watch('ngModel', function(){
+            if (scope.ngModel && scope.ngModel.org_tags){
+            scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.ngModel.event_tags));}
+        });
+        
      }
   }
 });

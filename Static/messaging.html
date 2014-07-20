@@ -1,7 +1,7 @@
 <section class="container">
 <h2 class="page-header">Send a Message: <br></h2>
 
-<selecting-users all-tags-list="$root.allTags" ng-model="$root.tags"></selecting-users>
+<selecting-users ng-model="$root.tags"></selecting-users>
 
     
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags)" novalidate>
