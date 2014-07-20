@@ -1,6 +1,6 @@
 <div><!--<selecting-users>-->
    <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-        <input type="text" class="form-control" ng-model="selectedTagName" select-function="$root.NotifyConsole()" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
+        <input type="text" class="form-control" ng-model="selectedTagName" update-fn="$root.NotifyConsole()" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
         <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
     </form>
    
