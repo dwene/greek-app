@@ -144,7 +144,7 @@ h1{font-size:36px; font-weight:bold;}
 .memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
 
 #tagtypeahead{position:relative;}
-#tagtypeahead #seeall{cursor:pointer; position:absolute; right:10px; top:8px;}
+#tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
 
 .memberTags .btn-group{-webkit-user-select:none;}
 .memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;

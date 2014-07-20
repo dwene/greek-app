@@ -1,20 +1,29 @@
-<div><!--<selecting-users>-->
-   <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-        <input type="text" class="form-control" ng-model="selectedTagName" select-function="$root.NotifyConsole()" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
-        <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
-    </form>
-   
-    <ul id="messagingTags">
-       <span>Recent: </span>
-            <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
-                <netetag-check ng-show="tag.recent"></netetag-check>
+<section id="selectingUsers">
+    
+    <div class="row">
+           <form class="col-xs-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
+                <input type="text" class="form-control" ng-model="selectedTagName" select-function="$root.NotifyConsole()" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
+                <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
+            </form>
+            <div class="col-xs-6">
+                   <h2 class="page-header">Recent Tags:
+                    <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
+                        <netetag-check ng-show="tag.recent"></netetag-check>
+                    </div>
+                    </h2>
             </div>
+    </div>
+   <br>
+    <ul id="messagingTags">
+    <h2 class="page-header">Selected Tags: <span ng-hide="tag.checked">No tags are selected.</span>
         <span ng-repeat="type in ngModel">
             <div class="btn-group" ng-repeat="tag in type">
                 <netetag-check ng-show="tag.checked"></netetag-check>
             </div>
         </span>
+    </h2>
     </ul>
+    
     <div id="selectedList" class="well">
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers = ( $root.users.members | tagDirectorySearch:ngModel)">{{member.first_name}} {{member.last_name}}</span>
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
@@ -49,5 +58,4 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 </div>
-
-
+</section>
