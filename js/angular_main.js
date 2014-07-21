@@ -604,11 +604,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http, $rootScope, Load) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
         Load.then(function(){
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.maxPageNumber = 5;
+        $scope.hidden = {};
+        $scope.current = {};
+        $scope.hidden.currentPage = 0;
+        $scope.hidden.pageSize = 10;
+        $scope.hidden.maxPageNumber = 5;
+        $scope.current.currentPage = 0;
+        $scope.current.pageSize = 10;
+        $scope.current.maxPageNumber = 5;
 //        $scope.getUser = function(notify){
 //            if(!notify.sender){
 //                return null;
@@ -682,15 +687,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $http.post('/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
         }
         
-        $scope.hideNotification = function(notify){
-            var key = notify.key;
-            $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
-            $rootScope.hidden_notifications.push(notify);
-            if (notify.new){
-                notify.new = false;
-                $rootScope.updateNotificationBadge();
-            }
-            $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
+        $scope.hideNotification = function(notify, domElement){
+            $timeout(function(){
+                notify.garbage = true;
+            })
+            $timeout(function(){
+                var key = notify.key;
+                $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+                $rootScope.hidden_notifications.push(notify);
+                if (notify.new){
+                    notify.new = false;
+                    $rootScope.updateNotificationBadge();
+                }
+                $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
+            })
+            
         }
         
         $scope.closeNotificationModal = function(notify){
