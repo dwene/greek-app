@@ -1563,7 +1563,25 @@ class RESTApi(remote.Service):
                 # if len(not_going_difference) > 0:
                 #     for _key in list(not_going_difference):
                 #         event.not_going.remove(_key)
-        event.put()
+        futures = list()
+        futures.append(event.put_async())
+        users = get_users_from_tags({'org_tags': event.org_tags, 'perms_tags': event.perms_tags},
+                                    request_user.organization, False)
+        notification = Notification()
+        notification.title = 'Event Updated: ' + event.title
+        notification.type = 'event'
+        notification.content = "The event " + event.title + " has been updated."
+        notification.content += ". Please check out your events page for more information."
+        notification.sender_name = "NeteGreek Notification Service"
+        notification.sender = request_user.key
+        notification.timestamp = datetime.datetime.now()
+        notification.link = '#/app/events/'+event.tag
+        notification.put()
+        for user in users:
+            user.new_notifications.append(notification.key)
+            futures.append(user.put_async())
+        for item in futures:
+            item.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/get_check_in_info',

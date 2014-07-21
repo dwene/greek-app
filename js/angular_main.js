@@ -3207,6 +3207,7 @@ App.directive('selectingUsers', function(){
     scope:{
         ngModel: "=",
         userCount:"=",
+        skipEvent:"=",
     },
     transclude: true,
     link: function (scope, element, attrs) {
@@ -3230,8 +3231,12 @@ App.directive('selectingUsers', function(){
             console.log('clicked');
         }
         scope.$watch('ngModel', function(){
-            if (scope.ngModel && scope.ngModel.org_tags){
-            scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.ngModel.event_tags));}
+            if (scope.ngModel && scope.ngModel.org_tags && !scope.skipEvent){
+                scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.ngModel.event_tags));
+            }
+            else if (scope.ngModel && scope.ngModel.org_tags && scope.skipEvent){
+                scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags);
+            }
         });
         
      }
@@ -3386,12 +3391,13 @@ App.filter('startFrom', function() {
 App.filter('checkedFilter', function() {
     return function(input) {
         out = [];
+        if  (input){
         for (var i = 0; i < input.length; i++){
             if (input[i].checked){
                 out.push(input[i]);
             }
         }
-    
+    }
     return out;
     }
 });

@@ -17,10 +17,16 @@
     </div>
    <br>
     <ul id="messagingTags">
-    <h2 class="page-header">Selected Tags: <span ng-hide="tag.checked">No tags are selected.</span>
-        <span ng-repeat="type in ngModel">
-            <div class="btn-group" ng-repeat="tag in type">
-                <netetag-check ng-show="tag.checked"></netetag-check>
+    <h2 class="page-header">Selected Tags: <span ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</span>
+        <span>
+            <div class="btn-group" ng-show="ngModel.org_tags" ng-repeat="tag in orgTagCheck = (ngModel.org_tags | checkedFilter)">
+                <netetag-check></netetag-check>
+            </div>
+            <div class="btn-group" ng-show="ngModel.event_tags && !skipEvent" ng-repeat="tag in eventTagCheck = ( ngModel.event_tags | checkedFilter)">
+                    <netetag-check></netetag-check>
+            </div>
+            <div class="btn-group" ng-show="ngModel.perms_tags" ng-repeat="tag in permsTagCheck = (ngModel.perms_tags | checkedFilter)">
+                    <netetag-check></netetag-check>
             </div>
         </span>
     </h2>
@@ -28,7 +34,7 @@
     
     <div id="selectedList" class="well">
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers = ( $root.users.members | tagDirectorySearch:ngModel)">{{member.first_name}} {{member.last_name}}</span>
-        <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
+        <span class="noneSelected" ng-hide="$parent.selectedMembers.length > 0">No one is selected.</span>
     </div>
     
     
