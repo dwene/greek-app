@@ -249,6 +249,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
             console.log('I got clikced');
         }
         
+        $rootScope.setColor = function (color){
+            $rootScope.color = color;
+            if (color == 'color5'){
+                $('body').addClass('dark');
+            }
+            else{
+                $('body').removeClass('dark');
+            }
+            
+        }
+        
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
@@ -383,6 +394,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(TOKEN, returned_data.token);
                         $.cookie(PERMS, returned_data.perms);
                         window.location.assign("#/app");
+                        $rootScope.refreshPage();
                     }
                     else{
                         if (data.error == "BAD_LOGIN"){
@@ -2754,6 +2766,33 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + data);
                 });
         });
+        $scope.closePoll = function(close){
+            var to_send = {key: $stateParams.key};
+            if (close === true){
+                to_send.close = true;
+            }
+            else if (close === false){
+                to_send.open = true;
+            }
+            $http.post('/_ah/api/netegreek/v1/poll/edit_poll', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        if (close){
+                            $scope.poll.open = false
+                        }
+                        else if (close === false){
+                            $scope.poll.open = true;
+                        }
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
+        
         
         $scope.submitResponse = function(){
             var to_send = $scope.poll;
@@ -2851,6 +2890,23 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 });
             };
             
+            $scope.saveColors = function(){
+                $http.post('/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $rootScope.refreshPage();
+                    }
+                    else{
+                        $scope.error = true;    
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + JSON.stringify(data));
+                });
+            }
+
+            
             $scope.changeTheme = function(number){
                 var colorNumber = 'color'+number;
                 $scope.themeColor = colorNumber;
@@ -2915,6 +2971,7 @@ function checkResponseErrors(received_data){
     if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN' || response.error == 'BAD_FIRST_TOKEN')
     {
         window.location.assign("/#/login");
+        window.location.reload();
         console.log('ERROR: '+response.error);
         return true;
     }
@@ -3722,14 +3779,10 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 checkIfDone();
             });
             console.log('hi');
-            $http.post('/_ah/api/netegreek/v1/pay/is_subscribed', packageForSending(''))
+            $http.post('/_ah/api/netegreek/v1/organization/info', packageForSending(''))
             .success(function(data){
-                console.log('hi');
-                if (!checkResponseErrors(data)){
-                    var subscribed = JSON.parse(data.data);
-                    $rootScope.subscribed = subscribed;
-                    console.log(subscribed);
-                }
+                $rootScope.subscribed = true;
+                $rootScope.setColor(JSON.parse(data.data).color);
                 checkIfDone();
             })
             .error(function(data) {
