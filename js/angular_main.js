@@ -2748,20 +2748,20 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
 	});
 
     App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
-        console.log('I made it to the controller');
         Load.then(function(){
             var to_send = {key: $stateParams.key};
             $http.post('/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
-                        console.log($scope.poll);
                     }
                     else{
+                        $scope.notFound = true;
                         console.log('ERR');
                     }
                 })
                 .error(function(data) {
+                    $scope.notFound = true;
                     console.log('Error: ' + data);
                 });
         });
@@ -2792,6 +2792,21 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 });
         }
         
+        $scope.deletePoll = function(){
+            var to_send = {key: $stateParams.key};
+            $http.post('/_ah/api/netegreek/v1/poll/delete', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        window.location.assign('#/app/polls')
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+        }
         
         $scope.submitResponse = function(){
             var to_send = $scope.poll;
@@ -2807,6 +2822,10 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 .error(function(data) {
                     console.log('Error: ' + data);
                 });
+        }
+        
+        $scope.goToResults = function(){
+            window.location.assign('#/app/polls/'+$stateParams.key + '/results');
         }
 	});
 

@@ -1966,6 +1966,32 @@ class RESTApi(remote.Service):
         poll['questions'] = out_results
         return OutgoingMessage(error='', data=json_dump(poll))
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/delete',
+                      http_method='POST', name='poll.delete')
+    def delete_poll(self, request):
+        data = json.loads(request.data)
+        poll_key = ndb.Key(urlsafe=data["key"])
+        poll_future = poll_key.get_async()
+        questions_future = Question.query(Question.poll == poll_key).fetch_async()
+        responses_future = Response.query(Response.poll == poll_key).fetch_async()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        poll = poll_future.get_result()
+        if not poll.organization == request_user.organization:
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        questions = questions_future.get_result()
+        responses = responses_future.get_result()
+        for question in questions:
+            question.key.delete()
+        for response in responses:
+            response.key.delete()
+        poll.key.delete()
+        return OutgoingMessage(error='', data='OK')
+
         # for question in question_list:
         #     responses = question["responses"].get_result()
         #     if question["question"].type == 'multiple':
