@@ -262,7 +262,6 @@ class SendEmails(webapp2.RequestHandler):
             return
         emails = CronEmail.query(CronEmail.pending == True).fetch()
         futures = []
-        logging.error('I made it to the send emails code')
         for email in emails:
             send_mandrill_email(from_email='support@netegreek.com', to_email=email.email,
                                 subject=email.title, body=email.content)

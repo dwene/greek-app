@@ -1692,7 +1692,6 @@ class RESTApi(remote.Service):
             att_data.put()
         return OutgoingMessage(error='', data='OK')
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/delete',
                       http_method='POST', name='event.delete')
     def delete_event(self, request):
@@ -1737,6 +1736,20 @@ class RESTApi(remote.Service):
             q.choices = question["choices"]
             q.type = question["type"]
             async_list.append(q.put_async())
+        users = get_users_from_tags(data["tags"], request_user.organization, False)
+        notification = Notification()
+        notification.title = 'New Poll: ' + poll.name
+        notification.content = 'You have been invited to answer a new poll.'
+        notification.content += ' Please visit your polling page for more information.'
+        notification.timestamp = datetime.datetime.now()
+        notification.sender = request_user.key
+        notification.type = 'poll'
+        notification.link = '#/app/polls/' + poll.key.urlsafe()
+        notification.sender_name = 'NeteGreek Notification Service'
+        notification.put()
+        for user in users:
+            user.new_notifications.append(notification.key)
+            async_list.append(user.put_async())
         for item in async_list:
             poll.questions.append(item.get_result())
         poll.put()
@@ -1759,22 +1772,28 @@ class RESTApi(remote.Service):
     #     question.put()
     #     return OutgoingMessage(error='', data='OK')
     #
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/edit_poll',
-    #                   http_method='POST', name='poll.edit_poll')
-    # def edit_poll(self, request):
-    #     data = json.loads(request.data)
-    #     question_future = ndb.Key(urlsafe=data["key"]).get_async()
-    #     request_user = get_user(request.user_name, request.token)
-    #     if not request_user:
-    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-    #     if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-    #         return OutgoingMessage(error=INCORRECT_PERMS, data='')
-    #     question = question_future.get_result()
-    #     question.worded_question = data["worded_question"]
-    #     question.type = data["type"]
-    #     question.choices = data["choices"]
-    #     question.put()
-    #     return OutgoingMessage(error='', data='OK')
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/edit_poll',
+                      http_method='POST', name='poll.edit_poll')
+    def edit_poll(self, request):
+        data = json.loads(request.data)
+        poll_future = ndb.Key(urlsafe=data["key"]).get_async()
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        poll = poll_future.get_result()
+        if not request_user.organization == poll.organization:
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        if 'close' in data and data["close"] is True:
+            poll.open = False
+            poll.put()
+            return OutgoingMessage(error='', data='OK')
+        if 'open' in data and data["open"] is True:
+            poll.open = True
+            poll.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/answer_questions',
                       http_method='POST', name='poll.answer_questions')
