@@ -88,11 +88,14 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 .checkLabel.label-default:hover{background:#ccc;}
 .checkLabel.label-primary:hover{background:blue;}
 
-/*Message and Events Person Well*/
+/*Selecting Members for Messaging*/
 #selectedList{margin-bottom:10px; padding:10px; min-height:60px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 .noneSelected{position:absolute; left:10px; top:10px;}
+#selectingUsers #messagingTags .page-header{line-height:45px; margin-top:-20px; padding-bottom:0px;}
+#tagtypeahead{position:relative;}
+#tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
 
 /*Random Fixes*/
 .btn{-webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-tap-highlight-color: transparent; 
@@ -142,9 +145,6 @@ h1{font-size:36px; font-weight:bold;}
 #selectedTags{display:inline;}
 .memberTags .badge:hover{background:#d9534f;}
 .memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
-
-#tagtypeahead{position:relative;}
-#tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
 
 .memberTags .btn-group{-webkit-user-select:none;}
 .memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;
