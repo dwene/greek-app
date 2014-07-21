@@ -96,6 +96,10 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 #selectingUsers #messagingTags .page-header{line-height:45px; margin-top:-20px; padding-bottom:0px;}
 #tagtypeahead{position:relative;}
 #tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
+@media screen and (max-width:768px){
+#selectingUsers .row .page-header{margin-top:10px;}
+}
+
 
 /*Random Fixes*/
 .btn{-webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-tap-highlight-color: transparent; 
@@ -179,6 +183,7 @@ margin-top: 2px;}}
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
 #recentlySentMessages{margin-top:20px;}
+#recentlySentMessages h2{margin-bottom:0px; border:0px;}
 #messagingTags{margin-bottom:5px;}
 #messagingTags .btn-group{margin-bottom:5px;}
 
@@ -353,14 +358,14 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation-duration: 1s;}
 
 /*ng-animation code*/
-.fadingIn.ng-enter, .messagePerson.ng-enter{
+.fadingIn.ng-enter, .fader.ng-enter{
 -webkit-animation: fadeIn .5s;
 -moz-animation: fadeIn .5s;
 -ms-animation: fadeIn .5s;
  animation: fadeIn .5s;
 }
 
-.fadingOut.ng-leave, .messagePerson.ng-leave{
+.fadingOut.ng-leave, .fader.ng-leave{
 -webkit-animation: fadeOut .5s;
 -moz-animation: fadeOut .5s;
 -ms-animation: fadeOut .5s;
