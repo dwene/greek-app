@@ -17,7 +17,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop']);
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', "googlechart"]);
 
 App.config(function($stateProvider, $urlRouterProvider) {
     
@@ -2827,6 +2827,8 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + data);
                 });
         });
+        
+        
     });
         
 
@@ -3234,6 +3236,43 @@ App.directive('ngEnter', function() {
                 }
             });
         };
+    });
+
+App.directive('netePieChart', function() {
+    return{    
+        scope: {
+            ngModel : '=',
+            realData: '='
+        },
+        restrict: 'E',
+        replace: 'true',
+        template: '<div> </div>',
+        link: function (scope, element, attrs) {
+            scope.$watch('ngModel', function(){
+                if (scope.ngModel){
+                    scope.realData = {};
+                        var objectList = [];
+                        for (var i = 0; i < scope.ngModel.length; i++){
+                            objectList.push({c: [
+                                {v: scope.ngModel[i].name},
+                                {v: scope.ngModel[i].count},
+                            ]})
+                        }
+
+                        scope.realData.data = {"cols": [
+                            {id: "t", label: "Choice", type: "string"},
+                            {id: "s", label: "Count", type: "number"}
+                        ], "rows":objectList};
+
+                        // $routeParams.chartType == BarChart or PieChart or ColumnChart...
+                        scope.realData.type = 'PieChart';
+                        scope.realData.options = {
+                            'title': 'test'
+                        }  
+                }   
+            });
+        }
+    }
     });
 
 //App.directive('calendar', function($compile){

@@ -7,6 +7,7 @@
                 <p>{{response.name}} : {{response.count}}</p>
             </li>
         </ul>
+        <nete-pie-chart ng-show="question.type == 'multiple_choice'" ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata"></div>
         <ul ng-show="question.type == 'text'"> 
             <li ng-repeat="response in question.responses">
                 <p>{{response}}</p>

@@ -1947,7 +1947,10 @@ class RESTApi(remote.Service):
                         responses_list.append(r["answer"])
                         for a in response.answer:
                             results[a]['count'] += 1
-                question_dict["response_data"] = results
+                output = list()
+                for key in results:
+                    output.append(results[key])
+                question_dict["response_data"] = output
             else:
                 for response in responses:
                     if response.question == question.key:
