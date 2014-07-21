@@ -3221,10 +3221,10 @@ App.directive('selectingUsers', function(){
                     if (tagTypes[j][i].name == tag.name)  {
                         console.log('I found the tag!');
                         tagTypes[j][i].checked = true;
+                        scope.selectedTagName = "";
                         break;
                     }
-                }
-                scope.selectedTagName = "";
+                } 
             }
         }
         scope.clickNofity = function(){
