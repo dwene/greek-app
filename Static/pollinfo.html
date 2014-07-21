@@ -2,11 +2,14 @@
 <div class="jumbotron">
 			
 <a ng-href="#/app/polls" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
-<a ng-click="closePoll(true)" ng-show="poll.open" class="btn btn-default topRight">Close Poll<i class="btn btn-default"></i></a>
-<a ng-click="closePoll(false)" ng-show="poll.open === false" class="btn btn-default topRight">Open Poll<i class="btn btn-default"></i></a>
+<button ng-click="closePoll(true)" ng-show="poll.open" class="btn btn-default topRight"><i class="fa fa-pause"></i> Close Poll</button>
+<button ng-click="closePoll(false)" ng-show="poll.open === false" class="btn btn-default topRight"><i class="fa fa-play"></i> Open Poll</button>
+<button ng-click="deletePoll()" class="btn btn-danger bottomRight"><i class="fa fa-trash"></i> Delete Poll</button>
+
 
 <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft">Report <i class="fa fa-edit"></i></button>
 
+            <div class="alert alert-warning text-center" role="alert" ng-show="poll.open === false">This poll is closed.</div>
 			<h1 class="text-center">{{poll.name}}</h1>
 			<p class="text-center">#{{poll.description}}</p>
 </div>
