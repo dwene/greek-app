@@ -251,7 +251,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $rootScope.setColor = function (color){
             $rootScope.color = color;
-            if (color == 'color5'){
+            if (color == 'color4' || color == 'color5'){
                 $('body').addClass('dark');
             }
             else{
@@ -2910,12 +2910,13 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 });
             };
             
-            $scope.saveColors = function(){
+            $scope.changeTheme = function(number){
+                
+                $rootScope.setColor('color'+number);
                 $http.post('/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        $rootScope.refreshPage();
                     }
                     else{
                         $scope.error = true;    
@@ -2924,19 +2925,6 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 .error(function(data) {
                     console.log('Error: ' + JSON.stringify(data));
                 });
-            }
-
-            
-            $scope.changeTheme = function(number){
-                var colorNumber = 'color'+number;
-                $scope.themeColor = colorNumber;
-                $rootScope.color = colorNumber;
-                if (number == 4 || number == 5){
-                $('body').addClass('dark');
-                }
-                else{
-                $('body').removeClass('dark');
-                }
             }
             
         });
