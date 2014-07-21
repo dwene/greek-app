@@ -1753,7 +1753,7 @@ class RESTApi(remote.Service):
         for item in async_list:
             poll.questions.append(item.get_result())
         poll.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump({'key': poll.key.urlsafe()}))
 
     # @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/edit_question',
     #                   http_method='POST', name='poll.edit_question')

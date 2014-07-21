@@ -2700,7 +2700,6 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
         $scope.createPoll = function(isValid){
             var poll = $scope.poll;
             poll.tags = getCheckedTags($scope.tags);
-            console.log(poll.tags);
             var to_send = JSON.parse(JSON.stringify(poll));
 //            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
 //            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
@@ -2708,7 +2707,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 $http.post('/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        window.location.assign('#/app/home');
+                        window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
                     }
                     else{
                         console.log('ERR');
