@@ -617,6 +617,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //        });
                 
             
+        //TOOLTIPS
+        $scope.archiveTip = {
+            "title" : "Archive Notification"
+        }
+        $scope.clearStatusTip = {
+            "title" : "Clear Status"
+        }
+            
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
@@ -680,7 +688,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
        $('#showHiddenButton').click(function () {
           $(this).text(function(i, text){
-              return text === "Show Hidden" ? "Hide Hidden" : "Show Hidden";
+              return text === "Show Archived" ? "Hide Archived" : "Show Archived";
           })
        });
        }); 
@@ -1920,6 +1928,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
+        
+        $scope.deleteMessageTip = {
+            "title" : "Delete Message"
+        }
+        
         function onFirstLoad(){
             $scope.loading = true;
             var tag_list = [];
@@ -2032,6 +2045,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#messageModal').modal();
             $scope.selectedMessage = message;
         }
+        
+        $('#showHiddenButton').click(function () {
+          $(this).text(function(i, text){
+              return text === "Show Recent" ? "Hide Recent" : "Show Recent";
+          })
+       });
+        
     });
     });
 

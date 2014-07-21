@@ -17,14 +17,15 @@
         
     </form>
     
-</section>
+<button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages">Show Recent</button>
 
-<section id="recentlySentMessages" class="container">
+
+<section id="recentlySentMessages" class="collapse">
     <h2 class="page-header" ng-hide="notify.length">Recently Sent: <br></h2>
     <ul>
         <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification">
             <div class="notificationContent">
-                <button type="button" class="close" ng-click="openMessageModal(notify)"><i class="fa fa-trash-o"></i></button>
+                <button type="button" class="close" ng-click="openMessageModal(notify)" bs-tooltip="deleteMessageTip" data-placement="left"><i class="fa fa-trash-o"></i></button>
             <span class="notificationTitle preText">{{notify.title}}</span>
             <span class="preText">{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
             </div>
@@ -38,6 +39,7 @@
     
 </section>
 
+</section>
 
 <div class="modal fade" id="messageModal">
   <div class="modal-dialog">

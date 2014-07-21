@@ -21,7 +21,7 @@
     </div>
        
     <div id="changeStatus" class="col-xs-12 col-sm-6">
-       <h2 class="page-header">Current Status:  <span class="currentStatus" ng-show="$root.me.status.length">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()">×</button></h2>
+       <h2 class="page-header">Current Status:  <span class="currentStatus" ng-show="$root.me.status.length">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button></h2>
        <section>
             <div class="col-xs-12">
             <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
@@ -43,7 +43,7 @@
         <ul>
             <li class="notification" ng-class="{new: notify.new, collapseOut: notify.collapseOut}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | limitTo: 5">
                 <div class="notificationContent">
-                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();"><i class="fa fa-times-circle"></i></button>
+                <button type="button" class="close" ng-click="hideNotification(notify);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
                 <span class="notificationTitle preText"><i class="fa fa-circle"></i>{{notify.title}}</span>
                     <span class="preText">{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 100">...</span></span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
@@ -53,7 +53,7 @@
         
             <p ng-show="!$root.notifications.length">There are no new notifications!</p>
         
-    <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Hidden</button>
+    <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Archived</button>
 
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
