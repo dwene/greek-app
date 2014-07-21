@@ -10,7 +10,7 @@
 </div>
 <div class="container">
 
-<div ng-repeat="poll in polls | orderBy: '-poll.timestamp'">
+<div ng-repeat="poll in polls | orderBy: '-timestamp'">
   <div ng-click="showPoll(poll)" class="notification">
        <div class="notificationContent">
         <span class="notificationTitle preText">{{poll.name}}</span>

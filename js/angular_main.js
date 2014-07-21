@@ -352,7 +352,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 LoadScreen.stop();
                 $rootScope.users = {};
                 window.location.assign("/#/login");
-                $rootScope.refreshPage();
         }
     });
     App.controller('indexController', function($scope, $http, LoadScreen) {
@@ -2791,6 +2790,17 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     console.log('Error: ' + data);
                 });
         }
+        $scope.$watchCollection('poll.questions', function(){
+            console.log('Im doing stuff');
+            if ($scope.poll && $scope.poll.questions){   
+            for (var i = 0; i < $scope.poll.questions.length; i++){
+                if (!$scope.poll.questions[i].new_response){
+                    $scope.formUnfinished = true;
+                    return;
+                }
+            }
+            $scope.formUnfinished = false;}
+        })
         
         $scope.deletePoll = function(){
             var to_send = {key: $stateParams.key};

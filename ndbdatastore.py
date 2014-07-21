@@ -120,10 +120,12 @@ class Poll(ndb.Model):
     open = ndb.BooleanProperty(default=True)
     allow_changes = ndb.BooleanProperty(default=True)
     answered_users = ndb.KeyProperty(repeated=True)
+    timestamp = ndb.DateTimeProperty()
 
 
 class Question(ndb.Model):
     type = ndb.StringProperty()
+    index = ndb.IntegerProperty()
     worded_question = ndb.StringProperty()
     choices = ndb.StringProperty(repeated=True)
     responses = ndb.KeyProperty(repeated=True)

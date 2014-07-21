@@ -1723,16 +1723,20 @@ class RESTApi(remote.Service):
         poll.invited_org_tags = data["tags"]["org_tags"]
         poll.invited_event_tags = data["tags"]["event_tags"]
         poll.invited_perms_tags = data["tags"]["perms_tags"]
+        poll.timestamp = datetime.datetime.now()
         poll.results_tags = ['council']
         poll.organization = request_user.organization
         # poll.time_start = datetime.datetime.strptime(data["time_start"], '%m/%d/%Y %I:%M %p')
         # poll.time_end = datetime.datetime.strptime(data["time_end"], '%m/%d/%Y %I:%M %p')
         key = poll.put()
         async_list = list()
+        index = 0
         for question in data["questions"]:
             q = Question()
             q.worded_question = question["worded_question"]
             q.poll = key
+            q.index = index
+            index += 1
             q.choices = question["choices"]
             q.type = question["type"]
             async_list.append(q.put_async())
@@ -1751,7 +1755,7 @@ class RESTApi(remote.Service):
             user.new_notifications.append(notification.key)
             async_list.append(user.put_async())
         for item in async_list:
-            poll.questions.append(item.get_result())
+            poll.questions.insert(0, item.get_result())
         poll.put()
         return OutgoingMessage(error='', data=json_dump({'key': poll.key.urlsafe()}))
 
