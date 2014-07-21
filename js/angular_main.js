@@ -3466,14 +3466,18 @@ App.filter('multipleSearch', function(){
 
 
 App.filter('removePassedEvents', function(){ 
-    return function (objects) {
+    return function (objects, removePref) {
         var retList = [];
         var now = new Date();
         if (!objects){
             return objects;
         }
         for(var oPos = 0; oPos < objects.length; oPos++){
-            if(moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) > 0){
+            
+            if(moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) > 0 && removePref){
+                retList.push(objects[oPos]);
+            }
+            else if (moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) < 0 && !removePref){
                 retList.push(objects[oPos]);
             }
 //            if (objects[oPos].time_start < now && objects[oPos].time_end > now){
