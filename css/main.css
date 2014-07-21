@@ -180,6 +180,8 @@ textarea.form-control{height:auto; max-width:100%;}
 /*App Home Page*/
 #statusContainer .close{margin:-2px 5px 0px 0px;}
 .currentStatus{font-style:italic;}
+#changeStatus #count{float:right; font-size:10px; margin:2px 4px 0px 0px;}
+#changeStatus section{min-height:46px;}
 @media screen and (max-width:768px){
 #statusContainer .page-header{padding-bottom:3px; margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
