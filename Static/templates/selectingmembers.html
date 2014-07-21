@@ -48,13 +48,18 @@
       <div class="modal-body">
             <ul class="addTags">
             <div>
+               <h2 class="page-header">Organization Tags</h2>
                 <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
                     <netetag-check></netetag-check>
                 </div>
-                <div class="btn-group" ng-repeat="tag in ngModel.perms_tags">
-                    <netetag-check></netetag-check>
+                <div ng-hide="skipEvent">
+                    <h2 class="page-header">Event Tags</h2>
+                    <div class="btn-group" ng-repeat="tag in ngModel.event_tags">
+                        <netetag-check></netetag-check>
+                    </div>
                 </div>
-                <div class="btn-group" ng-hide="skipEvent" ng-repeat="tag in ngModel.event_tags">
+                <h2 class="page-header">Preset Tags</h2>
+                <div class="btn-group" ng-repeat="tag in ngModel.perms_tags">
                     <netetag-check></netetag-check>
                 </div>
             </div>

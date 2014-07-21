@@ -96,6 +96,7 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 #selectingUsers #messagingTags .page-header{line-height:45px; margin-top:-20px; padding-bottom:0px;}
 #tagtypeahead{position:relative;}
 #tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
+#seeallTags .page-header{margin-bottom:2px; margin-top:10px;}
 @media screen and (max-width:768px){
 #selectingUsers .row .page-header{margin-top:10px;}
 }
@@ -136,7 +137,7 @@ h1{font-size:36px; font-weight:bold;}
 #directory .memberName{font-size:18px;}
 .directoryTags{font-size:12px; font-style: italic;}
 .directoryStatus{width:100%; margin-top:4px; display:block; font-size:16px;}
-#directory h2{text-transform:uppercase; font-weight:bold; text-indent:10px; margin-bottom:4px;}
+#directory h2{text-transform:uppercase; font-weight:bold; text-indent:10px; margin:20px 0px 0px 0px; border:0px;}
 
 /*Member Profile Page*/
 #profileContent{position:relative; margin:0 auto;}

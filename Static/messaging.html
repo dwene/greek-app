@@ -22,7 +22,7 @@
 <section id="recentlySentMessages" class="container">
     <h2 class="page-header" ng-hide="notify.length">Recently Sent: <br></h2>
     <ul>
-        <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification collapseOut" ng-class="{ new : notify.new }">
+        <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification">
             <div class="notificationContent">
                 <button type="button" class="close" ng-click="openMessageModal(notify)"><i class="fa fa-trash-o"></i></button>
             <span class="notificationTitle preText">{{notify.title}}</span>
