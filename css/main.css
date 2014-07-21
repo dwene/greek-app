@@ -77,6 +77,7 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 .noneSelected{position:absolute; left:10px; top:10px;}
+#selectingUsers #messagingTags{margin-top:0px;}
 #selectingUsers #messagingTags .page-header{min-height:30px; margin-top:0px; padding-bottom:0px;}
 #selectingUsers #messagingTags .page-header #noTags{display:inline-block; margin-top:3px;}
 #tagtypeahead{position:relative;}
@@ -100,6 +101,7 @@ input.form-control{height:34px !important;}
 .well, .jumbotron{position:relative;}
 .alert{background-image: none; padding: 0px; margin-bottom: 5px;}
 .container .jumbotron {padding-right: 20px;padding-left: 20px;}
+.dropdown-menu>.active>a{color:white !important;}
 @media screen and (max-width: 768px){
 .jumbotron {padding-top: 50px; padding-bottom: 50px;}
 }
@@ -226,7 +228,7 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Account Info Page*/
 #changePasswordButton{margin:10px 0px 0px 0px;}
 #changeProfileButton{display:block; width:180px; margin:0px auto 20px auto;}
-
+#updateAccountAlert{padding:15px; margin-right:100px;}
 
 /*Upload Profile Page*/
 #crop{display:block; width:300px; margin:0 auto 10px auto;}
@@ -272,7 +274,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #color1{}
 #color2{}
 #color3{}
-#color4{}
+#color4{background:#931111;}
 #color5{background:purple;}
 #color6{}
 #color7{}
@@ -291,25 +293,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #loadingScreen .fa-spin{margin-top:40px; font-size:80px;}
 
 
-/*Navigation Styles*/
 
-    /*Colors*/
-    .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
-    .navbar{border:0px; transition:background linear .3s;}
-    
-    /*Color Options*/
-        .color5 .navbar, .color5 .navbar-default .navbar-brand:hover .badge, .color5 .btn-info, .color5 .nav-pills>li.active>a, .color5 .label-primary{background:purple;}
-        .color5 .navbar-default .navbar-brand:hover, .color5 .navbar-default .navbar-nav>li>a:hover, .color5 .navbar .badge, .color5 .navbar-default .navbar-nav>.open>a, .color5 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color5 .navbar-default .navbar-toggle:hover, .color5 .navbar-default .navbar-toggle:focus, .color5 .tooltip-inner, .color5 .btn-primary, .color5 .nav-pills>li.active>a:hover, .color5 .checkLabel.label-primary:hover{background:#551A8B;}
-        .color5 .notification.new .notificationTitle, .color5 a{color:#551A8B;}
-        .color5 .tooltip.left .tooltip-arrow{border-left-color:#551A8B;} .color5 .tooltip.top .tooltip-arrow{border-top-color:#551A8B;} .color5 .tooltip.right .tooltip-arrow{border-right-color:#551A8B;} .color5 .tooltip.bottom .tooltip-arrow{border-bottom-color:#551A8B;}
-        .color5 .btn-info, .color5 .btn-primary{border:0px;}
-    
-    /*Dark Theme Color*/
-    .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
-    .dark .navbar-default .navbar-brand, .dark .navbar-default .navbar-nav>li>a, .dark .navbar-default .navbar-brand .badge, .dark #refreshNotifications{color:white !important; transition:background linear .3s;}
-    @media screen and (max-width:768px){
-        .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
-    }
 
 
 /*Helper Classes*/
@@ -420,94 +404,6 @@ animation: flipOutX .5;
 .bootstrap-datetimepicker-widget .btn:active,
 .bootstrap-datetimepicker-widget .btn.active {-webkit-box-shadow: none; box-shadow: none;}
 
-.twitter-typeahead{width:100%;}
-
-.tt-dropdown-menu,
-.gist {
-  text-align: left;
-}
-
-.typeahead,
-.tt-query,
-.tt-hint {
-}
-
-.typeahead {
-  background-color: #fff;
-}
-
-/*
-.typeahead:focus {
-  border: 2px solid #0097cf;
-}
-*/
-
-.tt-query {
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-
-.tt-hint {
-  color: #999;
-}
-
-.tt-dropdown-menu {
-  max-height:300px;
-  overflow-y: scroll;
-  padding: 6px 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
-  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-          box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
-
-.tt-suggestion {
-  padding: 3px 20px;
-  font-size: 18px;
-  line-height: 24px;
-}
-
-.tt-suggestion.tt-cursor {
-  color: #fff;
-  background-color: #0097cf;
-}
-
-.tt-suggestion p {
-  margin: 0;
-}
-
-.gist {
-  font-size: 14px;
-}
-
-/* example specific styles */
-/* ----------------------- */
-
-#custom-templates .empty-message {
-  padding: 5px 10px;
- text-align: center;
-}
-
-#multiple-datasets .league-name {
-  margin: 0 20px 5px 20px;
-  padding: 3px 0;
-  border-bottom: 1px solid #ccc;
-}
-
-#scrollable-dropdown-menu .tt-dropdown-menu {
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-#rtl-support .tt-dropdown-menu {
-  text-align: right;
-}
 
 /*Angular Picture Cropping*/
 div#cropped-image {
@@ -515,3 +411,38 @@ div#cropped-image {
   width: 150px;
   overflow: hidden;
 }
+
+/*Navigation Styles*/
+
+    /*Colors*/
+    .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
+    .navbar{border:0px; transition:background linear .3s;}
+    
+    /*Color Options*/
+
+/*        931111*/
+        
+        .color4 .navbar, .color4 .navbar-default .navbar-brand:hover .badge, .color4 .btn-info, .color4 .nav-pills>li.active>a, .color4 .label-primary, .color4 .monthview-primary-with-event
+        {background:#931111;}
+        .color4 .navbar-default .navbar-brand:hover, .color4 .navbar-default .navbar-nav>li>a:hover, .color4 .navbar .badge, .color4 .navbar-default .navbar-nav>.open>a, .color4 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color4 .navbar-default .navbar-toggle:hover, .color4 .navbar-default .navbar-toggle:focus, .color4 .tooltip-inner, .color4 .btn-primary, .color4 .nav-pills>li.active>a:hover, .color4 .checkLabel.label-primary:hover, .color4 .dropdown-menu>li>a:hover, .color4 .dropdown-menu>li>a:focus, .color4 .dropdown-menu>.active>a, .color4 .dropdown-menu>.active>a:hover, .color4 .dropdown-menu>.active>a:focus, .color4 .monthview-selected
+        {background:#600000;}
+        .color4 .notification.new .notificationTitle, .color4 a:not(.btn)
+        {color:#600000;}
+        .color4 .tooltip.left .tooltip-arrow{border-left-color:#600000;} .color4 .tooltip.top .tooltip-arrow{border-top-color:#600000;} .color4 .tooltip.right .tooltip-arrow{border-right-color:#600000;} .color4 .tooltip.bottom .tooltip-arrow{border-bottom-color:#600000;}
+        .color4 .btn-info, .color4 .btn-primary{border:1px solid #600000; text-shadow: none;}
+    
+        .color5 .navbar, .color5 .navbar-default .navbar-brand:hover .badge, .color5 .btn-info, .color5 .nav-pills>li.active>a, .color5 .label-primary, .color5 .monthview-primary-with-event
+        {background:purple;}
+        .color5 .navbar-default .navbar-brand:hover, .color5 .navbar-default .navbar-nav>li>a:hover, .color5 .navbar .badge, .color5 .navbar-default .navbar-nav>.open>a, .color5 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color5 .navbar-default .navbar-toggle:hover, .color5 .navbar-default .navbar-toggle:focus, .color5 .tooltip-inner, .color5 .btn-primary, .color5 .nav-pills>li.active>a:hover, .color5 .checkLabel.label-primary:hover, .color5 .dropdown-menu>li>a:hover, .color5 .dropdown-menu>li>a:focus, .color5 .dropdown-menu>.active>a, .color5 .dropdown-menu>.active>a:hover, .color5 .dropdown-menu>.active>a:focus, .color5 .monthview-selected
+        {background:#551A8B;}
+        .color5 .notification.new .notificationTitle, .color5 a:not(.btn)
+        {color:#551A8B;}
+        .color5 .tooltip.left .tooltip-arrow{border-left-color:#551A8B;} .color5 .tooltip.top .tooltip-arrow{border-top-color:#551A8B;} .color5 .tooltip.right .tooltip-arrow{border-right-color:#551A8B;} .color5 .tooltip.bottom .tooltip-arrow{border-bottom-color:#551A8B;}
+        .color5 .btn-info, .color5 .btn-primary{border:1px solid #551A8B; text-shadow: none;}
+    
+    /*Dark Theme Color*/
+    .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
+    .dark .navbar-default .navbar-brand, .dark .navbar-default .navbar-nav>li>a, .dark .navbar-default .navbar-brand .badge, .dark #refreshNotifications{color:white !important; transition:background linear .3s;}
+    @media screen and (max-width:768px){
+        .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
+    }

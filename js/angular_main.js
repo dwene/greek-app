@@ -2060,7 +2060,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $('#showHiddenButton').click(function () {
           $(this).text(function(i, text){
-              return text === "Show Recent" ? "Hide Recent" : "Show Recent";
+              return text === "Show Recently Sent" ? "Hide Recently Sent" : "Show Recently Sent";
           })
        });
         
@@ -2931,7 +2931,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                 var colorNumber = 'color'+number;
                 $scope.themeColor = colorNumber;
                 $rootScope.color = colorNumber;
-                if (number == 5){
+                if (number == 4 || number == 5){
                 $('body').addClass('dark');
                 }
                 else{

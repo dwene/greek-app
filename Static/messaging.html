@@ -17,11 +17,10 @@
         
     </form>
     
-<button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages">Show Recent</button>
+<button id="showHiddenButton" class="btn btn-block" ng-hide="notify.length" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages">Show Recently Sent</button>
 
 
 <section id="recentlySentMessages" class="collapse">
-    <h2 class="page-header" ng-hide="notify.length">Recently Sent: <br></h2>
     <ul>
         <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification">
             <div class="notificationContent">
