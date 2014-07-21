@@ -10,12 +10,13 @@
 			<h1 class="text-center">{{poll.name}}</h1>
 			<p class="text-center">#{{poll.description}}</p>
 </div>
+
+<h2 class="page-header">Your Response</h2>
+
 <div class="container" ng-show="poll.response_status">
     <div ng-repeat = "question in poll.questions">
-        <p>{{question.worded_question}}</p>
-        <div ng-repeat="a in question.response.answer">
-            {{a}}
-        </div>
+        <h3 class="question">{{question.worded_question}}</h3>
+        <span class="answer" ng-repeat="a in question.response.answer">{{a}}</span>
     </div>
 </div>
 
