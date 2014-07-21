@@ -28,7 +28,7 @@
     </div>
 -->
     
-    <selecting-users ng-model="tags"></selecting-users>
+    <selecting-users ng-model="tags" skip-event="true"></selecting-users>
     
 <!--    <span ng-repeat="member in $root.directory.members | tagDirectorySearch:tags">{{member.first_name}} {{member.last_name}}</span>-->
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>

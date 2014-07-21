@@ -9,7 +9,7 @@
 
 <div class="container">
     
-<selecting-users ng-model="tags"></selecting-users>
+<selecting-users ng-model="tags" skip-event="true"></selecting-users>
 
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
