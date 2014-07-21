@@ -5,22 +5,6 @@ html{display:none;}
 body{font-family: arial; background:white; font-family: 'Lato', sans-serif; -webkit-font-smoothing:antialiased;}
 body.modal-open{margin-right:0px;}
 
-/*Navigation Styles*/
-
-    /*Colors*/
-    .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
-    .navbar{border:0px; transition:background linear .3s;}
-    
-    /*Color Options*/
-        .color5 .navbar, .color5 .navbar-default .navbar-brand:hover .badge {background:purple !important;}
-        .color5 .navbar-default .navbar-brand:hover, .color5 .navbar-default .navbar-nav>li>a:hover, .color5 .navbar .badge, .color5 .navbar-default .navbar-nav>.open>a, .color5 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color5 .navbar-default .navbar-toggle:hover, .color5 .navbar-default .navbar-toggle:focus{background:#551A8B;}
-    
-    /*Dark Theme Color*/
-    .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
-    .dark .navbar-default .navbar-brand, .dark .navbar-default .navbar-nav>li>a, .dark .navbar-default .navbar-brand .badge, .dark #refreshNotifications{color:white !important; transition:background linear .3s;}
-    @media screen and (max-width:768px){
-        .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
-    }
 
     
 
@@ -93,7 +77,8 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 .noneSelected{position:absolute; left:10px; top:10px;}
-#selectingUsers #messagingTags .page-header{line-height:45px; margin-top:-20px; padding-bottom:0px;}
+#selectingUsers #messagingTags .page-header{min-height:30px; margin-top:0px; padding-bottom:0px;}
+#selectingUsers #messagingTags .page-header #noTags{display:inline-block; margin-top:3px;}
 #tagtypeahead{position:relative;}
 #tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
 #seeallTags .page-header{margin-bottom:2px; margin-top:10px;}
@@ -305,6 +290,28 @@ textarea.form-control{height:auto; max-width:100%;}
 #loadingScreen{width:100%; text-align:center;}
 #loadingScreen .fa-spin{margin-top:40px; font-size:80px;}
 
+
+/*Navigation Styles*/
+
+    /*Colors*/
+    .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
+    .navbar{border:0px; transition:background linear .3s;}
+    
+    /*Color Options*/
+        .color5 .navbar, .color5 .navbar-default .navbar-brand:hover .badge, .color5 .btn-info, .color5 .nav-pills>li.active>a, .color5 .label-primary{background:purple;}
+        .color5 .navbar-default .navbar-brand:hover, .color5 .navbar-default .navbar-nav>li>a:hover, .color5 .navbar .badge, .color5 .navbar-default .navbar-nav>.open>a, .color5 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color5 .navbar-default .navbar-toggle:hover, .color5 .navbar-default .navbar-toggle:focus, .color5 .tooltip-inner, .color5 .btn-primary, .color5 .nav-pills>li.active>a:hover, .color5 .checkLabel.label-primary:hover{background:#551A8B;}
+        .color5 .notification.new .notificationTitle, .color5 a{color:#551A8B;}
+        .color5 .tooltip.left .tooltip-arrow{border-left-color:#551A8B;} .color5 .tooltip.top .tooltip-arrow{border-top-color:#551A8B;} .color5 .tooltip.right .tooltip-arrow{border-right-color:#551A8B;} .color5 .tooltip.bottom .tooltip-arrow{border-bottom-color:#551A8B;}
+        .color5 .btn-info, .color5 .btn-primary{border:0px;}
+    
+    /*Dark Theme Color*/
+    .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
+    .dark .navbar-default .navbar-brand, .dark .navbar-default .navbar-nav>li>a, .dark .navbar-default .navbar-brand .badge, .dark #refreshNotifications{color:white !important; transition:background linear .3s;}
+    @media screen and (max-width:768px){
+        .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
+    }
+
+
 /*Helper Classes*/
 .smallprofilepic{
     display: inline-block;
@@ -411,7 +418,7 @@ animation: flipOutX .5;
 
 /*Specific Fixes*/
 .bootstrap-datetimepicker-widget .btn:active,
-.bootstrap-datetimepicker-widget .btn.active {-webkit-box-shadow: none; box-shadow: none; }
+.bootstrap-datetimepicker-widget .btn.active {-webkit-box-shadow: none; box-shadow: none;}
 
 .twitter-typeahead{width:100%;}
 

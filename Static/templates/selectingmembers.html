@@ -17,7 +17,7 @@
     </div>
    <br>
     <ul id="messagingTags">
-    <h2 class="page-header">Selected Tags: <span ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</span>
+    <h2 class="page-header">Selected Tags: <span id="noTags" ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</span>
         <span>
             <div class="btn-group" ng-show="ngModel.org_tags" ng-repeat="tag in orgTagCheck = (ngModel.org_tags | checkedFilter)">
                 <netetag-check></netetag-check>
