@@ -15,7 +15,7 @@
 
 <section>
     <h2 class="page-header">Account Info</h2>
-<div class="profilepic" style="background-image:url({{item.prof_pic}});" ></div>
+<div class="profilepic" style="background-image:url({{item.prof_pic || 'http://hivemind.co.nz/static/images/grey-icons/person.png'}});" ></div>
 <a ng-href="/#/app/uploadprofilepicture" id="changeProfileButton" class="btn btn-default">Change Profile Picture</a>
 <!--<button id="showHiddenButton" class="btn btn-default btn-block" data-toggle="collapse" data-target="#showHidden">Show Settings</button>-->
 

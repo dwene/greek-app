@@ -1020,7 +1020,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //incorrect person page
-    App.controller('incorrectpersonController', function($scope, $http){
+    App.controller('incorrectpersonController', function($scope, $http, LoadScreen){
     
     });
 
