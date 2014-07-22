@@ -1683,15 +1683,27 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
         $scope.selectTagFromTypeAhead = function(tag){
-            console.log('howdy');
-            for(var i = 0; i < $scope.tags.length; i ++){
-                if ($scope.tags[i].name == tag)  {
-                    $scope.tags[i].checked = true;
-
-                    return;
-                }
-                $scope.selectedTagName = "";
-            }
+            console.log('looking for tag', tag);
+            console.log('all tags', $scope.tags);
+            var tags = $scope.org_tags;
+            for(var i = 0; i < tags.length; i++){
+                    if (tags[i].name == tag.name)  {
+                        console.log('I found the tag!');
+                        tags[i].checked = true;
+                        $scope.selectedTagName = "";
+                        break;
+                    }
+                } 
+            
+            
+//            for(var i = 0; i < $scope.tags.length; i ++){
+//                if ($scope.tags[i].name == tag.name)  {
+//                    $scope.tags[i].checked = true;
+//
+//                    return;
+//                }
+//                $scope.selectedTagName = "";
+//            }
         }
         $scope.selectedTag = "";
         
@@ -1847,7 +1859,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.$watch('item.tag', function() {
-            $scope.item.tag = $scope.item.tag.replace(/\s+/g,'');
+            if ($scope.item){
+                $scope.item.tag = $scope.item.tag.replace(/\s+/g,'');
+            }
         });
        
         $scope.openRenameTagModal = function(tag){
