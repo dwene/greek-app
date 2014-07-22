@@ -1066,10 +1066,6 @@ class RESTApi(remote.Service):
             else:
                 del user_dict["dob"]
             user_dict["key"] = user.key.urlsafe()
-            try:
-                user_dict["prof_pic"] = images.get_serving_url(user.prof_pic)
-            except:
-                del user_dict["prof_pic"]
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
             else:
