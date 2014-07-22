@@ -33,6 +33,9 @@ body.modal-open{margin-right:0px;}
     #mobileMenu ul{margin:0px;}
     #mobileMenu li{background:#ccc; width:25%; display:inline-block; margin:0px;}
     #mobileMenu a{padding:15px 0px 10px 0px;}
+    @media screen and (max-width:768px){
+    body{margin-bottom:50px;}
+    }
 
 
 .dropdown{cursor:pointer;}
