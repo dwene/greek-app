@@ -1447,6 +1447,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
         }
+        $scope.getProfPic = function(link){
+            if (link){
+                return link + '=s50';
+            }
+            else{
+                return 'http://hivemind.co.nz/static/images/grey-icons/person.png';
+            }
+            
+        }
         
         //click the buttons to search for that button text
         $('#searchTags button').click(function(){
