@@ -32,10 +32,10 @@
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
         <p>{{question.worded_question}}</p>
         <div ng-show="question.type == 'text'"> 
-            <input type="text" ng-model="question.new_response" ng-required="question.type == 'text'">
+            <input type="text" name="response_form.input" ng-model="question.new_response" ng-required="question.type == 'text'">
         </div>
         <div ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
-            <input type="radio" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
+            <input type="radio" name="response_form.input" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
         </div>
        <hr> 
     </div>

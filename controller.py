@@ -483,21 +483,20 @@ class RESTApi(remote.Service):
         message = dict()
         if organization.subscription_id:
             subscription = braintree.Subscription.find(organization.subscription_id)
-            logging.error(subscription)
-            logging.error(organization.subscription_id)
             message["paid_through_date"] = subscription.paid_through_date
             message["subscription_price"] = str(subscription.price)
             message["next_billing_date"] = subscription.next_billing_date
         else:
             message["no_subscription"] = True
             message["premium_end"] = organization.cancel_subscription
-        credit_card = braintree.CreditCard.find(organization.payment_token)
-        card = dict()
-        card["masked_number"] = credit_card.masked_number
-        card["expiration"] = credit_card.expiration_date
-        card["cardholder_name"] = credit_card.cardholder_name
-        card["image_url"] = credit_card.image_url
-        message["credit_card"] = card
+        if organization.payment_token:
+            credit_card = braintree.CreditCard.find(organization.payment_token)
+            card = dict()
+            card["masked_number"] = credit_card.masked_number
+            card["expiration"] = credit_card.expiration_date
+            card["cardholder_name"] = credit_card.cardholder_name
+            card["image_url"] = credit_card.image_url
+            message["credit_card"] = card
         return OutgoingMessage(error='', data=json_dump(message))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/cancel_subscription',
@@ -1875,7 +1874,6 @@ class RESTApi(remote.Service):
             add["key"] = poll.key
             dict_polls.append(add)
         return OutgoingMessage(error='', data=json_dump(dict_polls))
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/get_poll_info',
                       http_method='POST', name='poll.get_poll_info')
