@@ -1,4 +1,4 @@
-<div class="container">
+<div id="polls" class="container">
 
 <!--		 HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
@@ -7,13 +7,11 @@
 <!--<button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> </button>-->
 		</div>
 
-</div>
-<div class="container">
 <div class="form-group">
     <input id="directorySearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
 </div>
 <div ng-repeat="poll in polls | orderBy: '-timestamp' | orderBy: '-open' | multipleSearch:search">
-  <div ng-click="showPoll(poll)" class="notification" ng-class="{new: poll.open}">
+  <div ng-click="showPoll(poll)" class="notification" ng-class="{closed: !poll.open}">
        <div class="notificationContent">
         <span class="notificationTitle preText">{{poll.name}}</span>
         <span class="preText">{{poll.description}}</span>
