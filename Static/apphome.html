@@ -61,6 +61,17 @@
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
        
+       <list-thing ng-model="$root.hidden_notifications">
+                <div class="notificationContent">
+                <span class="notificationTitle">{{ngModel.title}}</span>
+                    <span>{{ngModel.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
+                <span class="notificationSender" ng-show="notify.sender_name">sent by: {{ngModel.sender_name}}</span>
+                </div>
+       </list-thing>
+       
+       
+       
+<!--
         <ul>
             <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.hidden_notifications | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
                 <div class="notificationContent">
@@ -75,6 +86,7 @@
             <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1">&larr; Newer</button>
             <button class="next btn btn-default btn-sm" ng-disabled="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1">Older &rarr;</button>
             </div>
+-->
             
     </section>
         

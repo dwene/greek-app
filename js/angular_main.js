@@ -3180,6 +3180,26 @@ App.directive('match', function(){
         };
 });
 
+App.directive('listThing', function(){
+        return {
+            require: 'ngModel',
+            restrict: 'E',
+            templateUrl: '/Static/templates/olderYoungerTemplate.html',
+            transclude: true,
+            scope: {
+                ngModel: '=',
+                currentPage:'=?',
+                maxPageNumber:'=?',
+            },
+            controller: function($scope){
+        // check if it was defined.  If not - set a default
+            $scope.currentPage = $scope.currentPage || 0;
+            $scope.maxPageNumber = $scope.maxPageNumber || 5;
+            }
+        };
+});
+
+
 App.directive('timePicker', function($compile){
   return {
     scope: {
