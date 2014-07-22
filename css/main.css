@@ -270,6 +270,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Poll Info Page*/
 .question{font-weight:bold; margin:10px 0 5px 0;}
+#polls .closed .notificationTitle:after{content:' - closed';}
 
 /*Admin Page*/
 #colorPicker{width:300px; height:290px;}
