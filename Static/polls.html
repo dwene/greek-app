@@ -9,13 +9,15 @@
 
 </div>
 <div class="container">
-
-<div ng-repeat="poll in polls | orderBy: '-timestamp'">
-  <div ng-click="showPoll(poll)" class="notification">
+<div class="form-group">
+    <input id="directorySearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
+</div>
+<div ng-repeat="poll in polls | orderBy: '-timestamp' | orderBy: '-open' | multipleSearch:search">
+  <div ng-click="showPoll(poll)" class="notification" ng-class="{new: poll.open}">
        <div class="notificationContent">
         <span class="notificationTitle preText">{{poll.name}}</span>
         <span class="preText">{{poll.description}}</span>
-        <span class="notificationSender" ng-show="notify.sender_name">created by: {{poll.sender_name}}</span>
+        <span class="notificationSender">created by: {{$root.getNameFromKey(poll.creator)}}</span>
         </div>
     </div>
 </div>

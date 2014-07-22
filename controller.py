@@ -1291,7 +1291,7 @@ class RESTApi(remote.Service):
                 request_user.notifications)).order(Notification.timestamp).fetch_async(20)
         if request_user.hidden_notifications:
             hidden_notifications_future = Notification.query(Notification.key.IN(
-                request_user.hidden_notifications)).order(Notification.timestamp).fetch_async(20)
+                request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
         out_notifications = list()
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
@@ -1735,6 +1735,7 @@ class RESTApi(remote.Service):
         poll.invited_perms_tags = data["tags"]["perms_tags"]
         poll.timestamp = datetime.datetime.now()
         poll.results_tags = ['council']
+        poll.creator = request_user.key
         poll.organization = request_user.organization
         # poll.time_start = datetime.datetime.strptime(data["time_start"], '%m/%d/%Y %I:%M %p')
         # poll.time_end = datetime.datetime.strptime(data["time_end"], '%m/%d/%Y %I:%M %p')

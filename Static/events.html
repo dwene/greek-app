@@ -1,26 +1,42 @@
-<section class="container" id="events">
+<section class="container" id="events" ng-init="current = {maxPageNumber: 5, currentPage: 0}; present = true;">
         <div class="row">
         <div class="col-xs-12 col-sm-6 col-lg-4">
             <calendar id="calendar" calendar-mode="mode" event-source="eventSource">
         </div>
         <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
-        <a id="newEventButton" data-toggle="collapse" data-target="#showHidden" class="btn btn-default pull-right"><i class="fa fa-history"></i> Show Past</a>
+        <a id="newEventButton" data-toggle="collapse" class="btn btn-default pull-right" ng-click="present = !present; current.currentPage = 0;" ng-hide="search"><i class="fa fa-history"></i><span ng-show="!present">Show Future</span> <span ng-show="present">Show Past</span></a>
         <ul id="eventList" class="col-xs-12 col-sm-6 col-lg-8">
+<!--
             <ul id="showHidden" class="collapse">
-            <li class="notification" ng-repeat="event in events | orderBy:'-time_start' | removePassedEvents:false | multipleSearch:search" ng-click="showEvent(event)">
+            <input ng-model="search" type="text">
+            <li class="notification" ng-repeat="event in (previous_events = (events | removePassedEvents:false  | multipleSearch:search)) | orderBy:'-time_start' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber" ng-click="showEvent(event)">
                 <div class="notificationContent">
                 <span class="notificationTitle">{{event.title}}</span>
                 <span class="eventTime">{{showDate(event.time_start, event.time_end)}}</span>
+                <span class="notificationSender">created by: {{$root.getNameFromKey(event.creator)}}</span>
                 </div>
             </li>
+            <div class="pagerButtons" ng-hide="search">
+            <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1">&larr; Newer</button>
+            <button class="next btn btn-default btn-sm" ng-disabled="hidden.currentPage >= previous_events.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1">Older &rarr;</button>
+            </div>
             </ul>
+-->
             
-            <li class="notification" ng-repeat="event in events | orderBy:'-time_start' | removePassedEvents:true | multipleSearch:search" ng-click="showEvent(event)">
+            <div class="form-group">
+                <input id="directorySearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
+            </div>
+            <li class="notification" ng-repeat="event in (current_events = (events | removePassedEvents:present | multipleSearch: search)) | orderBy:'-time_start' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber" ng-click="showEvent(event)">
                 <div class="notificationContent">
                 <span class="notificationTitle">{{event.title}}</span>
                 <span class="eventTime">{{showDate(event.time_start, event.time_end)}}</span>
+                <span class="notificationSender">created by: {{$root.getNameFromKey(event.creator)}}</span>
                 </div>
             </li>
+            <div class="pagerButtons">
+                <button class="previous btn btn-default btn-sm" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1">&larr; Newer</button>
+                <button class="next btn btn-default btn-sm" ng-disabled="current.currentPage >= current_events.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1">Older &rarr;</button>
+            </div>
         </ul>
         </div>
 </section>

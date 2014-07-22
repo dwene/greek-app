@@ -315,6 +315,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $rootScope.notification_count = count;
         }
+        
+        $rootScope.getNameFromKey = function(key){
+            if ($rootScope.directory.members){
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    if ($rootScope.directory.members[i].key == key){
+                        return $rootScope.directory.members[i].first_name + ' ' + $rootScope.directory.members[i].last_name;
+                    }
+                }
+            }
+            return 'Unknown';
+        }
+        
+        
         $rootScope.showNav = true;
         $("html").show();
     });
@@ -605,33 +618,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the main app page
     App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
         Load.then(function(){
-        $scope.hidden = {};
-        $scope.current = {};
-        $scope.hidden.currentPage = 0;
-        $scope.hidden.pageSize = 10;
-        $scope.hidden.maxPageNumber = 5;
-        $scope.current.currentPage = 0;
-        $scope.current.pageSize = 10;
-        $scope.current.maxPageNumber = 5;
-//        $scope.getUser = function(notify){
-//            if(!notify.sender){
-//                return null;
-//            }
-//            for(var i = 0; i < $rootScope.users.members; i++){
-//                if ($rootScope.users.members[i].key == notify.sender){
-//                    return $rootScope.users.members[i];
-//                }
-//            }
-//        }
-        
-        //#FIXME content not defined here!!!! :-(
-//        $scope.$watch('notify.content', function() {
-//                $rootScope.notifications.notify.content = $rootScope.notifications.notify.content.replace(/(\\w{5})(\\w)/, "g", function(all,text,char){
-//                    return text + "&shy;" + char;
-//                });
-//        });
-                
-            
+//        $scope.hidden = {};
+//        $scope.current = {};
+//        $scope.hidden.currentPage = 0;
+//        $scope.hidden.pageSize = 10;
+//        $scope.hidden.maxPageNumber = 5;
+//        $scope.current.currentPage = 0;
+//        $scope.current.pageSize = 10;
+//        $scope.current.maxPageNumber = 5;
         //TOOLTIPS
         $scope.archiveTip = {
             "title" : "Archive Notification"
@@ -700,9 +694,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
             })
-            
         }
-        
+        $scope.showDate = function(start, end){
+            var mStart = momentInTimezone(start);
+
+            if (mStart.diff(moment().add('days', 6)) > 0){
+               return mStart.fromNow(); 
+            }
+            else if (mStart.diff(moment()) > 0){
+                return mStart.calendar();
+            }
+            var mEnd = momentInTimezone(end);
+            if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
+                return 'Happening Now';
+            }
+            if (mEnd.diff(moment()) < 0){
+                return 'Already Happened';
+            }
+        }
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
         }
@@ -2196,6 +2205,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.showEvent = function(event){
                 window.location.assign('#/app/events/' + event.tag);
             }
+            $scope.$watch('search', function(){
+                if ($scope.current){
+                    $scope.current.currentPage = 0;
+                    if ($scope.search){
+                        $scope.present = undefined;
+                    }
+                    else{
+                        $scope.present = true; 
+                    }
+                }
+            })
 	   });
 	});
 
@@ -3524,7 +3544,10 @@ App.filter('removePassedEvents', function(){
             if(moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) > 0 && removePref){
                 retList.push(objects[oPos]);
             }
-            else if (moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) < 0 && !removePref){
+            else if (moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) < 0 && removePref === false){
+                retList.push(objects[oPos]);
+            }
+            else if (removePref === undefined){
                 retList.push(objects[oPos]);
             }
 //            if (objects[oPos].time_start < now && objects[oPos].time_end > now){
