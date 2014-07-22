@@ -1811,6 +1811,7 @@ Copyright (c) 2013 Daniel Eden
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
     max-height:200px;
+    min-height:86px;
   }
 
   100% {
@@ -1818,6 +1819,7 @@ Copyright (c) 2013 Daniel Eden
     transform: perspective(400px) rotateX(90deg);
     opacity: 0;
     max-height:0px;
+    min-height:0px;
   }
 }
 
@@ -1828,6 +1830,7 @@ Copyright (c) 2013 Daniel Eden
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
     max-height:200px;
+    min-height:86px;
   }
 
   100% {
@@ -1836,6 +1839,7 @@ Copyright (c) 2013 Daniel Eden
     transform: perspective(400px) rotateX(90deg);
     opacity: 0;
     max-height:0px;
+    min-height:0px;
   }
 }
 

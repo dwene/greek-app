@@ -242,7 +242,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.updatingNotifications = false;
         $rootScope.allTags = [];
         //set color theme
-        $rootScope.color5 = true;
         $rootScope.colorName = "";
         
         $rootScope.notifyConsole = function(){
@@ -251,7 +250,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $rootScope.setColor = function (color){
             $rootScope.color = color;
-            if (color == 'color4' || color == 'color5'){
+            if (color == 'color2' || color == 'color3' || color == 'color4' || color == 'color5'){
                 $('body').addClass('dark');
             }
             else{

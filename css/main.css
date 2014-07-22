@@ -274,8 +274,8 @@ textarea.form-control{height:auto; max-width:100%;}
 .colorPick{margin:5px; border:1px solid black; padding:0px; height:57px; width:57px; display:inline-block;}
 .colorPick.selectedColor{border:1px solid white;}
 #color1{}
-#color2{}
-#color3{}
+#color2{background:#2F7338;}
+#color3{background:#F0788C;}
 #color4{background:#931111;}
 #color5{background:purple;}
 #color6{}
@@ -398,7 +398,7 @@ nav.navbar-default:hover .refresh{opacity:1;}
 -webkit-animation: flipOutX .5s;
 -moz-animation: flipOutX .5s;
 -ms-animation: flipOutX .5s;
-animation: flipOutX .5;
+animation: flipOutX .5s;
 }
 
 
@@ -432,25 +432,25 @@ div#cropped-image {
         .color1 .tooltip.left .tooltip-arrow{border-left-color:#;} .color1 .tooltip.top .tooltip-arrow{border-top-color:#;} .color1 .tooltip.right .tooltip-arrow{border-right-color:#;} .color1 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
         .color1 .btn-info, .color1 .btn-primary{border:1px solid #; text-shadow: none;}*/
 
-        /*Color Theme 2 Main: #, Accent: #
+        /*Color Theme 2 Main: #2F7338, Accent: #193E1E*/
         .color2 .navbar, .color2 .navbar-default .navbar-brand:hover .badge, .color2 .btn-info, .color2 .nav-pills>li.active>a, .color2 .label-primary, .color2 .monthview-primary-with-event
-        {background:#;}
+        {background:#2F7338;}
         .color2 .navbar-default .navbar-brand:hover, .color2 .navbar-default .navbar-nav>li>a:hover, .color2 .navbar .badge, .color2 .navbar-default .navbar-nav>.open>a, .color2 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color2 .navbar-default .navbar-toggle:hover, .color2 .navbar-default .navbar-toggle:focus, .color2 .tooltip-inner, .color2 .btn-primary, .color2 .nav-pills>li.active>a:hover, .color2 .checkLabel.label-primary:hover, .color2 .dropdown-menu>li>a:hover, .color2 .dropdown-menu>li>a:focus, .color2 .dropdown-menu>.active>a, .color2 .dropdown-menu>.active>a:hover, .color2 .dropdown-menu>.active>a:focus, .color2 .monthview-selected
-        {background:#;}
+        {background:#193E1E;}
         .color2 .notification.new .notificationTitle, .color2 a:not(.btn)
-        {color:#;}
-        .color2 .tooltip.left .tooltip-arrow{border-left-color:#;} .color2 .tooltip.top .tooltip-arrow{border-top-color:#;} .color2 .tooltip.right .tooltip-arrow{border-right-color:#;} .color2 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color2 .btn-info, .color2 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#193E1E;}
+        .color2 .tooltip.left .tooltip-arrow{border-left-color:#193E1E;} .color2 .tooltip.top .tooltip-arrow{border-top-color:#193E1E;} .color2 .tooltip.right .tooltip-arrow{border-right-color:#193E1E;} .color2 .tooltip.bottom .tooltip-arrow{border-bottom-color:#193E1E;}
+        .color2 .btn-info, .color2 .btn-primary{border:1px solid #193E1E; text-shadow: none;}
 
-        /*Color Theme 3 Main: #, Accent: #
+        /*Color Theme 3 Main: #F0788C, Accent: #BC0D35 */
         .color3 .navbar, .color3 .navbar-default .navbar-brand:hover .badge, .color3 .btn-info, .color3 .nav-pills>li.active>a, .color3 .label-primary, .color3 .monthview-primary-with-event
-        {background:#;}
+        {background:#F0788C;}
         .color3 .navbar-default .navbar-brand:hover, .color3 .navbar-default .navbar-nav>li>a:hover, .color3 .navbar .badge, .color3 .navbar-default .navbar-nav>.open>a, .color3 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color3 .navbar-default .navbar-toggle:hover, .color3 .navbar-default .navbar-toggle:focus, .color3 .tooltip-inner, .color3 .btn-primary, .color3 .nav-pills>li.active>a:hover, .color3 .checkLabel.label-primary:hover, .color3 .dropdown-menu>li>a:hover, .color3 .dropdown-menu>li>a:focus, .color3 .dropdown-menu>.active>a, .color3 .dropdown-menu>.active>a:hover, .color3 .dropdown-menu>.active>a:focus, .color3 .monthview-selected
-        {background:#;}
+        {background:#BC0D35;}
         .color3 .notification.new .notificationTitle, .color3 a:not(.btn)
-        {color:#;}
-        .color3 .tooltip.left .tooltip-arrow{border-left-color:#;} .color3 .tooltip.top .tooltip-arrow{border-top-color:#;} .color3 .tooltip.right .tooltip-arrow{border-right-color:#;} .color3 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color3 .btn-info, .color3 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#BC0D35;}
+        .color3 .tooltip.left .tooltip-arrow{border-left-color:#BC0D35;} .color3 .tooltip.top .tooltip-arrow{border-top-color:#BC0D35;} .color3 .tooltip.right .tooltip-arrow{border-right-color:#BC0D35;} .color3 .tooltip.bottom .tooltip-arrow{border-bottom-color:#BC0D35;}
+        .color3 .btn-info, .color3 .btn-primary{border:1px solid #BC0D35; text-shadow: none;}
 
         /*Color Theme 4 Main: #931111, Accent: #600000*/
         .color4 .navbar, .color4 .navbar-default .navbar-brand:hover .badge, .color4 .btn-info, .color4 .nav-pills>li.active>a, .color4 .label-primary, .color4 .monthview-primary-with-event
