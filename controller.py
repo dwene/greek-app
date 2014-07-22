@@ -91,6 +91,26 @@ def member_signup_email(user, token):
     message["to"] = user['email']
     return message
 
+# type = ndb.StringProperty()
+# pending = ndb.BooleanProperty(default=True)
+# email = ndb.StringProperty()
+# content = ndb.TextProperty()
+# title = ndb.StringProperty()
+# timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
+
+
+def add_notification_to_users(notification, users):
+    future_list = list()
+    for user in users:
+        if user.email_prefs == 'all':
+            future_list.append(CronEmail(type='notification', pending=True, email=user.email,
+                                         title='Notification: ' + notification.title,
+                                         content=notification.content).put_async())
+        user.new_notifications.append(notification.key)
+        future_list.append(user.put_async())
+    for item in future_list:
+        item.get_result()
+    return
 
 def alumni_signup_email(user, request_user, token):
     # to_email = [{'email': user['email'], 'type': 'to'}]
@@ -1250,12 +1270,7 @@ class RESTApi(remote.Service):
         notification.put()
         request_user.sent_notifications.append(notification.key)
         request_user.put()
-        futures = list()
-        for user in users:
-            user.new_notifications.append(notification.key)
-            futures.append(user.put_async())
-        for future in futures:
-            future.get_result()
+        add_notification_to_users(notification, users)
         return OutgoingMessage(error='', data='OK')
 
     #-------------------------
@@ -1441,7 +1456,7 @@ class RESTApi(remote.Service):
             new_event.perms_tags = ['everyone']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         notification = Notification()
-        notification.title = event_data["title"]
+        notification.title = 'Event: '+ event_data["title"]
         notification.type = 'event'
         notification.content = "You have been invited to the event: " + event_data["title"]
         notification.content += ". Please check out your events page for more information!"
@@ -1451,9 +1466,7 @@ class RESTApi(remote.Service):
         notification.link = '#/app/events/'+new_event.tag
         notification.put()
         future_list = [new_event.put_async(), request_user.put_async()]
-        for user in users:
-            user.new_notifications.append(notification.key)
-            future_list.append(user.put_async())
+        add_notification_to_users(notification, users)
         for item in future_list:
             item.get_result()
         return OutgoingMessage(error='', data='OK')
@@ -1576,9 +1589,7 @@ class RESTApi(remote.Service):
         notification.timestamp = datetime.datetime.now()
         notification.link = '#/app/events/'+event.tag
         notification.put()
-        for user in users:
-            user.new_notifications.append(notification.key)
-            futures.append(user.put_async())
+        add_notification_to_users(notification, users)
         for item in futures:
             item.get_result()
         return OutgoingMessage(error='', data='OK')
@@ -1741,7 +1752,7 @@ class RESTApi(remote.Service):
             async_list.append(q.put_async())
         users = get_users_from_tags(data["tags"], request_user.organization, False)
         notification = Notification()
-        notification.title = 'New Poll: ' + poll.name
+        notification.title = 'Poll: ' + poll.name
         notification.content = 'You have been invited to answer a new poll.'
         notification.content += ' Please visit your polling page for more information.'
         notification.timestamp = datetime.datetime.now()
@@ -1750,9 +1761,7 @@ class RESTApi(remote.Service):
         notification.link = '#/app/polls/' + poll.key.urlsafe()
         notification.sender_name = 'NeteGreek Notification Service'
         notification.put()
-        for user in users:
-            user.new_notifications.append(notification.key)
-            async_list.append(user.put_async())
+        add_notification_to_users(notification, users)
         for item in async_list:
             poll.questions.insert(0, item.get_result())
         poll.put()
@@ -1967,7 +1976,6 @@ class RESTApi(remote.Service):
         poll = poll.to_dict()
         poll['questions'] = out_results
         return OutgoingMessage(error='', data=json_dump(poll))
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/delete',
                       http_method='POST', name='poll.delete')
