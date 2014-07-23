@@ -24,8 +24,9 @@
 -->
             <div class="row">
             <div class="form-group">
-                <input id="directorySearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
+                <input id="directorySearch" type="search" ng-model="search"  ng-show="events.length" placeholder="Search..." class="form-control">
             </div>
+            <p ng-hide="events.length">There are no events yet!</p>
             </div>
             <li class="notification" ng-repeat="event in (current_events = (events | removePassedEvents:present | multipleSearch: search)) | orderBy:'-time_start' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber" ng-click="showEvent(event)">
                 <div class="notificationContent">
