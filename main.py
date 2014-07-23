@@ -237,7 +237,8 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                     f.write(thumbnail)
                 files.finalize(file_name)
                 blobstore.delete(blob_key)
-                blobstore.delete(user.prof_pic)
+                if user.prof_pic:
+                    blobstore.delete(user.prof_pic)
                 user.prof_pic = files.blobstore.get_blob_key(file_name)
                 user.put()
                 self.redirect('/#/app/accountinfo')
