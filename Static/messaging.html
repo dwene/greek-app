@@ -17,8 +17,7 @@
         
     </form>
     
-<button id="showHiddenButton" class="btn btn-block" ng-hide="notify.length" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages">Show Recently Sent</button>
-
+<button id="showHiddenButton" class="btn btn-block" ng-show="sentMessages.length" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages">Show Recently Sent</button>
 
 <section id="recentlySentMessages" class="collapse">
     <ul>
@@ -32,10 +31,9 @@
     </ul>
     
     <div class="pagerButtons">
-            <button class="previous btn btn-default btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">&larr; Newer</button>
-            <button class="next btn btn-default btn-sm" ng-disabled="currentPage >= sentMessages.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1">Older &rarr;</button>
-    </div>
-    
+            <button class="previous btn btn-default btn-sm" ng-hide="currentPage == 0" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">&larr; Newer</button>
+            <button class="next btn btn-default btn-sm" ng-hide="currentPage >= sentMessages.length/maxPageNumber - 1" ng-disabled="currentPage >= sentMessages.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1">Older &rarr;</button>
+    </div>  
 </section>
 
 </section>

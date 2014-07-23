@@ -213,6 +213,11 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select>
+        <script>
+            $('#currentState').focusout(function(){
+                $(this).trigger("change");
+            });
+        </script>
         <p ng-show="(memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
     </div>
     </div>
