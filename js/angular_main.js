@@ -245,7 +245,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.colorName = "";
         
         $rootScope.notifyConsole = function(){
-            console.log('I got clikced');
+            console.log('I got clicked');
         }
         
         $rootScope.setColor = function (color){
@@ -329,14 +329,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         
         $rootScope.showNav = true;
-        $("html").show();
+        
     });
 
 //navigation header
     App.controller('navigationController', function($scope, $http, $rootScope, LoadScreen){
         
         //closes the navigation if open and an li is clicked
-        var navMain = $("#mainNavigation");
+        var navMain = $("#mainNavigation, #mobileSettings");
         navMain.on('click', 'li:not(.dropdown)', function(){
             if( navMain.hasClass('in') ){
                      navMain.collapse('hide');
@@ -393,6 +393,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $.removeCookie('FORM_INFO_EMPTY')
         $rootScope.directory = {};
         LoadScreen.stop();
+        $('#body').show();
+        
         $rootScope.users = {};
         $scope.login = function(user_name, password){
             LoadScreen.start();
@@ -3850,7 +3852,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           var done = 0;
           function checkIfDone() {
             done++;
-            if (done==6) deferred.resolve(); 
+            if (done==6){ deferred.resolve(); $('#body').show(); }
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
