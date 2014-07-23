@@ -3259,10 +3259,10 @@ App.directive('timePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
+                        +'<input type="text" class="form-control" id="'+this_name+'time" name="'+this_name+'time" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
                         +'<script type="text/javascript">'
-                        +'$("#'+this_id+'").datetimepicker({'
+                        +'$("#'+this_id+'time").datetimepicker({'
                         +'pickDate: false,'
                         +'icons: {'
                         +'time: "fa fa-clock-o",'
@@ -3270,7 +3270,7 @@ App.directive('timePicker', function($compile){
                         +'up: "fa fa-arrow-up",'
                         +'down: "fa fa-arrow-down"'
                         +'}});'
-                        +'$("#'+this_id+' input").focusout(function(){'
+                        +'$("#'+this_id+'time").focusout(function(){'
                         +'$(this).trigger("change");'
                         +'});'
                         +'</script>'
@@ -3294,10 +3294,10 @@ App.directive('datePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
+                        +'<input type="text" class="form-control" id="'+this_name+'date" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
                         +'<script type="text/javascript">'
-                        +'$("#'+this_id+'").datetimepicker({'
+                        +'$("#'+this_id+'date").datetimepicker({'
                         +'pickTime: false,'
                         +'icons: {'
                         +'time: "fa fa-clock-o",'
@@ -3305,7 +3305,7 @@ App.directive('datePicker', function($compile){
                         +'up: "fa fa-arrow-up",'
                         +'down: "fa fa-arrow-down"'
                         +'}});'
-                        +'$("#'+this_id+' input").focusout(function(){'
+                        +'$("#'+this_id+'date").focusout(function(){'
                         +'$(this).trigger("change");'
                         +'});'
                         +'</script>'
