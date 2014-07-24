@@ -18,7 +18,7 @@
 </div>
 <h2 class="page-header">Your Response</h2>
 
-<div class="container" ng-show="poll.response_status || !poll.open">
+<div class="container" ng-if="poll.response_status || !poll.open">
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
         <h3 class="question">{{question.worded_question}}</h3>
         <span ng-repeat="a in question.response.answer" ng-show="question.response.answer"><span class="answer">{{a}}</span></span>
@@ -27,7 +27,7 @@
 </div>
 
 
-<div ng-hide="poll.response_status || !poll.open">
+<div ng-if="!(poll.response_status || !poll.open)">
    <form name="response_form"  ng-submit="submitResponse()">
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
         <p>{{question.worded_question}}</p>
