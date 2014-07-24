@@ -717,12 +717,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
         }
-        
-       $('#showHiddenButton').click(function () {
-          $(this).text(function(i, text){
-              return text === "Show Archived" ? "Hide Archived" : "Show Archived";
-          })
-       });
        }); 
 	});
 
@@ -732,12 +726,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //#FIXME When I refresh on the manage members page it shows your account, when I click into it though it does not.
         checkPermissions(COUNCIL);
         $scope.selectedMembers = {};
-
         //MANAGE MEMBERS TAB
-        
-        //this goes inside the HTTP request
-        //$scope.members = JSON.parse(data);
-		//console.log($scope.members)
         
         //ADD MEMBERS TAB
         $scope.openDeleteMemberModal = function(user){
@@ -860,12 +849,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         }
         function assignAngularViewModels(members){
-//            for(var i = 0; i< members.length; i++){
-//                if (members[i].user_name == $.cookie(USER_NAME)){
-//                    members.splice(i, 1);
-//                    break;
-//                }
-//            }
             $scope.members = members;
             LoadScreen.stop();
         }
@@ -975,21 +958,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
         };
         
         //onclick checkmark tag
-        $('#manageMembers').on('click', '.checkLabel', function(){
-            
-            var checkbox = $(this).find(':checkbox');
-                        
-                if ( checkbox.prop('checked') )
-                {
-                    $(this).addClass('label-primary').removeClass('label-default');
-                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
-                }
-                else
-                {
-                    $(this).removeClass('label-primary').addClass('label-default');
-                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-                }
-        });
+//        $('#manageMembers').on('click', '.checkLabel', function(){
+//            
+//            var checkbox = $(this).find(':checkbox');
+//                        
+//                if ( checkbox.prop('checked') )
+//                {
+//                    $(this).addClass('label-primary').removeClass('label-default');
+//                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
+//                }
+//                else
+//                {
+//                    $(this).removeClass('label-primary').addClass('label-default');
+//                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
+//                }
+//        });
         });
     });
 
@@ -1026,7 +1009,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
     });
 
-    App.controller('managealumniController', function($scope, $http, $rootScope, Load){
+    App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen){
         Load.then(function(){
          var formObject = document.getElementById('uploadMembers');
         if(formObject){
@@ -1152,6 +1135,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     o[this.name] = this.value || '';
                 }
             });
+            console.log('Im adding ', o);
             return o;
         };
     
