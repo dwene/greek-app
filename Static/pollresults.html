@@ -2,16 +2,17 @@
    <form name="response_form"  ng-submit="submitResponse()">
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
         <p>{{question.worded_question}}</p>
-        <ul ng-if="question.type == 'multiple_choice'"> 
-            <li ng-repeat="response in question.response_data">
-                <p>{{response.name}} : {{response.count}}</p>
-            </li>
-        </ul>
-        <nete-pie-chart ng-if="question.type == 'multiple_choice'" ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata"></div>
+        <div ng-if="question.type == 'multiple_choice'">
+            <ul> 
+                <li ng-repeat="response in question.response_data">
+                    <p>{{response.name}} : {{response.count}}</p>
+                </li>
+            </ul>
+            <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata"></div>
+        </div>
         <ul ng-if="question.type == 'text'"> 
             <li ng-repeat="response in question.responses">
                 <p>{{response}}</p>
-                
             </li>
         </ul>
        <hr> 
