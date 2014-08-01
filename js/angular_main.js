@@ -5,6 +5,7 @@
 //#TODO on calendar page change event time from 2400 to 12:00 PM format
 //#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
+//#TODO MEOW MEOW MEOW
 
 //Final/static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
