@@ -1,7 +1,7 @@
 <div class="container">
    <form name="response_form"  ng-submit="submitResponse()">
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
-        <p>{{question.worded_question}}</p>
+        <p>Question: {{question.worded_question}}</p>
         <div ng-if="question.type == 'multiple_choice'">
             <ul> 
                 <li ng-repeat="response in question.response_data">
@@ -12,7 +12,7 @@
         </div>
         <ul ng-if="question.type == 'text'"> 
             <li ng-repeat="response in question.responses">
-                <p>{{response}}</p>
+                <p>{{response.text}}</p>
             </li>
         </ul>
        <hr> 

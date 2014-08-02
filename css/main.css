@@ -260,6 +260,9 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Event Info Page*/
 #goingForm .form-group{width: 260px; margin: 10px auto;}
 
+/*Register User/Password Pages*/
+.usernameAlert{padding:10px;}
+
 /*Account Info Page*/
 #changePasswordButton{margin:10px 0px 0px 0px;}
 #changeProfileButton{display:block; width:180px; margin:0px auto 20px auto;}

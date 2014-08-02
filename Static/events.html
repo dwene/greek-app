@@ -4,7 +4,7 @@
             <calendar id="calendar" calendar-mode="mode" event-source="eventSource">
         </div>
         <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
-        <a id="newEventButton" data-toggle="collapse" class="btn btn-default pull-right" ng-show="events.length" ng-click="present = !present; current.currentPage = 0;" ng-hide="search.length || "><i class="fa fa-history"></i><span ng-show="!present">Show Upcoming</span> <span ng-show="present">Show Past</span></a>
+        <a id="newEventButton" data-toggle="collapse" class="btn btn-default pull-right" ng-show="events.length" ng-click="present = !present; current.currentPage = 0;" ng-hide="search.length"><i class="fa fa-history"></i><span ng-show="!present">Show Upcoming</span> <span ng-show="present">Show Past</span></a>
         <ul id="eventList" class="col-xs-12 col-sm-6 col-lg-8">
 <!--
             <ul id="showHidden" class="collapse">

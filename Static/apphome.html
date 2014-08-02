@@ -6,15 +6,16 @@
        <h2 class="page-header">Organization Letters</h2>
        <section></section>
     </div>
-    <div id="upcomingEvents" class="col-xs-12 col-sm-3 md-pull-right" ng-show="eventList.length">
+    <div id="upcomingEvents" class="col-xs-12 col-sm-3 md-pull-right">
        
         <h2 class="page-header">Upcoming Events</h2>
-        <section>
-            <ul>
+        <section >
+            <ul ng-show="eventList.length">
                 <li ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')">
                     <span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
                 </li>
             </ul>
+            <p ng-hide="eventList.length">No Upcoming Events!</p>
         </section>
     </div>
        
@@ -55,7 +56,7 @@
                     <button class="previous btn btn-default btn-sm" ng-hide="current.currentPage == 0" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1">&larr; Newer</button>
                     <button class="next btn btn-default btn-sm" ng-hide="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1">Older &rarr;</button>
         </div>
-        <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden" ng-init="hiddenStatus = false;" ng-click="hiddenStatus = !hiddenStatus"><span ng-hide="hiddenStatus">Show Archived</span><span ng-show="hiddenStatus">Hide Archived</span></button>
+        <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#showHidden">Show Archived</button>
     <section id="showHidden" class="collapse">
 <!--       #TODO replace this with repeat for hidden notificaitons-->
        

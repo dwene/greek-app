@@ -41,6 +41,7 @@ INFO_NOT_FILLED_OUT = 'EMPTY_INFO'
 INVALID_EMAIL = 'INVALID_EMAIL'
 INVALID_USERNAME = 'INVALID_USERNAME'
 NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
+TAG_INVALID = "TAG_INVALID"
 
 EVERYONE = 'Everyone'
 
@@ -1091,7 +1092,7 @@ class RESTApi(remote.Service):
         if not organization:
             return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
         if request_object["tag"] not in organization.tags and len(request_object['tag']) > 1:
-            organization.tags.append(request_object["tag"])
+            organization.tags.append(request_object["tag"].lower())
             organization.put()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error=INVALID_FORMAT, data='')
@@ -1109,7 +1110,7 @@ class RESTApi(remote.Service):
         if not organization:
             return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
         if request_object["tag"] in organization.tags:
-            organization.tags.remove(request_object['tag'])
+            organization.tags.remove(request_object['tag'].lower())
             organization.put()
             users = User.query(ndb.AND(User.tags == request_object["tag"],
                                User.organization == request_user.organization)).fetch()
@@ -1131,9 +1132,9 @@ class RESTApi(remote.Service):
         organization = request_user.organization.get()
         if not organization:
             return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        if request_object["old_tag"] in organization.tags:
-            organization.tags.remove(request_object['old_tag'])
-            organization.tags.append(request_object['new_tag'])
+        if request_object["old_tag"].lower() in organization.tags:
+            organization.tags.remove(request_object['old_tag'].lower())
+            organization.tags.append(request_object['new_tag'].lower())
             organization.put()
             users = User.query(ndb.AND(User.tags == request_object["old_tag"],
                                User.organization == request_user.organization)).fetch()
@@ -1422,12 +1423,17 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/create',
                       http_method='POST', name='event.create')
     def create_event(self, request):
+        event_data = json.loads(request.data)
         request_user = get_user(request.user_name, request.token)
+        event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+                                           Event.tag == event_data["tag"].lower())).get_async()
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        event_data = json.loads(request.data)
+        event = event_future.get_result()
+        if event or len(event_data["tag"]) < 4:
+            return OutgoingMessage(error=TAG_INVALID, data='')
         new_event = Event()
         new_event.creator = request_user.key
         new_event.description = event_data["description"]
@@ -1476,9 +1482,9 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         tag = json.loads(request.data)
-        event = Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag == tag)).get()
+        event = Event.query(ndb.AND(Event.organization == request_user.organization, Event.tag == tag.lower())).get()
         if event:
-            return OutgoingMessage(error=USERNAME_TAKEN, data='')
+            return OutgoingMessage(error=TAG_INVALID, data='')
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/rsvp',
@@ -1861,6 +1867,8 @@ class RESTApi(remote.Service):
         event_tags = list()
         for event in events:
             event_tags.append(event.tag)
+        if not request_user.tags:
+            request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
         if event_tags:
             polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
                                               Poll.invited_org_tags.IN(request_user.tags),
@@ -1967,7 +1975,7 @@ class RESTApi(remote.Service):
                         del r["answer"]
                         if len(response.answer) > 0:
                             r["answer"] = response.answer[0]
-                        responses_list.append(r["answer"])
+                        responses_list.append({'text': r["answer"], 'key': response.user})
             question_dict["responses"] = responses_list
             out_results.append(question_dict)
         poll = poll.to_dict()

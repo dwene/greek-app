@@ -273,6 +273,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 
                 $timeout(function(){
+                    console.log(data.data);
                     $rootScope.notifications = JSON.parse(data.data).notifications;
                     for (var i = 0; i < $rootScope.notifications.length; i++){
                         $rootScope.notifications[i].collapseOut = true; 
@@ -305,6 +306,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $rootScope.checkLogin = function(){
             return checkLogin();
+        }
+        
+        $rootScope.logout = function(){
+            $.removeCookie(USER_NAME);
+            $.removeCookie(TOKEN);
+            $.removeCookie(PERMS);
+            $.removeCookie('FORM_INFO_EMPTY');
+            $rootScope.directory = {};
+            $rootScope.users = {};
         }
         
         $rootScope.updateNotificationBadge = function(){
@@ -457,7 +467,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
-        
         $scope.changePassword = function(password) {
             $http.post('/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
             .success(function(data) {
@@ -481,18 +490,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //changing password
-    App.controller('changePasswordController', function($scope, $http, Load) {
+    App.controller('changePasswordController', function($scope, $http, Load, $rootScope) {
     Load.then(function(){    
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
-            console.log($scope.item);
-            $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending($scope.item))
+            var to_send = {password:$scope.item.password, old_password: $scope.item.old_password};
+            $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
-                    $scope.user_name = data.data;
+                    $rootScope.logout();
                 }
                 else{
                     console.log('Error: ' + data);
@@ -3244,7 +3253,7 @@ App.directive('timePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'time" name="'+this_name+'time" ng-model="ngModel" required/>'
+                        +'<input type="text" class="form-control" id="'+this_id+'time" name="'+this_name+'time" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'time").datetimepicker({'
@@ -3279,7 +3288,7 @@ App.directive('datePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_name+'date" name="'+this_name+'" ng-model="ngModel" required/>'
+                        +'<input type="text" class="form-control" id="'+this_id+'date" name="'+this_name+'" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'date").datetimepicker({'
