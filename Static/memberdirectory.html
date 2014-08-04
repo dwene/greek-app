@@ -14,11 +14,45 @@
     </div>
     
     </section>
-    
-    <section ng-repeat="group in directory">
-        <h2 class="page-header">{{group.name}}</h2>
+<!--    <section ng-repeat="group in directory" ng-show="userLists[$index]">-->
+       <section ng-show = "council.length">
+        <h2 class="page-header">Council</h2>
         <ul>
-            <li ng-repeat="member in group.data | orderBy:'last_name' | multipleSearch:search" class="member" ng-show="member.user_name.length" ng-click="showIndividual(member)">
+            <li ng-repeat="member in council = ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'council')" class="member" ng-click="showIndividual(member)">
+            
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
+                </div>
+
+            
+            </li>
+        </ul>
+    </section>
+    <section ng-show="leaders.length">
+        <h2 class="page-header">Leadership</h2>
+        <ul>
+            <li ng-repeat="member in leaders = ( $root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'leadership')" class="member" ng-click="showIndividual(member)">
+            
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
+                </div>
+
+            
+            </li>
+        </ul>
+    </section>
+    <section ng-show="members.length">
+        <h2 class="page-header">Members</h2>
+        <ul>
+            <li ng-repeat="member in members =  ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'member')" class="member" ng-click="showIndividual(member)">
             
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
@@ -33,11 +67,10 @@
         </ul>
     </section>
 <!--
-    <div ng-show = "directory.leadership.length > 0">
-        <h2>Leaders</h2>    
-        <ul ng-repeat="member in directory.leadership | orderBy:'last_name' | multipleSearch:search">
+    <div >
+        <h2>Leadership</h2>    
+        <li ng-repeat="member in $root.directory | multipleSearch:search | orderBy:'last_name' | hasUserName" class="member" ng-click="showIndividual(member)" ng-show="member.perms == 'council'">
 
-            <li class="member" ng-click="showIndividual(member)">
             <hr>
                 <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
 

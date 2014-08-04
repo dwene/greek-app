@@ -3664,7 +3664,20 @@ App.filter('multipleSearch', function(){
         return retList;
     }
 });
-
+            
+App.filter('directoryFilter', function(){ 
+    return function (objects, perms) {
+        var retList = []
+        if (objects){
+            for (var i = 0; i < objects.length; i++){
+                if (objects[i].user_name && objects[i].perms == perms){
+                    retList.push(objects[i]);
+                }
+            }
+        }
+        return retList;
+    }
+});
 
 App.filter('removePassedEvents', function(){ 
     return function (objects, removePref) {
