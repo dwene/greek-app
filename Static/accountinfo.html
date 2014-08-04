@@ -5,10 +5,10 @@
     
     <span>Email Preferences: </span><br>
     <div class="btn-group">
-        <button type="button" ng-click="item.email_prefs = 'all'" ng-class="{'btn-primary' : item.email_prefs === 'all'}" class="btn btn-default">All</button>
-        <button type="button" ng-click="item.email_prefs = 'daily'" ng-class="{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
-        <button type="button" ng-click="item.email_prefs = 'none'" ng-class="{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
-    </div><br>
+        <button type="button" ng-click="item.email_prefs = 'all'; updateEmailPrefs('all');" ng-class="{'btn-primary' : item.email_prefs === 'all'}" class="btn btn-default">All</button>
+        <button type="button" ng-click="item.email_prefs = 'daily';  updateEmailPrefs('daily');" ng-class="{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
+        <button type="button" ng-click="item.email_prefs = 'none';  updateEmailPrefs('none');" ng-class="{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
+    </div><update-status ng-model="emailPrefUpdating" fn-call="updateEmailPrefs(item.email_prefs)"></update-status><br>
     <a ng-href="#/app/changepassword" id="changePasswordButton" class="btn btn-default">Change Password</a>
     <br><br><br>
 </section>

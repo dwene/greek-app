@@ -1,12 +1,29 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
-//#FIXME 503 on update account info
+//#CHANGES 503 on update account info - SHOULD BE DONE!
 //#FIXME upload profile pic page
 //#TODO get label checked tags and checked people on manage people tags page
-//#TODO on calendar page change event time from 2400 to 12:00 PM format
+//#CHANGES on calendar page change event time from 2400 to 12:00 PM format - DONE!!!
 //#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
 //#TODO MEOW MEOW MEOW
 //#FIXME added some loading icons in new directive called update-satus to pages managingmembers,  eventcheckin, addingmembers. Test it by changing someones perms in managingmembers.  They could use some graphic help.
+
+/*
+STYLING CHANGES:
+Upcoming Events in apphome
+Managemembers
+tagging members
+memberdirectory
+memberprofile
+eventinfo
+eventcheckin
+eventreport
+pollinfo
+
+Need non-typeahead for mobile tag selection
+netegreek home button with spinner half in background rectangle
+
+*/
 
 
 //Final/static variables. These variables are used for cookies
@@ -1674,7 +1691,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.checkAlumni = function(){
             return checkAlumni();
         }
-
+        
+        
         $scope.updateAccount = function(isValid){
             if(isValid){
                 console.log($scope.item.dob);
@@ -1701,6 +1719,27 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
     });
+    $scope.updateEmailPrefs = function(option){
+        var to_send = {email_prefs: option}
+        $scope.emailPrefUpdating = "pending";
+        $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.emailPrefUpdating = "done";
+                }
+                else
+                {
+                    console.log('ERROR: '+data);
+                    $scope.emailPrefUpdating = "broken";
+                }
+            })
+            .error(function(data) {
+                $scope.emailPrefUpdate = "broken";
+                console.log('Error: ' + data);
+            });
+    }
+    
     $scope.getUser = function(){
         return $.cookie(USER_NAME);
     }
