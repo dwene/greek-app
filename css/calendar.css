@@ -36,8 +36,11 @@
     border-top: 2px darkgrey solid;
 }
 
+.calendar-point{
+    cursor: pointer; 
+}
 .event-detail {
-    cursor: pointer;
+
     white-space: nowrap;
     text-overflow: ellipsis;
 }
@@ -102,7 +105,7 @@ background-color:darkblue;
 }
 
 .monthview-eventdetail-timecolumn {
-    width: 140px;
+    width: 160px;
     overflow: hidden;
 }
 

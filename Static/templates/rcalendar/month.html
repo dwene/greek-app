@@ -25,13 +25,13 @@
     <div ng-if="showEventDetail" class="event-detail-container">
         <div class="scrollable" style="height: 200px">
             <table class="table table-bordered table-striped table-fixed">
-                <tr ng-repeat="event in selectedDate.events" ng-if="selectedDate.events">
-                    <td ng-if="!event.allDay" class="monthview-eventdetail-timecolumn">{{event.startTime|date: 'HH:mm'}}
+                <tr ng-repeat="event in selectedDate.events" ng-if="selectedDate.events"  ng-click="eventSelected(event)" class="calendar-point">
+                    <td ng-if="!event.allDay" class="monthview-eventdetail-timecolumn">{{event.startTime|date: 'hh:mma'}}
                         -
-                        {{event.endTime|date: 'HH:mm'}}
+                        {{event.endTime|date: 'hh:mma'}}
                     </td>
                     <td ng-if="event.allDay" class="monthview-eventdetail-timecolumn">All day</td>
-                    <td class="event-detail" ng-click="eventSelected(event)">{{event.title}}</td>
+                    <td class="event-detail">{{event.title}}</td>
                 </tr>
                 <tr ng-if="!selectedDate.events"><td class="no-event-label">No Events</td></tr>
             </table>

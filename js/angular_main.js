@@ -262,6 +262,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $rootScope.routeChange = function(){
             $('.modal-backdrop').remove();
+            $('.bootstrap-datetimepicker-widget').hide()
         }
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
