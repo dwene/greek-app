@@ -23,7 +23,6 @@ var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', "googlechart"]);
 
 App.config(function($stateProvider, $urlRouterProvider) {
-    
     $urlRouterProvider.otherwise("/")
     .when("/", "/app/home")
     .when("/app/managemembers", "/app/managemembers/manage")
@@ -261,7 +260,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             
         }
-        
+        $rootScope.routeChange = function(){
+            $('.modal-backdrop').remove();
+        }
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
             $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
@@ -339,12 +340,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $rootScope.showNav = true;
+//        $rootScope.$on('$routeChangeSuccess', function () {
+//            $('.modal-backdrop').remove();
+//        })
         
     });
 
 //navigation header
     App.controller('navigationController', function($scope, $http, $rootScope, LoadScreen){
-        
+        routeChange();
         //closes the navigation if open and an li is clicked
         var navMain = $("#mainNavigation, #mobileSettings");
         navMain.on('click', 'li:not(.dropdown)', function(){
@@ -384,6 +388,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //	});
     
     App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen) {
+        routeChange();
         Load.then(function(){
             if(!checkLogin()){
                 window.location.assign("/#/login");
@@ -397,6 +402,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //login page
 	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen) {
+        routeChange();
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
@@ -438,6 +444,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //getting a forgotten password email
     App.controller('forgotPasswordController', function($scope, $http){
+        routeChange();
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
             if (email === undefined){
@@ -463,6 +470,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //changing a forgotten password
     App.controller('changePasswordFromTokenController', function($scope, $http) {
+        routeChange();
         $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
@@ -490,6 +498,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //changing password
     App.controller('changePasswordController', function($scope, $http, Load, $rootScope) {
+    routeChange();
     Load.then(function(){    
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
@@ -519,6 +528,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the registration page
     App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
+        routeChange();
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie(PERMS);
@@ -542,6 +552,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the register info page
     App.controller('registerinfoController', function($scope, $http, registerOrganizationService, $rootScope) {
+        routeChange();
         if (registerOrganizationService.get() === undefined){
             window.location.assign('#/register');
         }
@@ -607,6 +618,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the payment page
     App.controller('paymentController', function($scope, $http) {
+        routeChange();
         //skip payment page right now
         $scope.pay = {};
         $scope.submitPayment = function(){
@@ -628,6 +640,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the main app page
     App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
+        routeChange();
+        $('.modal-backdrop').remove();
         Load.then(function(){
 //        $scope.hidden = {};
 //        $scope.current = {};
@@ -731,6 +745,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the add members page
     App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
+        routeChange();
         Load.then(function(){
         //initialize a member array
         var newmemberList = [];
@@ -887,6 +902,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //new member page
     App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope){
+    routeChange();
     Load.then(function(){
         //MANAGE MEMBERS TAB
         $scope.openDeleteMemberModal = function(user){
@@ -1013,6 +1029,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
     });
     App.controller('newmemberController', function($scope, $http, $stateParams){
+        routeChange();
         $('.container').hide();
         logoutCookies();
         $.cookie(TOKEN, $stateParams.key);
@@ -1045,6 +1062,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen){
+        routeChange();
         Load.then(function(){
          var formObject = document.getElementById('uploadMembers');
         if(formObject){
@@ -1149,6 +1167,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('addAlumniController', function($scope, $http, Load){
+        routeChange();
         Load.then(function(){
         var newmemberList = [];
         //initialize a filecontents variable
@@ -1274,6 +1293,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //new member info page
     App.controller('newmemberinfoController', function($scope, $http){
+        routeChange();
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
         $scope.$watch('item.user_name', function() {
@@ -1335,7 +1355,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //adding profile pictures
     App.controller('profilepictureController', function($scope, $http, Load){
-
+    routeChange();
     Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
@@ -1412,6 +1432,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //the directory
     App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
+    routeChange();
     Load.then(function(){
         function splitMembers(){
             var council = [];
@@ -1488,6 +1509,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
+    routeChange();
     Load.then(function(){    
         $scope.directory = $rootScope.directory.alumni;
         if (!$scope.directory){
@@ -1527,6 +1549,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member profiles
     App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen){
+    routeChange();
     $scope.saveVcard = function(){
         var user = $scope.member;
         var out_string = 'BEGIN:VCARD\nVERSION:4.0\nN:' + user.last_name + ';' + user.first_name + ';;;\n'; //name
@@ -1625,6 +1648,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //account info
     App.controller('accountinfoController', function($scope, $http, $rootScope, Load){
+    routeChange();
     Load.then(function(){
         $scope.updatedInfo = false;
         $scope.item = $rootScope.me;
@@ -1686,6 +1710,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //upload image
     App.controller('uploadImageController', function($scope, $http, Load){
+    routeChange();
     Load.then(function(){
         $http.post('/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
             .success(function(data){
@@ -1712,6 +1737,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
+        routeChange();
         $scope.selectTagFromTypeAhead = function(tag){
             console.log('looking for tag', tag);
             console.log('all tags', $scope.tags);
@@ -1995,6 +2021,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //member messaging page
     App.controller('messagingController', function($scope, $http, $q, $rootScope, Load) {
+    routeChange();
     Load.then(function(){    
         if (!checkPermissions('leadership')){
             window.location.assign("/#/app");
@@ -2131,6 +2158,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 
     App.controller('newEventController', function($scope, $http, $rootScope, Load) {
+        routeChange();
 //        if ($rootScope.tags){
 //            $scope.tags = arrangeTagData($rootScope.tags);
 //        }
@@ -2160,6 +2188,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     
                     event.tags = getCheckedTags($scope.tags);
                     var to_send = JSON.parse(JSON.stringify(event));
+                    console.log('date start', event.date_start + " " + event.time_start);
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
                     to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
                     console.log(to_send.time_end);
@@ -2213,6 +2242,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
     App.controller('eventsController', function($scope, $http, Load) {
+        routeChange();
         Load.then(function(){
                 //send the organization and user date from registration pages
                 $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
@@ -2265,6 +2295,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 
     App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+        routeChange();
         $scope.going = false;
         $scope.not_going = false;
         $scope.loading = true;
@@ -2423,6 +2454,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 
     App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+        routeChange();
         $scope.loading = true;
         Load.then(function(){
         $scope.tags = $rootScope.tags;
@@ -2562,6 +2594,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
     App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope) {
+        routeChange();
         $scope.loading = true;
         Load.then(function(){
             getCheckInData();
@@ -2660,7 +2693,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     });
 
-App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter) {
+    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter) {
+        routeChange();
         $scope.loading = true;
         Load.then(function(){
             getCheckInData();
@@ -2773,6 +2807,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
 
 
     App.controller('newPollController', function($scope, $http, Load, $rootScope) {
+        routeChange();
         $scope.poll = {}
         $scope.poll.questions = [];
         $scope.addQuestion = function(){
@@ -2819,7 +2854,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
 
 
     App.controller('pollController', function($scope, $http, Load, $rootScope) {
-        
+        routeChange();
         Load.then(function(){
             $http.post('/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
                 .success(function(data){
@@ -2842,6 +2877,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
 	});
 
     App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
+        routeChange();
         Load.then(function(){
             var to_send = {key: $stateParams.key};
             $http.post('/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
@@ -2935,6 +2971,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
 	});
 
     App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams) {
+        routeChange();
         Load.then(function(){
             var to_send = {key: $stateParams.key};
             $http.post('/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
@@ -2957,6 +2994,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
         
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {
+        routeChange();
 //        $scope.loading = true;
         Load.then(function(){
             loadSubscriptionInfo();
@@ -3036,6 +3074,10 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
 	});
 
 //More Functions
+
+function routeChange(){
+    $('.modal-backdrop').remove();
+}
 
 //checks to see if user is logged in or not
 function checkLogin(){
@@ -3334,7 +3376,7 @@ App.directive('datePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_id+'date" name="'+this_name+'" required/>'
+                        +'<input type="text" class="form-control" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'date").datetimepicker({'
@@ -3912,7 +3954,6 @@ App.factory('LoadScreen', function($rootScope){
 
 App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     var defer = $q.defer();
-    console.log("Loading Data")
     function executePosts() {
           var deferred = $q.defer();
           var done = 0;
