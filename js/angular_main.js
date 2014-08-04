@@ -6,6 +6,8 @@
 //#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
 //#TODO MEOW MEOW MEOW
+//#FIXME added some loading icons in new directive called update-satus to pages managingmembers,  eventcheckin, addingmembers. Test it by changing someones perms in managingmembers.  They could use some graphic help.
+
 
 //Final/static variables. These variables are used for cookies
 var USER_NAME = 'USER_NAME';
@@ -88,17 +90,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.managemembers', {
                     url : '/managemembers',
                     templateUrl : 'Static/managemembers.html',
-                    controller  : 'managemembersController'
                 })
                 .state('app.managemembers.manage', {
                         url : '/manage',
                         templateUrl : 'Static/managingmembers.html',
-                        controller: 'managemembersController'
+                        controller: 'manageMembersController'
                     })
                 .state('app.managemembers.add', {
                         url : '/add',
                         templateUrl : 'Static/addingmembers.html',
-                        controller: 'managemembersController'
+                        controller: 'addMembersController'
                     })
                 .state('app.managemembers.tag', {
                         url : '/tag',
@@ -242,6 +243,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.tags = {};
         $rootScope.updatingNotifications = false;
         $rootScope.allTags = [];
+        $rootScope.defaultProfilePicture = 'http://hivemind.co.nz/static/images/grey-icons/person.png';
         //set color theme
         $rootScope.colorName = "";
         
@@ -273,7 +275,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 
                 $timeout(function(){
-                    console.log(data.data);
                     $rootScope.notifications = JSON.parse(data.data).notifications;
                     for (var i = 0; i < $rootScope.notifications.length; i++){
                         $rootScope.notifications[i].collapseOut = true; 
@@ -283,7 +284,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                            });
                         
                     }
-                    console.log('Notifications', $rootScope.notifications);
                 })
                 $timeout(function(){
                     $rootScope.updateNotificationBadge();
@@ -337,7 +337,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             return 'Unknown';
         }
-        
         
         $rootScope.showNav = true;
         
@@ -731,40 +730,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //the add members page
-    App.controller('managemembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
+    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
         Load.then(function(){
-        //#FIXME When I refresh on the manage members page it shows your account, when I click into it though it does not.
-        checkPermissions(COUNCIL);
-        $scope.selectedMembers = {};
-        //MANAGE MEMBERS TAB
-        
-        //ADD MEMBERS TAB
-        $scope.openDeleteMemberModal = function(user){
-            $('#deleteMemberModal').modal();
-            $scope.userToDelete = user;
-        }
-        //#TODO this should now be fixed to where it can delete multiple checked members in this modal
-        
-        $scope.openConvertMembersModal = function(){
-            $('#convertMemberModal').modal();
-        }
-        
-        $scope.updatePerms = function(key, option){
-            var to_send = {key: key, perms: option};
-            $http.post('/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        console.log('success');
-                    }
-                    else{
-                        console.log('ERROR: '+data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-        }
-        
         //initialize a member array
         var newmemberList = [];
         //initialize a filecontents variable
@@ -791,7 +758,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
         //remove someone from list before adding everyone
          $scope.deleteAdd = function(add){
-              var index=$scope.adds.indexOf(add)
+              var index = $scope.adds.indexOf(add);
               $scope.adds.splice(index,1);     
         }
          
@@ -799,46 +766,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.addMember = function(isValid){
             if(isValid){
             newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
-            $('#result').text(JSON.stringify(newmemberList));
+            //$('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
             $scope.adds = newmemberList;}
             else{$scope.submitted = true;}
-            $('#addmemberForm').find('input').val('');
-        };
-        
-        $scope.convertMembersToAlumni = function(members){
-            keys = []
-            $('#convertMemberModal').modal('hide');
-            for (var key in members){
-                if (members[key] == true){
-                    keys.push(key);
-                }
-            }
-            var to_send = {'keys': keys};
-            console.log(to_send);
-            $http.post('/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        console.log('success');
-                    }
-                    else
-                    {
-                        console.log('ERROR: '+data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' + data);
-                });
-            $scope.selectedMembers = {};
-            for (var kIdx = 0; kIdx < keys.length; kIdx++){
-                for (var mIdx = 0; mIdx < $scope.members.length; mIdx ++){
-                    if($scope.members[mIdx].key == keys[kIdx]){
-                        $scope.members.splice(mIdx, 1);
-                        break;
-                    }
-                }
-            }
+            $scope.input={};
         };
         
         $scope.getMembers = function(){
@@ -876,45 +808,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         onPageLoad();
         
-        $scope.removeMember = function(user){
-            $('#deleteMemberModal').modal('hide');
-            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                }
-                else
-                    console.log('ERROR: '+data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });    
-            for (var i = 0; i < $scope.members.length; i++){
-                if ($scope.members[i].key == user.key){
-                    $scope.members.splice(i, 1);
-                    break;
-                }
-            }
-        }
-        
-        
         $scope.submitMembers = function(){
-            
+            $scope.updating = "pending";
             var data_tosend = {users: newmemberList};
             $http.post('/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $scope.members.concat(data_tosend.users);
+                    $scope.updating = "done";
+                    $scope.adds = [];
                 }
-                else
+                else{
+                    $scope.updating = "broken";
                     console.log('ERROR: '+data);
+                    }
             })
             .error(function(data) {
+                $scope.updating = "broken";
                 console.log('Error: ' + data);
-            });
-            $scope.adds = [];
-            newmemberList = [];
+            }); 
         }
         
         //this function sets up a filereader to read the CSV
@@ -961,32 +873,145 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }  
                 newmemberList = newmemberList.concat(csvMemberList);
                 //outputs object to result
-                $('#result').text(JSON.stringify(newmemberList));
+                //$('#result').text(JSON.stringify(newmemberList));
                 //define variable for ng-repeat
                 $scope.adds = newmemberList;
             }
         };
-        
-        //onclick checkmark tag
-//        $('#manageMembers').on('click', '.checkLabel', function(){
-//            
-//            var checkbox = $(this).find(':checkbox');
-//                        
-//                if ( checkbox.prop('checked') )
-//                {
-//                    $(this).addClass('label-primary').removeClass('label-default');
-//                    $(this).find('.checkStatus').addClass('fa-check-square-o').removeClass('fa-square-o');
-//                }
-//                else
-//                {
-//                    $(this).removeClass('label-primary').addClass('label-default');
-//                    $(this).find('.checkStatus').removeClass('fa-check-square-o').addClass('fa-square-o');
-//                }
-//        });
         });
     });
 
+
+
+
+
 //new member page
+    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope){
+    Load.then(function(){
+        //MANAGE MEMBERS TAB
+        $scope.openDeleteMemberModal = function(user){
+            $('#deleteMemberModal').modal();
+            $scope.userToDelete = user;
+        }
+        //#TODO this should now be fixed to where it can delete multiple checked members in this modal
+        
+        $scope.openConvertMembersModal = function(){
+            $('#convertMemberModal').modal();
+        }
+        
+        $scope.updatePerms = function(member, option){
+            var key = member.key;
+            member.updating = 'pending';
+            var to_send = {key: key, perms: option};
+            $http.post('/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        member.updating = 'done';
+                    }
+                    else{
+                        member.updating = 'broken';
+                    }
+                })
+                .error(function(data) {
+                    member.updating = 'broken';
+                });
+        }
+        
+        $scope.convertMembersToAlumni = function(members){
+            keys = []
+            $('#convertMemberModal').modal('hide');
+            for (var key in members){
+                if (members[key] == true){
+                    keys.push(key);
+                }
+            }
+            var to_send = {'keys': keys};
+            console.log(to_send);
+            $http.post('/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                    }
+                    else
+                    {
+                        console.log('ERROR: '+data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
+            $scope.selectedMembers = {};
+            for (var kIdx = 0; kIdx < keys.length; kIdx++){
+                for (var mIdx = 0; mIdx < $scope.members.length; mIdx ++){
+                    if($scope.members[mIdx].key == keys[kIdx]){
+                        $scope.members.splice(mIdx, 1);
+                        break;
+                    }
+                }
+            }
+        };
+        $scope.getMembers = function(){
+            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $rootScope.users = JSON.parse(data.data);
+                    console.log($rootScope.users);
+                    assignAngularViewModels($rootScope.users.members);
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        }
+        
+        function assignAngularViewModels(members){
+            $scope.members = members;
+            LoadScreen.stop();
+        }
+        
+        function onPageLoad(){
+            console.log('page is loading');
+            if($rootScope.users.members){
+                assignAngularViewModels($rootScope.users.members);
+                $scope.getMembers();
+            }
+            else{
+                LoadScreen.start();
+                $scope.getMembers();
+            }
+        }
+        onPageLoad();
+        
+        $scope.removeMember = function(user){
+            $('#deleteMemberModal').modal('hide');
+            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });    
+            for (var i = 0; i < $scope.members.length; i++){
+                if ($scope.members[i].key == user.key){
+                    $scope.members.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        
+         
+    ;})
+    
+    });
     App.controller('newmemberController', function($scope, $http, $stateParams){
         $('.container').hide();
         logoutCookies();
@@ -1448,7 +1473,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 return link + '=s50';
             }
             else{
-                return 'http://hivemind.co.nz/static/images/grey-icons/person.png';
+                return $rootScope.defaultProfilePicture;
             }
             
         }
@@ -2568,19 +2593,30 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $('#checkInModal').modal('hide');
             var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+            if (!member.attendance_data){
+                    member.attendance_data = {}
+            }
             if (clear){
                 to_send.clear = true;
+                member.attendance_data.time_in = "";
             }
+            else{
+                
+                member.attendance_data.time_in = moment();
+            }
+            member.in_updating = 'pending';
             $http.post('/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
-                    setTimeout(function(){getCheckInData();},500);
+                    member.in_updating = "done";
                 }
                 else{
+                    member.in_updating = "broken";
                     console.log('ERROR: '+data);
                 }
             })
             .error(function(data) {
+                member.in_updating = "broken";
                 console.log('Error: ' + data);
             });
         }
@@ -2592,20 +2628,30 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $('#checkOutModal').modal('hide');
             var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+            if (!member.attendance_data){
+                member.attendance_data = {};
+            }
             if (clear){
                 to_send.clear = true;
+                member.attendance_data.time_out = "";
             }
+            else {
+                member.attendance_data.time_out = moment();
+            }
+            member.out_updating = 'pending';
             $http.post('/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
-                    setTimeout(function(){getCheckInData();},500);
+                    member.out_updating = 'done';
                 }
                 else{
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ', data);
+                    member.out_updating = 'broken';
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
+                member.out_updating = 'broken';
             });
         }
         $scope.formatDate = function(date){
@@ -2626,13 +2672,13 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     $scope.loading = false;
                 }
                 else{
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ', data);
                     $scope.eventNotFound = true;
                     $scope.loading = false;
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' ,  data);
                 $scope.loading = false;
                 $scope.eventNotFound = true;
             });
@@ -2762,7 +2808,7 @@ App.controller('eventCheckInReportController', function($scope, $http, Load, $st
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             }
         }
@@ -3400,6 +3446,8 @@ App.directive('netePieChart', function() {
 //  }
 //});
 
+           
+            
 App.directive('selectingUsers', function(){
   return {
     restrict: 'E',
@@ -3473,6 +3521,17 @@ App.directive('netetagDelete', function($compile){
         }
     }
 });
+            
+App.directive('netememberCheck', function($compile){
+    return{
+        restrict: 'E',
+        scope:{ngModel:"="},
+        templateUrl: '../Static/templates/tags/netemember-check.html',
+        link: function(scope, element, attrs){
+//            $compile(element.contents())(scope)
+        }
+    }
+});
 
 App.directive('netetagAll', function($compile){
     return{
@@ -3484,6 +3543,19 @@ App.directive('netetagAll', function($compile){
     }
 });
 
+App.directive('updateStatus', function(){
+    return{
+        restrict: 'E',
+        scope:  { 
+            ngModel: "=",
+            fnCall: "@?" 
+                },
+        templateUrl: '../Static/templates/update-status.html',
+        link: function(scope, element, attrs){
+//            $compile(element.contents())(scope)
+        }
+    }
+});
 
 //            if (attrs.options == 'all'){
 //                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'

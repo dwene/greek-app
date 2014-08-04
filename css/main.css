@@ -330,6 +330,7 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
 #loadingScreen .fa-spin{margin-top:40px; font-size:80px;}
+.smallSpin{font-size:20px;}
 
 
 

@@ -34,22 +34,28 @@
             <hr>
             
             <form id="addalumniForm" name="addalumniForm" ng-submit="addAlumnus(addalumniForm.$valid)" role="form" novalidate>
-            <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.first_name.$invalid && !addalumniForm.first_name.$pristine) || (addalumniForm.first_name.$invalid && submitted)}">
+            <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.first_name.$invalid && !addalumniForm.first_name.$pristine) || (addalumniForm.first_name.$invalid && submitted)}">
                 <label for="first_name" class="control-label">First Name</label>
                   <input type="text" class="form-control" id="first_name" name="first_name" ng-model="input.first_name" placeholder="John">
               </div>
-            <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.last_name.$invalid && !addalumniForm.last_name.$pristine) || (addalumniForm.last_name.$invalid && submitted)}">
+            <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.last_name.$invalid && !addalumniForm.last_name.$pristine) || (addalumniForm.last_name.$invalid && submitted)}">
                 <label for="last_name" class="control-label">Last Name</label>
                   <input type="text" class="form-control" id="last_name" name="last_name" ng-model="input.last_name" placeholder="Doe">
               </div>  
-            <div class="form-group col-sm-3 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.email.$invalid && !addalumniForm.email.$pristine) || (addalumniForm.email.$invalid && submitted)}">
+            <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'has-error' : (addalumniForm.email.$invalid && !addalumniForm.email.$pristine) || (addalumniForm.email.$invalid && submitted)}">
                 <label for="email" class="control-label">Email*</label>
                   <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
               </div>
+<!--
               <div class="form-group" ng-class="{'has-error' : addalumniForm.$invalid && submitted}">
                   <button class="btn btn-default">Add Alumnus</button>
                 <p ng-show="addalumniForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
               </div>
+-->
+            <div class="form-group" ng-class="{ 'has-error' : addalumniForm.$invalid && submitted}">
+              <button class="btn btn-default" ng-disabled="!addalumniForm.$valid">Add Alumni</button>
+              <p ng-show="addalumniForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
+            </div>
              </form>
             
         </div>
