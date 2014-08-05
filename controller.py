@@ -653,7 +653,7 @@ class RESTApi(remote.Service):
         futures = list()
         for user in clump['users']:
             token = generate_token()
-            email_item = member_signup_email(user, request_user, token)
+            email_item = alumni_signup_email(user, request_user, token)
             cron_email = CronEmail()
             cron_email.title = email_item["subject"]
             cron_email.content = email_item["text"]
@@ -665,7 +665,7 @@ class RESTApi(remote.Service):
             new_user.email = user['email']
             new_user.organization = request_user.organization
             new_user.user_name = ''
-            new_user.current_token = user['token']
+            new_user.current_token = token
             if 'first_name' in user:
                 new_user.first_name = user['first_name']
             if 'last_name' in user:

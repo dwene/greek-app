@@ -46,20 +46,21 @@
         <h4 class="modal-title">All Tags</h4>
       </div>
       <div class="modal-body">
+            <input type="search" ng-model="modalSearch" placeholder="Search..." class="form-control">
             <ul class="addTags">
             <div>
                <h2 class="page-header">Organization Tags</h2>
-                <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
+                <div class="btn-group" ng-repeat="tag in ngModel.org_tags | multipleSearch:modalSearch">
                     <netetag-check></netetag-check>
                 </div>
                 <div ng-hide="skipEvent">
                     <h2 class="page-header">Event Tags</h2>
-                    <div class="btn-group" ng-repeat="tag in ngModel.event_tags">
+                    <div class="btn-group" ng-repeat="tag in ngModel.event_tags | multipleSearch:modalSearch">
                         <netetag-check></netetag-check>
                     </div>
                 </div>
                 <h2 class="page-header">Preset Tags</h2>
-                <div class="btn-group" ng-repeat="tag in ngModel.perms_tags">
+                <div class="btn-group" ng-repeat="tag in ngModel.perms_tags | multipleSearch:modalSearch">
                     <netetag-check></netetag-check>
                 </div>
             </div>

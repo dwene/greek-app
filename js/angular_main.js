@@ -1079,6 +1079,162 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
     });
 
+    App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen) {
+        routeChange();
+        Load.then(function(){
+        //initialize a member array
+        var newmemberList = [];
+        //initialize a filecontents variable
+        var filecontents;
+        
+        //this method will get the data from the form and add it to the newmemberList object
+        $.fn.serializeObject = function()
+        {
+            var o = {};
+            var a = this.serializeArray();
+            
+            $.each(a, function() {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    
+        //remove someone from list before adding everyone
+        $scope.deleteAdd = function(add){
+              var index = $scope.adds.indexOf(add);
+              $scope.adds.splice(index,1);     
+        }
+         
+        //ng-click for the form to add one member at a time        
+        $scope.addAlumnus = function(isValid){
+            if(isValid){
+                newmemberList = newmemberList.concat($('#addalumnusForm').serializeObject());
+                $scope.adds = newmemberList;
+            }
+            else{
+                $scope.submitted = true;
+            }
+            $scope.input = {};
+        }
+        
+        $scope.getAlumni = function(){
+            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $rootScope.users = JSON.parse(data.data);
+                    assignAngularViewModels($rootScope.users.alumni);
+                }
+                else
+                    console.log('ERROR: '+data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+        
+        }
+        function assignAngularViewModels(alumni){
+            $scope.alumni = alumni;
+            LoadScreen.stop();
+        }
+        
+        function onPageLoad(){
+            console.log('page is loading');
+            if($rootScope.users.alumni){
+                assignAngularViewModels($rootScope.users.alumni);
+                $scope.getAlumni();
+            }
+            else{
+                LoadScreen.start();
+                $scope.getAlumni();
+            }
+        }
+        onPageLoad();
+        
+        $scope.submitAlumni = function(){
+            $scope.updating = "pending";
+            var data_tosend = {users: newmemberList};
+            $http.post('/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.updating = "done";
+                    $scope.adds = [];
+                }
+                else{
+                    $scope.updating = "broken";
+                    console.log('ERROR: '+data);
+                    }
+            })
+            .error(function(data) {
+                $scope.updating = "broken";
+                console.log('Error: ' + data);
+            }); 
+        }
+        
+        //this function sets up a filereader to read the CSV
+        function readSingleFile(evt) {
+                //Retrieve the first (and only!) File from the FileList object
+                var f = evt.target.files[0]; 
+    
+                if (f) {
+                  var r = new FileReader();
+                  r.onload = function(e) { 
+                      filecontents = e.target.result;
+                  }
+                  r.readAsText(f);
+                    
+                } else { 
+                  alert("Failed to load file");
+                }
+            }
+        
+        //reads the file as it's added into the file input
+
+       //this function takes the CSV, converts it to JSON and outputs it
+        $scope.addAlumni = function(){
+            
+            //check to see if file is being read
+            if(filecontents == null){
+             //do nothing
+            alert('you have not selected a file');
+            }
+            else{
+                //converts CSV file to array of usable objects
+                var csvMemberList = CSV2ARRAY(filecontents);
+                console.log(csvMemberList);
+                checkEmail = function(email){
+                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    return re.test(email);
+                }
+                for (var i = 0; i< csvMemberList.length; i++){
+                    if(!checkEmail(csvMemberList[i].email) && csvMemberList[i].first_name && csvMemberList[i].last_name && csvMemberList[i].class_year){
+                        csvMemberList.splice(i, 1);
+                        i--;
+                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+                    }
+                }  
+                newmemberList = newmemberList.concat(csvMemberList);
+                //outputs object to result
+                //$('#result').text(JSON.stringify(newmemberList));
+                //define variable for ng-repeat
+                $scope.adds = newmemberList;
+            }
+        };
+        });
+    });
+
+
+
+
+
     App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen){
         routeChange();
         Load.then(function(){
@@ -1183,132 +1339,132 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
        }); 
     });
-
-    App.controller('addAlumniController', function($scope, $http, Load){
-        routeChange();
-        Load.then(function(){
-        var newmemberList = [];
-        //initialize a filecontents variable
-        var filecontents;
-        
-        //this method will get the data from the form and add it to the newmemberList object
-        $.fn.serializeObject = function()
-        {
-            var o = {};
-            var a = this.serializeArray();
-            
-            $.each(a, function() {
-                if (o[this.name] !== undefined) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
-            });
-            console.log('Im adding ', o);
-            return o;
-        };
-    
-        //remove someone from list before adding everyone
-         $scope.deleteAdd = function(add){
-              var index=$scope.adds.indexOf(add)
-              $scope.adds.splice(index,1);     
-        }
-         
-        //ng-click for the form to add one member at a time        
-        $scope.addAlumnus = function(isValid){
-            if(isValid){
-            newmemberList = newmemberList.concat($('#addalumniForm').serializeObject());
-            $('#result').text(JSON.stringify(newmemberList));
-            //define variable for ng-repeat
-            $scope.adds = newmemberList;
-            }else{$scope.submitted = true;}
-            $('#addalumniForm').find('input').val('');
-        };
-        
-        $scope.submitAlumni = function(){
-            
-            var data_tosend = {users: newmemberList};
-            $scope.adds = null;
-            $http.post('/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var returned = JSON.parse(data.data)
-                    if(returned.errors.length > 0){
-                        var errors_str = 'Errors with the following emails:\n';
-                        for(var i = 0; i< returned.errors.length; i++){
-                            errors_str += returned.errors[i].email + '\n';
-                        }
-                    alert(errors_str);
-                    }
-                    console.log(data);
-                }
-                else
-                    console.log('ERROR: '+data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-            newmemberList = [];
-            $scope.adds = [];
-        }
-        
-        //this function sets up a filereader to read the CSV
-        function readSingleFile(evt) {
-                //Retrieve the first (and only!) File from the FileList object
-                var f = evt.target.files[0]; 
-    
-                if (f) {
-                  var r = new FileReader();
-                  r.onload = function(e) { 
-                      filecontents = e.target.result;
-                  }
-                  r.readAsText(f);
-                    
-                } else { 
-                  alert("Failed to load file");
-                }
-            }
-        
-        //reads the file as it's added into the file input
-        document.getElementById('uploadAlumni').addEventListener('change', readSingleFile, false);
-        
-       //this function takes the CSV, converts it to JSON and outputs it
-        $scope.addAlumni = function(){
-            
-            //check to see if file is being read
-            if(filecontents == null){
-             //do nothing
-            alert('you have not selected a file');
-            }
-            else{
-                //converts CSV file to array of usable objects
-                var csvMemberList = CSV2ARRAY(filecontents);
-                console.log(csvMemberList);
-                checkEmail = function(email){
-                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    return re.test(email);
-                }
-                for (var i = 0; i< csvMemberList.length; i++){
-                    if(!checkEmail(csvMemberList[i].email)){
-                        csvMemberList.splice(i, 1);
-                        i--;
-                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
-                    }
-                }  
-                newmemberList = newmemberList.concat(csvMemberList);
-                //outputs object to result
-                $('#result').text(JSON.stringify(newmemberList));
-                //define variable for ng-repeat
-                $scope.adds = newmemberList;
-            }
-        };
-    });
-    });
-
+//
+//    App.controller('addAlumniController', function($scope, $http, Load){
+//        routeChange();
+//        Load.then(function(){
+//        var newmemberList = [];
+//        //initialize a filecontents variable
+//        var filecontents;
+//        
+//        //this method will get the data from the form and add it to the newmemberList object
+//        $.fn.serializeObject = function()
+//        {
+//            var o = {};
+//            var a = this.serializeArray();
+//            
+//            $.each(a, function() {
+//                if (o[this.name] !== undefined) {
+//                    if (!o[this.name].push) {
+//                        o[this.name] = [o[this.name]];
+//                    }
+//                    o[this.name].push(this.value || '');
+//                } else {
+//                    o[this.name] = this.value || '';
+//                }
+//            });
+//            console.log('Im adding ', o);
+//            return o;
+//        };
+//    
+//        //remove someone from list before adding everyone
+//         $scope.deleteAdd = function(add){
+//              var index=$scope.adds.indexOf(add)
+//              $scope.adds.splice(index,1);     
+//        }
+//         
+//        //ng-click for the form to add one member at a time        
+//        $scope.addAlumnus = function(isValid){
+//            if(isValid){
+//            newmemberList = newmemberList.concat($('#addalumniForm').serializeObject());
+//            $('#result').text(JSON.stringify(newmemberList));
+//            //define variable for ng-repeat
+//            $scope.adds = newmemberList;
+//            }else{$scope.submitted = true;}
+//            $('#addalumniForm').find('input').val('');
+//        };
+//        
+//        $scope.submitAlumni = function(){
+//            
+//            var data_tosend = {users: newmemberList};
+//            $scope.adds = null;
+//            $http.post('/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    var returned = JSON.parse(data.data)
+//                    if(returned.errors.length > 0){
+//                        var errors_str = 'Errors with the following emails:\n';
+//                        for(var i = 0; i< returned.errors.length; i++){
+//                            errors_str += returned.errors[i].email + '\n';
+//                        }
+//                    alert(errors_str);
+//                    }
+//                    console.log(data);
+//                }
+//                else
+//                    console.log('ERROR: '+data);
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' + data);
+//            });
+//            newmemberList = [];
+//            $scope.adds = [];
+//        }
+//        
+//        //this function sets up a filereader to read the CSV
+//        function readSingleFile(evt) {
+//                //Retrieve the first (and only!) File from the FileList object
+//                var f = evt.target.files[0]; 
+//    
+//                if (f) {
+//                  var r = new FileReader();
+//                  r.onload = function(e) { 
+//                      filecontents = e.target.result;
+//                  }
+//                  r.readAsText(f);
+//                    
+//                } else { 
+//                  alert("Failed to load file");
+//                }
+//            }
+//        
+//        //reads the file as it's added into the file input
+//        document.getElementById('uploadAlumni').addEventListener('change', readSingleFile, false);
+//        
+//       //this function takes the CSV, converts it to JSON and outputs it
+//        $scope.addAlumni = function(){
+//            
+//            //check to see if file is being read
+//            if(filecontents == null){
+//             //do nothing
+//            alert('you have not selected a file');
+//            }
+//            else{
+//                //converts CSV file to array of usable objects
+//                var csvMemberList = CSV2ARRAY(filecontents);
+//                console.log(csvMemberList);
+//                checkEmail = function(email){
+//                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//                    return re.test(email);
+//                }
+//                for (var i = 0; i< csvMemberList.length; i++){
+//                    if(!checkEmail(csvMemberList[i].email)){
+//                        csvMemberList.splice(i, 1);
+//                        i--;
+//                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+//                    }
+//                }  
+//                newmemberList = newmemberList.concat(csvMemberList);
+//                //outputs object to result
+//                $('#result').text(JSON.stringify(newmemberList));
+//                //define variable for ng-repeat
+//                $scope.adds = newmemberList;
+//            }
+//        };
+//    });
+//    });
+//
 //new member info page
     App.controller('newmemberinfoController', function($scope, $http){
         routeChange();
@@ -1603,7 +1759,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             loadMemberData();
         }
         
-        
         $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1624,6 +1779,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });        
     
         function loadMemberData(){
+            $scope.member = undefined;
             for(var i = 0; i<$scope.members.length; i++)
             {
                 if($scope.members[i].user_name == user_name)
@@ -1658,6 +1814,44 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.linkedin = $scope.member.linkedin;
 
                     break;
+                }
+            }
+            if ($scope.member === undefined){
+                for(var i = 0; i<$rootScope.directory.alumni.length; i++)
+                {
+                    if($rootScope.directory.alumni[i].user_name == user_name)
+                    {
+                        $scope.member = $scope.members[i];
+                        $scope.prof_pic = $scope.members[i].prof_pic;
+                         //define profile information
+                        $scope.status = $scope.member.status;
+                        var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        if ($scope.member.grad_month && $scope.member.grad_year){
+                            $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
+                        }
+                        $scope.major = $scope.member.major;
+                        $scope.firstName = $scope.member.first_name;
+                        $scope.lastName = $scope.member.last_name;
+                        $scope.email = $scope.member.email;
+                        $scope.birthday = $scope.member.dob
+                        $scope.phone = $scope.member.phone;
+                        $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                        $scope.position = $scope.member.position;
+                        $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                        if ($scope.currentAddress.indexOf('null') > -1){
+                            $scope.currentAddress = null;
+                        }
+                        if ($scope.permanentAddress.indexOf('null') > -1){
+                            $scope.permanentAddress = null;
+                        }
+                        $scope.website = $scope.member.website;
+                        $scope.facebook = $scope.member.facebook;
+                        $scope.twitter = $scope.member.twitter;
+                        $scope.instagram = $scope.member.instagram;
+                        $scope.linkedin = $scope.member.linkedin;
+
+                        break;
+                    }
                 }
             }
         }
@@ -3627,7 +3821,7 @@ App.directive('netetagAll', function($compile){
     }
 });
 
-App.directive('updateStatus', function(){
+App.directive('updateStatus', function($timeout){
     return{
         restrict: 'E',
         scope:  { 
@@ -3636,6 +3830,15 @@ App.directive('updateStatus', function(){
                 },
         templateUrl: '../Static/templates/update-status.html',
         link: function(scope, element, attrs){
+            scope.$watch('ngModel', function(){
+                if (scope.ngModel == 'done'){
+                    console.log('its done');
+                    $timeout(function(){
+                        console.log('I should be changing it now');
+                        scope.ngModel = '';
+                    }, 2000)
+                }
+            })
 //            $compile(element.contents())(scope)
         }
     }
