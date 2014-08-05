@@ -169,7 +169,6 @@ def forgotten_password_email(user):
     user.current_token = token
     user.put()
     link = 'https://greek-app.appspot.com/?token='+token+'#/changepasswordfromtoken'
-    logging.error(link)
     body = 'Hello\n'
     body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
     body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
@@ -283,7 +282,6 @@ def get_users_from_tags(tags, organization, keys_only):
 
     if not _keys_only:
         out_list = ndb.get_multi(out_list)
-    logging.error(out_list)
     return out_list
 
 
@@ -557,7 +555,7 @@ class RESTApi(remote.Service):
     def register_organization(self, request):
         try:
             clump = json.loads(request.data)
-            logging.error(clump)
+
             new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'])
             new_org.put()
             user = clump['user']
@@ -750,9 +748,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
-        logging.error(request.data)
         user_info = json.loads(request.data)
-        logging.error(user_info)
         user_to_remove = ndb.Key(urlsafe=user_info["key"]).get()
         if user_to_remove:
             removal_email(user_to_remove)
@@ -763,12 +759,9 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/new_user',
                       http_method='POST', name='auth.new_user')
     def register_user(self, request):
-        logging.error(request.token)
         user = User.query(User.current_token == request.token).get()
-        logging.error(user)
         if user and user.user_name == '':
             user_dict = user.to_dict()
-            logging.error(user_dict)
             del user_dict["hash_pass"]
             del user_dict["current_token"]
             del user_dict["organization"]
@@ -777,7 +770,7 @@ class RESTApi(remote.Service):
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_credentials',
                       http_method='POST', name='auth.register_credentials')
-    def add_credentials(self, request):
+    def register_credentials(self, request):
         data = json.loads(request.data)
         user = User.query(User.current_token == request.token).get()
         if user and user.user_name == '':
@@ -837,7 +830,6 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        logging.error(request_object["key"])
         user = ndb.Key(urlsafe=request_object["key"]).get()
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
@@ -885,11 +877,8 @@ class RESTApi(remote.Service):
                       http_method='POST', name='user.update_user_directory_info')
     def update_user_directory_info(self, request):
         user = User.query(User.user_name == request.user_name).get()
-        logging.error(user)
         user_data = json.loads(request.data)
-        logging.error(user_data)
         for key, value in user_data.iteritems():
-            logging.error(key + " " + str(value))
             if not value:
                 continue
             if key == "email":
@@ -1002,7 +991,6 @@ class RESTApi(remote.Service):
         if not user:
             return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
         new_pass = json.loads(request.data)["password"]
-        logging.error(new_pass)
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
         user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
@@ -1292,10 +1280,8 @@ class RESTApi(remote.Service):
         out_notifications = list()
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
-            logging.error(new_notifications)
             for notify in new_notifications:
                 note = notify.to_dict()
-                logging.error(note)
                 note["new"] = True
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)

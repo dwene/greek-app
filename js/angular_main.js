@@ -11,9 +11,9 @@
 /*
 STYLING CHANGES:
 Upcoming Events in apphome
-Managemembers
+Managemembers/managealumni
 tagging members
-memberdirectory
+memberdirectory/alumnidirectory
 memberprofile
 eventinfo
 eventcheckin
@@ -22,7 +22,7 @@ pollinfo
 
 Need non-typeahead for mobile tag selection
 netegreek home button with spinner half in background rectangle
-
+I think status max should be shorter, else it doesnt really fit.
 */
 
 
@@ -1315,7 +1315,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
         $scope.$watch('item.user_name', function() {
-            $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
+            if ($scope.user_name){
+                $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
+            }
         });
         $scope.checkUserName = function(user){
         $http.post('/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
@@ -1353,13 +1355,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     if(data.error == "INVALID_USERNAME")
                     {
-                        $scope.user_is_taken = true;
+                        $scope.unavailable = true;
                     }
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ', data);
                 } 
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
                 //now logged in
             $scope.waiting_for_response = false;
