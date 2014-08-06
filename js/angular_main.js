@@ -1076,6 +1076,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log(data.data);
                     $scope.user = JSON.parse(data.data);
                     $('.container').fadeIn();
+                    $('#body').show();
                 }
                 else
                     console.log('ERROR: '+data);
@@ -4305,6 +4306,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
+                checkResponseErrors(data.data);
                 //console.log(data.data);
                 if (!checkResponseErrors(data)){
                 $rootScope.users = JSON.parse(data.data);}
@@ -4316,6 +4318,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
             });
           $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
+                checkResponseErrors(data.data);
                 //console.log(data.data);
                 var directory = JSON.parse(data.data);
                 $rootScope.directory = directory;
@@ -4329,6 +4332,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
             });
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
+                
                 $rootScope.notifications = JSON.parse(data.data).notifications;
                 
                 for (var i = 0; i < $rootScope.notifications.length; i++){

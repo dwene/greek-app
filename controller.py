@@ -217,11 +217,11 @@ def get_user(user_name, token):
     user = User.query(User.user_name == user_name).get()
     if not user:
         return None
-    dt = (datetime.datetime.now() - user.timestamp)
-    if user.current_token == token and dt.days < 3:
-        return user
-    else:
-        return None
+    if user.timestamp:
+        dt = (datetime.datetime.now() - user.timestamp)
+        if user.current_token == token and dt.days < 3:
+            return user
+    return None
 
 
 def username_available(user_name):
