@@ -211,6 +211,7 @@ class ProfilePictureHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
+        logging.error('I somehow made it to the upload handler')
         user_name = self.request.get('user_name')
         token = self.request.get('token')
         user = get_user(user_name, token)

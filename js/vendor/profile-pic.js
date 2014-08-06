@@ -8,7 +8,7 @@ angular.module('aj.crop', [])
     return {
       restrict: 'E',
       replace: true,
-      scope: { src:'=', selected:'&' },
+      scope: { src:'=', selected:'&', ratio:'=?' },
       //link: function (scope, element, attr) {
       link: function (scope, element) {
         var myImg
@@ -42,7 +42,7 @@ angular.module('aj.crop', [])
                   scope.selected({cords: cords});
                 });
               }
-            , aspectRatio: 1
+            , aspectRatio: scope.ratio || 1
             , boxWidth: 300
             }
           , function () {
@@ -161,7 +161,7 @@ angular.module('App')
           console.log('onChange', arguments);
         }
       , trackDocument: true
-      , aspectRatio: 1
+      , aspectRatio: scope.ratio || 1
       });
     };
 
