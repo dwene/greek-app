@@ -2,31 +2,8 @@
                     
        
                     <section class="row">
-                    <div class="col-xs-7">
-                    <div class="col-xs-12">
-                    <div class="form-group row">
-                        <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members" class="form-control">
-                    </div>
-                    </div>
-                    <ul>
-                        <div id="memberSelect" ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
-                            <div class="row">
-                                <li class="col-sm-4 col-md-3">
-                                <label class="label checkLabel" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
-                                <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
-                                <input type="checkbox" ng-model="user.checked"> <span>#{{user.name}}</span>
-                                </label>
-                                </li>
-                                <ul id="memberTags" class="col-sm-8 col-md-9">
-                                    <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
-                                        <netetag-delete></netetag-delete>
-                                    </div>
-                                </ul>
-                            </div>
-                        </div>
-                    </ul>
-                    </div>
-                    <div class="col-xs-5">
+                    
+                    <div class="col-xs-12 col-sm-5">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
@@ -49,27 +26,52 @@
                         <p ng-show="!selectedUsers.length && selectedTags.length">Please select members.</p>
                                                 
                         <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</button>
+                        
+                        <section id="createTags">    
+                            <form id="addTag" name="addTag" ng-submit="addOrganizationTag(item.tag)">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                       <span class="input-group-addon">#</span>
+                                        <input name="tag" id="tag" ng-trim="false" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
+                                        <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-default">Create Tag</button>
+                                         </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                        
                     </div>
                     
+                    <div class="col-xs-12 col-sm-7">
+                    <div class="col-xs-12">
+                    <div class="form-group row">
+                        <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members" class="form-control">
+                    </div>
+                    </div>
+                    <ul>
+                        <div id="memberSelect" ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
+                               
+                               <ul id="memberTags">
+                                <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
+                                <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
+                                <input type="checkbox" ng-model="user.checked"> <span>#{{user.name}}</span>
+                                </label>
+                                
+                                
+                                    <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
+                                        <netetag-delete></netetag-delete>
+                                    </div>
+                                </ul>
+                            <hr>
+                        </div>
+                    </ul>
+                    </div>
+                    
+                    
                     </section>
                     
-                    <section id="createTags" class="row">    
-                        <div class="col-xs-12 col-sm-7">
-                        </div>
-                        <div class="col-xs-12 col-sm-5">
-                        <form id="addTag" name="addTag" ng-submit="addOrganizationTag(item.tag)">
-                            <div class="form-group">
-                                <div class="input-group">
-                                   <span class="input-group-addon">#</span>
-                                    <input name="tag" id="tag" ng-trim="false" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
-                                    <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-default">Create Tag</button>
-                                     </span>
-                                </div>
-                            </div>
-                        </form>
-                        </div>    
-                    </section>
+                    
 
 
 

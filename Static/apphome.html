@@ -2,11 +2,11 @@
         
     <section id="statusContainer" class="row">
     
-    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs">
+    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs" style="visibility:hidden;">
        <h2 class="page-header">Organization Letters</h2>
        <section></section>
     </div>
-    <div id="upcomingEvents" class="col-xs-12 col-sm-3 md-pull-right">
+    <div id="upcomingEvents" ng-show="eventList.length" class="col-xs-12 col-sm-3 md-pull-right">
        
         <h2 class="page-header">Upcoming Events</h2>
         <section >
@@ -15,7 +15,6 @@
                     <span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
                 </li>
             </ul>
-            <p ng-hide="eventList.length">No Upcoming Events!</p>
         </section>
     </div>
        
