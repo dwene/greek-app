@@ -1,11 +1,10 @@
 //#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
 //#CHANGES 503 on update account info - SHOULD BE DONE!
-//#FIXME upload profile pic page
-//#TODO get label checked tags and checked people on manage people tags page
+//#CHANGES upload profile pic page SHOULD BE DONE!
+//#CHANGES get label checked tags and checked people on manage people tags page - I THINK THIS IS DONE
 //#CHANGES on calendar page change event time from 2400 to 12:00 PM format - DONE!!!
 //#TODO fix check username tags in newmemberinfo and registerinfo pages
 //#TODO get it to where you can see all messages after they're hidden
-//#TODO MEOW MEOW MEOW
 //#FIXME added some loading icons in new directive called update-satus to pages managingmembers,  eventcheckin, addingmembers. Test it by changing someones perms in managingmembers.  They could use some graphic help.
 
 /*
@@ -311,7 +310,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $('.fa-refresh').removeClass('fa-spin')},930);
                 })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         }
         
@@ -466,7 +465,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 .error(function(data) {
                     $scope.login(user_name, password);
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         };
         $scope.forgotPassword = function(){
@@ -494,7 +493,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 $scope.emailFailed = true;
             });
         }
@@ -515,13 +514,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.user_name = data.data;
                 }
                 else{
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                     $scope.changeFailed = true;
                     $scope.passwordChanged = false;
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 $scope.changeFailed = true;
                 $scope.passwordChanged = false;
             });            
@@ -544,13 +543,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.logout();
                 }
                 else{
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                     $scope.changeFailed = true;
                     $scope.passwordChanged = false;
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 $scope.changeFailed = true;
                 $scope.passwordChanged = false;
             });              
@@ -602,7 +601,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.unavailable = false;
                     }
                     else{
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                         $scope.available = false;
                         $scope.unavailable = true;}  
                 });
@@ -638,7 +637,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });  
         }
             else{
@@ -710,10 +709,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             }); 
             $('#status').val("");
             if ($rootScope.me){
@@ -833,10 +832,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     assignAngularViewModels($rootScope.users.members);
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         
         }
@@ -870,12 +869,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else{
                     $scope.updating = "broken";
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                     }
             })
             .error(function(data) {
                 $scope.updating = "broken";
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             }); 
         }
         
@@ -987,11 +986,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             $scope.selectedMembers = {};
             for (var kIdx = 0; kIdx < keys.length; kIdx++){
@@ -1013,10 +1012,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     assignAngularViewModels($rootScope.users.members);
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         
         }
@@ -1047,10 +1046,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });    
             for (var i = 0; i < $scope.members.length; i++){
                 if ($scope.members[i].key == user.key){
@@ -1079,10 +1078,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $('#body').show();
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         
         $scope.correctPerson = function(){
@@ -1152,10 +1151,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     assignAngularViewModels($rootScope.users.alumni);
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         
         }
@@ -1189,12 +1188,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else{
                     $scope.updating = "broken";
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                     }
             })
             .error(function(data) {
                 $scope.updating = "broken";
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             }); 
         }
         
@@ -1280,11 +1279,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log("error: "+ data.error)
+                        console.log("error: ", data.error)
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         }
         
@@ -1318,11 +1317,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log("error: "+ data.error)
+                        console.log("error: ", data.error)
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
                 for (var i = 0; i < $scope.alumni.length; i++){
                     if ($scope.alumni[i]. key == alumnus.key){
@@ -1340,10 +1339,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });    
             if ($scope.alumni.indexOf(alumnus) > -1){
                     $scope.alumni.splice($scope.alumni.indexOf(alumnus), 1);
@@ -1422,10 +1421,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                    console.log(data);
 //                }
 //                else
-//                    console.log('ERROR: '+data);
+//                    console.log('ERROR: ',data);
 //            })
 //            .error(function(data) {
-//                console.log('Error: ' + data);
+//                console.log('Error: ' , data);
 //            });
 //            newmemberList = [];
 //            $scope.adds = [];
@@ -1503,7 +1502,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.unavailable = false;
                     }
                     else{
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                         $scope.available = false;
                         $scope.unavailable = true;}  
                 });
@@ -1561,11 +1560,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log("Error" + data.error)
+                    console.log("Error" , data.error)
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
             $scope.user_name = $.cookie(USER_NAME);
             $scope.token = $.cookie(TOKEN);
@@ -1675,11 +1674,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error)
+                    console.log("error: ", data.error)
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
@@ -1723,11 +1722,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                }
 //                else
 //                {
-//                    console.log("error: "+ data.error)
+//                    console.log("error: ", data.error)
 //                }
 //            })
 //            .error(function(data) {
-//                console.log('Error: ' + data);
+//                console.log('Error: ' , data);
 //            });
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
@@ -1790,11 +1789,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error)
+                    console.log("error: ", data.error)
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });        
     
         function loadMemberData(){
@@ -1896,11 +1895,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         
         $scope.checkAlumni = function(){
@@ -1920,12 +1919,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                     
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             }
             else{
@@ -1945,13 +1944,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                     $scope.emailPrefUpdating = "broken";
                 }
             })
             .error(function(data) {
-                $scope.emailPrefUpdate = "broken";
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
+                console.log('I should be broken');
+                $scope.emailPrefUpdating = "broken";
             });
     }
     
@@ -1976,11 +1976,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error)
+                    console.log("error: ", data.error)
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         
         $scope.showIndividual = function(member){
@@ -2051,10 +2051,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log($rootScope.users);
                 }
                 else
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         }
         getUsers();
@@ -2075,11 +2075,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $rootScope.org_tag_data = $scope.org_tags;
                     }
                     else{
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         }
         $scope.getOrganizationTags();
@@ -2097,12 +2097,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                     
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             
             $("#addTag input").val("");
@@ -2116,7 +2116,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if(checkResponseErrors(data)){openErrorModal(data.error)}
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             var idx = $rootScope.tags.org_tags.indexOf($scope.modaledTag);
             $rootScope.tags.org_tags.splice(idx, 1);
@@ -2146,11 +2146,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                         else
                         {
-                            console.log('ERROR: '+data);
+                            console.log('ERROR: ',data);
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
                 var tag = $scope.modaledTag;
                 $scope.rename = null;
@@ -2198,11 +2198,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             for(var j = 0; j < $scope.users.length; j++){
                 var user = $scope.users[j];
@@ -2249,11 +2249,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else
                     {
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         }
         
@@ -2313,11 +2313,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.tags = tag_data;
                 }
                 else{
-                    console.log("error: "+ data.error)
+                    console.log("error: ", data.error)
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
             $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
             .success(function(data){
@@ -2328,11 +2328,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error)
+                    console.log("error: ", data.error)
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
             return deferred.promise;
         }
@@ -2361,7 +2361,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                 }
                                 else
                                 {
-                                    console.log("error: "+ data.error)
+                                    console.log("error: ", data.error)
                                 }
                             })
                             },2000);
@@ -2369,11 +2369,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                         else
                         {
-                            console.log("error: "+ data.error)
+                            console.log("error: ", data.error)
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
                 $scope.title = '';
                 $scope.content = '';
@@ -2394,11 +2394,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                         else
                         {
-                            console.log("error: "+ data.error)
+                            console.log("error: ", data.error)
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
             $scope.sentMessages.splice($scope.sentMessages.indexOf(message), 1);
         }
@@ -2439,11 +2439,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $rootScope.tags = JSON.parse(data.data);
                     }
                     else{
-                        console.log("error: "+ data.error)
+                        console.log("error: ", data.error)
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
 
             $scope.addEvent = function(isValid, event){
@@ -2461,11 +2461,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
                         }
                         else
-                            console.log('ERROR: '+data);
+                            console.log('ERROR: ',data);
                         $scope.loading = false;
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                         $scope.loading = false;
                     });
                 $scope.loading = true;
@@ -2496,7 +2496,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
                 }
             }
@@ -2529,10 +2529,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         console.log($scope.eventSource);
                     }
                     else
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             
             $scope.showDate = function(start, end){
@@ -2620,11 +2620,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             getEventAndSetInfo(events, count);
                         }
                         else{
-                            console.log('ERROR: '+data);
+                            console.log('ERROR: ',data);
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
             }
         }   
@@ -2716,11 +2716,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             }
                         }
                         else{
-                            console.log('ERROR: '+data);
+                            console.log('ERROR: ',data);
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
         }
 	});
@@ -2774,11 +2774,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             getEventAndSetInfo(events, count);
                         }
                         else{
-                            console.log('ERROR: '+data);
+                            console.log('ERROR: ',data);
                         }
                     })
                     .error(function(data) {
-                        console.log('Error: ' + data);
+                        console.log('Error: ' , data);
                     });
                 }
         }   
@@ -2857,11 +2857,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     window.location.assign('#/app/events');
                 }
                 else{
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         }
     }
@@ -2882,13 +2882,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.loading = false;
                 }
                 else{
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                     $scope.eventNotFound = true;
                     $scope.loading = false;
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 $scope.loading = false;
                 $scope.eventNotFound = true;
             });
@@ -2920,12 +2920,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else{
                     member.in_updating = "broken";
-                    console.log('ERROR: '+data);
+                    console.log('ERROR: ',data);
                 }
             })
             .error(function(data) {
                 member.in_updating = "broken";
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         }
         $scope.checkOut = function(member, checkStatus, clear){
@@ -3002,13 +3002,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //                        createReport();
 //                    }
 //                    else{
-//                        console.log('ERROR: '+data);
+//                        console.log('ERROR: ',data);
 //                        $scope.eventNotFound = true;
 //                        $scope.loading = false;
 //                    }
 //                })
 //                .error(function(data) {
-//                    console.log('Error: ' + data);
+//                    console.log('Error: ' , data);
 //                    $scope.loading = false;
 //                    $scope.eventNotFound = true;
 //                });
@@ -3144,7 +3144,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         });
         
@@ -3171,7 +3171,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 .error(function(data) {
                     $scope.notFound = true;
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         });
         $scope.closePoll = function(close){
@@ -3197,7 +3197,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         }
         $scope.$watchCollection('poll.questions', function(){
@@ -3224,7 +3224,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         }
         
@@ -3240,7 +3240,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         }
         
@@ -3265,7 +3265,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
         });
         
@@ -3289,11 +3289,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.pay = {};
                     }
                     else{
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             }
             $scope.cancelSubscription = function(){
@@ -3304,11 +3304,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         setTimeout(function(){$rootScope.refreshPage();}, 150);
                     }
                     else{
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                 });
             }
             
@@ -3905,19 +3905,24 @@ App.directive('updateStatus', function($timeout){
         restrict: 'E',
         scope:  { 
             ngModel: "=",
-            fnCall: "@?" 
+            fnCall: "&?" 
                 },
         templateUrl: '../Static/templates/update-status.html',
-        link: function(scope, element, attrs){
-            scope.$watch('ngModel', function(){
-                if (scope.ngModel == 'done'){
+        controller: function($scope, $element, $attrs){
+            $scope.$watch('ngModel', function(){
+                if ($scope.ngModel == 'done'){
                     console.log('its done');
                     $timeout(function(){
                         console.log('I should be changing it now');
-                        scope.ngModel = '';
+                        $scope.ngModel = '';
                     }, 2000)
                 }
-            })
+            });
+            $scope.callFunction = function(){
+                console.log('hi!!!!!');
+                $scope.fnCall();
+                
+            }
 //            $compile(element.contents())(scope)
         }
     }
@@ -4220,11 +4225,11 @@ App.factory('directoryService', function($rootScope, $http, LoadScreen) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error);
+                    console.log("error: ", data.error);
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
     }
     else{
@@ -4236,11 +4241,11 @@ App.factory('directoryService', function($rootScope, $http, LoadScreen) {
                 }
                 else
                 {
-                    console.log("error: "+ data.error);
+                    console.log("error: ", data.error);
                 }
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
             });
         return $rootScope.directory;
     }
@@ -4254,11 +4259,11 @@ App.factory('getEvents', function($http, $rootScope){
                 $rootScope.events = events;
             }
             else{
-                console.log('ERROR: '+data);
+                console.log('ERROR: ',data);
             }
         })
         .error(function(data) {
-            console.log('Error: ' + data);
+            console.log('Error: ' , data);
         });
 });
 
@@ -4313,7 +4318,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 checkIfDone();
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 checkIfDone();
             });
           $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
@@ -4322,12 +4327,10 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 //console.log(data.data);
                 var directory = JSON.parse(data.data);
                 $rootScope.directory = directory;
-                console.log("DIRECTORY");
-                console.log($rootScope.directory);
                 checkIfDone();
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 checkIfDone();
             });
           $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
@@ -4343,7 +4346,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 checkIfDone();
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 checkIfDone();
             });  
 //            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
@@ -4357,15 +4360,14 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
                     $rootScope.tags = tag_data;
-                    console.log(tag_data);
                 }
                 else{
-                    console.log("error: "+ data.error)
+                    console.log("error: " , data.error)
                 }
                 checkIfDone();
             })
             .error(function(data) {
-                console.log('Error: ' + data);
+                console.log('Error: ' , data);
                 checkIfDone();
             });
             console.log('hi');
@@ -4385,12 +4387,12 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                         console.log('events rootscope', $rootScope.events);
                     }
                     else{
-                        console.log('ERROR: '+data);
+                        console.log('ERROR: ',data);
                     }
                     checkIfDone();
                 })
                 .error(function(data) {
-                    console.log('Error: ' + data);
+                    console.log('Error: ' , data);
                     checkIfDone();
                 });
           return deferred.promise;

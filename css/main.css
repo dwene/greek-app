@@ -393,7 +393,7 @@ transition:opacity .2s linear;
 }
 
 nav.navbar-default:hover .refresh{opacity:1;}
-.fa-spin.fa-refresh{-webkit-animation-duration: 1s; /* Safari and Chrome */
+#refreshNotifications .fa-spin.fa-refresh{-webkit-animation-duration: 1s; /* Safari and Chrome */
     animation-duration: 1s;}
 
 /*ng-animation code*/
