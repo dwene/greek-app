@@ -35,6 +35,12 @@ indexes:
   - name: time_end
   - name: going
   - name: tag
+  
+- kind: Event
+  properties:
+  - name: organization
+  - name: tag
+  - name: going
     
 - kind: Notification
   properties:

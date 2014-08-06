@@ -7,6 +7,7 @@ body.modal-open{margin-right:0px;}
 
 
 /*Navigation Styles*/
+    #homeButton {cursor:pointer};
 
     .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand .badge, #refreshNotifications {transition:background linear .3s;}
     .navbar{border:0px; transition:background linear .3s;}

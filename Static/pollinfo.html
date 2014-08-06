@@ -5,7 +5,7 @@
 <div class="jumbotron">
 			
 <a ng-href="#/app/polls" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
-<button ng-click="closePoll(true)" ng-show="poll.open && $root.checkPermissions('council')" class="btn btn-default topRight"><i class="fa fa-pause"></i> Close Poll</button>
+<button ng-click="closePoll(true)" ng-show="poll.open && $root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-pause"></i> Close Poll</button>
 <button ng-click="closePoll(false)" ng-show="poll.open === false && $root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-play"></i> Open Poll</button>
 <button ng-click="deletePoll()" ng-show="$root.checkPermissions('council')" class="btn btn-danger bottomRight"><i class="fa fa-trash"></i> Delete Poll</button>
     

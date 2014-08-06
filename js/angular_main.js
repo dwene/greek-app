@@ -399,6 +399,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     });
     App.controller('indexController', function($scope, $http, LoadScreen) {
+        $scope.homeButton = function(){
+            if (checkAlumni()){
+                window.location.assign('#/app/directory/members');
+            }
+            else{
+                window.location.assign('#/app/home');
+            }
+        }
 	});
 //home page
 //    App.controller('homeController', function($scope, $http) {
@@ -440,7 +448,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(USER_NAME, user_name);
                         $.cookie(TOKEN, returned_data.token);
                         $.cookie(PERMS, returned_data.perms);
-                        window.location.assign("#/app");
+                        $('html').hide();
+                        if (!checkAlumni()){
+                            window.location.assign("#/app");
+                        }
+                        else{
+                            window.location.assign('#/app/directory/members');
+                        }
                         $rootScope.refreshPage();
                     }
                     else{
@@ -684,6 +698,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if ($rootScope.me){
                 $rootScope.me.status = status;
             }
+            $scope.status = '';
         }
         $scope.clearStatus = function(){
             var status = "";
@@ -765,6 +780,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
         routeChange();
         Load.then(function(){
+
+        requireCouncil();
         //initialize a member array
         var newmemberList = [];
         //initialize a filecontents variable
@@ -922,6 +939,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope){
     routeChange();
     Load.then(function(){
+        requireCouncil();
         //MANAGE MEMBERS TAB
         $scope.openDeleteMemberModal = function(user){
             $('#deleteMemberModal').modal();
@@ -2011,7 +2029,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         Load.then(function(){
-        
+        requireLeadership();
         function getUsers(){
             $scope.users = [];
             $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
@@ -2258,9 +2276,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //member messaging page
     App.controller('messagingController', function($scope, $http, $q, $rootScope, Load) {
     routeChange();
-    Load.then(function(){    
+    Load.then(function(){ 
+        requireLeadership();
         if (!checkPermissions('leadership')){
+            if (checkAlumni()){
+                window.location.assign('#/app/directory/members');
+            }
+            else{
             window.location.assign("/#/app");
+            }
         }
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -2395,10 +2419,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('newEventController', function($scope, $http, $rootScope, Load) {
         routeChange();
+        
 //        if ($rootScope.tags){
 //            $scope.tags = arrangeTagData($rootScope.tags);
 //        }
         Load.then(function(){
+            requireLeadership();
             $scope.event = {};
             $scope.event.tag = '';
             $scope.tags = $rootScope.tags;
@@ -2479,7 +2505,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('eventsController', function($scope, $http, Load) {
         routeChange();
+        
         Load.then(function(){
+            requireMember();
+            if (!checkPermissions('leadership')){
+                if (checkAlumni()){
+                    window.location.assign('#/app/directory/members');
+                }
+                else{
+                    window.location.assign("/#/app");
+                }
+            }
                 //send the organization and user date from registration pages
                 $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
@@ -2532,6 +2568,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
         routeChange();
+        
         $scope.going = false;
         $scope.not_going = false;
         $scope.loading = true;
@@ -2566,6 +2603,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             return " ";
         }
         Load.then(function(){
+        requireMember();
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
@@ -2685,14 +2723,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     });
         }
 	});
-    
-
 
 
     App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
         routeChange();
         $scope.loading = true;
         Load.then(function(){
+        requireLeadership();
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
@@ -2833,6 +2870,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         $scope.loading = true;
         Load.then(function(){
+            requireLeadership();
             getCheckInData();
         });
         function getCheckInData(){
@@ -2934,6 +2972,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.loading = true;
         Load.then(function(){
             getCheckInData();
+            requireLeadership();
             function getCheckInData(){
             $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
@@ -3084,6 +3123,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         Load.then(function(){
+            requireLeadership();
             $scope.tags = $rootScope.tags;
         });
 	});
@@ -3092,6 +3132,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('pollController', function($scope, $http, Load, $rootScope) {
         routeChange();
         Load.then(function(){
+            requireMember();
             $http.post('/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -3115,6 +3156,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
         routeChange();
         Load.then(function(){
+            requireMember();
             var to_send = {key: $stateParams.key};
             $http.post('/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
                 .success(function(data){
@@ -3209,6 +3251,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams) {
         routeChange();
         Load.then(function(){
+            requireMember();
             var to_send = {key: $stateParams.key};
             $http.post('/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
                 .success(function(data){
@@ -3231,6 +3274,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {
         routeChange();
+        requireCouncil();
 //        $scope.loading = true;
         Load.then(function(){
             loadSubscriptionInfo();
@@ -3313,6 +3357,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 function routeChange(){
     $('.modal-backdrop').remove();
+    $('.bootstrap-datetimepicker-widget').hide();
 }
 
 //checks to see if user is logged in or not
@@ -3322,6 +3367,39 @@ function checkLogin(){
     }
     else
         return false;
+}
+
+function requireLeadership(){
+    if (!checkPermissions('leadership')){
+        if (checkAlumni()){
+            window.location.assign('#/app/directory/members');
+        }
+        else{
+            window.location.assign("/#/app");
+        }
+    }
+}
+
+function requireCouncil(){
+    if (!checkPermissions('council')){
+        if (checkAlumni()){
+            window.location.assign('#/app/directory/members');
+        }
+        else{
+            window.location.assign("/#/app");
+        }
+    }
+}
+
+function requireMember(){
+    if (!checkPermissions('member')){
+        if (checkAlumni()){
+            window.location.assign('#/app/directory/members');
+        }
+        else{
+            window.location.assign("/#/app");
+        }
+    }
 }
 
 //clears all checked labels
@@ -4217,7 +4295,13 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           var done = 0;
           function checkIfDone() {
             done++;
-            if (done==6){ deferred.resolve(); $('#body').show(); }
+            if (done==6){ 
+                deferred.resolve(); 
+                $('#body').show(); 
+                if (checkAlumni()){
+                    window.location.assign('#/app/directory/members');
+                }
+            }
           }
           $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
