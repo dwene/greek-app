@@ -268,10 +268,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $rootScope.setColor = function (color){
             $rootScope.color = color;
-            if (color == 'color2' || color == 'color3' || color == 'color4' || color == 'color5'){
+            var colorsfordark = [ 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'color11', 'color12', 'color13', 'color14', 'color15', 'color16' ];
+            if ( colorsfordark.indexOf(color) > -1 ){
                 $('body').addClass('dark');
+                $('body').removeClass('light');
             }
             else{
+                $('body').addClass('light');
                 $('body').removeClass('dark');
             }
             
