@@ -211,39 +211,77 @@ class ProfilePictureHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        logging.error('I somehow made it to the upload handler')
         user_name = self.request.get('user_name')
         token = self.request.get('token')
+        upload_type = self.request.get('type')
+        logging.error('This is my type:' + upload_type)
         user = get_user(user_name, token)
         if not user:
             self.redirect('/#/login')
-        upload_files = self.get_uploads('file') # 'file' is file upload field in the form
-        crop_data = json.loads(self.request.get('crop_data'))
-        blob_info = upload_files[0]
-        blob_key = blob_info.key()
-        if blob_key:
-            blob_info = blobstore.get(blob_key)
+        if upload_type == 'prof_pic':
+            logging.error('my type is prof_pic')
+            upload_files = self.get_uploads('file') # 'file' is file upload field in the form
+            crop_data = json.loads(self.request.get('crop_data'))
+            blob_info = upload_files[0]
+            blob_key = blob_info.key()
+            if blob_key:
+                blob_info = blobstore.get(blob_key)
 
-            if blob_info:
-                img = images.Image(blob_key=blob_key)
-                img.crop(left_x=float(crop_data['x'])/float(crop_data['bx']),
-                         right_x=float(crop_data['x2'])/float(crop_data['bx']),
-                         top_y=float(crop_data['y'])/float(crop_data['by']),
-                         bottom_y=float(crop_data['y2'])/float(crop_data['by']))
-                img.resize(width=300, height=300)
-                img.im_feeling_lucky()
-                thumbnail = img.execute_transforms(output_encoding=images.PNG)
-                file_name = files.blobstore.create(mime_type='image/png')
-                with files.open(file_name, 'a') as f:
-                    f.write(thumbnail)
-                files.finalize(file_name)
-                blobstore.delete(blob_key)
-                if user.prof_pic:
-                    blobstore.delete(user.prof_pic)
-                user.prof_pic = files.blobstore.get_blob_key(file_name)
-                user.put()
-                self.redirect('/#/app/accountinfo')
-                return
+                if blob_info:
+                    img = images.Image(blob_key=blob_key)
+                    img.crop(left_x=float(crop_data['x'])/float(crop_data['bx']),
+                             right_x=float(crop_data['x2'])/float(crop_data['bx']),
+                             top_y=float(crop_data['y'])/float(crop_data['by']),
+                             bottom_y=float(crop_data['y2'])/float(crop_data['by']))
+                    img.resize(width=300, height=300)
+                    img.im_feeling_lucky()
+                    thumbnail = img.execute_transforms(output_encoding=images.PNG)
+                    file_name = files.blobstore.create(mime_type='image/png')
+                    with files.open(file_name, 'a') as f:
+                        f.write(thumbnail)
+                    files.finalize(file_name)
+                    blobstore.delete(blob_key)
+                    if user.prof_pic:
+                        blobstore.delete(user.prof_pic)
+                    user.prof_pic = files.blobstore.get_blob_key(file_name)
+                    user.put()
+                    self.redirect('/#/app/accountinfo')
+                    return
+        elif upload_type == 'organization':
+            logging.error('my type is organization')
+            if not user.perms == "council":
+                self.redirect('/#/app')
+            upload_files = self.get_uploads('file') # 'file' is file upload field in the form
+            crop_data = json.loads(self.request.get('crop_data'))
+            blob_info = upload_files[0]
+            blob_key = blob_info.key()
+            if blob_key:
+                blob_info = blobstore.get(blob_key)
+
+                if blob_info:
+                    img = images.Image(blob_key=blob_key)
+                    img.crop(left_x=float(crop_data['x'])/float(crop_data['bx']),
+                             right_x=float(crop_data['x2'])/float(crop_data['bx']),
+                             top_y=float(crop_data['y'])/float(crop_data['by']),
+                             bottom_y=float(crop_data['y2'])/float(crop_data['by']))
+                    img.resize(width=400, height=300)
+                    img.im_feeling_lucky()
+                    thumbnail = img.execute_transforms(output_encoding=images.PNG)
+                    file_name = files.blobstore.create(mime_type='image/png')
+                    with files.open(file_name, 'a') as f:
+                        f.write(thumbnail)
+                    files.finalize(file_name)
+                    blobstore.delete(blob_key)
+                    organization = user.organization.get()
+                    if organization and organization.image:
+                        blobstore.delete(organization.image)
+                    organization.image = files.blobstore.get_blob_key(file_name)
+                    organization.put()
+                    self.redirect('/#/app/admin')
+                    return
+        logging.error('I have no type. Boo.')
+        self.redirect('/#/app')
+        return
 
 
 class MorningTasks(webapp2.RequestHandler):

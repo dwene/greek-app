@@ -104,6 +104,7 @@ class Organization(ndb.Model):
     trial_period = ndb.BooleanProperty(default=True)
     cost = ndb.FloatProperty(default=1.0)
     color = ndb.StringProperty(default='color1')
+    image = ndb.BlobKeyProperty()
 
 
 class Poll(ndb.Model):

@@ -222,6 +222,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     url : '/admin',
                     templateUrl : 'Static/admin.html',
                     controller : 'adminController'
+                })            
+            .state('app.organizationPictureUpload',{
+                //#TODO put this into each individual event :tag
+                    url : '/uploadOrganizationImage',
+                    templateUrl : 'Static/uploadOrganizationImage.html',
+                    controller : 'organizationPictureController'
                 })
             .state('app.newPoll',{
             //#TODO put this into each individual event :tag
@@ -1572,6 +1578,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
             $scope.user_name = $.cookie(USER_NAME);
             $scope.token = $.cookie(TOKEN);
+            $scope.type = "prof_pic";
 //        $scope.getUser = function(){
 //            console.log('Hey I got the username');
 //            return $.cookie(USER_NAME);
@@ -1625,6 +1632,30 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 console.log(data);
             });
         }
+    });
+    });
+
+    App.controller('organizationPictureController', function($scope, $http, Load){
+    routeChange();
+    Load.then(function(){
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $("#profilePic").attr("action", data.data);
+                    $scope.url = data.data;
+                }
+                else
+                {
+                    console.log("Error" , data.error)
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+            });
+            $scope.user_name = $.cookie(USER_NAME);
+            $scope.token = $.cookie(TOKEN);
+            $scope.type = "organization";
     });
     });
 
