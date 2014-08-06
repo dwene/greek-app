@@ -24,6 +24,13 @@
         <button id="color16" ng-click="changeTheme(16);" class="colorPick" ng-class="{'selectedColor' : themeColor === 'color16'}"></button>
     </div>
       
+      
+      <h2 class="page-header">Organization Image</h2>
+      <img src="{{$root.organization.image}}">
+      <a class="btn btn-default" ng-href="#/app/uploadorganizationimage">Change Organization Image</a>
+      
+      
+      
       <h2 class="page-header">Subscription Information</h2>
       
        <div ng-hide ="subscription.no_subscription">

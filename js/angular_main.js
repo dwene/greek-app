@@ -225,7 +225,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })            
             .state('app.organizationPictureUpload',{
                 //#TODO put this into each individual event :tag
-                    url : '/uploadOrganizationImage',
+                    url : '/uploadorganizationimage',
                     templateUrl : 'Static/uploadOrganizationImage.html',
                     controller : 'organizationPictureController'
                 })
@@ -1638,6 +1638,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('organizationPictureController', function($scope, $http, Load){
     routeChange();
     Load.then(function(){
+        requireCouncil();
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -4410,6 +4411,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
             .success(function(data){
                 $rootScope.subscribed = true;
                 $rootScope.setColor(JSON.parse(data.data).color);
+                $rootScope.organization = JSON.parse(data.data);
                 checkIfDone();
             })
             .error(function(data) {

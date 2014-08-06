@@ -587,6 +587,10 @@ class RESTApi(remote.Service):
         out = dict(name=organization.name, school=organization.school)
         out["subscribed"] = organization.subscribed
         out["color"] = organization.color
+        try:
+            out["image"] = images.get_serving_url(organization.image, secure_url=True)
+        except:
+            out["image"] = ''
         return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
