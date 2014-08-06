@@ -321,12 +321,12 @@ textarea.form-control{height:auto; max-width:100%;}
 #color8{background:#F26C9D;}
 #color9{background:#630F00;}
 #color10{background:#C72A26;}
-#color11{}
-#color12{}
-#color13{}
-#color14{}
-#color15{}
-#color16{}
+#color11{background:#91390E;}
+#color12{background:#FF6100;}
+#color13{background:#FFC100;}
+#color14{background:#2E9685;}
+#color15{background:#59391E;}
+#color16{background:#33302C;}
 
 /*Loading Screen*/
 #loadingScreen{width:100%; text-align:center;}
@@ -558,65 +558,65 @@ div#cropped-image {
         .color10 .tooltip.left .tooltip-arrow{border-left-color:#871D1A;} .color10 .tooltip.top .tooltip-arrow{border-top-color:#871D1A;} .color10 .tooltip.right .tooltip-arrow{border-right-color:#871D1A;} .color10 .tooltip.bottom .tooltip-arrow{border-bottom-color:#871D1A;}
         .color10 .btn-info, .color10 .btn-primary{border:1px solid #871D1A; text-shadow: none;}
 
-        /*Color Theme 11 Main: #, Accent: #
+        /*Color Theme 11 Main: #91390E, Accent: #*/
         .color11 .navbar, .color11 .navbar-default .navbar-brand:hover .badge, .color11 .btn-info, .color11 .nav-pills>li.active>a, .color11 .label-primary, .color11 .monthview-primary-with-event, .color11 #mobileMenu li
-        {background:#;}
+        {background:#91390E;}
         .color11 .navbar-default .navbar-brand:hover, .color11 .navbar-default .navbar-nav>li>a:hover, .color11 .navbar .badge, .color11 .navbar-default .navbar-nav>.open>a, .color11 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color11 .navbar-default .navbar-toggle:hover, .color11 .navbar-default .navbar-toggle:focus, .color11 .tooltip-inner, .color11 .btn-primary, .color11 .nav-pills>li.active>a:hover, .color11 .checkLabel.label-primary:hover, .color11 .dropdown-menu>li>a:hover, .color11 .dropdown-menu>li>a:focus, .color11 .dropdown-menu>.active>a, .color11 .dropdown-menu>.active>a:hover, .color11 .dropdown-menu>.active>a:focus, .color11 .monthview-selected
-        {background:#;}
+        {background:#522008;}
         .color11 .notification.new .notificationTitle, .color11 a:not(.btn)
-        {color:#;}
-        .color11 .tooltip.left .tooltip-arrow{border-left-color:#;} .color11 .tooltip.top .tooltip-arrow{border-top-color:#;} .color11 .tooltip.right .tooltip-arrow{border-right-color:#;} .color11 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color11 .btn-info, .color11 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#522008;}
+        .color11 .tooltip.left .tooltip-arrow{border-left-color:#522008;} .color11 .tooltip.top .tooltip-arrow{border-top-color:#522008;} .color11 .tooltip.right .tooltip-arrow{border-right-color:#522008;} .color11 .tooltip.bottom .tooltip-arrow{border-bottom-color:#522008;}
+        .color11 .btn-info, .color11 .btn-primary{border:1px solid #522008; text-shadow: none;}
 
-        /*Color Theme 12 Main: #, Accent: #
+        /*Color Theme 12 Main: #FF6100, Accent: #*/
         .color12 .navbar, .color12 .navbar-default .navbar-brand:hover .badge, .color12 .btn-info, .color12 .nav-pills>li.active>a, .color12 .label-primary, .color12 .monthview-primary-with-event, .color12 #mobileMenu li
-        {background:#;}
+        {background:#FF6100;}
         .color12 .navbar-default .navbar-brand:hover, .color12 .navbar-default .navbar-nav>li>a:hover, .color12 .navbar .badge, .color12 .navbar-default .navbar-nav>.open>a, .color12 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color12 .navbar-default .navbar-toggle:hover, .color12 .navbar-default .navbar-toggle:focus, .color12 .tooltip-inner, .color12 .btn-primary, .color12 .nav-pills>li.active>a:hover, .color12 .checkLabel.label-primary:hover, .color12 .dropdown-menu>li>a:hover, .color12 .dropdown-menu>li>a:focus, .color12 .dropdown-menu>.active>a, .color12 .dropdown-menu>.active>a:hover, .color12 .dropdown-menu>.active>a:focus, .color12 .monthview-selected
-        {background:#;}
+        {background:#7F3000;}
         .color12 .notification.new .notificationTitle, .color12 a:not(.btn)
-        {color:#;}
-        .color12 .tooltip.left .tooltip-arrow{border-left-color:#;} .color12 .tooltip.top .tooltip-arrow{border-top-color:#;} .color12 .tooltip.right .tooltip-arrow{border-right-color:#;} .color12 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color12 .btn-info, .color12 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#7F3000;}
+        .color12 .tooltip.left .tooltip-arrow{border-left-color:#7F3000;} .color12 .tooltip.top .tooltip-arrow{border-top-color:#7F3000;} .color12 .tooltip.right .tooltip-arrow{border-right-color:#7F3000;} .color12 .tooltip.bottom .tooltip-arrow{border-bottom-color:#7F3000;}
+        .color12 .btn-info, .color12 .btn-primary{border:1px solid #7F3000; text-shadow: none;}
 
-        /*Color Theme 13 Main: #, Accent: #
+        /*Color Theme 13 Main: #FFC100, Accent: #E59F00*/
         .color13 .navbar, .color13 .navbar-default .navbar-brand:hover .badge, .color13 .btn-info, .color13 .nav-pills>li.active>a, .color13 .label-primary, .color13 .monthview-primary-with-event, .color13 #mobileMenu li
-        {background:#;}
+        {background:#FFC100;}
         .color13 .navbar-default .navbar-brand:hover, .color13 .navbar-default .navbar-nav>li>a:hover, .color13 .navbar .badge, .color13 .navbar-default .navbar-nav>.open>a, .color13 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color13 .navbar-default .navbar-toggle:hover, .color13 .navbar-default .navbar-toggle:focus, .color13 .tooltip-inner, .color13 .btn-primary, .color13 .nav-pills>li.active>a:hover, .color13 .checkLabel.label-primary:hover, .color13 .dropdown-menu>li>a:hover, .color13 .dropdown-menu>li>a:focus, .color13 .dropdown-menu>.active>a, .color13 .dropdown-menu>.active>a:hover, .color13 .dropdown-menu>.active>a:focus, .color13 .monthview-selected
-        {background:#;}
+        {background:#E59F00;}
         .color13 .notification.new .notificationTitle, .color13 a:not(.btn)
-        {color:#;}
-        .color13 .tooltip.left .tooltip-arrow{border-left-color:#;} .color13 .tooltip.top .tooltip-arrow{border-top-color:#;} .color13 .tooltip.right .tooltip-arrow{border-right-color:#;} .color13 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color13 .btn-info, .color13 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#E59F00;}
+        .color13 .tooltip.left .tooltip-arrow{border-left-color:#E59F00;} .color13 .tooltip.top .tooltip-arrow{border-top-color:#E59F00;} .color13 .tooltip.right .tooltip-arrow{border-right-color:#E59F00;} .color13 .tooltip.bottom .tooltip-arrow{border-bottom-color:#E59F00;}
+        .color13 .btn-info, .color13 .btn-primary{border:1px solid #E59F00; text-shadow: none;}
 
-        /*Color Theme 14 Main: #, Accent: #
+        /*Color Theme 14 Main: #2E9685, Accent: #20665A*/
         .color14 .navbar, .color14 .navbar-default .navbar-brand:hover .badge, .color14 .btn-info, .color14 .nav-pills>li.active>a, .color14 .label-primary, .color14 .monthview-primary-with-event, .color14 #mobileMenu li
-        {background:#;}
+        {background:#2E9685;}
         .color14 .navbar-default .navbar-brand:hover, .color14 .navbar-default .navbar-nav>li>a:hover, .color14 .navbar .badge, .color14 .navbar-default .navbar-nav>.open>a, .color14 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color14 .navbar-default .navbar-toggle:hover, .color14 .navbar-default .navbar-toggle:focus, .color14 .tooltip-inner, .color14 .btn-primary, .color14 .nav-pills>li.active>a:hover, .color14 .checkLabel.label-primary:hover, .color14 .dropdown-menu>li>a:hover, .color14 .dropdown-menu>li>a:focus, .color14 .dropdown-menu>.active>a, .color14 .dropdown-menu>.active>a:hover, .color14 .dropdown-menu>.active>a:focus, .color14 .monthview-selected
-        {background:#;}
+        {background:#20665A;}
         .color14 .notification.new .notificationTitle, .color14 a:not(.btn)
-        {color:#;}
-        .color14 .tooltip.left .tooltip-arrow{border-left-color:#;} .color14 .tooltip.top .tooltip-arrow{border-top-color:#;} .color14 .tooltip.right .tooltip-arrow{border-right-color:#;} .color14 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color14 .btn-info, .color14 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#20665A;}
+        .color14 .tooltip.left .tooltip-arrow{border-left-color:#20665A;} .color14 .tooltip.top .tooltip-arrow{border-top-color:#20665A;} .color14 .tooltip.right .tooltip-arrow{border-right-color:#20665A;} .color14 .tooltip.bottom .tooltip-arrow{border-bottom-color:#20665A;}
+        .color14 .btn-info, .color14 .btn-primary{border:1px solid #20665A; text-shadow: none;}
 
-        /*Color Theme 15 Main: #, Accent: #
+        /*Color Theme 15 Main: #59391E, Accent: #402915*/
         .color15 .navbar, .color15 .navbar-default .navbar-brand:hover .badge, .color15 .btn-info, .color15 .nav-pills>li.active>a, .color15 .label-primary, .color15 .monthview-primary-with-event, .color15 #mobileMenu li
-        {background:#;}
+        {background:#59391E;}
         .color15 .navbar-default .navbar-brand:hover, .color15 .navbar-default .navbar-nav>li>a:hover, .color15 .navbar .badge, .color15 .navbar-default .navbar-nav>.open>a, .color15 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color15 .navbar-default .navbar-toggle:hover, .color15 .navbar-default .navbar-toggle:focus, .color15 .tooltip-inner, .color15 .btn-primary, .color15 .nav-pills>li.active>a:hover, .color15 .checkLabel.label-primary:hover, .color15 .dropdown-menu>li>a:hover, .color15 .dropdown-menu>li>a:focus, .color15 .dropdown-menu>.active>a, .color15 .dropdown-menu>.active>a:hover, .color15 .dropdown-menu>.active>a:focus, .color15 .monthview-selected
-        {background:#;}
+        {background:#402915;}
         .color15 .notification.new .notificationTitle, .color15 a:not(.btn)
-        {color:#;}
-        .color15 .tooltip.left .tooltip-arrow{border-left-color:#;} .color15 .tooltip.top .tooltip-arrow{border-top-color:#;} .color15 .tooltip.right .tooltip-arrow{border-right-color:#;} .color15 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color15 .btn-info, .color15 .btn-primary{border:1px solid #; text-shadow: none;}*/
-    
-        /*Color Theme 16 Main: #, Accent: #
+        {color:#402915;}
+        .color15 .tooltip.left .tooltip-arrow{border-left-color:#402915;} .color15 .tooltip.top .tooltip-arrow{border-top-color:#402915;} .color15 .tooltip.right .tooltip-arrow{border-right-color:#402915;} .color15 .tooltip.bottom .tooltip-arrow{border-bottom-color:#402915;}
+        .color15 .btn-info, .color15 .btn-primary{border:1px solid #402915; text-shadow: none;}
+
+        /*Color Theme 16 Main: #33302C, Accent: #141312*/
         .color16 .navbar, .color16 .navbar-default .navbar-brand:hover .badge, .color16 .btn-info, .color16 .nav-pills>li.active>a, .color16 .label-primary, .color16 .monthview-primary-with-event, .color16 #mobileMenu li
-        {background:#;}
+        {background:#33302C;}
         .color16 .navbar-default .navbar-brand:hover, .color16 .navbar-default .navbar-nav>li>a:hover, .color16 .navbar .badge, .color16 .navbar-default .navbar-nav>.open>a, .color16 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color16 .navbar-default .navbar-toggle:hover, .color16 .navbar-default .navbar-toggle:focus, .color16 .tooltip-inner, .color16 .btn-primary, .color16 .nav-pills>li.active>a:hover, .color16 .checkLabel.label-primary:hover, .color16 .dropdown-menu>li>a:hover, .color16 .dropdown-menu>li>a:focus, .color16 .dropdown-menu>.active>a, .color16 .dropdown-menu>.active>a:hover, .color16 .dropdown-menu>.active>a:focus, .color16 .monthview-selected
-        {background:#;}
+        {background:#141312;}
         .color16 .notification.new .notificationTitle, .color16 a:not(.btn)
-        {color:#;}
-        .color16 .tooltip.left .tooltip-arrow{border-left-color:#;} .color16 .tooltip.top .tooltip-arrow{border-top-color:#;} .color16 .tooltip.right .tooltip-arrow{border-right-color:#;} .color16 .tooltip.bottom .tooltip-arrow{border-bottom-color:#;}
-        .color16 .btn-info, .color16 .btn-primary{border:1px solid #; text-shadow: none;}*/
+        {color:#141312;}
+        .color16 .tooltip.left .tooltip-arrow{border-left-color:#141312;} .color16 .tooltip.top .tooltip-arrow{border-top-color:#141312;} .color16 .tooltip.right .tooltip-arrow{border-right-color:#141312;} .color16 .tooltip.bottom .tooltip-arrow{border-bottom-color:#141312;}
+        .color16 .btn-info, .color16 .btn-primary{border:1px solid #141312; text-shadow: none;}
     
     /*Dark Theme Color*/
     .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
