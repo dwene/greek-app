@@ -26,6 +26,7 @@ I think status max should be shorter, else it doesnt really fit.
 
 
 //Final/static variables. These variables are used for cookies
+var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -285,7 +286,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
-            $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 
                 
@@ -442,7 +443,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.users = {};
         $scope.login = function(user_name, password){
             LoadScreen.start();
-            $http.post('/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
                 .success(function(data) {
                     if(!checkResponseErrors(data))
                     {
@@ -486,7 +487,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             to_send = {email: email, user_name: user_name};
             console.log(to_send);
-            $http.post('/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.sentEmail = true;
@@ -509,7 +510,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
-            $http.post('/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.passwordChanged = true;
@@ -538,7 +539,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
             var to_send = {password:$scope.item.password, old_password: $scope.item.old_password};
-            $http.post('/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.passwordChanged = true;
@@ -596,7 +597,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //ng-submit on form submit button click
         
         $scope.checkUserName = function(user){
-        $http.post('/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -621,7 +622,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 //format data for the api
                 data_tosend = {organization: organization, user: item}
                 //send the organization and user date from registration pages
-                $http.post('/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -657,7 +658,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.pay = {};
         $scope.submitPayment = function(){
             
-            $http.post('/_ah/api/netegreek/v1/pay/subscribe', packageForSending($scope.pay))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending($scope.pay))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -695,7 +696,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
-        $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
             $('#status').val("");
             if ($rootScope.me){
                 $rootScope.me.status = status;
@@ -706,7 +707,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var status = "";
             $scope.status = "";
             var to_send = {status: status};
-            $http.post('/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -737,7 +738,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.selectedNotification.new = false;
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
-            $http.post('/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
         }
         
         $scope.hideNotification = function(notify, domElement){
@@ -746,7 +747,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             $timeout(function(){
                 var key = notify.key;
-                $http.post('/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
                 $rootScope.hidden_notifications.push(notify);
                 if (notify.new){
                     notify.new = false;
@@ -826,7 +827,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         };
         
         $scope.getMembers = function(){
-            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -863,7 +864,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.submitMembers = function(){
             $scope.updating = "pending";
             var data_tosend = {users: newmemberList};
-            $http.post('/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -957,7 +958,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var key = member.key;
             member.updating = 'pending';
             var to_send = {key: key, perms: option};
-            $http.post('/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         member.updating = 'done';
@@ -981,7 +982,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             var to_send = {'keys': keys};
             console.log(to_send);
-            $http.post('/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -1006,7 +1007,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         };
         $scope.getMembers = function(){
-            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1043,7 +1044,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.removeMember = function(user){
             $('#deleteMemberModal').modal('hide');
-            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1071,7 +1072,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $('.container').hide();
         logoutCookies();
         $.cookie(TOKEN, $stateParams.key);
-        $http.post('/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1146,7 +1147,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $scope.getAlumni = function(){
-            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1182,7 +1183,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.submitAlumni = function(){
             $scope.updating = "pending";
             var data_tosend = {users: newmemberList};
-            $http.post('/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1273,7 +1274,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         function getAlumni(){
-            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -1313,7 +1314,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.selectedUser = {}
             $('#convertAlumniModal').modal('hide');
             var to_send = {'keys': [alumnus.key]}
-            $http.post('/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -1336,7 +1337,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.removeAlumni = function(alumnus){
             $scope.selectedUser = {}
             $('#deleteAlumniModal').modal('hide');
-            $http.post('/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1409,7 +1410,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //            
 //            var data_tosend = {users: newmemberList};
 //            $scope.adds = null;
-//            $http.post('/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
+//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
 //            .success(function(data){
 //                if (!checkResponseErrors(data))
 //                {
@@ -1497,7 +1498,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         });
         $scope.checkUserName = function(user){
-        $http.post('/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -1516,7 +1517,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if(isValid){
             $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
-            $http.post('/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1554,7 +1555,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('profilepictureController', function($scope, $http, Load){
     routeChange();
     Load.then(function(){
-        $http.post('/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1664,7 +1665,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         splitMembers();
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1712,7 +1713,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (!$scope.directory){
             LoadScreen.start();
         }
-//        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
 //            .success(function(data){
 //                if (!checkResponseErrors(data))
 //                {
@@ -1780,7 +1781,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             loadMemberData();
         }
         
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1887,7 +1888,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     Load.then(function(){
         $scope.updatedInfo = false;
         $scope.item = $rootScope.me;
-        $http.post('/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1913,7 +1914,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.updateAccount = function(isValid){
             if(isValid){
                 console.log($scope.item.dob);
-                $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -1939,7 +1940,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     $scope.updateEmailPrefs = function(option){
         var to_send = {email_prefs: option}
         $scope.emailPrefUpdating = "pending";
-        $http.post('/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -1970,7 +1971,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('uploadImageController', function($scope, $http, Load){
     routeChange();
     Load.then(function(){
-        $http.post('/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -2036,7 +2037,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         requireLeadership();
         function getUsers(){
             $scope.users = [];
-            $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -2064,7 +2065,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.getOrganizationTags = function(){
             //initialize ng-model variables to contain selected things
             $('#tag').val('');
-            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         var org_tags = JSON.parse(data.data).org_tags;
@@ -2087,7 +2088,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.getOrganizationTags();
         $scope.addOrganizationTag = function(tag){
-            $http.post('/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({tag: tag}))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({tag: tag}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -2114,7 +2115,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.removeOrganizationTag = function(){
             $('#deleteTagModal').modal('hide');
             $('#seeallTags').modal();
-            $http.post('/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({tag: $scope.modaledTag.name}))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({tag: $scope.modaledTag.name}))
                 .success(function(data){
                     if(checkResponseErrors(data)){openErrorModal(data.error)}
                 })
@@ -2142,7 +2143,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
             if(isValid){
                 $('#renameTagModal').modal('hide')
-                $http.post('/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({old_tag: $scope.modaledTag.name, new_tag: new_tag}))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({old_tag: $scope.modaledTag.name, new_tag: new_tag}))
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
@@ -2193,7 +2194,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function addTagsToUsers(tags, keys){
             var to_send = {tags: tags, keys: keys};
             console.log(to_send);
-            $http.post('/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -2242,7 +2243,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         function removeTagFromUser(tag, user){
-            $http.post('/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': [tag], 'keys': [user.key]}))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': [tag], 'keys': [user.key]}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -2308,7 +2309,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 done++;
                 if (done==2) deferred.resolve(); 
             }//#TODO change the tags to have 2 fields, one for name, one for checked/unchecked. This would work better with the ng-model
-            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
@@ -2322,7 +2323,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 console.log('Error: ' , data);
             });
-            $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -2350,13 +2351,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 tags = getCheckedTags($scope.tags);
                 var out_tags = tags;
                 var to_send = {title: $scope.title, content:$scope.content, tags: out_tags}
-                $http.post('/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
                             clearCheckedTags($scope.tags);
                             setTimeout(function(){
-                            $http.post('/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
+                            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
                             .success(function(data){
                                 if (!checkResponseErrors(data))
                                 {
@@ -2389,7 +2390,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.deleteMessage = function(message){
             $('#messageModal').modal('hide');
             var to_send = {message: message.key}
-            $http.post('/_ah/api/netegreek/v1/message/delete', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/delete', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data))
                         {
@@ -2435,7 +2436,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.$watch('event.tag', function() {
                 $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
             });
-            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.tags = JSON.parse(data.data);
@@ -2458,7 +2459,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
                     to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
                     console.log(to_send.time_end);
-                    $http.post('/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
+                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
@@ -2487,7 +2488,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 else{
                     $scope.isEmpty = false;
                     console.log('im here');
-                    $http.post('/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
+                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             $scope.available = true;
@@ -2521,7 +2522,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
                 //send the organization and user date from registration pages
-                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.events = JSON.parse(data.data);
@@ -2615,7 +2616,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function tryLoadEvent(count){
             LoadEvents();
             function LoadEvents(){
-                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             var events = JSON.parse(data.data);
@@ -2706,7 +2707,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 to_send.rsvp = 'not_going';
             }
             to_send.key = $scope.event.key;
-            $http.post('/_ah/api/netegreek/v1/event/rsvp', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/rsvp', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             if (rsvp){
@@ -2753,7 +2754,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.deleteEvent = function(){
             $('#deleteEventModal').modal('hide');
-            $http.post('/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     window.location.replace('#/app/events');
@@ -2769,7 +2770,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function tryLoadEvent(count){
             LoadEvents();
             function LoadEvents(){
-                $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
                             var events = JSON.parse(data.data);
@@ -2853,7 +2854,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
             to_send.tags = getCheckedTags($scope.tags);
             console.log(to_send.tags);
-        $http.post('/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     getEvents;
@@ -2878,7 +2879,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             getCheckInData();
         });
         function getCheckInData(){
-            $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);
@@ -2916,7 +2917,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 member.attendance_data.time_in = moment();
             }
             member.in_updating = 'pending';
-            $http.post('/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     member.in_updating = "done";
@@ -2950,7 +2951,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 member.attendance_data.time_out = moment();
             }
             member.out_updating = 'pending';
-            $http.post('/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     member.out_updating = 'done';
@@ -2978,7 +2979,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             getCheckInData();
             requireLeadership();
             function getCheckInData(){
-            $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);
@@ -2997,7 +2998,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
 //            $scope.generateReport(){
-//                $http.post('/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+//                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
 //                .success(function(data){
 //                    if (!checkResponseErrors(data)){
 //                        users = JSON.parse(data.data);
@@ -3112,7 +3113,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
 //            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
             if (isValid){
-                $http.post('/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
@@ -3137,7 +3138,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         Load.then(function(){
             requireMember();
-            $http.post('/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.polls = JSON.parse(data.data);
@@ -3162,7 +3163,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         Load.then(function(){
             requireMember();
             var to_send = {key: $stateParams.key};
-            $http.post('/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
@@ -3185,7 +3186,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             else if (close === false){
                 to_send.open = true;
             }
-            $http.post('/_ah/api/netegreek/v1/poll/edit_poll', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/edit_poll', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         if (close){
@@ -3217,7 +3218,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.deletePoll = function(){
             var to_send = {key: $stateParams.key};
-            $http.post('/_ah/api/netegreek/v1/poll/delete', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         window.location.assign('#/app/polls')
@@ -3233,7 +3234,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.submitResponse = function(){
             var to_send = $scope.poll;
-            $http.post('/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                        $rootScope.refreshPage();
@@ -3257,7 +3258,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         Load.then(function(){
             requireMember();
             var to_send = {key: $stateParams.key};
-            $http.post('/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
@@ -3283,7 +3284,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         Load.then(function(){
             loadSubscriptionInfo();
             function loadSubscriptionInfo(){
-                $http.post('/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.subscription = JSON.parse(data.data);
@@ -3301,7 +3302,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.cancelSubscription = function(){
                 $scope.loading = true;
-                $http.post('/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         setTimeout(function(){$rootScope.refreshPage();}, 150);
@@ -3321,7 +3322,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     toSend = paymentData;
                 }
                 $scope.loading = true;
-                $http.post('/_ah/api/netegreek/v1/pay/subscribe', packageForSending(toSend))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending(toSend))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -3340,7 +3341,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.changeTheme = function(number){
                 
                 $rootScope.setColor('color'+number);
-                $http.post('/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
@@ -4217,7 +4218,7 @@ App.filter('directorySearch', function(){
 App.factory('directoryService', function($rootScope, $http, LoadScreen) {
     if ($rootScope.directory === undefined){
         LoadScreen.start();
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -4236,7 +4237,7 @@ App.factory('directoryService', function($rootScope, $http, LoadScreen) {
             });
     }
     else{
-        $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
@@ -4255,7 +4256,7 @@ App.factory('directoryService', function($rootScope, $http, LoadScreen) {
 });
 
 App.factory('getEvents', function($http, $rootScope){
-    $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
         .success(function(data){
             if (!checkResponseErrors(data)){
                 var events = JSON.parse(data.data);
@@ -4312,7 +4313,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 }
             }
           }
-          $http.post('/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
+          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 checkResponseErrors(data.data);
                 //console.log(data.data);
@@ -4324,7 +4325,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 console.log('Error: ' , data);
                 checkIfDone();
             });
-          $http.post('/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 checkResponseErrors(data.data);
                 //console.log(data.data);
@@ -4336,7 +4337,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 console.log('Error: ' , data);
                 checkIfDone();
             });
-          $http.post('/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
                 
                 $rootScope.notifications = JSON.parse(data.data).notifications;
@@ -4352,13 +4353,13 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 console.log('Error: ' , data);
                 checkIfDone();
             });  
-//            $http.post('/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
 //                .success(function(data){
 //                    if (!checkResponseErrors(data)){
 //                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
 //                    }
 //                });
-            $http.post('/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     var tag_data = JSON.parse(data.data);
@@ -4374,7 +4375,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 checkIfDone();
             });
             console.log('hi');
-            $http.post('/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
             .success(function(data){
                 $rootScope.subscribed = true;
                 $rootScope.setColor(JSON.parse(data.data).color);
@@ -4383,7 +4384,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
             .error(function(data) {
                 checkIfDone();
             });
-            $http.post('/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $rootScope.events = JSON.parse(data.data);
