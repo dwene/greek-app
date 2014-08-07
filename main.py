@@ -33,6 +33,7 @@ import jinja2
 import webapp2
 import base64, re
 
+DOMAIN = 'https://app.netegreek.com'
 
 def send_mandrill_email(from_email, to_email, subject, body):
     to_send = dict()
@@ -214,12 +215,11 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         user_name = self.request.get('user_name')
         token = self.request.get('token')
         upload_type = self.request.get('type')
-        logging.error('This is my type:' + upload_type)
+        # logging.error('This is my type:' + upload_type)
         user = get_user(user_name, token)
         if not user:
-            self.redirect('/#/login')
+            self.redirect(DOMAIN + '/#/login')
         if upload_type == 'prof_pic':
-            logging.error('my type is prof_pic')
             upload_files = self.get_uploads('file') # 'file' is file upload field in the form
             crop_data = json.loads(self.request.get('crop_data'))
             blob_info = upload_files[0]
@@ -245,12 +245,11 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                         blobstore.delete(user.prof_pic)
                     user.prof_pic = files.blobstore.get_blob_key(file_name)
                     user.put()
-                    self.redirect('/#/app/accountinfo')
+                    self.redirect(DOMAIN + '/#/app/accountinfo')
                     return
         elif upload_type == 'organization':
-            logging.error('my type is organization')
             if not user.perms == "council":
-                self.redirect('/#/app')
+                self.redirect(DOMAIN + '/#/app')
             upload_files = self.get_uploads('file') # 'file' is file upload field in the form
             crop_data = json.loads(self.request.get('crop_data'))
             blob_info = upload_files[0]
@@ -277,10 +276,9 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                         blobstore.delete(organization.image)
                     organization.image = files.blobstore.get_blob_key(file_name)
                     organization.put()
-                    self.redirect('/#/app/admin')
+                    self.redirect(DOMAIN + '/#/app/admin')
                     return
-        logging.error('I have no type. Boo.')
-        self.redirect('/#/app')
+        self.redirect(DOMAIN + '/#/app')
         return
 
 
