@@ -451,7 +451,7 @@
     <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
         <label for="linkedin" class="col-sm-2 control-label">LinkedIn Profile</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="linkedin" name="linkedin" ng-model="item.linkedin" placeholder="linkedin.com/johndoe">
+          <input type="text" class="form-control" id="linkedin" name="linkedin" ng-model="item.linkedin" placeholder="www.linkedin.com/profile/view?id=112808945">
         </div>
         <p ng-show="(memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </div>

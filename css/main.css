@@ -165,6 +165,16 @@ h1{font-size:36px; font-weight:bold;}
 #profileContent .row{margin:0px; padding:0px;}
 #profileContent .status{text-align:center; width:100%; display:inline-block; font-size:18px; margin:10px 0px 5px;}
 
+#memberProfile #social{text-align:center; font-size:40px;}
+#memberProfile #social li{display:inline-block;}
+
+@media screen and (max-width:768px){
+#memberProfile #name{text-align:center;}
+}
+@media screen and (min-width:768px){
+#memberProfile #name h1{font-size:100px;}
+#memberProfile #name p{font-size:32px; margin-top:8px; font-style:italic;}
+}
 
 /*Member Tagging Page*/
 #addTagsButton{margin:15px 0px;}

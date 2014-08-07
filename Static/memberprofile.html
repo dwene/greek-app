@@ -5,20 +5,31 @@
     <div id="profileContent"> 
     
     <div class="jumbotron">
-    
 
     <a ng-href="#/app/directory/members" class="btn btn-default topLeft">Back  <i class="fa fa-reply"></i></a>
     <button ng-click="saveVcard()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Contact</button>
     
+    </div>
     
-			<h1 class="text-center">{{firstName}} {{lastName}}</h1>
-			<p class="text-center" ng-show="status">"{{status}}"</p>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5">
+            <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" ></div>
+            
+            <ul id="social">
+                <li ng-show="facebook.length > 0"><a target="_blank" href="{{facebook}}"><i class="fa fa-facebook-square"></i></a></li>
+                <li ng-show="twitter.length > 0"><a target="_blank" href="{{twitter}}"><i class="fa fa-twitter-square"></i></a></li>
+                <li ng-show="twitter.length > 0"><a target="_blank" href="{{instagram}}"><i class="fa fa-instagram"></i></a></li>
+                <li ng-show="linkedin.length > 0"><a target="_blank" href="{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
+            </ul>
+            
+        </div>
+        <div id="name" class="col-xs-12 col-sm-7">
+            <h1>{{firstName}}<br class="hidden-xs"> {{lastName}}</h1>
+            <p ng-show="status">"{{status}}"</p>
+        </div>
     </div>
     
     
-    <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" >
-    <!--    <img ng-src = "{{prof_pic}}" style = "width: 200px;">-->
-    </div>    
     <div class="row">Birthday: {{birthday}}</div>
     <div class="row">Phone: <a href="tel:{{phone}}">{{phone}}</a></div>
     <div class="row">Email: <a href="mailto:{{email}}">{{email}}</a></div>
@@ -28,11 +39,8 @@
     <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
     <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>
     <div class="row" ng-show="website.length > 0">Website: <a target="_blank" href="{{website}}">{{website}}</a></div>
-    <div class="row" ng-show="facebook.length > 0"><i class="fa fa-facebook"></i><i class="fa fa-facebook-square"></i>Facebook: <a target="_blank" href="{{facebook}}"> {{facebook}}</a></div>
-    <div class="row" ng-show="twitter.length > 0"><i class="fa fa-twitter"></i><i class="fa fa-twitter-square"></i>Twitter: <a target="_blank" href="{{twitter}}">{{twitter}}</a></div>
-    <div class="row" ng-show="instagram.length > 0"><i class="fa fa-instagram"></i>Instagram: <a target="_blank" href="{{instagram}}">{{instagram}}</a></div>
-    <div class="row" ng-show="linkedin.length > 0">LinkedIn:<i class="fa fa-linkedin"></i><i class="fa fa-linkedin-square"></i> <a target="_blank" href="{{linkedin}}">{{linkedin}}</a></div>
     
     </div>
+    
     
 </div>
