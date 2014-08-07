@@ -49,8 +49,8 @@
                         <i class="fa fa-cog" style="color:white;"></i>
                     </button>
 					
-					<a class="navbar-brand" href="/" ng-hide="$root.checkLogin()">NeteGreek</a>
-					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()"><i class="fa fa-home"></i> NeteGreek
+					<a class="navbar-brand" href="/" ng-hide="$root.checkLogin()"></a>
+					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
 					<span class="badge" ng-bind="$root.notification_count"></span>
 					</a>
                 <span id="refreshNotifications" ng-show="$root.checkLogin()" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            

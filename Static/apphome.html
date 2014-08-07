@@ -2,7 +2,7 @@
         
     <section id="statusContainer" class="row">
     
-    <div id="orgLetters" class="col-xs-12 col-sm-3">
+    <div id="orgLetters" class="col-xs-12 col-sm-4 hidden-xs">
        <section>
            <img class="imgBorders" src="{{$root.organization.image}}">
        </section>
@@ -19,7 +19,7 @@
         </section>
     </div>
        
-    <div id="changeStatus" class="col-xs-12 col-sm-6">
+    <div id="changeStatus" class="col-xs-12 col-sm-5">
        <h2 class="page-header">Current Status:  <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button></h2>
        <section>
             <div class="col-xs-12">
@@ -51,7 +51,7 @@
             </li>
         </ul>
         
-            <p style="width:100%; text-align:center;" ng-show="!$root.notifications.length">There are no new notifications!</p>
+            <p class="noNotifications" style="width:100%; text-align:center;" ng-show="!$root.notifications.length">There are no new notifications!</p>
         <div class="pagerButtons">
                     <button class="previous btn btn-default btn-sm" ng-hide="current.currentPage == 0" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1">&larr; Newer</button>
                     <button class="next btn btn-default btn-sm" ng-hide="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1">Older &rarr;</button>

@@ -265,7 +265,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.tags = {};
         $rootScope.updatingNotifications = false;
         $rootScope.allTags = [];
-        $rootScope.defaultProfilePicture = 'http://hivemind.co.nz/static/images/grey-icons/person.png';
+        $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
         //set color theme
         $rootScope.colorName = "";
         

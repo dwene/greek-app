@@ -4,13 +4,6 @@
     
     <div id="profileContent"> 
     
-    <div class="jumbotron">
-
-    <a ng-href="#/app/directory/members" class="btn btn-default topLeft">Back  <i class="fa fa-reply"></i></a>
-    <button ng-click="saveVcard()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Contact</button>
-    
-    </div>
-    
     <div class="row">
         <div class="col-xs-12 col-sm-5">
             <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" ></div>
@@ -22,23 +15,32 @@
                 <li ng-show="linkedin.length > 0"><a target="_blank" href="{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
             </ul>
             
+            <ul id="contact">
+                <li ng-show="phone"><a href="sms:{{phone}}"><i class="fa fa-phone-square"></i></a> <span>{{phone}}</span></li>
+                <li><a href="mailto:{{email}}"><i class="fa fa-envelope-square"></i></a> <span>{{email}}</span></li>
+            </ul>
+            
+            
         </div>
         <div id="name" class="col-xs-12 col-sm-7">
             <h1>{{firstName}}<br class="hidden-xs"> {{lastName}}</h1>
+            <div class="position" ng-show="position">{{position}}</div>
             <p ng-show="status">"{{status}}"</p>
+            
+             
+            <div class="row" ng-show="birthday">Birthday: {{birthday}}</div>
+            <div class="row" ng-show="major">Major: {{major}}</div>
+            <div class="row" ng-show="graduation">Expected Graduation: {{graduation}}</div>
+            <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
+            <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>
+            <div class="row" ng-show="website.length > 0">Website: <a target="_blank" href="{{website}}">{{website}}</a></div>
+            
+                        <button id="saveContact" ng-click="saveVcard()" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save Contact</button>
+            
         </div>
     </div>
     
-    
-    <div class="row">Birthday: {{birthday}}</div>
-    <div class="row">Phone: <a href="tel:{{phone}}">{{phone}}</a></div>
-    <div class="row">Email: <a href="mailto:{{email}}">{{email}}</a></div>
-    <div class="row" ng-show="major">Major: {{major}}</div>
-    <div class="row" ng-show="position">Position: {{position}}</div>
-    <div class="row" ng-show="graduation">Expected Graduation: {{graduation}}</div>
-    <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
-    <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>
-    <div class="row" ng-show="website.length > 0">Website: <a target="_blank" href="{{website}}">{{website}}</a></div>
+   
     
     </div>
     
