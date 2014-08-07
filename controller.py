@@ -893,8 +893,8 @@ class RESTApi(remote.Service):
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             email = member_signup_email(user=user.to_dict(), token=user.current_token)
             cron = CronEmail()
-            cron.content = email["content"]
-            cron.title = email["title"]
+            cron.content = email["text"]
+            cron.title = email["subject"]
             cron.pending = True
             cron.type = 'welcome_again'
             cron.timestamp = datetime.datetime.now()

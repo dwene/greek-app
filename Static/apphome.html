@@ -13,9 +13,9 @@
         <h2 class="page-header">Upcoming Events</h2>
         <section>
             <ul ng-show="eventList.length">
-                <li ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')">
+                <a ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')" ng-href="#/app/events/{{event.tag}}">
                     <span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
-                </li>
+                </a>
             </ul>
         </section>
     </div>
