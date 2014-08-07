@@ -2561,14 +2561,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         Load.then(function(){
             requireMember();
-            if (!checkPermissions('leadership')){
-                if (checkAlumni()){
-                    window.location.assign('#/app/directory/members');
-                }
-                else{
-                    window.location.assign("/#/app");
-                }
-            }
                 //send the organization and user date from registration pages
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
@@ -3490,21 +3482,23 @@ function packageForSending(send_data){
 
 function checkResponseErrors(received_data){
     response = received_data;
-    if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN' || response.error == 'BAD_FIRST_TOKEN')
-    {
-        window.location.assign("/#/login");
-        window.location.reload();
-        console.log('ERROR: '+response.error);
-        return true;
-    }
-    else if(response.error == '')
-    {
-        return false;
-    }
-    else
-    {
-        console.log('ERROR: '+response.error);
-        return true;    
+    if (response){
+        if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN' || response.error == 'BAD_FIRST_TOKEN')
+        {
+            window.location.assign("/#/login");
+            window.location.reload();
+            console.log('ERROR: ', response.error);
+            return true;
+        }
+        else if(response.error == '')
+        {
+            return false;
+        }
+        else
+        {
+            console.log('ERROR: ', response.error);
+            return true;    
+        }
     }
 }
 //This function is used to arrange the tag data so that we can use checkboxes with it

@@ -940,6 +940,8 @@ class RESTApi(remote.Service):
                 user.instagram = value
             elif key == "twitter":
                 user.twitter = value
+            elif key == "linkedin":
+                user.linkedin = value
             elif key == "website":
                 user.website = value
             elif key == "perm_address":
