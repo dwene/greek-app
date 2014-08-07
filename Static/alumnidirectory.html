@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="directory">
     
     <section id="searchTags">
         
@@ -10,13 +10,20 @@
     </div>
     
     </section>
-    
-    <ul>
+        <ul>
+            <li ng-repeat="member in council = ($root.directory.alumni | multipleSearch:search | orderBy:'last_name')" class="member" ng-click="showIndividual(member)">
+            
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
-        <li ng-repeat="member in directory | orderBy:'last_name' | multipleSearch:search" class="member" ng-click="showIndividual(member)">
-        <hr>
-            <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>    <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-        <hr>
-        </li>
-    </ul>
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+<!--
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
+-->
+                </div>
+
+            
+            </li>
+        </ul>
 </div>

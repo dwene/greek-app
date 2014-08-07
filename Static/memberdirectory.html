@@ -15,7 +15,7 @@
     
     </section>
 <!--    <section ng-repeat="group in directory" ng-show="userLists[$index]">-->
-       <section ng-show = "council.length">
+    <section ng-show = "council.length">
         <h2 class="page-header">Council</h2>
         <ul>
             <li ng-repeat="member in council = ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'council')" class="member" ng-click="showIndividual(member)">

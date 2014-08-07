@@ -1761,9 +1761,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
     routeChange();
     Load.then(function(){    
-        $scope.directory = $rootScope.directory.alumni;
-        if (!$scope.directory){
-            LoadScreen.start();
+        $scope.getProfPic = function(link){
+            if (link){
+                return link + '=s50';
+            }
+            else{
+                return $rootScope.defaultProfilePicture;
+            }
+            
         }
 //        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
 //            .success(function(data){
@@ -1823,8 +1828,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         saveAs(blob, "contact.vcf");
     }
     Load.then(function(){
-        var user_name = $stateParams.id;
-        if (user_name.toString().length < 2){
+        if ($stateParams.id.toString().length < 2){
             window.location.assign('/#/app/directory');
         }
         
@@ -1856,10 +1860,48 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.member = undefined;
             for(var i = 0; i<$scope.members.length; i++)
             {
-                if($scope.members[i].user_name == user_name)
+                if($scope.members[i].user_name == $stateParams.id)
                 {
+                    console.log('I found the member. my user is ', $stateParams.id);
                     $scope.member = $scope.members[i];
                     $scope.prof_pic = $scope.members[i].prof_pic;
+                     //define profile information
+                    $scope.status = $scope.member.status;
+                    var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    if ($scope.member.grad_month && $scope.member.grad_year){
+                        $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
+                    }
+                    $scope.major = $scope.member.major;
+                    $scope.firstName = $scope.member.first_name;
+                    $scope.lastName = $scope.member.last_name;
+                    $scope.email = $scope.member.email;
+                    $scope.birthday = $scope.member.dob
+                    $scope.phone = $scope.member.phone;
+                    $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+                    $scope.position = $scope.member.position;
+                    $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+                    if ($scope.currentAddress.indexOf('null') > -1){
+                        $scope.currentAddress = null;
+                    }
+                    if ($scope.permanentAddress.indexOf('null') > -1){
+                        $scope.permanentAddress = null;
+                    }
+                    $scope.website = $scope.member.website;
+                    $scope.facebook = $scope.member.facebook;
+                    $scope.twitter = $scope.member.twitter;
+                    $scope.instagram = $scope.member.instagram;
+                    $scope.linkedin = $scope.member.linkedin;
+
+                    return;
+                }
+            }
+            console.log('I made it to alumni');
+            for(var i = 0; i<$rootScope.directory.alumni.length; i++)
+            {
+                if($rootScope.directory.alumni[i].user_name == $stateParams.id)
+                {
+                    $scope.member = $scope.directory.alumni[i];
+                    $scope.prof_pic = $scope.member.prof_pic;
                      //define profile information
                     $scope.status = $scope.member.status;
                     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -1890,44 +1932,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     break;
                 }
             }
-            if ($scope.member === undefined){
-                for(var i = 0; i<$rootScope.directory.alumni.length; i++)
-                {
-                    if($rootScope.directory.alumni[i].user_name == user_name)
-                    {
-                        $scope.member = $scope.members[i];
-                        $scope.prof_pic = $scope.members[i].prof_pic;
-                         //define profile information
-                        $scope.status = $scope.member.status;
-                        var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                        if ($scope.member.grad_month && $scope.member.grad_year){
-                            $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
-                        }
-                        $scope.major = $scope.member.major;
-                        $scope.firstName = $scope.member.first_name;
-                        $scope.lastName = $scope.member.last_name;
-                        $scope.email = $scope.member.email;
-                        $scope.birthday = $scope.member.dob
-                        $scope.phone = $scope.member.phone;
-                        $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                        $scope.position = $scope.member.position;
-                        $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
-                        if ($scope.currentAddress.indexOf('null') > -1){
-                            $scope.currentAddress = null;
-                        }
-                        if ($scope.permanentAddress.indexOf('null') > -1){
-                            $scope.permanentAddress = null;
-                        }
-                        $scope.website = $scope.member.website;
-                        $scope.facebook = $scope.member.facebook;
-                        $scope.twitter = $scope.member.twitter;
-                        $scope.instagram = $scope.member.instagram;
-                        $scope.linkedin = $scope.member.linkedin;
-
-                        break;
-                    }
-                }
-            }
+            
         }
     });
     });
