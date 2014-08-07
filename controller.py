@@ -877,6 +877,31 @@ class RESTApi(remote.Service):
             user.put()
         return OutgoingMessage(error='', data='OK')
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_welcome_email',
+                      http_method='POST', name='user.resend_welcome_email')
+    def resend_welcome_email(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        if 'key' in request_object:
+            user = ndb.Key(urlsafe=request_object["key"]).get()
+            if not user:
+                return OutgoingMessage(error=INVALID_USERNAME, data='')
+            email = member_signup_email(user=user.to_dict(), token=user.current_token)
+            cron = CronEmail()
+            cron.content = email["content"]
+            cron.title = email["title"]
+            cron.pending = True
+            cron.type = 'welcome_again'
+            cron.timestamp = datetime.datetime.now()
+            cron.email = user.email
+            cron.put()
+        return OutgoingMessage(error='', data='OK')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
                       http_method='POST', name='user.update_user_directory_info')
     def update_user_directory_info(self, request):

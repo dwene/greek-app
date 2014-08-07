@@ -960,6 +960,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#convertMemberModal').modal();
         }
         
+        $scope.resendWelcomeEmail = function(member){
+            member.updating = 'pending';
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        member.updating = 'done';
+                    }
+                    else{
+                        member.updating = 'broken';
+                    }
+                })
+                .error(function(data) {
+                    member.updating = 'broken';
+                });
+        }
+        
         $scope.updatePerms = function(member, option){
             var key = member.key;
             member.updating = 'pending';
