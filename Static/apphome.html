@@ -2,14 +2,16 @@
         
     <section id="statusContainer" class="row">
     
-    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs" style="visibility:hidden;">
+    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs">
        <h2 class="page-header">Organization Letters</h2>
-       <section></section>
+       <section>
+           <img class="imgBorders" src="{{$root.organization.image}}">
+       </section>
     </div>
     <div id="upcomingEvents" ng-show="eventList.length" class="col-xs-12 col-sm-3 md-pull-right">
        
         <h2 class="page-header">Upcoming Events</h2>
-        <section >
+        <section>
             <ul ng-show="eventList.length">
                 <li ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')">
                     <span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>

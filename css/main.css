@@ -217,6 +217,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #messagingTags .btn-group{margin-bottom:5px;}
 
 /*App Home Page*/
+#orgLetters img{height:auto; width:100%;}
 #statusContainer .close{margin:-2px 5px 0px 0px;}
 .currentStatus{font-style:italic;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px 0px 0px;}
@@ -316,6 +317,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #colorPicker{width:300px; height:290px;}
 .colorPick{margin:5px; border:1px solid black; padding:0px; height:57px; width:57px; display:inline-block;}
 .colorPick.selectedColor{border:1px solid white;}
+#adminPage section{margin-bottom:20px;}
 #color1{background:#003663;}
 #color2{background:#5F77BF;}
 #color3{background:#005826;}
@@ -367,6 +369,8 @@ textarea.form-control{height:auto; max-width:100%;}
     box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);  
 }
 
+.imgBorders { padding: 10px 10px 10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
+
 @media screen and (min-width:768px){
 .md-pull-right{float:right;}
 }
@@ -375,7 +379,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .refresh{
 position:absolute;
-left:160px;
+left:180px;
 top:18px;
 cursor:pointer;
 padding: 0px 2px;
