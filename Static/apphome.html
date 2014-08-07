@@ -2,7 +2,7 @@
         
     <section id="statusContainer" class="row">
     
-    <div id="orgLetters" class="col-xs-12 col-sm-4 hidden-xs">
+    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs">
        <section>
            <img class="imgBorders" src="{{$root.organization.image}}">
        </section>
@@ -19,7 +19,7 @@
         </section>
     </div>
        
-    <div id="changeStatus" class="col-xs-12 col-sm-5">
+    <div id="changeStatus" class="col-xs-12 col-sm-6">
        <h2 class="page-header">Current Status:  <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button></h2>
        <section>
             <div class="col-xs-12">

@@ -244,6 +244,8 @@ textarea.form-control{height:auto; max-width:100%;}
 /*App Home Page*/
 #orgLetters img{height:auto; width:100%;}
 #statusContainer .close{margin:-2px 5px 0px 0px;}
+#statusContainer h2{font-weight:bold;}
+#statusContainer h2 span{font-weight:normal;}
 .currentStatus{font-style:italic;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px 0px 0px;}
 #changeStatus section{min-height:46px;}
@@ -397,7 +399,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .noNotifications{font-size:40px; margin:40px 0px; font-weight:bolder; color:#ccc;}
 
-.imgBorders { padding: 10px 10px 10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
+.imgBorders { padding:2px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
 
 @media screen and (min-width:768px){
 .md-pull-right{float:right;}
