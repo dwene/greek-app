@@ -3846,7 +3846,7 @@ App.directive('netePieChart', function() {
                         // $routeParams.chartType == BarChart or PieChart or ColumnChart...
                         scope.realData.type = 'PieChart';
                         scope.realData.options = {
-                            'title': 'test'
+                            'title': ''
                         }  
                 }   
             });
