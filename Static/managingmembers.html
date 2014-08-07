@@ -1,11 +1,18 @@
 <div id="manageMembers" class="container" ng-init="hideHash = true">
-    <div class="form-inline">
+   
+        <hr>
+        
+        <h2 class="page-header">Member Actions</h2>
+      
+       <button ng-click="openConvertMembersModal()" class="btn btn-default" ng-disabled = "!((members|checkedFilter).length)">Convert To Alumni</button>
+       
+        <hr>
+   
     <div class="form-group">
     <input id="manageMembersSearch" class="form-control" type="search" ng-model="search" placeholder="Search Members">
     </div>
-    <button ng-click="openConvertMembersModal()" class="btn btn-default" ng-disabled = "!((members|checkedFilter).length)">Convert To Alumni</button>
-    </div>
-
+    
+        <hr>
     <ul>
 
 <!--
@@ -16,33 +23,31 @@
        
        
         <li ng-repeat="member in members | orderBy:'last_name' | multipleSearch:search" ng-hide="member.user_name == $root.me.user_name" ng-init = "member.name = (member.first_name + ' ' + member.last_name) ">
-            <netemember-check ng-model="member"></netemember-check>
-<!--
-            <div class="btn-group">
-                <label class="label label-default checkLabel">
-                        <i class="fa fa-square-o checkStatus"></i>
-                        <input type="checkbox" ng-model="selectedMembers[member.key]">{{ member.first_name }} {{ member.last_name }}
-                </label>
+           
+            <div class="row">
+            
+            <div class="col-xs-12">
+                <netemember-check class="members" ng-model="member"></netemember-check>
             </div>
--->
+            <div class="col-xs-12 memberOptions">
+                <form class="permsSelect">
+                    <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
+                        <option value="council">council</option>
+                        <option value="member">member</option>
+                        <option value="leadership">leadership</option>
+                    </select>
+                </form>
+
+                <button ng-click="openDeleteMemberModal(member)" class="btn btn-danger btn-sm trash"><i class="fa fa-trash-o"></i></button>
+                <button ng-click="resendWelcomeEmail(member)" ng-show="neverLoggedIn(member)" class="btn btn-info btn-sm resendWelcome">Resend Welcome Email</button>
+                <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
             
-<!--            <button ng-click="openDeleteMemberModal(member)">Delete Member</button>-->
-<!--            <input type="checkbox" ng-model="selectedMembers[member.key]">-->
-            <form class="permsSelect">
-                <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
-                    <option value="council">council</option>
-                    <option value="member">member</option>
-                    <option value="leadership">leadership</option>
-                </select>
-            </form>
+            </div>
             
-            <button ng-click="openDeleteMemberModal(member)" class="btn btn-danger btn-sm trash"><i class="fa fa-trash-o"></i></button>
-<!--
-            <i class="fa fa-spinner fa-spin" ng-show="member.updating == 'pending'"></i>
-            <i class="fa fa-check" ng-show="member.updating == 'done'"></i>
-            <span ng-show="member.updating == 'broken'"><i class="fa fa-bell"></i><i class="fa fa-refresh" ng-click="updatePerms(member, option)"></i></span>
--->
-<update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
+            <hr>
+            
+            </div>
+       
         </li>
 
     </ul>
@@ -81,7 +86,9 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Are you sure you want to convert these members to alumni?</h4>
-        <div ng-repeat="member in members" ng-show="member.checked">{{member.first_name}} {{member.last_name}}</div>
+      </div>
+      <div class="modal-body">
+              <div ng-repeat="member in members" ng-show="member.checked">{{member.first_name}} {{member.last_name}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
