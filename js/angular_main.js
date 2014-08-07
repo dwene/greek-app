@@ -260,6 +260,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //Set up run commands for the app
     App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout) {
         $rootScope.$state = $state;
+        $rootScope.color = 'color1';
+        $('body').addClass('dark');
+        $('body').removeClass('light');
         $rootScope.$stateParams = $stateParams;
         $rootScope.directory = {};
         $rootScope.users = {};
@@ -269,7 +272,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
         //set color theme
-        $rootScope.colorName = "";
         
         $rootScope.notifyConsole = function(){
             console.log('I got clicked');
