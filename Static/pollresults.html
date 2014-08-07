@@ -1,4 +1,7 @@
-<div class="container">
+<div ng-if="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<section ng-if="!loading" ng-show="notFound">Sorry this webpage could not be found. :(</section>  
+
+<div ng-if="!loading" class="container">
    <form name="response_form"  ng-submit="submitResponse()">
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
         <p>Question: {{question.worded_question}}</p>

@@ -1,7 +1,10 @@
-<section ng-show="notFound">Sorry this webpage could not be found. :(</section>
+
+<div ng-if="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+
+<section ng-if="!loading" ng-show="notFound">Sorry this webpage could not be found. :(</section>
 
 
-<section class="container" ng-hide="notFound || !poll" >
+<section class="container" ng-if="!loading" ng-hide="notFound || !poll" >
 <div class="jumbotron">
 			
 <a ng-href="#/app/polls" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
@@ -21,8 +24,8 @@
 <div class="container" ng-if="poll.response_status || !poll.open">
     <div ng-repeat = "question in poll.questions | orderBy: 'index'">
         <h3 class="question">{{question.worded_question}}</h3>
-        <span ng-repeat="a in question.response.answer" ng-show="question.response.answer"><span class="answer">{{a}}</span></span>
-        <span ng-hide="question.response.answer">No response</span>
+        <span ng-repeat="a in question.response.answer" ng-show="question.response.answer.length"><span class="answer">{{a}}</span></span>
+        <span ng-hide="question.response.answer.length">No response</span>
     </div>
 </div>
 

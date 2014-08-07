@@ -2340,31 +2340,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
     routeChange();
     Load.then(function(){ 
         requireLeadership();
-        if (!checkPermissions('leadership')){
-            if (checkAlumni()){
-                window.location.assign('#/app/directory/members');
-            }
-            else{
-            window.location.assign("/#/app");
-            }
-        }
+        $scope.sentMessages = $rootScope.sentMessages;
+        $scope.tags = $rootScope.tags;
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
-        
+        $scope.loading = !($scope.sentMessages && $scope.tags);
+        console.log('Am I loading', $scope.loading);
         $scope.deleteMessageTip = {
             "title" : "Delete Message"
         }
         
         function onFirstLoad(){
-            $scope.loading = true;
             var tag_list = [];
-            $scope.tags = $rootScope.tags;
             var deferred = $q.defer();
             var done = 0;
             function checkIfDone() {
                 done++;
-                if (done==2) deferred.resolve(); 
+                if (done==2){$scope.loading = false; deferred.resolve();}
             }//#TODO change the tags to have 2 fields, one for name, one for checked/unchecked. This would work better with the ng-model
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
@@ -2376,24 +2369,29 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 else{
                     console.log("error: ", data.error)
                 }
+                checkIfDone();
             })
             .error(function(data) {
                 console.log('Error: ' , data);
+                checkIfDone();
             });
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     $scope.sentMessages = JSON.parse(data.data);
+                    $rootScope.sentMessages = $scope.sentMessages;
                     console.log($scope.sentMessages);
                 }
                 else
                 {
                     console.log("error: ", data.error)
                 }
+                checkIfDone();
             })
             .error(function(data) {
                 console.log('Error: ' , data);
+                checkIfDone();
             });
             return deferred.promise;
         }
@@ -2565,17 +2563,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     });
 
-    App.controller('eventsController', function($scope, $http, Load) {
+    App.controller('eventsController', function($scope, $http, Load, $rootScope) {
         routeChange();
         
         Load.then(function(){
             requireMember();
+            $scope.events = $rootScope.events;
+            $scope.eventSource = [];
+            for (var i = 0; i< $scope.events.length; i++){
+                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});}
                 //send the organization and user date from registration pages
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.events = JSON.parse(data.data);
-                        $scope.eventSource = [];
+                        $rootScope.events = $scope.events;
                         for (var i = 0; i< $scope.events.length; i++){
                             $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});
                         }
@@ -3186,11 +3188,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('pollController', function($scope, $http, Load, $rootScope) {
         routeChange();
         Load.then(function(){
+            $scope.polls = $rootScope.polls;
             requireMember();
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.polls = JSON.parse(data.data);
+                        $rootScope.polls = $scope.polls;
                     }
                     else{
                         console.log('ERR');
@@ -3210,6 +3214,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
         routeChange();
         Load.then(function(){
+            $scope.loading = true;
             requireMember();
             var to_send = {key: $stateParams.key};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
@@ -3221,10 +3226,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.notFound = true;
                         console.log('ERR');
                     }
+                    $scope.loading = false;
                 })
                 .error(function(data) {
                     $scope.notFound = true;
                     console.log('Error: ' , data);
+                    $scope.loading = false;
                 });
         });
         $scope.closePoll = function(close){
@@ -3302,9 +3309,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
 	});
 
-    App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams) {
+    App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams, LoadScreen) {
         routeChange();
         Load.then(function(){
+            $scope.loading = true;
             requireMember();
             var to_send = {key: $stateParams.key};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
@@ -3315,10 +3323,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else{
                         console.log('ERR');
+                        $scope.notFound = true;
                     }
+                    $scope.loading = false;
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
+                    $scope.loading = false;
+                    $scope.notFound = true;
                 });
         });
         
@@ -4390,7 +4402,6 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/get_users', packageForSending(''))
             .success(function(data){
                 checkResponseErrors(data.data);
-                //console.log(data.data);
                 if (!checkResponseErrors(data)){
                 $rootScope.users = JSON.parse(data.data);}
                 checkIfDone();
@@ -4448,7 +4459,6 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 console.log('Error: ' , data);
                 checkIfDone();
             });
-            console.log('hi');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
             .success(function(data){
                 $rootScope.subscribed = true;

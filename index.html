@@ -23,6 +23,7 @@
         <!--        Angular scripts-->
         <script src="js/vendor/angular.js"></script>
         <script src="js/vendor/angular-sanitize.min.js"></script>
+        <script>console.log = function(){}</script>
 <!--        <script src="js/vendor/angular-route.js"></script>-->
         <script src="js/vendor/angular-ui.js"></script>
         <script src="js/vendor/angular-animate.js"></script>
@@ -56,7 +57,7 @@
                 <span id="refreshNotifications" ng-show="$root.checkLogin()" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
 
 				</div>
-
+                    <google-chart ng-hide="true"></google-chart>
 				<div id="mainNavigation" class="hidden-xs">
                     <ul class="nav navbar-nav navbar-right" ng-hide="!$root.checkLogin()">
 
@@ -189,6 +190,7 @@
         <script type="text/javascript" src="js/vendor/ngAutocomplete.js"></script>
 <!--        Google Charts File-->
         <script type="text/javascript" src="js/vendor/ng-google-chart.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         
 
 <!--
