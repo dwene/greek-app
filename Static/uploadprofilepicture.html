@@ -10,7 +10,8 @@
 -->
     <section id="crop">
     <h2 class="page-header" ng-show="imageSrc.length">Image <i class="fa fa-crop"></i></h2>
-    <img-cropped src="imageSrc" selected="selected(cords)" ratio="1" style="width: 300px !important;"></img-cropped>
+<!--    <img-cropped src="imageSrc" selected="selected(cords)" ratio="1" style="width: 300px !important;"></img-cropped>-->
+    <img-cropped-two src="https://lh5.ggpht.com/OvrMD6hI6M18vwkLurgfP60bdsm3cwiPVLaktB4182_7hMoViWkJOlOKryUHLui9t0E-GUlGs8ALfFfr5V79" selected='selected(cords)'></img-cropped-two>
     <h2 class="page-header" ng-show="P.cropData.length">Preview</h2>
     <div id="cropped-image" ng-show="cropped" ng-style="{ width: P.picWidth + 'px', height: P.picHeight + 'px', overflow: 'hidden' }">
     <img id="preview" ng-src="{{ P.imageSrc }}">
