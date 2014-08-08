@@ -15,7 +15,7 @@
         </div>
         <ul ng-if="question.type == 'text'"> 
             <li ng-repeat="response in question.responses">
-                <p><span class="col-xs-8">{{response.text}}</span> <span class="col-xs-4">{{$root.getNameFromKey(response.key)}}</span></p>
+                <p><span class="col-xs-6">{{response.text}}</span> <span class="col-xs-6">{{$root.getNameFromKey(response.key)}}</span></p>
             </li>
         </ul>
        <hr> 
