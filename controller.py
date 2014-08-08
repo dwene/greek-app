@@ -977,6 +977,8 @@ class RESTApi(remote.Service):
                 user.occupation = value
             elif key == "employer":
                 user.employer = value
+            elif key == "pledge_class":
+                user.pledge_class = value
             elif key == "email_prefs":
                 user.email_prefs = value
         user.put()
