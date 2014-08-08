@@ -697,6 +697,33 @@ App.config(function($stateProvider, $urlRouterProvider) {
             "title" : "Clear Status"
         }
             
+        $scope.checkForMoreHiddenNotifications = function(notifications, pageNum, max){
+            var len = notifications.length;
+            $scope.working = true;
+             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', packageForSending(len))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var new_hiddens = JSON.parse(data.data);
+                    $rootScope.hidden_notifications = new_hiddens;
+                    if (new_hiddens.length > (pageNum*(max+1))){
+                        $scope.hidden.currentPage++;
+                    }
+                    else{
+                        $scope.noMoreHiddens = true;
+                    }
+                }
+                else{
+                    console.log('ERROR: ',data);
+                }
+                $scope.working = false;
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+                $scope.working = false;
+            }); 
+        }
+        
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));

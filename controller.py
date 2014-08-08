@@ -1358,6 +1358,25 @@ class RESTApi(remote.Service):
             request_user.put()
         return OutgoingMessage(error='', data='OK')
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/more_hidden',
+                      http_method='POST', name='notifications.more_hidden')
+    def more_hidden(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        out_hidden_notifications = list()
+        hidden_notifications_future = Notification.query(Notification.key.IN(
+            request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(data + 20)
+        hidden_notifications = hidden_notifications_future.get_result()
+        for notify in hidden_notifications:
+            note = notify.to_dict()
+            note["key"] = notify.key.urlsafe()
+            out_hidden_notifications.append(note)
+        return OutgoingMessage(error='', data=json_dump(out_hidden_notifications))
+
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hide',
                       http_method='POST', name='notifications.hide')
     def hide_notification(self, request):
