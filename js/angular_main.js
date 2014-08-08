@@ -3424,6 +3424,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 function routeChange(){
     $('.modal-backdrop').remove();
     $('.bootstrap-datetimepicker-widget').hide();
+    window.scrollTo(0, 0);
 }
 
 //checks to see if user is logged in or not

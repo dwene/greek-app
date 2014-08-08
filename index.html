@@ -23,7 +23,7 @@
         <!--        Angular scripts-->
         <script src="js/vendor/angular.js"></script>
         <script src="js/vendor/angular-sanitize.min.js"></script>
-        <script>console.log = function(){}</script>
+<!--        <script>console.log = function(){}</script>-->
 <!--        <script src="js/vendor/angular-route.js"></script>-->
         <script src="js/vendor/angular-ui.js"></script>
         <script src="js/vendor/angular-animate.js"></script>
@@ -124,7 +124,7 @@
 			</nav>
 </header>
 
-<div ui-view ng-hide="$root.loading" id="mainSection"></div>
+<div ui-view ng-hide="$root.loading"  autoscroll="true" id="mainSection"></div>
 
 
 <footer><br><br></footer> 
