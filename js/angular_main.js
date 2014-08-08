@@ -2538,12 +2538,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.checkTagAvailability = function(tag){
                 
-                if (tag = ""){
+                if (tag == ""){
                     $scope.isEmpty = true;
                 }
                 else{
                     $scope.isEmpty = false;
-                    console.log('im here');
+                    console.log('Im about to send', tag);
                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                     .success(function(data){
                         if (!checkResponseErrors(data)){

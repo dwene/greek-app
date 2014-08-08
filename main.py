@@ -51,7 +51,6 @@ def send_mandrill_email(from_email, to_email, subject, body):
                             payload=json_data,
                             method=urlfetch.POST,
                             headers={'Content-Type': 'application/json'})
-    logging.error(result)
     return
 
 
@@ -203,7 +202,6 @@ class MainHandler(webapp2.RequestHandler):
 class ProfilePictureHandler(webapp2.RequestHandler):
     def get(self):
         upload_url = blobstore.create_upload_url('/upload')
-        logging.error(upload_url)
         self.response.out.write('<html><body>')
         self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
         self.response.out.write("""Upload File: <input type="file" name="file"><br> <input type="submit"

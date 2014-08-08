@@ -212,6 +212,19 @@ def json_dump(item):
 def check_if_info_set(key):
     return True
 
+def check_availability_of_tag(tag, org_key):
+    organization_future = org_key.get_async()
+    event_future = Event.query(ndb.AND(Event.organization == org_key,
+                                       Event.tag == tag.lower())).get_async()
+    organization = organization_future.get_result()
+    if tag.lower() in organization.tags:
+        return False
+    if event_future.get_result():
+        return False
+    if tag.lower() in ['alumni', 'member', 'council', 'leadership', 'everyone']:
+        return False
+    return True
+
 
 def get_user(user_name, token):
     user = User.query(User.user_name == user_name).get()
@@ -1107,19 +1120,9 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        if not (request_object["tag"] and len(request_object['tag']) > 1):
+        if not check_availability_of_tag(request_object["tag"], request_user.organization):
             return OutgoingMessage(error=TAG_INVALID, data='')
-        tag = request_object["tag"]
-        organization_future = request_user.organization.get_async()
-        event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                           Event.tag == tag.lower())).get_async()
-        organization = organization_future.get_result()
-        if organization and tag.lower() in organization.tags:
-            return OutgoingMessage(error=TAG_INVALID, data='')
-        if event_future.get_result():
-            return OutgoingMessage(error=TAG_INVALID, data='')
-        if tag.lower() in ['alumni', 'member', 'council', 'leadership', 'everyone']:
-            return OutgoingMessage(error=TAG_INVALID, data='')
+        organization = request_user.organization.get()
         organization.tags.append(request_object["tag"].lower())
         organization.put()
         return OutgoingMessage(error='', data='OK')
@@ -1450,14 +1453,11 @@ class RESTApi(remote.Service):
     def create_event(self, request):
         event_data = json.loads(request.data)
         request_user = get_user(request.user_name, request.token)
-        event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                           Event.tag == event_data["tag"].lower())).get_async()
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        event = event_future.get_result()
-        if event or len(event_data["tag"]) < 4:
+        if not check_availability_of_tag(event_data["tag"], request_user.organization):
             return OutgoingMessage(error=TAG_INVALID, data='')
         new_event = Event()
         new_event.creator = request_user.key
@@ -1483,7 +1483,7 @@ class RESTApi(remote.Service):
             new_event.perms_tags = ['everyone']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         notification = Notification()
-        notification.title = 'Event: '+ event_data["title"]
+        notification.title = 'Event: ' + event_data["title"]
         notification.type = 'event'
         notification.content = "You have been invited to the event: " + event_data["title"]
         notification.content += ". Please check out your events page for more information!"
@@ -1507,16 +1507,21 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         tag = json.loads(request.data)
-        organization_future = request_user.organization.get_async()
-        event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                           Event.tag == tag.lower())).get_async()
-        organization = organization_future.get_result()
-        if organization and tag.lower() in organization.tags:
+        if not check_availability_of_tag(tag, request_user.organization):
             return OutgoingMessage(error=TAG_INVALID, data='')
-        if event_future.get_result():
-            return OutgoingMessage(error=TAG_INVALID, data='')
-        if tag.lower() in ['alumni', 'member', 'council', 'leadership', 'everyone']:
-            return OutgoingMessage(error=TAG_INVALID, data='')
+        # logging.error()
+        # organization_future = request_user.organization.get_async()
+        # event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+        #                                    Event.tag == tag.lower())).get_async()
+        # organization = organization_future.get_result()
+        # logging.error('The tag im checking is ' + tag.lower())
+        # if tag.lower() in organization.tags:
+        #     return OutgoingMessage(error=TAG_INVALID, data='')
+        # if event_future.get_result():
+        #     return OutgoingMessage(error=TAG_INVALID, data='')
+        # if tag.lower() in ['alumni', 'member', 'council', 'leadership', 'everyone']:
+        #     return OutgoingMessage(error=TAG_INVALID, data='')
+        # logging.error('And its valid')
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/rsvp',
