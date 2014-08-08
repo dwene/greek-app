@@ -1107,14 +1107,22 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        organization = request_user.organization.get()
-        if not organization:
-            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        if request_object["tag"] not in organization.tags and len(request_object['tag']) > 1:
-            organization.tags.append(request_object["tag"].lower())
-            organization.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error=INVALID_FORMAT, data='')
+        if not (request_object["tag"] and len(request_object['tag']) > 1):
+            return OutgoingMessage(error=TAG_INVALID, data='')
+        tag = request_object["tag"]
+        organization_future = request_user.organization.get_async()
+        event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+                                           Event.tag == tag.lower())).get_async()
+        organization = organization_future.get_result()
+        if organization and tag.lower() in organization.tags:
+            return OutgoingMessage(error=TAG_INVALID, data='')
+        if event_future.get_result():
+            return OutgoingMessage(error=TAG_INVALID, data='')
+        if tag.lower() in ['alumni', 'member', 'council', 'leadership', 'everyone']:
+            return OutgoingMessage(error=TAG_INVALID, data='')
+        organization.tags.append(request_object["tag"].lower())
+        organization.put()
+        return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_organization_tag',
                       http_method='POST', name='user.remove_organization_tag')
@@ -1503,7 +1511,7 @@ class RESTApi(remote.Service):
         event_future = Event.query(ndb.AND(Event.organization == request_user.organization,
                                            Event.tag == tag.lower())).get_async()
         organization = organization_future.get_result()
-        if tag.lower() in organization.tags:
+        if organization and tag.lower() in organization.tags:
             return OutgoingMessage(error=TAG_INVALID, data='')
         if event_future.get_result():
             return OutgoingMessage(error=TAG_INVALID, data='')
