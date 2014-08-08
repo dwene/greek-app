@@ -18,7 +18,7 @@
         
     </form>
     
-<button id="showHiddenButton" class="btn btn-block" ng-show="sentMessages.length" data-toggle="collapse" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages">Show Recently Sent</button>
+<button id="showHiddenButton" class="btn btn-block" ng-show="sentMessages.length" data-toggle="collapse" ng-click="shown = !shown" ng-show="$root.hidden_notifications.length" ng-init="shown = false" data-target="#recentlySentMessages"><span ng-show="shown">Hide</span><span ng-hide="shown">Show</span> Recently Sent</button>
 
 <section id="recentlySentMessages" class="collapse">
     <ul>
