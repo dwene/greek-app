@@ -155,8 +155,10 @@ h1{font-size:36px; font-weight:bold;}
 #mainSection{position:relative;}
 
 /*Directory Page*/
-#directory .member{position:relative; padding:20px 20px; min-height:80px; border-top:1px solid #777;}
-#directory .member:last-child{border-bottom:1px solid #777;}
+#directory .member{position:relative; min-height:80px; 
+padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    margin:5px 3px;
+}
 #directory .member:hover{background:#EDEDED; cursor:pointer;}
 /*makes room for the picture*/ .directoryContent{margin-left:80px;}
 #directory .memberName{font-size:18px;}
@@ -174,12 +176,14 @@ h1{font-size:36px; font-weight:bold;}
 #memberProfile #contact{text-align:left; font-size:40px; width:300px; margin:10px auto;}
 #memberProfile #contact li{display:inline-block; width:100%;}
 #memberProfile #contact span{display:inline-block; font-size:12px; position:relative; top:-8px;}
-#memberProfile #saveContact{margin:20px auto; display:block;}
+#memberProfile #saveContact{margin:20px auto 0px; display:block;}
 
 #memberProfile #name{margin:0px auto 0 auto;}
 #memberProfile h1{color:white; padding:10px; margin-left:-15px; margin-bottom:20px; border-radius:5px;}
 #memberProfile .position{margin-bottom:10px; font-weight:bold;}
 #memberProfile #name p{font-style:italic;}
+#memberProfile #name .info{margin-bottom:5px;}
+#memberProfile #name .info span{font-weight:bold;}
 @media screen and (max-width:768px){
 #memberProfile #name{width:300px;}
 #memberProfile h1{margin-right:-15px;}
@@ -191,6 +195,7 @@ h1{font-size:36px; font-weight:bold;}
 #memberProfile #name h1{font-size:60px;}
 #memberProfile #name p{font-size:32px;}
 #memberProfile .position{font-size:42px;}
+#memberProfile .card{margin-right:0px !important;}
 }
 
 /*Member Tagging Page*/
@@ -247,8 +252,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #orgLetters img{height:auto; width:100%;}
 #statusContainer .close{margin:-2px 5px 0px 0px;}
 #statusContainer h2{font-weight:bold;}
-#statusContainer h2 span{font-weight:normal;}
-.currentStatus{font-style:italic;}
+.currentStatus{font-style:italic; font-size:18px; padding:10px; display:block;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px 0px 0px;}
 #changeStatus section{min-height:46px;}
 @media screen and (max-width:768px){
@@ -260,21 +264,19 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
 
-.notification{cursor:pointer; position:relative; min-height:86px;}
-
-    .notification{
+.notification{cursor:pointer; position:relative; min-height:86px;
+    padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    margin:5px 3px;
+}
+/*
             background-image: -webkit-gradient(linear,left 0,left 100%,from(#fff),to(#f8f8f8));
             background-image: -webkit-linear-gradient(top,#fff,0%,#f8f8f8,100%);
             background-image: -moz-linear-gradient(top,#fff 0,#f8f8f8 100%);
             background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
             background-repeat: repeat-x;
-    }
+*/
 
 .notification:hover{background:#f6f6f6;}
-
-.notification:first-child{border-top:1px solid #ccc;}
-.notification:last-child{border-bottom:1px solid #ccc;}
-.notificationContent{padding:20px 30px;}
 .notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100; padding:5px;}
 .notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-5px;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
@@ -348,7 +350,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .result{}
 
 /*Admin Page*/
-#colorPicker{width:300px; height:290px;}
+#colorPicker{width:300px; height:290px; padding:10px !important;}
 .colorPick{margin:5px; border:1px solid black; padding:0px; height:57px; width:57px; display:inline-block;}
 .colorPick.selectedColor{border:1px solid white;}
 #adminPage section{margin-bottom:20px;}
@@ -394,7 +396,7 @@ textarea.form-control{height:auto; max-width:100%;}
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
+/*    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);*/
     border-radius:25px;
 }
 .profilepic{
@@ -412,6 +414,8 @@ textarea.form-control{height:auto; max-width:100%;}
 .noNotifications{font-size:40px; margin:40px 0px; font-weight:bolder; color:#ccc;}
 
 .orgLetters { padding:2px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
+
+.card{ padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
 
 @media screen and (min-width:768px){
 .md-pull-right{float:right;}

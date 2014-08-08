@@ -20,10 +20,10 @@
     </div>
        
     <div id="changeStatus" class="col-xs-12 col-sm-6">
-       <h2 class="page-header">Current Status:  <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span> <button type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button></h2>
+       <h2 class="page-header">Current Status:   <button type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button></h2>
        <section>
             <div class="col-xs-12">
-            <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
+            <form class="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
                 <div class="input-group">
                   <input id="status" name="status" type="text" placeholder="update your status here" class="form-control" ng-model="status"  maxlength="140">
                   <span class="input-group-btn">
@@ -33,6 +33,8 @@
                 <span id="count" ng-show="status.length">{{status.length}}/140</span>
             </form>
             </div>
+            
+        <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span>
         </section>
     </div>
         

@@ -9,34 +9,34 @@
             <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" ></div>
             
             <ul id="social">
-                <li ng-show="facebook.length > 0"><a target="_blank" href="{{facebook}}"><i class="fa fa-facebook-square"></i></a></li>
-                <li ng-show="twitter.length > 0"><a target="_blank" href="{{twitter}}"><i class="fa fa-twitter-square"></i></a></li>
-                <li ng-show="twitter.length > 0"><a target="_blank" href="{{instagram}}"><i class="fa fa-instagram"></i></a></li>
-                <li ng-show="linkedin.length > 0"><a target="_blank" href="{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
+                <li ng-show="facebook.length"><a target="_blank" href="{{facebook}}"><i class="fa fa-facebook-square"></i></a></li>
+                <li ng-show="twitter.length"><a target="_blank" href="{{twitter}}"><i class="fa fa-twitter-square"></i></a></li>
+                <li ng-show="twitter.length"><a target="_blank" href="{{instagram}}"><i class="fa fa-instagram"></i></a></li>
+                <li ng-show="linkedin.length"><a target="_blank" href="{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
             </ul>
             
             <ul id="contact">
-                <li ng-show="phone"><a href="sms:{{phone}}"><i class="fa fa-phone-square"></i></a> <span>{{phone}}</span></li>
-                <li><a href="mailto:{{email}}"><i class="fa fa-envelope-square"></i></a> <span>{{email}}</span></li>
+                <li ng-show="phone.length"><a href="sms:{{phone}}"><i class="fa fa-phone-square"></i></a> <span>{{phone}}</span></li>
+                <li><a target="_blank" href="mailto:{{email}}"><i class="fa fa-envelope-square"></i></a> <span>{{email}}</span></li>
+                <li ng-show="website.length"><a target="_blank" href="{{website}}"><i class="fa fa-globe"></i></a> <span>{{website}}</span></li>
+                <li ng-show="currentAddress.length"><a target="_blank" href="http://www.google.com/maps/place/{{currentAddress}}"><i class="fa fa-home"></i></a> <span>{{currentAddress}}</span></li>
             </ul>
             
             
         </div>
         <div id="name" class="col-xs-12 col-sm-7">
             <h1>{{firstName}}<br class="hidden-xs"> {{lastName}}</h1>
-            <div class="position" ng-show="position">{{position}}</div>
-            <p ng-show="status">"{{status}}"</p>
             
-             
-            <div class="row" ng-show="birthday">Birthday: {{birthday}}</div>
-            <div class="row" ng-show="major">Major: {{major}}</div>
-            <div class="row" ng-show="graduation">Expected Graduation: {{graduation}}</div>
-            <div class="row" ng-show="currentAddress.length > 0">Current Address: {{currentAddress}}</div>
-            <div class="row" ng-show="permanentAddress.length > 0">Permanent Address: {{permanentAddress}}</div>
-            <div class="row" ng-show="website.length > 0">Website: <a target="_blank" href="{{website}}">{{website}}</a></div>
+            <section class="card row">
+            <div class="position" ng-show="position.length">{{position}}</div>
+            <p ng-show="status.length">"{{status}}"</p> 
+            <div class="info" ng-show="birthday.length">Birthday: <span>{{birthday}}</span></div>
+            <div class="info" ng-show="major.length">Major: <span>{{major}}</span></div>
+            <div class="info" ng-show="graduation.length">Graduation: <span>{{graduation}}</span></div>
+            <div class="info" ng-show="permanentAddress.length">Permanent Address: <span>{{permanentAddress}}</span></div>
             
                         <button id="saveContact" ng-click="saveVcard()" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save Contact</button>
-            
+            </section>
         </div>
     </div>
     

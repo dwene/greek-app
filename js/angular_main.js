@@ -380,26 +380,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //navigation header
     App.controller('navigationController', function($scope, $http, $rootScope, LoadScreen){
         routeChange();
-        //closes the navigation if open and an li is clicked
-        var navMain = $("#mainNavigation, #mobileSettings");
-        navMain.on('click', 'li:not(.dropdown)', function(){
-            if( navMain.hasClass('in') ){
-                     navMain.collapse('hide');
+        
+        //closes the navigation if open and an li is clicked        
+        $('.navbar-brand, #mobileMenu, #mainMenu, #mobileSettings').on('click', function(){
+            if( $("#mobileSettings").hasClass('in') ){
+                     $("#mobileSettings").collapse('hide');
             }
             else{
             //do nothing
             }
         });
         
-        $('.navbar-brand').on('click', function(){
-            if( navMain.hasClass('in') ){
-                     navMain.collapse('hide');
-            }
-            else{
-            //do nothing
-            }
-        });
-        
+    
         $scope.logout = function(){
                 $.removeCookie(USER_NAME);
                 $.removeCookie(TOKEN);
