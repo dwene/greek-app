@@ -697,6 +697,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //        $scope.current.pageSize = 10;
 //        $scope.current.maxPageNumber = 5;
         //TOOLTIPS
+            
         $scope.archiveTip = {
             "title" : "Archive Notification"
         }
