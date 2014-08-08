@@ -49,9 +49,9 @@ body.modal-open{margin-right:0px;}
 
 
 .dropdown{cursor:pointer;}
-.navbar-brand{position:relative; width:210px; height:52px;}
+.navbar-brand{position:relative; width:210px; height:52px; border-radius:3px;}
 .navbar-brand:before{content:''; background:url(../images/NeteGreekLogoSmallWhite.png) 10px center no-repeat; position:absolute; top:0px; left:0px; width:100%; height:100%; background-size:156px 42px;}
-.navbar-brand .badge{font-size:12px; position:relative; left:160px; top:-2px;}
+.navbar-brand .badge{font-size:12px; position:relative; left:160px;}
 @media screen and (max-width:768px){
     nav.navbar{position:fixed; top:0px; width:100%;}
     #mainSection, #loadingScreen{margin-top:82px;}
@@ -110,6 +110,8 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 .noneSelected{position:absolute; left:10px; top:10px;}
+#recentTags{padding-bottom:5px;}
+#recentTags .btn-group{margin-bottom:4px;}
 #selectingUsers #messagingTags{margin-top:0px;}
 #selectingUsers #messagingTags .page-header{min-height:30px; margin-top:0px; padding-bottom:0px;}
 #selectingUsers #messagingTags .page-header #noTags{display:inline-block; margin-top:3px;}
@@ -273,7 +275,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .notification:first-child{border-top:1px solid #ccc;}
 .notification:last-child{border-bottom:1px solid #ccc;}
 .notificationContent{padding:20px 30px;}
-.notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100;}
+.notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100; padding:5px;}
 .notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-5px;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
 .notification.new .notificationTitle i{display:block;}
@@ -350,6 +352,11 @@ textarea.form-control{height:auto; max-width:100%;}
 .colorPick{margin:5px; border:1px solid black; padding:0px; height:57px; width:57px; display:inline-block;}
 .colorPick.selectedColor{border:1px solid white;}
 #adminPage section{margin-bottom:20px;}
+@media screen and (max-width:500px){
+#colorPicker{margin-left:-5px;}
+#adminPage .orgLetters{width:80%; display:block; margin:0 auto;}
+}
+
 #color1{background:#003663;}
 #color2{background:#5F77BF;}
 #color3{background:#005826;}
@@ -404,7 +411,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .noNotifications{font-size:40px; margin:40px 0px; font-weight:bolder; color:#ccc;}
 
-.imgBorders { padding:2px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
+.orgLetters { padding:2px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); }
 
 @media screen and (min-width:768px){
 .md-pull-right{float:right;}
@@ -502,7 +509,7 @@ div#cropped-image {
         {background:#003663;}
         .color1 .smallprofilepic, .color1 .profilepic{background-color:#003663;}
         .color1 .navbar-default .navbar-brand:hover, .color1 .navbar-default .navbar-nav>li>a:hover, .color1 .navbar .badge, .color1 .navbar-default .navbar-nav>.open>a, .color1 .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .color1 .navbar-default .navbar-toggle:hover, .color1 .navbar-default .navbar-toggle:focus, .color1 .tooltip-inner, .color1 .btn-primary, .color1 .nav-pills>li.active>a:hover, .color1 .checkLabel.label-primary:hover, .color1 .dropdown-menu>li>a:hover, .color1 .dropdown-menu>li>a:focus, .color1 .dropdown-menu>.active>a, .color1 .dropdown-menu>.active>a:hover, .color1 .dropdown-menu>.active>a:focus, .color1 .monthview-selected
-        {background-color:#002340;}
+        {background:#002340;}
         .color1 .notification.new .notificationTitle, .color1 a:not(.btn)
         {color:#002340;}
         .color1 .tooltip.left .tooltip-arrow{border-left-color:#002340;} .color1 .tooltip.top .tooltip-arrow{border-top-color:#002340;} .color1 .tooltip.right .tooltip-arrow{border-right-color:#002340;} .color1 .tooltip.bottom .tooltip-arrow{border-bottom-color:#002340;}

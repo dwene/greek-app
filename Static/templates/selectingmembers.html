@@ -7,7 +7,7 @@
                 <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
             </form>
             <div class="col-sm-6">
-                   <h2 class="page-header">Recent Tags:
+                   <h2 id="recentTags" class="page-header">Recent Tags:
                     <div class="btn-group" ng-repeat="tag in ngModel.org_tags">
                         <netetag-check ng-if="tag.recent"></netetag-check>
                     </div>

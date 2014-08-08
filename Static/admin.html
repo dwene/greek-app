@@ -2,9 +2,7 @@
       
     <section>
     <h2 class="page-header">Organization Settings</h2>
-      
-      <span>Color Theme: </span><br>
-    
+          
     <div id="colorPicker" class="well well-sm">
         <button id="color1" ng-click="changeTheme(1);" class="colorPick"></button>
         <button id="color2" ng-click="changeTheme(2);" class="colorPick"></button>
@@ -27,7 +25,7 @@
     
     <section>
     <h2 class="page-header">Organization Image</h2>
-      <img class="imgBorders" ng-src="{{$root.organization.image}}"><br><br>
+      <img class="orgLetters" ng-src="{{$root.organization.image}}"><br><br>
       <a class="btn btn-default" ng-href="#/app/uploadorganizationimage">Change Organization Image</a>
     </section>
       
