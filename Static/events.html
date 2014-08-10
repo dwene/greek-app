@@ -28,6 +28,7 @@
             </div>
             <p ng-hide="current_events.length">There are no current or upcoming events!</p>
             </div>
+            <div class="row">
             <li class="notification" ng-repeat="event in (current_events = (events | removePassedEvents:present | multipleSearch: search)) | orderBy:'-time_start' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber" ng-click="showEvent(event)">
                 <div class="notificationContent">
                 <span class="notificationTitle">{{event.title}}</span>
@@ -35,6 +36,7 @@
                 <span class="notificationSender">created by: {{$root.getNameFromKey(event.creator)}}</span>
                 </div>
             </li>
+            </div>
             <div class="pagerButtons">
                 <button class="previous btn btn-default btn-sm" ng-hide="current.currentPage == 0" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1">&larr; Newer</button>
                 <button class="next btn btn-default btn-sm" ng-hide="current.currentPage >= current_events.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= current_events.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1">Older &rarr;</button>

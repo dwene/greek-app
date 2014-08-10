@@ -30,9 +30,12 @@
             <section class="card row">
             <div class="position" ng-show="position.length">{{position}}</div>
             <p ng-show="status.length">"{{status}}"</p> 
+            <div class="info" ng-show="pledgeclass.length">Pledge Class: <span>{{pledgeclass}}</span></div>
             <div class="info" ng-show="birthday.length">Birthday: <span>{{birthday}}</span></div>
             <div class="info" ng-show="major.length">Major: <span>{{major}}</span></div>
             <div class="info" ng-show="graduation.length">Graduation: <span>{{graduation}}</span></div>
+            <div class="info" ng-show="employer.length">Graduation: <span>{{employer}}</span></div>
+            <div class="info" ng-show="occupation.length">Graduation: <span>{{occupation}}</span></div>
             <div class="info" ng-show="permanentAddress.length">Permanent Address: <span>{{permanentAddress}}</span></div>
             
                         <button id="saveContact" ng-click="saveVcard()" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save Contact</button>

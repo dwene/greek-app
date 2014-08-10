@@ -261,6 +261,9 @@ textarea.form-control{height:auto; max-width:100%;}
 #statusContainer section{margin-bottom:10px; padding:10px;}
 }
 
+#upcomingEvents .card{padding:4px !important; width:100%; display:block;}
+#upcomingEvents a:hover{background:#f6f6f6; text-decoration:none;}
+
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
 
