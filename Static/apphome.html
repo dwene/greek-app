@@ -9,18 +9,16 @@
     </div>
     <div id="upcomingEvents" ng-show="eventList.length" class="col-xs-12 col-sm-3 md-pull-right">
        
-        <h2 class="page-header">Upcoming Events</h2>
         <section>
             <ul ng-show="eventList.length">
                 <a class="card" ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')" ng-href="#/app/events/{{event.tag}}">
-                    <span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
+                    <div class="icon"><i class="fa fa-calendar"></i> | </div><span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
                 </a>
             </ul>
         </section>
     </div>
        
     <div id="changeStatus" class="col-xs-12 col-sm-6">
-       <h2 class="page-header">Current Status:   <button type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button></h2>
        <section>
             <div class="col-xs-12">
             <form class="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
@@ -33,8 +31,12 @@
                 <span id="count" ng-show="status.length">{{status.length}}/140</span>
             </form>
             </div>
-            
+        
+        <div class="card">
+        <i class="fa fa-comment-o bgIcon"></i> <span class="noStatus" ng-hide="$root.me.status.length">No Status</span>
+        <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>
         <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span>
+       </div>
         </section>
     </div>
         

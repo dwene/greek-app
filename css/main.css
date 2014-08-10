@@ -250,19 +250,24 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*App Home Page*/
 #orgLetters img{height:auto; width:100%;}
-#statusContainer .close{margin:-2px 5px 0px 0px;}
 #statusContainer h2{font-weight:bold;}
-.currentStatus{font-style:italic; font-size:18px; padding:10px; display:block;}
-#changeStatus #count{float:right; font-size:10px; margin:2px 4px 0px 0px;}
+.currentStatus{font-style:italic; font-size:22px; padding:10px; display:block; position:relative; z-index:100;}
+#changeStatus #count{float:right; font-size:10px; margin:2px 4px -20px 0px;}
 #changeStatus section{min-height:46px;}
+#changeStatus .card{padding:10px; margin-top:20px; position:relative; min-height:60px;}
+#changeStatus .close{top:-5px; left:5px; margin-top:-2px; position:relative; z-index:200;}
+#changeStatus .noStatus{top:14px; left:68px; font-size:32px; color:#ccc; font-weight:bold; display:block; position:absolute;}
+#changeStatus .bgIcon{color:#f8f8f8; font-size:48px; top:5px; left:10px; position:absolute; z-index:0px;}
+
 @media screen and (max-width:768px){
 #statusContainer .page-header{margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
-#statusContainer section{margin-bottom:10px; padding:10px;}
+#statusContainer section{padding:10px;}
 }
 
-#upcomingEvents .card{padding:4px !important; width:100%; display:block;}
+#upcomingEvents .card{padding:8px 4px 8px 40px !important; width:100%; display:block; min-height:36px; position:relative;}
 #upcomingEvents a:hover{background:#f6f6f6; text-decoration:none;}
+#upcomingEvents .icon{font-size:18px; position:absolute; top:50%; margin-top:-9px; left:8px;}
 
 /*Main App Page*/
 #notifications ul{margin-top:20px;}
