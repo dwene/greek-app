@@ -1810,8 +1810,9 @@ Copyright (c) 2013 Daniel Eden
     -webkit-transform: perspective(400px) rotateX(0deg);
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
-    max-height:200px;
+    max-height:120px;
     min-height:86px;
+    margin-bottom:4px;
   }
 
   100% {
@@ -1820,6 +1821,8 @@ Copyright (c) 2013 Daniel Eden
     opacity: 0;
     max-height:0px;
     min-height:0px;
+    margin-top:0px;
+    margin-bottom:-45px
   }
 }
 
@@ -1829,8 +1832,9 @@ Copyright (c) 2013 Daniel Eden
     -ms-transform: perspective(400px) rotateX(0deg);
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
-    max-height:200px;
+    max-height:120px;
     min-height:86px;
+    margin-bottom:4px;
   }
 
   100% {
@@ -1840,6 +1844,7 @@ Copyright (c) 2013 Daniel Eden
     opacity: 0;
     max-height:0px;
     min-height:0px;
+    margin-bottom:-45px;
   }
 }
 
