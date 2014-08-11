@@ -272,11 +272,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
         //set color theme
-        
-        $rootScope.notifyConsole = function(){
-            console.log('I got clicked');
-        }
-        
+//        $rootScope.$watch('loading', function(){
+//            if ($rootScope.loading){
+//                $('#loadingScreen').show();
+//            }
+//            else{
+//                $('#loadingScreen').hide();
+//            }
+//        })
         $rootScope.setColor = function (color){
             $rootScope.color = color;
             var colorsfordark = [ 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'color11', 'color12', 'color13', 'color14', 'color15', 'color16' ];
@@ -4324,50 +4327,49 @@ App.filter('directorySearch', function(){
                 in_objects[j].data = retList;
             }
         }
-        console.log('finished directorySearch');
         return in_objects;
     }
 });
 
-App.factory('directoryService', function($rootScope, $http, LoadScreen) {
-    if ($rootScope.directory === undefined){
-        LoadScreen.start();
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data);
-                    $rootScope.directory = directory;
-                    LoadScreen.stop();
-                    return $rootScope.directory;
-                }
-                else
-                {
-                    console.log("error: ", data.error);
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-    }
-    else{
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                }
-                else
-                {
-                    console.log("error: ", data.error);
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-        return $rootScope.directory;
-    }
-});
+//App.factory('directoryService', function($rootScope, $http, LoadScreen) {
+//    if ($rootScope.directory === undefined){
+//        LoadScreen.start();
+//        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    var directory = JSON.parse(data.data);
+//                    $rootScope.directory = directory;
+//                    LoadScreen.stop();
+//                    return $rootScope.directory;
+//                }
+//                else
+//                {
+//                    console.log("error: ", data.error);
+//                }
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' , data);
+//            });
+//    }
+//    else{
+//        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    $rootScope.directory = JSON.parse(data.data);
+//                }
+//                else
+//                {
+//                    console.log("error: ", data.error);
+//                }
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' , data);
+//            });
+//        return $rootScope.directory;
+//    }
+//});
 
 App.factory('getEvents', function($http, $rootScope){
     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
@@ -4402,9 +4404,11 @@ App.factory('LoadScreen', function($rootScope){
     return {
         start: function () {
             $rootScope.loading = true;
+            $('.mainLoadingScreen').show();
         },
         stop: function () {
             $rootScope.loading = false;
+            $('.mainLoadingScreen').hide();
         },
         check: function(){
             $rootScope.loading;
