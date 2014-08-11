@@ -1886,7 +1886,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             {
                 if($scope.members[i].user_name == $stateParams.id)
                 {
-                    console.log('I found the member. my user is ', $stateParams.id);
                     $scope.member = $scope.members[i];
                     $scope.prof_pic = $scope.members[i].prof_pic;
                      //define profile information
@@ -4466,7 +4465,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                     $rootScope.tags = load_data.tags;
 //              organization
                 $rootScope.subscribed = true;
-                $rootScope.setColor = load_data.organization_data.color;
+                $rootScope.setColor(load_data.organization_data.color);
                 $rootScope.organization = load_data.organization_data;
                 }
                 checkIfDone();

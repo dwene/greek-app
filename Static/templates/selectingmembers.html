@@ -3,7 +3,7 @@
     
     <div class="row">
            <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-                <input type="text" class="form-control" ng-model="selectedTagName" select-function="$root.NotifyConsole()" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
+                <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
                 <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
             </form>
             <div class="col-sm-6">
@@ -33,7 +33,7 @@
     </ul>
     
     <div id="selectedList" class="well">
-        <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers = ( $root.users.members | tagDirectorySearch:ngModel)">{{member.first_name}} {{member.last_name}}</span>
+        <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel)">{{member.first_name}} {{member.last_name}}</span>
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length > 0">No one is selected.</span>
     </div>
     
