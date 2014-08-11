@@ -378,6 +378,9 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Poll Results Page*/
 .resultsQuestion {font-size:20px; margin-bottom: 15px;}
+#pollResultsPage li {list-style:none}
+.pollSummaryList {margin-bottom:20px; list-style:none;}
+.tabSelect{cursor:pointer;}
 .resultAnswer {}
 .result{}
 

@@ -237,7 +237,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'Static/newpoll.html',
                 controller : 'newPollController'
                 })
-            .state('app.poll',{
+            .state('app.polls',{
             //#TODO put this into each individual event :tag
                 url : '/polls',
                 templateUrl : 'Static/polls.html',
@@ -250,10 +250,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 controller : 'pollInfoController'
                 })
             .state('app.pollresults',{
-            //#TODO put this into each individual event :tag
-                url : '/polls/:key/results',
-                templateUrl : 'Static/pollresults.html',
-                controller : 'pollResultsController'
+        //#TODO put this into each individual event :tag
+                    url : '/polls/:key/results',
+                    templateUrl : 'Static/pollresults.html',
+                    controller : 'pollResultsController'
                 })
     });
 
@@ -370,6 +370,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             return 'Unknown';
+        }
+        $rootScope.getUserFromKey = function(key){
+            if ($rootScope.directory.members){
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    if ($rootScope.directory.members[i].key == key){
+                        return $rootScope.directory.members[i];
+                    }
+                }
+            }
+            return undefined;
         }
         
         $rootScope.showNav = true;
@@ -3382,15 +3392,36 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams, LoadScreen) {
         routeChange();
+        $scope.openAllIndividuals = function(){
+            $('.individualResponses.collapse').collapse('show');
+        }
         Load.then(function(){
             $scope.loading = true;
+            if ($rootScope.currentPollResult && $rootScope.currentPollResult.key == $stateParams.key){
+                
+            }
             requireMember();
             var to_send = {key: $stateParams.key};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
-                        console.log($scope.poll);
+                        var key_list = [];
+                        var user_list = [];
+                        for (var i = 0; i < $scope.poll.questions.length; i++){
+                            var currentQuestion = $scope.poll.questions[i];
+                            for (var j = 0; j < currentQuestion.responses.length; j++){
+                                var idx = key_list.indexOf(currentQuestion.responses[j].key);
+                                if (idx == -1){
+                                    key_list.push(currentQuestion.responses[j].key);
+                                    user_list.push({key:currentQuestion.responses[j].key, user: $rootScope.getUserFromKey(currentQuestion.responses[j].key), responses: new Array($scope.poll.questions.length)});
+                                    var idx = key_list.indexOf(currentQuestion.responses[j].key);
+                                }
+                                user_list[idx].responses[i] = currentQuestion.responses[j].text;
+                            }
+                        }
+                        $scope.individuals = user_list;
+                        console.log('User list', user_list);
                     }
                     else{
                         console.log('ERR');
@@ -4486,10 +4517,11 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
         
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
             .success(function(data){
-                var load_data = JSON.parse(data.data);
-                console.log(load_data);
+//                
+//                console.log(load_data);
                 console.log(checkResponseErrors(data));
                 if(!checkResponseErrors(data)){
+                    var load_data = JSON.parse(data.data);
 //              directory
                     $rootScope.directory = load_data.directory;
                     console.log(load_data.directory);

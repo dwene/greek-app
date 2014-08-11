@@ -1,24 +1,54 @@
-<div ng-if="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<section ng-if="!loading" ng-show="notFound">Sorry this webpage could not be found. :(</section>  
+<div class="container" ng-init="state='individuals'">
+<ul class="nav nav-pills">
+    <li ng-class="{ active: state=='summary' }"><a ng-click="state='summary'" class="tabSelect">Summary</a></li>
+    <li ng-class="{ active: state=='individuals' }"><a ng-click="state='individuals'" class="tabSelect">Individuals</a></li>
+</ul>
+</div>
+<br>
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 
-<div ng-if="!loading" class="container">
-   <form name="response_form"  ng-submit="submitResponse()">
-    <div ng-repeat = "question in poll.questions | orderBy: 'index'">
-        <p class="resultsQuestion"><span><b>Question:</b></span> <span class="currentStatus">{{question.worded_question}}</span></p>
-        <div ng-if="question.type == 'multiple_choice'">
-            <ul> 
-                <li ng-repeat="response in question.response_data">
-                    <p>{{response.name}} : {{response.count}}</p>
-                </li>
-            </ul>
-            <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata"></div>
+<section ng-show="!loading && notFound">Sorry this webpage could not be found. :(</section>  
+<div id="pollResultsPage">
+    <div ng-show="!loading && state == 'summary'" class="container fadingIn fadingOut">
+    <!--   <form name="response_form"  ng-submit="submitResponse()">-->
+        <div ng-repeat = "question in poll.questions | orderBy: 'index'">
+            <p class="resultsQuestion"><span><b>Question:</b></span> <span class="currentStatus">{{question.worded_question}}</span></p>
+            <div ng-if="question.type == 'multiple_choice'">
+    <!--
+                <ul> 
+                    <li ng-repeat="response in question.response_data">
+                        <p>{{response.name}} : {{response.count}}</p>
+                    </li>
+                </ul>
+    -->
+                <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata"></div>
+            </div>
+               <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" data-target="{{'#summaryItem-' + $index}}" ><span>Response List</span></button>
+                <ul class="collapse" class="pollSummaryList" id="{{'summaryItem-' + $index}}">
+                   <li class="summary">
+                        <p><span class="col-xs-6">Response</span> <span class="col-xs-6">Name</span></p>
+                    </li>
+                    <br>
+                    <li class="summary" ng-repeat="response in question.responses">
+                        <p><span class="col-xs-6">{{response.text}}</span> <span class="col-xs-6">{{$root.getNameFromKey(response.key)}}</span></p>
+                    </li>
+                </ul>
+           <hr> 
         </div>
-        <ul ng-if="question.type == 'text'"> 
-            <li ng-repeat="response in question.responses">
-                <p><span class="col-xs-6">{{response.text}}</span> <span class="col-xs-6">{{$root.getNameFromKey(response.key)}}</span></p>
-            </li>
-        </ul>
-       <hr> 
+
     </div>
-    
+
+    <div ng-show="!loading && state == 'individuals'" class="container fadingIn fadingOut">
+      <button class="btn btn-default" ng-click="openAllIndividuals();">all</button>
+       <ul>
+        <li ng-repeat="ind in individuals">
+          <a class="btn btn-block" data-toggle="collapse" data-target="{{'#individualResponses-' + $index}}">{{ind.user.first_name}} {{ind.user.last_name}}</a>
+          <ul class="collapse individualResponses" id="{{'individualResponses-' + $index}}">
+          <p  ng-repeat="res in ind.responses">{{poll.questions[$index].worded_question}}: {{res}}</p>
+          </ul>
+        </li>
+       </ul>
+
+
+    </div>
 </div>

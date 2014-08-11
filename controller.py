@@ -2223,7 +2223,7 @@ class RESTApi(remote.Service):
                         del r["answer"]
                         if len(response.answer) > 0:
                             r["answer"] = response.answer[0]
-                        responses_list.append(r["answer"])
+                        responses_list.append({'text': r["answer"], 'key': response.user})
                         for a in response.answer:
                             results[a]['count'] += 1
                 output = list()
