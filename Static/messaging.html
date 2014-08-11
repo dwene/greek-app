@@ -1,10 +1,10 @@
-<div ng-if="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<section ng-if="!loading" class="container">
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<section ng-show="!loading" class="container">
 
 <selecting-users ng-model="$root.tags"></selecting-users>
 
     
-    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags)" novalidate>
+    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
             <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
             <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
@@ -14,11 +14,11 @@
             <p ng-show="(messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)" class="help-block">Please enter your message.</p>
         </div>
         <p ng-show="submitted && !selectedMembers.length" class="help-block">Please select some tags first</p>
-        <button ng-disabled="!selectedMembers.length || !messagingForm.$valid" type="submit" class="btn btn-default"><i class="fa fa-paper-plane"></i> Send</button>
+        <button ng-disabled="!selectedMembers.length || !messagingForm.$valid" type="submit" class="btn btn-default"><i class="fa fa-paper-plane"></i> Send</button><update-status ng-model="updating" fn-call="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)"></update-status>
         
     </form>
     
-<button id="showHiddenButton" class="btn btn-block" ng-show="sentMessages.length" data-toggle="collapse" ng-click="shown = !shown" ng-show="$root.hidden_notifications.length" ng-init="shown = false" data-target="#recentlySentMessages"><span ng-show="shown">Hide</span><span ng-hide="shown">Show</span> Recently Sent</button>
+<button id="showHiddenButton" class="btn btn-block" ng-show="sentMessages.length" data-toggle="collapse" ng-click="shown = !shown" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages"><span ng-show="shown">Hide</span><span ng-hide="shown">Show</span> Recently Sent</button>
 
 <section id="recentlySentMessages" class="collapse">
     <ul>
