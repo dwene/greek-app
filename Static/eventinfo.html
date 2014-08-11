@@ -29,6 +29,19 @@
         </form>
 		</div>
 -->
+  
+<div id="eventTitle" class="card">
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            <h1 class="text-center">{{event.title}}</h1>
+            <p class="text-center">#{{event.tag}}</p>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+        <p>{{event.description}}</p>
+        <p><a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">{{event.location}}</a></p>
+        </div>
+    </div>
+</div>
    
 <div id="eventButtons" class="card">
     <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default">Report <i class="fa fa-edit"></i></button>
@@ -41,9 +54,8 @@
     <p>Creator: {{creator.first_name}} {{creator.last_name}}</p>
     <p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
     <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p>
-    <p>Desciption: {{event.description}}</p>
-    <p>Location: {{event.location}}</p>
-    <p ng-show="event.address"><a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">Address: {{event.address}}</a></p>
+<!--    <p>Location: {{event.location}}</p>-->
+<!--    <p ng-show="event.address"><a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">Address: {{event.address}}</a></p>-->
     
     <h3 class="page-header">Going</h3>
     <ul>
