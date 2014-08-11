@@ -9,16 +9,16 @@
             <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" ></div>
             
             <ul id="social">
-                <li ng-show="facebook.length"><a target="_blank" href="{{facebook}}"><i class="fa fa-facebook-square"></i></a></li>
-                <li ng-show="twitter.length"><a target="_blank" href="{{twitter}}"><i class="fa fa-twitter-square"></i></a></li>
-                <li ng-show="twitter.length"><a target="_blank" href="{{instagram}}"><i class="fa fa-instagram"></i></a></li>
-                <li ng-show="linkedin.length"><a target="_blank" href="{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
+                <li ng-show="facebook.length"><a target="_blank" href="http://{{facebook}}"><i class="fa fa-facebook-square"></i></a></li>
+                <li ng-show="twitter.length"><a target="_blank" href="http://{{twitter}}"><i class="fa fa-twitter-square"></i></a></li>
+                <li ng-show="twitter.length"><a target="_blank" href="http://{{instagram}}"><i class="fa fa-instagram"></i></a></li>
+                <li ng-show="linkedin.length"><a target="_blank" href="http://{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
             </ul>
             
             <ul id="contact">
                 <li ng-show="phone.length"><a href="sms:{{phone}}"><i class="fa fa-phone-square"></i></a> <span>{{phone}}</span></li>
                 <li><a target="_blank" href="mailto:{{email}}"><i class="fa fa-envelope-square"></i></a> <span>{{email}}</span></li>
-                <li ng-show="website.length"><a target="_blank" href="{{website}}"><i class="fa fa-globe"></i></a> <span>{{website}}</span></li>
+                <li ng-show="website.length"><a target="_blank" href="http://{{website}}"><i class="fa fa-globe"></i></a> <span>{{website}}</span></li>
                 <li ng-show="currentAddress.length"><a target="_blank" href="http://www.google.com/maps/place/{{currentAddress}}"><i class="fa fa-home"></i></a> <span>{{currentAddress}}</span></li>
             </ul>
             

@@ -1,6 +1,6 @@
-<div ng-if="!$root.polls" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="!$root.polls" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 
-<div ng-if="$root.polls" id="polls" class="container">
+<div ng-show="$root.polls" id="polls" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0};">
 
 <!--		 HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
@@ -13,7 +13,9 @@
     <input id="directorySearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">
     <p ng-hide="polls.length">There are no polls yet!</p>
 </div>
-<div ng-repeat="poll in polls | orderBy: '-timestamp' | orderBy: '-open' | multipleSearch:search">
+
+
+<div ng-repeat="poll in polls | orderBy: '-timestamp' | orderBy: '-open' | multipleSearch:search | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
   <div ng-click="showPoll(poll)" class="notification" ng-class="{closed: !poll.open}">
        <div class="notificationContent">
         <span class="notificationTitle preText">{{poll.name}}</span>
@@ -22,6 +24,11 @@
         </div>
     </div>
 </div>
+<div class="pagerButtons">
+            <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1">&larr; Newer</button>
+            <button class="next btn btn-default btn-sm" ng-hide="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1">Older &rarr;</button>
+            <button class="next btn btn-default btn-sm" ng-show="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || working" ng-click="checkForMorePolls($root.polls, hidden.currentPage, hidden.maxPageNumber)"><span ng-show="working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="working">Older &rarr;</span></button>
+            </div>
 
 </div>
 

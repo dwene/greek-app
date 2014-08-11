@@ -2118,7 +2118,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         Load.then(function(){
         requireLeadership();
+            
+            
+            
         function getUsers(){
+            var out_users = [];
+            var users = $rootScope.directory;
+            for (var i = 0; i < users.members.length; i ++){
+                var user = users.members[i];
+                user.name = users.members[i].first_name + " " + users.members[i].last_name;
+                user.checked = false;
+                out_users.push(user);
+            }
+            $scope.users = out_users
             $scope.users = [];
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
@@ -2134,7 +2146,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     $scope.users = out_users;
                     $rootScope.directory = users;
-                    console.log("HERE");
                     console.log($rootScope.directory);
                 }
                 else
@@ -2175,12 +2186,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        if ($rootScope.tags.org_tags.indexOf(tag) == -1){
-                            $rootScope.tags.org_tags.push(tag);
+                        if ($rootScope.tags.org_tags.indexOf({tag: tag}) == -1){
+                            $rootScope.tags.org_tags.push({tag: tag});
                         }
-                        if ($scope.org_tags.indexOf(tag) == -1){
-                            $scope.org_tags.push({name:tag, checked:true});
+                        if ($scope.org_tags.indexOf({tag: tag}) == -1){
+                            $scope.org_tags.push({name:tag, checked:true, recent:true});
                         }
+//                        add to recent tags
+                        
                     }
                     else
                     {
@@ -2608,7 +2621,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $scope.events = JSON.parse(data.data);
                         $rootScope.events = $scope.events;
                         for (var i = 0; i< $scope.events.length; i++){
-                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});
+                            if ($scope.eventSource.indexOf({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag}) != -1){
+                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag});
+                            }
                         }
                         console.log($scope.eventSource);
                     }
@@ -3233,6 +3248,33 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' , data);
                 });
         });
+        
+        $scope.checkForMorePolls = function(polls, pageNum, max){
+            var len = polls.length;
+            $scope.working = true;
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/more_polls', packageForSending(len))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var new_polls = JSON.parse(data.data);
+                    $rootScope.polls = new_polls;
+                    if (new_polls.length > (pageNum*(max+1))){
+                        $scope.hidden.currentPage++;
+                    }
+                    else{
+                        $scope.noMoreHiddens = true;
+                    }
+                }
+                else{
+                    console.log('ERROR: ',data);
+                }
+                $scope.working = false;
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+                $scope.working = false;
+            }); 
+        }
         
         $scope.showPoll = function(poll){
                 window.location.assign('#/app/polls/' + poll.key);
@@ -4467,6 +4509,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                 $rootScope.subscribed = true;
                 $rootScope.setColor(load_data.organization_data.color);
                 $rootScope.organization = load_data.organization_data;
+                $rootScope.polls = load_data.polls;
                 }
                 checkIfDone();
             })

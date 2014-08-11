@@ -898,6 +898,7 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         out_data = dict()
         # line up all the queries
+        events_polls_future = Event.query(Event.going == request_user.key).fetch_async()
         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
         event_tag_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
                                             Event.time_end < datetime.datetime.today() + relativedelta(months=1))
@@ -927,7 +928,28 @@ class RESTApi(remote.Service):
             hidden_notifications_future = Notification.query(Notification.key.IN(
                 request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
 
-    #get results of queries
+#part 1 of polls
+        events_polls = events_polls_future.get_result()
+
+        poll_event_tags = list()
+        for event in events_polls:
+            poll_event_tags.append(event.tag)
+        if not request_user.tags:
+            request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
+        if poll_event_tags:
+            polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+                                              Poll.invited_org_tags.IN(request_user.tags),
+                                              Poll.invited_perms_tags == request_user.perms,
+                                              Poll.invited_event_tags.IN(poll_event_tags),
+                                              ),
+                                              Poll.organization == request_user.organization)).fetch_async(20)
+        else:
+            polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+                                              Poll.invited_org_tags.IN(request_user.tags),
+                                              Poll.invited_perms_tags == request_user.perms,
+                                              ),
+                                              Poll.organization == request_user.organization)).fetch_async(20)
+#get results of queries
         organization_users = organization_users_future.get_result()
         event_tag_list = event_tag_list_future.get_result()
         organization = organization_future.get_result()
@@ -1023,6 +1045,14 @@ class RESTApi(remote.Service):
         out_data["notifications"] = {'notifications': out_notifications,
                                      'hidden_notifications': out_hidden_notifications}
 
+#part 2 of polls
+        dict_polls = list()
+        polls = polls_future.get_result()
+        for poll in polls:
+            add = poll.to_dict()
+            add["key"] = poll.key
+            dict_polls.append(add)
+        out_data["polls"] = dict_polls
         return OutgoingMessage(error='', data=json_dump(out_data))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_welcome_email',
@@ -1260,7 +1290,13 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TAG_INVALID, data='')
         organization = request_user.organization.get()
         organization.tags.append(request_object["tag"].lower())
-        organization.put()
+        request_user.recently_used_tags.insert(0, request_object["tag"].lower())
+        if len(request_user.recently_used_tags) > 5:
+            request_user.recently_used_tags = request_user.recently_used_tags[:5]
+        org_put = organization.put_async()
+        user_put = request_user.put_async()
+        org_put.get_result()
+        user_put.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_organization_tag',
@@ -2067,13 +2103,48 @@ class RESTApi(remote.Service):
                                               Poll.invited_perms_tags == request_user.perms,
                                               Poll.invited_event_tags.IN(event_tags),
                                               ),
-                                       Poll.organization == request_user.organization)).fetch()
+                                       Poll.organization == request_user.organization)).fetch(20)
         else:
             polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
                                               Poll.invited_org_tags.IN(request_user.tags),
                                               Poll.invited_perms_tags == request_user.perms,
                                               ),
-                                       Poll.organization == request_user.organization)).fetch()
+                                       Poll.organization == request_user.organization)).fetch(20)
+        dict_polls = list()
+        for poll in polls:
+            add = poll.to_dict()
+            add["key"] = poll.key
+            dict_polls.append(add)
+        return OutgoingMessage(error='', data=json_dump(dict_polls))
+
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/more_polls',
+                      http_method='POST', name='poll.more_polls')
+    def more_polls(self, request):
+        count = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        events = Event.query(Event.going == request_user.key).fetch()
+        event_tags = list()
+        for event in events:
+            event_tags.append(event.tag)
+        if not request_user.tags:
+            request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
+        if event_tags:
+            polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+                                              Poll.invited_org_tags.IN(request_user.tags),
+                                              Poll.invited_perms_tags == request_user.perms,
+                                              Poll.invited_event_tags.IN(event_tags),
+                                              ),
+                                       Poll.organization == request_user.organization)).fetch(20 + count)
+        else:
+            polls = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+                                              Poll.invited_org_tags.IN(request_user.tags),
+                                              Poll.invited_perms_tags == request_user.perms,
+                                              ),
+                                       Poll.organization == request_user.organization)).fetch(20 + count)
         dict_polls = list()
         for poll in polls:
             add = poll.to_dict()
