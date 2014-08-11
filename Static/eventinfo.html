@@ -9,16 +9,7 @@
             <p class="text-center">#{{event.tag}}</p>
             </h1>
             
-            <div id="description" class="card">
-                <div class="icon"><i class="fa fa-quote-left"></i> | </div><p>{{event.description}}</p>
-                <span>Created by: {{creator.first_name}} {{creator.last_name}}</span>
-            </div>
-            
-        </div>
-        <div class="col-sm-6 col-xs-12">
-
-
-           <div id="time" class="card">
+            <div id="time" class="card">
                 <div class="icon"><i class="fa fa-clock-o"></i> | </div><span><p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
                 <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p></span>
             </div>
@@ -27,18 +18,57 @@
                 <a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">
                 <div class="icon"><i class="fa fa-map-marker"></i> | </div><span>{{event.location}}</span>
                 </a>
-            </div>        
+            </div>    
+            
+            <div id="description" class="card">
+                <div class="icon"><i class="fa fa-quote-left"></i> | </div><p>{{event.description}}</p>
+                <span>Created by: {{creator.first_name}} {{creator.last_name}}</span>
+            </div>
+            
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            
+            
+        <div id="eventButtons" class="card">
+            <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default">Report <i class="fa fa-edit"></i></button>
+            <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
+            <button ng-click="saveEvent()" class="btn btn-info pull-right saveButton"><i class="fa fa-floppy-o"></i></button>
+            <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
+        </div>
+        
+        <div id="going" class="card">
+                <h3 class="page-header">Going</h3>
+                <ul>
+                    <li class="well well-sm" >
+                        <span class="messagePerson label label-primary" ng-repeat="person in event.going_list">{{person.first_name}} {{person.last_name}}</span>
+                    </li>
+                </ul>
+        </div>
+        
+        <div id="notGoing" class="card">
+                <h3 class="page-header">Not Going</h3>
+                <ul>
+                    <li class="well well-sm">
+                        <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list">{{person.first_name}} {{person.last_name}}</span>
+                    </li>
+                </ul>
+        </div>
+           
+        <div id="invited" class="card">
+                <h3 class="page-header">Invited</h3>
+                <ul>
+                    <li class="well well-sm">
+                            <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
+                    </li>
+                </ul>
+        </div>
             
         </div>
 </div>
    
-<div id="eventButtons" class="card">
-    <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default">Report <i class="fa fa-edit"></i></button>
-    <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
-    <button ng-click="saveEvent()" class="btn btn-info pull-right saveButton"><i class="fa fa-floppy-o"></i></button>
-    <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
-</div>
 
+
+<!--
 <div class="row">
            <div class="col-sm-4 col-xs-12">
             <div id="going" class="card">
@@ -71,6 +101,7 @@
             </div>
             </div>
 </div>
+-->
 
 </div>
 
