@@ -1,46 +1,35 @@
 <div ng-show="loading" ng-hide="eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
 
-<div ng-hide="loading || eventNotFound" class="container">
-	
-		<!-- HEADER AND TODO COUNT -->
-<!--
-		<div class="jumbotron">
-			
-<a ng-href="#/app/events" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
-
- <button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> Save Event</button>
-<button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft">Report <i class="fa fa-edit"></i></button>
-<a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft2" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
-<button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default bottomRight"><i class="fa fa-edit"></i> Edit</button>
-
-			<h1 class="text-center">{{event.title}}</h1>
-			<p class="text-center">#{{event.tag}}</p>
-
-        <form id="goingForm" class="inline-form" ng-hide="event.creator == $root.me.key">
-        <div class="form-group">
-        <span>Are you going?
-        <div class="btn-group btn-group-lg">
-        <button class="btn" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
-        <button class="btn"  ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>
-        </div>
-        </span>
-        </div>
-        </form>
-		</div>
--->
+<div id="eventInfo" ng-hide="loading || eventNotFound" class="container">
   
-<div id="eventTitle" class="card">
-    <div class="row">
-        <div class="col-sm-6 col-xs-12">
-            <h1 class="text-center">{{event.title}}</h1>
+<div class="row">
+        <div id="eventTitle" class="col-sm-6 col-xs-12">
+            <h1 class="text-center darkbg">{{event.title}}<br>
             <p class="text-center">#{{event.tag}}</p>
+            </h1>
+            
+            <div id="description" class="card">
+                <div class="icon"><i class="fa fa-quote-left"></i> | </div><p>{{event.description}}</p>
+                <span>Created by: {{creator.first_name}} {{creator.last_name}}</span>
+            </div>
+            
         </div>
         <div class="col-sm-6 col-xs-12">
-        <p>{{event.description}}</p>
-        <p><a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">{{event.location}}</a></p>
+
+
+           <div id="time" class="card">
+                <div class="icon"><i class="fa fa-clock-o"></i> | </div><span><p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
+                <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p></span>
+            </div>
+            
+            <div ng-show="event.location.length" id="location" class="card">
+                <a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">
+                <div class="icon"><i class="fa fa-map-marker"></i> | </div><span>{{event.location}}</span>
+                </a>
+            </div>        
+            
         </div>
-    </div>
 </div>
    
 <div id="eventButtons" class="card">
@@ -49,31 +38,39 @@
     <button ng-click="saveEvent()" class="btn btn-info pull-right saveButton"><i class="fa fa-floppy-o"></i></button>
     <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
 </div>
-   
-    
-    <p>Creator: {{creator.first_name}} {{creator.last_name}}</p>
-    <p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
-    <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p>
-<!--    <p>Location: {{event.location}}</p>-->
-<!--    <p ng-show="event.address"><a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">Address: {{event.address}}</a></p>-->
-    
-    <h3 class="page-header">Going</h3>
-    <ul>
-        <li class="well well-sm" >
-            <span class="messagePerson label label-primary" ng-repeat="person in event.going_list">{{person.first_name}} {{person.last_name}}</span>
-        </li>
-    </ul>
-    <h3 class="page-header">Not Going</h3>
-    <ul>
-        <li class="well well-sm">
-            <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list">{{person.first_name}} {{person.last_name}}</span>
-        </li>
-    </ul>
-    <h3 class="page-header">Invited</h3>
-    <ul>
-        <li class="well well-sm">
-                <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
-        </li>
-    </ul>
+
+<div class="row">
+           <div class="col-sm-4 col-xs-12">
+            <div id="going" class="card">
+                <h3 class="page-header">Going</h3>
+                <ul>
+                    <li class="well well-sm" >
+                        <span class="messagePerson label label-primary" ng-repeat="person in event.going_list">{{person.first_name}} {{person.last_name}}</span>
+                    </li>
+                </ul>
+            </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+            <div id="notGoing" class="card">
+                <h3 class="page-header">Not Going</h3>
+                <ul>
+                    <li class="well well-sm">
+                        <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list">{{person.first_name}} {{person.last_name}}</span>
+                    </li>
+                </ul>
+            </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+            <div id="invited" class="card">
+                <h3 class="page-header">Invited</h3>
+                <ul>
+                    <li class="well well-sm">
+                            <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
+                    </li>
+                </ul>
+            </div>
+            </div>
+</div>
+
 </div>
 
