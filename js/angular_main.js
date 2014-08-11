@@ -3268,8 +3268,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     var new_polls = JSON.parse(data.data);
                     $rootScope.polls = new_polls;
-                    if (new_polls.length > (pageNum*(max+1))){
-                        $scope.hidden.currentPage++;
+                    if (new_polls.length > (pageNum*(max+1)) && (pageNum != 0 || new_polls.length > max)){
+                        pageNum++;
                     }
                     else{
                         $scope.noMoreHiddens = true;
