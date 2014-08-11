@@ -4,6 +4,7 @@
 <div ng-hide="loading || eventNotFound" class="container">
 	
 		<!-- HEADER AND TODO COUNT -->
+<!--
 		<div class="jumbotron">
 			
 <a ng-href="#/app/events" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
@@ -27,6 +28,15 @@
         </div>
         </form>
 		</div>
+-->
+   
+<div id="eventButtons" class="card">
+    <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default">Report <i class="fa fa-edit"></i></button>
+    <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
+    <button ng-click="saveEvent()" class="btn btn-info pull-right saveButton"><i class="fa fa-floppy-o"></i></button>
+    <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
+</div>
+   
     
     <p>Creator: {{creator.first_name}} {{creator.last_name}}</p>
     <p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
