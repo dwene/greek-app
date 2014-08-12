@@ -2,12 +2,8 @@
 
 <div ng-show="$root.polls" id="polls" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0};">
 
-<!--		 HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>Polls</h1>
-<a ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default topLeft">New Poll <i class="fa fa-plus"></i></a>
-<!--<button ng-click="saveEvent()" class="btn btn-info topRight"><i class="fa fa-floppy-o"></i> </button>-->
-		</div>
+
+<a ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Poll <i class="fa fa-plus"></i></a>
 
 <div class="form-group">
     <input id="directorySearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">

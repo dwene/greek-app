@@ -2,26 +2,16 @@
         
     <section id="statusContainer" class="row">
     
-    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs">
-       <section>
-           <img class="orgLetters" ng-src="{{$root.organization.image}}">
-       </section>
-    </div>
-    <div id="upcomingEvents" ng-show="eventList.length" class="col-xs-12 col-sm-3 md-pull-right">
-       
-        <section>
-            <ul ng-show="eventList.length">
-                <a class="card" ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')" ng-href="#/app/events/{{event.tag}}">
-                    <div class="icon"><i class="fa fa-calendar"></i> | </div><span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
-                </a>
-            </ul>
-        </section>
-    </div>
        
     <div id="changeStatus" class="col-xs-12 col-sm-6">
-       <section>
             
         <div class="card">
+        
+        <div class="smallprofilepic" style="background-image:url({{$root.me.prof_pic || $root.defaultProfilePicture}});" ></div>
+        
+        <i class="fa fa-comment-o bgIcon"></i> <span class="noStatus" ng-hide="$root.me.status.length">No Status</span>
+        <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>
+        <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span>
         
         <form name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
                 <div class="input-group">
@@ -33,11 +23,24 @@
                 <span id="count" ng-show="status.length">{{status.length}}/140</span>
         </form>
         
-        <i class="fa fa-comment-o bgIcon"></i> <span class="noStatus" ng-hide="$root.me.status.length">No Status</span>
-        <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>
-        <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span>
+
        </div>
+    </div>
+      
+    <div id="upcomingEvents" ng-show="eventList.length" class="col-xs-12 col-sm-3">   
+        <section>
+            <ul ng-show="eventList.length">
+                <a class="card" ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')" ng-href="#/app/events/{{event.tag}}">
+                    <div class="icon"><i class="fa fa-calendar"></i> | </div><span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
+                </a>
+            </ul>
         </section>
+    </div>  
+       
+    <div id="orgLetters" class="col-xs-12 col-sm-3 hidden-xs">
+       <section>
+           <img class="orgLetters" ng-src="{{$root.organization.image}}">
+       </section>
     </div>
         
     </section>

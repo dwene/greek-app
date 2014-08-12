@@ -253,13 +253,15 @@ textarea.form-control{height:auto; max-width:100%;}
 /*App Home Page*/
 #orgLetters img{height:auto; width:100%;}
 #statusContainer h2{font-weight:bold;}
-.currentStatus{font-style:italic; font-size:22px; margin-top:10px; padding:10px; display:block; position:relative; z-index:100;}
+.currentStatus{font-style:italic; font-size:22px; margin-top:0px; padding:10px; margin-left:60px; display:block; position:relative; z-index:100;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px -20px 0px;}
-#changeStatus section{min-height:46px;}
 #changeStatus .card{padding:10px; position:relative; min-height:120px;}
-#changeStatus .close{top:10px; right:0px; margin-top:-2px; position:relative; z-index:200;}
-#changeStatus .noStatus{top:64px; left:68px; font-size:32px; color:#ccc; font-weight:bold; display:block; position:absolute;}
-#changeStatus .bgIcon{color:#f8f8f8; font-size:48px; top:55px; left:10px; position:absolute; z-index:0px;}
+#changeStatus .smallprofilepic{left:15px; top:8px; margin-top:0px;}
+#changeStatus .close{top:0px; right:0px; margin-top:-2px; position:relative; z-index:200;}
+#changeStatus .noStatus{top:10px; left:68px; font-size:32px; color:#ccc; font-weight:bold; display:block; position:absolute;}
+#changeStatus .bgIcon{color:#f8f8f8; font-size:48px; top:8px; left:72px; position:absolute; z-index:0px;}
+#changeStatus #statusUpdate{margin-top:15px;}
+
 
 @media screen and (max-width:768px){
 #statusContainer .page-header{margin-bottom:0px;}
