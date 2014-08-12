@@ -37,30 +37,24 @@
         </div>
         
         <div id="going" class="card">
-                <h3 class="page-header">Going</h3>
-                <ul>
-                    <li class="well well-sm" >
+                <h3 class="page-header" data-toggle="collapse" data-target="#going_list">{{event.going_list.length}} Going <span ng-show="event.going_list.length" class="pull-right"><i class="fa fa-chevron-down"></i></span></h3>
+                    <div id="going_list" class="collapse">
                         <span class="messagePerson label label-primary" ng-repeat="person in event.going_list">{{person.first_name}} {{person.last_name}}</span>
-                    </li>
-                </ul>
+                    </div>
         </div>
         
         <div id="notGoing" class="card">
-                <h3 class="page-header">Not Going</h3>
-                <ul>
-                    <li class="well well-sm">
+                <h3 class="page-header" data-toggle="collapse" data-target="#notGoing_list">{{event.not_going_list.length}} Not Going <span class="pull-right"><i ng-show="event.not_going_list.length" class="fa fa-chevron-down"></i></span></h3>
+                    <div id="notGoing_list" class="collapse">
                         <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list">{{person.first_name}} {{person.last_name}}</span>
-                    </li>
-                </ul>
+                    </div>
         </div>
            
         <div id="invited" class="card">
-                <h3 class="page-header">Invited</h3>
-                <ul>
-                    <li class="well well-sm">
+                <h3 class="page-header" data-toggle="collapse" data-target="#invited_list">{{($root.directory.members|eventTagDirectorySearch:event.tags).length}} Invited <span ng-show="($root.directory.members|eventTagDirectorySearch:event.tags).length" class="pull-right"><i class="fa fa-chevron-down"></i></span></h3>
+                    <div id="invited_list" class="collapse">
                             <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
-                    </li>
-                </ul>
+                    </div>
         </div>
             
         </div>

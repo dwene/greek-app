@@ -9,7 +9,7 @@
         
         <div class="smallprofilepic" style="background-image:url({{$root.me.prof_pic || $root.defaultProfilePicture}});" ></div>
         
-        <i class="fa fa-comment-o bgIcon"></i> <span class="noStatus" ng-hide="$root.me.status.length">No Status</span>
+        <i class="fa fa-comment-o bgIcon"></i> <span class="noStatus" ng-hide="$root.me.status.length">Update Your Status</span>
         <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>
         <span class="currentStatus preText" ng-show="$root.me.status.length">"{{$root.me.status}}"</span>
         
@@ -51,8 +51,8 @@
             <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber">
                 <div class="notificationContent">
                 <button type="button" class="close" onclick="console.log(this)" ng-click="hideNotification(notify, this);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
-                <span class="notificationTitle preText"><i class="fa fa-circle"></i>{{notify.title}}</span>
-                    <span class="preText">{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 100">...</span></span>
+                <div class="notificationTitle"><div class="unread">|</div>{{notify.title}}</div>
+                    <span>{{notify.content | limitTo:116}}<span ng-show="notify.content.length > 100">...</span></span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
             </li>

@@ -256,9 +256,9 @@ textarea.form-control{height:auto; max-width:100%;}
 .currentStatus{font-style:italic; font-size:22px; margin-top:0px; padding:10px; margin-left:60px; display:block; position:relative; z-index:100;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px -20px 0px;}
 #changeStatus .card{padding:10px; position:relative; min-height:120px;}
-#changeStatus .smallprofilepic{left:15px; top:8px; margin-top:0px;}
+#changeStatus .smallprofilepic{left:10px; top:8px; margin-top:0px;}
 #changeStatus .close{top:0px; right:0px; margin-top:-2px; position:relative; z-index:200;}
-#changeStatus .noStatus{top:10px; left:68px; font-size:32px; color:#ccc; font-weight:bold; display:block; position:absolute;}
+#changeStatus .noStatus{margin:14px 0px 21px 120px; font-size:22px; font-style:italic; color:#ccc; font-weight:bold; display:block; position:relative;}
 #changeStatus .bgIcon{color:#f8f8f8; font-size:48px; top:8px; left:72px; position:absolute; z-index:0px;}
 #changeStatus #statusUpdate{margin-top:15px;}
 
@@ -269,6 +269,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #statusContainer section{padding:10px;}
 }
 
+#upcomingEvents section{margin-left:-10px; margin-right:-10px;}
 #upcomingEvents .card{padding:8px 4px 8px 40px !important; width:100%; display:block; min-height:36px; position:relative;}
 #upcomingEvents a:hover{background:#f6f6f6; text-decoration:none;}
 #upcomingEvents .icon{font-size:18px; position:absolute; top:50%; margin-top:-9px; left:8px;}
@@ -277,7 +278,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #notifications ul{margin-top:20px;}
 
 .notification{cursor:pointer; position:relative; min-height:86px;
-    padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    padding:20px 20px 20px 26px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     margin:5px 3px;
 }
 /*
@@ -290,9 +291,10 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .notification:hover{background:#f6f6f6;}
 .notificationContent .close{font-size:18px; top:5px; right:10px; position:absolute; z-index:100; padding:5px;}
-.notificationTitle{font-weight:bold; font-size:18px; position:relative; top:-5px;}
+.notificationTitle{font-weight:bold; font-size:18px; margin-bottom:5px;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
-.notification.new .notificationTitle i{display:block;}
+.unread{display:none;}
+.notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:5px; top:50%; margin-top:-21px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
 .notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}
 
@@ -352,6 +354,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 #eventInfo #going, #eventInfo #notGoing, #eventInfo #invited{padding:10px !important; margin-top:10px;}
 #eventInfo .card .page-header{margin: 0 0 10px;}
+#eventInfo h3{cursor:pointer; -ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
 
 /*New Event Page*/
 #eventTags{margin-bottom:5px;}

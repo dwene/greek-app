@@ -25,8 +25,8 @@
         <li ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber" class="notification">
             <div class="notificationContent">
                 <button type="button" class="close" ng-click="openMessageModal(notify)" bs-tooltip="deleteMessageTip" data-placement="left"><i class="fa fa-trash-o"></i></button>
-            <span class="notificationTitle preText">{{notify.title}}</span>
-            <span class="preText">{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
+            <span class="notificationTitle">{{notify.title}}</span>
+            <span>{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
             </div>
         </li>
     </ul>

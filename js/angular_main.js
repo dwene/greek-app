@@ -793,6 +793,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.working = false;
             }); 
         }   
+        
+//        $scope.notificationPreview = function(notify){
+//            return notify.replace(/\r?\n|\r/g," "); 
+//            }
+        
 //        $rootScope.$watch('notifications', function(){
 //            console.log('im checking');
 //            console.log($scope.current.currentPage * $scope.current.maxPageNumber);
