@@ -897,6 +897,8 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         out_data = dict()
+        out_data["perms"] = request_user.perms
+        out_data["accountFilledOut"] = bool(request_user.address and request_user.dob)
         # line up all the queries
         events_polls_future = Event.query(Event.going == request_user.key).fetch_async()
         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()

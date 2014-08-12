@@ -17,7 +17,7 @@
     </div>
     </section>
    
-        <form action="/upload" method="post" enctype="multipart/form-data"  id="profilePic">
+        <form action="/upload" method="post" enctype="multipart/form-data" ng-submit="uploading_image = 'pending'" id="profilePic">
         <input type="file" name="file" accept="image/*" value="upload" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
 <!--        <input name="file" accept="image/*" ng-model="P.imageSrc" style="display: none;">-->
         <input name="user_name" ng-model="user_name" style="display: none;">
@@ -31,7 +31,7 @@
     <hr>
     -->
     <!--    <div class="canvas-preview"></div>--><br>
-       <input  ng-disabled="!P.cropData" type="submit" name="submit" value="Upload" class="btn btn-default">
+       <input  ng-disabled="!P.cropData || uploading_image" type="submit" name="submit" value="Upload" class="btn btn-default"><update-status ng-model="uploading_image"></update-status>
        </form>
     
     

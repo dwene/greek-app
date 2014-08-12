@@ -258,9 +258,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout) {
+    App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout, LoadScreen) {
         $rootScope.$state = $state;
         $rootScope.color = 'color1';
+        $rootScope.perms = 'alumni';
         $('body').addClass('dark');
         $('body').removeClass('light');
         $rootScope.$stateParams = $stateParams;
@@ -271,6 +272,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.updatingNotifications = false;
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
+        $rootScope.hasLoaded = false;
         //set color theme
 //        $rootScope.$watch('loading', function(){
 //            if ($rootScope.loading){
@@ -336,7 +338,28 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $rootScope.checkPermissions = function(perms){
-            return checkPermissions(perms);
+            if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($rootScope.perms)){
+                return false;
+            }
+                return true;
+        }
+        
+        $rootScope.requirePermissions = function(perms){
+            if (!$rootScope.checkPermissions(perms)){
+                if ($rootScope.checkAlumni()){
+                    window.location.assign('#/app/directory/members');
+                }
+                else{
+                    window.location.assign("/#/app");
+                }
+            } 
+        }
+        
+        $rootScope.checkAlumni = function(){
+            if ($rootScope.perms == ALUMNI){
+                return true;
+            }
+            return false;
         }
         
         $rootScope.checkLogin = function(){
@@ -381,6 +404,49 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             return undefined;
         }
+        $rootScope.Load = function(){
+            LoadScreen.start()
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
+                .success(function(data){
+    //                
+    //                console.log(load_data);
+                    console.log(checkResponseErrors(data));
+                    if(!checkResponseErrors(data)){
+                        var load_data = JSON.parse(data.data);
+                        $rootScope.perms = load_data.perms;
+    //              directory
+                        $rootScope.directory = load_data.directory;
+                        for (var i = 0; i< $rootScope.directory.members.length; i++){
+                            if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+                                $rootScope.me = $rootScope.directory.members[i];
+                                break;
+                            }
+                        }
+    //              notifications
+                        $rootScope.notifications = load_data.notifications.notifications;
+
+                        for (var i = 0; i < $rootScope.notifications.length; i++){
+                                $rootScope.notifications[i].collapseOut = true; 
+                        }
+                        $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
+                        $rootScope.updateNotificationBadge();
+    //              events    
+                        $rootScope.events = load_data.events;
+    //              tags
+                        $rootScope.tags = load_data.tags;
+    //              organization
+                    $rootScope.subscribed = true;
+                    $rootScope.setColor(load_data.organization_data.color);
+                    $rootScope.organization = load_data.organization_data;
+                    $rootScope.polls = load_data.polls;
+                    }
+                    LoadScreen.stop();
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                    LoadScreen.stop();
+                });
+        }
         
         $rootScope.showNav = true;
 //        $rootScope.$on('$routeChangeSuccess', function () {
@@ -405,13 +471,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
     
         $scope.logout = function(){
-                $rootScope.logout();
-                window.location.assign("/#/login");
+            $rootScope.logout();
+            window.location.assign("/#/login");
         }
     });
-    App.controller('indexController', function($scope, $http, LoadScreen) {
+    App.controller('indexController', function($scope, $http, LoadScreen, $rootScope) {
         $scope.homeButton = function(){
-            if (checkAlumni()){
+            if ($rootScope.checkAlumni()){
                 window.location.assign('#/app/directory/members');
             }
             else{
@@ -433,7 +499,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if(!$rootScope.updatingNotifications){
                 $rootScope.updatingNotifications = true;
             $interval(function(){$rootScope.updateNotifications();}, 40000);}
-            LoadScreen.stop();
+           // LoadScreen.stop();
         })
 	});
 
@@ -442,7 +508,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
-        $.removeCookie(PERMS);
         $.removeCookie('FORM_INFO_EMPTY')
         $rootScope.directory = {};
         LoadScreen.stop();
@@ -456,15 +521,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         returned_data = JSON.parse(data.data);
                         $.cookie(USER_NAME, user_name);
                         $.cookie(TOKEN, returned_data.token);
-                        $.cookie(PERMS, returned_data.perms);
-                        $('html').hide();
-                        if (!checkAlumni()){
-                            window.location.assign("#/app");
+                        if ($rootScope.hasLoaded){
+                            $rootScope.Load();
                         }
-                        else{
-                            window.location.assign('#/app/directory/members');
-                        }
-                        $rootScope.refreshPage();
+                        window.location.assign("#/app");
+                        
                     }
                     else{
                         if (data.error == "BAD_LOGIN"){
@@ -484,7 +545,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //getting a forgotten password email
-    App.controller('forgotPasswordController', function($scope, $http){
+    App.controller('forgotPasswordController', function($scope, $http, $rootScope){
         routeChange();
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
@@ -510,7 +571,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //changing a forgotten password
-    App.controller('changePasswordFromTokenController', function($scope, $http) {
+    App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope) {
         routeChange();
         $.cookie(TOKEN, getParameterByName('token'));
         $scope.passwordChanged = false;
@@ -629,7 +690,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         var responseData = JSON.parse(data.data);
                         $.cookie(TOKEN,  responseData.token);
-                        $.cookie(PERMS, responseData.perms);
+                        $rootScope.perms =  responseData.perms;
                         $.cookie("USER_NAME", data_tosend.user.user_name);
                         window.location.assign("/#/app/managemembers/add");
                         $rootScope.refresh();
@@ -653,7 +714,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //the payment page
-    App.controller('paymentController', function($scope, $http) {
+    App.controller('paymentController', function($scope, $http, $rootScope) {
         routeChange();
         //skip payment page right now
         $scope.pay = {};
@@ -679,6 +740,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         $('.modal-backdrop').remove();
         Load.then(function(){
+            $rootScope.requirePermissions(MEMBER);
 //        $scope.hidden = {};
 //        $scope.current = {};
 //        $scope.hidden.currentPage = 0;
@@ -750,10 +812,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var to_send = {status: status};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
             .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                }
-                else
+                if (checkResponseErrors(data))
                     console.log('ERROR: ',data);
             })
             .error(function(data) {
@@ -828,7 +887,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         Load.then(function(){
 
-        requireCouncil();
+        $rootScope.requirePermissions(COUNCIL);
         //initialize a member array
         var newmemberList = [];
         //initialize a filecontents variable
@@ -986,7 +1045,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope){
     routeChange();
     Load.then(function(){
-        requireCouncil();
+        $rootScope.requirePermissions(COUNCIL);
         //MANAGE MEMBERS TAB
         $scope.openDeleteMemberModal = function(user){
             $('#deleteMemberModal').modal();
@@ -1127,7 +1186,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     ;})
     
     });
-    App.controller('newmemberController', function($scope, $http, $stateParams){
+    App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
         routeChange();
         $('.container').hide();
         logoutCookies();
@@ -1136,9 +1195,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    console.log(data.data);
                     $scope.user = JSON.parse(data.data);
                     $('.container').fadeIn();
+                    LoadScreen.stop();
                     $('#body').show();
                 }
                 else
@@ -1548,7 +1607,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //    });
 //
 //new member info page
-    App.controller('newmemberinfoController', function($scope, $http){
+    App.controller('newmemberinfoController', function($scope, $http, $rootScope){
         routeChange();
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
@@ -1594,6 +1653,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if(data.error == "INVALID_USERNAME")
                     {
                         $scope.unavailable = true;
+                        $scope.available = false;
                     }
                     console.log('ERROR: ', data);
                 } 
@@ -1612,7 +1672,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //adding profile pictures
-    App.controller('profilepictureController', function($scope, $http, Load){
+    App.controller('profilepictureController', function($scope, $http, Load, $rootScope){
     routeChange();
     Load.then(function(){
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
@@ -1689,10 +1749,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
     });
 
-    App.controller('organizationPictureController', function($scope, $http, Load){
+    App.controller('organizationPictureController', function($scope, $http, Load, $rootScope){
     routeChange();
     Load.then(function(){
-        requireCouncil();
+        $rootScope.requirePermissions(COUNCIL);
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -2000,7 +2060,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         
         $scope.checkAlumni = function(){
-            return checkAlumni();
+            return $rootScope.checkAlumni();
         }
         
         
@@ -2012,7 +2072,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data))
                     {
                         $scope.updatedInfo = true;
-                        $.removeCookie('FORM_INFO_EMPTY')
+                        $.removeCookie('FORM_INFO_EMPTY');
                     }
                     else
                     {
@@ -2061,7 +2121,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //upload image
-    App.controller('uploadImageController', function($scope, $http, Load){
+    App.controller('uploadImageController', function($scope, $http, Load, $rootScope){
     routeChange();
     Load.then(function(){
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
@@ -2127,7 +2187,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         Load.then(function(){
-        requireLeadership();
+        $rootScope.requirePermissions(LEADERSHIP);
             
             
             
@@ -2388,7 +2448,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('messagingController', function($scope, $http, $q, $rootScope, Load) {
     routeChange();
     Load.then(function(){ 
-        requireLeadership();
+        $rootScope.requirePermissions(LEADERSHIP);
         $scope.sentMessages = $rootScope.sentMessages;
         $scope.tags = $rootScope.tags;
         $scope.currentPage = 0;
@@ -2536,7 +2596,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //            $scope.tags = arrangeTagData($rootScope.tags);
 //        }
         Load.then(function(){
-            requireLeadership();
+            $rootScope.requirePermissions(LEADERSHIP);
             $scope.event = {};
             $scope.event.tag = '';
             $scope.tags = $rootScope.tags;
@@ -2619,7 +2679,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         
         Load.then(function(){
-            requireMember();
+            $rootScope.requirePermissions(MEMBER);
             $scope.events = $rootScope.events;
             $scope.eventSource = [];
             for (var i = 0; i< $scope.events.length; i++){
@@ -2713,7 +2773,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             return " ";
         }
         Load.then(function(){
-        requireMember();
+        $rootScope.requirePermissions(MEMBER);
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
@@ -2839,7 +2899,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         $scope.loading = true;
         Load.then(function(){
-        requireLeadership();
+        $rootScope.requirePermissions(LEADERSHIP);
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
@@ -2980,7 +3040,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         $scope.loading = true;
         Load.then(function(){
-            requireLeadership();
+            $rootScope.requirePermissions(LEADERSHIP);
             getCheckInData();
         });
         function getCheckInData(){
@@ -3082,7 +3142,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.loading = true;
         Load.then(function(){
             getCheckInData();
-            requireLeadership();
+            $rootScope.requirePermissions(LEADERSHIP);
             function getCheckInData(){
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
@@ -3233,7 +3293,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
         Load.then(function(){
-            requireLeadership();
+            $rootScope.requirePermissions(LEADERSHIP);
             $scope.tags = $rootScope.tags;
         });
 	});
@@ -3243,7 +3303,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         Load.then(function(){
             $scope.polls = $rootScope.polls;
-            requireMember();
+            $rootScope.requirePermissions(MEMBER);
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -3296,7 +3356,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         Load.then(function(){
             $scope.loading = true;
-            requireMember();
+            $rootScope.requirePermissions(MEMBER);
             var to_send = {key: $stateParams.key};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
                 .success(function(data){
@@ -3374,7 +3434,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                       $rootScope.refreshPage();
+                       window.location.assign('#/app/polls/'+$stateParams.key + '/results');
                     }
                     else{
                         console.log('ERR');
@@ -3400,7 +3460,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if ($rootScope.currentPollResult && $rootScope.currentPollResult.key == $stateParams.key){
                 
             }
-            requireMember();
+            $rootScope.requirePermissions(MEMBER);
             var to_send = {key: $stateParams.key};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
                 .success(function(data){
@@ -3442,7 +3502,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {
         routeChange();
-        requireCouncil();
+        $rootScope.requirePermissions(COUNCIL);
 //        $scope.loading = true;
         Load.then(function(){
             loadSubscriptionInfo();
@@ -3540,7 +3600,7 @@ function checkLogin(){
 
 function requireLeadership(){
     if (!checkPermissions('leadership')){
-        if (checkAlumni()){
+        if ($rootScope.checkAlumni()){
             window.location.assign('#/app/directory/members');
         }
         else{
@@ -3551,7 +3611,7 @@ function requireLeadership(){
 
 function requireCouncil(){
     if (!checkPermissions('council')){
-        if (checkAlumni()){
+        if ($rootScope.checkAlumni()){
             window.location.assign('#/app/directory/members');
         }
         else{
@@ -3562,7 +3622,7 @@ function requireCouncil(){
 
 function requireMember(){
     if (!checkPermissions('member')){
-        if (checkAlumni()){
+        if ($rootScope.checkAlumni()){
             window.location.assign('#/app/directory/members');
         }
         else{
@@ -3573,26 +3633,26 @@ function requireMember(){
 
 //clears all checked labels
 
-function checkPermissions(perms){
-    if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($.cookie(PERMS))){
-        return false;
-    }
-    return true;
-}
+//function checkPermissions(perms){
+//    if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($rootScope.perms)){
+//        return false;
+//    }
+//    return true;
+//}
 
 function logoutCookies(){
     $.removeCookie(USER_NAME);
     $.removeCookie(TOKEN);
-    $.removeCookie(PERMS);
+//    $.removeCookie(PERMS);
     $.removeCookie('FORM_INFO_EMPTY');
 }
 
-function checkAlumni(){
-    if ($.cookie(PERMS) == ALUMNI){
-        return true;
-    }
-    return false;
-}
+//function checkAlumni(){
+//    if ($.cookie(PERMS) == ALUMNI){
+//        return true;
+//    }
+//    return false;
+//}
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
 function packageForSending(send_data){
@@ -4492,16 +4552,12 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     var defer = $q.defer();
     function executePosts() {
           var deferred = $q.defer();
-          var done = 0;
-          function checkIfDone() {
-            done++;
-            if (done==1){ 
-                deferred.resolve(); 
-                $('#body').show(); 
-                if (checkAlumni()){
-                    window.location.assign('#/app/directory/members');
-                }
-            }
+          function checkIfDone() { 
+                deferred.resolve();
+                $rootScope.hasLoaded = true;
+                $('#body').show();
+
+                
           }
 //          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
 //            .success(function(data){
@@ -4519,12 +4575,17 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
             .success(function(data){
 //                
 //                console.log(load_data);
-                console.log(checkResponseErrors(data));
                 if(!checkResponseErrors(data)){
                     var load_data = JSON.parse(data.data);
+                    $rootScope.perms = load_data.perms;
 //              directory
                     $rootScope.directory = load_data.directory;
-                    console.log(load_data.directory);
+                    for (var i = 0; i< $rootScope.directory.members.length; i++){
+                        if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+                            $rootScope.me = $rootScope.directory.members[i];
+                            break;
+                        }
+                    }
 //              notifications
                     $rootScope.notifications = load_data.notifications.notifications;
                 
@@ -4538,10 +4599,14 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
 //              tags
                     $rootScope.tags = load_data.tags;
 //              organization
-                $rootScope.subscribed = true;
-                $rootScope.setColor(load_data.organization_data.color);
-                $rootScope.organization = load_data.organization_data;
-                $rootScope.polls = load_data.polls;
+                    $rootScope.subscribed = true;
+                    $rootScope.setColor(load_data.organization_data.color);
+                    $rootScope.organization = load_data.organization_data;
+                    $rootScope.polls = load_data.polls;
+//                    if (!load_data.accountFilledOut){
+//                        window.location.assign('#/app/accountinfo');
+//                    }
+                    
                 }
                 checkIfDone();
             })
@@ -4615,13 +4680,8 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
         }
             LoadScreen.start();
             executePosts().then(function() {
-                for (var i = 0; i< $rootScope.directory.members.length; i++){
-                    if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-                        $rootScope.me = $rootScope.directory.members[i];
-                        break;
-                    }
-                }
                 LoadScreen.stop();
+                console.log('I just stopped the load screen');
                 defer.resolve(); 
         });
 
