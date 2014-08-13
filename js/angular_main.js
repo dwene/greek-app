@@ -3099,7 +3099,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             else{
                 
-                member.attendance_data.time_in = moment();
+                member.attendance_data.time_in = momentUTCTime();
             }
             member.in_updating = 'pending';
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
@@ -3133,7 +3133,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 member.attendance_data.time_out = "";
             }
             else {
-                member.attendance_data.time_out = moment();
+                member.attendance_data.time_out = momentUTCTime();
             }
             member.out_updating = 'pending';
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
