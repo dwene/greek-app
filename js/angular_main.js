@@ -259,6 +259,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //Set up run commands for the app
     App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout, LoadScreen) {
+        
+        FastClick.attach(document.body);
+        
         $rootScope.$state = $state;
         $rootScope.color = 'color1';
         $rootScope.perms = 'alumni';

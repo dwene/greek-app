@@ -752,6 +752,6 @@ div#cropped-image {
     /*Dark Theme Color*/
     .dark .navbar-default .navbar-nav>.dropdown>a .caret {border-top-color: white !important; border-bottom-color: white !important;}
     .dark .navbar-default .navbar-brand, .dark .navbar-default .navbar-nav>li>a, .dark .navbar-default .navbar-brand .badge, .dark #refreshNotifications{color:white !important; transition:background linear .3s;}
-    @media screen and (max-width:768px){
+    @media screen and (max-width:767px){
         .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
     }
