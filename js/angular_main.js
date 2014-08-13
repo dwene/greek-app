@@ -274,10 +274,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
         $rootScope.hasLoaded = false;
         
-        $(function() {
-            FastClick.attach(document.body);
-        });
-        
         //set color theme
 //        $rootScope.$watch('loading', function(){
 //            if ($rootScope.loading){
