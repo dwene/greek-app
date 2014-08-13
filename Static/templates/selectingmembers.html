@@ -4,6 +4,7 @@
     <div class="row">
            <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                 <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
+                <div ng-repeat = "user in usersList" ng-show="user.checked">{{user.user.first_name}}</div>
                 <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
             </form>
             <div class="col-sm-6">
@@ -33,7 +34,8 @@
     </ul>
     
     <div id="selectedList" class="well">
-        <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel)">{{member.first_name}} {{member.last_name}}</span>
+       <span class="messagePerson label label-primary"  ng-repeat="tag in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel:usersList)" ng-show="tag.checked"><netetag-check></netetag-check></span>
+        <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length > 0">No one is selected.</span>
     </div>
     
@@ -63,6 +65,12 @@
                 <div class="btn-group" ng-repeat="tag in ngModel.perms_tags | multipleSearch:modalSearch">
                     <netetag-check></netetag-check>
                 </div>
+                <span ng-show="includeUsers">
+                <h2 class="page-header">Users</h2>
+                <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch">
+                    <netetag-check ng-options="(tag.user.first_name + tag.user.last_name) for tag.name in tag"></netetag-check>
+                </div>
+                </span>
             </div>
 <!--
                 <div class="btn-group" ng-repeat="tag in org_tags | orderBy : 'name'">

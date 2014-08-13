@@ -4065,7 +4065,7 @@ App.directive('netePieChart', function() {
 
            
             
-App.directive('selectingUsers', function(){
+App.directive('selectingUsers', function($rootScope){
     return {
     restrict: 'E',
     replace: 'true',
@@ -4074,30 +4074,45 @@ App.directive('selectingUsers', function(){
         ngModel: "=",
         userCount:"=",
         skipEvent:"=",
+        includeUsers:"=?",
     },
     transclude: true,
     link: function (scope, element, attrs) {
+        scope.usersList = [];
         scope.selectTagFromTypeAhead = function(tag){
-            console.log('searching for',tag);
-            var tagTypes = [scope.ngModel.org_tags, scope.ngModel.perms_tags, scope.ngModel.event_tags];
-            for (var j = 0; j < tagTypes.length; j++){
-                console.log(tagTypes[j]);
-                for(var i = 0; i < tagTypes[j].length; i++){
-                    console.log(tagTypes[j][i]);
-                    if (tagTypes[j][i].name == tag.name)  {
-                        console.log('I found the tag!');
-                        tagTypes[j][i].checked = true;
-                        scope.selectedTagName = "";
-                        break;
-                    }
-                } 
-            }
+            tag.checked = true;
+            scope.selectedTagName="";
+//            console.log('searching for',tag);
+//            if (tag.user){
+//                tag.checked = true;
+//                console.log('I just checked it');
+//            }
+//            var tagTypes = [scope.ngModel.org_tags, scope.ngModel.perms_tags, scope.ngModel.event_tags];
+//            for (var j = 0; j < tagTypes.length; j++){
+//                console.log(tagTypes[j]);
+//                for(var i = 0; i < tagTypes[j].length; i++){
+//                    console.log(tagTypes[j][i]);
+//                    if (tagTypes[j][i].name == tag.name)  {
+//                        console.log('I found the tag!');
+//                        tagTypes[j][i].checked = true;
+//                        scope.selectedTagName = "";
+//                        break;
+//                    }
+//                } 
+//            }
         }
         scope.clickNofity = function(){
             console.log('clicked');
         }
         scope.$watch('ngModel', function(){
-            if (scope.ngModel && scope.ngModel.org_tags && !scope.skipEvent){
+            if (scope.ngModel && scope.ngModel.org_tags && scope.includeUsers){
+                scope.usersList = [];
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    scope.usersList.push({user: $rootScope.directory.members[i], checked:false, name:$rootScope.directory.members[i].first_name + ' ' + $rootScope.directory.members[i].last_name });
+                }
+                scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.ngModel.event_tags)).concat(scope.usersList);
+            }
+            else if (scope.ngModel && scope.ngModel.org_tags && !scope.skipEvent){
                 scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.ngModel.event_tags));
             }
             else if (scope.ngModel && scope.ngModel.org_tags && scope.skipEvent){
@@ -4327,9 +4342,9 @@ App.filter('checkedFilter', function() {
 });
 
 App.filter('tagDirectorySearch', function(){
-    return function (objects, tags) {
-        if (!tags){return null;}
+    return function (objects, tags, additionalUsers) {
             var tags_list = []
+        if (tags){
         if (tags.org_tags){
             for (var i = 0; i < tags.org_tags.length; i++){
                 if (tags.org_tags[i].checked){
@@ -4360,33 +4375,43 @@ App.filter('tagDirectorySearch', function(){
                 }
             }
         }
+        }
             out_string = '';
             for (var j = 0; j < tags_list.length; j++){
                 out_string += tags_list[j] + ' ';
             }
         var search = out_string;
-        if (!search){
-            return null;
-        }
+//        if (!search){
+//            return null;
+//        }
         retList = [];
         
         var searchArray = search.split(" ");
-        for (var oPos = 0; oPos < objects.length; oPos++){
-            var object = objects[oPos];
-            for(var sPos = 0; sPos< searchArray.length; sPos++){
-                var check = false;
-                var searchItem = searchArray[sPos];
-                if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
-                    retList.push(object);
-                    break;
+        if (objects){
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                var object = objects[oPos];
+                for(var sPos = 0; sPos< searchArray.length; sPos++){
+                    var check = false;
+                    var searchItem = searchArray[sPos];
+                    if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
+                        retList.push(object);
+                        break;
+                    }
+                    else if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
+                        retList.push(object);
+                        break;
+                    }
+                    else if(object.event_tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
+                        retList.push(object);
+                        break;
+                    }
                 }
-                else if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
-                    retList.push(object);
-                    break;
-                }
-                else if(object.event_tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
-                    retList.push(object);
-                    break;
+            }
+        }
+        if (additionalUsers){
+            for (var uPos = 0; uPos < additionalUsers.length; uPos++){
+                if (additionalUsers[uPos].checked && retList.indexOf(additionalUsers[uPos].user) == -1){
+                    retList.push(additionalUsers[uPos]);
                 }
             }
         }

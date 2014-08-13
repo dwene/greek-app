@@ -1,7 +1,7 @@
 <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <section ng-show="!loading" class="container">
 
-<selecting-users ng-model="$root.tags"></selecting-users>
+<selecting-users ng-model="$root.tags" include-users="true"></selecting-users>
 
     
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>
