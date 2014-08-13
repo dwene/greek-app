@@ -40,7 +40,8 @@
     <h2 class="page-header">People Selected<span ng-show="$parent.selectedMembers.length">: {{$parent.selectedMembers.length}}</span></h2>
     <div id="selectedList">
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
-        <span class="messagePerson label label-primary"  ng-repeat="tag in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel:usersList)" ng-show="tag.checked"><netemember-check ng-model="tag"></netemember-check></span>
+
+        <span><netetag-check ng-repeat="tag in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel:usersList) | orderBy: 'last_name'" ng-show="tag.checked"></netetag-check></span>
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers | orderBy: 'last_name'" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>
     </div>
     
