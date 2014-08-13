@@ -2461,6 +2461,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
         $scope.loading = !($scope.sentMessages && $scope.tags);
+        $scope.clearUsers = false;
         $scope.deleteMessageTip = {
             "title" : "Delete Message"
         }
@@ -2515,10 +2516,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.sendMessage = function(isValid, tags, title, content){
             if (isValid){
-                tags = getCheckedTags($scope.tags);
-                var out_tags = tags;
-                console.log('$scope.title', title);
-                var to_send = {title: title, content: content, tags: out_tags};
+                var selectedKeys = []
+                console.log('selected members', $scope.selectedMembers.length);
+                for (var i = 0; i < $scope.selectedMembers.length; i++){
+                    
+                    if ($scope.selectedMembers[i].user){
+                        selectedKeys.push($scope.selectedMembers[i].user.key);
+                    }
+                    else if($scope.selectedMembers[i].key){
+                        selectedKeys.push($scope.selectedMembers[i].key);
+                    }
+                }
+                var to_send = {title: title, content: content, keys: selectedKeys};
                 console.log("what Im sending in message", to_send);
                 $scope.updating = "pending"
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
@@ -2529,7 +2538,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             $scope.title = '';
                             $scope.content = '';
                             $scope.messagingForm.$setPristine();
+                            $scope.clearUsers = true;
                             clearCheckedTags($scope.tags);
+                            
                             setTimeout(function(){
                             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
                             .success(function(data){
@@ -4075,6 +4086,7 @@ App.directive('selectingUsers', function($rootScope){
         userCount:"=",
         skipEvent:"=",
         includeUsers:"=?",
+        clearUsers:"=?",
     },
     transclude: true,
     link: function (scope, element, attrs) {
@@ -4119,6 +4131,16 @@ App.directive('selectingUsers', function($rootScope){
                 scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags);
             }
         });
+        scope.$watch('clearUsers', function(){
+            if (scope.clearUsers == true){
+                scope.clearUsers = false;
+                for (var i = 0; i < scope.usersList.length; i++){
+                    if (scope.usersList[i].checked){
+                        scope.usersList[i].checked = false;
+                    }
+                }
+            }
+        })
         
      }
   }

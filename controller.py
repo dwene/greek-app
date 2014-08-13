@@ -1454,21 +1454,13 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         data = json.loads(request.data)
-        tags = data['tags']
-        for tag in data['tags']['org_tags']:
-            if tag not in request_user.recently_used_tags:
-                request_user.recently_used_tags.insert(0, tag)
-            if len(request_user.recently_used_tags) > 5:
-                request_user.recently_used_tags = request_user.recently_used_tags[:5]
+        user_list_future = list()
         user_list = list()
         if 'keys' in data:
             for key in data['keys']:
-                user_list.append(ndb.Key(urlsafe=key).get_async())
-        users = get_users_from_tags(tags, request_user.organization, False)
-        users2 = list()
-        for user in user_list:
-            users2.append(user.get_result())
-        users = set(users).union(set(users2))
+                user_list_future.append(ndb.Key(urlsafe=key).get_async())
+        for user in user_list_future:
+            user_list.append(user.get_result())
         notification = Notification()
         notification.type = 'message'
         notification.content = data['content']
@@ -1479,7 +1471,7 @@ class RESTApi(remote.Service):
         notification.put()
         request_user.sent_notifications.append(notification.key)
         request_user.put()
-        add_notification_to_users(notification, users)
+        add_notification_to_users(notification, user_list)
         return OutgoingMessage(error='', data='OK')
 
     #-------------------------
