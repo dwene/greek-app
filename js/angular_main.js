@@ -37,7 +37,7 @@ var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', "googlechart"],  function ($compileProvider) {
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap' ,'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', "googlechart"],  function ($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms):/);
 });
 
@@ -4066,7 +4066,7 @@ App.directive('netePieChart', function() {
            
             
 App.directive('selectingUsers', function(){
-  return {
+    return {
     restrict: 'E',
     replace: 'true',
     templateUrl: '/Static/templates/selectingmembers.html',
