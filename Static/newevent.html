@@ -1,16 +1,13 @@
-<div class="container">
-
-<!--		 HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>New Event</h1>
-		</div>
-
-</div>
-
-<div class="container">
+<div id="createEvent" class="container">
+   
+   <div class="card">
+    
+    <h1 class="card-header">Create a New Event</h1>
     
 <selecting-users ng-model="tags" skip-event="true"></selecting-users>
 
+   <h2 class="card-header">Event Info</h1>
+   
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
         <label for="title" class="col-sm-2 control-label">Title</label>
@@ -39,7 +36,7 @@
       
       
     <div class="form-group" ng-class="{ 'has-error' : (newEvent.address.$invalid && !newEvent.address.$pristine) || (newEvent.address.$invalid && submitted)}">
-<label class="col-sm-2 control-label">Address: </label><div class="col-sm-10">
+<label class="col-sm-2 control-label">Address </label><div class="col-sm-10">
    <p class="well" ><span ng-show="event.location">{{event.address}}</span></p>
    </div>
     </div>   
@@ -99,5 +96,8 @@
    
     <button type="submit" class="btn btn-default pull-right" ng-disabled= "!selectedMembers.length || !newEvent.$valid">Submit</button>
 </form>
+
+</div>
+
  <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 </div>

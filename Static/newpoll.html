@@ -1,11 +1,12 @@
 <div id="newPoll" class="container">
 
-<!--		 HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-			<h1>New Poll</h1>
-		</div>
+<div class="card">
+    
+<h1 class="card-header">Create a New Poll</h1>
     
 <selecting-users ng-model="tags"></selecting-users>
+    
+<h2 class="card-header">Poll Info</h2>
 
     <form id="newPoll" name="newPoll" ng-submit="createPoll(newPoll.$valid)" class="form-horizontal" role="form" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
@@ -24,41 +25,9 @@
         <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
     </div>     
       
-<!--    <input type="text"  ng-autocomplete ng-model="autocomplete" options="options" details="details"/>-->
-<!--
-    <div class="form-group" ng-class="{ 'has-error' : ((newPoll.date_start.$invalid && !newPoll.date_start.$pristine) || (newPoll.date_start.$invalid && submitted)) || ((newPoll.time_start.$invalid && !newPoll.time_start.$pristine) || (newPoll.time_start.$invalid && submitted))}">
-        <label for="date_start" class="col-xs-2 control-label">Start</label>
-        <div class="col-xs-5 col-sm-5">
-
-        <date-picker id="datestartPicker" name="date_start"  ng-model="poll.date_start"></date-picker>
-        </div>
-        
-        <div class="col-xs-5 col-sm-5">
-
-        <time-picker id="timestartPicker" name="time_start" ng-model="poll.time_start"></time-picker>
-
-        
-        </div>
-        <p ng-show="((newPoll.date_start.$invalid && !newPoll.date_start.$pristine) || (newPoll.date_start.$invalid && submitted)) || ((newPoll.time_start.$invalid && !newPoll.time_start.$pristine) || (newPoll.time_start.$invalid && submitted))" class="help-block">Please enter start date and time.</p>
-    </div>   
-    
-    <div class="form-group" ng-class="{ 'has-error' : ((newPoll.date_end.$invalid && !newPoll.date_end.$pristine) || (newPoll.date_end.$invalid && submitted)) || ((newPoll.time_end.$invalid && !newPoll.time_end.$pristine) || (newPoll.time_end.$invalid && submitted))}">
-        <label for="date_end" class="col-xs-2 control-label">End</label>
-        <div class="col-xs-5 col-sm-5">
-        
-        <date-picker id="dateendPicker" name="date_end" ng-model="poll.date_end"></date-picker>
-
-        </div>
-        <div class="col-xs-5 col-sm-5">
-        <time-picker id="timeendPicker" name="time_end" ng-model="poll.time_end"></time-picker>
-        
-        </div>
-        <p ng-show="((newPoll.date_end.$invalid && !newPoll.date_end.$pristine) || (newPoll.date_end.$invalid && submitted)) || ((newPoll.time_end.$invalid && !newPoll.time_end.$pristine) || (newPoll.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
-    </div>
--->
     <div class="pollQuestion" ng-repeat="question in poll.questions">
                
-        <button type="button" class="close" ng-click="removeQuestion($index)"><i class="fa fa-trash-o"></i></button>
+        <button type="button" class="close" ng-click="removeQuestion($index)" bs-tooltip="deletePollTip" data-placement="left"><i class="fa fa-trash-o"></i></button>
         
         <div class="pollQuestionContent">
         
@@ -103,10 +72,12 @@
                 
     </div>
 
-    <button type="button" class="btn btn-default" ng-click="addQuestion()">Add Question</button>
+    <button type="button" ng-hide="poll.questions.length > 9" class="btn btn-default pull-left" ng-click="addQuestion()">Add Question <i class="fa fa-plus"></i></button>
 
-   
-    <button type="button" ng-click="createPoll(newPoll.$valid)" class="btn btn-default pull-right" ng-disabled="!selectedMembers.length || !newPoll.$valid || !poll.questions.length">Submit</button>
+    <button type="button" ng-click="createPoll(newPoll.$valid)" class="btn btn-default pull-right" ng-disabled="!selectedMembers.length || !newPoll.$valid || !poll.questions.length">Send Poll</button>
 </form>
+
+</div>
+
  <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 </div>

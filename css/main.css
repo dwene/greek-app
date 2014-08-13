@@ -252,7 +252,6 @@ margin-top: 2px;}}
 
 
 /*Messaging Page*/
-#messaging h1{font-size:24px; margin-top:-5px; margin-bottom:5px;}
 textarea.form-control{height:auto; max-width:100%;}
 #recentlySentMessages{margin-top:20px;}
 #recentlySentMessages h2{margin-bottom:0px; border:0px;}
@@ -369,6 +368,8 @@ textarea.form-control{height:auto; max-width:100%;}
 #eventInfo h3{cursor:pointer; -ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
 
 /*New Event Page*/
+#createEvent .card{padding-bottom:50px;}
+
 #eventTags{margin-bottom:5px;}
 #eventTags .btn-group{margin-bottom:5px;}
 #eventTags .btn-group .checkLabel{margin:0 2px;}
@@ -382,7 +383,11 @@ textarea.form-control{height:auto; max-width:100%;}
 .checkinContent .btn-group{position:absolute; right:-100px; top:50%; margin-top:-23px;}
 .checkinContent .memberName{font-size:18px;}
 
+/*Poll Page*/
+#newPollButton{margin-bottom:15px;}
+
 /*New Poll Page*/
+#newPoll .card{padding-bottom:50px;}
 #newPoll .input-group{margin-bottom:15px;}
 .pollQuestionContent{margin:40px 0px 5px 0px;}
 .pollQuestion{padding:15px; border-top:1px solid #ccc;}
@@ -462,6 +467,9 @@ textarea.form-control{height:auto; max-width:100%;}
     box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);  
     border-radius:125px;
 }
+
+h1.card-header{font-size:24px; margin-top:-5px; margin-bottom:5px;}
+h2.card-header{font-size:24px; font-weight:bold; margin:10px 0px;}
 
 h1.darkbg{color:white; border-radius:5px; padding:10px;}
 

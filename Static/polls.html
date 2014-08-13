@@ -1,12 +1,10 @@
 <div ng-show="!$root.polls" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 
 <div ng-show="$root.polls" id="polls" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0};">
-
-
-<a ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Poll <i class="fa fa-plus"></i></a>
+<a id="newPollButton" ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Poll <i class="fa fa-plus"></i></a>
 
 <div class="form-group">
-    <input id="directorySearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">
+    <input id="pollSearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">
     <p ng-hide="polls.length">There are no polls yet!</p>
 </div>
 

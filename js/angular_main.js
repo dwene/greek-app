@@ -3270,6 +3270,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('newPollController', function($scope, $http, Load, $rootScope) {
         routeChange();
+        $scope.deletePollTip = {
+            "title" : "Delete Question"
+        }
         $scope.poll = {}
         $scope.poll.questions = [];
         $scope.addQuestion = function(){
