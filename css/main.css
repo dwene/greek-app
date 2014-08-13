@@ -106,20 +106,28 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 .checkLabel.label-primary:hover{background:blue;}
 
 /*Selecting Members for Messaging*/
-#selectedList{margin-bottom:10px; padding:10px; min-height:60px; max-height:80px; overflow-y:scroll;}
+#selectedList{position:relative; margin-bottom:10px; max-height:80px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
-.noneSelected{position:absolute; left:10px; top:10px;}
-#recentTags{padding-bottom:5px;}
-#recentTags .btn-group{margin-bottom:4px;}
 #selectingUsers #messagingTags{margin-top:0px;}
-#selectingUsers #messagingTags .page-header{min-height:30px; margin-top:0px; padding-bottom:0px;}
+#selectingUsers .noneSelected{line-height:26px;}
+#selectedList .noneSelected{margin-bottom:-1px; display:block;}
 #selectingUsers #messagingTags .page-header #noTags{display:inline-block; margin-top:3px;}
-#tagtypeahead{position:relative;}
+#tagtypeahead{position:relative; margin-bottom:5px;}
 #tagtypeahead #seeall{cursor:pointer; position:absolute; right:25px; top:8px;}
+
+#selectingUsers .page-header{padding-bottom:2px; margin-bottom:4px; margin-top:10px;}
+
 #seeallTags .page-header{margin-bottom:2px; margin-top:10px;}
+
+#selectingUsers > .row{margin-top:10px;}
+
+#recentTags{position:relative; margin-bottom:5px; margin-top:-15px; overflow-y:hidden; max-height:48px;}
+#recentTags .page-header{margin-top:0px;}
+#recentTags .btn-group{margin-bottom:4px;}
+
 @media screen and (max-width:768px){
-#selectingUsers .row .page-header{margin-top:10px;}
+#recentTags{margin-top:10px;}
 }
 
 
@@ -244,6 +252,7 @@ margin-top: 2px;}}
 
 
 /*Messaging Page*/
+#messaging h1{font-size:24px; margin-top:-5px; margin-bottom:5px;}
 textarea.form-control{height:auto; max-width:100%;}
 #recentlySentMessages{margin-top:20px;}
 #recentlySentMessages h2{margin-bottom:0px; border:0px;}
@@ -307,8 +316,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .pagerButtons .previous{margin-left:20px;}
 .pagerButtons .next{float:right; margin-right:20px;}
 
-/*Events Page*/
-#newEventButton{margin-bottom:15px;}
+
 /*Event Info Page*/
 #goingForm .form-group{width: 260px; margin: 10px auto;}
 
@@ -325,7 +333,11 @@ textarea.form-control{height:auto; max-width:100%;}
 #crop .page-header{padding-bottom: 5px; margin: 10px 0 5px;}
 
 /*Event Page*/
+#calendar{margin-bottom:15px;}
 #calendar table{margin-bottom:0px;}
+
+#newEventButton, #showPastButton{margin:0px 0px 15px 0px;}
+#showPastButton{position:absolute; right:15px; top:0px;}
 
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}
