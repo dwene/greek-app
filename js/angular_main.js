@@ -3461,6 +3461,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('.individualResponses.collapse').collapse('show');
         }
         Load.then(function(){
+            $('html').trigger('resize');
             $scope.loading = true;
             if ($rootScope.currentPollResult && $rootScope.currentPollResult.key == $stateParams.key){
                 

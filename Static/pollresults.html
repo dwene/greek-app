@@ -1,4 +1,4 @@
-<div class="container" ng-init="state='individuals'">
+<div class="container" ng-init="state='summary'">
 <ul class="nav nav-pills">
     <li ng-class="{ active: state=='summary' }"><a ng-click="state='summary'" class="tabSelect">Summary</a></li>
     <li ng-class="{ active: state=='individuals' }"><a ng-click="state='individuals'" class="tabSelect">Individuals</a></li>
@@ -21,7 +21,7 @@
                     </li>
                 </ul>
     -->
-                <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata"></div>
+                <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata" style="width:300px; !important"></div>
             </div>
                <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" data-target="{{'#summaryItem-' + $index}}" ><span>Response List</span></button>
                 <ul class="collapse" class="pollSummaryList" id="{{'summaryItem-' + $index}}">
