@@ -25,6 +25,32 @@
         <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
     </div>     
       
+      
+<!--
+
+<div class="btn-group" ng-model="button.radio" bs-radio-group>
+  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="First">Everyone</label>
+  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1"> Second</label>
+  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="2"> Third</label>  
+-->
+      
+      
+    <div class="form-group" ng-init="poll.viewers = 'everyone'">
+        <label class="col-sm-2 control-label">Who can view results?</label>
+          <div class="btn-group col-sm-10">
+          <button class="btn" ng-class="{'btn-primary': poll.viewers == 'everyone', 'btn-default': poll.viewers != 'everyone' }" ng-click="poll.viewers = 'everyone'">Everyone</button>
+          <button class="btn"  ng-class="{'btn-primary': poll.viewers == 'leadership',  'btn-default': poll.viewers != 'leadership' }"  ng-click="poll.viewers = 'leadership'"> Leadership and Council</button>
+          <button class="btn" ng-class="{'btn-primary': poll.viewers == 'council',  'btn-default': poll.viewers != 'council' }"  ng-click="poll.viewers = 'council'">Council Only</button>  
+        </div>
+    </div>
+    
+    <div class="form-group" ng-init="poll.save_names=true">
+        <label class="col-sm-2 control-label">Display names in results?</label>
+        <div class="btn-group" ng-model="poll.save_names">
+          <button class="btn" ng-class="{'btn-primary': poll.save_names == true,  'btn-default': !poll.save_names}" ng-click="poll.save_names = true">Yes</button>
+          <button class="btn" ng-class="{'btn-primary': !poll.save_names,  'btn-default': poll.save_names == true}" ng-click="poll.save_names=false">No</button> 
+        </div>    
+    </div>  
     <div class="pollQuestion" ng-repeat="question in poll.questions">
                
         <button type="button" class="close" ng-click="removeQuestion($index)" bs-tooltip="deletePollTip" data-placement="left"><i class="fa fa-trash-o"></i></button>
