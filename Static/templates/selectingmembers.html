@@ -54,8 +54,11 @@
         <h4 class="modal-title">All Tags</h4>
       </div>
       <div class="modal-body">
-            <input type="search" ng-model="modalSearch" placeholder="Search..." class="form-control">
-            <ul class="addTags">
+                <div class="clearInputContainer">
+                    <input type="search" ng-model="modalSearch" placeholder="Search..." class="form-control">
+                    <button ng-show="modalSearch.length" type="button" class="close clearInput" ng-click="modalSearch = ''"><i class="fa fa-times"></i></button>
+                </div>
+            <ul class="selectTags">
             <div>
                <h2 class="page-header">Organization Tags</h2>
                 <div class="btn-group" ng-repeat="tag in ngModel.org_tags | multipleSearch:modalSearch">
