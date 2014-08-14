@@ -321,6 +321,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Event Info Page*/
 #goingForm .form-group{width: 260px; margin: 10px auto;}
+#goingForm .btn-group{margin-left:20px;}
 
 /*Register User/Password Pages*/
 .usernameAlert{padding:10px;}
@@ -404,6 +405,8 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Poll Results Page*/
 .resultsQuestion {font-size:20px; margin-bottom: 15px;}
 #pollResultsPage li {list-style:none}
+.pollSummaryList {margin-bottom:20px; list-style:none;}
+.tabSelect{cursor:pointer;}
 #pollResultsPage .card{margin-bottom:10px;}
 #pollResultsPage button{margin-bottom:20px;}
 .pollSummary {list-style:none;}
@@ -411,9 +414,6 @@ textarea.form-control{height:auto; max-width:100%;}
 .pollSummary h3{font-weight:bold; padding-bottom:4px; border-bottom:1px solid #ccc;}
 .pollSummary .summaryResponses .row{padding:10px 0px; border-bottom:1px solid #ccc;}
 .pollSummary .summaryResponses:nth-child(even){background:#f8f8f8;}
-.tabSelect{cursor:pointer;}
-.resultAnswer {}
-.result{}
 
 /*Admin Page*/
 #colorPicker{width:300px; height:290px; padding:10px !important;}
@@ -767,3 +767,4 @@ div#cropped-image {
     @media screen and (max-width:767px){
         .dark .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:white !important;}
     }
+    .dark .btn-primary{text-shadow: 0 1px 0 #000;}

@@ -34,6 +34,22 @@
             <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
             <button ng-click="saveEvent()" class="btn btn-info pull-right saveButton"><i class="fa fa-floppy-o"></i></button>
             <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
+        
+           <div ng-hide="event.creator == $root.me.key">
+            <hr>
+                    
+                <form id="goingForm" class="inline-form">
+                <div class="form-group">
+                <span>Are you going?
+                <div class="btn-group btn-group">
+                <button class="btn btn btn-default" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
+                <button class="btn btn btn-default"  ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>
+                </div>
+                </span>
+                </div>
+                </form>
+            </div>
+            
         </div>
         
         <div id="going" class="card">
@@ -59,43 +75,7 @@
             
         </div>
 </div>
-   
 
-
-<!--
-<div class="row">
-           <div class="col-sm-4 col-xs-12">
-            <div id="going" class="card">
-                <h3 class="page-header">Going</h3>
-                <ul>
-                    <li class="well well-sm" >
-                        <span class="messagePerson label label-primary" ng-repeat="person in event.going_list">{{person.first_name}} {{person.last_name}}</span>
-                    </li>
-                </ul>
-            </div>
-            </div>
-            <div class="col-sm-4 col-xs-12">
-            <div id="notGoing" class="card">
-                <h3 class="page-header">Not Going</h3>
-                <ul>
-                    <li class="well well-sm">
-                        <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list">{{person.first_name}} {{person.last_name}}</span>
-                    </li>
-                </ul>
-            </div>
-            </div>
-            <div class="col-sm-4 col-xs-12">
-            <div id="invited" class="card">
-                <h3 class="page-header">Invited</h3>
-                <ul>
-                    <li class="well well-sm">
-                            <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags">{{member.first_name}} {{member.last_name}}</span>
-                    </li>
-                </ul>
-            </div>
-            </div>
-</div>
--->
 
 </div>
 
