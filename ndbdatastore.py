@@ -123,6 +123,7 @@ class Poll(ndb.Model):
     answered_users = ndb.KeyProperty(repeated=True)
     creator = ndb.KeyProperty()
     timestamp = ndb.DateTimeProperty()
+    anonymous = ndb.BooleanProperty()
 
 
 class Question(ndb.Model):

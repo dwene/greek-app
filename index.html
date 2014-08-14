@@ -113,7 +113,7 @@
 
 			</div>
 			
-			<div id="mobileMenu" ng-show="$root.subscribed" class="visible-xs" ng-class="{leader: $root.checkPermissions('leadership')==true}">
+			<div id="mobileMenu" ng-show="$root.subscribed" class="visible-xs" ng-class="{leader: $root.checkPermissions('leadership')==true, hideMenu: $root.checkPermissions('member')==false}">
 				    <ul class="nav navbar-nav" ng-hide="!$root.checkLogin()">
                         <li><a ng-href="/#/app/home"><i class="fa fa-home"></i></a></li><!--        
    remove white space--><li><a ng-href="/#/app/directory/members"><i class="fa fa-book"></i></a></li><!--        

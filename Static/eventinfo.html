@@ -10,8 +10,8 @@
             </h1>
             
             <div id="time" class="card">
-                <div class="icon"><i class="fa fa-clock-o"></i> | </div><span><p>Start: {{time_start | date:'EEEE MMM d, y h:mm a'}}</p>
-                <p>End: {{time_end | date:'EEEE MMM d, y h:mm a'}}</p></span>
+                <div class="icon"><i class="fa fa-clock-o"></i> | </div><span><p>Start: {{formatDate(time_start)}}</p>
+                <p>End: {{formatDate(time_end)}}</p></span>
             </div>
             
             <div ng-show="event.location.length" id="location" class="card">

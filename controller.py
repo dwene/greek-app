@@ -1968,6 +1968,8 @@ class RESTApi(remote.Service):
         poll.timestamp = datetime.datetime.now()
         poll.results_tags = ['council']
         poll.creator = request_user.key
+        if 'anonymous' in data:
+            poll.anonymous = data["anonymous"]
         poll.organization = request_user.organization
         # poll.time_start = datetime.datetime.strptime(data["time_start"], '%m/%d/%Y %I:%M %p')
         # poll.time_end = datetime.datetime.strptime(data["time_end"], '%m/%d/%Y %I:%M %p')

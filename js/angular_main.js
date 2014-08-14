@@ -410,6 +410,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $rootScope.Load = function(){
             LoadScreen.start()
+            $('#mobileMenu').hide();
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
                 .success(function(data){
     //                
@@ -443,7 +444,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.setColor(load_data.organization_data.color);
                     $rootScope.organization = load_data.organization_data;
                     $rootScope.polls = load_data.polls;
+                        if ($rootScope.checkAlumni()){
+                            window.location.assign('#/app');
+                        }
+                        else{
+                            $('#mobileMenu').removeClass('hideMenu');
+                        }
                     }
+                    $('#mobileMenu').show();
                     LoadScreen.stop();
                 })
                 .error(function(data) {
@@ -2917,6 +2925,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         console.log('Error: ' , data);
                     });
         }
+        $scope.formatDate = function(date){
+            return moment(date).format('dddd - MMMM Do [at] h:mma');
+        }
 	});
 
 
@@ -4619,10 +4630,6 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
           var deferred = $q.defer();
           function checkIfDone() { 
                 deferred.resolve();
-                $rootScope.hasLoaded = true;
-                $('#body').show();
-
-                
           }
 //          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
 //            .success(function(data){
@@ -4671,6 +4678,9 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
 //                    if (!load_data.accountFilledOut){
 //                        window.location.assign('#/app/accountinfo');
 //                    }
+                    $rootScope.hasLoaded = true;
+                    $('#body').show();
+                    $('#mobileMenu').show();
                     
                 }
                 checkIfDone();
