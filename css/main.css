@@ -402,7 +402,13 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Poll Results Page*/
 .resultsQuestion {font-size:20px; margin-bottom: 15px;}
 #pollResultsPage li {list-style:none}
-.pollSummaryList {margin-bottom:20px; list-style:none;}
+#pollResultsPage .card{margin-bottom:10px;}
+#pollResultsPage button{margin-bottom:20px;}
+.pollSummary {list-style:none;}
+.summaryHeader .row, .summaryResponses .row{margin:0px;}
+.pollSummary h3{font-weight:bold; padding-bottom:4px; border-bottom:1px solid #ccc;}
+.pollSummary .summaryResponses .row{padding:10px 0px; border-bottom:1px solid #ccc;}
+.pollSummary .summaryResponses:nth-child(even){background:#f8f8f8;}
 .tabSelect{cursor:pointer;}
 .resultAnswer {}
 .result{}

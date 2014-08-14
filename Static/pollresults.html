@@ -6,39 +6,34 @@
 </div>
 <br>
 <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-
 <section ng-show="!loading && notFound">Sorry this webpage could not be found. :(</section>  
+
+
 <div id="pollResultsPage">
-    <div ng-show="!loading && state == 'summary'" class="container fadingIn fadingOut">
-    <!--   <form name="response_form"  ng-submit="submitResponse()">-->
-        <div ng-repeat = "question in poll.questions | orderBy: 'index'">
-            <p class="resultsQuestion"><span><b>Question:</b></span> <span class="currentStatus">{{question.worded_question}}</span></p>
+   
+    <div ng-show="!loading && state == 'summary'" class="container">
+        <div ng-repeat="question in poll.questions | orderBy: 'index'" class="card">
+            <h2 class="resultsQuestion card-header">{{question.worded_question}}</h2>
             <div ng-if="question.type == 'multiple_choice'">
-    <!--
-                <ul> 
-                    <li ng-repeat="response in question.response_data">
-                        <p>{{response.name}} : {{response.count}}</p>
-                    </li>
-                </ul>
-    -->
                 <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata" style="width:300px; !important"></div>
             </div>
-               <button id="showHiddenButton" class="btn btn-block" data-toggle="collapse" data-target="{{'#summaryItem-' + $index}}" ><span>Response List</span></button>
-                <ul class="collapse" class="pollSummaryList" id="{{'summaryItem-' + $index}}">
-                   <li class="summary">
-                        <p><span class="col-xs-6">Response</span> <span class="col-xs-6">Name</span></p>
+               <button class="btn" data-toggle="collapse" data-target="{{'#summaryItem-' + $index}}" ><span>View Responses</span></button>
+                <ul class="collapse pollSummary" id="{{'summaryItem-' + $index}}">
+                   <li class="summaryHeader">
+                       <div class="row">
+                        <h3 class="col-xs-6">Name</h3><h3 class="col-xs-6">Response</h3>
+                        </div>
                     </li>
-                    <br>
-                    <li class="summary" ng-repeat="response in question.responses">
-                        <p><span class="col-xs-6">{{response.text}}</span> <span class="col-xs-6">{{$root.getNameFromKey(response.key)}}</span></p>
+                    <li class="summaryResponses" ng-repeat="response in question.responses">
+                       <div class="row">
+                        <span class="col-xs-6">{{$root.getNameFromKey(response.key)}}</span><span class="col-xs-6">{{response.text}}</span>
+                        </div>
                     </li>
                 </ul>
-           <hr> 
         </div>
-
     </div>
 
-    <div ng-show="!loading && state == 'individuals'" class="container fadingIn fadingOut">
+    <div ng-show="!loading && state == 'individuals'" class="container">
       <button class="btn btn-default" ng-click="openAllIndividuals();">all</button>
        <ul>
         <li ng-repeat="ind in individuals">
@@ -48,7 +43,6 @@
           </ul>
         </li>
        </ul>
-
-
     </div>
+    
 </div>
