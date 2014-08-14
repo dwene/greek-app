@@ -74,7 +74,7 @@
                 <span ng-show="includeUsers">
                 <h2 class="page-header">Users</h2>
                 <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch">
-                    <netetag-check ng-options="(tag.user.first_name + tag.user.last_name) for tag.name in tag"></netetag-check>
+                    <netemember-check ng-model="tag"></netemember-check>
                 </div>
                 </span>
             </div>
