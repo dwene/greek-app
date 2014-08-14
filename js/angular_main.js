@@ -3491,8 +3491,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams, LoadScreen) {
         routeChange();
+        $scope.openAllQuestions = function(){
+            $('.pollSummary.collapse').collapse('show');
+        }
+        $scope.closeAllQuestions = function(){
+            $('.pollSummary.in').collapse('hide');
+        }
         $scope.openAllIndividuals = function(){
             $('.individualResponses.collapse').collapse('show');
+        }
+        $scope.closeAllIndividuals = function(){
+            $('.individualResponses.in').collapse('hide');
         }
         Load.then(function(){
             $('html').trigger('resize');

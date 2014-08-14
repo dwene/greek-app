@@ -12,6 +12,10 @@
 <div id="pollResultsPage">
    
     <div ng-show="!loading && state == 'summary'" class="container">
+       <div class="btn-group btn-group-sm pull-right expandButtons">
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="openAllQuestions();"><i class="fa fa-expand"></i></button>
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="closeAllQuestions();"><i class="fa fa-compress"></i></button>
+        </div>
         <div ng-repeat="question in poll.questions | orderBy: 'index'" class="card">
             <h2 class="resultsQuestion card-header">{{question.worded_question}}</h2>
             <div ng-if="question.type == 'multiple_choice'">
@@ -34,10 +38,13 @@
     </div>
 
     <div ng-show="!loading && state == 'individuals'" class="container">
-      <button class="btn btn-default" ng-click="openAllIndividuals();">all</button>
-       <ul>
-        <li ng-repeat="ind in individuals">
-          <a class="btn btn-block" data-toggle="collapse" data-target="{{'#individualResponses-' + $index}}">{{ind.user.first_name}} {{ind.user.last_name}}</a>
+        <div class="btn-group btn-group-sm pull-right expandButtons">
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="openAllIndividuals();"><i class="fa fa-expand"></i></button>
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="closeAllIndividuals();"><i class="fa fa-compress"></i></button>
+        </div>
+       <ul id="byPerson">
+        <li ng-repeat="ind in individuals" class="card">
+          <button class="btn" data-toggle="collapse" data-target="{{'#individualResponses-' + $index}}">{{ind.user.first_name}} {{ind.user.last_name}}</button>
           <ul class="collapse individualResponses" id="{{'individualResponses-' + $index}}">
           <p  ng-repeat="res in ind.responses">{{poll.questions[$index].worded_question}}: {{res}}</p>
           </ul>
