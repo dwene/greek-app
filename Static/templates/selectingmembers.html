@@ -41,7 +41,7 @@
     <div id="selectedList">
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
 
-        <span><netetag-check ng-repeat="tag in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel:usersList) | orderBy: 'last_name'" ng-show="tag.checked"></netetag-check></span>
+        <span><netemember-check ng-repeat="tag in $parent.selectedMembers = ( $root.directory.members | tagDirectorySearch:ngModel:usersList) | orderBy: 'last_name'" ng-model="tag" ng-show="tag.checked"></netemember-check></span>
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers | orderBy: 'last_name'" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>
     </div>
     
