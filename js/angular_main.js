@@ -2458,16 +2458,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
     routeChange();
     Load.then(function(){ 
         $rootScope.requirePermissions(LEADERSHIP);
-        $scope.sentMessages = $rootScope.sentMessages;
+        if ($rootScope.sentMessages){
+            $scope.sentMessages = $rootScope.sentMessages;
+        }
+        else{
+            $scope.sentMessages = [];
+        }
         $scope.tags = $rootScope.tags;
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.maxPageNumber = 5;
-        $scope.loading = !($scope.sentMessages && $scope.tags);
         $scope.clearUsers = false;
         $scope.deleteMessageTip = {
             "title" : "Delete Message"
         }
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.maxPageNumber = 5;
+        $scope.loading = !($scope.sentMessages && $scope.tags);
         
         function onFirstLoad(){
             var tag_list = [];

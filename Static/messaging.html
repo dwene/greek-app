@@ -23,8 +23,8 @@
     </form>
     
 </div>    
-    
-<button id="showHiddenButton" class="btn btn-block" ng-show="sentMessages.length" data-toggle="collapse" ng-click="shown = !shown" ng-show="$root.hidden_notifications.length" data-target="#recentlySentMessages"><span ng-show="shown">Hide</span><span ng-hide="shown">Show</span> Recently Sent</button>
+     <update-status ng-model="recent"></update-status>
+<button ng-init="shown = false" id="showHiddenButton" class="btn btn-block" data-toggle="collapse" ng-click="shown = !shown; getRecentlySentMessages();" data-target="#recentlySentMessages"><span ng-show="shown">Hide</span><span ng-hide="shown">Show</span> Recently Sent</button>
 
 <section id="recentlySentMessages" class="collapse">
     <ul>
