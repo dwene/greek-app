@@ -6,6 +6,7 @@
 
         <div id="pollTitle" class="col-sm-6 col-xs-12">
             <h1 class="text-center darkbg">{{poll.name}}<br>
+            <div class="alert alert-warning text-center" role="alert" ng-show="poll.open === false">This poll is closed.</div>
             </h1> 
             
             <div id="description" class="card">
@@ -16,8 +17,18 @@
         </div>
         
         <div class="col-sm-6 col-xs-12">
-            <div ng-if="poll.response_status || !poll.open" class="card">
-               <h2 class="page-header">Your Response</h2>
+           
+           <div id="pollButtons" class="card">
+                <button ng-click="goToResults()" ng-show="((poll.viewers != 'everyone' && $root.checkPermissions(poll.viewers))) || poll.viewers === undefined || poll.viewers == 'everyone'" class="btn btn-default">Results <i class="fa fa-edit"></i></button>
+                <div class="pull-right">
+                <button ng-click="closePoll(true)" ng-show="poll.open && $root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-pause"></i> Close Poll</button>
+                <button ng-click="closePoll(false)" ng-show="poll.open === false && $root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-play"></i> Open Poll</button>
+                <button ng-click="deletePoll()" ng-show="$root.checkPermissions('council')" class="btn btn-danger"><i class="fa fa-trash"></i> Delete Poll</button>
+                </div>
+            </div>
+           
+            <div id="responded" ng-if="poll.response_status || !poll.open" class="card">
+               <h1 class="card-header">Your Response</h1>
                 <div ng-repeat = "question in poll.questions | orderBy: 'index'">
                     <h3 class="question">{{question.worded_question}}</h3>
                     <span ng-repeat="a in question.response.answer" ng-show="question.response.answer.length"><span class="answer">{{a}}</span></span>
@@ -25,17 +36,17 @@
                 </div>
             </div>
             
-            <div ng-if="!(poll.response_status || !poll.open)">
+            <div id="response" ng-if="!(poll.response_status || !poll.open)" class="card">
+              <h1 class="card-header">Your Response</h1>
                <form name="response_form"  ng-submit="submitResponse()">
-                <div ng-repeat = "question in poll.questions | orderBy: 'index'">
-                    <p>{{question.worded_question}}</p>
-                    <div ng-show="question.type == 'text'"> 
+                <div class="question" ng-repeat="question in poll.questions | orderBy: 'index'">
+                    <h3>{{question.worded_question}}</h3>
+                    <div class="text_question" ng-show="question.type == 'text'"> 
                         <input type="text" name="response_form.input" ng-model="question.new_response" class="form-control col-sm-6" ng-required="question.type == 'text'">
                     </div>
-                    <div ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
+                    <div class="multiple_choice_question" ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
                         <input type="radio" name="response_form.input" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
                     </div>
-                   <hr> 
                 </div>
                 <input type="submit" ng-disabled="!response_form.$valid" class="btn btn-default">
               </form>  
