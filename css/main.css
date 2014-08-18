@@ -388,11 +388,20 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Edit Event Page*/
 
 /*Check In Page*/
-.checkin{border-top:1px solid #777; padding:10px; position:relative;}
-.checkin:last-child{border-bottom:1px solid #777;}
-/*makes room for the picture*/ .checkinContent{margin-left:60px; margin-right:100px; min-height:60px; position:relative;}
-.checkinContent .btn-group{position:absolute; right:-100px; top:50%; margin-top:-23px;}
-.checkinContent .memberName{font-size:18px;}
+
+/*makes room for the picture*/ .checkinContent{height:120px; padding:15px 15px 44px 75px !important; position:relative;}
+.checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
+.checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
+.checkinContent .checkinTitle{font-size:18px; display:block; font-weight:bold; margin-bottom:5px;}
+#checkinPage .btn-group .btn+.btn{margin-left:0px;}
+#checkinPage .smallprofilepic{margin-top:-40px; left:15px;}
+
+/*
+#checkinPage li{width:50%; margin:0 15px; display:inline-block;}
+@media screen and (max-width:768px){
+#checkinPage li{width:100%;}
+}
+*/
 
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}

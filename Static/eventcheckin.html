@@ -1,23 +1,26 @@
 <div ng-show="loading" ng-hide="eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
-<div class="container" ng-hide="loading || eventNotFound">
+
+<div id="checkinPage" class="container" ng-hide="loading || eventNotFound">
 
 <div class="form-group">
     <input id="checkinSearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
 </div>        
         
-        <ul>
+        <ul class="row">
+            <li ng-repeat="member in users | orderBy:'rsvp' | multipleSearch: search" class="checkin col-xs-12 col-sm-6" ng-show="true" ng-click="showIndividual(member)">
 
-            <li ng-repeat="member in users | orderBy:'rsvp' | multipleSearch: search" class="checkin" ng-show="true" ng-click="showIndividual(member)">
+                <div class="checkinContent card">
 
-                <div class="checkinContent">
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
-                <span class="memberName">{{member.first_name}} {{member.last_name}}</span> is <span class="rsvpStatus">{{member.rsvp}}</span><br>
+               
+                <span class="checkinTitle"><span class="memberName">{{member.first_name}} {{member.last_name}}</span> is <span class="rsvpStatus">{{member.rsvp}}</span></span>
                 <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}<i ng-click="checkIn(member, false, true)" class="fa fa-times"></i></span><br>
                 <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}<i ng-click="checkOut(member, false, true)" class="fa fa-times"></i></span><br>
                 
                     <div class="btn-group">
-                    <button class="btn btn-lg btn-success" ng-click="checkIn(member, true, false)"><i class="fa fa-key"></i></button>
+                    <button class="btn btn-lg btn-primary" ng-click="checkIn(member, true, false)"><i class="fa fa-key"></i></button>
                     <button class="btn btn-lg btn-danger" ng-click="checkOut(member, true, false)"><i class="fa fa-leaf"></i></button>
                     </div>
                 </div>
