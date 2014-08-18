@@ -1,30 +1,23 @@
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
-<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>		
-
-<div class="container">		
-		<!-- HEADER AND TODO COUNT -->
-		<div class="jumbotron text-center">
-					<button class="btn btn-default topRight" ng-click="createReport()">Download Report</button>
-			<h1>Report</h1>
-		</div>
-</div>
 
 <div id="report" class="container" ng-hide="eventNotFound || loading">
 
+			<h1 class="darkbg">Report for #{{event.tag}} <button class="btn btn-default pull-right" ng-click="createReport()"><i class="fa fa-download"></i> Download</button>
+</h1>
         <ul>
 
             <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin">
-            
-                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
-
-                <div class="checkinContent">
-
-                <span class="memberName">{{member.first_name}} {{member.last_name}}</span><br>
-                <span ng-show = "member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
-                <span ng-show = "member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
-                <span ng-show = "member.attendance_data.time_in && member.attendance_data.time_out">Duration: {{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span><br>
-                </div>
+                <div class="checkinContent card">
+                    <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+                    <h1 class="memberName card-header">{{member.first_name}} {{member.last_name}}</h1>
+                    <span ng-show = "member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
+                    <span ng-show = "member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
+                    <span ng-show = "member.attendance_data.time_in && member.attendance_data.time_out">Duration: {{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span><br>
+                    </div>
                 </li>
         </ul>
 
 </div>
+
+
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>		

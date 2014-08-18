@@ -398,12 +398,10 @@ textarea.form-control{height:auto; max-width:100%;}
 #checkinPage .smallprofilepic{margin-top:-40px; left:15px;}
 #checkinPage li{margin-bottom:10px;}
 
-/*
-#checkinPage li{width:50%; margin:0 15px; display:inline-block;}
-@media screen and (max-width:768px){
-#checkinPage li{width:100%;}
-}
-*/
+/*Check In Report*/
+#report h1{margin-bottom:10px;}
+#report .card{margin-bottom:10px;}
+#report .card .smallprofilepic{left:15px;}
 
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}
