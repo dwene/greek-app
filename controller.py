@@ -44,6 +44,7 @@ NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 TAG_INVALID = "TAG_INVALID"
 
 EVERYONE = 'Everyone'
+EXPIRE_TIME = 7 # Number of days until token expires
 
 
 class IncomingMessage(messages.Message):
@@ -232,7 +233,7 @@ def get_user(user_name, token):
         return None
     if user.timestamp:
         dt = (datetime.datetime.now() - user.timestamp)
-        if user.current_token == token and dt.days < 7:
+        if user.current_token == token and dt.days < EXPIRE_TIME:
             return user
     return None
 
@@ -586,7 +587,8 @@ class RESTApi(remote.Service):
             new_user.class_year = int(user['class_year'])
             new_user.timestamp = datetime.datetime.now()
             new_user.put()
-            return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms}))
+            return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms,
+                                                             'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
         except:
             return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
@@ -615,11 +617,12 @@ class RESTApi(remote.Service):
         user = User.query(User.user_name == user_name).get()
         if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
             dt = (datetime.datetime.now() - user.timestamp)
-            if dt.seconds/60/60 > 18:
+            if dt.seconds/60/60 > 2:
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return_item = {'token': user.current_token, 'perms': user.perms, 'expire': user.timestamp}
+            return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
+                                                                             datetime.timedelta(days=EXPIRE_TIME)}
             return OutgoingMessage(data=json_dump(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
@@ -800,7 +803,9 @@ class RESTApi(remote.Service):
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(error='', data=json_dump({'token': user.current_token, 'perms': user.perms}))
+            return OutgoingMessage(error='',
+                                   data=json_dump({'token': user.current_token, 'perms': user.perms,
+                                                   'expires': user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_username',
