@@ -393,8 +393,10 @@ textarea.form-control{height:auto; max-width:100%;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
 .checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
 .checkinContent .checkinTitle{font-size:18px; display:block; font-weight:bold; margin-bottom:5px;}
+.checkinContent .updating{position:absolute; top:10px; right:10px;}
 #checkinPage .btn-group .btn+.btn{margin-left:0px;}
 #checkinPage .smallprofilepic{margin-top:-40px; left:15px;}
+#checkinPage li{margin-bottom:10px;}
 
 /*
 #checkinPage li{width:50%; margin:0 15px; display:inline-block;}
