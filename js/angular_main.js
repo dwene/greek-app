@@ -532,7 +532,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     {
                         returned_data = JSON.parse(data.data);
                         $.cookie(USER_NAME, user_name);
-                        $.cookie(TOKEN, returned_data.token, {expires: returned_data.expires});
+                        $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
                         if ($rootScope.hasLoaded){
                             $rootScope.Load();
                         }
@@ -701,7 +701,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data))
                     {
                         var responseData = JSON.parse(data.data);
-                        $.cookie(TOKEN,  responseData.token, {expires: responseData.expires});
+                        $.cookie(TOKEN,  responseData.token, {expires: new Date(responseData.expires)});
                         $rootScope.perms =  responseData.perms;
                         $.cookie("USER_NAME", data_tosend.user.user_name);
                         window.location.assign("/#/app/managemembers/add");
@@ -1658,7 +1658,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     var returned_data = JSON.parse(data.data);
-                    $.cookie(TOKEN,returned_data.token, {expires: returned_data.expires});
+                    $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
                     $.cookie(USER_NAME, $scope.item.user_name);
                     $.cookie(PERMS, returned_data.perms);
                     $.cookie('FORM_INFO_EMPTY', 'true');
