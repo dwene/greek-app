@@ -16,7 +16,30 @@
         </div>
         
         <div class="col-sm-6 col-xs-12">
+            <div ng-if="poll.response_status || !poll.open" class="card">
+               <h2 class="page-header">Your Response</h2>
+                <div ng-repeat = "question in poll.questions | orderBy: 'index'">
+                    <h3 class="question">{{question.worded_question}}</h3>
+                    <span ng-repeat="a in question.response.answer" ng-show="question.response.answer.length"><span class="answer">{{a}}</span></span>
+                    <span ng-hide="question.response.answer.length">No response</span>
+                </div>
+            </div>
             
+            <div ng-if="!(poll.response_status || !poll.open)">
+               <form name="response_form"  ng-submit="submitResponse()">
+                <div ng-repeat = "question in poll.questions | orderBy: 'index'">
+                    <p>{{question.worded_question}}</p>
+                    <div ng-show="question.type == 'text'"> 
+                        <input type="text" name="response_form.input" ng-model="question.new_response" class="form-control col-sm-6" ng-required="question.type == 'text'">
+                    </div>
+                    <div ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
+                        <input type="radio" name="response_form.input" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
+                    </div>
+                   <hr> 
+                </div>
+                <input type="submit" ng-disabled="!response_form.$valid" class="btn btn-default">
+              </form>  
+            </div>
             
         </div>
 
