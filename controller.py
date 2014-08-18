@@ -898,6 +898,7 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load',
                       http_method='POST', name='info.load')
     def load_user_data(self, request):
+        time_start = datetime.datetime.now()
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
@@ -905,7 +906,7 @@ class RESTApi(remote.Service):
         out_data["perms"] = request_user.perms
         out_data["accountFilledOut"] = bool(request_user.address and request_user.dob)
         # line up all the queries
-        events_polls_future = Event.query(Event.going == request_user.key).fetch_async()
+        events_polls_future = Event.query(Event.going == request_user.key).fetch_async(projection=[Event.tag])
         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
         event_tag_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
                                             Event.time_end < datetime.datetime.today() + relativedelta(months=1))
@@ -937,7 +938,7 @@ class RESTApi(remote.Service):
 
 #part 1 of polls
         events_polls = events_polls_future.get_result()
-
+        time_middle = datetime.datetime.now()
         poll_event_tags = list()
         for event in events_polls:
             poll_event_tags.append(event.tag)
@@ -1060,6 +1061,10 @@ class RESTApi(remote.Service):
             add["key"] = poll.key
             dict_polls.append(add)
         out_data["polls"] = dict_polls
+
+        time_end = datetime.datetime.now()
+        logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
+                      str(time_middle-time_start))
         return OutgoingMessage(error='', data=json_dump(out_data))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_welcome_email',

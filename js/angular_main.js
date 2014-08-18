@@ -27,6 +27,7 @@ I think status max should be shorter, else it doesnt really fit.
 
 //Final/static variables. These variables are used for cookies
 var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+//var ENDPOINTS_DOMAIN = '';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -2206,8 +2207,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         Load.then(function(){
         $rootScope.requirePermissions(LEADERSHIP);
             
-            
-            
         function getUsers(){
             var out_users = [];
             var users = $rootScope.directory;
@@ -2218,7 +2217,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 out_users.push(user);
             }
             $scope.users = out_users
-            $scope.users = [];
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -2226,14 +2224,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     var users = JSON.parse(data.data);
                     var out_users = [];
                     for (var i = 0; i < users.members.length; i ++){
-                        var user = users.members[i];
-                        user.name = users.members[i].first_name + " " + users.members[i].last_name;
-                        user.checked = false;
-                        out_users.push(user);
+                        for (var j = 0; j < $scope.users.length; j++){
+                            if (users.members[i].key == $scope.users[j].key){
+                                var checked = $scope.users[j].checked;
+                                $scope.users[j] = users.members[i];
+                                $scope.users[j].checked = checked;
+                                $scope.users[j].name = users.members[i].first_name + " " + users.members[i].last_name;
+                                break;
+                            }
+                        }
+//                        var user = users.members[i];
+//                        user.name = users.members[i].first_name + " " + users.members[i].last_name;
+//                        user.checked = false;
+//                        out_users.push(user);
                     }
-                    $scope.users = out_users;
-                    $rootScope.directory = users;
-                    console.log($rootScope.directory);
+//                    $scope.users = out_users;
+//                    $rootScope.directory = users;
+//                    console.log($rootScope.directory);
                 }
                 else
                     console.log('ERROR: ',data);
@@ -3192,6 +3199,28 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);
+                    $scope.event = undefined;
+                    for (var i = 0; i < $rootScope.events.length; i++){
+                        if ($rootScope.events[i].tag == $stateParams.tag){
+                            $scope.event = $rootScope.events[i];
+                        }
+                    }
+                    $scope.noShows = [];
+                    if ($scope.event){
+                        for (var i = 0 ; i < $scope.users.length; i++){
+                            if ($scope.event.invited.indexOf($scope.users[i].key) != -1){
+                                if ($scope.event.going.indexOf($scope.users[i].key) != -1){
+                                    $scope.noShows.push({user: $scope.users[i], rsvp: 'Going'});
+                                }
+                                else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
+                                    $scope.noShows.push({user: $scope.users[i], rsvp: 'Not Going' });
+                                }
+                                else {
+                                    $scope.noShows.push({user: $scope.users[i], rsvp: 'No Response' });
+                                }
+                            }
+                        }
+                    }
                     $scope.loading = false;
                 }
                 else{
@@ -4326,7 +4355,6 @@ App.filter('multipleSearch', function(){
                     break;
                 }
                 if(sPos == searchArray.length-1 && check){
-                    console.log('adding to retlist');
                     retList.push(object);
                 }
             }

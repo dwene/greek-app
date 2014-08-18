@@ -13,7 +13,7 @@
 
         <ul>
 
-            <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin">
+            <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin" ng-show="member.attendance_data.time_in || member.attendance_data.time_out">
             
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
@@ -25,6 +25,28 @@
                 <span ng-show = "member.attendance_data.time_in && member.attendance_data.time_out">Duration: {{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span><br>
                 </div>
                 </li>
+                
+            
+        </ul>
+            <h2>No shows</h2>
+        <ul>
+
+<!--
+            <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin" ng-hide="member.attendance_data.time_in || member.attendance_data.time_out">
+            
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+
+                <div class="checkinContent">
+
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span><br>
+                <span ng-show = "member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
+                <span ng-show = "member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span><br>
+                <span ng-show = "member.attendance_data.time_in && member.attendance_data.time_out">Duration: {{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span><br>
+                </div>
+                </li>
+-->
+                
+            
         </ul>
 
 </div>

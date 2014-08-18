@@ -50,12 +50,12 @@
                     </div>
                     </div>
                     <ul>
-                        <div id="memberSelect" ng-repeat="user in users | orderBy:'last_name' | multipleSearch:search">
+                        <div id="memberSelect" ng-repeat="user in (users | orderBy:'last_name' | multipleSearch:search)  track by user.key">
                                
                                <ul id="memberTags">
                                 <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
                                 <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
-                                <input type="checkbox" ng-model="user.checked"> <span>#{{user.name}}</span>
+                                <input type="checkbox" ng-model="user.checked"> <span>{{user.name}}</span>
                                 </label>
                                 
                                 
