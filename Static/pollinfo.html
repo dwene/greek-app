@@ -1,10 +1,27 @@
-
 <div ng-if="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-
 <section ng-if="!loading" ng-show="notFound">Sorry this webpage could not be found. :(</section>
 
+<section id="pollInfo" class="container" ng-if="!loading" ng-hide="notFound || !poll" >
 
-<section class="container" ng-if="!loading" ng-hide="notFound || !poll" >
+
+        <div id="pollTitle" class="col-sm-6 col-xs-12">
+            <h1 class="text-center darkbg">{{poll.name}}<br>
+            </h1> 
+            
+            <div id="description" class="card">
+                <div class="icon"><i class="fa fa-quote-left"></i> | </div><p>{{poll.description}}</p>
+                <span>Created by: {{creator.first_name}} {{creator.last_name}}</span>
+            </div>
+            
+        </div>
+        
+        <div class="col-sm-6 col-xs-12">
+            
+            
+        </div>
+
+
+<!--
 <div class="jumbotron">
 			
 <a ng-href="#/app/polls" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
@@ -45,4 +62,5 @@
     <input type="submit" ng-disabled="!response_form.$valid" class="btn btn-default">
   </form>  
 </div>
+-->
 </section>

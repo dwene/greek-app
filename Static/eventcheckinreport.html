@@ -15,7 +15,7 @@
 
             <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin">
             
-                <div class="smallprofilepic" style="background-image:url({{member.prof_pic}});" ></div>
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
                 <div class="checkinContent">
 

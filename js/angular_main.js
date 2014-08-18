@@ -3176,6 +3176,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter) {
         routeChange();
         $scope.loading = true;
+        $scope.getProfPic = function(link){
+            if (link){
+                return link + '=s50';
+            }
+            else{
+                return $rootScope.defaultProfilePicture;
+            }   
+        }
         Load.then(function(){
             getCheckInData();
             $rootScope.requirePermissions(LEADERSHIP);
@@ -3451,6 +3459,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.formUnfinished = false;}
         })
+        
+        $scope.creator = $rootScope.getUserFromKey($scope.poll.creator);
+//        #FIXME creator undefined :-P
         
         $scope.deletePoll = function(){
             var to_send = {key: $stateParams.key};
