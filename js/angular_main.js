@@ -3409,6 +3409,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
+                        $scope.creator = $rootScope.getUserFromKey($scope.poll.creator);
                     }
                     else{
                         $scope.notFound = true;
@@ -3460,7 +3461,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.formUnfinished = false;}
         })
         
-        $scope.creator = $rootScope.getUserFromKey($scope.poll.creator);
 //        #FIXME creator undefined :-P
         
         $scope.deletePoll = function(){

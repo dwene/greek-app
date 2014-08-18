@@ -619,7 +619,7 @@ class RESTApi(remote.Service):
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return_item = {'token': user.current_token, 'perms': user.perms}
+            return_item = {'token': user.current_token, 'perms': user.perms, 'expire': user.timestamp}
             return OutgoingMessage(data=json_dump(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
