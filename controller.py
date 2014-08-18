@@ -232,7 +232,7 @@ def get_user(user_name, token):
         return None
     if user.timestamp:
         dt = (datetime.datetime.now() - user.timestamp)
-        if user.current_token == token and dt.days < 3:
+        if user.current_token == token and dt.days < 7:
             return user
     return None
 
