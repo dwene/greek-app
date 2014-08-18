@@ -13,7 +13,7 @@
 <button ng-click="deletePoll()" ng-show="$root.checkPermissions('council')" class="btn btn-danger bottomRight"><i class="fa fa-trash"></i> Delete Poll</button>
     
 
-<button ng-click="goToResults()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default bottomLeft">Results <i class="fa fa-edit"></i></button>
+<button ng-click="goToResults()" ng-show="((poll.viewers != 'everyone' && $rootScope.checkPermissions(poll.viewers))) || poll.viewers === undefined || poll.viewers == 'everyone'" class="btn btn-default bottomLeft">Results <i class="fa fa-edit"></i></button>
 
             <div class="alert alert-warning text-center" role="alert" ng-show="poll.open === false">This poll is closed.</div>
 			<h1 class="text-center">{{poll.name}}</h1>

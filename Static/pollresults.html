@@ -1,13 +1,14 @@
 <div class="container" ng-init="state='summary'">
 <ul class="nav nav-pills">
+
     <li ng-class="{ active: state=='summary' }"><a ng-click="state='summary'" class="tabSelect">By Question</a></li>
-    <li ng-class="{ active: state=='individuals' }"><a ng-click="state='individuals'" class="tabSelect">By Person</a></li>
+    <li ng-show="poll.show_names" ng-class="{ active: state=='individuals' }"><a ng-click="state='individuals'" class="tabSelect">By Person</a></li>
+
 </ul>
 </div>
 <br>
 <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <section ng-show="!loading && notFound">Sorry this webpage could not be found. :(</section>  
-
 
 <div id="pollResultsPage">
    
@@ -30,7 +31,7 @@
                     </li>
                     <li class="summaryResponses" ng-repeat="response in question.responses">
                        <div class="row">
-                        <span class="col-xs-6">{{$root.getNameFromKey(response.key)}}</span><span class="col-xs-6">{{response.text}}</span>
+                        <span class="col-xs-6"><span ng-hide="poll.show_names">{{$index + 1}}</span><span ng-show="poll.show_names">{{$root.getNameFromKey(response.key)}}</span></span><span class="col-xs-6">{{response.text}}</span>
                         </div>
                     </li>
                 </ul>

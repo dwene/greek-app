@@ -3515,6 +3515,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
+                        if (($scope.poll.viewers != 'everyone' && !$rootScope.checkPermissions($scope.poll.viewers))){
+                            window.location.replace('#/app/polls/'+$stateParams.key);
+                        }
                         var key_list = [];
                         var user_list = [];
                         for (var i = 0; i < $scope.poll.questions.length; i++){
