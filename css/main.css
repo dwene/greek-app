@@ -152,13 +152,14 @@ input.form-control{height:34px !important;}
 }
 .fa-times-circle{width:16px;}
 .collapse{display:none !important;}
+h1.darkbg{margin-bottom:10px;}
 
 @media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
 #memberAccount #addresses .col-sm-6:nth-child(1){position:relative; left:-10px;}
 #memberAccount #addresses .col-sm-6:nth-child(2){position:relative; left:15px;}
 }
-h1{font-size:36px; font-weight:bold;}
+h1{font-size:34px; font-weight:bold;}
 
 
 /*Main App ui-view*/
@@ -274,13 +275,14 @@ margin-top: 2px;}}
 
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
-#recentlySentMessages{margin-top:20px;}
+#recentlySentMessages{padding-top:10px;}
 #recentlySentMessages h2{margin-bottom:0px; border:0px;}
 #messagingTags{margin-bottom:5px;}
 #messagingTags .btn-group{margin-bottom:5px;}
 
 /*App Home Page*/
 #orgLetters img{height:auto; width:100%;}
+#statusContainer{margin-bottom:20px;}
 #statusContainer h2{font-weight:bold;}
 .currentStatus{font-style:italic; font-size:22px; margin-top:0px; padding:10px; margin-left:60px; display:block; position:relative; z-index:100;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px -20px 0px;}
@@ -305,8 +307,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #upcomingEvents .icon{font-size:18px; position:absolute; top:50%; margin-top:-9px; left:8px;}
 
 /*Main App Page*/
-#notifications ul{margin-top:20px;}
-
+#notifications ul{margin-top:10px;}
 #notifications .card-header{padding-left:20px;}
 
 @media screen and (min-width:768px){
@@ -530,9 +531,7 @@ h1.card-header{font-size:24px; margin-top:-5px; margin-bottom:5px;}
 h2.card-header{font-size:24px; font-weight:bold; margin:10px 0px;}
 
 h1.darkbg{color:white; border-radius:5px; padding:10px;}
-
-.saveButton{font-size: 23px;
-padding: 0px 6px; margin-left:5px;}
+.darkbg .btn{background:none; color:white; border:2px solid white; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); font-weight:bolder;}
 
 .noNotifications{font-size:40px; margin:40px 0px; font-weight:bolder; color:#ccc;}
 

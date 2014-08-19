@@ -19,11 +19,11 @@
         <div class="col-sm-6 col-xs-12">
            
            <div id="pollButtons" class="card">
-                <button ng-click="goToResults()" ng-show="((poll.viewers != 'everyone' && $root.checkPermissions(poll.viewers))) || poll.viewers === undefined || poll.viewers == 'everyone'" class="btn btn-default">Results <i class="fa fa-edit"></i></button>
+                <button ng-click="goToResults()" ng-show="((poll.viewers != 'everyone' && $root.checkPermissions(poll.viewers))) || poll.viewers === undefined || poll.viewers == 'everyone'" class="btn btn-default iconButton"><i class="fa fa-bar-chart-o"></i></button>
                 <div class="pull-right">
-                <button ng-click="closePoll(true)" ng-show="poll.open && $root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-pause"></i> Close Poll</button>
-                <button ng-click="closePoll(false)" ng-show="poll.open === false && $root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-play"></i> Open Poll</button>
-                <button ng-click="deletePoll()" ng-show="$root.checkPermissions('council')" class="btn btn-danger"><i class="fa fa-trash"></i> Delete Poll</button>
+                <button ng-click="closePoll(true)" ng-show="poll.open && $root.checkPermissions('leadership')" class="btn btn-default iconButton"><i class="fa fa-pause"></i></button>
+                <button ng-click="closePoll(false)" ng-show="poll.open === false && $root.checkPermissions('leadership')" class="btn btn-default iconButton"><i class="fa fa-play"></i></button>
+                <button ng-click="deletePoll()" ng-show="$root.checkPermissions('council')" class="btn btn-danger iconButton"><i class="fa fa-trash-o"></i></button>
                 </div>
             </div>
            

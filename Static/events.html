@@ -1,12 +1,12 @@
 <section class="container" id="events" ng-init="current = {maxPageNumber: 5, currentPage: 0}; present = true;">
        <div class="row">
         <div class="col-xs-12 col-sm-6 col-lg-4">
+           <h1 class="darkbg">Events <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Event <i class="fa fa-plus"></i></a> </h1>
             <calendar id="calendar" class="card" calendar-mode="mode" event-source="eventSource">
         </div>
         
         <ul id="eventList" class="col-xs-12 col-sm-6 col-lg-8">
             
-            <a id="newEventButton" href="#/app/newevent" ng-show="$root.checkPermissions('leadership')" class="btn btn-default">New Event <i class="fa fa-plus"></i></a> 
         <a id="showPastButton" data-toggle="collapse" class="btn btn-default" ng-show="events.length" ng-click="present = !present; current.currentPage = 0;" ng-hide="search.length"><i class="fa fa-history"></i><span ng-show="!present">Show Upcoming</span> <span ng-show="present">Show Past</span></a>
 
             <div class="form-group">

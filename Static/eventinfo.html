@@ -30,10 +30,12 @@
             
             
         <div id="eventButtons" class="card">
-            <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default">Report <i class="fa fa-edit"></i></button>
-            <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin">Check Ins</a>
-            <button ng-click="saveEvent()" class="btn btn-info pull-right saveButton"><i class="fa fa-floppy-o"></i></button>
-            <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default pull-right"><i class="fa fa-edit"></i> Edit</button>
+            <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-bar-chart-o"></i></button>
+            <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin"><i class="fa fa-key"></i></a>
+            <div class="pull-right">
+            <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-edit"></i></button>
+            <button ng-click="saveEvent()" class="btn btn-info"><i class="fa fa-floppy-o"></i></button>
+            </div>
         
            <div ng-hide="event.creator == $root.me.key">
             <hr>
