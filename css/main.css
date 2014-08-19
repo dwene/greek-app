@@ -408,14 +408,16 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Check In Page*/
 
-/*makes room for the picture*/ .checkinContent{height:120px; padding:15px 15px 44px 75px !important; position:relative;}
+/*makes room for the picture*/ .checkinContent{height:160px; padding:15px 15px 44px 75px !important; position:relative;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
 .checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
 .checkinContent .checkinTitle{font-size:18px; display:block; font-weight:bold; margin-bottom:5px;}
 .checkinContent .updating{position:absolute; top:10px; right:10px;}
+.rsvpStatus{display:block; margin-bottom:5px; font-size:18px; font-style:italic;}
 #checkinPage .btn-group .btn+.btn{margin-left:0px;}
-#checkinPage .smallprofilepic{margin-top:-40px; left:15px;}
+#checkinPage .smallprofilepic{top:12px; left:12px; margin-top:0px;}
 #checkinPage li{margin-bottom:10px;}
+.checkedIn, .checkedOut{display:block; padding:5px 0px;}
 
 /*Check In Report*/
 #report h1{margin-bottom:10px;}
