@@ -50,7 +50,7 @@
        <h1 class="card-header darkbg">{{$root.notification_lengths.unread}} of {{$root.notification_lengths.read + $root.notification_lengths.unread}} Unread</h1>
        
         <ul>
-            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy : '-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
+            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="hideNotification(notify, this);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
                 <div class="notificationTitle"><div class="unread">|</div>{{notify.title}}</div>
