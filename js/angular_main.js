@@ -3298,7 +3298,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 var originalCurrentLine = true;
                 var current_line = 42;
                 doc.setFontSize(23);
-                doc.text(56, 30, 'Report for #'+ $stateParams.tag);
+                var centeredText = function(text, y) {
+                    var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+                    doc.text(textOffset, y, text);
+                }
+                centeredText('Report for #'+ $stateParams.tag, 30);
+//                doc.text(56, 30, 'Report for #'+ $stateParams.tag);
                 doc.setFontSize(18);
                 doc.text(30, 40, 'Attendees');
                 var shifted = 20;
@@ -3331,7 +3337,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else if(current_line > 250){
                         if (originalCurrentLine){
-                            current_line = 40;
+                            current_line = 30;
                             originalCurrentLine = false;
                         }
                         else{
@@ -3351,7 +3357,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                         else{
                             if (originalCurrentLine){
-                            current_line = 40;
+                            current_line = 26;
                             originalCurrentLine = false;
                             }
                             else{
