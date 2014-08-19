@@ -150,16 +150,16 @@ input.form-control{height:34px !important;}
 @media screen and (max-width: 768px){
 .jumbotron {padding-top: 50px; padding-bottom: 50px;}
 }
-.fa-times-circle{width:16px;}
-.collapse{display:none !important;}
+.fa-times-circle{width:16px; cursor:pointer;}
 h1.darkbg{margin-bottom:10px;}
+.collapse{display:none !important;}
 
 @media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
 #memberAccount #addresses .col-sm-6:nth-child(1){position:relative; left:-10px;}
 #memberAccount #addresses .col-sm-6:nth-child(2){position:relative; left:15px;}
 }
-h1{font-size:34px; font-weight:bold;}
+h1{font-size:36px; font-weight:bold;}
 
 
 /*Main App ui-view*/
@@ -275,14 +275,13 @@ margin-top: 2px;}}
 
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
-#recentlySentMessages{padding-top:10px;}
+#recentlySentMessages{margin-top:20px;}
 #recentlySentMessages h2{margin-bottom:0px; border:0px;}
 #messagingTags{margin-bottom:5px;}
 #messagingTags .btn-group{margin-bottom:5px;}
 
 /*App Home Page*/
 #orgLetters img{height:auto; width:100%;}
-#statusContainer{margin-bottom:20px;}
 #statusContainer h2{font-weight:bold;}
 .currentStatus{font-style:italic; font-size:22px; margin-top:0px; padding:10px; margin-left:60px; display:block; position:relative; z-index:100;}
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px -20px 0px;}
@@ -307,7 +306,8 @@ textarea.form-control{height:auto; max-width:100%;}
 #upcomingEvents .icon{font-size:18px; position:absolute; top:50%; margin-top:-9px; left:8px;}
 
 /*Main App Page*/
-#notifications ul{margin-top:10px;}
+#notifications ul{margin-top:20px;}
+
 #notifications .card-header{padding-left:20px;}
 
 @media screen and (min-width:768px){
@@ -408,14 +408,17 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Check In Page*/
 
-/*makes room for the picture*/ .checkinContent{height:120px; padding:15px 15px 44px 75px !important; position:relative;}
+/*makes room for the picture*/ .checkinContent{height:160px; padding:15px 15px 44px 75px !important; position:relative;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
 .checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
 .checkinContent .checkinTitle{font-size:18px; display:block; font-weight:bold; margin-bottom:5px;}
 .checkinContent .updating{position:absolute; top:10px; right:10px;}
+.rsvpStatus{display:block; margin-bottom:5px; font-size:18px; font-style:italic;}
 #checkinPage .btn-group .btn+.btn{margin-left:0px;}
-#checkinPage .smallprofilepic{margin-top:-40px; left:15px;}
+#checkinPage .smallprofilepic{top:12px; left:12px; margin-top:0px;}
 #checkinPage li{margin-bottom:10px;}
+.checkedIn, .checkedOut{display:block; padding:5px 0px;}
+
 
 /*Check In Report*/
 #report h1{margin-bottom:10px;}
@@ -531,7 +534,9 @@ h1.card-header{font-size:24px; margin-top:-5px; margin-bottom:5px;}
 h2.card-header{font-size:24px; font-weight:bold; margin:10px 0px;}
 
 h1.darkbg{color:white; border-radius:5px; padding:10px;}
-.darkbg .btn{background:none; color:white; border:2px solid white; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); font-weight:bolder;}
+
+.saveButton{font-size: 23px;
+padding: 0px 6px; margin-left:5px;}
 
 .noNotifications{font-size:40px; margin:40px 0px; font-weight:bolder; color:#ccc;}
 
