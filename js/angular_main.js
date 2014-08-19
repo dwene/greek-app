@@ -3280,44 +3280,115 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!users){
                     users = $scope.users;
                 }
-                users = $filter('orderBy')(users, "['rsvp', 'last_name']");
+                users = $filter('orderBy')(users, "last_name");
                 // We'll make our own renderer to skip this editor
                 var specialElementHandlers = {
                     '#editor': function(element, renderer){
                         return true;
                     }
                 };
-                doc.setFontSize(30);
-                doc.text(10, 20, 'Report for '+ $stateParams.tag);
-                var current_line = 20;
+                var pageNumber = 1;
+                doc.setFontSize(10);
+                function newPage(){
+                    doc.addImage(NeteGreekLogo, 'PNG', 187, 5, 15, 14);
+                    doc.text(20, 14, 'Report for #'+ $stateParams.tag);
+                    doc.text(188, 288, 'Page '+pageNumber);
+                }
+                newPage();
+                var originalCurrentLine = true;
+                var current_line = 42;
+                doc.setFontSize(23);
+                doc.text(56, 30, 'Report for #'+ $stateParams.tag);
+                doc.setFontSize(18);
+                doc.text(30, 40, 'Attendees');
                 var shifted = 20;
+                
                 for (var i = 0; i < users.length; i++){
-                    doc.setFontSize(15);
-                    doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
-                    doc.setFontSize(10);
                     if (users[i].attendance_data){
-                        console.log(users[i].attendance_data);
-                        if (users[i].attendance_data.time_in){
-                        doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
-                        }
-                        if (users[i].attendance_data.time_out){
-                        doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
-                        }
-                        if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
-                            doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+                        if (users[i].attendance_data.time_in || users[i].attendance_data.time_out){
+                            doc.setFontSize(13);
+                            doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
+                            doc.setFontSize(10);
+                            console.log(users[i].attendance_data);
+                            if (users[i].attendance_data.time_in){
+                            doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
+                            }
+                            if (users[i].attendance_data.time_out){
+                            doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
+                            }
+                            if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
+                                doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+                            }   
                         }
                     }
                         current_line += 0;
                     if (current_line > 250 && shifted > 20){
                         current_line = 20;
                         shifted = 20;
+                        pageNumber++;
                         doc.addPage();
+                        newPage();
                     }
                     else if(current_line > 250){
-                        current_line = 20;
+                        if (originalCurrentLine){
+                            current_line = 40;
+                            originalCurrentLine = false;
+                        }
+                        else{
+                            current_line = 20;
+                        }
                         shifted = 110;
                     }
                 }
+                if ($scope.noShows.length){
+                    if (current_line > 200){
+                        if (shifted > 20){
+                            current_line = 20;
+                            shifted = 20;
+                            pageNumber++;
+                            doc.addPage();
+                            newPage();
+                        }
+                        else{
+                            if (originalCurrentLine){
+                            current_line = 40;
+                            originalCurrentLine = false;
+                            }
+                            else{
+                                current_line = 20;
+                            }
+                            shifted = 110;
+                        }
+                    }
+                    doc.setFontSize(18);
+                    current_line+=5;
+                    doc.text(10 + shifted, current_line+=12, 'No Shows');
+                    var noShowsOrganized = $filter('orderBy')($scope.noShows, 'user.last_name');
+                    
+                    for (var i = 0; i < noShowsOrganized.length; i++){
+                        doc.setFontSize(12);
+                        doc.text(10 + shifted, current_line+=8, noShowsOrganized[i].user.first_name + ' ' + noShowsOrganized[i].user.last_name + ' - ' + noShowsOrganized[i].rsvp);
+                        if (current_line > 250 && shifted > 20){
+                            current_line = 20;
+                            shifted = 20;
+                            pageNumber++;
+                            doc.addPage();
+                            newPage();
+                            
+                        }
+                        else if(current_line > 250){
+                            if (originalCurrentLine){
+                                current_line = 40;
+                                originalCurrentLine = false;
+                            }
+                            else{
+                                current_line = 20;
+                            }
+                            shifted = 110;
+                        }
+                    }
+                }
+                
 //                doc.text(20, 20, 'Do you like that?');
                 // All units are in the set measurement for the document
                 // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
@@ -4833,4 +4904,4 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
 });
 
 
-
+//var NeteGreekLogo = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAwACkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+vO/ib8UoPAYt7G2tVu9WuU8xI3bakSZIDNjk5IIAHoeRgZ9EryDxktxpnxTlnWO0+z6jpsCyy3SKweNJiJbcBs8OpXJ7ZH1pSkoq7Gk27IyfC/x6vZ9Wgt/Eum2sFnO/li6tQyiI8ZJDE7gMjOCCAc89D7rXzN40Wa0+HY0oavBfRWhhIi8tVCMHfdIuMkSMZQCCfuq55zhfojw/cfbPDel3O/f51pFJuznOUBzU06kaivB3Q5RcXaRo0UUVZIjMqIXdgqqMkk4AFePeE4IPij4417xReiSTRbMf2bpkYZlDDhmfggg4wcEf8tMH7tbvxt1qXR/htcxwMUfUZksi4PRWyz/AJqrL/wKrnwgi0+D4badHp8iuA0hmxjcshckhvcAr9RtPQik0nowTsJ4m+Gml6n4O1DS7CELfSIGguJnLMJFO5Rk/dUkYOB0OeTXnHwa8eXGi6j/AMIfrqSRQy3DQ2jS5Bt584aFgemW6ejHHO7j6Br5e+LDQw+O/FEUR8pg1vPHsOD53lJyMdDhmJ96FFJWQ223dn1DRVTSrpr7R7K7fG6e3jlOPVlB/rVumI8/8b3UWqXn9kXFpBJBaSJLieMPvfbwQDxgBj+NYHhXTYdF8bJqdtqUmn2EyFLmwSIeTK2CFJORtAJB6HHOCAxrtdf8JzanqL31rcxq7qAY5QcZHGQw6DpxisGLwvrhu1ha1CITgzmRWRR64B3H6YGfbqPJq/WoVnKKbX4WO6HsZU7M7nWr5NO0S8vGmSIxxHY7kAbzwg57liAB3JArwfX/AAc/iDxEdQuL8fY5ijTxbP3p2jGA/o3c9cnvgV6VdfCfSLwxtcatrkzwuJYvNvNyRyDkMqbdowewAFTad4JuvPH9pTwiBD923ZiZB7kgbfwyfcda6MTGu5xdLtYxpOnytTNHwZfGXTTp5TBswArD7uwk7VHptAxj0ArpqitrWCzhENtCkUY6KgwPr9alrqowlCCjJ3aMpyUpNo//2Q==";
