@@ -47,12 +47,12 @@
 
     <section id="notifications">
 
-       <h1 class="card-header darkbg">{{$root.notification_count}} of {{$root.notifications.length}} Unread</h1>
+       <h1 class="card-header darkbg">{{$root.notification_lengths.unread}} of {{$root.notification_lengths.read + $root.notification_lengths.unread}} Unread</h1>
        
         <ul>
-            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.notifications | orderBy : '-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber">
+            <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy : '-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
                 <div class="notificationContent">
-                <button type="button" class="close" onclick="console.log(this)" ng-click="hideNotification(notify, this);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
+                <button type="button" class="close" ng-click="hideNotification(notify, this);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
                 <div class="notificationTitle"><div class="unread">|</div>{{notify.title}}</div>
                     <span>{{notify.content | limitTo:116}}<span ng-show="notify.content.length > 100">...</span></span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
@@ -69,8 +69,9 @@
     <section id="showHidden" class="collapse">       
        
         <ul>
-            <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in $root.hidden_notifications | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
+            <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.hidden_notifications | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">
                 <div class="notificationContent">
+                <button type="button" class="close" ng-click="unhideNotification(notify, this);$event.stopPropagation();" bs-tooltip="unarchiveTip" data-placement="left"><i class="fa fa-inbox"></i></button>
                 <span class="notificationTitle">{{notify.title}}</span>
                     <span>{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>

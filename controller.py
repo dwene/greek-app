@@ -108,7 +108,7 @@ def add_notification_to_users(notification, users):
             future_list.append(CronEmail(type='notification', pending=True, email=user.email,
                                          title='Notification: ' + notification.title,
                                          content=notification.content).put_async())
-        user.new_notifications.append(notification.key)
+        user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
     for item in future_list:
         item.get_result()
@@ -1051,7 +1051,10 @@ class RESTApi(remote.Service):
                 note["key"] = notify.key.urlsafe()
                 out_hidden_notifications.append(note)
         out_data["notifications"] = {'notifications': out_notifications,
-                                     'hidden_notifications': out_hidden_notifications}
+                                     'hidden_notifications': out_hidden_notifications,
+                                     'notifications_length': len(request_user.notifications),
+                                     'hidden_notifications_length': len(request_user.hidden_notifications),
+                                     'new_notifications_length': len(request_user.new_notifications)}
 
 #part 2 of polls
         dict_polls = list()
@@ -1479,7 +1482,7 @@ class RESTApi(remote.Service):
         notification.sender_name = request_user.first_name + ' ' + request_user.last_name
         notification.title = data['title']
         notification.put()
-        request_user.sent_notifications.append(notification.key)
+        request_user.sent_notifications.insert(0, notification.key)
         request_user.put()
         add_notification_to_users(notification, user_list)
         return OutgoingMessage(error='', data='OK')
@@ -1499,10 +1502,10 @@ class RESTApi(remote.Service):
                 request_user.new_notifications)).fetch_async()
         if request_user.notifications:
             notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(Notification.timestamp).fetch_async(20)
+                request_user.notifications[:20])).fetch_async(20)
         if request_user.hidden_notifications:
             hidden_notifications_future = Notification.query(Notification.key.IN(
-                request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
+                request_user.hidden_notifications[:30])).fetch_async(30)
         out_notifications = list()
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
@@ -1525,7 +1528,12 @@ class RESTApi(remote.Service):
                 note = notify.to_dict()
                 note["key"] = notify.key.urlsafe()
                 out_hidden_notifications.append(note)
-        out = {'notifications': out_notifications, 'hidden_notifications': out_hidden_notifications}
+        out = {'notifications': out_notifications,
+               'hidden_notifications': out_hidden_notifications,
+               'notifications_length': len(request_user.notifications),
+               'hidden_notifications_length': len(request_user.hidden_notifications),
+               'new_notifications_length': len(request_user.new_notifications)}
+        logging.error('notifications_length' + str(len(request_user.notifications)))
         return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
@@ -1538,7 +1546,7 @@ class RESTApi(remote.Service):
         key = ndb.Key(urlsafe=data["notification"])
         if key in request_user.new_notifications:
             request_user.new_notifications.remove(key)
-            request_user.notifications.append(key)
+            request_user.notifications.insert(0 ,key)
             request_user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -1552,12 +1560,12 @@ class RESTApi(remote.Service):
         data = json.loads(request.data)
         out_hidden_notifications = list()
         hidden_notifications_future = Notification.query(Notification.key.IN(
-            request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(data + 20)
+            request_user.hidden_notifications[:data+20])).fetch_async(data + 20)
         hidden_notifications = hidden_notifications_future.get_result()
         for notify in hidden_notifications:
             note = notify.to_dict()
             note["key"] = notify.key.urlsafe()
-            out_hidden_notifications.append(note)
+            out_hidden_notifications.insert(0, note)
         return OutgoingMessage(error='', data=json_dump(out_hidden_notifications))
 
 
@@ -1571,15 +1579,31 @@ class RESTApi(remote.Service):
         key = ndb.Key(urlsafe=data["notification"])
         if key in request_user.notifications:
             request_user.notifications.remove(key)
-            request_user.hidden_notifications.append(key)
+            request_user.hidden_notifications.insert(0, key)
             request_user.put()
             return OutgoingMessage(error='', data='OK')
         if key in request_user.new_notifications:
             request_user.new_notifications.remove(key)
-            request_user.hidden_notifications.append(key)
+            request_user.hidden_notifications.insert(0, key)
             request_user.put()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error='', data='OK')
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/unhide',
+                      http_method='POST', name='notifications.unhide')
+    def unhide_notification(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["notification"])
+        if key in request_user.hidden_notifications:
+            request_user.hidden_notifications.remove(key)
+            request_user.notifications.insert(0, key)
+            request_user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hidden_notifications',
                       http_method='POST', name='notifications.hidden_notifications')
@@ -1592,7 +1616,7 @@ class RESTApi(remote.Service):
         for notification in hidden_notifications:
             notify = notification.to_dict()
             notify["key"] = notification.key.urlsafe()
-            notifications.append(notify)
+            notifications.insert(0, notify)
         return OutgoingMessage(error='', data=json_dump(notifications))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',

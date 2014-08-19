@@ -317,14 +317,20 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 
                 $timeout(function(){
-                    $rootScope.notifications = JSON.parse(data.data).notifications;
-                    for (var i = 0; i < $rootScope.notifications.length; i++){
-                        $rootScope.notifications[i].collapseOut = true; 
-//                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
-//                            function(all,text,char){
-//                                return text + "&shy;" + char;
-//                            });
-                        
+                    if (($rootScope.notifications.length + $rootScope.hidden_notifications.length) != (JSON.parse(data.data).notifications.length + JSON.parse(data.data).hidden_notifications.length)){
+                        $rootScope.notifications = JSON.parse(data.data).notifications;
+                        $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
+    //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
+    //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
+    //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
+                        for (var i = 0; i < $rootScope.notifications.length; i++){
+                            $rootScope.notifications[i].collapseOut = true; 
+    //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
+    //                            function(all,text,char){
+    //                                return text + "&shy;" + char;
+    //                            });
+
+                        }
                     }
                 })
                 $timeout(function(){
@@ -430,7 +436,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
     //              notifications
                         $rootScope.notifications = load_data.notifications.notifications;
-
+                        $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
                         for (var i = 0; i < $rootScope.notifications.length; i++){
                                 $rootScope.notifications[i].collapseOut = true; 
                         }
@@ -776,6 +782,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
         $scope.archiveTip = {
             "title" : "Archive Notification"
+        }    
+        $scope.unarchiveTip = {
+            "title" : "Unarchive Notification"
         }
         $scope.clearStatusTip = {
             "title" : "Clear Status"
@@ -866,17 +875,40 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $timeout(function(){
                 var key = notify.key;
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
-                $rootScope.hidden_notifications.push(notify);
+                $rootScope.hidden_notifications.unshift(notify);
                 if (notify.new){
+                    $rootScope.notification_lengths.unread--;
                     notify.new = false;
                     $rootScope.updateNotificationBadge();
                 }
+                else{
+                    $rootScope.notification_lengths.read--;
+                }
+                $rootScope.notification_lengths.hidden++;
                 $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
                 if ($rootScope.notifications && $scope.current && ($scope.current.currentPage * $scope.current.maxPageNumber) == $rootScope.notifications.length && $scope.current.currentPage > 0){
                 $scope.current.currentPage = $scope.current.currentPage - 1;
             }
             })
         }
+        
+        $scope.unhideNotification = function(notify, domElement){
+            $timeout(function(){
+                notify.garbage = true;
+            })
+            $timeout(function(){
+                $rootScope.notification_lengths.hidden--;
+                $rootScope.notification_lengths.read++;
+                var key = notify.key;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}));
+                $rootScope.notifications.unshift(notify);
+                $rootScope.hidden_notifications.splice($scope.hidden_notifications.indexOf(notify), 1);
+                if ($rootScope.hidden_notifications && $scope.hidden && ($scope.hidden.currentPage * $scope.hidden.maxPageNumber) == $rootScope.hidden_notifications.length && $scope.hidden.currentPage > 0){
+                $scope.hidden.currentPage = $scope.hidden.currentPage - 1;
+            }
+            })
+        }
+        
         $scope.showDate = function(start, end){
             var mStart = momentInTimezone(start);
 
@@ -4806,7 +4838,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                     }
 //              notifications
                     $rootScope.notifications = load_data.notifications.notifications;
-                
+                    $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
                     for (var i = 0; i < $rootScope.notifications.length; i++){
                             $rootScope.notifications[i].collapseOut = true; 
                     }
@@ -4909,5 +4941,3 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     return defer.promise;
 });
 
-
-//var NeteGreekLogo = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAwACkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+vO/ib8UoPAYt7G2tVu9WuU8xI3bakSZIDNjk5IIAHoeRgZ9EryDxktxpnxTlnWO0+z6jpsCyy3SKweNJiJbcBs8OpXJ7ZH1pSkoq7Gk27IyfC/x6vZ9Wgt/Eum2sFnO/li6tQyiI8ZJDE7gMjOCCAc89D7rXzN40Wa0+HY0oavBfRWhhIi8tVCMHfdIuMkSMZQCCfuq55zhfojw/cfbPDel3O/f51pFJuznOUBzU06kaivB3Q5RcXaRo0UUVZIjMqIXdgqqMkk4AFePeE4IPij4417xReiSTRbMf2bpkYZlDDhmfggg4wcEf8tMH7tbvxt1qXR/htcxwMUfUZksi4PRWyz/AJqrL/wKrnwgi0+D4badHp8iuA0hmxjcshckhvcAr9RtPQik0nowTsJ4m+Gml6n4O1DS7CELfSIGguJnLMJFO5Rk/dUkYOB0OeTXnHwa8eXGi6j/AMIfrqSRQy3DQ2jS5Bt584aFgemW6ejHHO7j6Br5e+LDQw+O/FEUR8pg1vPHsOD53lJyMdDhmJ96FFJWQ223dn1DRVTSrpr7R7K7fG6e3jlOPVlB/rVumI8/8b3UWqXn9kXFpBJBaSJLieMPvfbwQDxgBj+NYHhXTYdF8bJqdtqUmn2EyFLmwSIeTK2CFJORtAJB6HHOCAxrtdf8JzanqL31rcxq7qAY5QcZHGQw6DpxisGLwvrhu1ha1CITgzmRWRR64B3H6YGfbqPJq/WoVnKKbX4WO6HsZU7M7nWr5NO0S8vGmSIxxHY7kAbzwg57liAB3JArwfX/AAc/iDxEdQuL8fY5ijTxbP3p2jGA/o3c9cnvgV6VdfCfSLwxtcatrkzwuJYvNvNyRyDkMqbdowewAFTad4JuvPH9pTwiBD923ZiZB7kgbfwyfcda6MTGu5xdLtYxpOnytTNHwZfGXTTp5TBswArD7uwk7VHptAxj0ArpqitrWCzhENtCkUY6KgwPr9alrqowlCCjJ3aMpyUpNo//2Q==";
