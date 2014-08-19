@@ -3180,7 +3180,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     });
 
-    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter) {
+    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter) {
         routeChange();
         $scope.loading = true;
         $scope.getProfPic = function(link){
@@ -3205,18 +3205,36 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             $scope.event = $rootScope.events[i];
                         }
                     }
+                    $scope.invited = eventTagDirectorySearchFilter($rootScope.directory.members, $scope.event.tags);
                     $scope.noShows = [];
                     if ($scope.event){
                         for (var i = 0 ; i < $scope.users.length; i++){
-                            if ($scope.event.invited.indexOf($scope.users[i].key) != -1){
-                                if ($scope.event.going.indexOf($scope.users[i].key) != -1){
-                                    $scope.noShows.push({user: $scope.users[i], rsvp: 'Going'});
-                                }
-                                else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
-                                    $scope.noShows.push({user: $scope.users[i], rsvp: 'Not Going' });
-                                }
-                                else {
-                                    $scope.noShows.push({user: $scope.users[i], rsvp: 'No Response' });
+                            for (var j = 0; j < $scope.invited.length; j++){
+                                if ($scope.users[i].key == $scope.invited[j].key){
+                                    var shouldAdd = false;
+//                                if ($scope.invited[j].key == $scope.users[i].key){
+//                                    if ($scope.users[i].attendance_data){
+                                        if (!$scope.users[i].attendance_data){
+                                            shouldAdd=true;
+                                        }
+                                        else if (!($scope.users[i].attendance_data.time_in || $scope.users[i].attendance_data.time_out)){
+                                            shouldAdd=true;
+                                        }
+                                        if (shouldAdd)
+                                        {
+                                            if ($scope.event.going.indexOf($scope.users[i].key) != -1){
+                                                $scope.noShows.push({user: $scope.users[i], rsvp: 'Going'});
+                                            }
+                                            else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
+                                                $scope.noShows.push({user: $scope.users[i], rsvp: 'Not Going' });
+                                            }
+                                            else {
+                                                $scope.noShows.push({user: $scope.users[i], rsvp: 'No Response' });
+                                            }
+                                        
+                                        }
+                                    break;
+//                                    }
                                 }
                             }
                         }
