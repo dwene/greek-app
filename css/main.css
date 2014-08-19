@@ -245,14 +245,22 @@ margin-top: 2px;}}
 #deleteTagModal{z-index:9999;}
 #renameTagModal{z-index:9999;}
 
+#taggingMembers #memberSelect > li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
+#taggingMembers #memberSelect > li:nth-child(odd){background:#f8f8f8;}
+#taggingMembers #memberSelect > li:first-child{border-top:1px solid #ccc;}
+
 /*Member Management Page*/
-#manageMembers li{margin:4px;}
+#manageMembers .card{margin-bottom:10px;}
 #manageMembers .form-inline{margin-bottom:10px;}
 #manageMembers .row hr{margin:8px 0px 4px 0px;}
 .permsSelect{display:inline-block;}
 .resendWelcome{padding: 3px 5px; font-size:10px;}
-#manageMembers .members{float:left; margin-top:2px;}
+#manageMembers .members{float:left;}
 #manageMembers .memberOptions{margin-left:160px;}
+#manageMembers #members > li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
+#manageMembers #members > li:nth-child(odd){background:#f8f8f8;}
+#manageMembers #members > li:first-child{border-top:1px solid #ccc;}
+#manageMembers #members .col-xs-12{height:23px;}
 /*Adding Members*/
 #addmemberForm button{margin-left:15px;}
 #addingMembers .trash{position:absolute; right:10px; top:50%; margin-top:-12px;}

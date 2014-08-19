@@ -1,9 +1,10 @@
-<div class="container memberTags">                    
+<div id="taggingMembers" class="container memberTags">                    
                     
        
                     <section class="row">
                     
                     <div class="col-xs-12 col-sm-5">
+                        <div class="card">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
@@ -40,17 +41,18 @@
                                 </div>
                             </form>
                         </section>
-                        
+                        </div>
                     </div>
                     
                     <div class="col-xs-12 col-sm-7">
+                    <div class="card">
                     <div class="col-xs-12">
                     <div class="form-group row">
                         <input id="directorySearch" type="search" ng-model="search" placeholder="Search Members" class="form-control">
                     </div>
                     </div>
-                    <ul>
-                        <div id="memberSelect" ng-repeat="user in (users | orderBy:'last_name' | multipleSearch:search)  track by user.key">
+                    <ul id="memberSelect">
+                        <li ng-repeat="user in (users | orderBy:'last_name' | multipleSearch:search)  track by user.key">
                                
                                <ul id="memberTags">
                                 <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
@@ -63,9 +65,9 @@
                                         <netetag-delete></netetag-delete>
                                     </div>
                                 </ul>
-                            <hr>
-                        </div>
+                        </li>
                     </ul>
+                    </div>
                     </div>
                     </section>
 
