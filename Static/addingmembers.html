@@ -1,14 +1,8 @@
-<div class="container">
+<div id="addingMembers" class="container">
 
-    <ul>
-
-            <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">{{ add.first_name }} {{ add.last_name }}, {{ add.class_year }}, {{ add.email }} <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
-
-    </ul>
-    <button ng-click="submitMembers()" class="btn btn-default" ng-disabled = "!adds.length">Submit Members</button><update-status ng-model="updating"></update-status>
-    <hr>
-
-    <p id='areAdded'></p>
+    <div class="card">
+    <h1 class="card-header">Add Multiple Members at Once</h1>
+    <p id="areAdded"></p>
     <form id="addmembersForm" role="form">
         <div class="form-group">
             <label for="uploadMembers">Upload CSV</label>
@@ -19,10 +13,11 @@
         </div>
         <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file</p>
     </form>
+    </div>
 
-    <hr>
-
-    <form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid)" novalidate>
+    <form id="addmemberForm" class="card" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid)" novalidate>
+    <h1 class="card-header">Add One Member at a Time</h1>
+         <div class="row">
           <div class="form-group col-sm-3 col-xs-6">
             <label for="firstName" class="control-label">First Name</label>
               <input type="text" class="form-control" id="firstName" name="first_name" ng-model="input.first_name" placeholder="John" required>
@@ -43,6 +38,19 @@
               <button class="btn btn-default" ng-disabled="!addmemberForm.$valid">Add Member</button>
               <p ng-show="addmemberForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
           </div>
+          </div>
      </form>
+     
+    <ul ng-show="adds.length" id="addMembers" class="card">
+    <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
+    <div class="row">
+        <div class="col-xs-4">{{ add.first_name }} {{ add.last_name }}</div>
+        <div class="col-xs-4">{{ add.class_year }}</div>
+        <div class="col-xs-4">{{ add.email }}</div>
+    </div>
+    <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
+    <button id="addMembersButton" ng-click="submitMembers()" class="btn btn-default">Submit Members</button><update-status ng-model="updating"></update-status>
+    </ul>
+
 
 </div>

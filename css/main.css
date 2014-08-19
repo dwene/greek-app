@@ -138,7 +138,6 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 .btn{-webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-tap-highlight-color: transparent; 
 outline: 0px auto -webkit-focus-ring-color !important;}
 #registerForm #orgType input{margin-right:5px;}
-#addmemberForm button{float:right; margin-right:15px;}
 #correctPerson{text-align:center; margin-bottom:15px;}
 #logoutbutton{margin:7px;}
 input.form-control{height:34px !important;}
@@ -225,10 +224,13 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 .memberTags .page-header{margin: 20px 0 10px !important;}
 
 #memberTags .label:not(.member){padding:.4em 2em .4em .6em;}
+.memberTags .checkLabel{margin-bottom:4px;}
 #memberTags .badge{padding: .4em .4em .4em .3em;}
 @media screen and (max-width:768px){#memberTags{left: -2px;
 margin-top: 2px;}}
 #memberSelect row{margin:4px -15px 4px -15px;}
+#memberSelect hr{margin:8px 0px;}
+
 
 .addTags .label{padding:.4em 2em .4em 1.5em;}
 .addTags .btn-group{margin:2px 0px;}
@@ -248,10 +250,18 @@ margin-top: 2px;}}
 #manageMembers .form-inline{margin-bottom:10px;}
 #manageMembers .row hr{margin:8px 0px 4px 0px;}
 .permsSelect{display:inline-block;}
-.addPerson{margin:4px;}
 .resendWelcome{padding: 3px 5px; font-size:10px;}
 #manageMembers .members{float:left; margin-top:2px;}
 #manageMembers .memberOptions{margin-left:160px;}
+/*Adding Members*/
+#addmemberForm button{margin-left:15px;}
+#addingMembers .trash{position:absolute; right:10px; top:50%; margin-top:-12px;}
+#addingMembers li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
+#addingMembers li:nth-child(odd){background:#f8f8f8;}
+#addingMembers li:first-child{border-top:1px solid #ccc;}
+#addingMembers .card{margin-bottom:10px;}
+#addMembersButton{margin-top:15px;}
+
 
 
 /*Messaging Page*/
