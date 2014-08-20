@@ -292,6 +292,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #changeStatus .noStatus{margin:14px 0px 21px 120px; font-size:22px; font-style:italic; color:#ccc; font-weight:bold; display:block; position:relative;}
 #changeStatus .bgIcon{color:#f8f8f8; font-size:48px; top:8px; left:72px; position:absolute; z-index:0px;}
 #changeStatus #statusUpdate{margin-top:15px;}
+.notificationCount {width:100%; display:inline-block;}
 
 
 @media screen and (max-width:768px){

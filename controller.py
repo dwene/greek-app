@@ -926,12 +926,18 @@ class RESTApi(remote.Service):
         organization_future = request_user.organization.get_async()
         request_user = get_user(request.user_name, request.token)
 
+        notification_count = 40
         if request_user.new_notifications:
             new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).fetch_async(100)
+                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
+        if request_user.new_notifications:
+            if len(request_user.new_notifications) >= 40:
+                notification_count = 0
+            else:
+                notification_count = 40 - len(request_user.new_notifications)
         if request_user.notifications:
             notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(Notification.timestamp).fetch_async(20)
+                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
         if request_user.hidden_notifications:
             hidden_notifications_future = Notification.query(Notification.key.IN(
                 request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
@@ -1497,15 +1503,21 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        notification_count = 40
         if request_user.new_notifications:
             new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).fetch_async()
+                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
+        if request_user.new_notifications:
+            if len(request_user.new_notifications) >= 40:
+                notification_count = 0
+            else:
+                notification_count = 40 - len(request_user.new_notifications)
         if request_user.notifications:
             notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications[:20])).fetch_async(20)
+                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
         if request_user.hidden_notifications:
             hidden_notifications_future = Notification.query(Notification.key.IN(
-                request_user.hidden_notifications[:30])).fetch_async(30)
+                request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
         out_notifications = list()
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
@@ -1546,7 +1558,7 @@ class RESTApi(remote.Service):
         key = ndb.Key(urlsafe=data["notification"])
         if key in request_user.new_notifications:
             request_user.new_notifications.remove(key)
-            request_user.notifications.insert(0 ,key)
+            request_user.notifications.insert(0, key)
             request_user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -1560,13 +1572,49 @@ class RESTApi(remote.Service):
         data = json.loads(request.data)
         out_hidden_notifications = list()
         hidden_notifications_future = Notification.query(Notification.key.IN(
-            request_user.hidden_notifications[:data+20])).fetch_async(data + 20)
+            request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(data + 20)
         hidden_notifications = hidden_notifications_future.get_result()
         for notify in hidden_notifications:
             note = notify.to_dict()
             note["key"] = notify.key.urlsafe()
             out_hidden_notifications.insert(0, note)
         return OutgoingMessage(error='', data=json_dump(out_hidden_notifications))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/more_notifications',
+                      http_method='POST', name='notifications.more_notifications')
+    def more_notifications(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        out_notifications = list()
+        notification_count = 40 + data
+        if request_user.new_notifications:
+            new_notification_future = Notification.query(Notification.key.IN(
+                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40 + data)
+        if request_user.new_notifications:
+            if len(request_user.new_notifications) >= 40 + data:
+                notification_count = 0
+            else:
+                notification_count = 40+data - len(request_user.new_notifications)
+        if request_user.notifications:
+            notifications_future = Notification.query(Notification.key.IN(
+                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+        out_notifications = []
+        if request_user.notifications:
+            notifications = notifications_future.get_result()
+            for notify in notifications:
+                note = notify.to_dict()
+                note["key"] = notify.key.urlsafe()
+                out_notifications.append(note)
+        if request_user.new_notifications:
+            new_notifications = new_notification_future.get_result()
+            for notify in new_notifications:
+                note = notify.to_dict()
+                note["key"] = notify.key.urlsafe()
+                note["new"] = True
+                out_notifications.append(note)
+        return OutgoingMessage(error='', data=json_dump(out_notifications))
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hide',
