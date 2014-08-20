@@ -343,6 +343,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .pagerButtons{margin:15px 0px; height:30px;}
 .pagerButtons .previous{margin-left:5px;}
 .pagerButtons .next{float:right; margin-right:5px;}
+.pagerButtons .previous, .pagerButtons .next{background:none; border:3px solid black; font-weight:bolder; border-radius:36px;}
 
 
 /*Event Info Page*/
