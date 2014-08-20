@@ -6,7 +6,7 @@
 </h1>
         <ul>
 
-            <li ng-repeat="member in users | orderBy:['rsvp', 'last_name'] | multipleSearch: search" class="checkin" ng-show="member.attendance_data.time_in || member.attendance_data.time_out">
+            <li ng-repeat="member in users | orderBy:['rsvp', 'last_name']" class="checkin" ng-show="member.attendance_data.time_in || member.attendance_data.time_out">
                 <div class="checkinContent card">
                     <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
                     <h1 class="memberName card-header">{{member.first_name}} {{member.last_name}}</h1>

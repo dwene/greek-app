@@ -574,7 +574,7 @@ class RESTApi(remote.Service):
             new_org.put()
             user = clump['user']
             if username_available(user['user_name']):
-                new_user = User(user_name=user['user_name'])
+                new_user = User(user_name=user['user_name'].lower())
             else:
                 return OutgoingMessage(error=USERNAME_TAKEN, data='')
             new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
@@ -612,7 +612,7 @@ class RESTApi(remote.Service):
                       http_method='POST', name='auth.login')
     def login(self, request):
         clump = json.loads(request.data)
-        user_name = clump['user_name']
+        user_name = clump['user_name'].lower()
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
         if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
@@ -798,7 +798,7 @@ class RESTApi(remote.Service):
                 return OutgoingMessage(error='INVALID_USERNAME')
             if not len(data["password"]) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD')
-            user.user_name = data["user_name"]
+            user.user_name = data["user_name"].lower()
             user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()

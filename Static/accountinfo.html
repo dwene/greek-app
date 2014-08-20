@@ -9,7 +9,34 @@
         <button type="button" ng-click="item.email_prefs = 'daily';  updateEmailPrefs('daily');" ng-class="{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
         <button type="button" ng-click="item.email_prefs = 'none';  updateEmailPrefs('none');" ng-class="{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
     </div><update-status ng-model="emailPrefUpdating" fn-call="updateEmailPrefs(item.email_prefs)"></update-status><br>
-    <a ng-href="#/app/changepassword" id="changePasswordButton" class="btn btn-default">Change Password</a>
+    <form ng-hide="passwordChanged" id="newmemberAccount" class="form-horizontal" role="form">
+
+    <div class="form-group">
+        <label for="password" class="col-sm-2 control-label">Old Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" name="password" ng-model="new_pass.old_password" placeholder="***********" required>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="password" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" name="password" ng-model="new_pass.password" placeholder="***********" required>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="repeatPassword" class="col-sm-2 control-label">Repeat Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="new_pass.repeat_password" placeholder="***********" required>
+          <div ng-show="item.password != item.repeat_password" class="alert alert-danger usernameAlert">Passwords do not match</div>
+        </div>
+    </div>
+    <a ng-click="changePassword(new_pass.old_password, new_pass.password)" class="btn btn-default">Change Password</a>
+</form>
+<div ng-show="passwordChanged"> Your password has been changed! Please logout and login to continue using the app.</div>
+<div ng-show="changeFailed">Password change failed. Please double check your current and new password to see if they meet the correct requirements</div>
+<!--    <a ng-href="#/app/changepassword" id="changePasswordButton" class="btn btn-default">Change Password</a>-->
     <br><br><br>
 </section>
 
@@ -22,32 +49,32 @@
 <form id="memberAccount" method="POST" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
+    <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
         <label for="firstName" class="col-sm-2 control-label">First Name</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="firstName" name="first_name" ng-model="item.first_name" placeholder="John" required>
+          <input type="text" class="form-control" id="firstName" name="first_name" ng-model="item.first_name" required>
         </div>
         <p ng-show="(memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)" class="help-block">Please enter your first name.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)}">
+    <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)}">
         <label for="lastName" class="col-sm-2 control-label">Last Name</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="lastName" name="last_name" ng-model="item.last_name" placeholder="Doe" required>
+          <input type="text" class="form-control" id="lastName" name="last_name" ng-model="item.last_name" required>
         </div>
         <p ng-show="(memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)" class="help-block">Please enter your last name.</p>
     </div>
 
 
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)}">
+    <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)}">
         <label for="email" class="col-sm-2 control-label">Email</label>
         <div class="col-sm-10">
-          <input type="email" class="form-control" id="email" name="email" ng-model="item.email" placeholder="john@doe.edu" required>
+          <input type="email" class="form-control" id="email" name="email" ng-model="item.email" required>
         </div>
         <p ng-show="(memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)" class="help-block">Please enter a valid email.</p>
     </div>   
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)}">
+    <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)}">
         <label for="phone" class="col-sm-2 control-label">Phone</label>
         <div class="col-sm-10">
           <input type="tel" class="form-control" id="phone" name="phone" ng-model="item.phone" placeholder="###-###-####" required>
@@ -63,7 +90,7 @@
         <p ng-show="(memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)" class="help-block">Please enter your birthday.</p>
     </div>
     
-        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted), required:!checkAlumni()}">
         <label for="currentState" class="col-sm-2 control-label">Graduation Month</label>
         <div class="col-sm-10">
         <select class="form-control" id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni()">
@@ -84,18 +111,18 @@
     </div>
     </div> 
     
-<div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted)}">
+<div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni()}">
         <label for="grad_year" class="col-sm-2 control-label">Graduation Year</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="grad_year" name="grad_year" ng-model="item.grad_year" placeholder="2014" ng-required = "checkAlumni()">
+          <input type="number" class="form-control" id="grad_year" name="grad_year" ng-model="item.grad_year" placeholder="####" ng-required = "checkAlumni()">
         </div>
         <p ng-show="(memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted)" class="help-block">Please enter your graduation year.</p>
     </div>
 
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
+    <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
         <label for="major" class="col-sm-2 control-label">Major</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="major" name="major" ng-model="item.major" placeholder="Engineering" required>
+          <input type="text" class="form-control" id="major" name="major" ng-model="item.major" required>
         </div>
         <p ng-show="(memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)" class="help-block">Please enter your field of study.</p>
     </div>
@@ -105,17 +132,17 @@
         <div class="form-group" ng-class="{ 'has-error' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}" >
             <label for="position" class="col-sm-2 control-label">Leadership Position</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="position" name="position" ng-model="item.position" placeholder="President">
+              <input type="text" class="form-control" id="position" name="position" ng-model="item.position" >
             </div>
             <p ng-show="(memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
         </div>
     </div>
     
     <div id="alumni_fields" ng-show="checkAlumni()">
-        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.pledge_class.$invalid && !memberAccount.pledge_class.$pristine) || (memberAccount.pledge_class.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.pledge_class.$invalid && !memberAccount.pledge_class.$pristine) || (memberAccount.pledge_class.$invalid && submitted), required: checkAlumni()}">
         <label for="pledge_class" class="col-sm-2 control-label">Pledge Class Year</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="pledge_class" name="pledge_class" ng-model="item.pledge_class" placeholder="2014" ng-required = "checkAlumni()">
+          <input type="number" class="form-control" id="pledge_class" name="pledge_class" ng-model="item.pledge_class" placeholder="####" ng-required = "checkAlumni()">
         </div>
         <p ng-show="(memberAccount.pledge_class.$invalid && !memberAccount.pledge_class.$pristine) || (memberAccount.pledge_class.$invalid && submitted)" class="help-block">Please enter a year</p>
     </div>
@@ -123,14 +150,14 @@
         <div class="form-group" ng-class="{ 'has-error' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}" >
             <label for="occupation" class="col-sm-2 control-label">Occupation</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="occupation" name="occupation" ng-model="item.occupation" placeholder="Graphic Artist">
+              <input type="text" class="form-control" id="occupation" name="occupation" ng-model="item.occupation">
             </div>
             <p ng-show="(memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)" class="help-block">Please enter a valid occupation</p>
         </div>
         <div class="form-group" ng-class="{ 'has-error' : (memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)}" >
             <label for="occupation" class="col-sm-2 control-label">Employer</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="employer" name="employer" ng-model="item.employer" placeholder="Google Inc">
+              <input type="text" class="form-control" id="employer" name="employer" ng-model="item.employer" >
             </div>
             <p ng-show="(memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)" class="help-block">Please enter a valid employer</p>
         </div>
@@ -141,23 +168,23 @@
 
     <div class="col-xs-12 col-sm-6">
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
         <label for="currentAddress" class="control-label">Current Address</label>
         <div>
-          <input type="text" class="form-control" id="currentAddress" name="address" ng-model="item.address" placeholder="42 Wallaby Way" ng-required="!checkAlumni()">
+          <input type="text" class="form-control" id="currentAddress" name="address" ng-model="item.address" ng-required="!checkAlumni()">
         </div>
         <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
         <label for="currentCity" class="control-label">Current City</label>
         <div>
-          <input type="text" class="form-control" id="currentCity" name="city" ng-model="item.city" placeholder="Austin" ng-required="!checkAlumni()">
+          <input type="text" class="form-control" id="currentCity" name="city" ng-model="item.city" ng-required="!checkAlumni()">
         </div>
         <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni()}">
         <label for="currentState" class="control-label">Current State</label>
         <div>
         <select class="form-control" id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni()">
@@ -223,10 +250,10 @@
     </div>
 
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
         <label for="zip" class="control-label">Current Zip</label>
         <div>
-          <input type="number" class="form-control" id="zip" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" placeholder="78759">
+          <input type="number" class="form-control" id="zip" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" placeholder="#####" ng-required="!checkAlumni()">
         </div>
         <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
     </div>
@@ -239,7 +266,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)}">
         <label for="permAddress" class="control-label">Permanent Address</label>
         <div>
-          <input type="text" class="form-control" id="permAddress" name="perm_address" ng-model="item.perm_address" placeholder="42 Wallaby Way">
+          <input type="text" class="form-control" id="permAddress" name="perm_address" ng-model="item.perm_address">
         </div>
         <p ng-show="(memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)" class="help-block">Please enter your permanent address.</p>
     </div>
@@ -247,7 +274,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)}">
         <label for="permCity" class="control-label">Permanent City</label>
         <div>
-          <input type="text" class="form-control" id="permCity" name="perm_city" ng-model="item.perm_city" placeholder="Austin">
+          <input type="text" class="form-control" id="permCity" name="perm_city" ng-model="item.perm_city">
         </div>
         <p ng-show="(memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)" class="help-block">Please enter your permanent city.</p>
     </div>
@@ -316,7 +343,7 @@
     <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)}">
         <label for="permZip" class="control-label">Permanent Zip</label>
         <div>
-          <input type="number" class="form-control" id="permZip" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/" placeholder="78759">
+          <input type="number" class="form-control" id="permZip" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/" placeholder="#####">
         </div>
         <p ng-show="(memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
     </div>
@@ -325,26 +352,26 @@
 </div>
 
 <div ng-show="checkAlumni()">
-        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: checkAlumni()}">
         <label for="currentAddress" class=" col-sm-2 control-label">Current Address</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="currentAddress" name="address" ng-model="item.address" placeholder="42 Wallaby Way" ng-required="!checkAlumni()">
+          <input type="text" class="form-control" id="currentAddress" name="address" ng-model="item.address" ng-required="checkAlumni()">
         </div>
         <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: checkAlumni()}">
         <label for="currentCity" class=" col-sm-2 control-label">Current City</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="currentCity" name="city" ng-model="item.city" placeholder="Austin" ng-required="!checkAlumni()">
+          <input type="text" class="form-control" id="currentCity" name="city" ng-model="item.city" ng-required="checkAlumni()">
         </div>
         <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: checkAlumni()}">
         <label for="currentState" class="col-sm-2 control-label">Current State</label>
         <div  class="col-sm-10">
-        <select class="form-control" id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni()">
+        <select class="form-control" id="currentState" name="state" ng-model="item.state" ng-required="checkAlumni()">
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -402,10 +429,10 @@
     </div>
 
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.zip2.$invalid && !memberAccount.zip2.$pristine) || (memberAccount.zip2.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'has-error' : ((memberAccount.zip2.$invalid && !memberAccount.zip2.$pristine) || (memberAccount.zip2.$invalid && submitted)), required: checkAlumni()}">
         <label for="zip2" class="col-sm-2 control-label">Current Zip</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="zip2" name="zip2" ng-model="item.zip" placeholder="78759" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni()">
+          <input type="number" class="form-control" id="zip2" name="zip2" ng-model="item.zip" placeholder="#####" ng-pattern="/[0-9]{5}/" ng-required="checkAlumni()">
         </div>
         <p ng-show="(memberAccount.zip2.$invalid && !memberAccount.zip2.$pristine) || (memberAccount.zip2.$invalid && submitted)" class="help-block">Please enter your current 5 digit zip code.</p>
     </div>
@@ -420,7 +447,7 @@
 
             <div class="input-group">
             <span class="input-group-addon">http://</span> 
-            <input type="text" class="form-control" id="website" name="website" ng-model="item.website" placeholder="johndoe.com" remove-http>
+            <input type="text" class="form-control" id="website" name="website" ng-model="item.website" remove-http>
             </div>
 
         </div>

@@ -52,7 +52,7 @@
                     </div>
                     </div>
                     <ul id="memberSelect">
-                        <li ng-repeat="user in (users | orderBy:'last_name' | multipleSearch:search)  track by user.key">
+                        <li ng-repeat="user in (users | orderBy:'last_name' | nameSearch:search)  track by user.key">
                                
                                <ul id="memberTags">
                                 <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">

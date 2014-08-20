@@ -8,7 +8,7 @@
 </div>        
         
         <ul class="row">
-            <li ng-repeat="member in users | orderBy:'rsvp' | multipleSearch: search" class="checkin col-xs-12 col-sm-6" ng-show="true" ng-click="showIndividual(member)">
+            <li ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search" class="checkin col-xs-12 col-sm-6" ng-show="true" ng-click="showIndividual(member)">
 
                 <div class="checkinContent card">
                 
