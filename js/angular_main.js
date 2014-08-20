@@ -790,16 +790,35 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.clearStatusTip = {
             "title" : "Clear Status"
         }
-        $scope.checkForMoreHiddenNotifications = function(notifications, pageNum, max){
-            var len = notifications.length;
-            $scope.working = true;
+        $scope.checkForMoreHiddenNotifications = function(pageNum, max){
+            var len = $rootScope.hidden_notifications.length;
+            $scope.hidden_working = true;
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', packageForSending(len))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     var new_hiddens = JSON.parse(data.data);
-                    $rootScope.hidden_notifications = new_hiddens;
-                    if (new_hiddens.length > (pageNum*(max+1))){
+                    var next = false;
+                    for (var i = 0; i < new_hiddens.length; i++){
+                        next = false;
+                        for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
+                            if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
+                                next = true;
+                                break;
+                            }
+                        }
+                        if (next){ continue;}
+                        for (var j = 0; j < $rootScope.notifications.length; j++){
+                            if ($rootScope.notifications[j].key == new_hiddens[i].key){
+                                next = true;
+                                break;
+                            }
+                        }
+                        if (next){ continue;}
+                        $rootScope.hidden_notifications.push(new_hiddens[i]);
+                    }
+//                    $rootScope.hidden_notifications = new_hiddens;
+                    if ($rootScope.hidden_notifications.length > ((pageNum+1)*max)){
                         $scope.hidden.currentPage++;
                     }
                     else{
@@ -809,13 +828,61 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 else{
                     console.log('ERROR: ',data);
                 }
+                $scope.hidden_working = false;
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+                $scope.hidden_working = false;
+            }); 
+        }
+        
+        $scope.checkForMoreNotifications = function(pageNum, max){
+            var len = $rootScope.notifications.length;
+            $scope.current_working = true;
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', packageForSending(len))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    var new_hiddens = JSON.parse(data.data);
+                    var next = false;
+                    for (var i = 0; i < new_hiddens.length; i++){
+                        next = false;
+                        for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
+                            if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
+                                next = true;
+                                break;
+                            }
+                        }
+                        if (next){ continue;}
+                        for (var j = 0; j < $rootScope.notifications.length; j++){
+                            if ($rootScope.notifications[j].key == new_hiddens[i].key){
+                                next = true;
+                                break;
+                            }
+                        }
+                        if (next){ continue;}
+                        $rootScope.notifications.push(new_hiddens[i]);
+                    }
+//                    $rootScope.hidden_notifications = new_hiddens;
+                    if ($rootScope.notifications.length > ((pageNum+1)*(max))){
+                        $scope.current.currentPage++;
+                    }
+                    else{
+                        $scope.noMoreNotifications = true;
+                    }
+                }
+                else{
+                    console.log('ERROR: ',data);
+                }
+                $scope.current_working = false;
                 $scope.working = false;
             })
             .error(function(data) {
                 console.log('Error: ' , data);
+                $scope.current_working = false;
                 $scope.working = false;
             }); 
-        }   
+        }  
         
 //        $scope.notificationPreview = function(notify){
 //            return notify.replace(/\r?\n|\r/g," "); 
@@ -875,7 +942,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             $timeout(function(){
                 var key = notify.key;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}))
+                .error(function(data) {
+                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+                }); 
                 $rootScope.hidden_notifications.unshift(notify);
                 if (notify.new){
                     $rootScope.notification_lengths.unread--;
@@ -889,6 +959,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
                 if ($rootScope.notifications && $scope.current && ($scope.current.currentPage * $scope.current.maxPageNumber) == $rootScope.notifications.length && $scope.current.currentPage > 0){
                 $scope.current.currentPage = $scope.current.currentPage - 1;
+                if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length < 5){
+                $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber)
+            }
+            
+
             }
             })
         }
@@ -901,11 +976,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $rootScope.notification_lengths.hidden--;
                 $rootScope.notification_lengths.read++;
                 var key = notify.key;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}));
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}))
+                .error(function(data) {
+                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}));
+                });
                 $rootScope.notifications.unshift(notify);
                 $rootScope.hidden_notifications.splice($scope.hidden_notifications.indexOf(notify), 1);
                 if ($rootScope.hidden_notifications && $scope.hidden && ($scope.hidden.currentPage * $scope.hidden.maxPageNumber) == $rootScope.hidden_notifications.length && $scope.hidden.currentPage > 0){
                 $scope.hidden.currentPage = $scope.hidden.currentPage - 1;
+                if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length < 5){
+                    $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
+                }
             }
             })
         }
