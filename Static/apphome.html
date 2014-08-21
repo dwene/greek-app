@@ -54,7 +54,7 @@
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="hideNotification(notify, this);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
                 <div class="notificationTitle"><div class="unread">|</div>{{notify.title}}</div>
-                    <span>{{notify.content | limitTo:116}}<span ng-show="notify.content.length > 100">...</span></span>
+                    <span class="notificationText">{{notify.content}}</span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
             </li>
@@ -82,7 +82,7 @@
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="unhideNotification(notify, this);$event.stopPropagation();" bs-tooltip="unarchiveTip" data-placement="left"><i class="fa fa-inbox"></i></button>
                 <span class="notificationTitle">{{notify.title}}</span>
-                    <span>{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
+                    <span class="notificationText">{{notify.content}}</span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
             </li>
