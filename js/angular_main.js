@@ -303,7 +303,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('.fa-refresh').addClass('fa-spin');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-                
+            if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
                 
                 $timeout(function(){
                     for (var i = 0; i < $rootScope.notifications.length; i++){
@@ -312,20 +312,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 
                 $timeout(function(){
-                    if (($rootScope.notifications.length + $rootScope.hidden_notifications.length) != (JSON.parse(data.data).notifications.length + JSON.parse(data.data).hidden_notifications.length)){
-                        $rootScope.notifications = JSON.parse(data.data).notifications;
-                        $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
-    //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
-    //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
-    //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
-                        for (var i = 0; i < $rootScope.notifications.length; i++){
-                            $rootScope.notifications[i].collapseOut = true; 
-    //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
-    //                            function(all,text,char){
-    //                                return text + "&shy;" + char;
-    //                            });
 
-                        }
+                    $rootScope.notifications = JSON.parse(data.data).notifications;
+                    $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
+//                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
+//                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
+//                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
+                    for (var i = 0; i < $rootScope.notifications.length; i++){
+                        $rootScope.notifications[i].collapseOut = true; 
+//                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
+//                            function(all,text,char){
+//                                return text + "&shy;" + char;
+//                            });
+
                     }
                 })
                 $timeout(function(){
@@ -333,7 +332,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 setTimeout(function(){
                     $('.fa-refresh').removeClass('fa-spin')},930);
-                })
+            }
+            })
+                
             .error(function(data) {
                 console.log('Error: ' , data);
             });
@@ -957,8 +958,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length < 5){
                 $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber)
             }
-            
-
+            }
+                if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length <= 5){
+                    $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber);
             }
             })
         }
@@ -983,6 +985,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
                 }
             }
+                if (!noMoreHiddens && !hidden_working && $root.hidden_notifications.length < $root.notification_lengths.hidden && $root.hidden_notifications.length <= 5){
+                    $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber);
+                }
             })
         }
         
@@ -1535,9 +1540,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen){
         routeChange();
         Load.then(function(){
-        var formObject = document.getElementById('uploadMembers');
-        if(formObject){
-            formObject.addEventListener('change', readSingleFile, false);}
+//        var formObject = document.getElementById('uploadMembers');
+//        if(formObject){
+//            formObject.addEventListener('change', readSingleFile, false);}
         $scope.openDeleteAlumniModal = function(user){
             $('#deleteAlumniModal').modal();
             $scope.selectedUser = user;
@@ -1628,156 +1633,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.removeAlumni = function(alumnus){
             $scope.selectedUser = {}
             $('#deleteAlumniModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });    
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus));   
             if ($scope.alumni.indexOf(alumnus) > -1){
-                    $scope.alumni.splice($scope.alumni.indexOf(alumnus), 1);
+                $scope.alumni.splice($scope.alumni.indexOf(alumnus), 1);
             }
             
-//            for (var i = 0; i < $scope.alumni.length; i++){
-//                if ($scope.alumni[i].key == alumnus.key){
-//                    $scope.alumni.splice(i, 1);
-//                    break;
-//                }
-//            }
         }
        }); 
     });
-//
-//    App.controller('addAlumniController', function($scope, $http, Load){
-//        routeChange();
-//        Load.then(function(){
-//        var newmemberList = [];
-//        //initialize a filecontents variable
-//        var filecontents;
-//        
-//        //this method will get the data from the form and add it to the newmemberList object
-//        $.fn.serializeObject = function()
-//        {
-//            var o = {};
-//            var a = this.serializeArray();
-//            
-//            $.each(a, function() {
-//                if (o[this.name] !== undefined) {
-//                    if (!o[this.name].push) {
-//                        o[this.name] = [o[this.name]];
-//                    }
-//                    o[this.name].push(this.value || '');
-//                } else {
-//                    o[this.name] = this.value || '';
-//                }
-//            });
-//            console.log('Im adding ', o);
-//            return o;
-//        };
-//    
-//        //remove someone from list before adding everyone
-//         $scope.deleteAdd = function(add){
-//              var index=$scope.adds.indexOf(add)
-//              $scope.adds.splice(index,1);     
-//        }
-//         
-//        //ng-click for the form to add one member at a time        
-//        $scope.addAlumnus = function(isValid){
-//            if(isValid){
-//            newmemberList = newmemberList.concat($('#addalumniForm').serializeObject());
-//            $('#result').text(JSON.stringify(newmemberList));
-//            //define variable for ng-repeat
-//            $scope.adds = newmemberList;
-//            }else{$scope.submitted = true;}
-//            $('#addalumniForm').find('input').val('');
-//        };
-//        
-//        $scope.submitAlumni = function(){
-//            
-//            var data_tosend = {users: newmemberList};
-//            $scope.adds = null;
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    var returned = JSON.parse(data.data)
-//                    if(returned.errors.length > 0){
-//                        var errors_str = 'Errors with the following emails:\n';
-//                        for(var i = 0; i< returned.errors.length; i++){
-//                            errors_str += returned.errors[i].email + '\n';
-//                        }
-//                    alert(errors_str);
-//                    }
-//                    console.log(data);
-//                }
-//                else
-//                    console.log('ERROR: ',data);
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//            });
-//            newmemberList = [];
-//            $scope.adds = [];
-//        }
-//        
-//        //this function sets up a filereader to read the CSV
-//        function readSingleFile(evt) {
-//                //Retrieve the first (and only!) File from the FileList object
-//                var f = evt.target.files[0]; 
-//    
-//                if (f) {
-//                  var r = new FileReader();
-//                  r.onload = function(e) { 
-//                      filecontents = e.target.result;
-//                  }
-//                  r.readAsText(f);
-//                    
-//                } else { 
-//                  alert("Failed to load file");
-//                }
-//            }
-//        
-//        //reads the file as it's added into the file input
-//        document.getElementById('uploadAlumni').addEventListener('change', readSingleFile, false);
-//        
-//       //this function takes the CSV, converts it to JSON and outputs it
-//        $scope.addAlumni = function(){
-//            
-//            //check to see if file is being read
-//            if(filecontents == null){
-//             //do nothing
-//            alert('you have not selected a file');
-//            }
-//            else{
-//                //converts CSV file to array of usable objects
-//                var csvMemberList = CSV2ARRAY(filecontents);
-//                console.log(csvMemberList);
-//                checkEmail = function(email){
-//                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//                    return re.test(email);
-//                }
-//                for (var i = 0; i< csvMemberList.length; i++){
-//                    if(!checkEmail(csvMemberList[i].email)){
-//                        csvMemberList.splice(i, 1);
-//                        i--;
-//                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
-//                    }
-//                }  
-//                newmemberList = newmemberList.concat(csvMemberList);
-//                //outputs object to result
-//                $('#result').text(JSON.stringify(newmemberList));
-//                //define variable for ng-repeat
-//                $scope.adds = newmemberList;
-//            }
-//        };
-//    });
-//    });
-//
 
     App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
         routeChange();
@@ -1807,9 +1670,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign("#/incorrectperson");
         }
     });
-
-
-
 
 //new member info page
     App.controller('newmemberinfoController', function($scope, $http, $rootScope, $stateParams, LoadScreen){
@@ -1918,33 +1778,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.user_name = $.cookie(USER_NAME);
             $scope.token = $.cookie(TOKEN);
             $scope.type = "prof_pic";
-//        $scope.getUser = function(){
-//            console.log('Hey I got the username');
-//            return $.cookie(USER_NAME);
-//        }
-//        $scope.getToken = function(){
-//            return $.cookie(TOKEN);
-//        } 
-
-        
         //initialize profile image variable
         var newprofileImage;
-        
-        //this function sets up a filereader to read the CSV
-//            function readImage(evt) {
-//                //Retrieve the first (and only!) File from the FileList object
-//                var f = evt.target.files[0]; 
-//    
-//                if (f) {
-//                  var r = new FileReader();
-//                  r.onload = function(e) { 
-//                      newprofileImage = e.target.result;
-//                  }
-//                    
-//                } else { 
-//                  alert("Failed to load file");
-//                }
-//            }
         
         //reads the file as it's added into the file input
         
@@ -2089,25 +1924,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             
         }
-//        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    var directory = JSON.parse(data.data)
-//                    console.log(directory);
-//                    $rootScope.directory = directory;
-//                    $scope.directory = $rootScope.directory.alumni;
-//                    LoadScreen.start();
-//                    return $rootScope.directory;
-//                }
-//                else
-//                {
-//                    console.log("error: ", data.error)
-//                }
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//            });
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
         }
@@ -2856,7 +2672,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 
-    App.controller('newEventController', function($scope, $http, $rootScope, Load) {
+    App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout) {
         routeChange();
         
 //        if ($rootScope.tags){
@@ -2939,7 +2755,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         });
-
+        $scope.$watch('event.date_start', function(){
+            if ($scope.event){
+                if ($scope.event.date_start && !$scope.event.date_end){
+                    $scope.event.date_end = JSON.parse(JSON.stringify($scope.event.date_start));
+                    console.log(moment().add('hours', 1).format('h:[00] A'));
+                    
+                    $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
+                    $scope.event.time_end = moment().add('hours', 2).format('h:[00] A');
+                    $timeout(function(){$('.picker').trigger('change')},200);
+                }
+            }
+        })
     });
 
     App.controller('eventsController', function($scope, $http, Load, $rootScope) {
@@ -3717,32 +3544,32 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         });
         
-        $scope.checkForMorePolls = function(polls, pageNum, max){
-            var len = polls.length;
-            $scope.working = true;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/more_polls', packageForSending(len))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var new_polls = JSON.parse(data.data);
-                    $rootScope.polls = new_polls;
-                    if (new_polls.length > (pageNum*(max+1)) && (pageNum != 0 || new_polls.length > max)){
-                        pageNum++;
-                    }
-                    else{
-                        $scope.noMoreHiddens = true;
-                    }
-                }
-                else{
-                    console.log('ERROR: ',data);
-                }
-                $scope.working = false;
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.working = false;
-            }); 
-        }
+//        $scope.checkForMorePolls = function(polls, pageNum, max){
+//            var len = polls.length;
+//            $scope.working = true;
+//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/more_polls', packageForSending(len))
+//            .success(function(data){
+//                if (!checkResponseErrors(data))
+//                {
+//                    var new_polls = JSON.parse(data.data);
+//                    $rootScope.polls = new_polls;
+//                    if (new_polls.length > (pageNum*(max+1)) && (pageNum != 0 || new_polls.length > max)){
+//                        pageNum++;
+//                    }
+//                    else{
+//                        $scope.noMoreHiddens = true;
+//                    }
+//                }
+//                else{
+//                    console.log('ERROR: ',data);
+//                }
+//                $scope.working = false;
+//            })
+//            .error(function(data) {
+//                console.log('Error: ' , data);
+//                $scope.working = false;
+//            }); 
+//        }
         
         $scope.showPoll = function(poll){
                 window.location.assign('#/app/polls/' + poll.key);
@@ -4323,7 +4150,7 @@ App.directive('timePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_id+'time" name="'+this_name+'time" ng-model="ngModel" required/>'
+                        +'<input type="text" class="form-control picker" id="'+this_id+'time" name="'+this_name+'time" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'time").datetimepicker({'
@@ -4333,7 +4160,7 @@ App.directive('timePicker', function($compile){
                         +'date: "fa fa-calendar",'
                         +'up: "fa fa-arrow-up",'
                         +'down: "fa fa-arrow-down"'
-                        +'}});'
+                        +"}});"
                         +'$("#'+this_id+'time").focusout(function(){'
                         +'$(this).trigger("change");'
                         +'});'
@@ -4358,7 +4185,7 @@ App.directive('datePicker', function($compile){
         var this_id = attrs.id;
         
         element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel" required/>'
+                        +'<input type="text" class="form-control picker" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel" required/>'
                         +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'date").datetimepicker({'

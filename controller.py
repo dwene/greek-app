@@ -958,13 +958,15 @@ class RESTApi(remote.Service):
                                               Poll.invited_perms_tags == request_user.perms,
                                               Poll.invited_event_tags.IN(poll_event_tags),
                                               ),
-                                              Poll.organization == request_user.organization)).fetch_async(20)
+                                              Poll.organization == request_user.organization)).\
+                order(-Poll.timestamp).fetch_async(100)
         else:
             polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
                                               Poll.invited_org_tags.IN(request_user.tags),
                                               Poll.invited_perms_tags == request_user.perms,
                                               ),
-                                              Poll.organization == request_user.organization)).fetch_async(20)
+                                              Poll.organization == request_user.organization)).\
+                order(-Poll.timestamp).fetch_async(100)
 #get results of queries
         organization_users = organization_users_future.get_result()
         event_tag_list = event_tag_list_future.get_result()
