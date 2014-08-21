@@ -302,13 +302,13 @@ textarea.form-control{height:auto; max-width:100%;}
 #upcomingEvents section{margin-left:-10px; margin-right:-10px;}
 }
 
-
+#upcomingEvents{margin-top:10px;}
 #upcomingEvents .card{padding:8px 4px 8px 40px !important; width:100%; margin-bottom:10px; display:block; min-height:36px; position:relative;}
 #upcomingEvents a:hover{background:#f6f6f6; text-decoration:none;}
 #upcomingEvents .icon{font-size:18px; position:absolute; top:50%; margin-top:-9px; left:8px;}
 
 /*Main App Page*/
-#notifications ul{padding:5px 0px; min-height:380px}
+#notifications ul{padding:5px 0px; height:380px}
 #notifications h1{margin-bottom:0px;}
 
 #notifications .card-header{padding-left:20px;}
@@ -331,7 +331,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .notification:hover{background:#f6f6f6;}
 .notificationContent .close{font-size:18px; top:5px; right:5px; position:absolute; z-index:100; padding:5px;}
-.notificationTitle{font-weight:bold; height:18px; font-size:18px; margin-bottom:2px; padding-right:22px; display:block; overflow:hidden;}
+.notificationTitle{font-weight:bold; height:20px; font-size:18px; width:90% !important; margin-bottom:0px; display:block; overflow:hidden;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
 .unread{display:none;}
 .notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:3px; top:50%; margin-top:-21px;}
@@ -348,7 +348,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .pagerButtons .btn-default[disabled]{border-color:#BBB !important; color:#BBB !important;}
 .pagerButtons .previous{float:left; margin-left:5px;}
 .pagerButtons .next{float:right; margin-right:5px;}
-.pagerButtons .previous, .pagerButtons .next{background:none; border:3px solid black; font-weight:bolder; border-radius:36px;}
+.pagerButtons .previous, .pagerButtons .next{background:none; border:2px solid black; font-weight:bolder; border-radius:36px;}
 .notificationCount{margin:0 auto; display:block; line-height:30px; width:160px; color:white; border-radius:5px; font-weight:bold;}
 
 
@@ -382,6 +382,12 @@ textarea.form-control{height:auto; max-width:100%;}
 .event:last-child{border-bottom:1px solid #777;}
 .eventContent{padding:20px 10px;}
 .eventName{display:inline-block; width:100%; font-size:16px; font-weight:bold;}
+
+.calendar-header{padding-top:2px; margin-bottom:5px;}
+.calendar-header strong{font-weight:bold;}
+.calendar-navbar .btn{background:none !important; border:2px solid #000;}
+.calendar-navbar .today{position:relative; top:-2px; left:2px;}
+.calendar-navbar .previous, .calendar-navbar .next{border-radius:36px;}
 
 /*Event Info Page*/
 #eventTitle{margin-bottom:10px;}

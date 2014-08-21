@@ -1541,6 +1541,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         routeChange();
         Load.then(function(){
         var formObject = document.getElementById('uploadMembers');
+        
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
         $scope.openDeleteAlumniModal = function(user){
@@ -3067,9 +3068,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.creator = getUsersFromKey(event.creator);
             $scope.event = event;
-            if ($scope.event.address){
+                if($scope.event.address){
                 $scope.address_html = $scope.event.address.split(' ').join('+');
-            }
+                }
+                if($scope.event.location || !$scope.event.address){
+                $scope.address_html = $scope.event.location.split(' ').join('+');
+                }
             $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
             $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             $scope.loading = false;
