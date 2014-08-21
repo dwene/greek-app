@@ -275,7 +275,7 @@ margin-top: 2px;}}
 
 /*Messaging Page*/
 textarea.form-control{height:auto; max-width:100%;}
-#recentlySentMessages{padding-top:10px;}
+#recentlySentMessages ul{padding:5px 0px; min-height:380px;}
 #recentlySentMessages h2{margin-bottom:0px; border:0px;}
 #messagingTags{margin-bottom:5px;}
 #messagingTags .btn-group{margin-bottom:5px;}
@@ -344,6 +344,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #showHidden ul{min-height:380px;}
 #showHiddenButton{margin-top:20px; border-top:1px solid #ccc; border-bottom:1px solid #ccc; background:none;}
 .pagerButtons{margin:5px 0px; height:30px;}
+.pagerButtons .btn-default[disabled]{border-color:#BBB !important; color:#BBB !important;}
 .pagerButtons .previous{float:left; margin-left:5px;}
 .pagerButtons .next{float:right; margin-right:5px;}
 .pagerButtons .previous, .pagerButtons .next{background:none; border:3px solid black; font-weight:bolder; border-radius:36px;}
