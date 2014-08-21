@@ -282,11 +282,13 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*App Home Page*/
 #orgLetters img{height:auto; width:100%;}
+#orgLetters{margin-bottom:10px;}
 #statusContainer{margin-bottom:20px;}
 #statusContainer h2{font-weight:bold;}
 .currentStatus{font-style:italic; font-size:22px; margin-top:0px; padding:10px; margin-left:60px; display:block; position:relative; z-index:100;}
+
 #changeStatus #count{float:right; font-size:10px; margin:2px 4px -20px 0px;}
-#changeStatus .card{padding:10px; position:relative; min-height:120px;}
+#changeStatus{padding:10px; position:relative; min-height:120px;}
 #changeStatus .smallprofilepic{left:10px; top:8px; margin-top:0px;}
 #changeStatus .close{top:0px; right:0px; margin-top:-2px; position:relative; z-index:200;}
 #changeStatus .noStatus{margin:14px 0px 21px 120px; font-size:22px; font-style:italic; color:#ccc; font-weight:bold; display:block; position:relative;}
@@ -297,7 +299,6 @@ textarea.form-control{height:auto; max-width:100%;}
 @media screen and (max-width:768px){
 #statusContainer .page-header{margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
-#statusContainer section{padding:10px;}
 #upcomingEvents section{margin-left:-10px; margin-right:-10px;}
 }
 
@@ -313,7 +314,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #notifications .card-header{padding-left:20px;}
 
 @media screen and (min-width:768px){
-#notifications .card-header{margin:20px 0px 0px 0px;}
+#notifications .card-header{margin:0px;}
 }
     
 .notification{cursor:pointer; overflow:hidden; position:relative; height:68px;
