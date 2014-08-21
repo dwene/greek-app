@@ -1545,7 +1545,6 @@ class RESTApi(remote.Service):
                'notifications_length': len(request_user.notifications),
                'hidden_notifications_length': len(request_user.hidden_notifications),
                'new_notifications_length': len(request_user.new_notifications)}
-        logging.error('notifications_length' + str(len(request_user.notifications)))
         return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',

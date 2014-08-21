@@ -276,6 +276,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.updatingNotifications = false;
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
+        $rootScope.addingMembersLink = '../files/AddMemberDocument.xlxs';
         $rootScope.hasLoaded = false;
         
         //set color theme
@@ -1018,7 +1019,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
         routeChange();
         Load.then(function(){
-
+        var formObject = document.getElementById('uploadMembers');
+        if(formObject){
+            formObject.addEventListener('change', readSingleFile, false);}
         $rootScope.requirePermissions(COUNCIL);
         //initialize a member array
         var newmemberList = [];
@@ -1153,7 +1156,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     return re.test(email);
                 }
                 for (var i = 0; i< csvMemberList.length; i++){
-                    if(!checkEmail(csvMemberList[i].email) && csvMemberList[i].first_name && csvMemberList[i].last_name && csvMemberList[i].class_year){
+                    if (!(csvMemberList[i].email || csvMemberList[i].first_name || csvMemberList[i].email || csvMemberList[i].class_year)){
+                        csvMemberList.splice(i, 1);
+                        i--;
+                        continue;
+                    }
+                    if(!checkEmail(csvMemberList[i].email) || !csvMemberList[i].first_name || !csvMemberList[i].last_name || !csvMemberList[i].class_year){
                         csvMemberList.splice(i, 1);
                         i--;
                         $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
@@ -1164,8 +1172,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 //$('#result').text(JSON.stringify(newmemberList));
                 //define variable for ng-repeat
                 $scope.adds = newmemberList;
+                var formObject = document.getElementById('uploadMembers');
+                if (formObject){
+                    $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
+                    $('#uploadMembers').unwrap();
+                    $('#uploadMembers').trigger('change');
+                    filecontents = null;
+                } 
             }
-        };
+        }
         });
     });
 
@@ -4143,7 +4158,7 @@ function CSV2ARRAY(csv) {
     var json = JSON.stringify(objArray);
     console.log(json);
     var str = json.replace(/},/g, "},\r\n");
-    
+    var ready_array = JSON.parse(str);
     return JSON.parse(str);
 }
 
