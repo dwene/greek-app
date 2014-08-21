@@ -21,8 +21,9 @@
 </div>
 <div class="pagerButtons">
             <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1"><i class="fa fa-arrow-left"></i></button>
-            <button class="next btn btn-default btn-sm" ng-hide="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-arrow-right"></i></button>
-            <button class="next btn btn-default btn-sm" ng-show="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || working" ng-click="checkForMorePolls($root.polls, hidden.currentPage, hidden.maxPageNumber)"><span ng-show="working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="working"><i class="fa fa-arrow-right"></i></span></button>
+            <button class="next btn btn-default btn-sm" ng-disabled="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-arrow-right"></i></button>
+            <span class="text-center notificationCount darkbg">{{(hidden.currentPage * hidden.maxPageNumber) + 1}} - {{(hidden.currentPage *hidden.maxPageNumber)+5 >= polls.length? polls.length: (hidden.maxPageNumber * hidden.currentPage)+5}}<span ng-hide="$root.hidden_notifications.length <= 5"> of {{polls.length}}</span></span>
+<!--            <button class="next btn btn-default btn-sm" ng-show="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || working" ng-click="checkForMorePolls($root.polls, hidden.currentPage, hidden.maxPageNumber)"><span ng-show="working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="working"><i class="fa fa-arrow-right"></i></span></button>-->
             </div>
 
 </div>
