@@ -276,7 +276,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.updatingNotifications = false;
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
-        $rootScope.addingMembersLink = '../files/AddMemberDocument.xlxs';
         $rootScope.hasLoaded = false;
         
         //set color theme
@@ -1019,7 +1018,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
         routeChange();
         Load.then(function(){
-        var formObject = document.getElementById('uploadMembers');
+         var formObject = document.getElementById('uploadMembers');
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
         $rootScope.requirePermissions(COUNCIL);
@@ -1117,7 +1116,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .error(function(data) {
                 $scope.updating = "broken";
                 console.log('Error: ' , data);
-            }); 
+            });
+            
         }
         
         //this function sets up a filereader to read the CSV
@@ -1156,12 +1156,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     return re.test(email);
                 }
                 for (var i = 0; i< csvMemberList.length; i++){
-                    if (!(csvMemberList[i].email || csvMemberList[i].first_name || csvMemberList[i].email || csvMemberList[i].class_year)){
-                        csvMemberList.splice(i, 1);
+                    var item = csvMemberList[i];
+                    if (!item.email || !item.first_name || !item.last_name || !item.class_year){
+                       csvMemberList.splice(i, 1);
                         i--;
                         continue;
                     }
-                    if(!checkEmail(csvMemberList[i].email) || !csvMemberList[i].first_name || !csvMemberList[i].last_name || !csvMemberList[i].class_year){
+                    if(!checkEmail(csvMemberList[i].email) && csvMemberList[i].first_name && csvMemberList[i].last_name && csvMemberList[i].class_year){
                         csvMemberList.splice(i, 1);
                         i--;
                         $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
@@ -1172,15 +1173,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 //$('#result').text(JSON.stringify(newmemberList));
                 //define variable for ng-repeat
                 $scope.adds = newmemberList;
-                var formObject = document.getElementById('uploadMembers');
-                if (formObject){
-                    $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
-                    $('#uploadMembers').unwrap();
-                    $('#uploadMembers').trigger('change');
-                    filecontents = null;
-                } 
+                $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
+                $('#uploadMembers').unwrap();
+                $('#uploadMembers').trigger('change');
+                filecontents = null;
+                
             }
-        }
+        };
         });
     });
 
@@ -1370,8 +1369,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen) {
         routeChange();
         Load.then(function(){
-        //initialize a member array
+//        //initialize a member array
+        var formObject = document.getElementById('uploadMembers');
+        if(formObject){
+            formObject.addEventListener('change', readSingleFile, false);}
         var newmemberList = [];
+            
         //initialize a filecontents variable
         var filecontents;
         
@@ -1403,7 +1406,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //ng-click for the form to add one member at a time        
         $scope.addAlumnus = function(isValid){
             if(isValid){
-                newmemberList = newmemberList.concat($('#addalumnusForm').serializeObject());
+                newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
                 $scope.adds = newmemberList;
             }
             else{
@@ -1484,8 +1487,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         
-        //reads the file as it's added into the file input
-
+//        //reads the file as it's added into the file input
+//
        //this function takes the CSV, converts it to JSON and outputs it
         $scope.addAlumni = function(){
             
@@ -1502,8 +1505,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     return re.test(email);
                 }
+                
                 for (var i = 0; i< csvMemberList.length; i++){
-                    if(!checkEmail(csvMemberList[i].email) && csvMemberList[i].first_name && csvMemberList[i].last_name && csvMemberList[i].class_year){
+                    
+                    if (!csvMemberList[i].email){
+                        csvMemberList.splice(i, 1);
+                        i--;
+                        continue;
+                    }
+                    if(!checkEmail(csvMemberList[i].email)){
                         csvMemberList.splice(i, 1);
                         i--;
                         $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
@@ -1514,6 +1524,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 //$('#result').text(JSON.stringify(newmemberList));
                 //define variable for ng-repeat
                 $scope.adds = newmemberList;
+                $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
+                $('#uploadMembers').unwrap();
+                $('#uploadMembers').trigger('change');
+                filecontents = null;
             }
         };
         });
@@ -1526,7 +1540,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen){
         routeChange();
         Load.then(function(){
-         var formObject = document.getElementById('uploadMembers');
+        var formObject = document.getElementById('uploadMembers');
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
         $scope.openDeleteAlumniModal = function(user){
@@ -1537,6 +1551,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.openConvertAlumniModal = function(user){
             $('#convertAlumniModal').modal();
             $scope.selectedUser = user;
+        }
+        
+        $scope.resendWelcomeEmail = function(member){
+            member.updating = 'pending';
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        member.updating = 'done';
+                    }
+                    else{
+                        member.updating = 'broken';
+                    }
+                })
+                .error(function(data) {
+                    member.updating = 'broken';
+                });
         }
         
         function getAlumni(){
@@ -4158,7 +4188,7 @@ function CSV2ARRAY(csv) {
     var json = JSON.stringify(objArray);
     console.log(json);
     var str = json.replace(/},/g, "},\r\n");
-    var ready_array = JSON.parse(str);
+    
     return JSON.parse(str);
 }
 

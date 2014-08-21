@@ -1,4 +1,4 @@
-<div id="manageMembers" class="container" ng-init="hideHash = true">
+<div id="manageMembers" class="container">
    
     <div class="card">
         <h1 class="card-header">Member Actions</h1>
@@ -12,7 +12,7 @@
     
     <ul id="members">
        
-        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = (member.first_name + ' ' + member.last_name) ">
+        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
            
            <div class="row">
                 <div class="col-xs-12 col-sm-6">
@@ -34,14 +34,10 @@
                     </div>
                 </div>
             </div>     
-            </div>
-       
         </li>
-
     </ul>
         <p ng-show="members.length < 1">There are no members to manage!</p>    
     </div>
-    
 </div>
 
 <div class="modal fade" id="deleteMemberModal">

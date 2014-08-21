@@ -1,12 +1,5 @@
-<div class="container">
+<!--
 
-        <!-- HEADER AND TODO COUNT -->
-        <div class="jumbotron text-center">
-            <h1>Manage Alumni</h1>
-        </div>
-
-</div>
-        
 <div class="container">
 
     <ul ng-repeat="alumnus in alumni | orderBy:'last_name'">
@@ -22,6 +15,38 @@
     <p ng-show="alumni.length < 1">There are no alumni to manage!</p>
 
 </div>
+-->
+
+<div id="manageMembers" class="container">
+    <div class="card">
+    <div class="form-group">
+    <input id="manageMembersSearch" class="form-control" type="search" ng-model="search" placeholder="Search Alumni">
+    </div>
+    
+    <ul id="members">
+       
+        <li ng-repeat="alumnus in $root.directory.alumni | orderBy:'last_name' | nameSearch:search">
+           
+           <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                   <label class="label label-primary">
+                        <div>{{alumnus.first_name + ' ' + alumnus.last_name}}</div>
+                    </label>
+
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="pull-right">
+                        <button ng-click="resendWelcomeEmail(alumnus)" ng-hide="alumnus.user_name" class="btn btn-info btn-sm resendWelcome">Resend Welcome Email</button>
+                        <button ng-click="openConvertAlumniModal(alumnus)" class="btn btn-info btn-sm resendWelcome">Convert to Member</button>
+                        <button ng-click="openDeleteAlumniModal(alumnus)" class="btn btn-danger btn-sm trash"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </div>
+            </div>     
+        </li>
+    </ul>
+        <p ng-show="members.length < 1">There are no alumni to manage!</p>    
+    </div>
+</div>
 
 
 <div class="modal fade" id="deleteAlumniModal">
@@ -32,7 +57,7 @@
         <h4 class="modal-title">Delete {{selectedUser.first_name}} {{selectedUser.last_name}} ?</h4>
       </div>
       <div class="modal-body">
-        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic}});" >
+        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic || $root.defaultProfilePicture}});" >
     </div>    
     
     <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>
@@ -59,7 +84,7 @@
         <h4 class="modal-title">Convert Alumnus to Member?</h4>
       </div>
       <div class="modal-body">
-        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic}});" >
+        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic || $root.defaultProfilePicture}});" >
     </div>    
     
     <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>

@@ -42,6 +42,7 @@ INVALID_EMAIL = 'INVALID_EMAIL'
 INVALID_USERNAME = 'INVALID_USERNAME'
 NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 TAG_INVALID = "TAG_INVALID"
+DOMAIN = 'app.netegreek.com'
 
 EVERYONE = 'Everyone'
 EXPIRE_TIME = 7 # Number of days until token expires
@@ -80,7 +81,7 @@ class DateEncoder(json.JSONEncoder):
 
 def member_signup_email(user, token):
     user['token'] = token
-    signup_link = 'https://greek-app.appspot.com/#/newuser/'+token
+    signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
@@ -114,14 +115,15 @@ def add_notification_to_users(notification, users):
         item.get_result()
     return
 
-def alumni_signup_email(user, request_user, token):
+
+def alumni_signup_email(user, organization_key, token):
     # to_email = [{'email': user['email'], 'type': 'to'}]
-    org = request_user.organization.get()
+    org = organization_key.get()
     user['token'] = token
-    signup_link = 'https://greek-app.appspot.com/#/newuser/'+token
+    signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
-    body += org.name + " at " + org.school + "has requested to add you to their database of alumni. If you would like" \
+    body += org.name + " at " + org.school + " has requested to add you to their database of alumni. If you would like" \
                                              " to add yourself please go to the following link\n"
     body += signup_link + "\n\n -NeteGreek Team"
     message = dict()
@@ -169,7 +171,7 @@ def forgotten_password_email(user):
     token = generate_token()
     user.current_token = token
     user.put()
-    link = 'https://greek-app.appspot.com/?token='+token+'#/changepasswordfromtoken'
+    link = DOMAIN+ '/?token='+token+'#/changepasswordfromtoken'
     body = 'Hello\n'
     body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
     body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
@@ -673,7 +675,7 @@ class RESTApi(remote.Service):
         futures = list()
         for user in clump['users']:
             token = generate_token()
-            email_item = alumni_signup_email(user, request_user, token)
+            email_item = alumni_signup_email(user, request_user.organization, token)
             cron_email = CronEmail()
             cron_email.title = email_item["subject"]
             cron_email.content = email_item["text"]
@@ -1089,15 +1091,26 @@ class RESTApi(remote.Service):
             user = ndb.Key(urlsafe=request_object["key"]).get()
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
-            email = member_signup_email(user=user.to_dict(), token=user.current_token)
-            cron = CronEmail()
-            cron.content = email["text"]
-            cron.title = email["subject"]
-            cron.pending = True
-            cron.type = 'welcome_again'
-            cron.timestamp = datetime.datetime.now()
-            cron.email = user.email
-            cron.put()
+            if user.perms == 'alumni':
+                email = alumni_signup_email(user.to_dict(), request_user.organization, user.current_token)
+                cron = CronEmail()
+                cron.content = email["text"]
+                cron.title = email["subject"]
+                cron.pending = True
+                cron.type = 'welcome_again'
+                cron.timestamp = datetime.datetime.now()
+                cron.email = user.email
+                cron.put()
+            else:
+                email = member_signup_email(user=user.to_dict(), token=user.current_token)
+                cron = CronEmail()
+                cron.content = email["text"]
+                cron.title = email["subject"]
+                cron.pending = True
+                cron.type = 'welcome_again'
+                cron.timestamp = datetime.datetime.now()
+                cron.email = user.email
+                cron.put()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
