@@ -1912,7 +1912,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
     routeChange();
-    Load.then(function(){    
+    Load.then(function(){
+        $scope.years = [];
+        $scope.selected_year = 0;
+        for (var i = 0; i < $rootScope.directory.alumni.length; i++){
+            if ($rootScope.directory.alumni[i].grad_year && $scope.years.indexOf({value:$rootScope.directory.alumni[i].grad_year}) == -1){
+                $scope.years.push({value:$rootScope.directory.alumni[i].grad_year});
+                if ($rootScope.directory.alumni[i].grad_year > $scope.selected_year){
+                    $scope.selected_year = $rootScope.directory.alumni[i].grad_year
+                }
+            }
+        }
         $scope.getProfPic = function(link){
             if (link){
                 return link + '=s50';
@@ -1920,7 +1930,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             else{
                 return $rootScope.defaultProfilePicture;
             }
-            
         }
         $scope.showIndividual = function(member){
             window.location.assign("#/app/directory/"+member.user_name);
@@ -4520,12 +4529,33 @@ App.filter('nameSearch', function(){
             return objects;
         }
         retList = [];
-        for (var oPos = 0; oPos < objects.length; oPos++){
-            var object = objects[oPos];
-            var check = false;
-            var name = object.first_name + ' ' + object.last_name;
-            if(name.toString().toLowerCase().indexOf(search.toLowerCase()) > -1){
-                retList.push(object);
+        if (objects){
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                var object = objects[oPos];
+                var check = false;
+                var name = object.first_name + ' ' + object.last_name;
+                if(name.toString().toLowerCase().indexOf(search.toLowerCase()) > -1){
+                    retList.push(object);
+                }
+            }
+        }
+        return retList;
+    }
+});
+            
+App.filter('yearSearch', function(){ 
+    return function (objects, search) {
+        if (!search){
+            return objects;
+        }
+        retList = [];
+        if (objects){
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                var object = objects[oPos];
+                var check = false;
+                if(object.grad_year.toString().toLowerCase() == search.toString().toLowerCase()){
+                    retList.push(object);
+                }
             }
         }
         return retList;
