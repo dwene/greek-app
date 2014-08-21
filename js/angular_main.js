@@ -76,15 +76,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl : 'Static/payment.html',
 				controller  : 'paymentController'
 			})
-        .state('newmemberinfo', {
-                url : '/newuserinfo',
-                templateUrl : 'Static/newmemberinfo.html',
-                controller : 'newmemberinfoController'
-            })
         .state('newmember', {
                     url : '/newuser/:key',
-                    templateUrl : 'Static/newmember.html',
-                    controller : 'newmemberController'
+                    templateUrl : 'Static/newmemberinfo.html',
+                    controller : 'newmemberinfoController'
                 })
         .state('forgotpassword', {
                     url : '/forgotpassword',
@@ -1783,11 +1778,65 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //    });
 //    });
 //
-//new member info page
-    App.controller('newmemberinfoController', function($scope, $http, $rootScope){
+
+    App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
         routeChange();
+        $('.container').hide();
+        logoutCookies();
+        $.cookie(TOKEN, $stateParams.key);
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $scope.user = JSON.parse(data.data);
+                    $('.container').fadeIn();
+                    LoadScreen.stop();
+                    $('#body').show();
+                }
+                else
+                    console.log('ERROR: ',data);
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+            });
+        
+        $scope.correctPerson = function(){
+            window.location.assign("#/newuserinfo");
+        }
+        $scope.incorrectPerson = function(){
+            window.location.assign("#/incorrectperson");
+        }
+    });
+
+
+
+
+//new member info page
+    App.controller('newmemberinfoController', function($scope, $http, $rootScope, $stateParams, LoadScreen){
+        routeChange();
+        $scope.loading = true;
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
+        logoutCookies();
+        $.cookie(TOKEN, $stateParams.key);
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data))
+                {
+                    $('.container').fadeIn();
+                    LoadScreen.stop();
+                    $('#body').show();
+                    $scope.loading = false;
+                }
+                else{
+                    console.log('ERROR: ',data);
+                    window.location.assign('/login');
+                }
+            })
+            .error(function(data) {
+                window.location.assign('/login');
+                console.log('Error: ' , data);
+            });
         $scope.$watch('item.user_name', function() {
             if ($scope.user_name){
                 $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
@@ -1845,7 +1894,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.submitted = true;
             }
         }
-        
     });
 
 //adding profile pictures
