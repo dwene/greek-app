@@ -52,3 +52,10 @@ indexes:
   - name: key
   - name: timestamp
     direction: desc
+
+- kind: Poll
+  properties:
+  - name: invited_event_tags
+  - name: organization
+  - name: timestamp
+    direction: desc
