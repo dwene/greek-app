@@ -59,3 +59,17 @@ indexes:
   - name: organization
   - name: timestamp
     direction: desc
+
+- kind: Poll
+  properties:
+  - name: invited_perms_tags
+  - name: organization
+  - name: timestamp
+    direction: desc
+
+- kind: Poll
+  properties:
+  - name: invited_org_tags
+  - name: organization
+  - name: timestamp
+    direction: desc

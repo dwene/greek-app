@@ -379,6 +379,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $.removeCookie(PERMS);
             $.removeCookie('FORM_INFO_EMPTY');
             $rootScope.directory = {};
+            $rootScope.me = undefined;
+            $rootScope.polls = undefined;
+            $rootScope.perms = undefined;
+            $rootScope.events = undefined;
+            $rootScope.notifications = undefined;
+            $rootScope.hidden_notifications = undefined;
         }
         
         $rootScope.updateNotificationBadge = function(){
@@ -412,57 +418,67 @@ App.config(function($stateProvider, $urlRouterProvider) {
             return undefined;
         }
         $rootScope.Load = function(){
-            LoadScreen.start()
+            LoadScreen.start();
             $('#mobileMenu').hide();
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
                 .success(function(data){
-    //                
-    //                console.log(load_data);
-                    console.log(checkResponseErrors(data));
                     if(!checkResponseErrors(data)){
-                        var load_data = JSON.parse(data.data);
-                        $rootScope.perms = load_data.perms;
-    //              directory
-                        $rootScope.directory = load_data.directory;
-                        for (var i = 0; i< $rootScope.directory.members.length; i++){
-                            if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-                                $rootScope.me = $rootScope.directory.members[i];
-                                break;
+                        $timeout(function(){
+                            var load_data = JSON.parse(data.data);
+                            $rootScope.perms = load_data.perms;
+                            if (load_data.perms == 'alumni'){
+                                window.location.replace('#/app/directory');
                             }
-                        }
-    //              notifications
-                        $rootScope.notifications = load_data.notifications.notifications;
-                        $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
-                        for (var i = 0; i < $rootScope.notifications.length; i++){
-                                $rootScope.notifications[i].collapseOut = true; 
-                        }
-                        $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
-                        $rootScope.updateNotificationBadge();
-    //              events    
-                        $rootScope.events = load_data.events;
-    //              tags
-                        $rootScope.tags = load_data.tags;
-    //              organization
-                    $rootScope.subscribed = true;
-                    $rootScope.setColor(load_data.organization_data.color);
-                    $rootScope.organization = load_data.organization_data;
-                    $rootScope.polls = load_data.polls;
+        //              directory
+                            $rootScope.directory = load_data.directory;
+                            for (var i = 0; i< $rootScope.directory.members.length; i++){
+                                if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+                                    $rootScope.me = $rootScope.directory.members[i];
+                                   break;
+                                }
+                            }
+        //              notifications
+                            $rootScope.notifications = load_data.notifications.notifications;
+                            $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
+                            for (var i = 0; i < $rootScope.notifications.length; i++){
+                                    $rootScope.notifications[i].collapseOut = true; 
+                            }
+                            $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
+                            $rootScope.updateNotificationBadge();
+        //              events    
+                            $rootScope.events = load_data.events;
+        //              tags
+                            $rootScope.tags = load_data.tags;
+        //              organization
+                        $rootScope.subscribed = true;
+                        $rootScope.setColor(load_data.organization_data.color);
+                        $rootScope.organization = load_data.organization_data;
+                        $rootScope.polls = load_data.polls;
+                    }, 100);
+                    
+                    $timeout(function(){
                         if ($rootScope.checkAlumni()){
                             window.location.assign('#/app');
                         }
                         else{
                             $('#mobileMenu').removeClass('hideMenu');
                         }
+                        $('#mobileMenu').show();
+                        if ($rootScope.perms == 'alumni'){
+                            $timeout(function(){LoadScreen.stop();}, 400)
+                        }
+                        else{
+                            LoadScreen.stop();
+                        }
+                        }, 100);
                     }
-                    $('#mobileMenu').show();
-                    LoadScreen.stop();
+                    
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
                     LoadScreen.stop();
                 });
         }
-        
         $rootScope.showNav = true;
 //        $rootScope.$on('$routeChangeSuccess', function () {
 //            $('.modal-backdrop').remove();
@@ -527,6 +543,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.directory = {};
         LoadScreen.stop();
         $('#body').show();
+        $rootScope.logout();
         $scope.login = function(user_name, password){
             LoadScreen.start();
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
@@ -539,8 +556,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         if ($rootScope.hasLoaded){
                             $rootScope.Load();
                         }
-                        window.location.assign("#/app");
-                        
+                        window.location.assign('#/app');
                     }
                     else{
                         if (data.error == "BAD_LOGIN"){
@@ -1237,12 +1253,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         
-        $scope.convertMembersToAlumni = function(members){
-            keys = []
+        $scope.convertMembersToAlumni = function(){
+            keys = [];
+            console.log('converting to alumni', members);
             $('#convertMemberModal').modal('hide');
-            for (var key in members){
-                if (members[key] == true){
-                    keys.push(key);
+            for (var i = 0; i < $scope.members.length; i++){
+                if ($scope.members[i].checked){
+                    $scope.members[i].checked = false; 
+                    keys.push($scope.members[i].key);
+                    $scope.members.splice(i, 1);
+                    i--;
                 }
             }
             var to_send = {'keys': keys};
@@ -1261,15 +1281,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .error(function(data) {
                     console.log('Error: ' , data);
                 });
-            $scope.selectedMembers = {};
-            for (var kIdx = 0; kIdx < keys.length; kIdx++){
-                for (var mIdx = 0; mIdx < $scope.members.length; mIdx ++){
-                    if($scope.members[mIdx].key == keys[kIdx]){
-                        $scope.members.splice(mIdx, 1);
-                        break;
-                    }
-                }
-            }
         };
         $scope.getMembers = function(){
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
@@ -4126,6 +4137,53 @@ App.directive('removeHttp', function(){
         }};
 });
 
+
+App.directive('wtf', function(){
+    return {
+        restrict: 'E',
+        scope: {
+            alumni: '=',
+            search: '=',
+            selectedYear: '=',
+        },
+        templateUrl: '/Static/templates/alumniDirectoryPicker.html',
+        controller: function($scope) {
+            $scope.$watch('alumni', function(){
+                if ($scope.alumni){
+                    $scope.years = [];
+                    $scope.selectedYear = 0;
+                    for (var i = 0; i < $scope.alumni.length; i++){
+                        if ($scope.alumni[i].grad_year && $scope.years.indexOf({value:$scope.alumni[i].grad_year}) == -1){
+                            $scope.years.push({value:$scope.alumni[i].grad_year});
+                            if ($scope.alumni[i].grad_year > $scope.selectedYear){
+                                $scope.selectedYear = $scope.alumni[i].grad_year;
+                                $scope.highestYear = $scope.alumni[i].grad_year;
+                            }
+                        }
+                    }
+                    $scope.years.push({value:'Unknown'});
+                console.log('years', $scope.years);    
+                }
+            });
+            $scope.$watch('search', function(){
+                if ($scope.search){
+                    if ($scope.search.length){
+                        $scope.selectedYear = undefined;}
+                    else{
+                        $scope.selectedYear = $scope.highestYear;
+                    }
+                }
+                else{
+                    $scope.selectedYear = $scope.highestYear;
+                }
+            })
+            $scope.years = [{value:2015}, {value:2014}, {value:2013}];
+            $scope.selectedYear = $scope.years[0].value;
+        }
+    };
+});
+
+
 App.directive('listThing', function(){
         return {
             require: 'ngModel',
@@ -4552,8 +4610,12 @@ App.filter('yearSearch', function(){
         if (objects){
             for (var oPos = 0; oPos < objects.length; oPos++){
                 var object = objects[oPos];
-                var check = false;
-                if(object.grad_year.toString().toLowerCase() == search.toString().toLowerCase()){
+                if (object.grad_year){
+                    if(object.grad_year.toString().toLowerCase() == search.toString().toLowerCase()){
+                        retList.push(object);
+                    }
+                }
+                else if (search.toString().toLowerCase() == 'unknown'){
                     retList.push(object);
                 }
             }
@@ -4863,10 +4925,13 @@ App.factory('LoadScreen', function($rootScope){
         start: function () {
             $rootScope.loading = true;
             $('.mainLoadingScreen').show();
+            $('.nav').hide();
         },
         stop: function () {
             $rootScope.loading = false;
             $('.mainLoadingScreen').hide();
+            $('.nav').show();
+            console.log('stopping load screen');
         },
         check: function(){
             $rootScope.loading;
@@ -4879,6 +4944,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     function executePosts() {
           var deferred = $q.defer();
           function checkIfDone() { 
+              console.log('Im done loading');
                 deferred.resolve();
           }
 //          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
@@ -4931,7 +4997,6 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                     $rootScope.hasLoaded = true;
                     $('#body').show();
                     $('#mobileMenu').show();
-                    
                 }
                 checkIfDone();
             })

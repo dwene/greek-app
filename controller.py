@@ -692,6 +692,8 @@ class RESTApi(remote.Service):
                 new_user.first_name = user['first_name']
             if 'last_name' in user:
                 new_user.last_name = user['last_name']
+            if 'class_year' in user:
+                new_user.grad_year = int(user['class_year'])
             new_user.perms = 'alumni'
             futures.append(new_user.put_async())
         for future in futures:
