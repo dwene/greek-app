@@ -303,7 +303,6 @@ textarea.form-control{height:auto; max-width:100%;}
 @media screen and (max-width:768px){
 #statusContainer .page-header{margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
-#upcomingEvents section{margin-left:-10px; margin-right:-10px;}
 }
 
 #upcomingEvents{margin-top:10px;}
