@@ -167,6 +167,7 @@ h1{font-size:34px; font-weight:bold;}
 #mainSection{position:relative;}
 
 /*Directory Page*/
+#directory h1.darkbg{padding: 8px 10px; font-size: 20px; margin: 10px 0px 0px 0px;}
 #directory .member{position:relative; min-height:80px; 
 padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     margin:10px 3px;
