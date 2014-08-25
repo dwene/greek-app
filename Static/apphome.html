@@ -119,7 +119,7 @@
       </div>
       <div class="modal-footer">
         <a href="mailto:{{selectedNotificationUser.email}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" class="btn btn-info pull-left"><i class="fa fa-envelope-o"></i></a>
-        <a href="tel:{{selectedNotificationUser.phone}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" class="btn btn-info pull-left"><i class="fa fa-phone"></i></a>
+        <a href="sms:{{selectedNotificationUser.phone}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" class="btn btn-info pull-left"><i class="fa fa-phone"></i></a>
         <a type="button" class="btn btn-info" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</a>
         <a type="button" class="btn btn-info" ng-show="selectedNotification.type == 'poll'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Poll</a>
         <button type="button" class="btn btn-primary" ng-click="closeNotificationModal()">OK</button>
