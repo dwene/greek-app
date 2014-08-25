@@ -29,7 +29,8 @@
             
             <section class="card row">
             <div class="position" ng-show="position.length">{{position}}</div>
-            <p ng-show="status.length">"{{status}}"</p> 
+            <p ng-show="status.length">"{{status}}"</p>
+            <div class="info"><span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span></div>
             <div class="info" ng-show="pledgeclass.length">Pledge Class: <span>{{pledgeclass}}</span></div>
             <div class="info" ng-show="birthday.length">Birthday: <span>{{birthday}}</span></div>
             <div class="info" ng-show="major.length">Major: <span>{{major}}</span></div>

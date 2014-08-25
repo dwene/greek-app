@@ -23,11 +23,15 @@
         <ul>
             <li ng-repeat="member in council = ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'council')" class="member" ng-click="showIndividual(member)">
             
+                <div class="quickButtons">
+                    <a href="mailto:{{selectedNotificationUser.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a href="tel:{{selectedNotificationUser.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                </div>
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
-
+                
                 <div class="directoryContent">
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span>
                 <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
                 </div>
 
@@ -39,12 +43,16 @@
         <h2 class="page-header">Leadership</h2>
         <ul>
             <li ng-repeat="member in leaders = ( $root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'leadership')" class="member" ng-click="showIndividual(member)">
-            
+                
+                <div class="quickButtons">
+                    <a href="mailto:{{selectedNotificationUser.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a href="tel:{{selectedNotificationUser.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                </div>
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
                 <div class="directoryContent">
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span>
                 <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
                 </div>
 
@@ -57,11 +65,15 @@
         <ul>
             <li ng-repeat="member in members =  ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'member')" class="member" ng-click="showIndividual(member)">
             
+               <div class="quickButtons">
+                    <a href="mailto:{{selectedNotificationUser.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a href="tel:{{selectedNotificationUser.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                </div>
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
                 <div class="directoryContent">
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span>
                 <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
                 </div>
 
