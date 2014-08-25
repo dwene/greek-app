@@ -1,19 +1,8 @@
 <div class="container" id="directory">
     
-    <section id="searchTags">
-<!--
-        <div class="btn-group">
-        <ul>
-            <li ng-repeat="year in years" ng-click="$parent.selected_year = year.value; $parent.search = undefined;" ng-class="{'label-default': selected_year != year.value, 'label-primary': selected_year == year.value}"><label class="label">
-    <div>{{year.value}}</div>
-</label></li>
-        </ul>
-        </div>
--->
     <search ng-model="modalSearch"></search>
     
-    </section>
-       <wtf alumni="$root.directory.alumni" selected-year="selected_year" search="search"></wtf>
+       <wtf id="yearSelect" alumni="$root.directory.alumni" selected-year="selected_year" search="search"></wtf>
         <ul>
             <li ng-repeat="member in council = ($root.directory.alumni | nameSearch:search |  yearSearch:selected_year | orderBy:'last_name')" class="member" ng-click="showIndividual(member)">
             

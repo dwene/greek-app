@@ -137,6 +137,7 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 /*Random Fixes*/
 .btn{-webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-tap-highlight-color: transparent; 
 outline: 0px auto -webkit-focus-ring-color !important;}
+.btn-info{font-weight:bold; text-shadow: 0 1px 0 rgba(0, 0, 0, .6);}
 #registerForm #orgType input{margin-right:5px;}
 #correctPerson{text-align:center; margin-bottom:15px;}
 #logoutbutton{margin:7px;}
@@ -177,6 +178,9 @@ padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 .directoryStatus{width:100%; margin-top:8px; display:block; font-size:12px; font-weight:bold;}
 #directory h2{text-transform:uppercase; font-weight:bold; text-indent:10px; margin:20px 0px 0px 0px; border:0px;}
 
+/*Alumni Directory*/
+#yearSelect{display:block; padding:10px;}
+
 /*Member Profile Page*/
 #profileContent{position:relative; margin:20px auto;}
 #profileContent .status{text-align:center; width:100%; display:inline-block; font-size:18px; margin:10px 0px 5px;}
@@ -215,7 +219,7 @@ padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 #addTagsButton{margin:15px 0px;}
 #selectedTags{display:inline;}
 .memberTags .badge:hover{background:#d9534f;}
-.memberTags .btn-group, .messagingTags .btn-group{margin: 0px 4px 0px 0px;}
+.memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
 
 .memberTags #seeall{right:15px !important;}
 
@@ -246,7 +250,7 @@ margin-top: 2px;}}
 #deleteTagModal{z-index:9999;}
 #renameTagModal{z-index:9999;}
 
-#taggingMembers #memberSelect > li{padding: 10px 10px 6px 10px; position:relative; border-bottom:1px solid #ccc;}
+#taggingMembers #memberSelect > li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
 #taggingMembers #memberSelect > li:nth-child(odd){background:#f8f8f8;}
 #taggingMembers #memberSelect > li:first-child{border-top:1px solid #ccc;}
 
@@ -299,6 +303,7 @@ textarea.form-control{height:auto; max-width:100%;}
 @media screen and (max-width:768px){
 #statusContainer .page-header{margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
+#upcomingEvents section{margin-left:-10px; margin-right:-10px;}
 }
 
 #upcomingEvents{margin-top:10px;}
@@ -439,10 +444,6 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}
-#polls ul{padding:5px 0px; height:380px}
-#polls .form-group {
-margin-bottom: 5px;
-}
 
 /*New Poll Page*/
 #newPoll .card{padding-bottom:50px;}
