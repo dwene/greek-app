@@ -4,12 +4,12 @@
 <h1 class="darkbg">Polls <a id="newPollButton" ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Poll <i class="fa fa-plus-circle"></i></a>
 </h1>
 
-<div class="form-group">
-    <input id="pollSearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">
-    <p ng-hide="polls.length">There are no polls yet!</p>
-</div>
+<!--<div class="form-group">-->
+<!--    <input id="pollSearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">-->
+<!--</div>-->
+<search ng-model="search" ng-show="polls.length" id="pollSearch"></search>
 
-
+<p ng-hide="polls.length">There are no polls yet!</p>
 <div ng-repeat="poll in polls | orderBy: '-timestamp' | orderBy: '-open' | multipleSearch:search | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
   <div ng-click="showPoll(poll)" class="notification" ng-class="{closed: !poll.open}">
        <div class="notificationContent">

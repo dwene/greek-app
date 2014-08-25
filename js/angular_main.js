@@ -330,9 +330,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $timeout(function(){
                     $rootScope.updateNotificationBadge();
                 })
-                setTimeout(function(){
-                    $('.fa-refresh').removeClass('fa-spin')},930);
             }
+                $timeout(function(){
+                    $('.fa-refresh').removeClass('fa-spin')
+                });
             })
                 
             .error(function(data) {
@@ -426,9 +427,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $timeout(function(){
                             var load_data = JSON.parse(data.data);
                             $rootScope.perms = load_data.perms;
-                            if (load_data.perms == 'alumni'){
-                                window.location.replace('#/app/directory');
-                            }
         //              directory
                             $rootScope.directory = load_data.directory;
                             for (var i = 0; i< $rootScope.directory.members.length; i++){
@@ -556,7 +554,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         if ($rootScope.hasLoaded){
                             $rootScope.Load();
                         }
-                        window.location.assign('#/app');
+                        if (returned_data.perms == 'alumni'){
+                            window.location.assign('#/app/directory');
+                        }
+                        else{
+                            window.location.assign('#/app');
+                        }
+                        
                     }
                     else{
                         if (data.error == "BAD_LOGIN"){
@@ -1967,15 +1971,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
         out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
         console.log(user.prof_pic);
-        if (user.prof_pic.indexOf('jpg') > -1){
-            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
-        }
-        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('gif') > -1){
-            out_string += 'PHOTO;MEDIATYPE=image/gif:' + user.prof_pic + '\n';
-        }
-        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('png') > -1){
-            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
-        }
+//        if (user.prof_pic.indexOf('jpg') > -1){
+//            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
+//        }
+//        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('gif') > -1){
+//            out_string += 'PHOTO;MEDIATYPE=image/gif:' + user.prof_pic + '\n';
+//        }
+//        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('png') > -1){
+//            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
+//        }
         out_string += 'END:VCARD';
         var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
         saveAs(blob, "contact.vcf");
@@ -2871,8 +2875,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
             out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
             out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
-            out_string += 'DESCRIPTION:'+event.description + '\n';
-            out_string += 'SUMMARY:'+event.title + '\n';    
+            out_string += 'SUMMARY:'+event.title.replace(/(\r\n|\n|\r)/gm," ") + '\n';
+            out_string += 'DESCRIPTION:'+event.description.replace(/(\r\n|\n|\r)/gm," ") + '\n';
             out_string += 'END:VEVENT\nEND:VCALENDAR';
             var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
             saveAs(blob, "event.ics");
@@ -4137,6 +4141,16 @@ App.directive('removeHttp', function(){
         }};
 });
 
+
+App.directive('search', function(){
+        return {
+            restrict: 'E',
+            scope: {
+                ngModel: '='
+            },
+            templateUrl:'/Static/templates/searchdirective.html',
+        };
+});
 
 App.directive('wtf', function(){
     return {
