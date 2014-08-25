@@ -337,7 +337,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .notificationTitle{font-weight:bold; height:20px; font-size:18px; width:90% !important; margin-bottom:0px; display:block; overflow:hidden;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
 .unread{display:none;}
-.notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:3px; top:50%; margin-top:-21px;}
+.notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:2px; top:50%; margin-top:-21px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
 .notificationText{width: 100%; height: 18px; overflow: hidden; display: block;}
 .notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}
@@ -378,6 +378,8 @@ textarea.form-control{height:auto; max-width:100%;}
 
 #newEventButton, #showPastButton{margin:0px 0px 15px 0px;}
 #showPastButton{position:absolute; right:15px; top:0px;}
+
+#events ul{padding:5px 0px; height:380px}
 
 .event{cursor:pointer; position:relative;}
 .event:hover{background:#EDEDED;}

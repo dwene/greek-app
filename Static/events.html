@@ -7,7 +7,7 @@
         
         <div id="eventList" class="col-xs-12 col-sm-6 col-lg-8">
             <search ng-model="search" id="directorySearch" ng-show="events.length"></search>
-        <a id="showPastButton" data-toggle="collapse" class="btn btn-default" ng-show="events.length" ng-click="present = !present; current.currentPage = 0; order = (present ? 'time_start': '-time_start');" ng-hide="search.length"><i class="fa fa-history"></i><span ng-show="!present">Show Upcoming</span> <span ng-show="present">Show Past</span></a>
+        <a id="showPastButton" data-toggle="collapse" class="btn btn-default" ng-show="events.length" ng-click="present = !present; current.currentPage = 0; order = (present ? 'time_start': '-time_start');" ng-hide="search.length"><i class="fa fa-history"></i><span ng-show="!present"> Show Upcoming</span> <span ng-show="present">Show Past</span></a>
 
 <!--            <div class="form-group">-->
 <!--                <input id="directorySearch" type="search" ng-model="search" ng-show="events.length" placeholder="Search..." class="form-control">-->
@@ -23,10 +23,20 @@
                     </div>
                 </li>
             </ul>
+<!--
             <div class="pagerButtons">
                 <button class="previous btn btn-default btn-sm" ng-hide="current.currentPage == 0" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1">&larr; Newer</button>
                 <button class="next btn btn-default btn-sm" ng-hide="current.currentPage >= current_events.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= current_events.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1">Older &rarr;</button>
             </div>
+-->
+            
+            <div class="pagerButtons" ng-hide="$root.notifications.length <= 0">
+                    <button class="previous btn btn-default btn-sm" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1"><i class="fa fa-arrow-left"></i></button>
+                    <button class="next btn btn-default btn-sm" ng-hide="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1"><i class="fa fa-arrow-right"></i></button>
+                    <button class="next btn btn-default btn-sm" ng-show="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="noMoreNotifications || current_working || $root.notification_lengths.unread + $root.notification_lengths.read <= $root.notifications.length" ng-click="checkForMoreNotifications(current.currentPage, current.maxPageNumber)"><span ng-show="current_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="current_working"><i class="fa fa-arrow-right"></i></span></button>
+                    <span class="text-center notificationCount darkbg">{{(current.currentPage * current.maxPageNumber) + 1}} - {{(current.currentPage *current.maxPageNumber)+5 >= ($root.notification_lengths.unread + $root.notification_lengths.read) ? ($root.notification_lengths.unread + $root.notification_lengths.read):(current.currentPage *current.maxPageNumber)+5}}<span ng-hide="$root.notifications.length <= 5"> of {{$root.notification_lengths.unread + $root.notification_lengths.read}}</span></span>
+            </div>
+            
         </div>
         </div>
 </section>
