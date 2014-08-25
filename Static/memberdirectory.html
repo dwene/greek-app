@@ -19,7 +19,7 @@
     </section>
 <!--    <section ng-repeat="group in directory" ng-show="userLists[$index]">-->
     <section ng-show = "council.length">
-        <h2 class="page-header">Council</h2>
+        <h2 class="page-header darkbg">Council</h2>
         <ul>
             <li ng-repeat="member in council = ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'council')" class="member" ng-click="showIndividual(member)">
             
@@ -40,7 +40,7 @@
         </ul>
     </section>
     <section ng-show="leaders.length">
-        <h2 class="page-header">Leadership</h2>
+        <h2 class="page-header darkbg">Leadership</h2>
         <ul>
             <li ng-repeat="member in leaders = ( $root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'leadership')" class="member" ng-click="showIndividual(member)">
                 
@@ -61,7 +61,7 @@
         </ul>
     </section>
     <section ng-show="members.length">
-        <h2 class="page-header">Members</h2>
+        <h2 class="page-header darkbg">Members</h2>
         <ul>
             <li ng-repeat="member in members =  ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'member')" class="member" ng-click="showIndividual(member)">
             
