@@ -3,14 +3,10 @@
 <div ng-show="$root.polls" id="polls" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0};">
 <h1 class="darkbg">Polls <a id="newPollButton" ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Poll <i class="fa fa-plus-circle"></i></a>
 </h1>
-
-<!--<div class="form-group">-->
-<!--    <input id="pollSearch" type="search" ng-show="polls.length" ng-model="search" placeholder="Search..." class="form-control">-->
-<!--</div>-->
-<search ng-model="search" ng-show="polls.length" id="pollSearch"></search>
-
-<p ng-hide="polls.length">There are no polls yet!</p>
-<div ng-repeat="poll in polls | orderBy: '-timestamp' | orderBy: '-open' | multipleSearch:search | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
+    <search ng-model="search" id="pollSearch" ng-show="polls.length"></search>
+    <p ng-hide="polls.length">There are no polls yet!</p>
+<ul>
+<li ng-repeat="poll in polls | orderBy: '-timestamp' | multipleSearch:search | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
   <div ng-click="showPoll(poll)" class="notification" ng-class="{closed: !poll.open}">
        <div class="notificationContent">
         <span class="notificationTitle">{{poll.name}}</span>
@@ -18,7 +14,8 @@
         <span class="notificationSender">created by: {{$root.getNameFromKey(poll.creator)}}</span>
         </div>
     </div>
-</div>
+</li>
+</ul>
 <div class="pagerButtons">
             <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1"><i class="fa fa-arrow-left"></i></button>
             <button class="next btn btn-default btn-sm" ng-disabled="hidden.currentPage >= $root.polls.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-arrow-right"></i></button>

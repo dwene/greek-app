@@ -215,7 +215,7 @@ padding:20px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 #addTagsButton{margin:15px 0px;}
 #selectedTags{display:inline;}
 .memberTags .badge:hover{background:#d9534f;}
-.memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
+.memberTags .btn-group, .messagingTags .btn-group{margin: 0px 4px 0px 0px;}
 
 .memberTags #seeall{right:15px !important;}
 
@@ -246,7 +246,7 @@ margin-top: 2px;}}
 #deleteTagModal{z-index:9999;}
 #renameTagModal{z-index:9999;}
 
-#taggingMembers #memberSelect > li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
+#taggingMembers #memberSelect > li{padding: 10px 10px 6px 10px; position:relative; border-bottom:1px solid #ccc;}
 #taggingMembers #memberSelect > li:nth-child(odd){background:#f8f8f8;}
 #taggingMembers #memberSelect > li:first-child{border-top:1px solid #ccc;}
 
@@ -299,7 +299,6 @@ textarea.form-control{height:auto; max-width:100%;}
 @media screen and (max-width:768px){
 #statusContainer .page-header{margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
-#upcomingEvents section{margin-left:-10px; margin-right:-10px;}
 }
 
 #upcomingEvents{margin-top:10px;}
@@ -440,6 +439,10 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}
+#polls ul{padding:5px 0px; height:380px}
+#polls .form-group {
+margin-bottom: 5px;
+}
 
 /*New Poll Page*/
 #newPoll .card{padding-bottom:50px;}

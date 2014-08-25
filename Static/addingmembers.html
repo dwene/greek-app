@@ -3,15 +3,14 @@
     <div class="card">
     <h1 class="card-header">Add Multiple Members at Once</h1>
     <p id="areAdded"></p>
-    <a class="btn btn-default" ng-href="https://docs.google.com/file/d/0B4Of2nSYBtRgUjVMdjJYQmUyUGs/edit" target="_">Excel Template</a>
     <form id="addmembersForm" role="form">
         <div class="form-group">
             <label for="uploadMembers">Upload CSV</label>
             <input type="file" id="uploadMembers" accept=".csv">
         </div>
-        <div class="form-group">
-            <button ng-click="addMembers()" class="btn btn-default">Add Members</button>
-        </div>
+
+        <button ng-click="addMembers()" class="btn btn-default">Add Members</button>    <a class="btn btn-default" ng-href="https://docs.google.com/file/d/0B4Of2nSYBtRgUjVMdjJYQmUyUGs/edit" target="_blank"><i class="fa fa-download"></i> Excel Template</a>
+        
         <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file</p>
     </form>
     </div>
