@@ -257,7 +257,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout, LoadScreen) {
         
         FastClick.attach(document.body);
-        
+        $rootScope.randomPhrase = function(){
+            return 'Wow, you are looking great today!'
+        };
         $rootScope.$state = $state;
         $rootScope.color = 'color1';
         $rootScope.perms = 'alumni';

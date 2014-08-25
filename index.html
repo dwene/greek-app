@@ -147,7 +147,18 @@
        
 </div>
        
-<div id="loadingScreen" class="mainLoadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div id="loadingScreen" class="mainLoadingScreen">
+    <i class="fa fa-spinner fa-spin"></i>
+    <p id="nicePhrase" style="color: blue; font-size:24px;"></p>  
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+        var niceThings = ['Wow, you are looking great today!', 'Dang, Have you been working out?', 'Hope your day is great!'];
+        document.getElementById("nicePhrase").innerHTML = niceThings[getRandomInt(0, niceThings.length)];
+    </script>
+    <p style="color:grey;">Give us one second while we setup for you...</p> 
+</div>
         
 <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
         <script src="js/vendor/jquery.cookie.js"></script>
