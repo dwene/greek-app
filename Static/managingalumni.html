@@ -19,10 +19,7 @@
 
 <div id="manageMembers" class="container">
     <div class="card">
-    <div class="form-group">
-    <input id="manageMembersSearch" class="form-control" type="search" ng-model="search" placeholder="Search Alumni">
-    </div>
-    
+    <search ng-model="search" id="manageMembersSearch"></search>
     <ul id="members">
        
         <li ng-repeat="alumnus in $root.directory.alumni | orderBy:'last_name' | nameSearch:search">
