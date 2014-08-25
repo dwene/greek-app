@@ -24,8 +24,8 @@
             <li ng-repeat="member in council = ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'council')" class="member" ng-click="showIndividual(member)">
             
                 <div class="quickButtons">
-                    <a href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
-                    <a href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                    <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a ng-show="member.phone" ng-href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
                 </div>
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
                 
@@ -46,7 +46,7 @@
                 
                 <div class="quickButtons">
                     <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
-                    <a ng-href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                    <a ng-show="member.phone" ng-href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
                 </div>
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
@@ -66,8 +66,8 @@
             <li ng-repeat="member in members =  ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'member')" class="member" ng-click="showIndividual(member)">
             
                <div class="quickButtons">
-                    <a href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
-                    <a href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                    <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a ng-show="member.phone" ng-href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
                 </div>
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
 
