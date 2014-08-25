@@ -4152,13 +4152,14 @@ App.directive('search', function(){
         };
 });
 
-App.directive('wtf', function(){
+App.directive('alumniYearPicker', function(){
     return {
         restrict: 'E',
         scope: {
             alumni: '=',
             search: '=',
             selectedYear: '=',
+            requireRegistration: '=?',
         },
         templateUrl: '/Static/templates/alumniDirectoryPicker.html',
         controller: function($scope) {
@@ -4167,11 +4168,13 @@ App.directive('wtf', function(){
                     $scope.years = [];
                     $scope.selectedYear = 0;
                     for (var i = 0; i < $scope.alumni.length; i++){
-                        if ($scope.alumni[i].grad_year && $scope.years.indexOf({value:$scope.alumni[i].grad_year}) == -1 && $scope.alumni[i].user_name){
-                            $scope.years.push({value:$scope.alumni[i].grad_year});
-                            if ($scope.alumni[i].grad_year > $scope.selectedYear){
-                                $scope.selectedYear = $scope.alumni[i].grad_year;
-                                $scope.highestYear = $scope.alumni[i].grad_year;
+                        if ($scope.alumni[i].grad_year && $scope.years.indexOf({value:$scope.alumni[i].grad_year}) == -1){
+                            if (!$scope.requireRegistration || ($scope.requireRegistration && $scope.alumni[i].user_name)){
+                                $scope.years.push({value:$scope.alumni[i].grad_year});
+                                if ($scope.alumni[i].grad_year > $scope.selectedYear){
+                                    $scope.selectedYear = $scope.alumni[i].grad_year;
+                                    $scope.highestYear = $scope.alumni[i].grad_year;
+                                }
                             }
                         }
                     }

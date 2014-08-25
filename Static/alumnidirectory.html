@@ -2,7 +2,7 @@
     
     <search ng-model="search"></search>
     
-       <wtf id="yearSelect" alumni="$root.directory.alumni" selected-year="selected_year" search="search"></wtf>
+       <alumni-year-picker id="yearSelect" alumni="$root.directory.alumni" selected-year="selected_year" search="search" require-registration="true"></alumni-year-picker>
         <ul>
             <li ng-repeat="member in council = ($root.directory.alumni | nameSearch:search |  yearSearch:selected_year | orderBy:'last_name')" class="member" ng-click="showIndividual(member)" ng-show="member.user_name">
             

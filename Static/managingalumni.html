@@ -20,9 +20,10 @@
 <div id="manageMembers" class="container">
     <div class="card">
     <search ng-model="search" id="manageMembersSearch"></search>
+       <alumni-year-picker id="yearSelect" alumni="$root.directory.alumni" selected-year="selected_year" search="search"></alumni-year-picker>
     <ul id="members">
        
-        <li ng-repeat="alumnus in $root.directory.alumni | orderBy:'last_name' | nameSearch:search">
+        <li ng-repeat="alumnus in $root.directory.alumni | orderBy:'last_name' | yearSearch:selected_year |nameSearch:search">
            
            <div class="row">
                 <div class="col-xs-12 col-sm-6">
