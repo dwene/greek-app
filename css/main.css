@@ -443,6 +443,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}
+#polls ul{padding:5px 0px; height:380px}
 
 /*New Poll Page*/
 #newPoll .card{padding-bottom:50px;}
