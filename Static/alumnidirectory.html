@@ -1,19 +1,14 @@
 <div class="container" id="directory">
     
-    <search ng-model="modalSearch"></search>
+    <search ng-model="search"></search>
     
        <wtf id="yearSelect" alumni="$root.directory.alumni" selected-year="selected_year" search="search"></wtf>
         <ul>
-            <li ng-repeat="member in council = ($root.directory.alumni | nameSearch:search |  yearSearch:selected_year | orderBy:'last_name')" class="member" ng-click="showIndividual(member)">
+            <li ng-repeat="member in council = ($root.directory.alumni | nameSearch:search |  yearSearch:selected_year | orderBy:'last_name')" class="member" ng-click="showIndividual(member)" ng-show="member.user_name">
             
                 <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
-
                 <div class="directoryContent">
                 <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
-<!--
-                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags">{{tag}}</span> </span>
-                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
--->
                 </div>
 
             
