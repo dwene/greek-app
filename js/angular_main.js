@@ -452,7 +452,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $rootScope.setColor(load_data.organization_data.color);
                         $rootScope.organization = load_data.organization_data;
                         $rootScope.polls = load_data.polls;
-                    }, 100);
+                        $rootScope.tags = load_data.tags;
+                    });
                     
                     $timeout(function(){
                         if ($rootScope.checkAlumni()){
@@ -2544,7 +2545,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         else{
             $scope.sentMessages = [];
         }
-        $scope.tags = $rootScope.tags;
         $scope.clearUsers = false;
         $scope.deleteMessageTip = {
             "title" : "Delete Message"
@@ -2552,16 +2552,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
-        $scope.loading = !($scope.sentMessages && $scope.tags);
-        
-        function onFirstLoad(){
-            var tag_list = [];
-            var deferred = $q.defer();
-            var done = 0;
-            function checkIfDone() {
-                done++;
-                if (done==2){$scope.loading = false; deferred.resolve();}
-            }//#TODO change the tags to have 2 fields, one for name, one for checked/unchecked. This would work better with the ng-model
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data)){
@@ -2572,11 +2562,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 else{
                     console.log("error: ", data.error)
                 }
-                checkIfDone();
             })
             .error(function(data) {
                 console.log('Error: ' , data);
-                checkIfDone();
             });
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
             .success(function(data){
@@ -2590,17 +2578,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     console.log("error: ", data.error)
                 }
-                checkIfDone();
             })
             .error(function(data) {
                 console.log('Error: ' , data);
                 checkIfDone();
             });
-            return deferred.promise;
-        }
-        onFirstLoad().then(function(){$scope.loading=false;})
-        $scope.selectedTags = {};
-        
+//        
         
         $scope.sendMessage = function(isValid, tags, title, content){
             if (isValid){
@@ -5008,6 +4991,8 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
                     $rootScope.setColor(load_data.organization_data.color);
                     $rootScope.organization = load_data.organization_data;
                     $rootScope.polls = load_data.polls;
+                    $rootScope.tags = load_data.tags;
+                    console.log('$Rootscope tags', $rootScope.tags);
 //                    if (!load_data.accountFilledOut){
 //                        window.location.assign('#/app/accountinfo');
 //                    }

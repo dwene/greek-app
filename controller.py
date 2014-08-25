@@ -921,15 +921,13 @@ class RESTApi(remote.Service):
                                         ndb.OR(Event.org_tags.IN(request_user.tags),
                                         Event.perms_tags == request_user.perms,
                                         Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(30)
+                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
         else:
             events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
                                         ndb.OR(Event.perms_tags == request_user.perms,
                                         Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(30)
+                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
         organization_future = request_user.organization.get_async()
-        request_user = get_user(request.user_name, request.token)
-
         notification_count = 40
         if request_user.new_notifications:
             new_notification_future = Notification.query(Notification.key.IN(
@@ -1002,23 +1000,23 @@ class RESTApi(remote.Service):
                 user_list.append(user_dict)
         out_data["directory"] = {'members': user_list, 'alumni': alumni_list}
 
-        # tags section
-        org_tags = organization.tags
-        org_tags_list = list()
-        for tag in request_user.recently_used_tags:
-            if tag in org_tags:
-                org_tags_list.append({"name": tag, "recent": True})
-                org_tags.remove(tag)
-            else:
-                request_user.recently_used_tags.remove(tag)
-        for tag in org_tags:
-            org_tags_list.append({"name": tag, "recent": False})
-        # events = event_tags_future.get_result()
-        event_tags_list = list()
-        for event in event_tag_list:
-            event_tags_list.append({"name": event.tag})
-        perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
-        out_data["tags"] = {'org_tags': org_tags_list, 'event_tags': event_tags_list, 'perms_tags': perm_tags_list}
+        # # tags section
+        # org_tags = organization.tags
+        # org_tags_list = list()
+        # for tag in request_user.recently_used_tags:
+        #     if tag in org_tags:
+        #         org_tags_list.append({"name": tag, "recent": True})
+        #         org_tags.remove(tag)
+        #     else:
+        #         request_user.recently_used_tags.remove(tag)
+        # for tag in org_tags:
+        #     org_tags_list.append({"name": tag, "recent": False})
+        # # events = event_tags_future.get_result()
+        # event_tags_list = list()
+        # for event in event_tag_list:
+        #     event_tags_list.append({"name": event.tag})
+        # perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+        # out_data["tags"] = {'org_tags': org_tags_list, 'event_tags': event_tags_list, 'perms_tags': perm_tags_list}
 
         # organization info
         organization_data = dict(name=organization.name, school=organization.school)
@@ -1067,6 +1065,18 @@ class RESTApi(remote.Service):
                                      'notifications_length': len(request_user.notifications),
                                      'hidden_notifications_length': len(request_user.hidden_notifications),
                                      'new_notifications_length': len(request_user.new_notifications)}
+        org_tags_list = list()
+        logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
+        for tag in organization.tags:
+            if tag in request_user.recently_used_tags:
+                org_tags_list.append({"name": tag, "recent": True})
+            else:
+                org_tags_list.append({"name": tag, "recent": False})
+        event_tags_list = list()
+        for event in event_tag_list:
+            event_tags_list.append({"name": event.tag})
+        perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+        out_data["tags"] = {'org_tags': org_tags_list, 'perms_tags': perm_tags_list, 'event_tags': event_tags_list}
 
 #part 2 of polls
         dict_polls = list()
@@ -1848,12 +1858,12 @@ class RESTApi(remote.Service):
                                  ndb.OR(Event.org_tags.IN(request_user.tags),
                                         Event.perms_tags == request_user.perms,
                                         Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch(30)
+                                        Event.going == request_user.key))).order(-Event.time_start).fetch()
         else:
             events = Event.query(ndb.AND(Event.organization == request_user.organization,
                                  ndb.OR(Event.perms_tags == request_user.perms,
                                         Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch(30)
+                                        Event.going == request_user.key))).order(-Event.time_start).fetch()
         out_events = list()
         for event in events:
             dict_event = event.to_dict()
