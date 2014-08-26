@@ -9,7 +9,7 @@
 -->
 
 <span class="btn-group">
-    <label ng-repeat="year in years | orderBy:'value'" ng-click="$parent.selectedYear = year.value; $parent.search = undefined;" ng-class="{'label-default': selectedYear != year.value, 'label-primary': selectedYear == year.value}" class="label">
+    <label ng-repeat="year in years | orderBy:['-year', 'semester']" ng-click="$parent.selectedYear = year; $parent.search = undefined;" ng-class="{'label-default': selectedYear != year, 'label-primary': selectedYear == year}" class="label">
         <span>{{year.value}}</span>
     </label>
 </span>

@@ -20,7 +20,8 @@ class User(ndb.Model):
     class_year = ndb.IntegerProperty()
     grad_month = ndb.IntegerProperty()
     grad_year = ndb.IntegerProperty()
-    pledge_class = ndb.StringProperty()
+    pledge_class_semester = ndb.StringProperty(default='Fall')
+    pledge_class_year = ndb.IntegerProperty(default=2014)
     #address stuff
     address = ndb.StringProperty()
     city = ndb.StringProperty()

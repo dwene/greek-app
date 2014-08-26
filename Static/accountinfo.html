@@ -111,7 +111,7 @@
     </div>
     </div> 
     
-<div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni()}">
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni()}">
         <label for="grad_year" class="col-sm-2 control-label">Graduation Year</label>
         <div class="col-sm-10">
           <input type="number" class="form-control" id="grad_year" name="grad_year" ng-model="item.grad_year" placeholder="####" ng-required = "checkAlumni()">
@@ -119,6 +119,25 @@
         <p ng-show="(memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted)" class="help-block">Please enter your graduation year.</p>
     </div>
 
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni()}">
+            <label for="pledge_class_year" class="col-sm-2 control-label">Pledge Class Year</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="pledge_class_year" name="pledge_class_year" ng-model="item.pledge_class_year" placeholder="####" ng-required = "checkAlumni()">
+            </div>
+            <p ng-show="(memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted)" class="help-block">Please enter a year</p>
+    </div>
+       
+    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni()}">
+        <label for="currentState" class="col-sm-2 control-label">Pledge Class Semester</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" ng-required="!checkAlumni()">
+                <option value="fall">Fall</option>
+                <option value="spring">Spring</option>
+            </select>
+            <p ng-show="(memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted)" class="help-block">Please enter your graduation month.</p>
+        </div>
+    </div>
+   
     <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
         <label for="major" class="col-sm-2 control-label">Major</label>
         <div class="col-sm-10">
@@ -139,14 +158,6 @@
     </div>
     
     <div id="alumni_fields" ng-show="checkAlumni()">
-        <div class="form-group" ng-class="{ 'has-error' : (memberAccount.pledge_class.$invalid && !memberAccount.pledge_class.$pristine) || (memberAccount.pledge_class.$invalid && submitted), required: checkAlumni()}">
-        <label for="pledge_class" class="col-sm-2 control-label">Pledge Class Year</label>
-        <div class="col-sm-10">
-          <input type="number" class="form-control" id="pledge_class" name="pledge_class" ng-model="item.pledge_class" placeholder="####" ng-required = "checkAlumni()">
-        </div>
-        <p ng-show="(memberAccount.pledge_class.$invalid && !memberAccount.pledge_class.$pristine) || (memberAccount.pledge_class.$invalid && submitted)" class="help-block">Please enter a year</p>
-    </div>
-        
         <div class="form-group" ng-class="{ 'has-error' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}" >
             <label for="occupation" class="col-sm-2 control-label">Occupation</label>
             <div class="col-sm-10">

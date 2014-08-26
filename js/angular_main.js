@@ -2035,6 +2035,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if ($scope.member.grad_month && $scope.member.grad_year){
                         $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
                     }
+                    $scope.pledgeClass = $scope.member.pledge_class_semester + ' ' + $scope.member.pledge_class_year;
                     $scope.major = $scope.member.major;
                     $scope.firstName = $scope.member.first_name;
                     $scope.lastName = $scope.member.last_name;
@@ -2072,7 +2073,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if ($scope.member.grad_month && $scope.member.grad_year){
                         $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
                     }
-                    $scope.pledgeclass = $scope.member.pledge_class;
+                    $scope.pledgeClass = $scope.member.pledge_class_semester + ' ' + $scope.member.pledge_class_year;
                     $scope.occupation = $scope.member.occupation;
                     $scope.position = $scope.member.position;
                     $scope.major = $scope.member.major;
@@ -4187,20 +4188,25 @@ App.directive('alumniYearPicker', function(){
             $scope.$watch('alumni', function(){
                 if ($scope.alumni){
                     $scope.years = [];
-                    $scope.selectedYear = 0;
                     for (var i = 0; i < $scope.alumni.length; i++){
-                        if ($scope.alumni[i].grad_year && $scope.years.indexOf({value:$scope.alumni[i].grad_year}) == -1){
+                        var item = {value:$scope.alumni[i].pledge_class_semester + ' '+ $scope.alumni[i].pledge_class_year, year:$scope.alumni[i].pledge_class_year, semester:$scope.alumni[i].pledge_class_semester};
+                        if ($scope.alumni[i].pledge_class_year && $scope.alumni[i].pledge_class_semester && !isAlreadyAdded(item)){
                             if (!$scope.requireRegistration || ($scope.requireRegistration && $scope.alumni[i].user_name)){
-                                $scope.years.push({value:$scope.alumni[i].grad_year});
-                                if ($scope.alumni[i].grad_year > $scope.selectedYear){
-                                    $scope.selectedYear = $scope.alumni[i].grad_year;
-                                    $scope.highestYear = $scope.alumni[i].grad_year;
+                                $scope.years.push(item);
+                                if (!$scope.selectedYear){
+                                    $scope.selectedYear = item;
+                                }
+                                else if (item.year > $scope.selectedYear.year){
+                                    $scope.selectedYear = item;
+                                    $scope.highestYear = item;
                                 }
                             }
                         }
                     }
-                    $scope.years.push({value:'Unknown'});
-                console.log('years', $scope.years);    
+                    $scope.years.push({value:'Unknown', year:0});
+                     $scope.selectedYear = $scope.years[0];
+                console.log('years', $scope.years);
+                console.log('selectedYear',$scope.selectedYear);
                 }
             });
             $scope.$watch('search', function(){
@@ -4215,8 +4221,14 @@ App.directive('alumniYearPicker', function(){
                     $scope.selectedYear = $scope.highestYear;
                 }
             })
-            $scope.years = [{value:2015}, {value:2014}, {value:2013}];
-            $scope.selectedYear = $scope.years[0].value;
+            function isAlreadyAdded(item){
+                for (var i = 0; i < $scope.years.length; i++){
+                    if (item.value == $scope.years[i].value){
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
     };
 });
@@ -4652,6 +4664,28 @@ App.filter('yearSearch', function(){
                     if(object.grad_year.toString().toLowerCase() == search.toString().toLowerCase()){
                         retList.push(object);
                     }
+                }
+                else if (search.toString().toLowerCase() == 'unknown'){
+                    retList.push(object);
+                }
+            }
+        }
+        return retList;
+    }
+});
+            
+            
+App.filter('pledgeClassSearch', function(){ 
+    return function (objects, search) {
+        if (!search){
+            return objects;
+        }
+        retList = [];
+        if (objects){
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                var object = objects[oPos];
+                if (object.pledge_class_year == search.year && object.pledge_class_semester == search.semester){
+                    retList.push(object); 
                 }
                 else if (search.toString().toLowerCase() == 'unknown'){
                     retList.push(object);

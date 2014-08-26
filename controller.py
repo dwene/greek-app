@@ -657,6 +657,10 @@ class RESTApi(remote.Service):
             new_user.first_name = user['first_name']
             new_user.last_name = user['last_name']
             new_user.class_year = int(user['class_year'])
+            if 'pledge_class_year' in user:
+                new_user.pledge_class_year = int(user['pledge_class_year'])
+            if 'pledge_class_semester' in user:
+                new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             new_user.perms = 'member'
             futures.append(new_user.put_async())
         for future in futures:
@@ -692,8 +696,10 @@ class RESTApi(remote.Service):
                 new_user.first_name = user['first_name']
             if 'last_name' in user:
                 new_user.last_name = user['last_name']
-            if 'class_year' in user:
-                new_user.grad_year = int(user['class_year'])
+            if 'pledge_class_semester' in user:
+                new_user.pledge_class_semester = user['pledge_class_semester']
+            if 'pledge_class_year' in user:
+                new_user.pledge_class_year = user['pledge_class_year'].lower()
             new_user.perms = 'alumni'
             futures.append(new_user.put_async())
         for future in futures:
@@ -1157,6 +1163,10 @@ class RESTApi(remote.Service):
                 user.zip = int(value)
             elif key == "class_year":
                 user.class_year = int(value)
+            elif key == "pledge_class_year":
+                user.pledge_class_year = int(value)
+            elif key == "pledge_class_semester":
+                user.pledge_class_semester = value.lower()
             elif key == "phone":
                 user.phone = value
             elif key == "facebook":

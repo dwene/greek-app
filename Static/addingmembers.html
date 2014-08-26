@@ -18,24 +18,32 @@
     <form id="addmemberForm" class="card" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid)" novalidate>
     <h1 class="card-header">Add One Member at a Time</h1>
          <div class="row">
-          <div class="form-group col-sm-3 col-xs-6 required">
+          <div class="form-group col-sm-4 col-xs-6 required">
             <label for="firstName" class="control-label">First Name</label>
               <input type="text" class="form-control" id="firstName" name="first_name" ng-model="input.first_name" placeholder="John" required>
           </div>
-          <div class="form-group col-sm-3 col-xs-6 required">
+          <div class="form-group col-sm-4 col-xs-6 required">
             <label for="lastName" class="control-label">Last Name</label>
               <input type="text" class="form-control" id="lastName" name="last_name" ng-model="input.last_name" placeholder="Doe" required>
           </div>
-          <div class="form-group col-sm-3 col-xs-6 required">
-            <label for="classYear" class="control-label">Class Year</label>
-              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.class_year" placeholder="2014" value="2014" ng-pattern="/[0-9]{4}/" required>
+          <div class="form-group col-sm-4 col-xs-6 required">
+            <label for="classYear" class="control-label">Pledge Class Year</label>
+              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.class_year" placeholder="####" ng-pattern="/[0-9]{4}/">
           </div>
-          <div class="form-group col-sm-3 col-xs-6 required">
-            <label for="email" class="control-label">Email</label></label>
+          <div class="form-group col-sm-4 col-xs-6 required">
+          <label for="pledge_class_year" class="control-label">Pledge Class Semester</label>
+            <select class="form-control" id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" ng-required="!checkAlumni()">
+                <option value="fall">Fall</option>
+                <option value="spring">Spring</option>
+            </select>
+          </div>
+          <div class="form-group col-sm-4 col-xs-6 required">
+            <label for="email" class="control-label">Email</label>
               <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
           </div>
-          <div class="form-group" ng-class="{ 'has-error' : addmemberForm.$invalid && submitted}">
-              <button class="btn btn-default" type="submit" ng-disabled="!addmemberForm.$valid">Add Member</button>
+          <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'has-error' : addmemberForm.$invalid && submitted}">
+             <label for="submit_form" class="control-label"></label>
+              <input name="submit_form" class="btn btn-default form-control" type="submit" ng-disabled="!addmemberForm.$valid" value="Add Member">
               <p ng-show="addmemberForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
           </div>
           </div>
@@ -45,7 +53,7 @@
     <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
     <div class="row">
         <div class="col-xs-4">{{ add.first_name }} {{ add.last_name }}</div>
-        <div class="col-xs-4">{{ add.class_year }}</div>
+        <div class="col-xs-4">{{ add.pledge_class_semester.charAt(0).toUpperCase() + add.pledge_class_semester.slice(1); + ' ' + add.pledge_class_year }}</div>
         <div class="col-xs-4">{{ add.email }}</div>
     </div>
     <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>

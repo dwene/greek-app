@@ -49,6 +49,9 @@ handlers:
   script: controller.APPLICATION
   secure: always
 
+builtins:
+- remote_api: on
+
 libraries:
 - name: webapp2
   version: "2.5.2"
