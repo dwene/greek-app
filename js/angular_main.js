@@ -37,6 +37,11 @@ var LEADERSHIP = 'leadership';
 var COUNCIL = 'council';
 var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
+String.prototype.replaceAll = function(str1, str2, ignore) 
+{
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+}
+
 //initialize app
 var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap' ,'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics'],  function ($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms):/);
@@ -3470,6 +3475,37 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.formatDate = function(date){
                 return momentInTimezone(date).format('lll');
+            }
+            
+            $scope.downloadCSV = function(){
+                var users = $filter('orderBy')($scope.users, 'last_name');
+                var out = [['"Last%20Name"','"First%20Name"', '"Time%20In"', '"Time%20Out"']];
+                //datetime format yyyy-mm-dd hh:mm:ss
+                for (var i = 0; i < users.length; i++){
+                    var time_in = '';
+                    var time_out = '';
+                    if (users[i].attendance_data){
+                        time_in = moment(users[i].attendance_data.time_in).format('YYYY-MM-DD HH:mm:ss');
+                        time_out = moment(users[i].attendance_data.time_out).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                    out.push([users[i].last_name.replaceAll(' ', '%20'), users[i].first_name.replaceAll(' ', '%20'), time_in.replaceAll(' ', '%20'), time_out.replaceAll(' ', '%20')]);
+                }
+
+                var csvRows = [];
+
+                for(var i=0, l=out.length; i<l; ++i){
+                    csvRows.push(out[i].join(','));
+                }
+
+                var csvString = csvRows.join("%0A");
+                var a         = document.createElement('a');
+                a.href        = 'data:attachment/csv,' + csvString;
+                a.target      = '_blank';
+                a.download    = $stateParams.tag+'.csv';
+                console.log(a.href);
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             }
             $scope.timeDifference = function(start, end){
                 var mStart = moment(start);
