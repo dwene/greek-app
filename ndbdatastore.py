@@ -52,7 +52,7 @@ class User(ndb.Model):
     sent_notifications = ndb.KeyProperty(repeated=True)
     events = ndb.KeyProperty(repeated=True)
     recently_used_tags = ndb.StringProperty(repeated=True)
-    email_prefs = ndb.StringProperty(default='none')
+    email_prefs = ndb.StringProperty(default='all')
 
 
 class Notification(ndb.Model):

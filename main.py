@@ -53,6 +53,14 @@ def send_mandrill_email(from_email, to_email, subject, body):
                             headers={'Content-Type': 'application/json'})
     return
 
+def send_email(from_email, to_email, subject, body):
+    footer = 'If you believe you are receiving this email in error, please email support@netegreek.com'
+    full_body = body + '\n\n' + footer
+    try:
+        mail.send_mail(from_email, to_email, subject, full_body)
+    except:
+        send_mandrill_email(from_email, to_email, subject, full_body)
+
 
 def get_user(user_name, token):
     user = User.query(User.user_name == user_name).get()
@@ -298,8 +306,8 @@ class SendEmails(webapp2.RequestHandler):
         emails = CronEmail.query(CronEmail.pending == True).fetch()
         futures = []
         for email in emails:
-            send_mandrill_email(from_email='support@netegreek.com', to_email=email.email,
-                                subject=email.title, body=email.content)
+            send_email(from_email='support@netegreek.com', to_email=email.email,
+                       subject=email.title, body=email.content)
 
             # mail.send_mail(sender="support@netegreek.com", to=str(email.email),
             #                subject=str(email.title), body=str(email.content))

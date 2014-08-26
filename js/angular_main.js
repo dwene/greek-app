@@ -1045,13 +1045,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the add members page
     App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
         routeChange();
+        $scope.adds = [];
         Load.then(function(){
          var formObject = document.getElementById('uploadMembers');
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
         $rootScope.requirePermissions(COUNCIL);
         //initialize a member array
-        var newmemberList = [];
         //initialize a filecontents variable
         var filecontents;
         
@@ -1083,12 +1083,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //ng-click for the form to add one member at a time        
         $scope.addMember = function(isValid){
             if(isValid){
-            newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
+            $scope.adds = $scope.adds.concat($scope.input);
             //$('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
-            $scope.adds = newmemberList;}
+            $scope.input = {};}
             else{$scope.submitted = true;}
-            $scope.input={};
+            
         };
         
         $scope.getMembers = function(){
@@ -1128,7 +1128,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.submitMembers = function(){
             $scope.updating = "pending";
-            var data_tosend = {users: newmemberList};
+            var data_tosend = {users: $scope.adds};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1183,24 +1183,35 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     return re.test(email);
                 }
+                var new_item_list = [];
                 for (var i = 0; i< csvMemberList.length; i++){
                     var item = csvMemberList[i];
-                    if (!item.email || !item.first_name || !item.last_name || !item.class_year){
-                       csvMemberList.splice(i, 1);
-                        i--;
+                    var new_item = {};
+                    if (item['First']){
+                        new_item.first_name = item['First'];
+                    }
+                    if (item['Last']){
+                        new_item.last_name = item['Last'];
+                    }
+                    if (item['Pledge Year']){
+                        new_item.pledge_class_year = item['Pledge Year'];
+                    }
+                    if (item['Pledge Semester']){
+                        new_item.pledge_class_semester = item['Pledge Semester'];
+                    }
+                    if (item['Email']){
+                        new_item.email = item['Email'];
+                    }
+                    if (!new_item.email || !new_item.first_name || !new_item.last_name || !new_item.pledge_class_year || !new_item.pledge_class_semester){
                         continue;
                     }
-                    if(!checkEmail(csvMemberList[i].email) && csvMemberList[i].first_name && csvMemberList[i].last_name && csvMemberList[i].class_year){
-                        csvMemberList.splice(i, 1);
-                        i--;
+                    if(!checkEmail(new_item.email)){
                         $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+                        continue;
                     }
-                }  
-                newmemberList = newmemberList.concat(csvMemberList);
-                //outputs object to result
-                //$('#result').text(JSON.stringify(newmemberList));
-                //define variable for ng-repeat
-                $scope.adds = newmemberList;
+                    new_item_list.push(new_item);
+                }
+                $scope.adds = $scope.adds.concat(new_item_list);
                 $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
                 $('#uploadMembers').unwrap();
                 $('#uploadMembers').trigger('change');
@@ -1396,7 +1407,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         var formObject = document.getElementById('uploadMembers');
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
-        var newmemberList = [];
+        $scope.adds = [];
             
         //initialize a filecontents variable
         var filecontents;
@@ -1429,8 +1440,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //ng-click for the form to add one member at a time        
         $scope.addAlumnus = function(isValid){
             if(isValid){
-                newmemberList = newmemberList.concat($('#addmemberForm').serializeObject());
-                $scope.adds = newmemberList;
+                $scope.adds = $scope.adds.concat($scope.input);
             }
             else{
                 $scope.submitted = true;
@@ -1474,7 +1484,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.submitAlumni = function(){
             $scope.updating = "pending";
-            var data_tosend = {users: newmemberList};
+            var data_tosend = {users: $scope.adds};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -1529,24 +1539,36 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     return re.test(email);
                 }
                 
+                
+                var new_item_list = [];
                 for (var i = 0; i< csvMemberList.length; i++){
-                    
-                    if (!csvMemberList[i].email){
-                        csvMemberList.splice(i, 1);
-                        i--;
+                    var item = csvMemberList[i];
+                    var new_item = {};
+                    if (item['First']){
+                        new_item.first_name = item['First'];
+                    }
+                    if (item['Last']){
+                        new_item.last_name = item['Last'];
+                    }
+                    if (item['Pledge Year']){
+                        new_item.pledge_class_year = item['Pledge Year'];
+                    }
+                    if (item['Pledge Semester']){
+                        new_item.pledge_class_semester = item['Pledge Semester'];
+                    }
+                    if (item['Email']){
+                        new_item.email = item['Email'];
+                    }
+                    if (!new_item.email || !new_item.pledge_class_year || !new_item.pledge_class_semester){
                         continue;
                     }
-                    if(!checkEmail(csvMemberList[i].email)){
-                        csvMemberList.splice(i, 1);
-                        i--;
+                    if(!checkEmail(new_item.email)){
                         $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+                        continue;
                     }
-                }  
-                newmemberList = newmemberList.concat(csvMemberList);
-                //outputs object to result
-                //$('#result').text(JSON.stringify(newmemberList));
-                //define variable for ng-repeat
-                $scope.adds = newmemberList;
+                    new_item_list.push(new_item);
+                }
+                $scope.adds = $scope.adds.concat(new_item_list);
                 $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
                 $('#uploadMembers').unwrap();
                 $('#uploadMembers').trigger('change');
@@ -4187,7 +4209,9 @@ App.directive('alumniYearPicker', function(){
         controller: function($scope) {
             $scope.$watch('alumni', function(){
                 if ($scope.alumni){
-                    $scope.years = [];
+                    if (!$scope.years){
+                        $scope.years = [];
+                    }
                     for (var i = 0; i < $scope.alumni.length; i++){
                         var item = {value:$scope.alumni[i].pledge_class_semester + ' '+ $scope.alumni[i].pledge_class_year, year:$scope.alumni[i].pledge_class_year, semester:$scope.alumni[i].pledge_class_semester};
                         if ($scope.alumni[i].pledge_class_year && $scope.alumni[i].pledge_class_semester && !isAlreadyAdded(item)){
@@ -4195,6 +4219,7 @@ App.directive('alumniYearPicker', function(){
                                 $scope.years.push(item);
                                 if (!$scope.selectedYear){
                                     $scope.selectedYear = item;
+                                    $scope.highestYear = item;
                                 }
                                 else if (item.year > $scope.selectedYear.year){
                                     $scope.selectedYear = item;
@@ -4203,8 +4228,13 @@ App.directive('alumniYearPicker', function(){
                             }
                         }
                     }
-                    $scope.years.push({value:'Unknown', year:0});
-                     $scope.selectedYear = $scope.years[0];
+                    $scope.highestYear = $scope.years[0];
+                    for (var i = 0; i < $scope.years.length; i++){
+                        if ($scope.years[i].year > $scope.highestYear.year){
+                            $scope.highestYear = $scope.years[i];
+                        }
+                    }
+                     $scope.selectedYear = $scope.highestYear;
                 console.log('years', $scope.years);
                 console.log('selectedYear',$scope.selectedYear);
                 }
@@ -4646,6 +4676,16 @@ App.filter('nameSearch', function(){
                     retList.push(object);
                 }
             }
+        }
+        return retList;
+    }
+});
+            
+App.filter('capitalizeFirst', function(){ 
+    return function (objects) {
+        if (objects){
+            console.log(objects);
+            return objects[0].toUpperCase() + objects.slice(1);
         }
         return retList;
     }

@@ -102,11 +102,11 @@
           </div>
           <div class="form-group col-sm-4 col-xs-6 required">
             <label for="classYear" class="control-label">Pledge Class Year</label>
-              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.class_year" placeholder="####" ng-pattern="/[0-9]{4}/">
+              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.pledge_class_year" placeholder="####" ng-pattern="/[0-9]{4}/">
           </div>
           <div class="form-group col-sm-4 col-xs-6 required">
           <label for="pledge_class_year" class="control-label">Pledge Class Semester</label>
-            <select class="form-control" id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" ng-required="!checkAlumni()">
+            <select class="form-control" id="pledgeClassSemester" name="pledge_class_semester" ng-model="input.pledge_class_semester" ng-required="!checkAlumni()">
                 <option value="fall">Fall</option>
                 <option value="spring">Spring</option>
             </select>
@@ -122,12 +122,11 @@
           </div>
           </div>
      </form>
-     
     <ul ng-show="adds.length" id="addMembers" class="card">
     <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
     <div class="row">
         <div class="col-xs-4">{{ add.first_name }} {{ add.last_name }}</div>
-        <div class="col-xs-4">{{ add.pledge_class_semester.charAt(0).toUpperCase() + add.pledge_class_semester.slice(1); + ' ' + add.pledge_class_year }}</div>
+        <div class="col-xs-4">{{ (add.pledge_class_semester + ' ' + add.pledge_class_year) | capitalizeFirst }}</div>
         <div class="col-xs-4">{{ add.email }}</div>
     </div>
     <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>

@@ -108,7 +108,7 @@ def add_notification_to_users(notification, users):
         if user.email_prefs == 'all':
             future_list.append(CronEmail(type='notification', pending=True, email=user.email,
                                          title='Notification: ' + notification.title,
-                                         content=notification.content).put_async())
+                                         content='Content:' + notification.content).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
     for item in future_list:
@@ -697,9 +697,9 @@ class RESTApi(remote.Service):
             if 'last_name' in user:
                 new_user.last_name = user['last_name']
             if 'pledge_class_semester' in user:
-                new_user.pledge_class_semester = user['pledge_class_semester']
+                new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             if 'pledge_class_year' in user:
-                new_user.pledge_class_year = user['pledge_class_year'].lower()
+                new_user.pledge_class_year = user['pledge_class_year']
             new_user.perms = 'alumni'
             futures.append(new_user.put_async())
         for future in futures:
@@ -1072,7 +1072,7 @@ class RESTApi(remote.Service):
                                      'hidden_notifications_length': len(request_user.hidden_notifications),
                                      'new_notifications_length': len(request_user.new_notifications)}
         org_tags_list = list()
-        logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
+        # logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
         for tag in organization.tags:
             if tag in request_user.recently_used_tags:
                 org_tags_list.append({"name": tag, "recent": True})
@@ -1094,8 +1094,8 @@ class RESTApi(remote.Service):
         out_data["polls"] = dict_polls
 
         time_end = datetime.datetime.now()
-        logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
-                      str(time_middle-time_start))
+        # logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
+        #               str(time_middle-time_start))
         return OutgoingMessage(error='', data=json_dump(out_data))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_welcome_email',

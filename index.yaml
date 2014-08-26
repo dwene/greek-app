@@ -53,6 +53,11 @@ indexes:
   - name: timestamp
     direction: desc
 
+- kind: Notification
+  properties:
+  - name: __key__
+  - name: timestamp
+
 - kind: Poll
   properties:
   - name: invited_event_tags
