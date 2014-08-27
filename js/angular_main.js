@@ -557,7 +557,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if(!checkResponseErrors(data))
                     {
                         returned_data = JSON.parse(data.data);
-                        $.cookie(USER_NAME, user_name);
+                        $.cookie(USER_NAME, user_name.toLowerCase());
                         $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
                         if ($rootScope.hasLoaded){
                             $rootScope.Load();
