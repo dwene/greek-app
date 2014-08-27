@@ -595,18 +595,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
         console.log('I just stopped the loading in forgot password controller');
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
-            if (email === undefined){
-                email = '';
-            }
-            to_send = {email: email, user_name: user_name};
+            $scope.gettingnewPassword = 'pending';
+            to_send = {email: '', user_name: user_name};
             console.log(to_send);
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.sentEmail = true;
+                    $scope.gettingnewPassword = 'done';
                 }
                 else{
                     $scope.emailFailed = true;
+                    $scope.gettingnewPassword = 'broken';
                 }
             })
             .error(function(data) {
@@ -635,25 +635,34 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .error(function(data){window.location.replace('#/login')});
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
-        $scope.changePassword = function(password) {
+        $scope.changePassword = function(password, isValid) {
+            if(isValid){
+            $scope.changingPassword = 'pending';
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
                     $scope.user_name = data.data;
+                    $scope.changingPassword = 'done';
                 }
                 else{
                     console.log('Error: ' , data);
                     $scope.changeFailed = true;
                     $scope.passwordChanged = false;
+                    $scope.changingPassword = 'broken';
                 }
             })
             .error(function(data) {
                 console.log('Error: ' , data);
                 $scope.changeFailed = true;
                 $scope.passwordChanged = false;
-            });            
+                $scope.changingPassword = 'broken';
+            });   
+            }
+            else{
+                $scope.changingPassword = '';
+            }
         }
     });
 

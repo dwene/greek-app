@@ -373,6 +373,9 @@ textarea.form-control{height:auto; max-width:100%;}
 #changeProfileButton{display:block; width:180px; margin:0px auto 20px auto;}
 #updateAccountAlert{padding:15px; margin-right:100px;}
 
+/*Change Password from Token*/
+#changepasswordfromToken #correctUser{font-weight:bold; margin:10px; display:block;}
+
 /*Upload Profile Page*/
 #crop{display:block; width:300px; margin:0 auto 10px auto;}
 #crop .page-header{padding-bottom: 5px; margin: 10px 0 5px;}
