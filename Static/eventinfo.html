@@ -1,4 +1,4 @@
-<div ng-show="loading" ng-hide="eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="loading && !eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
 
 <div id="eventInfo" ng-hide="loading || eventNotFound" class="container">

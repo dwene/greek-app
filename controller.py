@@ -677,7 +677,6 @@ class RESTApi(remote.Service):
             new_user.user_name = ''
             new_user.first_name = user['first_name']
             new_user.last_name = user['last_name']
-            new_user.class_year = int(user['class_year'])
             if 'pledge_class_year' in user:
                 new_user.pledge_class_year = int(user['pledge_class_year'])
             if 'pledge_class_semester' in user:

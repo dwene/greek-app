@@ -490,7 +490,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 
 /*Admin Page*/
-#colorPicker{width:300px; height:290px; padding:10px !important;}
+#colorPicker{width:305px; height:290px; padding:10px !important;}
 .colorPick{margin:5px; border:1px solid black; padding:0px; height:57px; width:57px; display:inline-block;}
 .colorPick.selectedColor{border:1px solid white;}
 #adminPage section{margin-bottom:20px;}

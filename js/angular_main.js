@@ -619,6 +619,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //changing a forgotten password
     App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, LoadScreen, $stateParams) {
         routeChange();
+        $rootScope.logout();
         $.cookie(TOKEN, $stateParams.token);
         console.log('My token', $.cookie(TOKEN));
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
@@ -2937,6 +2938,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.tags = $rootScope.tags;
         var event_tag = $stateParams.tag;
         tryLoadEvent(0);
+        getEventAndSetInfo($rootScope.events, 0);
 	   });
         function tryLoadEvent(count){
             LoadEvents();
@@ -2954,6 +2956,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     })
                     .error(function(data) {
                         console.log('Error: ' , data);
+                        tryLoadEvent(count+1);
                     });
             }
         }   
@@ -2983,6 +2986,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 else{
                     $scope.eventNotFound = true;
                     $scope.loading = false;
+                    console.log('I think I couldnt find the event');
                     return;
                 }
             }
@@ -3017,6 +3021,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
             $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             $scope.loading = false;
+            $scope.eventNotFound = false;
             
             setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800);
             
