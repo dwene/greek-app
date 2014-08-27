@@ -254,7 +254,7 @@ def get_user(user_name, token):
 
 
 def username_available(user_name):
-    if User.query(User.user_name == user_name).get():
+    if User.query(User.user_name == user_name.lower()).get():
         return False
     elif len(user_name) < 5:
         return False
