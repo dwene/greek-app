@@ -2640,7 +2640,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             .error(function(data) {
                 console.log('Error: ' , data);
-                checkIfDone();
             });
 //        
         
@@ -2843,6 +2842,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             for (var i = 0; i< $scope.events.length; i++){
                 $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});}
                 //send the organization and user date from registration pages
+            function getEvents(){
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -2860,7 +2860,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
+                    getEvents();
                 });
+            }
             
             $scope.showDate = function(start, end){
                 var mStart = momentInTimezone(start);
