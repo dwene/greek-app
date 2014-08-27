@@ -261,7 +261,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 //Set up run commands for the app
     App.run(function ($rootScope, $state, $stateParams, $http, $q, $timeout, LoadScreen) {
-        
+        console.log('Im starting the run parse');
         FastClick.attach(document.body);
         $rootScope.randomPhrase = function(){
             return 'Wow, you are looking great today!'
@@ -590,7 +590,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //getting a forgotten password email
     App.controller('forgotPasswordController', function($scope, $http, $rootScope, LoadScreen){
         routeChange();
+        $rootScope.logout();
         LoadScreen.stop();
+        console.log('I just stopped the loading in forgot password controller');
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
             if (email === undefined){
