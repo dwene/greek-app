@@ -53,7 +53,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
     .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app", "/app/home")
     .when("/app/managealumni", "/app/managealumni/manage")
-    .when("/app/directory", "/app/directory/members");
+    .when("/app/directory", "/app/directory/members")
+    .when("/changepasswordfromtoken", "/changepasswordfromtoken/1");
     
       $stateProvider 
         .state('home', {
@@ -92,7 +93,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     controller : 'forgotPasswordController'
                 })
         .state('changepasswordfromtoken', {
-                    url : '/changepasswordfromtoken',
+                    url : '/changepasswordfromtoken/:token',
                     templateUrl : 'Static/change_password_from_token.html',
                     controller : 'changePasswordFromTokenController'
                 })
@@ -279,7 +280,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
         $rootScope.hasLoaded = false;
-        
         //set color theme
 //        $rootScope.$watch('loading', function(){
 //            if ($rootScope.loading){
@@ -543,13 +543,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //login page
 	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen) {
         routeChange();
+        $rootScope.logout();
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
         $.removeCookie('FORM_INFO_EMPTY')
         $rootScope.directory = {};
         LoadScreen.stop();
         $('#body').show();
-        $rootScope.logout();
         $scope.login = function(user_name, password){
             LoadScreen.start();
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
@@ -588,8 +588,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //getting a forgotten password email
-    App.controller('forgotPasswordController', function($scope, $http, $rootScope){
+    App.controller('forgotPasswordController', function($scope, $http, $rootScope, LoadScreen){
         routeChange();
+        LoadScreen.stop();
         $scope.sentEmail = false;
         $scope.reset = function(email, user_name) {
             if (email === undefined){
@@ -614,9 +615,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //changing a forgotten password
-    App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope) {
+    App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, LoadScreen, $stateParams) {
         routeChange();
-        $.cookie(TOKEN, getParameterByName('token'));
+        $.cookie(TOKEN, $stateParams.token);
+        console.log('My token', $.cookie(TOKEN));
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
+        .success(function(data){
+           if (!checkResponseErrors(data)){
+            LoadScreen.stop();
+            $scope.user = JSON.parse(data.data);
+           }
+            else{
+                window.location.replace('#/login');
+            }
+        })
+        .error(function(data){window.location.replace('#/login')});
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
@@ -955,6 +968,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             $scope.selectedNotification.new = false;
+            $scope.notification_lengths.unread --;
+            $scope.notification_lengths.read ++;
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
@@ -3980,7 +3995,6 @@ function checkResponseErrors(received_data){
         if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN' || response.error == 'BAD_FIRST_TOKEN')
         {
             window.location.assign("/#/login");
-            window.location.reload();
             console.log('ERROR: ', response.error);
             return true;
         }
@@ -5043,6 +5057,8 @@ App.factory('LoadScreen', function($rootScope){
             $rootScope.loading = false;
             $('.mainLoadingScreen').hide();
             $('.nav').show();
+            $('.container').fadeIn();
+            $('#body').show();
             console.log('stopping load screen');
         },
         check: function(){
@@ -5053,6 +5069,10 @@ App.factory('LoadScreen', function($rootScope){
 
 App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     var defer = $q.defer();
+        if (!checkLogin()){
+        window.location.replace('#/login');
+        defer.resolve();
+    }
     function executePosts() {
           var deferred = $q.defer();
           function checkIfDone() { 
@@ -5070,6 +5090,11 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
 //                console.log('Error: ' , data);
 //                checkIfDone();
 //            });
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
+            .success(function(data){
+                console.log('checked login');
+                if (checkResponseErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
+            });
         
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
             .success(function(data){

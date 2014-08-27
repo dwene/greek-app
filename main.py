@@ -32,15 +32,20 @@ import datetime
 import jinja2
 import webapp2
 import base64, re
-
 DOMAIN = 'https://app.netegreek.com'
+HTML_EMAIL_1 = """
+<div bgcolor="#d4d4d4"><div style="font-size:1px;display:none!important"></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td bgcolor="#d4d4d4" style="padding-top:10px"><table width="650" border="0" cellspacing="0" cellpadding="0" align="center"><tbody><tr><td width="650"><table width="650" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="650" bgcolor="#003663" valign="top" padding="" style=""><a href="https://app.netegreek.com" target="_blank"><img src="https://app.netegreek.com/images/NeteGreekLogoSmallWhite.png" width="149" height="40" style="margin-top:20px;margin-left:20px;height:40px;width:149px;" border="0"></a></td></tr><tr width="650"><td bgcolor="#003663" padding="10" style="padding:10px;"></td></tr><tr><table width="650" border="0" cellspacing="0" cellpadding="0"><tr><td width="50" bgcolor="#003663" halign="left"></td><td width="550" bgcolor="#003663" halign="center"><table width="550" bgcolor="#FFFFFF" border="0" halign="center"><tr><td width="550" border="0" style="border:none;"><div style="margin-top:20px;margin-bottom:20px;margin-left: 10px;margin-right:10px;">"""
+HTML_EMAIL_2 = """
+</div></td></tr></table></td><td width="50" bgcolor="#003663"></td></tr></table></tr><tr><td width="650" height="50" bgcolor="#003663"></td></tr></tbody></table><table width="650" cellpadding="0" cellspacing="0" border="0" bgcolor="#d4d4d4" align="center"><tbody><tr><td><table align="center" style="width:100%;max-width:650px;text-align:left;padding-top:15px"><tbody><tr><td colspan="2" style="text-align:center;width:100%"><p style="color:#818181;font-size:12px;padding-top:10px;line-height:25px;font-family:arial;font-color:white;text-align:center"> If you believe you are receiving this email in error please email <a href="mailto:support@netegreek.com" style="">support@netegreek.com</a></p><p style="color:#818181;font-color:white;font-size:12px;padding-top:10px;line-height:25px;font-family:arial;text-align:center"> NeteGreek, LLC. </p></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div>"""
 
-def send_mandrill_email(from_email, to_email, subject, body):
+
+def send_mandrill_email(from_email, to_email, subject, body, html):
     to_send = dict()
     email_out = [{'email': to_email, 'type': 'to'}]
     to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
     message = dict()
     message["text"] = body
+    message["html"] = html
     message["subject"] = subject
     message["from_email"] = from_email
     message["from_name"] = 'NeteGreek'
@@ -53,13 +58,17 @@ def send_mandrill_email(from_email, to_email, subject, body):
                             headers={'Content-Type': 'application/json'})
     return
 
+
 def send_email(from_email, to_email, subject, body):
     footer = 'If you believe you are receiving this email in error, please email support@netegreek.com'
+    html_title = """<h1 style="text-align: center;font-family:sans-serif;color:#000">""" + subject.replace('\n', '<br/>') + """</h1>"""
+    html_body = """<p style="text-align: left;font-family:sans-serif;color: #000">""" + body.replace('\n', '<br/>') + """</p>"""
     full_body = body + '\n\n' + footer
+    html_full = HTML_EMAIL_1 + html_title + html_body + HTML_EMAIL_2
     try:
-        mail.send_mail(from_email, to_email, subject, full_body)
+        mail.send_mail(from_email, to_email, subject, full_body, html=html_full)
     except:
-        send_mandrill_email(from_email, to_email, subject, full_body)
+        send_mandrill_email(from_email, to_email, subject, full_body, html_full)
 
 
 def get_user(user_name, token):

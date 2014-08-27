@@ -107,8 +107,8 @@ def add_notification_to_users(notification, users):
     for user in users:
         if user.email_prefs == 'all':
             future_list.append(CronEmail(type='notification', pending=True, email=user.email,
-                                         title='Notification: ' + notification.title,
-                                         content='Content:' + notification.content).put_async())
+                                         title=notification.title,
+                                         content=notification.content).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
     for item in future_list:
@@ -135,22 +135,36 @@ def alumni_signup_email(user, organization_key, token):
     return message
 
 
-def send_mandrill_email(from_email, to_emails, subject, body):
+def send_mandrill_email(from_email, to_email, subject, body, html):
     to_send = dict()
+    email_out = [{'email': to_email, 'type': 'to'}]
     to_send["key"] = 'y8EslL_LZDf4__hJZbbMAQ'
     message = dict()
     message["text"] = body
+    message["html"] = html
     message["subject"] = subject
     message["from_email"] = from_email
     message["from_name"] = 'NeteGreek'
-    message["to"] = to_emails
+    message["to"] = email_out
     to_send["message"] = message
     json_data = json.dumps(to_send)
-    result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0//messages/send.json',
+    result = urlfetch.fetch(url='https://mandrillapp.com/api/1.0/messages/send.json',
                             payload=json_data,
                             method=urlfetch.POST,
                             headers={'Content-Type': 'application/json'})
     return
+
+
+def send_email(from_email, to_email, subject, body):
+    footer = 'If you believe you are receiving this email in error, please email support@netegreek.com'
+    html_title = """<h1 style="text-align: center;font-family:sans-serif;color:#000">""" + subject.replace('\n', '<br/>') + """</h1>"""
+    html_body = """<p style="text-align: left;font-family:sans-serif;color: #000">""" + body.replace('\n', '<br/>') + """</p>"""
+    full_body = body + '\n\n' + footer
+    html_full = HTML_EMAIL_1 + html_title + html_body + HTML_EMAIL_2
+    try:
+        mail.send_mail(from_email, to_email, subject, full_body, html=html_full)
+    except:
+        send_mandrill_email(from_email, to_email, subject, full_body, html_full)
 
 
 def removal_email(user):
@@ -165,17 +179,16 @@ def removal_email(user):
 
 
 def forgotten_password_email(user):
-    to_email = [{'email': user.email, 'type': 'to', 'name': user.first_name}]
+    to_email = user.email
     from_email = 'support@netegreek.com'
     subject = 'NeteGreek Password Reset'
-    token = generate_token()
+    token = generate_token() + user.user_name
     user.current_token = token
     user.put()
-    link = DOMAIN+ '/?token='+token+'#/changepasswordfromtoken'
-    body = 'Hello\n'
-    body += 'Please follow the link to reset your password. If you believe you are receiving this email in '
-    body += 'error please contact your NeteGreek administrator.\n'+ link + '\nHave a great day!\nNeteGreek Team'
-    send_mandrill_email(from_email, to_email, subject, body)
+    link = DOMAIN+ '/#/changepasswordfromtoken/'+token
+    body = 'Hello\n\n'
+    body += 'Please follow the link to reset your password for the NeteGreek app.\n' + link + '\nHave a great day!\nNeteGreek Team'
+    send_email(from_email, to_email, subject, body)
 
 
 def check_form_status(user):
@@ -609,6 +622,14 @@ class RESTApi(remote.Service):
         except:
             out["image"] = ''
         return OutgoingMessage(error='', data=json_dump(out))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_login',
+                      http_method='POST', name='user.check_login')
+    def check_login(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
                       http_method='POST', name='auth.login')
@@ -1233,6 +1254,14 @@ class RESTApi(remote.Service):
             organization.color = data["color"]
             organization.put()
         return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/check_password_token',
+                      http_method='POST', name='auth.check_password_token')
+    def check_password_token(self, request):
+        user = User.query(User.current_token == request.token).get()
+        if not user:
+            return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
+        return OutgoingMessage(error='', data=json_dump({'first_name': user.first_name, 'last_name': user.last_name, 'user_name': user.user_name}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/change_password',
                       http_method='POST', name='auth.change_password')
