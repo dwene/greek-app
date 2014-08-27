@@ -18,11 +18,15 @@
                 
             
         </ul>
-            <h2>No shows</h2>
+        
+        <div id="noShows" class="card">
+        <h1>No Shows</h1>
+        <ul>
             <li ng-repeat="member in noShows | orderBy: 'user.last_name'" class="checkin">
                 <span>{{member.user.first_name}} {{member.user.last_name}} {{member.rsvp}}</span>
             </li>
         </ul>
+        </div>
 
 </div>
 

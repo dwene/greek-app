@@ -339,12 +339,12 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .notification:hover{background:#f6f6f6;}
 .notificationContent .close{font-size:18px; top:5px; right:5px; position:absolute; z-index:100; padding:5px;}
-.notificationTitle{font-weight:bold; height:20px; font-size:18px; width:90% !important; margin-bottom:0px; display:block; overflow:hidden;}
+.notificationTitle{font-weight:bold; height:19px; font-size:18px; width:90% !important; margin-bottom:0px; display:block; overflow:hidden;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
 .unread{display:none;}
 .notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:2px; top:50%; margin-top:-21px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
-.notificationText{width: 100%; height: 18px; overflow: hidden; display: block;}
+.notificationText{width: 100%; height: 17px; overflow: hidden; display: block;}
 .notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
@@ -436,7 +436,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Check In Page*/
 
-/*makes room for the picture*/ .checkinContent{height:160px; padding:15px 15px 44px 75px !important; position:relative;}
+/*makes room for the picture*/ .checkinContent{height:110px; padding:15px 15px 44px 75px !important; position:relative;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
 .checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
 .checkinContent .checkinTitle{font-size:18px; display:block; font-weight:bold; margin-bottom:5px;}
@@ -452,9 +452,13 @@ textarea.form-control{height:auto; max-width:100%;}
 #report .card{margin-bottom:10px;}
 #report .card .smallprofilepic{left:15px;}
 
+#noShows ul{border-top:1px solid #ccc;}
+#noShows li:nth-child(even){background:#f8f8f8;}
+#noShows li{border-bottom:1px solid #ccc; padding:10px;}
+
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}
-#polls ul{padding:5px 0px; height:380px}
+#polls ul{}
 
 /*New Poll Page*/
 #newPoll .card{padding-bottom:50px;}
