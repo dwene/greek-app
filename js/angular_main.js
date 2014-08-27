@@ -989,7 +989,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }); 
                 $rootScope.hidden_notifications.unshift(notify);
                 if (notify.new){
-                    $rootScope.notification_lengths.unread--;
+                    $rootScope.notification_lengths.unread--;//#FIXME notifications_lengths.unread is not updating as soon as it is read
                     notify.new = false;
                     $rootScope.updateNotificationBadge();
                 }
@@ -2281,6 +2281,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //member tagging page
     App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
         routeChange();
+        
+//        var elementToScroll = $('#tagMembersCard')
+//        var elementPosition = elementToScroll.offset();
+//
+//        $(window).scroll(function(){
+//                if($(window).scrollTop() > elementPosition.top){
+//                      elementToScroll.css('position','fixed').css('top',''+elementPosition+'');
+//                } else {
+//                    elementToScroll.css('position','relative');
+//                }    
+//        });
+        
         $scope.selectTagFromTypeAhead = function(tag){
             console.log('looking for tag', tag);
             console.log('all tags', $scope.tags);

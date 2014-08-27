@@ -223,14 +223,15 @@ padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 #addTagsButton{margin:15px 0px;}
 #selectedTags{display:inline;}
 .memberTags .badge:hover{background:#d9534f;}
-.memberTags .btn-group, .messagingTags .btn-group{margin:0px 2px;}
+.memberTags .btn-group, .messagingTags .btn-group{margin:0px 4px 0px 0px;}
+#taggingSearch{margin-bottom:10px; display:block;}
 
 .memberTags #seeall{right:15px !important;}
 
 .memberTags .btn-group{-webkit-user-select:none;}
 .memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;
 border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
-.memberTags .page-header{margin: 20px 0 10px !important;}
+.memberTags .page-header{margin: 10px 0 10px !important; padding-bottom:5px;}
 
 #memberTags .label:not(.member){padding:.4em 2em .4em .6em;}
 .memberTags .checkLabel{margin-bottom:4px;}
@@ -253,8 +254,8 @@ margin-top: 2px;}}
 .modal-title span{font-weight:bold !important;}
 #deleteTagModal{z-index:9999;}
 #renameTagModal{z-index:9999;}
-
-#taggingMembers #memberSelect > li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
+#tagMembersCard{margin-bottom:10px;}
+#taggingMembers #memberSelect > li{padding:6px 10px 4px 10px; position:relative; border-bottom:1px solid #ccc;}
 #taggingMembers #memberSelect > li:nth-child(odd){background:#f8f8f8;}
 #taggingMembers #memberSelect > li:first-child{border-top:1px solid #ccc;}
 
@@ -391,6 +392,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .event:last-child{border-bottom:1px solid #777;}
 .eventContent{padding:20px 10px;}
 .eventName{display:inline-block; width:100%; font-size:16px; font-weight:bold;}
+.eventTime{display:block; width:100%;}
 
 .calendar-header{padding-top:2px; margin-bottom:5px;}
 .calendar-header strong{font-weight:bold;}
@@ -478,8 +480,7 @@ textarea.form-control{height:auto; max-width:100%;}
 .pollSummaryList {margin-bottom:20px; list-style:none;}
 .tabSelect{cursor:pointer;}
 #pollResultsPage .card{margin-bottom:10px;}
-#pollResultsPage button{margin-bottom:20px;}
-.pollSummary {list-style:none;}
+.pollSummary {list-style:none; margin-top:20px;}
 .summaryHeader .row, .summaryResponses .row{margin:0px;}
 .pollSummary h3{font-weight:bold; padding-bottom:4px; border-bottom:1px solid #ccc;}
 .pollSummary .summaryResponses .row{padding:10px 0px; border-bottom:1px solid #ccc;}

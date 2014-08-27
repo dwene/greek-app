@@ -4,13 +4,13 @@
                     <section class="row">
                     
                     <div class="col-xs-12 col-sm-5">
-                        <div class="card">
+                        <div id="tagMembersCard" class="card">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
                             </form>
                         
-                        <p ng-hide="selectedTags.length || selectedUsers.length">Please select tags and members.</p>    
+                        <p ng-hide="selectedTags.length || (selectedUsers = (users | checkedFilter)).length">Please select tags and members.</p>    
                             
                        <h2 class="page-header" ng-show="selectedTags.length">ADD</h2>
                               
@@ -19,11 +19,14 @@
                         </ul>
                         <p ng-show="!selectedTags.length && selectedUsers.length">Please select tags.</p>
                         
-                        <h2 class="page-header" ng-show="selectedUsers.length">TO</h2>
+<!--                        <h2 class="page-header" ng-show="selectedUsers.length">TO</h2>-->
+                        <h2 class="page-header">TO {{selectedUsers.length}} MEMBERS</h2>
                         
+<!--
                         <ul>
                            <netetag-check ng-repeat="tag in selectedUsers = (users | checkedFilter)"></netetag-check>
                         </ul>
+-->
                         <p ng-show="!selectedUsers.length && selectedTags.length">Please select members.</p>
                                                 
                         <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</button>
@@ -47,7 +50,9 @@
                     <div class="col-xs-12 col-sm-7">
                     <div class="card">
                     <div class="col-xs-12">
-                    <search ng-model="search" id="directorySearch"></search>
+                    <div class="row">
+                    <search ng-model="search" id="taggingSearch"></search>
+                    </div>
                     </div>
                     <ul id="memberSelect">
                         <li ng-repeat="user in (users | orderBy:'last_name' | nameSearch:search)  track by user.key">
