@@ -980,8 +980,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             $scope.selectedNotification.new = false;
-            $scope.notification_lengths.unread --;
-            $scope.notification_lengths.read ++;
+            if (notify.new){
+                $scope.notification_lengths.unread --;
+                $scope.notification_lengths.read ++;
+            }
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
