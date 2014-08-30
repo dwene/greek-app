@@ -738,16 +738,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         if (registerOrganizationService.get() === undefined){
             window.location.assign('#/register');
         }
-        $scope.$watch('user_name', function() {
-            if ($scope.user_name){
-                $scope.user_name = $scope.user_name.replace(/\s+/g,'');
-                for (var i = 0; i < $scope.user_name.length; i++){
-                    if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.".indexOf($scope.user_name[i]) == -1){
-                        
-                    }
-                }
-            }
-            
+        $scope.$watch('item.user_name', function() {
+            $scope.unavailable = false;
+            $scope.available = false;
         });
         //ng-submit on form submit button click
         
@@ -1797,6 +1790,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if ($scope.user_name){
                 $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
             }
+            $scope.unavailable = false;
+            $scope.available = false;
         });
         $scope.checkUserName = function(user){
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))

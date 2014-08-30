@@ -1244,7 +1244,7 @@ class RESTApi(remote.Service):
                     if organization.key == user.organization:
                         org = {'name': organization.name, 'school': organization.school}
                         break
-                if org:
+                if org and user.user_name:
                     user_list.append({'user_name': user.user_name, 'org_name': org['name'], 'org_school': org['school']})
             return OutgoingMessage(error='', data=json_dump(user_list))
         elif user_data["user_name"]:
