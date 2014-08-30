@@ -3263,6 +3263,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.eventNotFound = true;
             });
         }
+        $scope.eventTag = $stateParams.tag;
         $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
             if(checkStatus && member.attendance_data && member.attendance_data.time_in){
                 $('#checkInModal').modal();

@@ -441,6 +441,8 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Check In Page*/
 
+#checkinPage #topSearch{padding-left:45px;}
+#checkinPage #topSearch .btn{margin-bottom: -46px; margin-left: -46px;}
 /*makes room for the picture*/ .checkinContent{height:140px; padding:15px 15px 44px 75px !important; position:relative;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
 .checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
@@ -456,7 +458,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #report h1{margin-bottom:10px;}
 #report .card{margin-bottom:10px;}
 #report .card .smallprofilepic{left:15px;}
-
+#report .checkinContent{height:110px;}
 #noShows ul{border-top:1px solid #ccc;}
 #noShows li:nth-child(even){background:#f8f8f8;}
 #noShows li{border-bottom:1px solid #ccc; padding:10px;}
