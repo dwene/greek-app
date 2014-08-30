@@ -30,10 +30,10 @@
             
             
         <div id="eventButtons" class="card">
-            <button ng-click="goToReport()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-bar-chart-o"></i></button>
-            <a id="eventcheckinButton" ng-if="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin"><i class="fa fa-sign-in"></i></a>
+            <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-bar-chart-o"></i></button>
+            <a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin"><i class="fa fa-sign-in"></i></a>
             <div class="pull-right">
-            <button ng-click="editEvent()" ng-if="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-edit"></i></button>
+            <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-edit"></i></button>
             <button ng-click="saveEvent()" class="btn btn-info"><i class="fa fa-floppy-o"></i></button>
             </div>
         

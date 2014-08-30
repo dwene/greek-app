@@ -2,7 +2,7 @@
 
 <div id="report" class="container" ng-hide="eventNotFound || loading">
 
-			<h1 class="darkbg">Report for #{{event.tag}} <button class="btn btn-default pull-right" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</button>
+			<h1 class="darkbg">Report for #{{event.tag}} <a class="btn btn-default pull-right" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</a>
 </h1>
         <ul>
 
@@ -23,7 +23,7 @@
         <h1>No Shows</h1>
         <ul>
             <li ng-repeat="member in noShows | orderBy: 'user.last_name'" class="checkin">
-                <span>{{member.user.first_name}} {{member.user.last_name}} {{member.rsvp}}</span>
+                <span>{{member.user.first_name}} {{member.user.last_name}}</span> - {{member.rsvp}}
             </li>
         </ul>
         </div>

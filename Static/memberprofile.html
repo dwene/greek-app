@@ -30,7 +30,7 @@
             <section class="card row">
             <div class="position" ng-show="position.length">{{position}}</div>
             <p ng-show="status.length">"{{status}}"</p>
-            <div class="info"><span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span></div>
+            <div id="theTags" class="info"><span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span></div>
             <div class="info" ng-show="pledgeClass.length">Pledge Class: <span>{{pledgeClass}}</span></div>
             <div class="info" ng-show="birthday.length">Birthday: <span>{{birthday}}</span></div>
             <div class="info" ng-show="major.length">Major: <span>{{major}}</span></div>
@@ -39,7 +39,7 @@
             <div class="info" ng-show="occupation.length">Occupation: <span>{{occupation}}</span></div>
             <div class="info" ng-show="permanentAddress.length">Permanent Address: <span>{{permanentAddress}}</span></div>
             
-                        <button id="saveContact" ng-click="saveVcard()" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save Contact</button>
+                        <button id="saveContact" ng-click="saveVcard()" class="btn btn-info"><i class="fa fa-floppy-o"></i></button>
             </section>
         </div>
     </div>

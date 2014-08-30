@@ -15,7 +15,7 @@
                 <update-status class="updating" ng-model="member.in_updating" fn-call="checkIn(member, true, false)"></update-status>
                 <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status>
 
-                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+                <div class="smallprofilepic" style="background-image:url({{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}});" ></div>
                
                 <span class="checkinTitle"><span class="memberName">{{member.first_name}} {{member.last_name}}</span> is <span class="rsvpStatus">{{member.rsvp}}</span></span>
                 <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}<i ng-click="checkIn(member, false, true)" class="fa fa-times"></i></span><br>

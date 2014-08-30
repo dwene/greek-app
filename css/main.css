@@ -188,6 +188,9 @@ padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 /*Member Profile Page*/
 #profileContent{position:relative; margin:20px auto;}
 #profileContent .status{text-align:center; width:100%; display:inline-block; font-size:18px; margin:10px 0px 5px;}
+#profileContent .card{position:relative;}
+
+#profileContent #theTags{padding-right:36px;}
 
 
 #memberProfile #social{text-align:center; font-size:40px;}
@@ -195,7 +198,7 @@ padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 #memberProfile #contact{text-align:left; font-size:40px; width:300px; margin:10px auto;}
 #memberProfile #contact li{display:inline-block; width:100%;}
 #memberProfile #contact span{display:inline-block; font-size:12px; position:relative; top:-8px;}
-#memberProfile #saveContact{margin:20px auto 0px; display:block;}
+#memberProfile #saveContact{display:block; position:absolute; top:10px; right:10px;}
 
 #memberProfile #name{margin:0px auto 0 auto;}
 #memberProfile h1{ padding:10px; margin-left:-15px; margin-bottom:20px; }
@@ -436,7 +439,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Check In Page*/
 
-/*makes room for the picture*/ .checkinContent{height:110px; padding:15px 15px 44px 75px !important; position:relative;}
+/*makes room for the picture*/ .checkinContent{height:140px; padding:15px 15px 44px 75px !important; position:relative;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
 .checkinContent .btn{width:50%; border-radius:0px; height:34px; padding:0px;}
 .checkinContent .checkinTitle{font-size:18px; display:block; font-weight:bold; margin-bottom:5px;}
@@ -455,6 +458,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #noShows ul{border-top:1px solid #ccc;}
 #noShows li:nth-child(even){background:#f8f8f8;}
 #noShows li{border-bottom:1px solid #ccc; padding:10px;}
+#noShows li span{font-weight:bold;}
 
 /*Poll Page*/
 #newPollButton{margin-bottom:15px;}
