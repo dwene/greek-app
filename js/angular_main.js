@@ -594,14 +594,30 @@ App.config(function($stateProvider, $urlRouterProvider) {
         LoadScreen.stop();
         console.log('I just stopped the loading in forgot password controller');
         $scope.sentEmail = false;
-        $scope.reset = function(email, user_name) {
+        $scope.reset = function(input) {
             $scope.gettingnewPassword = 'pending';
-            to_send = {email: '', user_name: user_name};
+            function validEmail(v) {
+                var r = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+                return (v.match(r) == null) ? false : true;
+            }
+            if (validEmail(input)){
+                to_send = {email: input, user_name:''};
+            }
+            else{
+                to_send = {email: '', user_name: input};
+            }
             console.log(to_send);
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
             .success(function(data) {
                 if(!checkResponseErrors(data)){
-                    $scope.sentEmail = true;
+                    if (data.data == 'OK'){
+                        $scope.sentEmail = true;
+                        $scope.gettingnewPassword = 'done';
+                    }
+                    else{
+                        $scope.returned_choices = JSON.parse(data.data);
+                        $scope.showList = true;
+                    }
                     $scope.gettingnewPassword = 'done';
                 }
                 else{
@@ -723,7 +739,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
             window.location.assign('#/register');
         }
         $scope.$watch('user_name', function() {
+            if ($scope.user_name){
                 $scope.user_name = $scope.user_name.replace(/\s+/g,'');
+                for (var i = 0; i < $scope.user_name.length; i++){
+                    if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.".indexOf($scope.user_name[i]) == -1){
+                        
+                    }
+                }
+            }
+            
         });
         //ng-submit on form submit button click
         
@@ -4203,6 +4227,32 @@ App.directive('match', function(){
                     return (ctrl.$pristine && angular.isUndefined(ctrl.$modelValue)) || scope.match === ctrl.$modelValue;
                 }, function(currentValue) {
                     ctrl.$setValidity('match', currentValue);
+                });
+            }
+        };
+});
+
+
+App.directive('userNameInput', function(){
+        return {
+            require: 'ngModel',
+            restrict: 'A',
+            scope: {
+                ngModel: '='
+            },
+            link: function(scope, elem, attrs, ctrl) {
+                scope.$watch('ngModel', function() {
+                    if (scope.ngModel){
+                        var value = true;
+                        console.log(scope.ngModel);
+                        for (var i = 0; i < scope.ngModel.length; i++){
+                            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.".indexOf(scope.ngModel[i]) == -1){
+                                value = false;
+                                break;
+                            }
+                        }
+                        ctrl.$setValidity('userNameInput', value);
+                    }
                 });
             }
         };

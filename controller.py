@@ -1231,7 +1231,22 @@ class RESTApi(remote.Service):
     def forgot_password(self, request):
         user_data = json.loads(request.data)
         if len(user_data["email"]) > 1:
-            user = User.query(User.email == user_data["email"]).get()
+            users = User.query(User.email == user_data["email"]).fetch()
+            org_key_list = list()
+            for user in users:
+                if user.organization not in org_key_list:
+                    org_key_list.append(user.organization)
+            orgs = ndb.get_multi(org_key_list)
+            user_list = list()
+            for user in users:
+                org = None
+                for organization in orgs:
+                    if organization.key == user.organization:
+                        org = {'name': organization.name, 'school': organization.school}
+                        break
+                if org:
+                    user_list.append({'user_name': user.user_name, 'org_name': org['name'], 'org_school': org['school']})
+            return OutgoingMessage(error='', data=json_dump(user_list))
         elif user_data["user_name"]:
             user = User.query(User.user_name == user_data["user_name"]).get()
         if not user:

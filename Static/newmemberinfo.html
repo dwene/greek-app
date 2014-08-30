@@ -15,9 +15,9 @@
         <label for="userName" class="col-sm-2 control-label">User Name</label>
         <div class="col-sm-10">
          <div class="input-group">
-          <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" required>
+          <input type="text" class="form-control" id="userName" name="user_name" ng-model="item.user_name" placeholder="John.Doe" user-name-input required>
           <span class="input-group-btn">
-           <button ng-click="checkUserName(item.user_name)" class="btn btn-default" type="button">Check</button>
+           <button ng-click="checkUserName(item.user_name)" class="btn btn-default" type="button" ng-disabled="newmemberAccount.user_name.$invalid">Check</button>
           </span>
           </div>
           <div class="form-control-feedback alert alert-success usernameAlert" ng-show="available && !unavailable">That will work!</div>
