@@ -1248,7 +1248,7 @@ class RESTApi(remote.Service):
                     user_list.append({'user_name': user.user_name, 'org_name': org['name'], 'org_school': org['school']})
             return OutgoingMessage(error='', data=json_dump(user_list))
         elif user_data["user_name"]:
-            user = User.query(User.user_name == user_data["user_name"]).get()
+            user = User.query(User.user_name == user_data["user_name"].lower()).get()
         if not user:
             return OutgoingMessage(error=INVALID_EMAIL, data='')
         forgotten_password_email(user)
