@@ -10,7 +10,7 @@
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
                             </form>
                         
-                        <p ng-hide="selectedTags.length || (selectedUsers = (users | checkedFilter)).length">Please select tags and members.</p>    
+                        <p ng-hide="selectedTags.length || selectedUsers.length">Please select tags and members.</p>    
                             
                        <h2 class="page-header" ng-show="selectedTags.length">ADD</h2>
                               
@@ -20,7 +20,7 @@
                         <p ng-show="!selectedTags.length && selectedUsers.length">Please select tags.</p>
                         
 <!--                        <h2 class="page-header" ng-show="selectedUsers.length">TO</h2>-->
-                        <h2 class="page-header">TO {{selectedUsers.length}} MEMBERS</h2>
+                        <h2 class="page-header">TO {{(selectedUsers = (users | checkedFilter)).length}} MEMBERS</h2>
                         
 <!--
                         <ul>

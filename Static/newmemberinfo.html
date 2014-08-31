@@ -41,6 +41,6 @@
         </div>
         <p ng-show="(newmemberAccount.repeat_password.$invalid && !newmemberAccount.repeat_password.$pristine) || (newmemberAccount.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
     </div>
-    <button type="submit" ng-disabled="waiting_for_response" class="btn btn-default pull-right">Submit</button>
+    <button type="submit" ng-disabled="waiting_for_response" class="btn btn-default pull-right" ng-disabled="working">Submit</button><update-status ng-model="working"></update-status>
 </form>
 </div>

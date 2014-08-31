@@ -996,10 +996,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('I found it!');
                 }
             }
-            $scope.selectedNotification.new = false;
-            if (notify.new){
+            if ($scope.selectedNotification.new){
                 $scope.notification_lengths.unread --;
                 $scope.notification_lengths.read ++;
+                $scope.selectedNotification.new = false;
             }
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
@@ -1811,12 +1811,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.createAccount = function(isValid){
             
             if(isValid){
+            $scope.working = 'pending';
             $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
+                    $scope.working = 'done';
                     var returned_data = JSON.parse(data.data);
                     $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
                     $.cookie(USER_NAME, $scope.item.user_name);
@@ -1827,6 +1829,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
                 else
                 {
+                    $scope.working = 'broken';
                     if(data.error == "INVALID_USERNAME")
                     {
                         $scope.unavailable = true;
@@ -1836,6 +1839,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 } 
             })
             .error(function(data) {
+                $scope.working = 'broken';
                 console.log('Error: ' , data);
             });
                 //now logged in
@@ -2796,7 +2800,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
             $scope.addEvent = function(isValid, event){
                 if(isValid){
-                    
+                    $scope.working = 'pending';
                     event.tags = getCheckedTags($scope.tags);
                     var to_send = JSON.parse(JSON.stringify(event));
                     console.log('date start', event.date_start + " " + event.time_start);
@@ -2806,13 +2810,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
+                            $scope.working = 'done';
                             setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
                         }
-                        else
-                            console.log('ERROR: ',data);
+                        else{
+                            $scope.working = 'broken';
+                            console.log('ERROR: ',data);}
                         $scope.loading = false;
                     })
                     .error(function(data) {
+                        $scope.working = 'broken';
                         console.log('Error: ' , data);
                         $scope.loading = false;
                     });
@@ -3122,6 +3129,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('#deleteEventModal').modal('hide');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
             .success(function(data){
+                $scope.loading = true;
                 if (!checkResponseErrors(data)){
                     window.location.replace('#/app/events');
                     for (var i = 0; i < $rootScope.events.length; i++){
@@ -3214,7 +3222,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
     $scope.submitEdits = function(isValid){
         if (isValid){
-        $scope.loading = true;
+            $scope.working = 'pending';
             var to_send = JSON.parse(JSON.stringify($scope.event));
             to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
             to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
@@ -3223,14 +3231,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data)){
+                    $scope.working = "done";
                     getEvents;
                     window.location.assign('#/app/events');
                 }
                 else{
+                    $scope.working = "broken";
                     console.log('ERROR: ',data);
                 }
             })
             .error(function(data) {
+                $scope.working = "broken";
                 console.log('Error: ' , data);
             });
         }

@@ -1937,19 +1937,32 @@ class RESTApi(remote.Service):
         request_data = json.loads(request.data)
         event_tag = request_data["tag"]
         event = Event.query(ndb.AND(Event.tag == event_tag, Event.organization == request_user.organization)).get()
+        change = False
         for key, value in request_data.iteritems():
             if key == "time_start":
-                event.time_start = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
+                if not event.time_start == datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p'):
+                    event.time_start = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
+                    change = True
             elif key == "time_end":
-                event.time_end = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
+                if not event.time_end == datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p'):
+                    event.time_end = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
+                    change = True
             elif key == "title":
-                event.title = value
+                if not event.title == value:
+                    event.title = value
+                    change = True
             elif key == "description":
-                event.description = value
+                if not event.description == value:
+                    event.description = value
+                    change = True
             elif key == "location":
-                event.location = value
+                if not event.location == value:
+                    event.location = value
+                    change = True
             elif key == 'address':
-                event.address = value
+                if not event.address == value:
+                    event.address = value
+                    change = True
             elif key == "tags":
                 if "org_tags" in value:
                     event.org_tags = value["org_tags"]
@@ -1970,21 +1983,22 @@ class RESTApi(remote.Service):
                 #         event.not_going.remove(_key)
         futures = list()
         futures.append(event.put_async())
-        users = get_users_from_tags({'org_tags': event.org_tags, 'perms_tags': event.perms_tags},
-                                    request_user.organization, False)
-        notification = Notification()
-        notification.title = 'Event Updated: ' + event.title
-        notification.type = 'event'
-        notification.content = "The event " + event.title + " has been updated."
-        notification.content += ". Please check out your events page for more information."
-        notification.sender_name = "NeteGreek Notification Service"
-        notification.sender = request_user.key
-        notification.timestamp = datetime.datetime.now()
-        notification.link = '#/app/events/'+event.tag
-        notification.put()
-        add_notification_to_users(notification, users)
-        for item in futures:
-            item.get_result()
+        if change:
+            users = get_users_from_tags({'org_tags': event.org_tags, 'perms_tags': event.perms_tags},
+                                        request_user.organization, False)
+            notification = Notification()
+            notification.title = 'Event Updated: ' + event.title
+            notification.type = 'event'
+            notification.content = "The event " + event.title + " has been updated."
+            notification.content += ". Please check out your events page for more information."
+            notification.sender_name = "NeteGreek Notification Service"
+            notification.sender = request_user.key
+            notification.timestamp = datetime.datetime.now()
+            notification.link = '#/app/events/'+event.tag
+            notification.put()
+            add_notification_to_users(notification, users)
+            for item in futures:
+                item.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/get_check_in_info',
