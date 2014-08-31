@@ -36,7 +36,7 @@
     <div id="upcomingEvents" ng-show="eventList.length">   
         <section>
             <div ng-show="eventList.length">
-                <a class="card" ng-repeat="event in eventList = ($root.events | removePassedEvents:true |  limitTo: 3 | orderBy: 'time_start')" ng-href="#/app/events/{{event.tag}}">
+                <a class="card" ng-repeat="event in eventList = ($root.events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)" ng-href="#/app/events/{{event.tag}}">
                     <div class="icon"><i class="fa fa-calendar"></i> | </div><span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
                 </a>
             </div>
