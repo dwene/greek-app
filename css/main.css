@@ -448,7 +448,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 /*Check In Page*/
 
-#checkinPage #topSearch{padding-left:45px;}
+#checkinPage #topSearch{padding-left:45px; margin-top:-15px;}
 #checkinPage #topSearch .btn{margin-bottom: -46px; margin-left: -46px;}
 /*makes room for the picture*/ .checkinContent{height:140px; padding:15px 15px 44px 75px !important; position:relative;}
 .checkinContent .btn-group{position:absolute; left:0px; bottom:0px; width:100%;}
