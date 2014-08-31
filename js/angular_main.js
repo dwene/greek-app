@@ -2232,21 +2232,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.updateAccount = function(isValid){
             if(isValid){
+                $scope.working = 'pending';
                 console.log($scope.item.dob);
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
+                        $scope.working = 'done';
                         $scope.updatedInfo = true;
                         $.removeCookie('FORM_INFO_EMPTY');
                     }
                     else
                     {
+                        $scope.working = 'broken';
                         console.log('ERROR: ',data);
                     }
                     
                 })
                 .error(function(data) {
+                    $scope.working = 'broken';
                     console.log('Error: ' , data);
                 });
             }
@@ -2837,20 +2841,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.isEmpty = true;
                 }
                 else{
+                    $scope.checkWorking = 'pending';
+                    $scope.unavailable = false;
+                    $scope.available = false;
                     $scope.isEmpty = false;
                     console.log('Im about to send', tag);
                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
                     .success(function(data){
                         if (!checkResponseErrors(data)){
+                            $scope.checkWorking = 'done';
                             $scope.available = true;
                             $scope.unavailable = false;
                         }
                         else{
+                            $scope.checkWorking = 'broken';
                             $scope.unavailable = true;
                             $scope.available = false;
                         }
                     })
                     .error(function(data) {
+                        $scope.checkWorking = 'broken';
                         console.log('Error: ' , data);
                     });
                 }
@@ -3644,6 +3654,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             question.choices.splice(idx, 1);
         }
         $scope.createPoll = function(isValid){
+            $scope.working = 'pending';
             var poll = $scope.poll;
             poll.tags = getCheckedTags($scope.tags);
             var to_send = JSON.parse(JSON.stringify(poll));
@@ -3653,13 +3664,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        $scope.working = 'done';
                         window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
                     }
                     else{
+                        $scope.working = 'broken';
                         console.log('ERR');
                     }
                 })
                 .error(function(data) {
+                    $scope.working = 'broken';
                     console.log('Error: ' , data);
                 });
             }

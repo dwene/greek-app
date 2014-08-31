@@ -100,7 +100,7 @@
 
     <button type="button" ng-hide="poll.questions.length > 9" class="btn btn-default pull-left" ng-click="addQuestion()">Add Question <i class="fa fa-plus"></i></button>
 
-    <button type="button" ng-click="createPoll(newPoll.$valid)" class="btn btn-default pull-right" ng-disabled="!selectedMembers.length || !newPoll.$valid || !poll.questions.length">Send Poll</button>
+    <span class="pull-right"><update-status ng-model="working"></update-status><button type="button" ng-click="createPoll(newPoll.$valid)" class="btn btn-default" ng-disabled="!selectedMembers.length || !newPoll.$valid || !poll.questions.length || (working && working != 'broken')">Send Poll</button></span>
 </form>
 
 </div>

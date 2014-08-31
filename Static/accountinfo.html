@@ -2,13 +2,14 @@
 
 <section>
     <h2 class="page-header">Settings</h2>
-    
-    <span>Email Preferences: </span><br>
-    <div class="btn-group">
+    <div class="row">
+    <span class="col-sm-2">Email Preferences: </span><br>
+    <div class="btn-group col-sm-10">
         <button type="button" ng-click="item.email_prefs = 'all'; updateEmailPrefs('all');" ng-class="{'btn-primary' : item.email_prefs === 'all'}" class="btn btn-default">All</button>
         <button type="button" ng-click="item.email_prefs = 'daily';  updateEmailPrefs('daily');" ng-class="{'btn-primary' : item.email_prefs === 'daily'}" class="btn btn-default">Daily</button>
         <button type="button" ng-click="item.email_prefs = 'none';  updateEmailPrefs('none');" ng-class="{'btn-primary' : item.email_prefs === 'none'}" class="btn btn-default">None</button>
-    </div><update-status ng-model="emailPrefUpdating" fn-call="updateEmailPrefs(item.email_prefs)"></update-status><br>
+    </div><update-status ng-model="emailPrefUpdating" fn-call="updateEmailPrefs(item.email_prefs)"></update-status>
+    </div><br>
     <form ng-hide="passwordChanged" id="newmemberAccount" class="form-horizontal" role="form">
 
     <div class="form-group">
@@ -519,7 +520,7 @@
     </div>
 
 
-    <button type="submit" class="btn btn-default pull-right">Save Info</button>
+    <button type="submit" class="btn btn-default pull-right" ng-disabled="working == 'pending'"><span ng-hide="working == 'pending'">Save Info</span><update-status ng-model="working" ng-show="working == 'pending'"></update-status></button>
     <div id="updateAccountAlert" class="alert alert-success" ng-show="updatedInfo">Account info updated!</div>
 </form>
 </section>

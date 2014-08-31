@@ -74,8 +74,8 @@
     <div class="card">
     <h1 class="card-header">Add Multiple Alumni at Once</h1>
     <p id="areAdded"></p>
-    <a class="btn btn-default" ng-href="https://docs.google.com/file/d/0B4Of2nSYBtRgUjVMdjJYQmUyUGs/edit" target="_">Excel Template</a>
-    <button type="button" class="btn btn-sm btn-primary btn-circle" data-placement="top-center" title="CSV upload" data-content="You can use this excel sheet to upload multiple alumni at one time! Just download and fill out the excel form, then export the file as a .csv file" bs-popover><i class="fa fa-question"></i></button>
+<!--    <a class="btn btn-default" ng-href="https://docs.google.com/file/d/0B4Of2nSYBtRgUjVMdjJYQmUyUGs/edit" target="_">Excel Template</a>-->
+<!--    <button type="button" class="btn btn-sm btn-primary btn-circle" data-placement="top-center" title="CSV upload" data-content="You can use this excel sheet to upload multiple alumni at one time! Just download and fill out the excel form, then export the file as a .csv file" bs-popover><i class="fa fa-question"></i></button>-->
 <!--    <p>You can use this excel sheet to upload multiple alumni at one time! Just fill out the form and export the file as a ".csv"</p>-->
     <form id="addmembersForm" role="form">
         <div class="form-group">
@@ -83,7 +83,7 @@
             <input type="file" id="uploadMembers" accept=".csv">
         </div>
         <div class="form-group">
-            <button ng-click="addAlumni()" class="btn btn-default">Add Alumni</button>
+            <button ng-click="addAlumni()" class="btn btn-default">Add Alumni</button> <a class="btn btn-default" href="../files/AddMembers.csv" target="_blank" download="addmembers.csv"><i class="fa fa-download"></i> CSV Template</a>
         </div>
         <p ng-show="memberSkippedNotifier">Some alumni may have been skipped due to an invalid format in the .csv file</p>
     </form>
