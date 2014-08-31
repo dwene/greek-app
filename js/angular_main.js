@@ -398,12 +398,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $rootScope.updateNotificationBadge = function(){
             var count = 0;
-            for (var i = 0; i< $rootScope.notifications.length; i++){
-                if ($rootScope.notifications[i].new){
-                    count ++;
+            if ($rootScope.notifications){
+                for (var i = 0; i< $rootScope.notifications.length; i++){
+                    if ($rootScope.notifications[i].new){
+                        count ++;
+                    }
                 }
+                $rootScope.notification_count = count;
             }
-            $rootScope.notification_count = count;
         }
         
         $rootScope.getNameFromKey = function(key){
@@ -605,7 +607,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 to_send = {email: input, user_name:''};
             }
             else{
-                to_send = {email: '', user_name: input};
+                to_send = {email: '', user_name: input.toLowerCase()};
             }
             console.log(to_send);
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
@@ -636,15 +638,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //changing a forgotten password
     App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, LoadScreen, $stateParams) {
         routeChange();
-        $rootScope.logout();
+        $.removeCookie(USER_NAME);
         $.cookie(TOKEN, $stateParams.token);
         console.log('My token', $.cookie(TOKEN));
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
         .success(function(data){
-           if (!checkResponseErrors(data)){
-            LoadScreen.stop();
-            $scope.user = JSON.parse(data.data);
-           }
+            if (!checkResponseErrors(data)){
+                LoadScreen.stop();
+                $scope.user = JSON.parse(data.data);
+            }
             else{
                 window.location.replace('#/login');
             }
