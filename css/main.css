@@ -381,6 +381,13 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Change Password from Token*/
 #changepasswordfromToken #correctUser{font-weight:bold; margin:10px; display:block;}
 
+/*Forgotten Password Page*/
+#forgotPass .thinking{position:absolute; left:-15px; top:8px;}
+#forgotPass .striped{line-height:30px; margin-top:5px;}
+#forgotPass .striped li{padding:5px 15px;}
+#forgotPass .striped li button{margin-left:15px;}
+#forgotPass #listHeaders{font-weight:bold;}
+
 /*Upload Profile Page*/
 #crop{display:block; width:300px; margin:0 auto 10px auto;}
 #crop .page-header{padding-bottom: 5px; margin: 10px 0 5px;}
