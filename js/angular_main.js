@@ -393,6 +393,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.events = undefined;
             $rootScope.notifications = undefined;
             $rootScope.hidden_notifications = undefined;
+            $rootScope.updateNotificationBadge();
         }
         
         $rootScope.updateNotificationBadge = function(){
