@@ -719,7 +719,7 @@ class RESTApi(remote.Service):
             if 'pledge_class_semester' in user:
                 new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             if 'pledge_class_year' in user:
-                new_user.pledge_class_year = user['pledge_class_year']
+                new_user.pledge_class_year = int(user['pledge_class_year'])
             new_user.perms = 'alumni'
             futures.append(new_user.put_async())
         for future in futures:

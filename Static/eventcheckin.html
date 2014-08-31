@@ -18,7 +18,7 @@
 
                 <div class="smallprofilepic" style="background-image:url({{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}});" ></div>
                
-                <span class="checkinTitle"><span class="memberName">{{member.first_name}} {{member.last_name}}</span> is <span class="rsvpStatus">{{member.rsvp}}</span></span>
+                <span class="checkinTitle"><span class="memberName">{{member.first_name}} {{member.last_name}}</span> - <span class="rsvpStatus"><span ng-show="member.rsvp == 'not_going'">Not Going</span><span ng-show="member.rsvp == 'going'">Going</span><span ng-show="member.rsvp == 'unknown'">No Response</span></span></span>
                 <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}<i ng-click="checkIn(member, false, true)" class="fa fa-times"></i></span><br>
                 <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}<i ng-click="checkOut(member, false, true)" class="fa fa-times"></i></span><br>
                 
