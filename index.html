@@ -82,7 +82,7 @@
                         </ul>
                         </li>
                         
-                        <li><a id="help" data-toggle="modal" data-target="#helpModal"><i class="fa fa-question-circle"></i></a></li>
+                        <li><a class="help" data-toggle="modal" ng-show="$root.checkLogin()" data-target="#helpModal"><i class="fa fa-question-circle"></i></a></li>
                         
                     </ul>
                     <ul ng-hide="$root.checkLogin()" class="nav navbar-nav navbar-right">
@@ -96,7 +96,7 @@
                     <li><a ng-href="/#/app/directory/members"><i class="fa fa-book"></i></a></li>
 				</ul>
 				
-				<a id="help" class="mobile visible-xs" data-toggle="modal" data-target="#helpModal"><i class="fa fa-question-circle"></i></a>
+				<a class="mobile visible-xs help" ng-show="$root.checkLogin()" data-toggle="modal" data-target="#helpModal"><i class="fa fa-question-circle"></i></a>
 				
 				<div id="mobileSettings" class="visible-xs collapse">
                    
