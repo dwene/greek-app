@@ -586,6 +586,7 @@ textarea.form-control{height:auto; max-width:100%;}
   line-height: 1.42;
   border-radius: 15px;
 }
+.capitalize {text-transform: capitalize;}
 .required label:before {content:'*'; color:red;}
 .clearInputContainer{position:relative;}
 .clearInput{position:absolute !important; right:8px !important; top:6px !important;}

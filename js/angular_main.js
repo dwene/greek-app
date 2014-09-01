@@ -3268,8 +3268,43 @@ App.config(function($stateProvider, $urlRouterProvider) {
     }
 	});
 
-    App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope) {
+    App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope, $timeout) {
         routeChange();
+        function setTimeout(scope, fn, delay) {
+            var promise = $timeout(fn, delay);
+            var deregister = scope.$on('$destroy', function() {
+                $timeout.cancel(promise);
+            });
+            promise.then(deregister);
+        }
+        update();
+        function update() {
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    console.log('I am updating the user check in stuff!');
+                    var users = JSON.parse(data.data);
+                    if (users){
+                        for (var i = 0; i < $scope.users.length; i++){
+                            var user = $scope.users[i];
+                            if (user.attendance_data){
+                                if (user.attendance_data.in_updating || user.attendance_data.out_updating){
+                                    continue;
+                                }
+                                if (user.timestamp_moment){
+                                    if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 5){
+                                        continue;
+                                    }
+                                }
+                            }
+                            $scope.users[i] = users[i];
+                        }
+                    }
+                }
+                setTimeout($scope, update, 3000);
+            });
+        }
+        
         $scope.loading = true;
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
@@ -3279,7 +3314,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
-                    $scope.users = JSON.parse(data.data);
+                    $scope.users = JSON.parse(data.data);  
                     $scope.loading = false;
                 }
                 else{
@@ -3294,8 +3329,31 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.eventNotFound = true;
             });
         }
+//        function updateCheckInInfo(){
+//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+//            .success(function(data){
+//                if (!checkResponseErrors(data)){
+//                    console.log('I am updating the user check in stuff!');
+//                    var users = JSON.parse(data.data);
+//                    if (users){
+//                        for (var i = 0; i < $scope.users.length; i++){
+//                            var user = $scope.users[i];
+//                            if (user.attendance_data){
+//                                if (user.attendance_data.in_updating || user.attendance_data.out_updating){
+//                                    continue;
+//                                }
+//                            }
+//                            $scope.users[i] = users[i];
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//        
+//        updateCheckInInfo()
         $scope.eventTag = $stateParams.tag;
         $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
+            member.timestamp_moment = moment();
             if(checkStatus && member.attendance_data && member.attendance_data.time_in){
                 $('#checkInModal').modal();
                 $scope.selectedUser = member;
@@ -3319,6 +3377,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     member.in_updating = "done";
+                    member.timestamp_moment = moment();
                 }
                 else{
                     member.in_updating = "broken";
@@ -3331,6 +3390,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         }
         $scope.checkOut = function(member, checkStatus, clear){
+            member.timestamp_moment = moment();
             if(checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in){
                 $('#checkOutModal').modal();
                 $scope.selectedUser = member;
@@ -3353,6 +3413,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     member.out_updating = 'done';
+                    member.timestamp_moment = moment();
                 }
                 else{
                     console.log('ERROR: ', data);
@@ -4072,7 +4133,7 @@ function packageForSending(send_data){
     {user_name:$.cookie(USER_NAME),
      token: $.cookie(TOKEN),
      data: JSON.stringify(send_data)};
-    console.log(output);
+//    console.log(output);
     return output;
 }
 
@@ -4134,7 +4195,7 @@ function clearCheckedTags(tags){
 }
 
 function getCheckedTags(tags){
-    console.log(tags);
+//    console.log(tags);
     var org_tags= [];
     var perms_tags = [];
     var event_tags = [];
@@ -4231,7 +4292,7 @@ function CSV2ARRAY(csv) {
     }
 
     var json = JSON.stringify(objArray);
-    console.log(json);
+//    console.log(json);
     var str = json.replace(/},/g, "},\r\n");
     
     return JSON.parse(str);
@@ -4275,7 +4336,7 @@ App.directive('userNameInput', function(){
                 scope.$watch('ngModel', function() {
                     if (scope.ngModel){
                         var value = true;
-                        console.log(scope.ngModel);
+//                        console.log(scope.ngModel);
                         for (var i = 0; i < scope.ngModel.length; i++){
                             if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.".indexOf(scope.ngModel[i]) == -1){
                                 value = false;
@@ -4362,8 +4423,8 @@ App.directive('alumniYearPicker', function(){
                         }
                     }
                      $scope.selectedYear = $scope.highestYear;
-                console.log('years', $scope.years);
-                console.log('selectedYear',$scope.selectedYear);
+//                console.log('years', $scope.years);
+//                console.log('selectedYear',$scope.selectedYear);
                 }
             });
             $scope.$watch('search', function(){
@@ -4706,15 +4767,15 @@ App.directive('updateStatus', function($timeout){
         controller: function($scope, $element, $attrs){
             $scope.$watch('ngModel', function(){
                 if ($scope.ngModel == 'done'){
-                    console.log('its done');
+//                    console.log('its done');
                     $timeout(function(){
-                        console.log('I should be changing it now');
+//                        console.log('I should be changing it now');
                         $scope.ngModel = '';
                     }, 2000)
                 }
             });
             $scope.callFunction = function(){
-                console.log('hi!!!!!');
+//                console.log('hi!!!!!');
                 $scope.fnCall();
                 
             }
@@ -4808,15 +4869,15 @@ App.filter('nameSearch', function(){
     }
 });
             
-App.filter('capitalizeFirst', function(){ 
-    return function (objects) {
-        if (objects){
-            console.log(objects);
-            return objects[0].toUpperCase() + objects.slice(1);
-        }
-        return retList;
-    }
-});
+//App.filter('capitalizeFirst', function(){ 
+//    return function (objects) {
+//        if (objects){
+////            console.log(objects);
+//            return objects[0].toUpperCase() + objects.slice(1);
+//        }
+//        return retList;
+//    }
+//});
             
 App.filter('yearSearch', function(){ 
     return function (objects, search) {

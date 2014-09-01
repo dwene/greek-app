@@ -126,7 +126,7 @@
     <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
     <div class="row">
         <div class="col-xs-4">{{ add.first_name }} {{ add.last_name }}</div>
-        <div class="col-xs-4">{{ (add.pledge_class_semester + ' ' + add.pledge_class_year) | capitalizeFirst }}</div>
+        <div class="col-xs-4 capitalize">{{ (add.pledge_class_semester + ' ' + add.pledge_class_year)}}</div>
         <div class="col-xs-4">{{ add.email }}</div>
     </div>
     <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
