@@ -310,7 +310,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('.fa-refresh').addClass('fa-spin');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-            if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != ((JSON.parse(data.data).new_notifications_length || 0) + (JSON.parse(data.data).hidden_notifications_length || 0)+ (JSON.parse(data.data).notifications_length|| 0))){
+            if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
                 
                 $timeout(function(){
                     for (var i = 0; i < $rootScope.notifications.length; i++){
@@ -856,6 +856,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //the main app page
     App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
         routeChange();
+        $scope.noMoreHiddens = false;
         $('.modal-backdrop').remove();
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);
@@ -1091,7 +1092,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
                 }
             }
-                if (!noMoreHiddens && !hidden_working && $root.hidden_notifications.length < $root.notification_lengths.hidden && $root.hidden_notifications.length <= 5){
+                if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length <= 5){
                     $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber);
                 }
             })
