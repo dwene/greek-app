@@ -310,7 +310,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $('.fa-refresh').addClass('fa-spin');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
             .success(function(data){
-            if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
+            if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != ((JSON.parse(data.data).new_notifications_length || 0) + (JSON.parse(data.data).hidden_notifications_length || 0)+ (JSON.parse(data.data).notifications_length|| 0))){
                 
                 $timeout(function(){
                     for (var i = 0; i < $rootScope.notifications.length; i++){
