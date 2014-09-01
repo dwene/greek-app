@@ -348,7 +348,7 @@ textarea.form-control{height:auto; max-width:100%;}
 
 .notification:hover{background:#f6f6f6;}
 .notificationContent .close{font-size:18px; top:5px; right:5px; position:absolute; z-index:100; padding:5px;}
-.notificationTitle{font-weight:bold; height:22px; font-size:18px; line-height:22px; width:90% !important; margin-bottom:0px; display:block; overflow:hidden; margin-top:-4px;}
+.notificationTitle{font-weight:bold; height:22px; font-size:18px; line-height:22px; padding-left:20px; margin-left:-20px; margin-bottom:0px; display:block; overflow:hidden; margin-top:-4px;}
 .notificationTitle i{font-size:12px; position:absolute; left:-15px; top:3px; display:none;}
 .unread{display:none;}
 .notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:2px; top:50%; margin-top:-21px;}
