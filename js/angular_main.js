@@ -527,9 +527,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.sendHelpMessage = function(isValid, content){
             console.log('I am getting submitted');
             if(isValid){
+                $scope.sendingHelp='pending';
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
-                .success(function(){console.log('success');})
-                .error(function(){console.log('error');})
+                .success(function(){console.log('success');
+//                $('#helpModal').modal('hide');
+                $scope.helpMessage.$setPristine();
+                $scope.message={};
+                $scope.sendingHelp='done';
+                })
+                .error(function(){console.log('error');
+                $scope.sendingHelp='broken';})
             }
             else{
             //do nothing
