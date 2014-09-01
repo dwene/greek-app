@@ -1,7 +1,0 @@
-Things to Work On
-
-- when changing UI-View it should load the view in loaded at scrolltop:top; for some reason it is sometimes scrolled down even on pages when the view is not that long
-
-- when tags are added, they should also be put in to the recent tags list
-
-- 

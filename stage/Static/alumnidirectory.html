@@ -1,0 +1,15 @@
+<div class="container" id="directory">
+    
+    <search ng-model="search"></search>
+    
+       <alumni-year-picker id="yearSelect" alumni="$root.directory.alumni" selected-year="selected_year" search="search" require-registration="true"></alumni-year-picker>
+        <ul>
+            <li ng-repeat="member in council = ($root.directory.alumni | nameSearch:search | pledgeClassSearch:selected_year | orderBy:'last_name')" class="member" ng-click="showIndividual(member)" ng-show="member.user_name">
+            
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                </div>
+            </li>
+        </ul>
+</div>

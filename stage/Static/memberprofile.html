@@ -1,0 +1,52 @@
+<div ng-hide="member"  class="jumbotron text-center"><h1>Person not found :(</h1></div>
+
+<div id="memberProfile" class="container" ng-show="member">
+    
+    <div id="profileContent"> 
+    
+    <div class="row">
+        <div class="col-xs-12 col-sm-5">
+            <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" ></div>
+            
+            <ul id="social">
+                <li ng-show="facebook.length"><a target="_blank" href="http://{{facebook}}"><i class="fa fa-facebook-square"></i></a></li>
+                <li ng-show="twitter.length"><a target="_blank" href="http://{{twitter}}"><i class="fa fa-twitter-square"></i></a></li>
+                <li ng-show="twitter.length"><a target="_blank" href="http://{{instagram}}"><i class="fa fa-instagram"></i></a></li>
+                <li ng-show="linkedin.length"><a target="_blank" href="http://{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
+            </ul>
+            
+            <ul id="contact">
+                <li ng-show="phone.length"><a href="sms:{{phone}}"><i class="fa fa-phone-square"></i></a> <span>{{phone}}</span></li>
+                <li><a target="_blank" href="mailto:{{email}}"><i class="fa fa-envelope-square"></i></a> <span>{{email}}</span></li>
+                <li ng-show="website.length"><a target="_blank" href="http://{{website}}"><i class="fa fa-globe"></i></a> <span>{{website}}</span></li>
+                <li ng-show="currentAddress.length"><a target="_blank" href="http://www.google.com/maps/place/{{currentAddress}}"><i class="fa fa-home"></i></a> <span>{{currentAddress}}</span></li>
+            </ul>
+            
+            
+        </div>
+        <div id="name" class="col-xs-12 col-sm-7">
+            <h1 class="darkbg">{{firstName}}<br class="hidden-xs"> {{lastName}}</h1>
+            
+            <section class="card row">
+            <div class="position" ng-show="position.length">{{position}}</div>
+            <p ng-show="status.length">"{{status}}"</p>
+            <div id="theTags" class="info"><span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span></div>
+            <div class="info" ng-show="pledgeClass.length">Pledge Class: <span class="capitalize">{{pledgeClass}}</span></div>
+            <div class="info" ng-show="birthday.length">Birthday: <span>{{birthday}}</span></div>
+            <div class="info" ng-show="major.length">Major: <span>{{major}}</span></div>
+            <div class="info" ng-show="graduation.length">Graduation: <span>{{graduation}}</span></div>
+            <div class="info" ng-show="employer.length">Employer: <span>{{employer}}</span></div>
+            <div class="info" ng-show="occupation.length">Occupation: <span>{{occupation}}</span></div>
+            <div class="info" ng-show="permanentAddress.length">Permanent Address: <span>{{permanentAddress}}</span></div>
+            
+                        <button id="saveContact" ng-click="saveVcard()" class="btn btn-info"><i class="fa fa-floppy-o"></i></button>
+            </section>
+        </div>
+    </div>
+    
+   
+    
+    </div>
+    
+    
+</div>

@@ -1,0 +1,13 @@
+cron:
+- description: send emails
+  url: /sendemails
+  
+  schedule: every 5 minutes
+
+- description: morning tasks
+  url: /morningtasks
+  schedule: every day 05:01
+
+- description: daily notifications emails
+  url: /dailynotifications
+  schedule: every day 02:00

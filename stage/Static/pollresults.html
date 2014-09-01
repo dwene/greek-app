@@ -1,0 +1,56 @@
+<div class="container" ng-init="state='summary'">
+<ul class="nav nav-pills">
+
+    <li ng-class="{ active: state=='summary' }"><a ng-click="state='summary'" class="tabSelect">By Question</a></li>
+    <li ng-show="poll.show_names" ng-class="{ active: state=='individuals' }"><a ng-click="state='individuals'" class="tabSelect">By Person</a></li>
+
+</ul>
+</div>
+<br>
+<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<section ng-show="!loading && notFound">Sorry this webpage could not be found. :(</section>  
+
+<div id="pollResultsPage">
+   
+    <div ng-show="!loading && state == 'summary'" class="container">
+       <div class="btn-group btn-group-sm pull-right expandButtons">
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="openAllQuestions();"><i class="fa fa-expand"></i></button>
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="closeAllQuestions();"><i class="fa fa-compress"></i></button>
+        </div>
+        <div ng-repeat="question in poll.questions | orderBy: 'index'" class="card">
+            <h2 class="resultsQuestion card-header">{{question.worded_question}}</h2>
+            <div ng-if="question.type == 'multiple_choice'">
+                <nete-pie-chart ng-model="question.response_data" real-data="question.realdata"></nete-pie-chart> <div google-chart chart="question.realdata" style="width:270px; !important"></div>
+            </div>
+               <button class="btn" data-toggle="collapse" data-target="{{'#summaryItem-' + $index}}" ><span>View Responses</span></button>
+                <ul class="collapse pollSummary" id="{{'summaryItem-' + $index}}">
+                   <li class="summaryHeader">
+                       <div class="row">
+                        <h3 class="col-xs-6">Name</h3><h3 class="col-xs-6">Response</h3>
+                        </div>
+                    </li>
+                    <li class="summaryResponses" ng-repeat="response in question.responses">
+                       <div class="row">
+                        <span class="col-xs-6"><span ng-hide="poll.show_names">{{$index + 1}}</span><span ng-show="poll.show_names">{{$root.getNameFromKey(response.key)}}</span></span><span class="col-xs-6">{{response.text}}</span>
+                        </div>
+                    </li>
+                </ul>
+        </div>
+    </div>
+
+    <div ng-show="!loading && state == 'individuals'" class="container">
+        <div class="btn-group btn-group-sm pull-right expandButtons">
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="openAllIndividuals();"><i class="fa fa-expand"></i></button>
+            <button id="expandAll" class="btn btn-sm btn-default" ng-click="closeAllIndividuals();"><i class="fa fa-compress"></i></button>
+        </div>
+       <ul id="byPerson">
+        <li ng-repeat="ind in individuals" class="card">
+          <button class="btn" data-toggle="collapse" data-target="{{'#individualResponses-' + $index}}">{{ind.user.first_name}} {{ind.user.last_name}}</button>
+          <ul class="collapse individualResponses" id="{{'individualResponses-' + $index}}">
+          <p  ng-repeat="res in ind.responses">{{poll.questions[$index].worded_question}}: {{res}}</p>
+          </ul>
+        </li>
+       </ul>
+    </div>
+    
+</div>
