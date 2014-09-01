@@ -24,9 +24,13 @@ body.modal-open{margin-right:0px;}
     box-shadow:         0px 2px 2px 0px rgba(50, 50, 50, 0.75);
 */
     }
-    @media screen and (max-width:768px){
+    @media screen and (max-width:767px){
     .navbar{padding:5px;}
     }
+    #help{cursor:pointer;}
+    #help.mobile{color:white; font-size:24px; position:absolute; right:68px; top:14px;}
+
+@media screen and (max-width:991px){#mainNavigation>ul>li>a{padding:15px 10px 15px 10px;}}
 
     /*Mobile Menu*/
     #mobileMenu{position:fixed; left:0px; bottom:0px; width:100%; text-align:center; font-size:28px;}
@@ -35,7 +39,7 @@ body.modal-open{margin-right:0px;}
     #mobileMenu a{padding:15px 0px 10px 0px;}
     #mobileMenu.leader li{width:20% !important;}
     .hideMenu{height: 0px;}
-    @media screen and (max-width:768px){
+    @media screen and (max-width:767px){
     body{margin-bottom:50px;}
     }
     /*for unsubscribed users*/
@@ -45,7 +49,7 @@ body.modal-open{margin-right:0px;}
         display:none;
     }
     #mobileDirectory a{padding:13px 0px 10px 0px;}
-    @media screen and (max-width:768px){
+    @media screen and (max-width:767px){
         #mobileDirectory{display:block;}
     }
 
@@ -54,7 +58,7 @@ body.modal-open{margin-right:0px;}
 .navbar-brand{position:relative; width:210px; height:52px; border-radius:3px;}
 .navbar-brand:before{content:''; background:url(../images/NeteGreekLogoSmallWhite.png) 10px center no-repeat; position:absolute; top:0px; left:0px; width:100%; height:100%; background-size:156px 42px;}
 .navbar-brand .badge{font-size:12px; position:relative; left:160px;}
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
     nav.navbar{position:fixed; top:0px; width:100%;}
     #mainSection, #loadingScreen{margin-top:82px;}
 }
@@ -90,7 +94,7 @@ nav.navbar-default .open .dropdown-menu {
 }
 
 /*Nav Pills*/
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
 .nav-pills{font-size:12px;}
 }
 
@@ -129,7 +133,7 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc;}
 #recentTags .page-header{margin-top:0px;}
 #recentTags .btn-group{margin-bottom:4px;}
 
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
 #recentTags{margin-top:10px;}
 }
 
@@ -148,14 +152,14 @@ input.form-control{height:34px !important;}
 .alert{background-image: none; padding: 0px; margin-bottom: 5px;}
 .container .jumbotron {padding-right: 20px;padding-left: 20px;}
 .dropdown-menu>.active>a{color:white !important;}
-@media screen and (max-width: 768px){
+@media screen and (max-width: 767px){
 .jumbotron {padding-top: 50px; padding-bottom: 50px;}
 }
 .fa-times-circle{width:16px;}
 .collapse{display:none !important;}
 h1.darkbg{margin-bottom:10px;}
 
-@media screen and (max-width:768px){#memberAccount #addresses{padding:0px;}}
+@media screen and (max-width:767px){#memberAccount #addresses{padding:0px;}}
 @media screen and (min-width:768px){
 #memberAccount #addresses .col-sm-6:nth-child(1){position:relative; left:-10px;}
 #memberAccount #addresses .col-sm-6:nth-child(2){position:relative; left:15px;}
@@ -206,7 +210,7 @@ padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 #memberProfile #name p{font-style:italic;}
 #memberProfile #name .info{margin-bottom:5px;}
 #memberProfile #name .info span{font-weight:bold;}
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
 #memberProfile #name{width:300px;}
 #memberProfile h1{margin-right:-15px;}
 }
@@ -239,7 +243,7 @@ border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 #memberTags .label:not(.member){padding:.4em 2em .4em .6em;}
 .memberTags .checkLabel{margin-bottom:4px;}
 #memberTags .badge{padding: .4em .4em .4em .3em;}
-@media screen and (max-width:768px){#memberTags{left: -2px;
+@media screen and (max-width:767px){#memberTags{left: -2px;
 margin-top: 2px;}}
 #memberSelect row{margin:4px -15px 4px -15px;}
 #memberSelect hr{margin:8px 0px;}
@@ -310,7 +314,7 @@ textarea.form-control{height:auto; max-width:100%;}
 #changeStatus #statusUpdate{margin-top:15px;}
 
 
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
 #statusContainer .page-header{margin-bottom:0px;}
 #statusContainer{margin-top:-10px;}
 }
@@ -623,7 +627,7 @@ transition:opacity .2s linear;
 }
 
 
-@media screen and (max-width:768px){
+@media screen and (max-width:767px){
 .refresh{opacity:1 !important;}
 }
 
