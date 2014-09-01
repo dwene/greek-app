@@ -159,13 +159,13 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Send us a message and we'll get right back to you.</h4>
       </div>
-     <form id="helpMessage" name="helpMessage" ng-submit="sendHelpMessage(helpMessage.$valid)" ng-controller="helpMessageController as sendHelp" novalidate>
+     <form id="helpMessage" name="helpMessage" ng-submit="sendHelpMessage(helpMessage.$valid, message)" ng-init="message={subject:'', content:''};" novalidate>
       <div class="modal-body">
            <div class="row">
             <div class="form-group">
                 <label for="password" class="col-sm-2 control-label">Subject</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="subject" name="subject" ng-model="sendHelp.subject" placeholder="Subject" required>
+                  <input type="text" class="form-control" id="subject" name="subject" ng-model="message.subject" placeholder="Subject" required>
                 </div>
             </div>
             </div><br>
@@ -173,14 +173,14 @@
             <div class="form-group">
                 <label for="password" class="col-sm-2 control-label">Message</label>
                 <div class="col-sm-10">
-                 <textarea id="content" ng-model="sendHelp.content" name="content" class="form-control" placeholder="Enter your message here..." required></textarea>
+                 <textarea id="content" ng-model="message.message" name="content" class="form-control" placeholder="Enter your message here..." required></textarea>
                 </div>
             </div>
             </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-disable="{ 'has-error' : (helpMessage.subject.$invalid && !helpMessage.subject.$pristine) || (helpMessage.subject.$invalid && submitted)}">Send</button>
+        <button type="submit" class="btn btn-primary">Send</button>
       </div>
       </form>
     </div><!-- /.modal-content -->
