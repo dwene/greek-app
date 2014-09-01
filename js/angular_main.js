@@ -525,10 +525,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
         }
 	});
-//home page
-//    App.controller('homeController', function($scope, $http) {
-//        
-//	});
+
+    App.controller('helpMessageController', function($scope, $http, $rootScope) {
+        $scope.sendHelpMessage = function(isValid){        
+            if(isValid){
+            //send the help message
+            }
+            else{
+            //do nothing
+            }
+        }
+	});
     
     App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen) {
         routeChange();

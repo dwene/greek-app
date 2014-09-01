@@ -206,8 +206,8 @@ padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 
 #memberProfile #name{margin:0px auto 0 auto;}
 #memberProfile h1{ padding:10px; margin-left:-15px; margin-bottom:20px; }
-#memberProfile .position{margin-bottom:10px; font-weight:bold;}
-#memberProfile #name p{font-style:italic;}
+#memberProfile .position{margin-bottom:10px; font-weight:bold; margin-right:38px;}
+#memberProfile #name p{font-style:italic; margin-right:38px;}
 #memberProfile #name .info{margin-bottom:5px;}
 #memberProfile #name .info span{font-weight:bold;}
 @media screen and (max-width:767px){
