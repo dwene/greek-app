@@ -27,9 +27,11 @@ body.modal-open{margin-right:0px;}
     @media screen and (max-width:767px){
     .navbar{padding:5px;}
     }
-    #help{cursor:pointer;}
-    #help.mobile{color:white; font-size:24px; position:absolute; right:68px; top:14px; display:none;}
+
+    .help{cursor:pointer;}
+    .help.mobile{color:white; font-size:24px; position:absolute; right:68px; top:14px; display:none;}
     @media screen and (max-width:767px){display:block;}
+
 
 @media screen and (max-width:991px){#mainNavigation>ul>li>a{padding:15px 10px 15px 10px;}}
 
