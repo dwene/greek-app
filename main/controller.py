@@ -1180,7 +1180,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
         users = User.query(User.organization == request_user.organization).fetch()
         async_items = []
         for user in users:

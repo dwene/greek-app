@@ -1341,6 +1341,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     member.updating = 'broken';
                 });
         }
+        $scope.resendAllWelcomeEmails = function(){
+            $scope.resendWorking = 'pending';
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', packageForSending(''))
+            .success(function(data){
+                if (!checkResponseErrors(data)){
+                    $scope.resendWorking = 'done';
+                }
+                else{
+                    $scope.resendWorking = 'broken';
+                    console.log('ERROR', data.error);
+                }
+            })
+            .error(function(data){
+                $scope.resendWorking = 'broken';
+                console.log('ERROR', data.error)
+            })
+        }
         
         $scope.updatePerms = function(member, option){
             var key = member.key;
