@@ -626,6 +626,13 @@ ul.striped > li{border-bottom:1px solid #ccc;}
 ul.striped > li:nth-child(odd){background:#f8f8f8;}
 ul.striped > li:first-child{border-top:1px solid #ccc;}
 
+.bg-warning{
+background-color: #fcf8e3;
+padding:15px;
+border-radius:5px;
+}
+.bg-warning span{font-weight:bold; width:100%;}
+
 .trash{padding: 0px 5px; font-size: 14px;}
 
 .refresh{
