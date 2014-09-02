@@ -23,7 +23,7 @@ braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   public_key="wy5t8dq5rbs9x53j",
                                   private_key="d71fe8c3b083f72653e0b9a6004ba9a6")
 
-WEB_CLIENT_ID = 'greek-app'
+WEB_CLIENT_ID = 'greek-app-stage'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
 IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID

@@ -360,14 +360,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $rootScope.requirePermissions = function(perms){
-            if (!$rootScope.checkPermissions(perms)){
-                if ($rootScope.checkAlumni()){
-                    window.location.assign('#/app/directory/members');
-                }
-                else{
-                    window.location.assign("/#/app");
-                }
-            } 
+            if ($rootScope.perms){
+                if (!$rootScope.checkPermissions(perms)){
+                    if ($rootScope.checkAlumni()){
+                        window.location.assign('#/app/directory/members');
+                    }
+                    else{
+                        window.location.assign("/#/app/home");
+                    }
+                } 
+            }
+            else{
+                window.location.assign('/#/login');
+            }
         }
         
         $rootScope.checkAlumni = function(){
@@ -458,7 +463,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //              tags
                             $rootScope.tags = load_data.tags;
         //              organization
-                        $rootScope.subscribed = true;
+                        $rootScope.subscribed = false;
                         $rootScope.setColor(load_data.organization_data.color);
                         $rootScope.organization = load_data.organization_data;
                         $rootScope.polls = load_data.polls;
