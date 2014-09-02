@@ -589,7 +589,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if(!checkResponseErrors(data))
                     {
                         returned_data = JSON.parse(data.data);
-                        $.cookie(USER_NAME, user_name.toLowerCase());
+                        $.cookie(USER_NAME, user_name.toLowerCase(), {expires: new Date(returned_data.expires)});
                         $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
                         if ($rootScope.hasLoaded){
                             $rootScope.Load();
@@ -1854,7 +1854,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     $scope.working = 'done';
                     var returned_data = JSON.parse(data.data);
                     $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
-                    $.cookie(USER_NAME, $scope.item.user_name);
+                    $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
                     $.cookie(PERMS, returned_data.perms);
                     $.cookie('FORM_INFO_EMPTY', 'true');
                     console.log($.cookie(TOKEN));

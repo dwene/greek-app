@@ -98,7 +98,7 @@
 				
 				<a class="mobile help" ng-show="$root.checkLogin()" data-toggle="modal" data-target="#helpModal"><i class="fa fa-question-circle"></i></a>
 				
-				<div id="mobileSettings" class="visible-xs collapse">
+				<div id="mobileSettings" class="collapse">
                    
                     <ul class="nav navbar-nav navbar-collapse" ng-hide="!$root.checkLogin()">
                             <li><a ng-href="#/app/accountinfo"><i class="fa fa-user"></i> Account</a></li>
@@ -119,7 +119,7 @@
 
 			</div>
 			
-			<div id="mobileMenu" ng-show="$root.subscribed" class="visible-xs" ng-class="{leader: $root.checkPermissions('leadership')==true, hideMenu: $root.checkPermissions('member')==false}">
+			<div id="mobileMenu" ng-show="$root.subscribed" ng-class="{leader: $root.checkPermissions('leadership')==true, hideMenu: $root.checkPermissions('member')==false}">
 				    <ul class="nav navbar-nav" ng-hide="!$root.checkLogin()">
                         <li><a ng-href="/#/app/home"><i class="fa fa-home"></i></a></li><!--        
    remove white space--><li><a ng-href="/#/app/directory/members"><i class="fa fa-book"></i></a></li><!--        

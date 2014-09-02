@@ -29,8 +29,15 @@ body.modal-open{margin-right:0px;}
     }
 
     .help{cursor:pointer;}
-    .help.mobile{color:white; font-size:24px; position:absolute; right:68px; top:14px; display:none;}
-    @media screen and (max-width:767px){display:block;}
+    .help.mobile{color:white !important; font-size:24px; position:absolute; right:68px; top:14px; display:none;}
+    
+#mobileSettings{display:none;}
+#mobileMenu{display:none !important;}
+@media screen and (max-width:767px){
+    .help.mobile{display:block;}
+    #mobileSettings{display:block;}
+    #mobileMenu{display:block !important;}
+}
 
 
 @media screen and (max-width:991px){#mainNavigation>ul>li>a{padding:15px 10px 15px 10px;}}
@@ -202,9 +209,11 @@ padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4
 
 #memberProfile #social{text-align:center; font-size:40px;}
 #memberProfile #social li{display:inline-block;}
-#memberProfile #contact{text-align:left; font-size:40px; width:300px; margin:10px auto;}
-#memberProfile #contact li{display:inline-block; width:100%;}
-#memberProfile #contact span{display:inline-block; font-size:12px; position:relative; top:-8px;}
+
+#memberProfile #contact{text-align:left; width:300px; position:relative; left:50%; margin:10px 0px 10px -150px;}
+#memberProfile #contact li{display:inline-block; width:100%; min-height:45px;}
+#memberProfile #contact a{position:absolute; font-size:40px;}
+#memberProfile #contact span{display:inline-block; font-size:14px; line-height:14px; margin:12px 0px 0px 45px; position:relative;}
 #memberProfile #saveContact{display:block; position:absolute; top:10px; right:10px;}
 
 #memberProfile #name{margin:0px auto 0 auto;}
