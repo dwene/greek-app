@@ -1171,6 +1171,33 @@ class RESTApi(remote.Service):
                 cron.put()
         return OutgoingMessage(error='', data='OK')
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_all_welcome_emails',
+                      http_method='POST', name='user.resend_all_welcome_emails')
+    def resend_all_welcome_emails(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        users = User.query(User.organization == request_user.organization).fetch()
+        async_items = []
+        for user in users:
+            if not user.user_name:
+                email = member_signup_email(user=user.to_dict(), token=user.current_token)
+                cron = CronEmail()
+                cron.content = email["text"]
+                cron.title = email["subject"]
+                cron.pending = True
+                cron.type = 'welcome_again'
+                cron.timestamp = datetime.datetime.now()
+                cron.email = user.email
+                async_items.append(cron.put_async())
+        for item in async_items:
+            item.get_result()
+        return OutgoingMessage(error='', data='OK')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
                       http_method='POST', name='user.update_user_directory_info')
     def update_user_directory_info(self, request):
