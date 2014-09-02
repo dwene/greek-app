@@ -602,6 +602,10 @@ class RESTApi(remote.Service):
             new_user.class_year = int(user['class_year'])
             new_user.timestamp = datetime.datetime.now()
             new_user.put()
+            content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
+            content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
+            content += '\nUser Name: ' + new_user.user_name
+            send_email('support@netegreek.com', 'support@netegreek.com', 'New Organization Registered', content)
             return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms,
                                                              'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
         except:

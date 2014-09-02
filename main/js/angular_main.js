@@ -390,6 +390,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $.removeCookie(USER_NAME);
             $.removeCookie(TOKEN);
             $.removeCookie(PERMS);
+//            $rootScope.refreshPage();
             $.removeCookie('FORM_INFO_EMPTY');
             $rootScope.directory = {};
             $rootScope.me = undefined;
@@ -399,6 +400,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.notifications = undefined;
             $rootScope.hidden_notifications = undefined;
             $rootScope.updateNotificationBadge();
+            
         }
         
         $rootScope.updateNotificationBadge = function(){
@@ -463,7 +465,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         //              tags
                             $rootScope.tags = load_data.tags;
         //              organization
-                        $rootScope.subscribed = false;
+                        $rootScope.subscribed = true;
                         $rootScope.setColor(load_data.organization_data.color);
                         $rootScope.organization = load_data.organization_data;
                         $rootScope.polls = load_data.polls;
@@ -596,6 +598,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         returned_data = JSON.parse(data.data);
                         $.cookie(USER_NAME, user_name.toLowerCase(), {expires: new Date(returned_data.expires)});
                         $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
+                        $rootScope.perms = returned_data.perms;
                         if ($rootScope.hasLoaded){
                             $rootScope.Load();
                         }
@@ -605,7 +608,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         else{
                             window.location.assign('#/app');
                         }
-                        
                     }
                     else{
                         if (data.error == "BAD_LOGIN"){
