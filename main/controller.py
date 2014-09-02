@@ -42,7 +42,7 @@ INVALID_EMAIL = 'INVALID_EMAIL'
 INVALID_USERNAME = 'INVALID_USERNAME'
 NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 TAG_INVALID = "TAG_INVALID"
-DOMAIN = 'app.netegreek.com'
+DOMAIN = 'https://app.netegreek.com'
 
 EVERYONE = 'Everyone'
 EXPIRE_TIME = 7 # Number of days until token expires
