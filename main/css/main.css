@@ -38,7 +38,11 @@ body.modal-open{margin-right:0px;}
     #mobileSettings{display:block;}
     #mobileMenu{display:block !important;}
 }
-
+/*fix for questions and refresh button on iPhone size*/
+@media screen and (max-width:340px){
+.help.mobile{right:60px;}
+#refreshNotifications{left:204px;}
+}
 
 @media screen and (max-width:991px){#mainNavigation>ul>li>a{padding:15px 10px 15px 10px;}}
 
