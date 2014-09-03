@@ -2103,13 +2103,18 @@ App.config(function($stateProvider, $urlRouterProvider) {
     routeChange();
     $scope.saveVcard = function(){
         var user = $scope.member;
-        var out_string = 'BEGIN:VCARD\nVERSION:4.0\nN:' + user.last_name + ';' + user.first_name + ';;;\n'; //name
+        var out_string = 'BEGIN:VCARD\nVERSION:2.1\nN:' + user.last_name + ';' + user.first_name + ';;;\n'; //name
         out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n';//FN
-        out_string += 'TEL;TYPE=cell,voice;VALUE=uri:tel:+1-' + user.phone + '\n'; //Phone
-        out_string += 'EMAIL:' + user.email + '\n';
-        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
-        out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
-        console.log(user.prof_pic);
+        if (user.phone){
+        out_string += 'TEL;CELL:' + user.phone + '\n';} //Phone
+        if (user.email){
+        out_string += 'EMAIL;PREF;INTERNET:' + user.email + '\n';}//Email
+        if (user.prof_pic){
+        out_string += 'PHOTO;PNG:'+user.prof_pic + '\n';}//picture
+//        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
+        if (user.address){
+        out_string += 'ADR;HOME:;;'+user.address+';'+user.city+';'+user.state+';'+user.zip+';United States of America\n';}//address
+//        out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
 //        if (user.prof_pic.indexOf('jpg') > -1){
 //            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
 //        }
@@ -2120,8 +2125,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
 //        }
         out_string += 'END:VCARD';
-        var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "contact.vcf");
+        var blob = new Blob([out_string], {type: "text/vcard;charset=utf-8"});
+//        var csvString = csvRows.join("%0A");
+//                var a         = document.createElement('a');
+//                a.href        = 'data:text/vcard,' + out_string;
+//                a.target      = '_blank';
+//                a.download    = 'contact.vcf';
+//                console.log(a.href);
+//                document.body.appendChild(a);
+//                a.click();
+//                document.body.removeChild(a);
+        saveAs(blob, ($scope.member.first_name + '_' + $scope.member.last_name) || "contact" + ".vcf");
     }
     Load.then(function(){
         if ($stateParams.id.toString().length < 2){
@@ -3027,7 +3041,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             out_string += 'SUMMARY:'+event.title.replace(/(\r\n|\n|\r)/gm," ") + '\n';
             out_string += 'DESCRIPTION:'+event.description.replace(/(\r\n|\n|\r)/gm," ") + '\n';
             out_string += 'END:VEVENT\nEND:VCALENDAR';
-            var blob = new Blob([out_string], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([out_string], {type: "text/calendar;charset=utf-8"});
+            console.log(blob);
             saveAs(blob, "event.ics");
         }
         

@@ -315,7 +315,7 @@ class SendEmails(webapp2.RequestHandler):
         emails = CronEmail.query(CronEmail.pending == True).fetch()
         futures = []
         for email in emails:
-            send_email(from_email='support@netegreek.com', to_email=email.email,
+            send_email(from_email='NeteGreek <support@netegreek.com>', to_email=email.email,
                        subject=email.title, body=email.content)
 
             # mail.send_mail(sender="support@netegreek.com", to=str(email.email),
