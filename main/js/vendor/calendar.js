@@ -35,7 +35,6 @@ angular.module('ui.rCalendar', [])
         $scope.today = function(){
             self.currentCalendarDate = new Date();
             $scope.move(0);
-            console.log('today!');
         }
         
         $scope.eventSelected = function(event){
@@ -280,7 +279,6 @@ angular.module('ui.rCalendar', [])
                         date = startDate.getDate(),
                         month = (startDate.getMonth() + (date !== 1 ? 1 : 0)) % 12,
                         year = startDate.getFullYear() + (date !== 1 && month === 0 ? 1 : 0);
-
                     var days = getDates(startDate, 42);
                     for (var i = 0; i < 42; i++) {
                         days[i] = angular.extend(createDateObject(days[i], ctrl.formatDay), {
@@ -293,8 +291,9 @@ angular.module('ui.rCalendar', [])
                         scope.labels[j] = dateFilter(days[j].date, ctrl.formatDayHeader);
                     }
 
-                    var headerDate = new Date(year, month, date);
+                    var headerDate = moment(startDate).add('days', 7).format();
                     scope.$parent.title = dateFilter(headerDate, ctrl.formatMonthTitle);
+//                    console.log('ctrl._refreshview title', scope.$parent.title);
                     scope.rows = ctrl.split(days, 7);
 
                     if (scope.showWeeks) {

@@ -70,10 +70,20 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('register', {
                 url : '/register',
 				templateUrl : 'Static/register.html',
+                controller : 'registerController'
+			})
+        .state('registerorg', {
+                url : '/registerorganization',
+				templateUrl : 'Static/registerorganization.html',
 				controller  : 'registerController'
 			})
-        .state('registerinfo', {
-                url : '/registerinfo',
+        .state('registeruser', {
+                url : '/registeruser',
+				templateUrl : 'Static/registeruser.html',
+				controller  : 'registerController'
+			})
+        .state('registerorg2', {
+                url : '/registerorganizationinfo',
 				templateUrl : 'Static/registerinfo.html',
 				controller  : 'registerinfoController'
 			})
@@ -770,6 +780,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         //this page passes parameters through a get method to register info
     });
+
+    App.controller('registerUserController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
+        routeChange();
+        $rootScope.logout();
+        $scope.data = {};
+        LoadScreen.stop();
+        $scope.findMe = function(item){
+            
+        }
+    });
+
 
 //the register info page
     App.controller('registerinfoController', function($scope, $http, registerOrganizationService, $rootScope) {
@@ -4386,7 +4407,6 @@ App.directive('match', function(){
         };
 });
 
-
 App.directive('userNameInput', function(){
         return {
             require: 'ngModel',
@@ -4431,6 +4451,26 @@ App.directive('removeHttp', function(){
                     }
                 }
 
+            })
+        }};
+});
+
+
+App.directive('removeHashTag', function(){
+    return {
+        require: 'ngModel',
+        restrict: 'A',
+        scope: {
+            ngModel: '='
+        },
+        controller: function($scope) {
+            var index = 0;
+            $scope.$watch('ngModel', function(){
+                if ($scope.ngModel){
+                    if ($scope.ngModel.indexOf('#') > -1){
+                        $scope.ngModel = $scope.ngModel.splice($scope.ngModel.indexOf('#'), 1);
+                    }
+                }
             })
         }};
 });

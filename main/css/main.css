@@ -384,6 +384,10 @@ textarea.form-control{height:auto; max-width:100%;}
 .notificationCount{margin:0 auto; display:block; line-height:30px; width:160px; color:white; border-radius:5px; font-weight:bold;}
 
 
+/*Register organization page*/
+#registerButtonContainer{text-align:center;}
+.registerButton {position:relative; text-align:center; margin-bottom:20px; margin-top:20px; background:none; color:white; border:2px solid white; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); font-weight:bolder; padding: 20px;}
+.registerButton:hover{ color:white; }
 
 /*Event Info Page*/
 #goingForm .form-group{width: 260px; margin: 10px auto;}

@@ -78,9 +78,9 @@
         <div class="col-sm-10">
         <div class="input-group">
         <span class="input-group-addon">#</span>
-        <input type="text" class="form-control tagInput" id="tag" name="tag" ng-model="event.tag" ng-trim="false" placeholder="BowlingSocial2014" required>
+        <input type="text" class="form-control tagInput" id="tag" name="tag" ng-model="event.tag" ng-trim="false" placeholder="BowlingSocial2014" user-name-input required>
         <span class="input-group-btn">
-           <button ng-click="checkTagAvailability(event.tag)" class="btn btn-default" type="button" ng-disabled="checkWorking && checkWorking != 'broken'">Check Availability</button><update-status ng-model="checkWorking" fn-call="checkTagAvailability(event.tag)"></update-status>
+           <button ng-click="checkTagAvailability(event.tag)" class="btn btn-default" type="button" ng-disabled="checkWorking && checkWorking != 'broken' || newEvent.tag.$invalid">Check Availability</button><update-status ng-model="checkWorking" fn-call="checkTagAvailability(event.tag)"></update-status>
         </span>
         </div>
         

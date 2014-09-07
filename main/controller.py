@@ -584,11 +584,10 @@ class RESTApi(remote.Service):
     def register_organization(self, request):
         try:
             clump = json.loads(request.data)
-
             new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'])
             new_org.put()
             user = clump['user']
-            if username_available(user['user_name']):
+            if username_available(user['user_name'].lower()):
                 new_user = User(user_name=user['user_name'].lower())
             else:
                 return OutgoingMessage(error=USERNAME_TAKEN, data='')
@@ -847,7 +846,7 @@ class RESTApi(remote.Service):
         data = json.loads(request.data)
         user = User.query(User.current_token == request.token).get()
         if user and user.user_name == '':
-            if not username_available(data["user_name"]):
+            if not username_available(data["user_name"].lower()):
                 return OutgoingMessage(error='INVALID_USERNAME')
             if not len(data["password"]) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD')
