@@ -652,6 +652,38 @@ class RESTApi(remote.Service):
         send_email('NeteGreek <support@netegreek.com>', email, title, content)
         return OutgoingMessage(error='', data='OK')
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/find_unregistered_users',
+                      http_method='POST', name='auth.find_unregistered_users')
+    def find_unregistered_users(self, request):
+        clump = json.loads(request.data)
+        users = User.query(User.user_name == None, User.email == clump['email']).fetch()
+        user_list = list()
+        org_list = list()
+        for user in users:
+            user_list.append({'first_name': user.first_name, 'last_name': user.last_name,
+                              'email': user.email, 'organization': user.organization, 'key': user.key})
+            if user.organization not in org_list:
+                org_list.append(user.organization)
+        orgs = ndb.get_multi(org_list)
+        for user in users:
+            for org in orgs:
+                if user['organization'] == org.key:
+                    user['org_name'] = org.name
+                    user['school'] = org.school
+                    break
+        return OutgoingMessage(error='', data=json_dump(user_list))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/resend_registration_email',
+                      http_method='POST', name='auth.resend_registration_email')
+    def resend_registration_email(self, request):
+        user = ndb.get(json.loads(request.data)['key'])
+        if user:
+            forgotten_password_email(user)
+            return OutgoingMessage(error='', data='')
+        else:
+            return OutgoingMessage(error=INVALID_USERNAME, data='')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/login',
                       http_method='POST', name='auth.login')
     def login(self, request):

@@ -80,7 +80,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('registeruser', {
                 url : '/registeruser',
 				templateUrl : 'Static/registeruser.html',
-				controller  : 'registerController'
+				controller  : 'registerUserController'
 			})
         .state('registerorg2', {
                 url : '/registerorganizationinfo',
@@ -787,7 +787,28 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.data = {};
         LoadScreen.stop();
         $scope.findMe = function(item){
-            
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/find_unregistered_users', packageForSending({email:email}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.users = json.loads(data.data);
+                        $scope.loadedUsers = true;
+                    }
+                });
+        }
+        $scope.resendEmail = function(key){
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/resend_registration_email', packageForSending({key:key}))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        $scope.sentEmail = true;
+                        $scope.emailFailed = false;
+                    }
+                    else {
+                        $scope.sentEmail = false;
+                        $scope.emailFailed = true;
+                    }
+                });
         }
     });
 
