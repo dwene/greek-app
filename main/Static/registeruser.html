@@ -11,7 +11,7 @@
              <div class="input-group">
               <input type="email" class="form-control" id="inputUser" ng-model="email" placeholder="john.doe@gmail.com" required>
                   <span class="input-group-btn">
-                  <button type="submit" class="btn btn-default" ng-disabled="gettingnewPassword == 'pending'">Submit</button>
+                  <button type="submit" class="btn btn-default" ng-disabled="users_load == 'pending'">Submit</button><update-status ng-model="users_load"></update-status>
                 </span>
               </div>
             </div>
@@ -29,11 +29,11 @@
         </div>
         </div>
         <ul class="striped">
-            <li ng-repeat = "item in returned_choices">
+            <li ng-repeat = "user in users">
                <div class="row">
                 <div class="col-xs-4">{{user.first_name + ' ' + user.last_name}}</div>
                 <div class="col-xs-4">{{user.org_name}}</div>
-                <div class="col-xs-4"><button ng-click="resendEmail(user.key)" class="btn btn-primary btn-sm"><i class="fa fa-paper-plane-o"></i> Send Email</button></div>
+                <div class="col-xs-4"><button ng-click="resendEmail(user.key)" ng-disabled="email_load == 'pending'" class="btn btn-primary btn-sm"><i class="fa fa-paper-plane-o"></i> Send Email</button><update-status ng-model="email_load"></update-status></div>
                 </div>
             </li>
         </ul>

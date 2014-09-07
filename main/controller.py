@@ -80,7 +80,6 @@ class DateEncoder(json.JSONEncoder):
 
 
 def member_signup_email(user, token):
-    user['token'] = token
     signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
@@ -657,29 +656,35 @@ class RESTApi(remote.Service):
                       http_method='POST', name='auth.find_unregistered_users')
     def find_unregistered_users(self, request):
         clump = json.loads(request.data)
-        users = User.query(User.user_name == None, User.email == clump['email']).fetch()
+        users = User.query(User.email == clump['email']).fetch()
         user_list = list()
         org_list = list()
         for user in users:
-            user_list.append({'first_name': user.first_name, 'last_name': user.last_name,
-                              'email': user.email, 'organization': user.organization, 'key': user.key})
-            if user.organization not in org_list:
-                org_list.append(user.organization)
-        orgs = ndb.get_multi(org_list)
-        for user in users:
-            for org in orgs:
-                if user['organization'] == org.key:
-                    user['org_name'] = org.name
-                    user['school'] = org.school
-                    break
+            if not user.user_name:
+                user_list.append({'first_name': user.first_name, 'last_name': user.last_name,
+                                  'email': user.email, 'organization': user.organization, 'key': user.key})
+                if user.organization not in org_list:
+                    org_list.append(user.organization)
+        if len(org_list) > 0:
+            orgs = ndb.get_multi(org_list)
+            for user in user_list:
+                for org in orgs:
+                    if user['organization'] == org.key:
+                        user['org_name'] = org.name
+                        user['school'] = org.school
+                        break
         return OutgoingMessage(error='', data=json_dump(user_list))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/resend_registration_email',
                       http_method='POST', name='auth.resend_registration_email')
     def resend_registration_email(self, request):
-        user = ndb.get(json.loads(request.data)['key'])
+        user = ndb.Key(urlsafe=json.loads(request.data)['key']).get()
         if user:
-            forgotten_password_email(user)
+            if user.perms == 'alumni':
+                email_item = alumni_signup_email(user.to_dict(), user.organization, user.current_token)
+            else:
+                email_item = member_signup_email(user.to_dict(), user.current_token)
+            send_email('NeteGreek <support@netegreek.com>', email_item["to"], email_item["subject"], email_item["text"])
             return OutgoingMessage(error='', data='')
         else:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
@@ -1047,6 +1052,8 @@ class RESTApi(remote.Service):
                                               ),
                                               Poll.organization == request_user.organization)).\
                 order(-Poll.timestamp).fetch_async(100)
+        if request_user.tags == ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']:
+            request_user.tags = ['']
 #get results of queries
         organization_users = organization_users_future.get_result()
         event_tag_list = event_tag_list_future.get_result()
