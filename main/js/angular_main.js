@@ -3251,7 +3251,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
 	});
 
-
     App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout){
         routeChange();
         $scope.loading = true;

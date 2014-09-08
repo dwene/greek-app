@@ -109,7 +109,7 @@ def add_notification_to_users(notification, users):
             if notification.type =='event':
                 body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
             elif notification.type == 'poll':
-                body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
+                body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
             future_list.append(CronEmail(type='notification', pending=True, email=user.email,
                                          title=notification.title,
                                          content=body).put_async())
