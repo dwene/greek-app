@@ -405,12 +405,12 @@ textarea.form-control{height:auto; max-width:100%;}
 /*Change Password from Token*/
 #changepasswordfromToken #correctUser{font-weight:bold; margin:10px; display:block;}
 
-/*Forgotten Password Page*/
-#forgotPass .thinking{position:absolute; left:-15px; top:8px;}
-#forgotPass .striped{line-height:30px; margin-top:5px;}
-#forgotPass .striped li{padding:5px 15px;}
-#forgotPass .striped li button{margin-left:15px;}
-#forgotPass #listHeaders{font-weight:bold;}
+/*Striped Lists*/
+.thinking{position:absolute; left:-15px; top:8px;}
+.striped{line-height:30px; margin-top:5px;}
+.striped li{padding:5px 15px;}
+.striped li button{margin-left:15px;}
+#listHeaders{font-weight:bold;}
 
 /*Upload Profile Page*/
 #crop{display:block; width:300px; margin:0 auto 10px auto;}
