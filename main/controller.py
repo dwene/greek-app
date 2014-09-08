@@ -105,9 +105,14 @@ def add_notification_to_users(notification, users):
     future_list = list()
     for user in users:
         if user.email_prefs == 'all':
+            body = notification.content
+            if notification.type =='event':
+                body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
+            elif notification.type == 'poll':
+                body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
             future_list.append(CronEmail(type='notification', pending=True, email=user.email,
                                          title=notification.title,
-                                         content=notification.content).put_async())
+                                         content=body).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
     for item in future_list:
@@ -1931,7 +1936,7 @@ class RESTApi(remote.Service):
         notification.sender_name = "NeteGreek Notification Service"
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
-        notification.link = '#/app/events/'+new_event.tag
+        notification.link = '/#/app/events/'+new_event.tag
         notification.put()
         future_list = [new_event.put_async(), request_user.put_async()]
         add_notification_to_users(notification, users)
@@ -2081,7 +2086,7 @@ class RESTApi(remote.Service):
             notification.sender_name = "NeteGreek Notification Service"
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
-            notification.link = '#/app/events/'+event.tag
+            notification.link = '/#/app/events/'+event.tag
             notification.put()
             add_notification_to_users(notification, users)
             for item in futures:
@@ -2257,7 +2262,7 @@ class RESTApi(remote.Service):
         notification.timestamp = datetime.datetime.now()
         notification.sender = request_user.key
         notification.type = 'poll'
-        notification.link = '#/app/polls/' + poll.key.urlsafe()
+        notification.link = '/#/app/polls/' + poll.key.urlsafe()
         notification.sender_name = 'NeteGreek Notification Service'
         notification.put()
         add_notification_to_users(notification, users)

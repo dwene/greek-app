@@ -2995,9 +2995,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log(moment().add('hours', 1).format('h:[00] A'));
                     
                     $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
-                    $scope.event.time_end = moment().add('hours', 2).format('h:[00] A');
                     $timeout(function(){$('.picker').trigger('change')},200);
                 }
+            }
+        })
+        $scope.$watch('event.time_start', function(){
+            console.log('I see that change!!!');
+            if ($scope.event){
+                if ($scope.event.time_start){
+                    
+                    $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
+                    if (test && $scope.event.date_start == $scope.event.date_end){
+                        console.log('difference', moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0);
+                        console.log('time_end', $scope.event.time_end);
+                        console.log('time_start', $scope.event.time_start);
+                        $scope.event.date_end = moment($scope.event.date_end).add('days', 1).format('MM/DD/YYYY');
+                    }
+                }
+                $timeout(function(){$('.picker').trigger('change')},200);
             }
         })
     });
@@ -3236,7 +3252,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 
-    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout){
         routeChange();
         $scope.loading = true;
         Load.then(function(){
@@ -3352,6 +3368,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
             $scope.loading = false;
+            $timeout(function(){$('.picker').trigger('change')},200);
         }
     $scope.submitEdits = function(isValid){
         if (isValid){
