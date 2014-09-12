@@ -16,7 +16,7 @@
     
     <ul id="members">
        
-        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
+        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search:20" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
            
            <div class="row">
                 <div class="col-xs-12 col-sm-6">

@@ -3149,7 +3149,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         function getEventAndSetInfo(events, count){
             function getUsersFromKey(key){
                 for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    console.log($rootScope.directory.members[i].key);
                     if ($rootScope.directory.members[i].key == key){
                         return $rootScope.directory.members[i];
                     }
@@ -3181,8 +3180,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             for (var i = 0; i < event.going.length; i++){
                 var user_push = getUsersFromKey(event.going[i])
                 event.going_list.push(user_push);
-                console.log(user_push.user_name);
-                console.log($rootScope.me.user_name);
                 if (user_push.user_name == $rootScope.me.user_name){
                     $scope.going = true;
                     $scope.not_going = false;
@@ -3408,13 +3405,16 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         update();
         function update() {
+            console.log('starting update');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     console.log('I am updating the user check in stuff!');
                     var users = JSON.parse(data.data);
+                    var counter = 0;
                     if (users){
                         for (var i = 0; i < $scope.users.length; i++){
+                            counter++;
                             var user = $scope.users[i];
                             if (user.attendance_data){
                                 if (user.attendance_data.in_updating || user.attendance_data.out_updating){
@@ -3425,12 +3425,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                         continue;
                                     }
                                 }
+                                $scope.users[i] = users[i];
                             }
-                            $scope.users[i] = users[i];
+                            
                         }
+                        console.log('I did ' + counter.toString() + ' repetitions across the loop');
                     }
                 }
-                setTimeout($scope, update, 3000);
+                setTimeout($scope, update, 15000);
             });
         }
         
@@ -3440,11 +3442,13 @@ App.config(function($stateProvider, $urlRouterProvider) {
             getCheckInData();
         });
         function getCheckInData(){
+            console.log('Im starting get check in data');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);  
                     $scope.loading = false;
+                    console.log('Im ending get check in data');
                 }
                 else{
                     console.log('ERROR: ',data);
@@ -3458,28 +3462,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $scope.eventNotFound = true;
             });
         }
-//        function updateCheckInInfo(){
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
-//            .success(function(data){
-//                if (!checkResponseErrors(data)){
-//                    console.log('I am updating the user check in stuff!');
-//                    var users = JSON.parse(data.data);
-//                    if (users){
-//                        for (var i = 0; i < $scope.users.length; i++){
-//                            var user = $scope.users[i];
-//                            if (user.attendance_data){
-//                                if (user.attendance_data.in_updating || user.attendance_data.out_updating){
-//                                    continue;
-//                                }
-//                            }
-//                            $scope.users[i] = users[i];
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//        
-//        updateCheckInInfo()
         $scope.eventTag = $stateParams.tag;
         $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
             member.timestamp_moment = moment();
@@ -4998,8 +4980,11 @@ App.filter('multipleSearch', function(){
             
             
 App.filter('nameSearch', function(){ 
-    return function (objects, search) {
+    return function (objects, search, max) {
         if (!search){
+            if (max && objects){
+                return objects.slice(0, max);
+            }
             return objects;
         }
         retList = [];
@@ -5010,6 +4995,12 @@ App.filter('nameSearch', function(){
                 var name = object.first_name + ' ' + object.last_name;
                 if(name.toString().toLowerCase().indexOf(search.toLowerCase()) > -1){
                     retList.push(object);
+                }
+                if (max){
+                    if (retList.length >= max){
+                        console.log('Im returning early');
+                        return retList;
+                    }
                 }
             }
         }

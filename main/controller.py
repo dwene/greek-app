@@ -2103,8 +2103,10 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_tag = json.loads(request.data)
         event_key = Event.query(Event.tag == event_tag).get().key
-        users_future = User.query(User.organization == request_user.organization).fetch_async()
-        attendance_data_future = AttendanceData.query(ndb.AND(AttendanceData.event == event_key)).fetch_async()
+        users_future = User.query(User.organization ==
+                                  request_user.organization).fetch_async(projection=[User.user_name, User.prof_pic,
+                                                                                     User.first_name, User.last_name])
+        attendance_data_future = AttendanceData.query(AttendanceData.event == event_key).fetch_async()
         event_future = Event.query(Event.tag == event_tag).get_async()
         users = users_future.get_result()
         attendance_data = attendance_data_future.get_result()

@@ -78,3 +78,21 @@ indexes:
   - name: organization
   - name: timestamp
     direction: desc
+
+- kind: User
+  properties:
+  - name: organization
+  - name: first_name
+  - name: last_name
+  - name: prof_pic
+  - name: user_name
+  - name: __key__
+
+- kind: User
+  properties:
+  - name: organization
+  - name: first_name
+  - name: last_name
+  - name: prof_pic
+  - name: user_name
+

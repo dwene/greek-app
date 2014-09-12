@@ -1,15 +1,15 @@
-<div ng-show="loading" ng-hide="eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="loading && !eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
 
 <div id="checkinPage" class="container" ng-hide="loading || eventNotFound">
 
 <div id="topSearch" class="form-group">
    <a href="/#/app/events/{{eventTag}}" class="btn btn-primary"><i class="fa fa-arrow-circle-o-left"></i></a>
-    <input id="checkinSearch" type="search" ng-model="search" placeholder="Search..." class="form-control">
+    <search ng-model="search"></search>
 </div>        
         
         <ul class="row">
-            <li ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search" class="checkin col-xs-12 col-sm-6" ng-show="true" ng-click="showIndividual(member)">
+            <li ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search: 20 | limitTo:20" class="checkin col-xs-12 col-sm-6" ng-show="true">
 
                 <div class="checkinContent card">
                 
