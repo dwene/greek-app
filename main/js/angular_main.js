@@ -43,7 +43,7 @@ String.prototype.replaceAll = function(str1, str2, ignore)
 }
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap' ,'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics'],  function ($compileProvider) {
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap' ,'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll'],  function ($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms):/);
 });
 
@@ -2038,42 +2038,60 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the directory
-    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
+    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, directoryFilterFilter, $filter){
     routeChange();
+        $scope.memberdirectorylength = 20;
     Load.then(function(){
-        function splitMembers(){
-            var council = [];
-            var leadership = [];
-            var members = [];
-            if ($rootScope.directory.members){
-                for (var i = 0; i< $rootScope.directory.members.length; i++){
-                    if ($rootScope.directory.members[i].perms == MEMBER){
-                        members.push($rootScope.directory.members[i]);
-                        continue;
-                    }
-                    if ($rootScope.directory.members[i].perms == LEADERSHIP){
-                        leadership.push($rootScope.directory.members[i]);
-                        continue;
-                    }
-                    if ($rootScope.directory.members[i].perms == COUNCIL){
-                        console.log('hi')
-                        council.push($rootScope.directory.members[i]);
-                        continue;
-                    }
-                }
-                $scope.directory = [];
-                if (council.length > 0){
-                    $scope.directory.push({name: 'council', data: council});             
-                }
-                if (leadership.length > 0){
-                    $scope.directory.push({name: 'leadership', data: leadership});               
-                }
-                if (members.length > 0){
-                    $scope.directory.push({name: 'member', data: members});          
+        
+        $scope.increaseDirectoryLength = function(){
+            if ($scope.members){
+                if ($scope.memberdirectorylength < $scope.members.length){
+//                    console.log('Increasing number of shown elements');
+                    $scope.memberdirectorylength += 20;
                 }
             }
         }
-        splitMembers();
+        
+        $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
+        $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
+        $scope.members = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'member'), 'last_name');
+        $scope.$watch('search', function(){
+            if ($scope.search){
+                $scope.memberdirectorylength = 20;
+            }
+        })
+//        function splitMembers(){
+//            var council = [];
+//            var leadership = [];
+//            var members = [];
+//            if ($rootScope.directory.members){
+//                for (var i = 0; i< $rootScope.directory.members.length; i++){
+//                    if ($rootScope.directory.members[i].perms == MEMBER){
+//                        members.push($rootScope.directory.members[i]);
+//                        continue;
+//                    }
+//                    if ($rootScope.directory.members[i].perms == LEADERSHIP){
+//                        leadership.push($rootScope.directory.members[i]);
+//                        continue;
+//                    }
+//                    if ($rootScope.directory.members[i].perms == COUNCIL){
+//                        console.log('hi')
+//                        council.push($rootScope.directory.members[i]);
+//                        continue;
+//                    }
+//                }
+//                $scope.directory = [];
+//                if (council.length > 0){
+//                    $scope.directory.push({name: 'council', data: council});             
+//                }
+//                if (leadership.length > 0){
+//                    $scope.directory.push({name: 'leadership', data: leadership});               
+//                }
+//                if (members.length > 0){
+//                    $scope.directory.push({name: 'member', data: members});          
+//                }
+//            }
+//        }
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -2082,8 +2100,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log(directory);
                     $rootScope.directory = directory;
                     $scope.directory = $rootScope.directory.members;
+                    $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
+                    $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
+                    $scope.members = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'member'), 'last_name');
                     LoadScreen.stop();
-                    splitMembers();
                 }
                 else
                 {
@@ -3440,6 +3460,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
             getCheckInData();
+            $scope.maxLength = 20;
+            $scope.maxLengthIncrease = function(){
+                if ($scope.users){
+                    if ($scope.maxLength < $scope.users.length){
+                        $scope.maxLength += 20;
+                    }
+                }
+            }
+            
+            
+            $scope.$watch('search', function(){
+                if ($scope.search){
+                    $scope.maxLength = 20;    
+                }
+            });
         });
         function getCheckInData(){
             console.log('Im starting get check in data');
@@ -4950,7 +4985,7 @@ App.directive('updateStatus', function($timeout){
 App.filter('multipleSearch', function(){ 
     return function (objects, search) {
         var searchValues = search;
-        if (!search){
+        if (!search || !objects){
             return objects;
         }
         retList = [];
@@ -4981,10 +5016,7 @@ App.filter('multipleSearch', function(){
             
 App.filter('nameSearch', function(){ 
     return function (objects, search, max) {
-        if (!search){
-            if (max && objects){
-                return objects.slice(0, max);
-            }
+        if (!search || !objects){
             return objects;
         }
         retList = [];

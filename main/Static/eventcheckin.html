@@ -7,9 +7,9 @@
    <a href="/#/app/events/{{eventTag}}" class="btn btn-primary"><i class="fa fa-arrow-circle-o-left"></i></a>
     <search ng-model="search"></search>
 </div>        
-        
+       <div infinite-scroll="maxLengthIncrease()" infinite-scroll-disabled="search"> 
         <ul class="row">
-            <li ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search: 20 | limitTo:20" class="checkin col-xs-12 col-sm-6" ng-show="true">
+            <li ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search: 0 | limitTo:maxLength track by member.key" class="checkin col-xs-12 col-sm-6" ng-show="true">
 
                 <div class="checkinContent card">
                 
@@ -37,6 +37,7 @@
 
                 </li>
         </ul>
+        </div>
           
 </div>
 

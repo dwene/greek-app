@@ -21,7 +21,7 @@
     <section ng-show = "council.length">
         <h1 class="darkbg">Council</h2>
         <ul>
-            <li ng-repeat="member in council = ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'council')" class="member" ng-click="showIndividual(member)">
+            <li ng-repeat="member in council | multipleSearch:search  track by member.key" class="member" ng-click="showIndividual(member)">
             
                 <div class="quickButtons">
                     <a ng-href="mailto:{{member.email}}" target="_blank" ng-click="$event.stopPropagation();" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
@@ -39,10 +39,10 @@
             </li>
         </ul>
     </section>
-    <section ng-show="leaders.length">
+    <section ng-show="leadership.length">
         <h1 class="darkbg">Leadership</h2>
         <ul>
-            <li ng-repeat="member in leaders = ( $root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'leadership')" class="member" ng-click="showIndividual(member)">
+            <li ng-repeat="member in leadership | multipleSearch:search track by member.key " class="member" ng-click="showIndividual(member)">
                 
                 <div class="quickButtons">
                     <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
@@ -60,10 +60,11 @@
             </li>
         </ul>
     </section>
+   <div infinite-scroll="increaseDirectoryLength()" infinite-scroll-distance="0" infinite-scroll-disabled="search">
     <section ng-show="members.length">
         <h1 class="darkbg">Members</h2>
         <ul>
-            <li ng-repeat="member in members =  ($root.directory.members | multipleSearch:search | orderBy:'last_name' | directoryFilter:'member')" class="member" ng-click="showIndividual(member)">
+            <li ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" class="member" ng-click="showIndividual(member)">
             
                <div class="quickButtons">
                     <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
@@ -79,8 +80,12 @@
 
             
             </li>
+            
         </ul>
     </section>
+    <div style='height:1px;'></div>
+    </div>
+    
 <!--
     <div >
         <h2>Leadership</h2>    
