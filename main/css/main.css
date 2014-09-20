@@ -712,6 +712,9 @@ animation: flipOutX .5s;
 /*Specific Fixes*/
 .bootstrap-datetimepicker-widget .btn:active,
 .bootstrap-datetimepicker-widget .btn.active {-webkit-box-shadow: none; box-shadow: none;}
+@media screen and (max-width:768px){
+    .tooltip{display:none !important;}
+}
 
 
 /*Angular Picture Cropping*/
