@@ -448,7 +448,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.Load = function(){
             LoadScreen.start();
             $('#mobileMenu').hide();
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''), {cache: true})
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
                 .success(function(data){
                     if(!checkResponseErrors(data)){
                         $timeout(function(){
