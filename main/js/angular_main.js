@@ -448,7 +448,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.Load = function(){
             LoadScreen.start();
             $('#mobileMenu').hide();
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''), {cache: true})
                 .success(function(data){
                     if(!checkResponseErrors(data)){
                         $timeout(function(){
@@ -3447,15 +3447,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                 }
                                 $scope.users[i] = users[i];
                             }
-                            
                         }
-                        console.log('I did ' + counter.toString() + ' repetitions across the loop');
                     }
                 }
                 setTimeout($scope, update, 15000);
             });
         }
-        
         $scope.loading = true;
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
@@ -3468,8 +3465,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 }
             }
-            
-            
             $scope.$watch('search', function(){
                 if ($scope.search){
                     $scope.maxLength = 20;    
@@ -3477,7 +3472,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             });
         });
         function getCheckInData(){
-            console.log('Im starting get check in data');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
@@ -3579,7 +3573,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter) {
         routeChange();
+        $scope.maxLength = 0;
+        $scope.maxNoShowsLength = 0;
         $scope.loading = true;
+        $scope.increaseMaxLength = function(){
+            if ($scope.users && $scope.shows){
+                if ($scope.maxLength < $scope.users.length){
+                    $scope.maxLength += 20;
+                    $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
+                    console.log('maxNoShowsLength', $scope.maxNoShowsLength);
+                }
+            }
+        }
+        
         $scope.getProfPic = function(link){
             if (link){
                 return link + '=s50';
@@ -3604,6 +3610,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     $scope.invited = eventTagDirectorySearchFilter($rootScope.directory.members, $scope.event.tags);
                     $scope.noShows = [];
+                    $scope.shows = [];
                     if ($scope.event){
                         for (var i = 0 ; i < $scope.users.length; i++){
                             for (var j = 0; j < $scope.invited.length; j++){
@@ -3617,8 +3624,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                         else if (!($scope.users[i].attendance_data.time_in || $scope.users[i].attendance_data.time_out)){
                                             shouldAdd=true;
                                         }
-                                        if (shouldAdd)
-                                        {
+                                        if (shouldAdd){
                                             if ($scope.event.going.indexOf($scope.users[i].key) != -1){
                                                 $scope.noShows.push({user: $scope.users[i], rsvp: 'Going'});
                                             }
@@ -3630,6 +3636,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                             }
                                         
                                         }
+                                        else if (!shouldAdd){
+                                            $scope.shows.push($scope.users[i]);
+                                        }
                                     break;
 //                                    }
                                 }
@@ -3637,6 +3646,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                     $scope.loading = false;
+                    console.log('total number', $scope.shows.length + $scope.noShows.length);
+                    console.log('users length', $scope.users.length);
+                    $scope.maxLength = 20;
+                    $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
                 }
                 else{
                     console.log('ERROR: ', data);
