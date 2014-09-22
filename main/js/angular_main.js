@@ -5425,7 +5425,8 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
     function executePosts() {
           var deferred = $q.defer();
             var neededCount = 0;
-          function checkIfDone() { 
+          function checkIfDone() {
+              console.log('neededCount', neededCount);
               if (neededCount <= 0){
                 console.log('Im done loading');
                 deferred.resolve();
@@ -5641,7 +5642,6 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
                         if (!checkResponseErrors(data)){
                             $rootScope.events = JSON.parse(data.data);
                             localStorageService.set('events', $rootScope.events);
-                            checkIfDone();
                         }
                         else{
                             console.log('ERROR: ',data);
