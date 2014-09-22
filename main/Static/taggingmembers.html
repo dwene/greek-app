@@ -54,8 +54,9 @@
                     <search ng-model="search" id="taggingSearch"></search>
                     </div>
                     </div>
+                    <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
                     <ul id="memberSelect">
-                        <li ng-repeat="user in (users | orderBy:'last_name' | nameSearch:search)  track by user.key">
+                        <li ng-repeat="user in (users | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
                                
                                <ul id="memberTags">
                                 <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
@@ -70,6 +71,7 @@
                                 </ul>
                         </li>
                     </ul>
+                    </div>
                     </div>
                     </div>
                     </section>

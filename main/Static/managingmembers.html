@@ -13,10 +13,10 @@
     </div>
 -->
    <search ng-model="search" id="manageMembersSearch"></search>
-    
+    <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
     <ul id="members">
        
-        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search:20" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
+        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
            
            <div class="row">
                 <div class="col-xs-12 col-sm-6">
@@ -40,6 +40,7 @@
             </div>     
         </li>
     </ul>
+       </div>
         <p ng-show="members.length < 1">There are no members to manage!</p>    
     </div>
 </div>

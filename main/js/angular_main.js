@@ -43,7 +43,7 @@ String.prototype.replaceAll = function(str1, str2, ignore)
 }
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap' ,'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll'],  function ($compileProvider) {
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap' ,'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll', 'LocalStorageModule'],  function ($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms):/);
 });
 
@@ -397,6 +397,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $rootScope.logout = function(){
+            localStorage.clear();
             $.removeCookie(USER_NAME);
             $.removeCookie(TOKEN);
             $.removeCookie(PERMS);
@@ -445,66 +446,68 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             return undefined;
         }
-        $rootScope.Load = function(){
-            LoadScreen.start();
-            $('#mobileMenu').hide();
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
-                .success(function(data){
-                    if(!checkResponseErrors(data)){
-                        $timeout(function(){
-                            var load_data = JSON.parse(data.data);
-                            $rootScope.perms = load_data.perms;
-        //              directory
-                            $rootScope.directory = load_data.directory;
-                            for (var i = 0; i< $rootScope.directory.members.length; i++){
-                                if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-                                    $rootScope.me = $rootScope.directory.members[i];
-                                   break;
-                                }
-                            }
-        //              notifications
-                            $rootScope.notifications = load_data.notifications.notifications;
-                            $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
-                            for (var i = 0; i < $rootScope.notifications.length; i++){
-                                    $rootScope.notifications[i].collapseOut = true; 
-                            }
-                            $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
-                            $rootScope.updateNotificationBadge();
-        //              events    
-                            $rootScope.events = load_data.events;
-        //              tags
-                            $rootScope.tags = load_data.tags;
-        //              organization
-                        $rootScope.subscribed = true;
-                        $rootScope.setColor(load_data.organization_data.color);
-                        $rootScope.organization = load_data.organization_data;
-                        $rootScope.polls = load_data.polls;
-                        $rootScope.tags = load_data.tags;
-                    });
-                    
-                    $timeout(function(){
-                        if ($rootScope.checkAlumni()){
-                            window.location.assign('#/app');
-                        }
-                        else{
-                            $('#mobileMenu').removeClass('hideMenu');
-                        }
-                        $('#mobileMenu').show();
-                        if ($rootScope.perms == 'alumni'){
-                            $timeout(function(){LoadScreen.stop();}, 400)
-                        }
-                        else{
-                            LoadScreen.stop();
-                        }
-                        }, 100);
-                    }
-                    
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    LoadScreen.stop();
-                });
-        }
+//        $rootScope.Load = function(){
+//            LoadScreen.start();
+//            $('#mobileMenu').hide();
+//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
+//                .success(function(data){
+//                    if(!checkResponseErrors(data)){
+//                        $timeout(function(){
+//                            var load_data = JSON.parse(data.data);
+//                            $rootScope.perms = load_data.perms;
+//        //              directory
+//                            $rootScope.directory = load_data.directory;
+//                            for (var i = 0; i< $rootScope.directory.members.length; i++){
+//                                if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+//                                    $rootScope.me = $rootScope.directory.members[i];
+//                                   break;
+//                                }
+//                            }
+//        //              notifications
+//                            $rootScope.notifications = load_data.notifications.notifications;
+//                            $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
+//                            for (var i = 0; i < $rootScope.notifications.length; i++){
+//                                    $rootScope.notifications[i].collapseOut = true; 
+//                            }
+//                            $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
+//                            $rootScope.updateNotificationBadge();
+//        //              events    
+//                            $rootScope.events = load_data.events;
+//        //              tags
+//                            $rootScope.tags = load_data.tags;
+//        //              organization
+//                        $rootScope.subscribed = true;
+//                        $rootScope.setColor(load_data.organization_data.color);
+//                        $rootScope.organization = load_data.organization_data;
+//                        $rootScope.polls = load_data.polls;
+//                        $rootScope.tags = load_data.tags;
+//                    });
+//                    
+//                    $timeout(function(){
+//                        if ($rootScope.checkAlumni()){
+//                            window.location.assign('#/app');
+//                        }
+//                        else{
+//                            $('#mobileMenu').removeClass('hideMenu');
+//                        }
+//                        $('#mobileMenu').show();
+//                        if ($rootScope.perms == 'alumni'){
+//                            $timeout(function(){LoadScreen.stop();}, 400)
+//                        }
+//                        else{
+//                            LoadScreen.stop();
+//                        }
+//                        }, 100);
+//                    }
+//                    
+//                })
+//                .error(function(data) {
+//                    console.log('Error: ' , data);
+//                    LoadScreen.stop();
+//                });
+//        }
+//       
+        
         $rootScope.showNav = true;
 //        $rootScope.$on('$routeChangeSuccess', function () {
 //            $('.modal-backdrop').remove();
@@ -605,19 +608,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 .success(function(data) {
                     if(!checkResponseErrors(data))
                     {
+                        LoadScreen.start();
                         returned_data = JSON.parse(data.data);
                         $.cookie(USER_NAME, user_name.toLowerCase(), {expires: new Date(returned_data.expires)});
                         $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
                         $rootScope.perms = returned_data.perms;
-                        if ($rootScope.hasLoaded){
-                            $rootScope.Load();
-                        }
+                        
                         if (returned_data.perms == 'alumni'){
                             window.location.assign('#/app/directory');
                         }
                         else{
                             window.location.assign('#/app');
                         }
+                        window.location.reload();
                     }
                     else{
                         if (data.error == "BAD_LOGIN"){
@@ -1181,7 +1184,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //the add members page
-    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen) {
+    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
         routeChange();
         $scope.adds = [];
         Load.then(function(){
@@ -1235,6 +1238,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     $rootScope.directory = JSON.parse(data.data);
+                    localStorageService.set('directory', $rootScope.directory);
                     console.log($rootScope.directory);
                     assignAngularViewModels($rootScope.directory.members);
                 }
@@ -1361,14 +1365,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 
-
-
-
 //new member page
-    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope){
+    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope, localStorageService){
     routeChange();
     Load.then(function(){
         $rootScope.requirePermissions(COUNCIL);
+        $scope.memberslength = 20;
+        $scope.$watch('search', function(){
+            if ($scope.search){
+                $scope.memberslength = 20;
+            }
+        });
         //MANAGE MEMBERS TAB
         $scope.openDeleteMemberModal = function(user){
             $('#deleteMemberModal').modal();
@@ -1378,6 +1385,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.openConvertMembersModal = function(){
             $('#convertMemberModal').modal();
+        }
+        $scope.loadMoreMembers = function(){
+            if ($scope.memberslength < $scope.members.length){
+                $scope.memberslength += 20;
+            }
         }
         
         $scope.resendWelcomeEmail = function(member){
@@ -1466,7 +1478,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     $rootScope.directory = JSON.parse(data.data);
-                    console.log($rootScope.directory);
+                    localStorageService.set('directory', $rootScope.directory);
                     assignAngularViewModels($rootScope.directory.members);
                 }
                 else
@@ -1555,7 +1567,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     
     });
 
-    App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen) {
+    App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
         routeChange();
         Load.then(function(){
 //        //initialize a member array
@@ -1609,6 +1621,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     $rootScope.directory = JSON.parse(data.data);
+                    localStorageService.set('directory', $rootScope.directory);
                     assignAngularViewModels($rootScope.directory.alumni);
                 }
                 else
@@ -1737,7 +1750,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 
 
-    App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen){
+    App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService){
         routeChange();
         Load.then(function(){
 
@@ -1773,6 +1786,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data))
                     {
                         $rootScope.directory = JSON.parse(data.data);
+                        localStorageService.set('directory', $rootScope.directory);
                         assignAngularViewModels($rootScope.directory.alumni);
                     }
                     else
@@ -2038,7 +2052,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the directory
-    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, directoryFilterFilter, $filter){
+    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, directoryFilterFilter, $filter, localStorageService){
     routeChange();
         $scope.memberdirectorylength = 20;
     Load.then(function(){
@@ -2099,6 +2113,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     var directory = JSON.parse(data.data)
                     console.log(directory);
                     $rootScope.directory = directory;
+                    localStorageService.set('directory', $rootScope.directory);
                     $scope.directory = $rootScope.directory.members;
                     $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
                     $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
@@ -2170,7 +2185,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member profiles
-    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen){
+    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService){
     routeChange();
     $scope.saveVcard = function(){
         var user = $scope.member;
@@ -2224,6 +2239,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 {
                     var directory = JSON.parse(data.data)
                     $rootScope.directory = directory;
+                    localStorageService.set('directory', $rootScope.directory);
                     LoadScreen.stop();
                     $scope.members = directory.members;
                     loadMemberData();
@@ -2460,7 +2476,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member tagging page
-    App.controller('membertagsController', function($scope, $http, $rootScope, Load) {
+    App.controller('membertagsController', function($scope, $http, $rootScope, Load, localStorageService) {
         routeChange();
         
 //        var elementToScroll = $('#tagMembersCard')
@@ -2512,7 +2528,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         Load.then(function(){
         $rootScope.requirePermissions(LEADERSHIP);
-            
+        $scope.memberslength = 20;
+        $scope.$watch('search', function(){
+                $scope.memberslength = 20;
+        });
+        $scope.loadMoreMembers = function(){
+            if ($scope.memberslength < $scope.users.length){
+                $scope.memberslength += 20;
+            }
+        }
         function getUsers(){
             var out_users = [];
             var users = $rootScope.directory;
@@ -2528,6 +2552,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if (!checkResponseErrors(data))
                 {
                     var users = JSON.parse(data.data);
+                    $rootScope.directory = users;
+                    localStorageService.set('directory', $rootScope.directory);
                     var out_users = [];
                     for (var i = 0; i < users.members.length; i ++){
                         for (var j = 0; j < $scope.users.length; j++){
@@ -2569,6 +2595,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             out_tags.push(org_tags[i]);
                         }
                         $rootScope.tags = JSON.parse(data.data);
+                        localStorageService.set('tags', $rootScope.tags);
                         $scope.org_tags = out_tags;
                         $rootScope.org_tag_data = $scope.org_tags;
                     }
@@ -2775,7 +2802,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load, localStorageService) {
     routeChange();
     Load.then(function(){ 
         $rootScope.requirePermissions(LEADERSHIP);
@@ -2798,6 +2825,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     var tag_data = JSON.parse(data.data);
                     $scope.tags = tag_data;
                     $rootScope.tags = tag_data;
+                    localStorageService.set('tags', $rootScope.tags);
                 }
                 else{
                     console.log("error: ", data.error)
@@ -2916,7 +2944,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 
-    App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout) {
+    App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout, localStorageService) {
         routeChange();
         
 //        if ($rootScope.tags){
@@ -2935,6 +2963,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data)){
                         $scope.tags = JSON.parse(data.data);
                         $rootScope.tags = JSON.parse(data.data);
+                        localStorageService.set('tags', $rootScope.tags);
                     }
                     else{
                         console.log("error: ", data.error)
@@ -3038,7 +3067,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         })
     });
 
-    App.controller('eventsController', function($scope, $http, Load, $rootScope) {
+    App.controller('eventsController', function($scope, $http, Load, $rootScope, localStorageService) {
         routeChange();
         
         Load.then(function(){
@@ -3054,6 +3083,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data)){
                         $scope.events = JSON.parse(data.data);
                         $rootScope.events = $scope.events;
+                        localStorageService.set('events', $rootScope.events);
                         for (var i = 0; i< $scope.events.length; i++){
                             if ($scope.eventSource.indexOf({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag}) != -1){
                             $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag});
@@ -3915,7 +3945,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 
-    App.controller('pollController', function($scope, $http, Load, $rootScope) {
+    App.controller('pollController', function($scope, $http, Load, $rootScope, localStorageService) {
         routeChange();
         Load.then(function(){
             $scope.polls = $rootScope.polls;
@@ -3925,6 +3955,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data)){
                         $scope.polls = JSON.parse(data.data);
                         $rootScope.polls = $scope.polls;
+                        localStorageService.set('polls', $rootScope.polls);
                     }
                     else{
                         console.log('ERR');
@@ -5335,46 +5366,6 @@ App.filter('directorySearch', function(){
     }
 });
 
-//App.factory('directoryService', function($rootScope, $http, LoadScreen) {
-//    if ($rootScope.directory === undefined){
-//        LoadScreen.start();
-//        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    var directory = JSON.parse(data.data);
-//                    $rootScope.directory = directory;
-//                    LoadScreen.stop();
-//                    return $rootScope.directory;
-//                }
-//                else
-//                {
-//                    console.log("error: ", data.error);
-//                }
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//            });
-//    }
-//    else{
-//        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    $rootScope.directory = JSON.parse(data.data);
-//                }
-//                else
-//                {
-//                    console.log("error: ", data.error);
-//                }
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//            });
-//        return $rootScope.directory;
-//    }
-//});
-
 App.factory('getEvents', function($http, $rootScope){
     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
         .success(function(data){
@@ -5425,7 +5416,7 @@ App.factory('LoadScreen', function($rootScope){
     };
 });
 
-App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
+App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, localStorageService){
     var defer = $q.defer();
         if (!checkLogin()){
         window.location.replace('#/login');
@@ -5433,136 +5424,257 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
     }
     function executePosts() {
           var deferred = $q.defer();
+            var neededCount = 0;
           function checkIfDone() { 
-              console.log('Im done loading');
+              if (neededCount <= 0){
+                console.log('Im done loading');
                 deferred.resolve();
+              }
+              else{
+              neededCount --;}
           }
-//          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
+            .success(function(data){
+                console.log('checked login');
+                if (checkResponseErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
+            });
+            
+//        if ($cacheFactory.info()){
+//            $rootScope.directory = JSON.parse($cacheFactory.get('directory'));
+//            return deferred.promise;
+//        }
+//            $rootScope.directory = localStorageService.get('directory');
+//            checkIfDone();
+//        $http.get(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load2/'+$.cookie(USER_NAME)+'/'+$.cookie(TOKEN))
 //            .success(function(data){
-//                checkResponseErrors(data.data);
-//                if (!checkResponseErrors(data)){
-//                $rootScope.directory = JSON.parse(data.data);}
+//                if(!checkResponseErrors(data)){
+//                    var load_data = JSON.parse(data.data);
+//                    $rootScope.perms = load_data.perms;
+////              directory
+//                    $rootScope.directory = load_data.directory;
+//                    for (var i = 0; i< $rootScope.directory.members.length; i++){
+//                        if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+//                            $rootScope.me = $rootScope.directory.members[i];
+//                            break;
+//                        }
+//                    }
+//                    localStorageService.set('directory', $rootScope.directory);
+////              notifications
+//                    $rootScope.notifications = load_data.notifications.notifications;
+//                    localStorageService.set('notifications', $rootScope.notifications);
+//                    $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
+//                    for (var i = 0; i < $rootScope.notifications.length; i++){
+//                            $rootScope.notifications[i].collapseOut = true; 
+//                    }
+//                    $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
+//                    $rootScope.updateNotificationBadge();
+////              events    
+//                    $rootScope.events = load_data.events;
+//                    localStorageService.set('events', $rootScope.events);
+//
+////                    $cacheFactory.put('events', JSON.stringify($rootScope.events));
+////              tags
+//                    $rootScope.tags = load_data.tags;
+//                    localStorageService.set('tags', $rootScope.tags);
+//
+////                    $cacheFactory.put('tags', JSON.stringify($rootScope.tags));
+////              organization
+//                    $rootScope.subscribed = true;
+//                    $rootScope.setColor(load_data.organization_data.color);
+//                    $rootScope.organization = load_data.organization_data;
+//                    $rootScope.polls = load_data.polls;
+//                    localStorageService.set('organization', $rootScope.organization);
+//                    localStorageService.set('polls', $rootScope.polls);
+//                    $rootScope.hasLoaded = true;
+//                    $('#body').show();
+//                    $('#mobileMenu').show();
+//                }
 //                checkIfDone();
 //            })
 //            .error(function(data) {
 //                console.log('Error: ' , data);
 //                checkIfDone();
 //            });
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
-            .success(function(data){
-                console.log('checked login');
-                if (checkResponseErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
-            });
-        
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
-            .success(function(data){
-                console.log('load data', data);
-                if(!checkResponseErrors(data)){
-                    var load_data = JSON.parse(data.data);
-                    $rootScope.perms = load_data.perms;
-//              directory
-                    $rootScope.directory = load_data.directory;
-                    for (var i = 0; i< $rootScope.directory.members.length; i++){
-                        if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-                            $rootScope.me = $rootScope.directory.members[i];
-                            break;
-                        }
+            $rootScope.directory = localStorageService.get('directory');
+            if ($rootScope.directory){
+                $rootScope.perms = 'alumni';
+                for (var i = 0; i < $rootScope.directory.members.length; i++){
+                    if ($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+                        $rootScope.me = $rootScope.directory.members[i];
+                        $rootScope.perms = $rootScope.me.perms;
+                        break;
                     }
-//              notifications
-                    $rootScope.notifications = load_data.notifications.notifications;
-                    $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
+                }
+            }
+            else{
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $rootScope.directory = JSON.parse(data.data);
+                        localStorageService.set('directory', $rootScope.directory);
+                    }
+                    checkIfDone();
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                    checkIfDone();
+                });
+            }
+            var load_data = localStorageService.get('notifications');
+            if (load_data){
+                try{
+                    $rootScope.notifications = load_data.notifications;
+                    $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
                     for (var i = 0; i < $rootScope.notifications.length; i++){
                             $rootScope.notifications[i].collapseOut = true; 
                     }
-                    $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
+                    $rootScope.hidden_notifications = load_data.hidden_notifications;
                     $rootScope.updateNotificationBadge();
-//              events    
-                    $rootScope.events = load_data.events;
-//              tags
-                    $rootScope.tags = load_data.tags;
-//              organization
-                    $rootScope.subscribed = true;
-                    $rootScope.setColor(load_data.organization_data.color);
-                    $rootScope.organization = load_data.organization_data;
-                    $rootScope.polls = load_data.polls;
-                    $rootScope.tags = load_data.tags;
-                    console.log('$Rootscope tags', $rootScope.tags);
-//                    if (!load_data.accountFilledOut){
-//                        window.location.assign('#/app/accountinfo');
-//                    }
-                    $rootScope.hasLoaded = true;
-                    $('#body').show();
-                    $('#mobileMenu').show();
+                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+                    .success(function(data){
+                        var load_data = JSON.parse(data.data);
+                        localStorageService.set('notifications', load_data);
+                        $rootScope.notifications = load_data.notifications;
+                        $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
+                        for (var i = 0; i < $rootScope.notifications.length; i++){
+                                $rootScope.notifications[i].collapseOut = true; 
+                        }
+                        $rootScope.hidden_notifications = load_data.hidden_notifications;
+                        $rootScope.updateNotificationBadge();
+                        })
+                    .error(function(data) {
+                            console.log('Error: ' , data);
+                        });
                 }
-                checkIfDone();
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                checkIfDone();
-            });
-//          $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
-//            .success(function(data){
-//                
-//                $rootScope.notifications = JSON.parse(data.data).notifications;
-//                
-//                for (var i = 0; i < $rootScope.notifications.length; i++){
-//                        $rootScope.notifications[i].collapseOut = true; 
-//                }
-//                $rootScope.hidden_notifications = JSON.parse(data.data).hidden_notifications;
-//                $rootScope.updateNotificationBadge();
-//                checkIfDone();
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//                checkIfDone();
-//            });  
+                catch(err){localStorageService.remove('notifications'); $rootScope.refreshPage();}
+            }
+            else {
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+                .success(function(data){
+                    var load_data = JSON.parse(data.data);
+                    localStorageService.set('notifications', load_data);
+                    $rootScope.notifications = load_data.notifications;
+                    $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
+                    for (var i = 0; i < $rootScope.notifications.length; i++){
+                            $rootScope.notifications[i].collapseOut = true; 
+                    }
+                    $rootScope.hidden_notifications = load_data.hidden_notifications;
+                    $rootScope.updateNotificationBadge();
+                    checkIfDone();
+                    })
+                .error(function(data) {
+                        console.log('Error: ' , data);
+                        checkIfDone();
+                    });  
+            }
 //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
 //                .success(function(data){
 //                    if (!checkResponseErrors(data)){
 //                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
 //                    }
 //                });
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
-//            .success(function(data){
-//                if (!checkResponseErrors(data)){
-//                    var tag_data = JSON.parse(data.data);
-//                    $rootScope.tags = tag_data;
-//                }
-//                else{
-//                    console.log("error: " , data.error)
-//                }
-//                checkIfDone();
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//                checkIfDone();
-//            });
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
-//            .success(function(data){
-//                $rootScope.subscribed = true;
-//                $rootScope.setColor(JSON.parse(data.data).color);
-//                $rootScope.organization = JSON.parse(data.data);
-//                checkIfDone();
-//            })
-//            .error(function(data) {
-//                checkIfDone();
-//            });
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-//                .success(function(data){
-//                    if (!checkResponseErrors(data)){
-//                        $rootScope.events = JSON.parse(data.data);
-//                        console.log('events rootscope', $rootScope.events);
-//                    }
-//                    else{
-//                        console.log('ERROR: ',data);
-//                    }
-//                    checkIfDone();
-//                })
-//                .error(function(data) {
-//                    console.log('Error: ' , data);
-//                    checkIfDone();
-//                });
-          return deferred.promise;
+            $rootScope.tags = localStorageService.get('tags');
+            if (!$rootScope.tags){
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        var tag_data = JSON.parse(data.data);
+                        $rootScope.tags = tag_data;
+                        localStorageService.set('tags', $rootScope.tags);
+                    }
+                    else{
+                        console.log("error: " , data.error)
+                    }
+                    checkIfDone();
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                    checkIfDone();
+                });
+            }
+            $rootScope.organization = localStorageService.get('organization_data');
+            if ($rootScope.organization){
+                try{
+                    $rootScope.subscribed = true;
+                    $rootScope.setColor($rootScope.organization.color);
+                    $rootScope.organization = $rootScope.organization;
+                    $rootScope.me = $rootScope.organization.me;
+                    console.log('me', $rootScope.me);
+                    $rootScope.perms = $rootScope.me.perms;
+
+                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+                    .success(function(data){
+                        $rootScope.setColor(JSON.parse(data.data).color);
+                        $rootScope.organization = JSON.parse(data.data);
+                        console.log('me', $rootScope.me);
+                        $rootScope.me = $rootScope.organization.me;
+                        $rootScope.perms = $rootScope.me.perms;
+                        localStorageService.set('organization_data', $rootScope.organization);
+                    });
+                }
+                catch(err){localStorageService.remove('organization_data'); $rootScope.refreshPage();}
+            }
+            else{
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+                .success(function(data){
+                    $rootScope.subscribed = true;
+                    $rootScope.setColor(JSON.parse(data.data).color);
+                    $rootScope.organization = JSON.parse(data.data);
+                    $rootScope.me = $rootScope.organization.me;
+                    $rootScope.perms = $rootScope.me.perms;
+                    localStorageService.set('organization_data', JSON.parse(data.data));
+                    checkIfDone();
+                })
+                .error(function(data) {
+                    checkIfDone();
+                });
+            }
+            $rootScope.events = localStorageService.get('events');
+            if (!$rootScope.events){
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            $rootScope.events = JSON.parse(data.data);
+                            localStorageService.set('events', $rootScope.events);
+                            checkIfDone();
+                        }
+                        else{
+                            console.log('ERROR: ',data);
+                        }
+                        checkIfDone();
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' , data);
+                        checkIfDone();
+                    });
+            }
+            $rootScope.polls = localStorageService.get('polls');
+            if (!$rootScope.polls){
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
+                    .success(function(data){
+                        if (!checkResponseErrors(data)){
+                            $rootScope.polls = JSON.parse(data.data);
+                            localStorageService.set('polls', $rootScope.polls);
+                            checkIfDone();
+                        }
+                        else{
+                            checkIfDone();
+                            console.log('ERR');
+                        }
+                    })
+                    .error(function(data) {
+                        checkIfDone();
+                        console.log('Error: ' , data);
+                    });
+            }
+        checkIfDone();
+        return deferred.promise;
         }
             LoadScreen.start();
             executePosts().then(function() {
