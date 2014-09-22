@@ -43,9 +43,8 @@ INVALID_USERNAME = 'INVALID_USERNAME'
 NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 TAG_INVALID = "TAG_INVALID"
 DOMAIN = 'https://app.netegreek.com'
-
 EVERYONE = 'Everyone'
-EXPIRE_TIME = 7 # Number of days until token expires
+EXPIRE_TIME = 60 # Number of days until token expires
 
 
 class IncomingMessage(messages.Message):
@@ -624,6 +623,15 @@ class RESTApi(remote.Service):
         out = dict(name=organization.name, school=organization.school)
         out["subscribed"] = organization.subscribed
         out["color"] = organization.color
+        me = request_user.to_dict()
+        del me["hash_pass"]
+        del me["current_token"]
+        del me["organization"]
+        del me["timestamp"]
+        del me["notifications"]
+        del me["new_notifications"]
+        del me["hidden_notifications"]
+        out["me"] = me
         try:
             out["image"] = images.get_serving_url(organization.image, secure_url=True)
         except:
@@ -1439,6 +1447,14 @@ class RESTApi(remote.Service):
         organization_users = organization_users_future.get_result()
         event_list = event_list_future.get_result()
         user_list = list()
+        me = request_user.to_dict()
+        del me["hash_pass"]
+        del me["current_token"]
+        del me["organization"]
+        del me["timestamp"]
+        del me["notifications"]
+        del me["new_notifications"]
+        del me["hidden_notifications"]
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
@@ -1464,7 +1480,7 @@ class RESTApi(remote.Service):
                 alumni_list.append(user_dict)
             else:
                 user_list.append(user_dict)
-        return_data = json_dump({'members': user_list, 'alumni': alumni_list})
+        return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
         return OutgoingMessage(error='', data=return_data)
 
 
@@ -2568,7 +2584,7 @@ class RESTApi(remote.Service):
 
 
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load2',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load2/{user_name}/{token}',
                       http_method='GET', name='info.load2')
     def load_user_data2(self, request):
         time_start = datetime.datetime.now()
