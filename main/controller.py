@@ -2569,9 +2569,10 @@ class RESTApi(remote.Service):
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load2',
-                      http_method='GET', name='info.load')
-    def load_user_data(self, request):
+                      http_method='GET', name='info.load2')
+    def load_user_data2(self, request):
         time_start = datetime.datetime.now()
+        logging.error('user and token: ' + str(request.user_name) + ' ' + str(request.token))
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')

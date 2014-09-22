@@ -5456,8 +5456,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen){
         
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
             .success(function(data){
-//                
-//                console.log(load_data);
+                console.log('load data', data);
                 if(!checkResponseErrors(data)){
                     var load_data = JSON.parse(data.data);
                     $rootScope.perms = load_data.perms;
