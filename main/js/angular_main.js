@@ -3850,16 +3850,26 @@ App.config(function($stateProvider, $urlRouterProvider) {
             
             $scope.downloadCSV = function(){
                 var users = $filter('orderBy')($scope.users, 'last_name');
-                var out = [['"Last%20Name"','"First%20Name"', '"Time%20In"', '"Time%20Out"']];
+                var out = [['"Last%20Name"','"First%20Name"', '"Date%20In"', '"Time%20In"', '"Date%20Out"', '"Time%20Out"']];
                 //datetime format yyyy-mm-dd hh:mm:ss
                 for (var i = 0; i < users.length; i++){
                     var time_in = '';
                     var time_out = '';
+                    var date_in = '';
+                    var date_out = '';
                     if (users[i].attendance_data){
-                        time_in = moment(users[i].attendance_data.time_in).format('YYYY-MM-DD HH:mm:ss');
-                        time_out = moment(users[i].attendance_data.time_out).format('YYYY-MM-DD HH:mm:ss');
+                        if (users[i].attendance_data.time_in){
+                            var val = moment(momentInTimezone(users[i].attendance_data.time_in));
+                            time_in = val.format('hh:mm a');
+                            date_in = val.format('MM/DD/YYYY');
+                        }
+                        if (users[i].attendance_data.time_out){
+                            var val2 = moment(momentInTimezone(users[i].attendance_data.time_out));
+                            time_out = val2.format('hh:mm a');
+                            date_out = val2.format('MM/DD/YYYY');
+                        }
                     }
-                    out.push([users[i].last_name.replaceAll(' ', '%20'), users[i].first_name.replaceAll(' ', '%20'), time_in.replaceAll(' ', '%20'), time_out.replaceAll(' ', '%20')]);
+                    out.push([users[i].last_name.replaceAll(' ', '%20'), users[i].first_name.replaceAll(' ', '%20'), date_in.replaceAll(' ', '%20'), time_in.replaceAll(' ', '%20'), date_out.replaceAll(' ', '%20'), time_out.replaceAll(' ', '%20')]);
                 }
 
                 var csvRows = [];
@@ -3873,7 +3883,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 a.href        = 'data:attachment/csv,' + csvString;
                 a.target      = '_blank';
                 a.download    = $stateParams.tag+'.csv';
-                console.log(a.href);
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
