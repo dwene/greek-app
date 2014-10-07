@@ -24,7 +24,6 @@ netegreek home button with spinner half in background rectangle
 I think status max should be shorter, else it doesnt really fit.
 */
 
-
 //Final/static variables. These variables are used for cookies
 var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
 //var ENDPOINTS_DOMAIN = '';
