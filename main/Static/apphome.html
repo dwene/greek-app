@@ -109,6 +109,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title preText">{{selectedNotification.title}}</h4>
+        <p class="">{{formatTimestamp(selectedNotification.timestamp)}}</p>
       </div>
       <div class="modal-body">
         <p id="messageContent" class="preText" >{{selectedNotification.content}}</p>

@@ -290,15 +290,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = '../images/defaultprofile.png';
         $rootScope.hasLoaded = false;
-        //set color theme
-//        $rootScope.$watch('loading', function(){
-//            if ($rootScope.loading){
-//                $('#loadingScreen').show();
-//            }
-//            else{
-//                $('#loadingScreen').hide();
-//            }
-//        })
         $rootScope.setColor = function (color){
             $rootScope.color = color;
             var colorsfordark = [ 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'color11', 'color12', 'color13', 'color14', 'color15', 'color16' ];
@@ -315,6 +306,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.routeChange = function(){
             $('.modal-backdrop').remove();
             $('.bootstrap-datetimepicker-widget').hide()
+            window.scrollTo(0, 0);
         }
         $rootScope.updateNotifications = function(){
             $('.fa-refresh').addClass('fa-spin');
@@ -327,9 +319,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $rootScope.notifications[i].collapseOut = false;
                     }
                 })
-                
                 $timeout(function(){
-
                     $rootScope.notifications = JSON.parse(data.data).notifications;
                     $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
 //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
@@ -397,7 +387,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         
         $rootScope.logout = function(){
-            localStorage.clear();
+            //localStorage.clear();
+            
             $.removeCookie(USER_NAME);
             $.removeCookie(TOKEN);
             $.removeCookie(PERMS);
@@ -579,7 +570,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
 	});
     
-    App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen) {
+    App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen, localStorageService) {
         routeChange();
         Load.then(function(){
             if(!checkLogin()){
@@ -593,12 +584,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
 	});
 
 //login page
-	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen) {
+	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen, localStorageService) {
         routeChange();
         $rootScope.logout();
         $.removeCookie(USER_NAME);
         $.removeCookie(TOKEN);
-        $.removeCookie('FORM_INFO_EMPTY')
+        $.removeCookie('FORM_INFO_EMPTY');
         $rootScope.directory = {};
         LoadScreen.stop();
         $('#body').show();
@@ -613,7 +604,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         $.cookie(USER_NAME, user_name.toLowerCase(), {expires: new Date(returned_data.expires)});
                         $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
                         $rootScope.perms = returned_data.perms;
-                        
+                        if (localStorageService.get('user_name') != $.cookie(USER_NAME)){
+                            localStorage.clear();
+                            localStorageService.set('user_name', $.cookie(USER_NAME));
+                        }
                         if (returned_data.perms == 'alumni'){
                             window.location.assign('#/app/directory');
                         }
@@ -1085,10 +1079,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.selectedNotification = notify;
             $scope.selectedNotificationUser = undefined;
             for(var i = 0; i < $rootScope.directory.members.length; i++){
-                console.log($rootScope.directory.members[i].key);
                 if ($rootScope.directory.members[i].key == notify.sender){
                     $scope.selectedNotificationUser = $rootScope.directory.members[i];
-                    console.log('I found it!');
                 }
             }
             if ($scope.selectedNotification.new){
@@ -1176,6 +1168,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
             if (mEnd.diff(moment()) < 0){
                 return 'Already Happened';
             }
+        }
+        
+        $scope.formatTimestamp = function(timestamp){
+            return momentInTimezone(timestamp).calendar();
         }
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
@@ -5180,18 +5176,6 @@ App.filter('removePassedEvents', function(){
             else if (removePref === undefined){
                 retList.push(objects[oPos]);
             }
-//            if (objects[oPos].time_start < now && objects[oPos].time_end > now){
-//                retList.splice(0, 0, objects[oPos]);
-//            }
-//            else if(objects[oPos].time_start > now){
-//                for(var rPos = 0; rPos < retList.length; rPos++){
-//                    if (retList[rPos].time_start < objects[oPos].time_start){
-//                        retList.splice(rPos, 0, objects[oPos]);
-//                        break;
-//                    }
-//                }
-//            }
-//            else if ()
         }
         return retList;
     }
@@ -5443,6 +5427,10 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
               else{
               neededCount --;}
           }
+        if ($.cookie(USER_NAME) != localStorageService.get('user_name')){
+            localStorage.clear();
+            localStorageService.set('user_name', $.cookie(USER_NAME));
+        }
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
             .success(function(data){
                 console.log('checked login');

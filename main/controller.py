@@ -77,7 +77,6 @@ class DateEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
-
 def member_signup_email(user, token):
     signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
@@ -99,6 +98,48 @@ def member_signup_email(user, token):
 # title = ndb.StringProperty()
 # timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
 
+
+def test_directory():
+    time1 = datetime.datetime.now()
+    # agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA
+    organization = ndb.Key(urlsafe = "agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA")
+    organization_users_future = User.query(User.organization == organization).fetch_async()
+    event_list_future = Event.query(Event.organization == organization,
+                                    ).fetch_async(projection=[Event.going, Event.tag])
+    time3 = datetime.datetime.now()
+    organization_users = organization_users_future.get_result()
+    time4 = datetime.datetime.now()
+    event_list = event_list_future.get_result()
+    time5 = datetime.datetime.now()
+    user_list = list()
+    alumni_list = list()
+    for user in organization_users:
+        user_dict = user.to_dict()
+        del user_dict["hash_pass"]
+        del user_dict["current_token"]
+        del user_dict["organization"]
+        del user_dict["timestamp"]
+        del user_dict["notifications"]
+        del user_dict["new_notifications"]
+        del user_dict["hidden_notifications"]
+        event_tags = list()
+        for event in event_list:
+            if user.key in event.going:
+                event_tags.append(event.tag)
+        user_dict["event_tags"] = event_tags
+        user_dict["key"] = user.key.urlsafe()
+        if user.dob:
+            user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+        else:
+            del user_dict["dob"]
+        user_dict["key"] = user.key.urlsafe()
+        if user_dict["perms"] == 'alumni':
+            alumni_list.append(user_dict)
+        else:
+            user_list.append(user_dict)
+    return_data = json_dump({'members': user_list, 'alumni': alumni_list})
+    time6 = datetime.datetime.now()
+    print time6 - time1
 
 def add_notification_to_users(notification, users):
     future_list = list()
@@ -1437,15 +1478,20 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
                       http_method='POST', name='auth.directory')
     def directory(self, request):
+        time1 = datetime.datetime.now()
         request_user = get_user(request.user_name, request.token)
+        time2 = datetime.datetime.now()
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        # agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA
         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
-        event_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                        Event.time_end < datetime.datetime.today() + relativedelta(months=1))
+        event_list_future = Event.query(Event.organization == request_user.organization,
                                         ).fetch_async(projection=[Event.going, Event.tag])
+        time3 = datetime.datetime.now()
         organization_users = organization_users_future.get_result()
+        time4 = datetime.datetime.now()
         event_list = event_list_future.get_result()
+        time5 = datetime.datetime.now()
         user_list = list()
         me = request_user.to_dict()
         del me["hash_pass"]
@@ -1481,6 +1527,9 @@ class RESTApi(remote.Service):
             else:
                 user_list.append(user_dict)
         return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
+        time6 = datetime.datetime.now()
+        times = str(time1) + " " + str(time2) + " " + str(time3) + " " + str(time4) + " " + str(time5) + " "+str(time6)
+        logging.error('Times:   ' + times)
         return OutgoingMessage(error='', data=return_data)
 
 

@@ -156,3 +156,6 @@ class CronEmail(ndb.Model):
     content = ndb.TextProperty()
     title = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
+
+
+
