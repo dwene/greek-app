@@ -1751,7 +1751,7 @@ class RESTApi(remote.Service):
                 notification_count = 0
             else:
                 notification_count = 40 - len(request_user.new_notifications)
-        if request_user.notifications:
+        if request_user.notifications and notification_count > 0:
             notifications_future = Notification.query(Notification.key.IN(
                 request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
         if request_user.hidden_notifications:
@@ -1765,7 +1765,7 @@ class RESTApi(remote.Service):
                 note["new"] = True
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
-        if request_user.notifications:
+        if request_user.notifications and notification_count > 0:
             notifications = notifications_future.get_result()
             for notify in notifications:
                 note = notify.to_dict()
@@ -1979,7 +1979,7 @@ class RESTApi(remote.Service):
         new_event.time_start = datetime.datetime.strptime(event_data["time_start"], '%m/%d/%Y %I:%M %p')
         new_event.time_end = datetime.datetime.strptime(event_data["time_end"], '%m/%d/%Y %I:%M %p')
         new_event.time_created = datetime.datetime.now()
-        new_event.tag = event_data["tag"]
+        new_event.tag = event_data["tag"].lower()
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
         new_event.location = event_data["location"]
