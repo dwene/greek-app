@@ -302,13 +302,21 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,png,txt}',
+            '*.{ico,png,txt,py,yaml}',
             '.htaccess',
             '*.html',
             'views/{,*/}*.html',
 			'views/templates/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'braintree/{,*/}*',
+            'braintree/util/{,*/}*',
+            'dateutil/{,*/}*',
+            'email/*',
+            'email_footers/*',
+            'files/*',
+            'requests/*',
+            'lib/{,*/*/}*'
           ]
         }, {
           expand: true,

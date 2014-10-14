@@ -15,8 +15,8 @@ handlers:
   upload: favicon\.ico
   secure: always
 
-- url: /Static
-  static_dir: Static
+- url: /views
+  static_dir: views
   secure: always
 
 - url: /picup
