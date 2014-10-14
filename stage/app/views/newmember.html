@@ -1,0 +1,15 @@
+<div class="container">
+
+		<!-- HEADER AND TODO COUNT -->
+			<h1 class="darkbg">Is this you?</h1>
+
+
+<div id="correctPerson" class="row">
+    <div class="col-xs-6 col-sm-3">{{user.first_name}}</div>
+    <div class="col-xs-6 col-sm-3">{{user.last_name}}</div>
+    <div class="col-xs-6 col-sm-3">{{user.class_year}}</div>
+    <div class="col-xs-6 col-sm-3">{{user.email}}</div>
+</div>
+<button ng-click="correctPerson()" class="btn btn-default">Yes</button>
+<button ng-click="incorrectPerson()" class="btn btn-default">No</button>
+</div>

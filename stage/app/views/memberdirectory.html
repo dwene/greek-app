@@ -1,0 +1,74 @@
+<div class="container" id="directory">
+    
+    <section id="searchTags">
+   <search ng-model="search"></search>
+    
+    </section>
+    <section ng-show = "council.length">
+        <h1 class="darkbg">Council</h1>
+        <ul>
+            <li ng-repeat="member in council | multipleSearch:search  track by member.key" class="member" ng-click="showIndividual(member)">
+            
+                <div class="quickButtons">
+                    <a ng-href="mailto:{{member.email}}" target="_blank" ng-click="$event.stopPropagation();" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a ng-show="member.phone" ng-href="sms:{{member.phone}}" ng-click="$event.stopPropagation();" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                </div>
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+                
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
+                </div>
+
+            
+            </li>
+        </ul>
+    </section>
+    <section ng-show="leadership.length">
+        <h1 class="darkbg">Leadership</h1>
+        <ul>
+            <li ng-repeat="member in leadership | multipleSearch:search track by member.key " class="member" ng-click="showIndividual(member)">
+                
+                <div class="quickButtons">
+                    <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a ng-show="member.phone" ng-href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                </div>
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
+                </div>
+
+            
+            </li>
+        </ul>
+    </section>
+   <div infinite-scroll="increaseDirectoryLength()" infinite-scroll-distance="0" infinite-scroll-disabled="search">
+    <section ng-show="members.length">
+        <h1 class="darkbg">Members</h1>
+        <ul>
+            <li ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" class="member" ng-click="showIndividual(member)">
+            
+               <div class="quickButtons">
+                    <a ng-href="mailto:{{member.email}}" target="_blank" class="btn btn-info"><i class="fa fa-envelope-o"></i></a>
+                    <a ng-show="member.phone" ng-href="sms:{{member.phone}}" target="_blank" class="btn btn-info"><i class="fa fa-phone"></i></a>
+                </div>
+                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
+
+                <div class="directoryContent">
+                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+                <span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span>
+                <span class="directoryStatus" ng-show="member.status.length">"{{member.status}}"</span>
+                </div>
+
+            
+            </li>
+            
+        </ul>
+    </section>
+    <div style='height:1px;'></div>
+    </div>
+</div>
