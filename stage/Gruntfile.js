@@ -260,9 +260,9 @@ module.exports = function (grunt) {
         options: {
           collapseWhitespace: true,
           conservativeCollapse: true,
-          collapseBooleanAttributes: true,
+          collapseBooleanAttributes: false,
           removeCommentsFromCDATA: true,
-          removeOptionalTags: true
+          removeOptionalTags: false
         },
         files: [{
           expand: true,
@@ -316,7 +316,8 @@ module.exports = function (grunt) {
             'email_footers/*',
             'files/*',
             'requests/*',
-            'lib/{,*/*/}*'
+            'lib/{,*/*/}*',
+            'scripts/vendor/profilepic.js'
           ]
         }, {
           expand: true,
