@@ -1,10 +1,13 @@
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
+
 <div id="report" class="container" ng-hide="eventNotFound || loading" infinite-scroll="increaseMaxLength()">
+			
 
 			<h1 class="darkbg">Report for #{{event.tag}} <a class="btn btn-default" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</a></h1>
-        <ul >
+       <search ng-model="search"></search>
+        <ul>
 
-            <li ng-repeat="member in shows | orderBy:['rsvp', 'last_name'] | limitTo:maxLength" class="checkin">
+            <li ng-repeat="member in currentShows = (shows | orderBy:['rsvp', 'last_name'] | nameSearch:search:0 | limitTo:maxLength)" class="checkin">
                 <div class="checkinContent card">
                     <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
                     <h1 class="memberName card-header">{{member.first_name}} {{member.last_name}}</h1>
@@ -13,17 +16,14 @@
                     <span ng-show = "member.attendance_data.time_in && member.attendance_data.time_out">Duration: {{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span><br>
                     </div>
                 </li>
-                
-            
         </ul>
-    
         <div id="noShows" class="card">
-        <h1>No Shows</h1>
-        <ul>
-            <li ng-repeat="member in noShows | orderBy: 'user.last_name' | limitTo: maxNoShowsLength" class="checkin">
-                <span>{{member.user.first_name}} {{member.user.last_name}}</span> - {{member.rsvp}}
-            </li>
-        </ul>
+			<h1>No Shows</h1>
+			<ul>
+				<li ng-repeat="member in noShows | orderBy: 'last_name'| nameSearch:search:0 | limitTo: maxNoShowsLength" class="checkin">
+					<span>{{member.first_name}} {{member.last_name}}</span> - {{member.rsvp}}
+				</li>
+			</ul>
         </div>
 
 </div>

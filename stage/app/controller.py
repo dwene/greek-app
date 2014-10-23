@@ -1004,6 +1004,22 @@ class RESTApi(remote.Service):
         user.put()
         return OutgoingMessage(error='', data='OK')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/users_emails',
+                      http_method='POST', name='user.manage_users_emails')
+    def manage_users_emails(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        request_object = json.loads(request.data)
+        user = ndb.Key(urlsafe=request_object["key"]).get()
+        if not user:
+            return OutgoingMessage(error=INVALID_USERNAME, data='')
+        user.email = request_object["email"]
+        user.put()
+        return OutgoingMessage(error='', data='OK')    
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/convert_to_alumni',
                       http_method='POST', name='user.convert_to_alumni')
     def convert_to_alumni(self, request):
@@ -2458,7 +2474,7 @@ class RESTApi(remote.Service):
         for poll in polls:
             add = poll.to_dict()
             add["key"] = poll.key
-            dict_polls.append(add)
+            dict_polls.append(add)asdfasdf
         return OutgoingMessage(error='', data=json_dump(dict_polls))
 
 

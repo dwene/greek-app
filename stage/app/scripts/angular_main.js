@@ -2613,9 +2613,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                         if ($scope.org_tags.indexOf({tag: tag}) == -1){
                             $scope.org_tags.push({name:tag, checked:true, recent:true});
-                        }
-//                        add to recent tags
-                        
+                        } 
                     }
                     else
                     {
@@ -3534,7 +3532,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 member.attendance_data.time_in = "";
             }
             else{
-                
                 member.attendance_data.time_in = momentUTCTime();
             }
             member.in_updating = 'pending';
@@ -3592,7 +3589,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
         $scope.formatDate = function(date){
             return momentInTimezone(date).format('lll');
-            
         }
     });
 
@@ -3606,10 +3602,19 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 if ($scope.maxLength < $scope.users.length){
                     $scope.maxLength += 20;
                     $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
-                    console.log('maxNoShowsLength', $scope.maxNoShowsLength);
                 }
             }
         }
+		$scope.$watch('search', function(){
+			if ($scope.search){
+				$scope.maxNoShowsLength = 10;
+				$scope.maxLength = 10;
+			}
+			else{
+				$scope.maxLength = 20;
+				$scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
+			}
+		});
         
         $scope.getProfPic = function(link){
             if (link){
@@ -3641,8 +3646,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             for (var j = 0; j < $scope.invited.length; j++){
                                 if ($scope.users[i].key == $scope.invited[j].key){
                                     var shouldAdd = false;
-//                                if ($scope.invited[j].key == $scope.users[i].key){
-//                                    if ($scope.users[i].attendance_data){
                                         if (!$scope.users[i].attendance_data){
                                             shouldAdd=true;
                                         }
@@ -3651,28 +3654,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                         }
                                         if (shouldAdd){
                                             if ($scope.event.going.indexOf($scope.users[i].key) != -1){
-                                                $scope.noShows.push({user: $scope.users[i], rsvp: 'Going'});
+                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
                                             }
                                             else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
-                                                $scope.noShows.push({user: $scope.users[i], rsvp: 'Not Going' });
+                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
                                             }
                                             else {
-                                                $scope.noShows.push({user: $scope.users[i], rsvp: 'No Response' });
+                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
                                             }
-                                        
                                         }
                                         else if (!shouldAdd){
                                             $scope.shows.push($scope.users[i]);
                                         }
                                     break;
-//                                    }
                                 }
                             }
                         }
                     }
                     $scope.loading = false;
-                    console.log('total number', $scope.shows.length + $scope.noShows.length);
-                    console.log('users length', $scope.users.length);
                     $scope.maxLength = 20;
                     $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
                 }
