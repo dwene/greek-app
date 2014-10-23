@@ -1438,6 +1438,24 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
         }
         
+        $scope.changeUserEmail = function(member, email){
+            var to_send = {key: member.key, email: email};
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/update_users_emails', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data))
+                    {
+                        console.log('success');
+                    }
+                    else
+                    {
+                        console.log('ERROR: ',data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+        }
+
         $scope.convertMembersToAlumni = function(){
             keys = [];
             console.log('converting to alumni', members);
@@ -4955,6 +4973,17 @@ App.directive('netememberCheck', function($compile){
         link: function(scope, element, attrs){
 //            $compile(element.contents())(scope)
         }
+    }
+});
+
+App.directive('neteMember', function($compile){
+    return{
+        restrict: 'E',
+        scope:{ngModel:"="},
+        templateUrl: '../views/templates/tags/netemember.html',
+        // link: function(scope, element, attrs){
+//            $compile(element.contents())(scope)
+        // }
     }
 });
 
