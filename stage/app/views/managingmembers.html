@@ -16,14 +16,14 @@
     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
     <ul id="members">
        
-        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-hide="member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
+        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-hide="hideOptions: member.user_name == $root.me.user_name" ng-init="member.name = member.first_name + ' ' + member.last_name;">
            
            <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                    <netemember-check class="members" ng-model="member"></netemember-check>
+                <netemember-check class="members" ng-model="member"></netemember-check>
 
                 </div>
-                <div class="col-xs-12 col-sm-6">
+                <div class="options" class="col-xs-12 col-sm-6">
                     <div class="pull-right">
                         <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
                         <button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="btn btn-info btn-sm resendWelcome">Resend Welcome Email</button>

@@ -20,6 +20,7 @@ module.exports = function (grunt) {
     app: require('./bower.json').appPath || 'app',
     dist: 'dist'
   };
+    
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -44,6 +45,10 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
+        css: {
+            files: '**/*.scss',
+            tasks: ['compass']
+        },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
@@ -378,6 +383,8 @@ module.exports = function (grunt) {
       'watch'
     ]);
   });
+    
+
 
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
