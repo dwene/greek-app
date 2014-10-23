@@ -4951,7 +4951,7 @@ App.directive('netememberCheck', function($compile){
     return{
         restrict: 'E',
         scope:{ngModel:"="},
-        templateUrl: '../views/templates/tags/netemember-check.html',
+        templateUrl: '../views/templates/tags/nete-member-check.html',
         link: function(scope, element, attrs){
 //            $compile(element.contents())(scope)
         }

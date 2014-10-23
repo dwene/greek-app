@@ -835,6 +835,9 @@ h1 {
 #manageMembers .row hr {
   margin: 8px 0px 4px 0px;
 }
+#manageMembers .row {
+  margin: 0px;
+}
 .permsSelect {
   display: inline-block;
 }
@@ -888,9 +891,6 @@ h1 {
 }
 #addMembersButton {
   margin-top: 15px;
-}
-#manageMembers .hideOptions .options {
-  display: none;
 }
 /*Messaging Page*/
 textarea.form-control {
