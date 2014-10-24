@@ -144,7 +144,9 @@ def test_directory():
 def add_notification_to_users(notification, users):
     future_list = list()
     for user in users:
-        if user.email_prefs == 'all':
+        if not user.email_prefs:
+            logging.error(user)
+        elif user.email_prefs == 'all':
             body = notification.content
             if notification.type =='event':
                 body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
@@ -2474,7 +2476,7 @@ class RESTApi(remote.Service):
         for poll in polls:
             add = poll.to_dict()
             add["key"] = poll.key
-            dict_polls.append(add)asdfasdf
+            dict_polls.append(add)
         return OutgoingMessage(error='', data=json_dump(dict_polls))
 
 
