@@ -141,7 +141,7 @@ def test_directory():
     time6 = datetime.datetime.now()
     print time6 - time1
 
-def add_notification_to_users(notification, users):
+def add_notification_to_users(notification, users, email_pref):
     future_list = list()
     for user in users:
         if not user.email_prefs:
@@ -149,12 +149,13 @@ def add_notification_to_users(notification, users):
         elif user.email_prefs == 'all':
             body = notification.content
             if notification.type =='event':
-                body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
+                body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
             elif notification.type == 'poll':
                 body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
-            future_list.append(CronEmail(type='notification', pending=True, email=user.email,
-                                         title=notification.title,
-                                         content=body).put_async())
+            if not email_prefs === False:
+                future_list.append(CronEmail(type='notification', pending=True, email=user.email,
+                                            title=notification.title,
+                                            content=body).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
     for item in future_list:
@@ -2001,6 +2002,8 @@ class RESTApi(remote.Service):
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
         new_event.location = event_data["location"]
+        if 'send_email' in event_data:
+            send_email = event_data['send_email']
         if 'address' in event_data:
             new_event.address = event_data["address"]
         for tag in new_event.org_tags:
@@ -2024,7 +2027,7 @@ class RESTApi(remote.Service):
         notification.link = '/#/app/events/'+new_event.tag
         notification.put()
         future_list = [new_event.put_async(), request_user.put_async()]
-        add_notification_to_users(notification, users)
+        add_notification_to_users(notification, users, send_email)
         for item in future_list:
             item.get_result()
         return OutgoingMessage(error='', data='OK')
@@ -2147,6 +2150,8 @@ class RESTApi(remote.Service):
                     event.perms_tags = value["perms_tags"]
                     if EVERYONE in value["perms_tags"]:
                         event.perms_tags = ['everyone']
+            elif key == "send_email":
+                send_email = value
                 # invited_users = get_users_from_tags(tags=value,
                 #                                     organization=request_user.organization,
                 #                                     keys_only=True)
@@ -2173,7 +2178,7 @@ class RESTApi(remote.Service):
             notification.timestamp = datetime.datetime.now()
             notification.link = '/#/app/events/'+event.tag
             notification.put()
-            add_notification_to_users(notification, users)
+            add_notification_to_users(notification, users, send_email)
             for item in futures:
                 item.get_result()
         return OutgoingMessage(error='', data='OK')
@@ -2352,7 +2357,9 @@ class RESTApi(remote.Service):
         notification.link = '/#/app/polls/' + poll.key.urlsafe()
         notification.sender_name = 'NeteGreek Notification Service'
         notification.put()
-        add_notification_to_users(notification, users)
+        if 'send_email' in data:
+            send_email = send_email['data']
+        add_notification_to_users(notification, users, send_email)
         for item in async_list:
             poll.questions.insert(0, item.get_result())
         poll.put()

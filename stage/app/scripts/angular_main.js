@@ -848,7 +848,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.registerinfoClick = function(item, isValid){
         
         if(isValid){
-                
             var organization = registerOrganizationService.get();
                 //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
     //            if(organization.name === null || organization.school === null || organization.type === null){
@@ -2860,8 +2859,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             })
             .error(function(data) {
                 console.log('Error: ' , data);
-            });
-//        
+            });      
         
         $scope.sendMessage = function(isValid, tags, title, content){
             if (isValid){
@@ -2949,25 +2947,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
           $(this).text(function(i, text){
               return text === "Show Recently Sent" ? "Hide Recently Sent" : "Show Recently Sent";
           })
-       });
-        
+       }); 
     });
     });
-
 
     App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout, localStorageService) {
         routeChange();
-        
-//        if ($rootScope.tags){
-//            $scope.tags = arrangeTagData($rootScope.tags);
-//        }
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
             $scope.event = {};
             $scope.event.tag = '';
             $scope.tags = $rootScope.tags;
             $scope.$watch('event.tag', function() {
+                if (!$scope.event)
+                    $scope.unavailable = false;
                 $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
+                $scope.unavailable = false;
+                $scope.available = false;
             });
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
                 .success(function(data){
@@ -4980,7 +4976,7 @@ App.directive('neteMember', function($compile){
     return{
         restrict: 'E',
         scope:{ngModel:"="},
-        templateUrl: '../views/templates/tags/netemember.html',
+        templateUrl: '../views/templates/tags/nete-member.html',
         // link: function(scope, element, attrs){
 //            $compile(element.contents())(scope)
         // }
