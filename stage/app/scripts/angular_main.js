@@ -4178,6 +4178,108 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         
     });
+
+    App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen){
+        routeChange();
+        Load.then(function(){
+            $scope.groups = $rootScope.organization.groups;
+            $scope.links = $rootScope.links;
+            $scope.showEditLinkModal = function(link){
+                $scope.selectedLink = link;
+            } 
+            $scope.createGroup = function(group){
+                var to_send = {group:group};
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+            }
+            $scope.deleteGroup = function(group){
+                var to_send = {group:group}
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+            }
+            $scope.createLink = function(title, link, group){
+                var to_send = {group:group, title:title, link:link};
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+            }
+            $scope.deleteLink = function(key){
+                var to_send = {key:key};
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+            }
+            $scope.editLink = function(key, link, title, group){
+                var to_send = {key:key, link:link, title:title, group:group};
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+
+            }
+            $scope.renameGroup = function(old_group, group){
+                var to_send = {old_group:old_group, group:group};
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        
+                    }
+                    else{
+                        console.log('ERR');
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+            }
+        });
+    });
         
 
     App.controller('adminController', function($scope, $http, Load, $rootScope) {

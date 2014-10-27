@@ -157,5 +157,9 @@ class CronEmail(ndb.Model):
     title = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
 
-
+class Link(ndb.Model):
+    title = ndb.StringProperty()
+    link = ndb.StringProperty()
+    group = ndb.StringProperty()
+    organization = ndb.KeyProperty()
 
