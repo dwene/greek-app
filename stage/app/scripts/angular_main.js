@@ -4203,7 +4203,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
             }
             $scope.deleteGroup = function(group){
-                var to_send = {group:group}
+                var to_send = {group:group};
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -4247,7 +4247,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' , data);
                 });
             }
-            $scope.editLink = function(key, link, title, group){
+            $scope.editLink = function(key, title, link, group){
                 var to_send = {key:key, link:link, title:title, group:group};
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
                 .success(function(data){

@@ -162,4 +162,3 @@ class Link(ndb.Model):
     link = ndb.StringProperty()
     group = ndb.StringProperty()
     organization = ndb.KeyProperty()
-

@@ -24,30 +24,3 @@
             </div>
 
 </div>
-
-
-
-<div class="modal fade" id="LinkModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">New Link</h4>
-      </div>
-      <div class="modal-body">
-              <input type="text" ng-model="newTitle">
-              <input type="text" ng-model="newLink">
-              <select ng-model="newGroup">
-                <option ng-repeat="group in groups" ng-value="group">{{group}}</option>
-                <option value="new_group_listing">New</option>
-              </select>
-              <input ng-show="newGroup == 'new_group_listing'" type="text" ng-model="newGroupValue">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="createLink()">Save</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-    

@@ -2,17 +2,22 @@
 	<ul>
 		<li ng-repeat="group in groups">
 			<h1 class="darkbg">group</h1>
+			<span>
+				<button ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-danger btn-sm poll-right"><i class="fa fa-trash-o"></i></button>
+				<button ng-click="openEditGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-danger btn-sm poll-right"><i class="fa fa-edit"></i></button>
+			</span>
 			<ul>
 				<li ng-repeat="link in links">
 	           		<div class="row">
-	                <div class="col-xs-12 col-sm-6">
-	                <h3>{{link.title}}</h3>
-	                </div>
-	                <div class="col-xs-12 col-sm-6">
-	                    <div class="pull-right">
-	                        <button ng-click="openEditLinkModal(link)" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i></button>
-	                    </div>
-	                </div>
+		                <div class="col-xs-12 col-sm-6">
+		                <h3>{{link.title}}</h3>
+		                </div>
+		                <div class="col-xs-12 col-sm-6">
+		                    <div class="pull-right" ng-show="$root.checkPermissions(leadership)">
+		                        <button ng-click="openEditLinkModal(link)" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i></button>
+		                        <button ng-click="openDeleteLinkModal(link)" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button>
+		                    </div>
+		                </div>
 	            	</div>     
         		</li>
 			</ul>
@@ -20,3 +25,124 @@
 	</ul>
 	
 </div>
+
+
+<div class="modal fade" id="createGroupModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+              <input type="text" ng-model="newGroupName">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="createGroup(newGroupName)">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="deleteGroupModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+              <p>Delete group {{selectedGroup}}?</p>
+              <p>This will also delete all links within this group.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteGroup(selectedGroup)">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="editGroupModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+              <input type="text" ng-model="newGroupName">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="editGroup(selectedGroup, newGroupName)">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="modal fade" id="newLinkModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">New Link</h4>
+      </div>
+      <div class="modal-body">
+              <input type="text" ng-model="newTitle">
+              <input type="text" ng-model="newLink">
+              <select ng-model="newGroup" ng-options="group for group in groups">
+                <option value="new_group_listing">New</option>
+              </select>
+              <input ng-show="newGroup == 'new_group_listing'" type="text" ng-model="newGroupValue">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="createLink(newTitle, newLink, newGroupValue||newGroup)">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="modal fade" id="deleteLinkModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+              <p>Are you sure you want to delete the link {{selectedLink.title}}?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteLink(selectedLink.key)">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div class="modal fade" id="editLinkModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit Link</h4>
+      </div>
+      <div class="modal-body">
+              <input type="text" ng-model="newTitle">
+              <input type="text" ng-model="newLink">
+              <select ng-model="newGroup" ng-options="group for group in groups">
+                <option value="new_group_listing">New</option>
+              </select>
+              <input ng-show="newGroup == 'new_group_listing'" type="text" ng-model="newGroupValue">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteLink(selectedLink.key)" data-dismiss="modal">Delete Link</button>
+        <button type="button" class="btn btn-primary" ng-click="editLink(selectedLink.key, newTitle, newLink, newGroupValue||newGroup)">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
