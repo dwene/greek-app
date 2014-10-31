@@ -773,7 +773,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.error = false;
             if(isValid){
                 registerOrganizationService.set(data);
-                window.location.assign('#/registerinfo');
+                window.location.assign('#/registerorganizationinfo');
             }
             else{
                 $scope.error = true;
@@ -4215,6 +4215,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $('#deleteLinkModal').modal();
                 $scope.selectedLink = link;
             }
+            $scope.openRenameGroupModal = function(group){
+                $('#renameGroupModal').modal();
+                $scope.selectedGroup = group;
+            }
+            $scope.openDeleteGroupModal = function(group){
+                $('#deleteGroupModal').modal();
+                $scope.selectedGroup = group;
+            }
             $scope.createGroup = function(group){
                 var to_send = {group:group};
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
@@ -4234,6 +4242,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.deleteGroup = function(group){
                 var to_send = {group:group};
+                $('#deleteGroupModal').modal('hide');
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -4321,10 +4330,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.renameGroup = function(old_group, group){
                 var to_send = {old_group:old_group, group:group};
+                $('#renameGroupModal').modal('hide');
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        
+                       for (var i = 0; i < $scope.links.length; i++){
+                            if ($scope.links[i].group == old_group){
+                                $scope.links[i].group = group;
+                            }
+                            if ($scope.groups.indexOf(old_group) != -1){
+                                $scope.groups[$scope.groups.indexOf(old_group)] = group;
+                            }
+                            else{
+                                $scope.groups.push(group);
+                            }
+                        } 
                     }
                     else{
                         console.log('ERR');

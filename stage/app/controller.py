@@ -143,11 +143,7 @@ def test_directory():
 
 
 
-
-
-
-
-def add_notification_to_users(notification, users, email_pref):
+def add_notification_to_users(notification, users, email_prefs):
     future_list = list()
     for user in users:
         if not user.email_prefs:
@@ -2009,6 +2005,7 @@ class RESTApi(remote.Service):
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
         new_event.location = event_data["location"]
+        send_email = True
         if 'send_email' in event_data:
             send_email = event_data['send_email']
         if 'address' in event_data:
@@ -2364,6 +2361,7 @@ class RESTApi(remote.Service):
         notification.link = '/#/app/polls/' + poll.key.urlsafe()
         notification.sender_name = 'NeteGreek Notification Service'
         notification.put()
+        send_email = True
         if 'send_email' in data:
             send_email = send_email['data']
         add_notification_to_users(notification, users, send_email)
