@@ -4215,6 +4215,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $('#deleteLinkModal').modal();
                 $scope.selectedLink = link;
             }
+            $scope.openRenameGroupModal = function(group){
+                $('#renameGroupModal').modal();
+                $scope.selectedGroup = group;
+            }
+            $scope.openDeleteGroupModal = function(group){
+                $('#deleteGroupModal').modal();
+                $scope.selectedGroup = group;
+            }
             $scope.createGroup = function(group){
                 var to_send = {group:group};
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
@@ -4234,7 +4242,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.deleteGroup = function(group){
                 var to_send = {group:group};
-                $('#renameGroupModal').modal('hide');
+                $('#deleteGroupModal').modal('hide');
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
@@ -4331,7 +4339,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.links[i].group = group;
                             }
                             if ($scope.groups.indexOf(old_group) != -1){
-                                $scope.groups[$scope.indexOf(old_group)] = group;
+                                $scope.groups[$scope.groups.indexOf(old_group)] = group;
                             }
                             else{
                                 $scope.groups.push(group);
