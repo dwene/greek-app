@@ -211,11 +211,11 @@ nav {
 }
 /*fix for questions and refresh button on iPhone size*/
 @media screen and (max-width: 340px) {
-  .help.mobile {
-    right: 60px;
-  }
   #refreshNotifications {
     left: 204px;
+  }
+  .help.mobile {
+    right: 60px;
   }
 }
 @media screen and (max-width: 991px) {
@@ -223,44 +223,14 @@ nav {
     padding: 15px 10px 15px 10px;
   }
 }
-/*Mobile Menu*/
-#mobileMenu {
-  position: fixed;
-  left: 0px;
-  bottom: 0px;
-  width: 100%;
-  text-align: center;
-  font-size: 28px;
+.navbar-toggle {
+  display: block;
+  position: absolute;
+  right: 0px;
 }
-#mobileMenu ul {
-  margin: 0px;
+#mainNavigation {
+  margin-right: 50px;
 }
-#mobileMenu li {
-  background: #ccc;
-  width: 25%;
-  display: inline-block;
-  margin: 0px;
-}
-#mobileMenu a {
-  padding: 15px 0px 10px 0px;
-}
-#mobileMenu.leader li {
-  width: 20% !important;
-}
-.hideMenu {
-  height: 0px;
-}
-@media screen and (max-width: 767px) {
-  body {
-    margin-bottom: 50px;
-  }
-}
-/*for unsubscribed users (to be worked on)
-#mobileDirectory{
-font-size:28px; width:54px; text-align:center;
-position:absolute; right:80px; top:-7px;
-}
-#mobileDirectory a{padding:13px 0px 10px 0px;}*/
 .dropdown {
   cursor: pointer;
 }
