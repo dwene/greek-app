@@ -4237,7 +4237,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        
+                        for (var i = 0; i < $scope.links.length; i++){
+                            if ($scope.links[i].group == group){
+                                $scope.links.splice(i, 1);
+                                i--;
+                            }
+                            if ($scope.groups.indexOf(group) != -1){
+                                $scope.groups.splice($scope.groups.indexOf(group), 1);
+                            }
+                        }
                     }
                     else{
                         console.log('ERR');
