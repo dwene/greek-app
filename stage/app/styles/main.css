@@ -329,6 +329,7 @@ nav.navbar-default .open .dropdown-menu {
 h2.page-header {
   margin: 0px 0px 10px 0px;
   border-color: #ccc;
+  font-weight: bold;
 }
 /*Labels and Tags*/
 .label {

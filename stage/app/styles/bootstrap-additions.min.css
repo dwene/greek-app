@@ -146,6 +146,7 @@
     background: white;
 }
 .aside .navbar-nav, .aside .navbar-nav>li{float:none;}
+.aside .navbar-nav>li a{border-radius:5px;}
 .aside:focus {
     outline: none;
 }
