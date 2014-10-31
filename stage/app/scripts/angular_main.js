@@ -4203,12 +4203,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 });
 
             $scope.openEditLinkModal = function(link){
-                $scope.temp = {link:link.link, title:link.title, group:link.group};
+                $scope.temp_link = {link:link.link, title:link.title, group:link.group};
                 $scope.selectedLink = link;
                 $('#editLinkModal').modal();
             } 
             $scope.openNewLinkModal = function(){
-                $scope.temp = {};
+                $scope.temp_link = {};
                 $('#newLinkModal').modal();
             }
             $scope.openDeleteLinkModal = function(link){
@@ -4255,8 +4255,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data)){
                         if ($scope.groups.indexOf(group) ==-1){
                             $scope.groups.push(group);
-                            $scope.links.push({title: title, link: link, group:group});
                         }
+                        $scope.links.push({title: title, link: link, group:group, key:JSON.parse(data.data)});
                     }
                     else{
                         console.log('ERR');
