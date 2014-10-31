@@ -1,19 +1,21 @@
+<div id="links">
+
 <div class="container">
 <h1 class="darkbg">Links<button id="newLinkButton" ng-click="openNewLinkModal()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Link <i class="fa fa-plus-circle"></i></button>
 </h1>
 	<ul>
 		<li ng-repeat="group in groups">
-            <ul class="striped">
 			<h2 class="page-header">{{group}}
                 <span class="pull-right">
                     <button ng-click="openEditGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-sm"><i class="fa fa-edit"></i></button>
                     <button ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-sm"><i class="fa fa-trash-o"></i></button>
                 </span>
             </h2>
+            <ul class="striped">
 				<li ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
 	           		<div class="row">
 		                <div class="col-xs-12 col-sm-6">
-		                <h3>{{link.title}}</h3>
+                        <a target="_blank" ng-href="link.link"><h3>{{link.title}}</h3></a>
 		                </div>
 		                <div class="col-xs-12 col-sm-6">
 		                    <div class="pull-right" ng-show="$root.checkPermissions(leadership)">
@@ -202,3 +204,6 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+</div>

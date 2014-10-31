@@ -981,6 +981,10 @@ textarea.form-control {
   margin-top: -9px;
   left: 8px;
 }
+/*Links Page*/
+#links ul.striped {
+  margin-bottom: 20px;
+}
 /*Main App Page*/
 #notifications ul {
   padding: 5px 0px;
