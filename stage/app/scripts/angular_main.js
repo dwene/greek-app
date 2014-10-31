@@ -773,7 +773,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.error = false;
             if(isValid){
                 registerOrganizationService.set(data);
-                window.location.assign('#/registerinfo');
+                window.location.assign('#/registerorganizationinfo');
             }
             else{
                 $scope.error = true;
