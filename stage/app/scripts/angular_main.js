@@ -5269,6 +5269,24 @@ App.filter('nameSearch', function(){
         return retList;
     }
 });
+
+App.filter('linkGroup', function(){ 
+    return function (objects, group) {
+        if (!group || !objects){
+            return objects;
+        }
+        retList = [];
+        if (objects){
+            for (var oPos = 0; oPos < objects.length; oPos++){
+                console.log(objects[oPos]);
+                if(objects[oPos].group == group){
+                    retList.push(objects[oPos]);
+                }
+            }
+        }
+        return retList;
+    }
+});
             
 //App.filter('capitalizeFirst', function(){ 
 //    return function (objects) {

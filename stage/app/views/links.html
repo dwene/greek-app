@@ -10,7 +10,7 @@
                     <button ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-sm"><i class="fa fa-trash-o"></i></button>
                 </span>
             </h2>
-				<li ng-repeat="link in links" ng-show="link.group == group">
+				<li ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
 	           		<div class="row">
 		                <div class="col-xs-12 col-sm-6">
 		                <h3>{{link.title}}</h3>
