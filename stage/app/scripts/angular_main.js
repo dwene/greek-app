@@ -4184,22 +4184,45 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
     });
 
-    App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen){
+    App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen, localStorageService){
         routeChange();
+        $rootScope.requirePermissions(MEMBER);
         Load.then(function(){
-            $scope.groups = $rootScope.organization.groups;
+            $scope.groups = $rootScope.link_groups;
             $scope.links = $rootScope.links;
-            $scope.showEditLinkModal = function(link){
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $rootScope.links = JSON.parse(data.data);
+                        $scope.links = $rootScope.links;
+                        localStorageService.set('links', $rootScope.links);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                });
+
+            $scope.openEditLinkModal = function(link){
+                $scope.temp = {link:link.link, title:link.title, group:link.group};
                 $scope.selectedLink = link;
+                $('#editLinkModal').modal();
             } 
             $scope.openNewLinkModal = function(){
+                $scope.temp = {};
                 $('#newLinkModal').modal();
+            }
+            $scope.openDeleteLinkModal = function(link){
+                $('#deleteLinkModal').modal();
+                $scope.selectedLink = link;
             }
             $scope.createGroup = function(group){
                 var to_send = {group:group};
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        if ($scope.groups.indexOf(group) == -1){
+                            $scope.groups.push(group);
+                        }
                     }
                     else{
                         console.log('ERR');
@@ -4226,11 +4249,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.createLink = function(title, link, group){
                 var to_send = {group:group, title:title, link:link};
-                if ($scope.groups.indexOf(group) ==-1)
+                $('#newLinkModal').modal('hide');
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        
+                        if ($scope.groups.indexOf(group) ==-1){
+                            $scope.groups.push(group);
+                            $scope.links.push({title: title, link: link, group:group});
+                        }
                     }
                     else{
                         console.log('ERR');
@@ -4240,40 +4266,54 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     console.log('Error: ' , data);
                 });
             }
-            $scope.deleteLink = function(key){
-                var to_send = {key:key};
+            $scope.deleteLink = function(link){
+                var to_send = {key:link.key};
+                console.log('link key',link.key);
+                $('#deleteLinkModal').modal('hide');
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        
+                        for(var i = 0; i<$rootScope.links.length; i++){
+                            if ($rootScope.links[i].key == link.key){
+                                $rootScope.links.splice(i, 1); 
+                                break;
+                            }
+                        }
                     }
                     else{
-                        console.log('ERR');
+                        console.log('ERR', data.error);
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
                 });
             }
-            $scope.editLink = function(key, title, link, group){
-                var to_send = {key:key, link:link, title:title, group:group};
+            $scope.editLink = function(title, link, group, current_link){
+                console.log(current_link);
+                var to_send = {key:current_link.key, link:link, title:title, group:group};
+                console.log('to_send', to_send);
+                $('#editLinkModal').modal('hide');
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
-                        
+                        current_link.title = title;
+                        current_link.group = group;
+                        current_link.link = link;
+                        if ($scope.groups.indexOf(group) == -1){
+                            $scope.groups.push(group);
+                        }
                     }
                     else{
-                        console.log('ERR');
+                        console.log('ERR', data.error);
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
                 });
-
             }
             $scope.renameGroup = function(old_group, group){
                 var to_send = {old_group:old_group, group:group};
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         
@@ -5730,6 +5770,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
             if ($rootScope.organization){
                 try{
                     $rootScope.subscribed = true;
+                    $rootScope.link_groups = $rootScope.organization.link_groups;
                     $rootScope.setColor($rootScope.organization.color);
                     $rootScope.organization = $rootScope.organization;
                     $rootScope.me = $rootScope.organization.me;
@@ -5742,6 +5783,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
                         $rootScope.organization = JSON.parse(data.data);
                         console.log('me', $rootScope.me);
                         $rootScope.me = $rootScope.organization.me;
+                        $rootScope.link_groups = $rootScope.organization.link_groups;
                         $rootScope.perms = $rootScope.me.perms;
                         localStorageService.set('organization_data', $rootScope.organization);
                     });
@@ -5802,6 +5844,22 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
                         checkIfDone();
                         console.log('Error: ' , data);
                     });
+            }
+            $rootScope.links = localStorageService.get('links');
+            if (!$rootScope.links){
+                neededCount++;
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
+                .success(function(data){
+                    if (!checkResponseErrors(data)){
+                        $rootScope.links = JSON.parse(data.data);
+                        localStorageService.set('links', $rootScope.links);
+                    }
+                    checkIfDone();
+                })
+                .error(function(data) {
+                    console.log('Error: ' , data);
+                    checkIfDone();
+                });
             }
         checkIfDone();
         return deferred.promise;

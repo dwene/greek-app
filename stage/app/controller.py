@@ -141,6 +141,12 @@ def test_directory():
     time6 = datetime.datetime.now()
     print time6 - time1
 
+
+
+
+
+
+
 def add_notification_to_users(notification, users, email_pref):
     future_list = list()
     for user in users:
@@ -149,10 +155,10 @@ def add_notification_to_users(notification, users, email_pref):
         elif user.email_prefs == 'all':
             body = notification.content
             if notification.type =='event':
-                body += '\n\n To see this event please visit: ' + DOMAIN + notification.link
+                body = '\n\n To see this event please visit: ' + DOMAIN + notification.link
             elif notification.type == 'poll':
                 body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
-            if not email_prefs === False:
+            if not email_prefs == False:
                 future_list.append(CronEmail(type='notification', pending=True, email=user.email,
                                             title=notification.title,
                                             content=body).put_async())
@@ -667,6 +673,7 @@ class RESTApi(remote.Service):
         out = dict(name=organization.name, school=organization.school)
         out["subscribed"] = organization.subscribed
         out["color"] = organization.color
+        out["link_groups"] = organization.link_groups
         me = request_user.to_dict()
         del me["hash_pass"]
         del me["current_token"]
@@ -2855,6 +2862,19 @@ class RESTApi(remote.Service):
         return OutgoingMessage(error='', data=json_dump(out_data))
 
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='link/get',
+                      http_method='POST', name='link.get')
+    def get_links(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        links = Link.query(Link.organization == request_user.organization).fetch()
+        links_list = list()
+        for link in links:
+            temp = link.to_dict()
+            temp['key'] = link.key.urlsafe()
+            links_list.append(temp)
+        return OutgoingMessage(error='', data=json_dump(links_list))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='link/create',
                       http_method='POST', name='link.create')
@@ -2873,8 +2893,9 @@ class RESTApi(remote.Service):
         link.link = data['link']
         link.title = data['title']
         link.group = data['group']
+        link.organization = request_user.organization
         link.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump(link.key.urlsafe()))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='link/edit',
                       http_method='POST', name='link.edit')
@@ -2887,12 +2908,17 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         if not 'key' in data:
             OutgoingMessage(error='Missing Key', data='')
+        organization_future = request_user.organization.get_async()
         link = ndb.Key(urlsafe=data['key']).get()
+        organization = organization_future.get_result()
         if 'title' in data:
             link.title = data['title']
         if 'link' in data:
             link.link = data['link']
         if 'group' in data:
+            if not data['group'] in organization.link_groups:
+                organization.link_groups.append(data['group'])
+                organization.put()
             link.group = data['group']
         link.put()
         return OutgoingMessage(error='', data='OK')
@@ -2962,7 +2988,7 @@ class RESTApi(remote.Service):
         organization = request_user.organization.get()
         if data['group'] in organization.link_groups:
             organization.link_groups.remove(data['group'])
-            links = Link.query(Link.group == data['group'], Link.organization = request_user.organization).fetch(keys_only=True)
+            links = Link.query(Link.group == data['group'], Link.organization == request_user.organization).fetch(keys_only=True)
             async_list = list()
             for link in links:
                 async_list.append(link.key.delete_async())

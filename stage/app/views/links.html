@@ -3,13 +3,13 @@
 </h1>
 	<ul>
 		<li ng-repeat="group in groups">
-			<h1 class="darkbg">group</h1>
+			<h1 class="darkbg">{{group}}</h1>
 			<span>
 				<button ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-danger btn-sm poll-right"><i class="fa fa-trash-o"></i></button>
 				<button ng-click="openEditGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-danger btn-sm poll-right"><i class="fa fa-edit"></i></button>
 			</span>
 			<ul>
-				<li ng-repeat="link in links">
+				<li ng-repeat="link in links" ng-show="link.group == group">
 	           		<div class="row">
 		                <div class="col-xs-12 col-sm-6">
 		                <h3>{{link.title}}</h3>
@@ -89,35 +89,35 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">New Link</h4>
       </div>
-      <form id="newLinkForm" name="newLinkForm" class="form-horizontal" ng-submit="createLink(newTitle, newLink, newGroup == 'new_group_listing' ? newGroupValue : newGroup)" novalidate>
+      <form id="newLinkForm" name="newLinkForm" class="form-horizontal" ng-submit="createLink(temp_link.title, temp_link.link, temp_link.group == 'new_group_listing' ? temp_link.new_group : temp_link.group)" novalidate>
       <div class="modal-body">
 	    <div class="form-group">
 	        <label for="newTitle" class="col-sm-2 control-label">Title</label>
 	        <div class="col-sm-10">
-	          <input type="text" class="form-control" id="newTitle" name="newTitle" ng-model="newTitle" required>
+	          <input type="text" class="form-control" id="newTitle" name="newTitle" ng-model="temp_link.title" required>
 	        </div>
 	    </div>
 	    <div class="form-group">
 	        <label for="newLink" class="col-sm-2 control-label">Link</label>
 	        <div class="col-sm-10">
-	          <input type="text" class="form-control" id="newLink" name="newLink" ng-model="newLink" required>
+	          <input type="text" class="form-control" id="newLink" name="newLink" ng-model="temp_link.link" required>
 	        </div>
 	    </div>
-
+{{temp_link}}
 	    <div class="form-group">
 	        <label for="newGroup" class="col-sm-2 control-label">Group</label>
 	        <div class="col-sm-10">
-	        <select class="form-control" id="newGroup" name="newGroup" ng-model="newGroup" required>
+	        <select class="form-control" id="newGroup" name="newGroup" ng-model="temp_link.group" required>
 	        	<option ng-repeat="group in groups">{{group}}</option>
 	        	<option value="new_group_listing">New</option>
 	        </select>
 	    	</div>
     	</div>
 
-	    <div class="form-group" ng-show="newGroup == 'new_group_listing'">
+	    <div class="form-group" ng-show="temp_link.group == 'new_group_listing'">
 	        <label for="newTitle" class="col-sm-2 control-label">New Group</label>
 	        <div class="col-sm-10">
-	          <input type="text" class="form-control" id="newGroupValue" name="newGroupValue" ng-model="newGroupValue" ng-required="newGroup === 'new_group_listing'">
+	          <input type="text" class="form-control" id="newGroupValue" name="newGroupValue" ng-model="temp_link.new_group" ng-required="temp_link.group === 'new_group_listing'">
 	        </div>
 	    </div>
       
@@ -126,7 +126,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button type="submit" ng-disabled="!newLinkForm.$valid" class="btn btn-primary">Save</button>
       </div>
-      </form> 
+      </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -143,7 +143,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" ng-click="deleteLink(selectedLink.key)">Delete</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteLink(selectedLink)">Delete</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -158,19 +158,44 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Edit Link</h4>
       </div>
+      <form id="editLinkForm" name="newLinkForm" class="form-horizontal" ng-submit="editLink(temp.title, temp.link, temp.group == 'new_group_listing' ? newGroupValue : temp.group, selectedLink)" novalidate>
       <div class="modal-body">
-              <input type="text" ng-model="newTitle">
-              <input type="text" ng-model="newLink">
-              <select ng-model="newGroup" ng-options="group for group in groups">
-                <option value="new_group_listing">New</option>
-              </select>
-              <input ng-show="newGroup == 'new_group_listing'" type="text" ng-model="newGroupValue">
+      <div class="form-group">
+          <label for="newTitle" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newTitle" name="newTitle" ng-model="temp.title" required>
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="newLink" class="col-sm-2 control-label">Link</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newLink" name="newLink" ng-model="temp.link" required>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="newGroup" class="col-sm-2 control-label">Group</label>
+          <div class="col-sm-10">
+          <select class="form-control" id="newGroup" name="newGroup" ng-model="temp.group" required>
+            <option ng-repeat="group in groups">{{group}}</option>
+            <option value="new_group_listing">New</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" ng-show="temp.group == 'new_group_listing'">
+          <label for="newGroup" class="col-sm-2 control-label">New Group</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newGroupValue" name="newGroupValue" ng-model="newGroupValue" ng-required="newGroup === 'new_group_listing'">
+          </div>
+      </div>
+      
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" ng-click="deleteLink(selectedLink.key)" data-dismiss="modal">Delete Link</button>
-        <button type="button" class="btn btn-primary" ng-click="editLink(selectedLink.key, newTitle, newLink, newGroupValue||newGroup)">Save</button>
+        <button type="submit" ng-disabled="!editLinkForm.$valid" class="btn btn-primary">Save</button>
       </div>
+      </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

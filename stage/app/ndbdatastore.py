@@ -57,7 +57,7 @@ class User(ndb.Model):
     events = ndb.KeyProperty(repeated=True)
     recently_used_tags = ndb.StringProperty(repeated=True)
     email_prefs = ndb.StringProperty(default='all')
-    link_groups = ndb.StringProperty(repeated=True)
+
 
 
 class Notification(ndb.Model):
@@ -111,7 +111,7 @@ class Organization(ndb.Model):
     cost = ndb.FloatProperty(default=1.0)
     color = ndb.StringProperty(default='color1')
     image = ndb.BlobKeyProperty()
-
+    link_groups = ndb.StringProperty(repeated=True)
 
 class Poll(ndb.Model):
     questions = ndb.KeyProperty(repeated=True)
