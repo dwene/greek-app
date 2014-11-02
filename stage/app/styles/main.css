@@ -982,8 +982,22 @@ textarea.form-control {
   left: 8px;
 }
 /*Links Page*/
-#links ul.striped {
+#links h1 {
   margin-bottom: 20px;
+}
+#links .card {
+  margin-bottom: 20px;
+}
+#links .page-header div {
+  margin-right: 15px;
+}
+#links li button {
+  border: none;
+  background: none;
+  height: 32px;
+  width: 32px;
+  padding-bottom: 15px;
+  margin: 0px;
 }
 /*Main App Page*/
 #notifications ul {

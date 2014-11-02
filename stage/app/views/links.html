@@ -4,12 +4,12 @@
 <h1 class="darkbg">Links<button id="newLinkButton" ng-click="openNewLinkModal()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Link <i class="fa fa-plus-circle"></i></button>
 </h1>
 	<ul>
-		<li ng-repeat="group in groups">
+		<li ng-repeat="group in groups" class="card">
 			<h2 class="page-header">{{group}}
-                <span class="pull-right">
-                    <button ng-click="openRenameGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-sm"><i class="fa fa-edit"></i></button>
-                    <button ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)" class="btn btn-sm"><i class="fa fa-trash-o"></i></button>
-                </span>
+                <div class="pull-right">
+                    <button ng-click="openRenameGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-edit"></i></button>
+                    <button ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-trash-o"></i></button>
+                </div>
             </h2>
             <ul class="striped">
 				<li ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
@@ -19,8 +19,8 @@
 		                </div>
 		                <div class="col-xs-12 col-sm-6">
 		                    <div class="pull-right" ng-show="$root.checkPermissions(leadership)">
-		                        <button ng-click="openEditLinkModal(link)" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i></button>
-		                        <button ng-click="openDeleteLinkModal(link)" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button>
+		                        <button ng-click="openEditLinkModal(link)"><i class="fa fa-edit"></i></button>
+		                        <button ng-click="openDeleteLinkModal(link)"><i class="fa fa-trash-o"></i></button>
 		                    </div>
 		                </div>
 	            	</div>     
@@ -53,10 +53,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        Delete group: {{selectedGroup}}?
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-              <p>Delete group {{selectedGroup}}?</p>
               <p>This will also delete all links within this group.</p>
       </div>
       <div class="modal-footer">
@@ -71,6 +71,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+       Rename Group: {{selectedGroup}}
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
@@ -114,7 +115,7 @@
 	        <div class="col-sm-10">
 	        <select class="form-control" id="newGroup" name="newGroup" ng-model="temp_link.group" required>
 	        	<option ng-repeat="group in groups">{{group}}</option>
-	        	<option value="new_group_listing">New</option>
+	        	<option value="new_group_listing">Add New Group</option>
 	        </select>
 	    	</div>
     	</div>
@@ -187,7 +188,7 @@
           <div class="col-sm-10">
           <select class="form-control" id="newGroup" name="newGroup" ng-model="temp_link.group" required>
             <option ng-repeat="group in groups">{{group}}</option>
-            <option value="new_group_listing">New</option>
+            <option value="new_group_listing">Add New Group</option>
           </select>
         </div>
       </div>
