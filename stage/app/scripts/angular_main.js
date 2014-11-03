@@ -4231,22 +4231,27 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     if (!checkResponseErrors(data)){
                         if ($scope.groups.indexOf(group) == -1){
                             $scope.groups.push(group);
+                            $scope.checkCreateGroup = "done";
                         }
                     }
                     else{
                         console.log('ERR');
+                        $scope.checkCreateGroup = "broken";
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
+                    $scope.checkCreateGroup = "broken";
                 });
             }
             $scope.deleteGroup = function(group){
                 var to_send = {group:group};
-                $('#deleteGroupModal').modal('hide');
+                $scope.checkDeleteGroup = "pending";
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        $('#deleteGroupModal').modal('hide');
+                        $scope.checkDeleteGroup = "done";
                         for (var i = 0; i < $scope.links.length; i++){
                             if ($scope.links[i].group == group){
                                 $scope.links.splice(i, 1);
@@ -4267,10 +4272,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.createLink = function(title, link, group){
                 var to_send = {group:group, title:title, link:link};
-                $('#newLinkModal').modal('hide');
+                $scope.checkCreateLink = "pending";
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        $('#newLinkModal').modal('hide');
+                        $scope.checkCreateLink = "done";
                         if ($scope.groups.indexOf(group) ==-1){
                             $scope.groups.push(group);
                         }
@@ -4286,11 +4293,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.deleteLink = function(link){
                 var to_send = {key:link.key};
-                console.log('link key',link.key);
-                $('#deleteLinkModal').modal('hide');
+                $scope.checkDeleteLink = "pending";
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        $('#deleteLinkModal').modal('hide');
+                        $scope.checkDeleteLink = "done";
                         for(var i = 0; i<$rootScope.links.length; i++){
                             if ($rootScope.links[i].key == link.key){
                                 $rootScope.links.splice(i, 1); 
@@ -4300,20 +4308,22 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else{
                         console.log('ERR', data.error);
+                        $scope.checkDeleteLink = "broken";
                     }
                 })
                 .error(function(data) {
+                    $scope.checkDeleteLink = "broken";
                     console.log('Error: ' , data);
                 });
             }
             $scope.editLink = function(title, link, group, current_link){
-                console.log(current_link);
                 var to_send = {key:current_link.key, link:link, title:title, group:group};
-                console.log('to_send', to_send);
-                $('#editLinkModal').modal('hide');
+                $scope.checkEditLink = "pending";
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        $('#editLinkModal').modal('hide');
+                        $scope.checkEditLink = "done";
                         current_link.title = title;
                         current_link.group = group;
                         current_link.link = link;
@@ -4331,10 +4341,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             }
             $scope.renameGroup = function(old_group, group){
                 var to_send = {old_group:old_group, group:group};
-                $('#renameGroupModal').modal('hide');
+                $scope.checkRenameGroup = "pending";
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
+                        $scope.checkRenameGroup = "done";
+                        $('#renameGroupModal').modal('hide');
                        for (var i = 0; i < $scope.links.length; i++){
                             if ($scope.links[i].group == old_group){
                                 $scope.links[i].group = group;
@@ -4351,10 +4363,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else{
                         console.log('ERR');
+                        $scope.checkRenameGroup = "broken";
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ' , data);
+                    $scope.checkRenameGroup = "broken";
                 });
             }
         });
