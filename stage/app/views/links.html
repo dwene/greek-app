@@ -4,7 +4,7 @@
 <h1 class="darkbg">Links<button id="newLinkButton" ng-click="openNewLinkModal()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Link <i class="fa fa-plus-circle"></i></button>
 </h1>
 	<ul>
-		<li ng-repeat="group in groups" class="card">
+		<li ng-repeat="group in groups track by group" class="card">
 			<h2 class="page-header">{{group}}
                 <div class="pull-right">
                     <button ng-click="openRenameGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-edit"></i></button>

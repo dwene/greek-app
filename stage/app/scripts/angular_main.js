@@ -4218,6 +4218,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $scope.openRenameGroupModal = function(group){
                 $('#renameGroupModal').modal();
                 $scope.selectedGroup = group;
+                $scope.newGroupName = "";
             }
             $scope.openDeleteGroupModal = function(group){
                 $('#deleteGroupModal').modal();
@@ -4338,13 +4339,15 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             if ($scope.links[i].group == old_group){
                                 $scope.links[i].group = group;
                             }
-                            if ($scope.groups.indexOf(old_group) != -1){
-                                $scope.groups[$scope.groups.indexOf(old_group)] = group;
-                            }
-                            else{
-                                $scope.groups.push(group);
-                            }
-                        } 
+                        }
+                        if ($scope.groups.indexOf(old_group) != -1){
+                            $scope.groups[$scope.groups.indexOf(old_group)] = group;
+                            console.log("I found the old group and am changing it");
+                        }
+                        else{
+                            $scope.groups.push(group);
+                        }
+                        
                     }
                     else{
                         console.log('ERR');
@@ -5298,7 +5301,7 @@ App.filter('linkGroup', function(){
         retList = [];
         if (objects){
             for (var oPos = 0; oPos < objects.length; oPos++){
-                console.log(objects[oPos]);
+                //console.log(objects[oPos]);
                 if(objects[oPos].group == group){
                     retList.push(objects[oPos]);
                 }

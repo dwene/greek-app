@@ -1751,7 +1751,7 @@ class RESTApi(remote.Service):
         notification.put()
         request_user.sent_notifications.insert(0, notification.key)
         request_user.put()
-        add_notification_to_users(notification, user_list)
+        add_notification_to_users(notification, user_list, True)
         return OutgoingMessage(error='', data='OK')
 
     #-------------------------
@@ -2989,7 +2989,7 @@ class RESTApi(remote.Service):
             links = Link.query(Link.group == data['group'], Link.organization == request_user.organization).fetch(keys_only=True)
             async_list = list()
             for link in links:
-                async_list.append(link.key.delete_async())
+                async_list.append(link.delete_async())
             for item in async_list:
                 item.get_result()
             organization.put()
