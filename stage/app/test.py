@@ -4,6 +4,34 @@ import datetime
 from google.appengine.ext import ndb
 
 
+
+def show_notifications():
+    users = User.query().fetch()
+    none_count = 0
+    for user in users:
+        for item in user.new_notifications:
+            temp = item.get()
+            if not temp:
+                print "I got none"
+                none_count = none_count+1
+                user.new_notifications.remove(item)
+            print temp
+        for item in user.notifications:
+            temp = item.get()
+            if not temp:
+                print "I got none"
+                none_count = none_count+1
+                user.notifications.remove(item)
+            print temp
+        for item in user.hidden_notifications:
+            temp = item.get()
+            if not temp:
+                print "I got none"
+                none_count = none_count+1
+                user.hidden_notifications.remove(item)
+            print temp    
+        user.put()
+
 def test_directory():
     time1 = datetime.datetime.now()
     # agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA

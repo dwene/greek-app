@@ -2206,17 +2206,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
     routeChange();
     $scope.saveVcard = function(){
         var user = $scope.member;
-        var out_string = 'BEGIN:VCARD\nVERSION:2.1\nN:' + user.last_name + ';' + user.first_name + ';;;\n'; //name
-        out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n';//FN
+        var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name
+        out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n\r';//FN
         if (user.phone){
-        out_string += 'TEL;CELL:' + user.phone + '\n';} //Phone
+        out_string += 'TEL;CELL:' + user.phone + '\n\r';} //Phone
         if (user.email){
-        out_string += 'EMAIL;PREF;INTERNET:' + user.email + '\n';}//Email
+        out_string += 'EMAIL;PREF;INTERNET:' + user.email + '\n\r';}//Email
         if (user.prof_pic){
-        out_string += 'PHOTO;PNG:'+user.prof_pic + '\n';}//picture
+        out_string += 'PHOTO;PNG:'+user.prof_pic + '\n\r';}//picture
 //        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
         if (user.address){
-        out_string += 'ADR;HOME:;;'+user.address+';'+user.city+';'+user.state+';'+user.zip+';United States of America\n';}//address
+        out_string += 'ADR;HOME:;;'+user.address+';'+user.city+';'+user.state+';'+user.zip+';United States of America\n\r';}//address
 //        out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
 //        if (user.prof_pic.indexOf('jpg') > -1){
 //            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
@@ -2228,17 +2228,17 @@ App.config(function($stateProvider, $urlRouterProvider) {
 //            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
 //        }
         out_string += 'END:VCARD';
-        var blob = new Blob([out_string], {type: "text/vcard;charset=utf-8"});
+        //var blob = new Blob([out_string], {type: "text/vcard;charset=utf-8"});
 //        var csvString = csvRows.join("%0A");
-//                var a         = document.createElement('a');
-//                a.href        = 'data:text/vcard,' + out_string;
-//                a.target      = '_blank';
-//                a.download    = 'contact.vcf';
-//                console.log(a.href);
-//                document.body.appendChild(a);
-//                a.click();
-//                document.body.removeChild(a);
-        saveAs(blob, ($scope.member.first_name + '_' + $scope.member.last_name) || "contact" + ".vcf");
+               var a         = document.createElement('a');
+               a.href        = 'data:text/vcard,' + encodeURIComponent(out_string);
+               a.target      = '_blank';
+               a.download    = 'contact.vcf';
+               console.log(a.href);
+               document.body.appendChild(a);
+               a.click();
+               document.body.removeChild(a);
+        //saveAs(blob, ($scope.member.first_name + '_' + $scope.member.last_name) || "contact" + ".vcf");
     }
     Load.then(function(){
         if ($stateParams.id.toString().length < 2){
@@ -3170,9 +3170,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
             out_string += 'SUMMARY:'+event.title.replace(/(\r\n|\n|\r)/gm," ") + '\n';
             out_string += 'DESCRIPTION:'+event.description.replace(/(\r\n|\n|\r)/gm," ") + '\n';
             out_string += 'END:VEVENT\nEND:VCALENDAR';
-            var blob = new Blob([out_string], {type: "text/calendar;charset=utf-8"});
-            console.log(blob);
-            saveAs(blob, "event.ics");
+            var a         = document.createElement('a');
+               a.href        = 'data:text/calendar,' + encodeURIComponent(out_string);
+               a.target      = '_blank';
+               a.download    = event.title.replace(/(\r\n|\n|\r)/gm," ") + '.ics';
+               console.log(a.href);
+               document.body.appendChild(a);
+               a.click();
+               document.body.removeChild(a);
         }
         
         $scope.mapEvent = function(){
@@ -5637,6 +5642,7 @@ App.factory('LoadScreen', function($rootScope){
             $('.nav').show();
             $('.container').fadeIn();
             $('#body').show();
+            routeChange();
             console.log('stopping load screen');
         },
         check: function(){
@@ -5836,6 +5842,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
                     $rootScope.link_groups = $rootScope.organization.link_groups;
                     $rootScope.setColor($rootScope.organization.color);
                     $rootScope.organization = $rootScope.organization;
+                    $rootScope.link_groups = $rootScope.organization.link_groups;
                     $rootScope.me = $rootScope.organization.me;
                     console.log('me', $rootScope.me);
                     $rootScope.perms = $rootScope.me.perms;
@@ -5861,6 +5868,7 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
                     $rootScope.setColor(JSON.parse(data.data).color);
                     $rootScope.organization = JSON.parse(data.data);
                     $rootScope.me = $rootScope.organization.me;
+                    $rootScope.link_groups = $rootScope.organization.link_groups;
                     $rootScope.perms = $rootScope.me.perms;
                     localStorageService.set('organization_data', JSON.parse(data.data));
                     checkIfDone();
