@@ -42,7 +42,7 @@ String.prototype.replaceAll = function(str1, str2, ignore)
 }
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.aside', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll', 'LocalStorageModule'],  function ($compileProvider) {
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'mgcrea.ngStrap', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.aside', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll', 'LocalStorageModule', 'colorpicker.module', 'wysiwyg.module', 'ngSanitize' ],  function ($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms):/);
 });
 
@@ -913,7 +913,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout, $sce) {
         routeChange();
         $scope.noMoreHiddens = false;
         $('.modal-backdrop').remove();
@@ -1080,6 +1080,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $scope.openNotificationModal = function(notify){
             $('#notificationModal').modal();
             $scope.selectedNotification = notify;
+            var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            $scope.messageHTML = $sce.trustAsHtml(message);
             $scope.selectedNotificationUser = undefined;
             for(var i = 0; i < $rootScope.directory.members.length; i++){
                 if ($rootScope.directory.members[i].key == notify.sender){
@@ -2817,8 +2819,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //member messaging page
-    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load, localStorageService) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load, localStorageService, $sce) {
     routeChange();
+    // $scope.trustHTML = function(html){
+    //     return $sce.trustAsHtml(html);
+    // }
+
     Load.then(function(){ 
         $rootScope.requirePermissions(LEADERSHIP);
         if ($rootScope.sentMessages){
@@ -2945,6 +2951,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         
         $scope.openMessageModal = function(message){
             $('#messageModal').modal();
+            $scope.messageHTML = $sce.trustAsHtml(message.content);
             $scope.selectedMessage = message;
         }
         
@@ -5284,7 +5291,12 @@ App.filter('multipleSearch', function(){
         return retList;
     }
 });
-            
+
+App.filter('htmlToPlaintext', function() {
+    return function(text) {
+      return String(text).replace(/<[^>]+>/gm, ' ');
+    }
+  });            
             
 App.filter('nameSearch', function(){ 
     return function (objects, search, max) {

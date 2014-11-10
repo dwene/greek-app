@@ -56,7 +56,7 @@
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="hideNotification(notify, this);$event.stopPropagation();" bs-tooltip="archiveTip" data-placement="left"><i class="fa fa-folder-open-o"></i></button>
                 <div class="notificationTitle"><div class="unread">|</div>{{notify.title}}</div>
-                    <span class="notificationText">{{notify.content}}</span>
+                    <span class="notificationText">{{notify.content | htmlToPlaintext}}</span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
             </li>
@@ -76,7 +76,7 @@
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="unhideNotification(notify, this);$event.stopPropagation();" bs-tooltip="unarchiveTip" data-placement="left"><i class="fa fa-inbox"></i></button>
                 <span class="notificationTitle">{{notify.title}}</span>
-                    <span class="notificationText">{{notify.content}}</span>
+                    <span class="notificationText">{{notify.content | htmlToPlaintext}}</span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
                 </div>
             </li>
@@ -100,7 +100,6 @@
     </div>
     </div>
     
-    
 </div>
 
 <div class="modal fade" id="notificationModal">
@@ -112,7 +111,7 @@
         <p class="">{{formatTimestamp(selectedNotification.timestamp)}}</p>
       </div>
       <div class="modal-body">
-        <p id="messageContent" class="preText" >{{selectedNotification.content}}</p>
+        <p ng-bind-html="messageHTML"></p>
         <br>
         <span class="notificationSender">sent by: {{selectedNotification.sender_name}}</span>
       </div>

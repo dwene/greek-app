@@ -358,6 +358,25 @@ module.exports = function (grunt) {
         'svgmin'
       ]
     },
+    less: {
+      development: {
+        options: {
+          paths: ["styles"]
+        },
+        files: {
+          "<%= yeoman.app %>/styles/main.css": "<%= yeoman.app %>/styles/less/main.less"
+        }
+      },
+      production: {
+        options: {
+          paths: ["styles"],
+          cleancss: true,
+        },
+        files: {
+          "<%= yeoman.app %>/styles/main.css": "<%= yeoman.app %>/styles/less/main.less"
+        }
+      }
+    },
 
     // Test settings
     karma: {
@@ -376,6 +395,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'less:development',
       'wiredep',
       'concurrent:server',
       'autoprefixer',
@@ -401,6 +421,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'less:development',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

@@ -2789,7 +2789,7 @@ div#cropped-image {
 .dark .btn-primary {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
 }
-#notificationModal img {
+#messageModal img {
   display: block;
   max-width: 95%;
 }
