@@ -998,6 +998,9 @@ textarea.form-control {
   padding-bottom: 15px;
   margin: 0px;
 }
+#links li a {
+  display: inline-block;
+}
 /*Main App Page*/
 #notifications ul {
   padding: 5px 0px;
