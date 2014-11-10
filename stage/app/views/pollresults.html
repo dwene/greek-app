@@ -46,8 +46,8 @@
        <ul id="byPerson">
         <li ng-repeat="ind in individuals" class="card">
           <button class="btn" data-toggle="collapse" data-target="{{'#individualResponses-' + $index}}">{{ind.user.first_name}} {{ind.user.last_name}}</button>
-          <ul class="collapse individualResponses" id="{{'individualResponses-' + $index}}">
-          <p  ng-repeat="res in ind.responses">{{poll.questions[$index].worded_question}}: {{res}}</p>
+          <ul class="collapse individualResponses striped" id="{{'individualResponses-' + $index}}">
+          <li  ng-repeat="res in ind.responses"><span class="title">{{poll.questions[$index].worded_question}}</span><br>{{res}}</li>
           </ul>
         </li>
        </ul>
