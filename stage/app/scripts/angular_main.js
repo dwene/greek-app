@@ -4189,7 +4189,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                                     user_list.push({key:currentQuestion.responses[j].key, user: $rootScope.getUserFromKey(currentQuestion.responses[j].key), responses: new Array($scope.poll.questions.length)});
                                     var idx = key_list.indexOf(currentQuestion.responses[j].key);
                                 }
-                                user_list[idx].responses[i] = currentQuestion.responses[j].text;
+                                user_list[idx].responses[i] = {response:currentQuestion.responses[j].text, question: currentQuestion};
                             }
                         }
                         $scope.individuals = user_list;
@@ -5696,13 +5696,14 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
               else{
               neededCount --;}
           }
+        console.log('user_name', $.cookie(USER_NAME));
         if ($.cookie(USER_NAME) != localStorageService.get('user_name')){
             localStorage.clear();
             localStorageService.set('user_name', $.cookie(USER_NAME));
         }
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
             .success(function(data){
-                console.log('checked login');
+                console.log('----------THIS-LOGIN-WORKS----------');
                 if (checkResponseErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
             });
             
