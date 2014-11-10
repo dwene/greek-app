@@ -44,7 +44,7 @@
             <button id="expandAll" class="btn btn-sm btn-default" ng-click="closeAllIndividuals();"><i class="fa fa-compress"></i></button>
         </div>
        <ul id="byPerson">
-        <li ng-repeat="ind in individuals" class="card">
+        <li ng-repeat="ind in individuals | orderBy: 'user.last_name'" class="card">
           <button class="btn" data-toggle="collapse" data-target="{{'#individualResponses-' + $index}}">{{ind.user.first_name}} {{ind.user.last_name}}</button>
           <ul class="collapse individualResponses striped" id="{{'individualResponses-' + $index}}">
           <li  ng-repeat="res in ind.responses"><span class="title">{{poll.questions[$index].worded_question}}</span><br>{{res}}</li>

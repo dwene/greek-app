@@ -2825,6 +2825,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
     //     return $sce.trustAsHtml(html);
     // }
 
+
+
+
+    $scope.menuOptions = [
+            ['bold', 'italic', 'underline', 'strikethrough'],
+            ['font'],
+            ['font-size'],
+            ['font-color', 'hilite-color'],
+            ['remove-format'],
+            ['outdent', 'indent'],
+            ['left-justify', 'center-justify', 'right-justify'],
+            [],
+            ['link', 'image']
+        ];
+
     Load.then(function(){ 
         $rootScope.requirePermissions(LEADERSHIP);
         if ($rootScope.sentMessages){

@@ -15,7 +15,7 @@
         </div>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)}">
             <!-- <textarea id="content" ng-model="content" name="content" class="form-control" placeholder="Enter your message here..." required></textarea> -->
-            <wysiwyg textarea-id="content" textarea-class="form-control" textarea-height="180px" textarea-name="content" textarea-required ng-model="content" enable-bootstrap-title="true"></wysiwyg>
+            <wysiwyg textarea-id="content" textarea-class="form-control" textarea-height="180px" textarea-name="content" textarea-required ng-model="content" enable-bootstrap-title="true" textarea-menu="{{menuOptions}}"></wysiwyg>
             <p ng-show="(messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)" class="help-block">Please enter your message.</p>
         </div>
         <p ng-show="submitted && !selectedMembers.length" class="help-block">Please select some tags first</p>
