@@ -511,1988 +511,1985 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //navigation header
-    App.controller('navigationController', function($scope, $http, $rootScope, LoadScreen){
-        routeChange();
+    // App.controller('navigationController', function($scope, $http, $rootScope, LoadScreen){
+    //     routeChange();
         
-        //closes the navigation if open and an li is clicked        
-        $('.navbar-brand, #mobileMenu, #mainMenu, #mobileSettings').on('click', function(){
-            if( $("#mobileSettings").hasClass('in') ){
-                     $("#mobileSettings").collapse('hide');
-            }
-            else{
-            //do nothing
-            }
-        });
+    //     //closes the navigation if open and an li is clicked        
+    //     $('.navbar-brand, #mobileMenu, #mainMenu, #mobileSettings').on('click', function(){
+    //         if( $("#mobileSettings").hasClass('in') ){
+    //                  $("#mobileSettings").collapse('hide');
+    //         }
+    //         else{
+    //         //do nothing
+    //         }
+    //     });
         
     
-        $scope.logout = function(){
-            $rootScope.logout();
-            window.location.assign("/#/login");
-        }
-    });
-    App.controller('indexController', function($scope, $http, LoadScreen, $rootScope) {
-        $scope.homeButton = function(){
-            if ($rootScope.checkAlumni()){
-                window.location.assign('#/app/directory/members');
-            }
-            else{
-                window.location.assign('#/app/home');
-            }
-        }
-        $scope.sendHelpMessage = function(isValid, content){
-            console.log('I am getting submitted');
-            if(isValid){
-                $scope.sendingHelp='pending';
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
-                .success(function(){console.log('success');
-//                $('#helpModal').modal('hide');
-                $scope.helpMessage.$setPristine();
-                $scope.message={};
-                $scope.sendingHelp='done';
-                })
-                .error(function(){console.log('error');
-                $scope.sendingHelp='broken';})
-            }
-            else{
-            //do nothing
-            }
-        }
-	});
+    //     $scope.logout = function(){
+    //         $rootScope.logout();
+    //         window.location.assign("/#/login");
+    //     }
+    // });
+//     App.controller('indexController', function($scope, $http, LoadScreen, $rootScope) {
+//         $scope.homeButton = function(){
+//             if ($rootScope.checkAlumni()){
+//                 window.location.assign('#/app/directory/members');
+//             }
+//             else{
+//                 window.location.assign('#/app/home');
+//             }
+//         }
+//         $scope.sendHelpMessage = function(isValid, content){
+//             console.log('I am getting submitted');
+//             if(isValid){
+//                 $scope.sendingHelp='pending';
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
+//                 .success(function(){console.log('success');
+// //                $('#helpModal').modal('hide');
+//                 $scope.helpMessage.$setPristine();
+//                 $scope.message={};
+//                 $scope.sendingHelp='done';
+//                 })
+//                 .error(function(){console.log('error');
+//                 $scope.sendingHelp='broken';})
+//             }
+//             else{
+//             //do nothing
+//             }
+//         }
+// 	});
 
-    App.controller('helpMessageController', function($scope, $http, $rootScope) {
-        $scope.howdy="howdy";
-        $scope.sendHelpMessage = function(isValid, content){
-            console.log('I am getting submitted');
-            if(isValid){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
-                .success(function(){console.log('success');})
-                .error(function(){console.log('error');})
-            }
-            else{
-            //do nothing
-            }
-        }
-	});
+ //    App.controller('helpMessageController', function($scope, $http, $rootScope) {
+ //        $scope.howdy="howdy";
+ //        $scope.sendHelpMessage = function(isValid, content){
+ //            console.log('I am getting submitted');
+ //            if(isValid){
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
+ //                .success(function(){console.log('success');})
+ //                .error(function(){console.log('error');})
+ //            }
+ //            else{
+ //            //do nothing
+ //            }
+ //        }
+	// });
     
-    App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen, localStorageService) {
-        routeChange();
-        Load.then(function(){
-            if(!checkLogin()){
-                window.location.assign("/#/login");
-            }
-            if(!$rootScope.updatingNotifications){
-                $rootScope.updatingNotifications = true;
-            $interval(function(){$rootScope.updateNotifications();}, 40000);}
-           // LoadScreen.stop();
-        })
-	});
+ //    App.controller('appController', function($scope, $http, $interval, $rootScope, Load, LoadScreen, localStorageService) {
+ //        routeChange();
+ //        Load.then(function(){
+ //            if(!checkLogin()){
+ //                window.location.assign("/#/login");
+ //            }
+ //            if(!$rootScope.updatingNotifications){
+ //                $rootScope.updatingNotifications = true;
+ //            $interval(function(){$rootScope.updateNotifications();}, 40000);}
+ //           // LoadScreen.stop();
+ //        })
+	// });
 
-//login page
-	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen, localStorageService) {
-        routeChange();
-        $rootScope.logout();
-        $.removeCookie(USER_NAME);
-        $.removeCookie(TOKEN);
-        $.removeCookie('FORM_INFO_EMPTY');
-        $rootScope.directory = {};
-        LoadScreen.stop();
-        $('#body').show();
-        $scope.login = function(user_name, password){
-            LoadScreen.start();
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
-                .success(function(data) {
-                    if(!checkResponseErrors(data))
-                    {
-                        LoadScreen.start();
-                        returned_data = JSON.parse(data.data);
-                        $.cookie(USER_NAME, user_name.toLowerCase(), {expires: new Date(returned_data.expires)});
-                        $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
-                        $rootScope.perms = returned_data.perms;
-                        if (localStorageService.get('user_name') != $.cookie(USER_NAME)){
-                            localStorage.clear();
-                            localStorageService.set('user_name', $.cookie(USER_NAME));
-                        }
-                        if (returned_data.perms == 'alumni'){
-                            window.location.assign('#/app/directory');
-                        }
-                        else{
-                            window.location.assign('#/app');
-                        }
-                        window.location.reload();
-                    }
-                    else{
-                        if (data.error == "BAD_LOGIN"){
-                            $scope.badLogin = true;
-                            LoadScreen.stop();
-                        }   
-                    }
-                })
-                .error(function(data) {
-                    $scope.login(user_name, password);
-                    console.log('Error: ' , data);
-                });
-        };
-        $scope.forgotPassword = function(){
-        window.location.assign('/#/forgotpassword'); 
-        }
-    });
+// //login page
+// 	App.controller('loginController', function($scope, $http, $rootScope, LoadScreen, localStorageService) {
+//         routeChange();
+//         $rootScope.logout();
+//         $.removeCookie(USER_NAME);
+//         $.removeCookie(TOKEN);
+//         $.removeCookie('FORM_INFO_EMPTY');
+//         $rootScope.directory = {};
+//         LoadScreen.stop();
+//         $('#body').show();
+//         $scope.login = function(user_name, password){
+//             LoadScreen.start();
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
+//                 .success(function(data) {
+//                     if(!checkResponseErrors(data))
+//                     {
+//                         LoadScreen.start();
+//                         returned_data = JSON.parse(data.data);
+//                         $.cookie(USER_NAME, user_name.toLowerCase(), {expires: new Date(returned_data.expires)});
+//                         $.cookie(TOKEN, returned_data.token, {expires: new Date(returned_data.expires)});
+//                         $rootScope.perms = returned_data.perms;
+//                         if (localStorageService.get('user_name') != $.cookie(USER_NAME)){
+//                             localStorage.clear();
+//                             localStorageService.set('user_name', $.cookie(USER_NAME));
+//                         }
+//                         if (returned_data.perms == 'alumni'){
+//                             window.location.assign('#/app/directory');
+//                         }
+//                         else{
+//                             window.location.assign('#/app');
+//                         }
+//                         window.location.reload();
+//                     }
+//                     else{
+//                         if (data.error == "BAD_LOGIN"){
+//                             $scope.badLogin = true;
+//                             LoadScreen.stop();
+//                         }   
+//                     }
+//                 })
+//                 .error(function(data) {
+//                     $scope.login(user_name, password);
+//                     console.log('Error: ' , data);
+//                 });
+//         };
+//         $scope.forgotPassword = function(){
+//         window.location.assign('/#/forgotpassword'); 
+//         }
+//     });
 
 //getting a forgotten password email
-    App.controller('forgotPasswordController', function($scope, $http, $rootScope, LoadScreen){
-        routeChange();
-        $rootScope.logout();
-        LoadScreen.stop();
-        console.log('I just stopped the loading in forgot password controller');
-        $scope.sentEmail = false;
-        $scope.reset = function(input) {
-            $scope.gettingnewPassword = 'pending';
-            function validEmail(v) {
-                var r = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
-                return (v.match(r) == null) ? false : true;
-            }
-            if (validEmail(input)){
-                to_send = {email: input, user_name:''};
-            }
-            else{
-                to_send = {email: '', user_name: input.toLowerCase()};
-            }
-            console.log(to_send);
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
-            .success(function(data) {
-                if(!checkResponseErrors(data)){
-                    if (data.data == 'OK'){
-                        $scope.sentEmail = true;
-                        $scope.gettingnewPassword = 'done';
-                    }
-                    else{
-                        $scope.returned_choices = JSON.parse(data.data);
-                        $scope.showList = true;
-                    }
-                    $scope.gettingnewPassword = 'done';
-                }
-                else{
-                    $scope.emailFailed = true;
-                    $scope.gettingnewPassword = 'broken';
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.emailFailed = true;
-            });
-        }
-    });
+    // App.controller('forgotPasswordController', function($scope, $http, $rootScope, LoadScreen){
+    //     routeChange();
+    //     $rootScope.logout();
+    //     LoadScreen.stop();
+    //     console.log('I just stopped the loading in forgot password controller');
+    //     $scope.sentEmail = false;
+    //     $scope.reset = function(input) {
+    //         $scope.gettingnewPassword = 'pending';
+    //         function validEmail(v) {
+    //             var r = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+    //             return (v.match(r) == null) ? false : true;
+    //         }
+    //         if (validEmail(input)){
+    //             to_send = {email: input, user_name:''};
+    //         }
+    //         else{
+    //             to_send = {email: '', user_name: input.toLowerCase()};
+    //         }
+    //         console.log(to_send);
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
+    //         .success(function(data) {
+    //             if(!checkResponseErrors(data)){
+    //                 if (data.data == 'OK'){
+    //                     $scope.sentEmail = true;
+    //                     $scope.gettingnewPassword = 'done';
+    //                 }
+    //                 else{
+    //                     $scope.returned_choices = JSON.parse(data.data);
+    //                     $scope.showList = true;
+    //                 }
+    //                 $scope.gettingnewPassword = 'done';
+    //             }
+    //             else{
+    //                 $scope.emailFailed = true;
+    //                 $scope.gettingnewPassword = 'broken';
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             $scope.emailFailed = true;
+    //         });
+    //     }
+    // });
 
 //changing a forgotten password
-    App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, LoadScreen, $stateParams) {
-        routeChange();
-        $.removeCookie(USER_NAME);
-        $.cookie(TOKEN, $stateParams.token);
-        console.log('My token', $.cookie(TOKEN));
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
-        .success(function(data){
-            if (!checkResponseErrors(data)){
-                LoadScreen.stop();
-                $scope.user = JSON.parse(data.data);
-            }
-            else{
-                window.location.replace('#/login');
-            }
-        })
-        .error(function(data){window.location.replace('#/login')});
-        $scope.passwordChanged = false;
-        $scope.changeFailed = false;
-        $scope.changePassword = function(password, isValid) {
-            if(isValid){
-            $scope.changingPassword = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
-            .success(function(data) {
-                if(!checkResponseErrors(data)){
-                    $scope.passwordChanged = true;
-                    $scope.changeFailed = false;
-                    $scope.user_name = data.data;
-                    $scope.changingPassword = 'done';
-                }
-                else{
-                    console.log('Error: ' , data);
-                    $scope.changeFailed = true;
-                    $scope.passwordChanged = false;
-                    $scope.changingPassword = 'broken';
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.changeFailed = true;
-                $scope.passwordChanged = false;
-                $scope.changingPassword = 'broken';
-            });   
-            }
-            else{
-                $scope.changingPassword = '';
-            }
-        }
-    });
+    // App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, LoadScreen, $stateParams) {
+    //     routeChange();
+    //     $.removeCookie(USER_NAME);
+    //     $.cookie(TOKEN, $stateParams.token);
+    //     console.log('My token', $.cookie(TOKEN));
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
+    //     .success(function(data){
+    //         if (!checkResponseErrors(data)){
+    //             LoadScreen.stop();
+    //             $scope.user = JSON.parse(data.data);
+    //         }
+    //         else{
+    //             window.location.replace('#/login');
+    //         }
+    //     })
+    //     .error(function(data){window.location.replace('#/login')});
+    //     $scope.passwordChanged = false;
+    //     $scope.changeFailed = false;
+    //     $scope.changePassword = function(password, isValid) {
+    //         if(isValid){
+    //         $scope.changingPassword = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({password: password}))
+    //         .success(function(data) {
+    //             if(!checkResponseErrors(data)){
+    //                 $scope.passwordChanged = true;
+    //                 $scope.changeFailed = false;
+    //                 $scope.user_name = data.data;
+    //                 $scope.changingPassword = 'done';
+    //             }
+    //             else{
+    //                 console.log('Error: ' , data);
+    //                 $scope.changeFailed = true;
+    //                 $scope.passwordChanged = false;
+    //                 $scope.changingPassword = 'broken';
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             $scope.changeFailed = true;
+    //             $scope.passwordChanged = false;
+    //             $scope.changingPassword = 'broken';
+    //         });   
+    //         }
+    //         else{
+    //             $scope.changingPassword = '';
+    //         }
+    //     }
+    // });
 
 //changing password
-    App.controller('changePasswordController', function($scope, $http, Load, $rootScope) {
-    routeChange();
-    Load.then(function(){    
-        $scope.passwordChanged = false;
-        $scope.changeFailed = false;
-        $scope.changePassword = function(password) {
-            var to_send = {password:$scope.item.password, old_password: $scope.item.old_password};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
-            .success(function(data) {
-                if(!checkResponseErrors(data)){
-                    $scope.passwordChanged = true;
-                    $scope.changeFailed = false;
-                    $rootScope.logout();
-                    window.location.assign('#/app/login');
-                }
-                else{
-                    console.log('Error: ' , data);
-                    $scope.changeFailed = true;
-                    $scope.passwordChanged = false;
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.changeFailed = true;
-                $scope.passwordChanged = false;
-            });              
-        }
-    });
-    });
+    // App.controller('changePasswordController', function($scope, $http, Load, $rootScope) {
+    // routeChange();
+    // Load.then(function(){    
+    //     $scope.passwordChanged = false;
+    //     $scope.changeFailed = false;
+    //     $scope.changePassword = function(password) {
+    //         var to_send = {password:$scope.item.password, old_password: $scope.item.old_password};
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
+    //         .success(function(data) {
+    //             if(!checkResponseErrors(data)){
+    //                 $scope.passwordChanged = true;
+    //                 $scope.changeFailed = false;
+    //                 $rootScope.logout();
+    //                 window.location.assign('#/app/login');
+    //             }
+    //             else{
+    //                 console.log('Error: ' , data);
+    //                 $scope.changeFailed = true;
+    //                 $scope.passwordChanged = false;
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             $scope.changeFailed = true;
+    //             $scope.passwordChanged = false;
+    //         });              
+    //     }
+    // });
+    // });
 
 //the registration page
-    App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
-        routeChange();
-        $rootScope.logout();
-        $scope.data = {};
-        LoadScreen.stop();
-        $scope.continue = function(isValid, data){
-            $scope.error = false;
-            if(isValid){
-                registerOrganizationService.set(data);
-                window.location.assign('#/registerorganizationinfo');
-            }
-            else{
-                $scope.error = true;
-            }
-        }
-        //this page passes parameters through a get method to register info
-    });
+    // App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
+    //     routeChange();
+    //     $rootScope.logout();
+    //     $scope.data = {};
+    //     LoadScreen.stop();
+    //     $scope.continue = function(isValid, data){
+    //         $scope.error = false;
+    //         if(isValid){
+    //             registerOrganizationService.set(data);
+    //             window.location.assign('#/registerorganizationinfo');
+    //         }
+    //         else{
+    //             $scope.error = true;
+    //         }
+    //     }
+    //     //this page passes parameters through a get method to register info
+    // });
 
-    App.controller('registerUserController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
-        routeChange();
-        $rootScope.logout();
-        $scope.data = {};
-        LoadScreen.stop();
-        $scope.findMe = function(email){
-            $scope.users_load = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/find_unregistered_users', packageForSending({email:email}))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $scope.users_load = 'done';
-                        $scope.users = JSON.parse(data.data);
-                        $scope.loadedUsers = true;
-                    }
-                    else{$scope.users_load = 'broken';}
-                })
-                .error(function(data){
-                    $scope.users_load = 'broken';
-                })
-        }
-        $scope.resendEmail = function(key){
-            $scope.email_load = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/resend_registration_email', packageForSending({key:key}))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $scope.sentEmail = true;
-                        $scope.email_load = 'done';
-                    }
-                    else {
-                        $scope.sentEmail = false;
-                        $scope.email_load = 'broken';
-                    }
-                })
-                .error(function(data){
-                    $scope.email_load = 'broken';             
-                });
-        }
-    });
+    // App.controller('registerUserController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
+    //     routeChange();
+    //     $rootScope.logout();
+    //     $scope.data = {};
+    //     LoadScreen.stop();
+    //     $scope.findMe = function(email){
+    //         $scope.users_load = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/find_unregistered_users', packageForSending({email:email}))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     $scope.users_load = 'done';
+    //                     $scope.users = JSON.parse(data.data);
+    //                     $scope.loadedUsers = true;
+    //                 }
+    //                 else{$scope.users_load = 'broken';}
+    //             })
+    //             .error(function(data){
+    //                 $scope.users_load = 'broken';
+    //             })
+    //     }
+    //     $scope.resendEmail = function(key){
+    //         $scope.email_load = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/resend_registration_email', packageForSending({key:key}))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     $scope.sentEmail = true;
+    //                     $scope.email_load = 'done';
+    //                 }
+    //                 else {
+    //                     $scope.sentEmail = false;
+    //                     $scope.email_load = 'broken';
+    //                 }
+    //             })
+    //             .error(function(data){
+    //                 $scope.email_load = 'broken';             
+    //             });
+    //     }
+    // });
 
 
 //the register info page
-    App.controller('registerinfoController', function($scope, $http, registerOrganizationService, $rootScope) {
-        routeChange();
-        if (registerOrganizationService.get() === undefined){
-            window.location.assign('#/register');
-        }
-        $scope.$watch('item.user_name', function() {
-            $scope.unavailable = false;
-            $scope.available = false;
-        });
-        //ng-submit on form submit button click
+ //    App.controller('registerinfoController', function($scope, $http, registerOrganizationService, $rootScope) {
+ //        routeChange();
+ //        if (registerOrganizationService.get() === undefined){
+ //            window.location.assign('#/register');
+ //        }
+ //        $scope.$watch('item.user_name', function() {
+ //            $scope.unavailable = false;
+ //            $scope.available = false;
+ //        });
+ //        //ng-submit on form submit button click
         
-        $scope.checkUserName = function(user){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $scope.available = true;
-                        $scope.unavailable = false;
-                    }
-                    else{
-                        console.log('ERROR: ',data);
-                        $scope.available = false;
-                        $scope.unavailable = true;}  
-                });
-        }
-        $scope.registerinfoClick = function(item, isValid){
+ //        $scope.checkUserName = function(user){
+ //        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data))
+ //                    {
+ //                        $scope.available = true;
+ //                        $scope.unavailable = false;
+ //                    }
+ //                    else{
+ //                        console.log('ERROR: ',data);
+ //                        $scope.available = false;
+ //                        $scope.unavailable = true;}  
+ //                });
+ //        }
+ //        $scope.registerinfoClick = function(item, isValid){
         
-        if(isValid){
-            var organization = registerOrganizationService.get();
-                //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
-    //            if(organization.name === null || organization.school === null || organization.type === null){
-    //                window.location.assign("/#/register");
-    //            }
-                //format data for the api
-                data_tosend = {organization: organization, user: item}
-                //send the organization and user date from registration pages
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        var responseData = JSON.parse(data.data);
-                        $.cookie(TOKEN,  responseData.token, {expires: new Date(responseData.expires)});
-                        $rootScope.perms =  responseData.perms;
-                        $.cookie("USER_NAME", data_tosend.user.user_name);
-                        window.location.assign("/#/app/managemembers/add");
-                        $rootScope.refresh();
-                    }
-                    else{
-                        if (data.error == 'USERNAME_TAKEN'){
-                            $scope.unavailable = true;
-                            $scope.available = false;
-                        }
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });  
-        }
-            else{
-            //for validation purposes
-            $scope.submitted = true;
-            }
-        };
-	});
+ //        if(isValid){
+ //            var organization = registerOrganizationService.get();
+ //                //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
+ //    //            if(organization.name === null || organization.school === null || organization.type === null){
+ //    //                window.location.assign("/#/register");
+ //    //            }
+ //                //format data for the api
+ //                data_tosend = {organization: organization, user: item}
+ //                //send the organization and user date from registration pages
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data))
+ //                    {
+ //                        var responseData = JSON.parse(data.data);
+ //                        $.cookie(TOKEN,  responseData.token, {expires: new Date(responseData.expires)});
+ //                        $rootScope.perms =  responseData.perms;
+ //                        $.cookie("USER_NAME", data_tosend.user.user_name);
+ //                        window.location.assign("/#/app/managemembers/add");
+ //                        $rootScope.refresh();
+ //                    }
+ //                    else{
+ //                        if (data.error == 'USERNAME_TAKEN'){
+ //                            $scope.unavailable = true;
+ //                            $scope.available = false;
+ //                        }
+ //                    }
+ //                })
+ //                .error(function(data) {
+ //                    console.log('Error: ' , data);
+ //                });  
+ //        }
+ //            else{
+ //            //for validation purposes
+ //            $scope.submitted = true;
+ //            }
+ //        };
+	// });
 
 //the payment page
-    App.controller('paymentController', function($scope, $http, $rootScope) {
-        routeChange();
-        //skip payment page right now
-        $scope.pay = {};
-        $scope.submitPayment = function(){
+    // App.controller('paymentController', function($scope, $http, $rootScope) {
+    //     routeChange();
+    //     //skip payment page right now
+    //     $scope.pay = {};
+    //     $scope.submitPayment = function(){
             
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending($scope.pay))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    window.location.assign("#/app");
-                }
-                else
-                    console.log('ERROR: '+JSON.stringify(data));
-            })
-            .error(function(data) {
-                console.log('Error: ' + JSON.stringify(data));
-            }); 
-        };
-    });
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending($scope.pay))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 window.location.assign("#/app");
+    //             }
+    //             else
+    //                 console.log('ERROR: '+JSON.stringify(data));
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' + JSON.stringify(data));
+    //         }); 
+    //     };
+    // });
 
 //the main app page
-    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout, $sce) {
-        routeChange();
-        $scope.noMoreHiddens = false;
-        $('.modal-backdrop').remove();
-        Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
-//        $scope.hidden = {};
-//        $scope.current = {};
-//        $scope.hidden.currentPage = 0;
-//        $scope.hidden.pageSize = 10;
-//        $scope.hidden.maxPageNumber = 5;
-//        $scope.current.currentPage = 0;
-//        $scope.current.pageSize = 10;
-//        $scope.current.maxPageNumber = 5;
-        //TOOLTIPS
+//     App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout, $sce) {
+//         routeChange();
+//         $scope.noMoreHiddens = false;
+//         $('.modal-backdrop').remove();
+//         Load.then(function(){
+//             $rootScope.requirePermissions(MEMBER);
+// //        $scope.hidden = {};
+// //        $scope.current = {};
+// //        $scope.hidden.currentPage = 0;
+// //        $scope.hidden.pageSize = 10;
+// //        $scope.hidden.maxPageNumber = 5;
+// //        $scope.current.currentPage = 0;
+// //        $scope.current.pageSize = 10;
+// //        $scope.current.maxPageNumber = 5;
+//         //TOOLTIPS
             
-        $scope.testLoadAll = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
-            .success(function(data){
-                console.log('LoadAll Results', data.data)
-            })
-            .error(function(data) {
-                console.log('LoadAll Results ' , data);
-            }); 
-        }
+//         $scope.testLoadAll = function(){
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
+//             .success(function(data){
+//                 console.log('LoadAll Results', data.data)
+//             })
+//             .error(function(data) {
+//                 console.log('LoadAll Results ' , data);
+//             }); 
+//         }
             
-        $scope.archiveTip = {
-            "title" : "Archive Notification"
-        }    
-        $scope.unarchiveTip = {
-            "title" : "Unarchive Notification"
-        }
-        $scope.clearStatusTip = {
-            "title" : "Clear Status"
-        }
-        $scope.checkForMoreHiddenNotifications = function(pageNum, max){
-            var len = $rootScope.hidden_notifications.length;
-            $scope.hidden_working = true;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', packageForSending(len))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var new_hiddens = JSON.parse(data.data);
-                    var next = false;
-                    for (var i = 0; i < new_hiddens.length; i++){
-                        next = false;
-                        for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
-                            if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        for (var j = 0; j < $rootScope.notifications.length; j++){
-                            if ($rootScope.notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        $rootScope.hidden_notifications.push(new_hiddens[i]);
-                    }
-//                    $rootScope.hidden_notifications = new_hiddens;
-                    if ($rootScope.hidden_notifications.length > ((pageNum+1)*max)){
-                        $scope.hidden.currentPage++;
-                    }
-                    else{
-                        $scope.noMoreHiddens = true;
-                    }
-                }
-                else{
-                    console.log('ERROR: ',data);
-                }
-                $scope.hidden_working = false;
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.hidden_working = false;
-            }); 
-        }
+//         $scope.archiveTip = {
+//             "title" : "Archive Notification"
+//         }    
+//         $scope.unarchiveTip = {
+//             "title" : "Unarchive Notification"
+//         }
+//         $scope.clearStatusTip = {
+//             "title" : "Clear Status"
+//         }
+//         $scope.checkForMoreHiddenNotifications = function(pageNum, max){
+//             var len = $rootScope.hidden_notifications.length;
+//             $scope.hidden_working = true;
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', packageForSending(len))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data))
+//                 {
+//                     var new_hiddens = JSON.parse(data.data);
+//                     var next = false;
+//                     for (var i = 0; i < new_hiddens.length; i++){
+//                         next = false;
+//                         for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
+//                             if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         for (var j = 0; j < $rootScope.notifications.length; j++){
+//                             if ($rootScope.notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         $rootScope.hidden_notifications.push(new_hiddens[i]);
+//                     }
+// //                    $rootScope.hidden_notifications = new_hiddens;
+//                     if ($rootScope.hidden_notifications.length > ((pageNum+1)*max)){
+//                         $scope.hidden.currentPage++;
+//                     }
+//                     else{
+//                         $scope.noMoreHiddens = true;
+//                     }
+//                 }
+//                 else{
+//                     console.log('ERROR: ',data);
+//                 }
+//                 $scope.hidden_working = false;
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//                 $scope.hidden_working = false;
+//             }); 
+//         }
         
-        $scope.checkForMoreNotifications = function(pageNum, max){
-            var len = $rootScope.notifications.length;
-            $scope.current_working = true;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', packageForSending(len))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var new_hiddens = JSON.parse(data.data);
-                    var next = false;
-                    for (var i = 0; i < new_hiddens.length; i++){
-                        next = false;
-                        for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
-                            if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        for (var j = 0; j < $rootScope.notifications.length; j++){
-                            if ($rootScope.notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        $rootScope.notifications.push(new_hiddens[i]);
-                    }
-//                    $rootScope.hidden_notifications = new_hiddens;
-                    if ($rootScope.notifications.length > ((pageNum+1)*(max))){
-                        $scope.current.currentPage++;
-                    }
-                    else{
-                        $scope.noMoreNotifications = true;
-                    }
-                }
-                else{
-                    console.log('ERROR: ',data);
-                }
-                $scope.current_working = false;
-                $scope.working = false;
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.current_working = false;
-                $scope.working = false;
-            }); 
-        }  
+//         $scope.checkForMoreNotifications = function(pageNum, max){
+//             var len = $rootScope.notifications.length;
+//             $scope.current_working = true;
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', packageForSending(len))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data))
+//                 {
+//                     var new_hiddens = JSON.parse(data.data);
+//                     var next = false;
+//                     for (var i = 0; i < new_hiddens.length; i++){
+//                         next = false;
+//                         for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
+//                             if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         for (var j = 0; j < $rootScope.notifications.length; j++){
+//                             if ($rootScope.notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         $rootScope.notifications.push(new_hiddens[i]);
+//                     }
+// //                    $rootScope.hidden_notifications = new_hiddens;
+//                     if ($rootScope.notifications.length > ((pageNum+1)*(max))){
+//                         $scope.current.currentPage++;
+//                     }
+//                     else{
+//                         $scope.noMoreNotifications = true;
+//                     }
+//                 }
+//                 else{
+//                     console.log('ERROR: ',data);
+//                 }
+//                 $scope.current_working = false;
+//                 $scope.working = false;
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//                 $scope.current_working = false;
+//                 $scope.working = false;
+//             }); 
+//         }  
         
-//        $scope.notificationPreview = function(notify){
-//            return notify.replace(/\r?\n|\r/g," "); 
-//            }
+// //        $scope.notificationPreview = function(notify){
+// //            return notify.replace(/\r?\n|\r/g," "); 
+// //            }
         
-//        $rootScope.$watch('notifications', function(){
-//            console.log('im checking');
-//            console.log($scope.current.currentPage * $scope.current.maxPageNumber);
-//        })
-        $scope.updateStatus = function(status){
-        var to_send = {'status': status};
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
-            $('#status').val("");
-            if ($rootScope.me){
-                $rootScope.me.status = status;
-            }
-            $scope.status = '';
-        }
-        $scope.clearStatus = function(){
-            var status = "";
-            $scope.status = "";
-            var to_send = {status: status};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
-            .success(function(data){
-                if (checkResponseErrors(data))
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            }); 
-            $('#status').val("");
-            if ($rootScope.me){
-                $rootScope.me.status = status;
-            }            
-        }
+// //        $rootScope.$watch('notifications', function(){
+// //            console.log('im checking');
+// //            console.log($scope.current.currentPage * $scope.current.maxPageNumber);
+// //        })
+//         $scope.updateStatus = function(status){
+//         var to_send = {'status': status};
+//         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
+//             $('#status').val("");
+//             if ($rootScope.me){
+//                 $rootScope.me.status = status;
+//             }
+//             $scope.status = '';
+//         }
+//         $scope.clearStatus = function(){
+//             var status = "";
+//             $scope.status = "";
+//             var to_send = {status: status};
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
+//             .success(function(data){
+//                 if (checkResponseErrors(data))
+//                     console.log('ERROR: ',data);
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//             }); 
+//             $('#status').val("");
+//             if ($rootScope.me){
+//                 $rootScope.me.status = status;
+//             }            
+//         }
         
-        $scope.openNotificationModal = function(notify){
-            $('#notificationModal').modal();
-            $scope.selectedNotification = notify;
-            var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            $scope.messageHTML = $sce.trustAsHtml(message);
-            $scope.selectedNotificationUser = undefined;
-            for(var i = 0; i < $rootScope.directory.members.length; i++){
-                if ($rootScope.directory.members[i].key == notify.sender){
-                    $scope.selectedNotificationUser = $rootScope.directory.members[i];
-                }
-            }
-            if ($scope.selectedNotification.new){
-                $scope.notification_lengths.unread --;
-                $scope.notification_lengths.read ++;
-                $scope.selectedNotification.new = false;
-            }
-            $rootScope.updateNotificationBadge();
-            var key = $scope.selectedNotification.key;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
-        }
+//         $scope.openNotificationModal = function(notify){
+//             $('#notificationModal').modal();
+//             $scope.selectedNotification = notify;
+//             var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+//             $scope.messageHTML = $sce.trustAsHtml(message);
+//             $scope.selectedNotificationUser = undefined;
+//             for(var i = 0; i < $rootScope.directory.members.length; i++){
+//                 if ($rootScope.directory.members[i].key == notify.sender){
+//                     $scope.selectedNotificationUser = $rootScope.directory.members[i];
+//                 }
+//             }
+//             if ($scope.selectedNotification.new){
+//                 $scope.notification_lengths.unread --;
+//                 $scope.notification_lengths.read ++;
+//                 $scope.selectedNotification.new = false;
+//             }
+//             $rootScope.updateNotificationBadge();
+//             var key = $scope.selectedNotification.key;
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
+//         }
         
-        $scope.hideNotification = function(notify, domElement){
-            $timeout(function(){
-                notify.garbage = true;
-            })
-            $timeout(function(){
-                var key = notify.key;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}))
-                .error(function(data) {
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
-                }); 
-                $rootScope.hidden_notifications.unshift(notify);
-                if (notify.new){
-                    $rootScope.notification_lengths.unread--;//#FIXME notifications_lengths.unread is not updating as soon as it is read
-                    notify.new = false;
-                    $rootScope.updateNotificationBadge();
-                }
-                else{
-                    $rootScope.notification_lengths.read--;
-                }
-                $rootScope.notification_lengths.hidden++;
-                $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
-                if ($rootScope.notifications && $scope.current && ($scope.current.currentPage * $scope.current.maxPageNumber) == $rootScope.notifications.length && $scope.current.currentPage > 0){
-                $scope.current.currentPage = $scope.current.currentPage - 1;
-                if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length < 5){
-                $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber)
-            }
-            }
-                if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length <= 5){
-                    $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber);
-            }
-            })
-        }
+//         $scope.hideNotification = function(notify, domElement){
+//             $timeout(function(){
+//                 notify.garbage = true;
+//             })
+//             $timeout(function(){
+//                 var key = notify.key;
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}))
+//                 .error(function(data) {
+//                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
+//                 }); 
+//                 $rootScope.hidden_notifications.unshift(notify);
+//                 if (notify.new){
+//                     $rootScope.notification_lengths.unread--;//#FIXME notifications_lengths.unread is not updating as soon as it is read
+//                     notify.new = false;
+//                     $rootScope.updateNotificationBadge();
+//                 }
+//                 else{
+//                     $rootScope.notification_lengths.read--;
+//                 }
+//                 $rootScope.notification_lengths.hidden++;
+//                 $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
+//                 if ($rootScope.notifications && $scope.current && ($scope.current.currentPage * $scope.current.maxPageNumber) == $rootScope.notifications.length && $scope.current.currentPage > 0){
+//                 $scope.current.currentPage = $scope.current.currentPage - 1;
+//                 if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length < 5){
+//                 $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber)
+//             }
+//             }
+//                 if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length <= 5){
+//                     $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber);
+//             }
+//             })
+//         }
         
-        $scope.unhideNotification = function(notify, domElement){
-            $timeout(function(){
-                notify.garbage = true;
-            })
-            $timeout(function(){
-                $rootScope.notification_lengths.hidden--;
-                $rootScope.notification_lengths.read++;
-                var key = notify.key;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}))
-                .error(function(data) {
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}));
-                });
-                $rootScope.notifications.unshift(notify);
-                $rootScope.hidden_notifications.splice($scope.hidden_notifications.indexOf(notify), 1);
-                if ($rootScope.hidden_notifications && $scope.hidden && ($scope.hidden.currentPage * $scope.hidden.maxPageNumber) == $rootScope.hidden_notifications.length && $scope.hidden.currentPage > 0){
-                $scope.hidden.currentPage = $scope.hidden.currentPage - 1;
-                if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length < 5){
-                    $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
-                }
-            }
-                if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length <= 5){
-                    $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber);
-                }
-            })
-        }
+//         $scope.unhideNotification = function(notify, domElement){
+//             $timeout(function(){
+//                 notify.garbage = true;
+//             })
+//             $timeout(function(){
+//                 $rootScope.notification_lengths.hidden--;
+//                 $rootScope.notification_lengths.read++;
+//                 var key = notify.key;
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}))
+//                 .error(function(data) {
+//                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}));
+//                 });
+//                 $rootScope.notifications.unshift(notify);
+//                 $rootScope.hidden_notifications.splice($scope.hidden_notifications.indexOf(notify), 1);
+//                 if ($rootScope.hidden_notifications && $scope.hidden && ($scope.hidden.currentPage * $scope.hidden.maxPageNumber) == $rootScope.hidden_notifications.length && $scope.hidden.currentPage > 0){
+//                 $scope.hidden.currentPage = $scope.hidden.currentPage - 1;
+//                 if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length < 5){
+//                     $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
+//                 }
+//             }
+//                 if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length <= 5){
+//                     $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber);
+//                 }
+//             })
+//         }
         
-        $scope.showDate = function(start, end){
-            var mStart = momentInTimezone(start);
+//         $scope.showDate = function(start, end){
+//             var mStart = momentInTimezone(start);
 
-            if (mStart.diff(moment().add('days', 6)) > 0){
-               return mStart.fromNow(); 
-            }
-            else if (mStart.diff(moment()) > 0){
-                return mStart.calendar();
-            }
-            var mEnd = momentInTimezone(end);
-            if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
-                return 'Happening Now';
-            }
-            if (mEnd.diff(moment()) < 0){
-                return 'Already Happened';
-            }
-        }
+//             if (mStart.diff(moment().add('days', 6)) > 0){
+//                return mStart.fromNow(); 
+//             }
+//             else if (mStart.diff(moment()) > 0){
+//                 return mStart.calendar();
+//             }
+//             var mEnd = momentInTimezone(end);
+//             if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
+//                 return 'Happening Now';
+//             }
+//             if (mEnd.diff(moment()) < 0){
+//                 return 'Already Happened';
+//             }
+//         }
         
-        $scope.formatTimestamp = function(timestamp){
-            return momentInTimezone(timestamp).calendar();
-        }
-        $scope.closeNotificationModal = function(notify){
-            $('#notificationModal').modal('hide');
-        }
-       }); 
-	});
+//         $scope.formatTimestamp = function(timestamp){
+//             return momentInTimezone(timestamp).calendar();
+//         }
+//         $scope.closeNotificationModal = function(notify){
+//             $('#notificationModal').modal('hide');
+//         }
+//        }); 
+// 	});
 
 //the add members page
-    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
-        routeChange();
-        $scope.adds = [];
-        Load.then(function(){
-         var formObject = document.getElementById('uploadMembers');
-        if(formObject){
-            formObject.addEventListener('change', readSingleFile, false);}
-        $rootScope.requirePermissions(COUNCIL);
-        //initialize a member array
-        //initialize a filecontents variable
-        var filecontents;
+    // App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
+    //     routeChange();
+    //     $scope.adds = [];
+    //     Load.then(function(){
+    //      var formObject = document.getElementById('uploadMembers');
+    //     if(formObject){
+    //         formObject.addEventListener('change', readSingleFile, false);}
+    //     $rootScope.requirePermissions(COUNCIL);
+    //     //initialize a member array
+    //     //initialize a filecontents variable
+    //     var filecontents;
         
-        //this method will get the data from the form and add it to the newmemberList object
-        $.fn.serializeObject = function()
-        {
-            var o = {};
-            var a = this.serializeArray();
+    //     //this method will get the data from the form and add it to the newmemberList object
+    //     $.fn.serializeObject = function()
+    //     {
+    //         var o = {};
+    //         var a = this.serializeArray();
             
-            $.each(a, function() {
-                if (o[this.name] !== undefined) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
-            });
-            return o;
-        };
+    //         $.each(a, function() {
+    //             if (o[this.name] !== undefined) {
+    //                 if (!o[this.name].push) {
+    //                     o[this.name] = [o[this.name]];
+    //                 }
+    //                 o[this.name].push(this.value || '');
+    //             } else {
+    //                 o[this.name] = this.value || '';
+    //             }
+    //         });
+    //         return o;
+    //     };
     
-        //remove someone from list before adding everyone
-         $scope.deleteAdd = function(add){
-              var index = $scope.adds.indexOf(add);
-              $scope.adds.splice(index,1);     
-        }
+    //     //remove someone from list before adding everyone
+    //      $scope.deleteAdd = function(add){
+    //           var index = $scope.adds.indexOf(add);
+    //           $scope.adds.splice(index,1);     
+    //     }
          
-        //ng-click for the form to add one member at a time        
-        $scope.addMember = function(isValid){
-            if(isValid){
-            $scope.adds = $scope.adds.concat($scope.input);
-            //$('#result').text(JSON.stringify(newmemberList));
-            //define variable for ng-repeat
-            $scope.input = {};}
-            else{$scope.submitted = true;}
+    //     //ng-click for the form to add one member at a time        
+    //     $scope.addMember = function(isValid){
+    //         if(isValid){
+    //         $scope.adds = $scope.adds.concat($scope.input);
+    //         //$('#result').text(JSON.stringify(newmemberList));
+    //         //define variable for ng-repeat
+    //         $scope.input = {};}
+    //         else{$scope.submitted = true;}
             
-        };
+    //     };
         
-        $scope.getMembers = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                    localStorageService.set('directory', $rootScope.directory);
-                    console.log($rootScope.directory);
-                    assignAngularViewModels($rootScope.directory.members);
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+    //     $scope.getMembers = function(){
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $rootScope.directory = JSON.parse(data.data);
+    //                 localStorageService.set('directory', $rootScope.directory);
+    //                 console.log($rootScope.directory);
+    //                 assignAngularViewModels($rootScope.directory.members);
+    //             }
+    //             else
+    //                 console.log('ERROR: ',data);
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
         
-        }
-        function assignAngularViewModels(members){
-            $scope.members = members;
-            LoadScreen.stop();
-        }
+    //     }
+    //     function assignAngularViewModels(members){
+    //         $scope.members = members;
+    //         LoadScreen.stop();
+    //     }
         
-        function onPageLoad(){
-            console.log('page is loading');
-            if($rootScope.directory.members){
-                assignAngularViewModels($rootScope.directory.members);
-                $scope.getMembers();
-            }
-            else{
-                LoadScreen.start();
-                $scope.getMembers();
-            }
-        }
-        onPageLoad();
+    //     function onPageLoad(){
+    //         console.log('page is loading');
+    //         if($rootScope.directory.members){
+    //             assignAngularViewModels($rootScope.directory.members);
+    //             $scope.getMembers();
+    //         }
+    //         else{
+    //             LoadScreen.start();
+    //             $scope.getMembers();
+    //         }
+    //     }
+    //     onPageLoad();
         
-        $scope.submitMembers = function(){
-            $scope.updating = "pending";
-            var data_tosend = {users: $scope.adds};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $scope.updating = "done";
-                    $scope.adds = [];
-                }
-                else{
-                    $scope.updating = "broken";
-                    console.log('ERROR: ',data);
-                    }
-            })
-            .error(function(data) {
-                $scope.updating = "broken";
-                console.log('Error: ' , data);
-            });
+    //     $scope.submitMembers = function(){
+    //         $scope.updating = "pending";
+    //         var data_tosend = {users: $scope.adds};
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $scope.updating = "done";
+    //                 $scope.adds = [];
+    //             }
+    //             else{
+    //                 $scope.updating = "broken";
+    //                 console.log('ERROR: ',data);
+    //                 }
+    //         })
+    //         .error(function(data) {
+    //             $scope.updating = "broken";
+    //             console.log('Error: ' , data);
+    //         });
             
-        }
+    //     }
         
-        //this function sets up a filereader to read the CSV
-        function readSingleFile(evt) {
-                //Retrieve the first (and only!) File from the FileList object
-                var f = evt.target.files[0]; 
+    //     //this function sets up a filereader to read the CSV
+    //     function readSingleFile(evt) {
+    //             //Retrieve the first (and only!) File from the FileList object
+    //             var f = evt.target.files[0]; 
     
-                if (f) {
-                  var r = new FileReader();
-                  r.onload = function(e) { 
-                      filecontents = e.target.result;
-                  }
-                  r.readAsText(f);
+    //             if (f) {
+    //               var r = new FileReader();
+    //               r.onload = function(e) { 
+    //                   filecontents = e.target.result;
+    //               }
+    //               r.readAsText(f);
                     
-                } else { 
-                  alert("Failed to load file");
-                }
-            }
+    //             } else { 
+    //               alert("Failed to load file");
+    //             }
+    //         }
         
-        //reads the file as it's added into the file input
+    //     //reads the file as it's added into the file input
 
-       //this function takes the CSV, converts it to JSON and outputs it
-        $scope.addMembers = function(){
+    //    //this function takes the CSV, converts it to JSON and outputs it
+    //     $scope.addMembers = function(){
             
-            //check to see if file is being read
-            if(filecontents == null){
-             //do nothing
-            alert('you have not selected a file');
-            }
-            else{
-                //converts CSV file to array of usable objects
-                var csvMemberList = CSV2ARRAY(filecontents);
-                console.log(csvMemberList);
-                checkEmail = function(email){
-                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    return re.test(email);
-                }
-                var new_item_list = [];
-                for (var i = 0; i< csvMemberList.length; i++){
-                    var item = csvMemberList[i];
-                    var new_item = {};
-                    if (item['First']){
-                        new_item.first_name = item['First'];
-                    }
-                    if (item['Last']){
-                        new_item.last_name = item['Last'];
-                    }
-                    if (item['Pledge Year']){
-                        new_item.pledge_class_year = item['Pledge Year'];
-                    }
-                    if (item['Pledge Semester']){
-                        new_item.pledge_class_semester = item['Pledge Semester'];
-                    }
-                    if (item['Email']){
-                        new_item.email = item['Email'];
-                    }
-                    if (!new_item.email || !new_item.first_name || !new_item.last_name || !new_item.pledge_class_year || !new_item.pledge_class_semester){
-                        continue;
-                    }
-                    if(!checkEmail(new_item.email)){
-                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
-                        continue;
-                    }
-                    new_item_list.push(new_item);
-                }
-                $scope.adds = $scope.adds.concat(new_item_list);
-                $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
-                $('#uploadMembers').unwrap();
-                $('#uploadMembers').trigger('change');
-                filecontents = null;
+    //         //check to see if file is being read
+    //         if(filecontents == null){
+    //          //do nothing
+    //         alert('you have not selected a file');
+    //         }
+    //         else{
+    //             //converts CSV file to array of usable objects
+    //             var csvMemberList = CSV2ARRAY(filecontents);
+    //             console.log(csvMemberList);
+    //             checkEmail = function(email){
+    //                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    //                 return re.test(email);
+    //             }
+    //             var new_item_list = [];
+    //             for (var i = 0; i< csvMemberList.length; i++){
+    //                 var item = csvMemberList[i];
+    //                 var new_item = {};
+    //                 if (item['First']){
+    //                     new_item.first_name = item['First'];
+    //                 }
+    //                 if (item['Last']){
+    //                     new_item.last_name = item['Last'];
+    //                 }
+    //                 if (item['Pledge Year']){
+    //                     new_item.pledge_class_year = item['Pledge Year'];
+    //                 }
+    //                 if (item['Pledge Semester']){
+    //                     new_item.pledge_class_semester = item['Pledge Semester'];
+    //                 }
+    //                 if (item['Email']){
+    //                     new_item.email = item['Email'];
+    //                 }
+    //                 if (!new_item.email || !new_item.first_name || !new_item.last_name || !new_item.pledge_class_year || !new_item.pledge_class_semester){
+    //                     continue;
+    //                 }
+    //                 if(!checkEmail(new_item.email)){
+    //                     $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+    //                     continue;
+    //                 }
+    //                 new_item_list.push(new_item);
+    //             }
+    //             $scope.adds = $scope.adds.concat(new_item_list);
+    //             $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
+    //             $('#uploadMembers').unwrap();
+    //             $('#uploadMembers').trigger('change');
+    //             filecontents = null;
                 
-            }
-        };
-        });
-    });
+    //         }
+    //     };
+    //     });
+    // });
 
 
 //new member page
-    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope, localStorageService){
-    routeChange();
-    Load.then(function(){
-        $rootScope.requirePermissions(COUNCIL);
-        $scope.memberslength = 20;
-        $scope.$watch('search', function(){
-            if ($scope.search){
-                $scope.memberslength = 20;
-            }
-        });
-        //MANAGE MEMBERS TAB
-        $scope.openDeleteMemberModal = function(user){
-            $('#deleteMemberModal').modal();
-            $scope.userToDelete = user;
-        }
-        //#TODO this should now be fixed to where it can delete multiple checked members in this modal
+    // App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope, localStorageService){
+    // routeChange();
+    // Load.then(function(){
+    //     $rootScope.requirePermissions(COUNCIL);
+    //     $scope.memberslength = 20;
+    //     $scope.$watch('search', function(){
+    //         if ($scope.search){
+    //             $scope.memberslength = 20;
+    //         }
+    //     });
+    //     //MANAGE MEMBERS TAB
+    //     $scope.openDeleteMemberModal = function(user){
+    //         $('#deleteMemberModal').modal();
+    //         $scope.userToDelete = user;
+    //     }
+    //     //#TODO this should now be fixed to where it can delete multiple checked members in this modal
         
-        $scope.openConvertMembersModal = function(){
-            $('#convertMemberModal').modal();
-        }
-        $scope.loadMoreMembers = function(){
-            if ($scope.memberslength < $scope.members.length){
-                $scope.memberslength += 20;
-            }
-        }
+    //     $scope.openConvertMembersModal = function(){
+    //         $('#convertMemberModal').modal();
+    //     }
+    //     $scope.loadMoreMembers = function(){
+    //         if ($scope.memberslength < $scope.members.length){
+    //             $scope.memberslength += 20;
+    //         }
+    //     }
         
-        $scope.resendWelcomeEmail = function(member){
-            member.updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        member.updating = 'done';
-                    }
-                    else{
-                        member.updating = 'broken';
-                    }
-                })
-                .error(function(data) {
-                    member.updating = 'broken';
-                });
-        }
-        $scope.resendAllWelcomeEmails = function(){
-            $scope.resendWorking = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    $scope.resendWorking = 'done';
-                }
-                else{
-                    $scope.resendWorking = 'broken';
-                    console.log('ERROR', data.error);
-                }
-            })
-            .error(function(data){
-                $scope.resendWorking = 'broken';
-                console.log('ERROR', data.error)
-            })
-        }
+    //     $scope.resendWelcomeEmail = function(member){
+    //         member.updating = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     member.updating = 'done';
+    //                 }
+    //                 else{
+    //                     member.updating = 'broken';
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 member.updating = 'broken';
+    //             });
+    //     }
+    //     $scope.resendAllWelcomeEmails = function(){
+    //         $scope.resendWorking = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data)){
+    //                 $scope.resendWorking = 'done';
+    //             }
+    //             else{
+    //                 $scope.resendWorking = 'broken';
+    //                 console.log('ERROR', data.error);
+    //             }
+    //         })
+    //         .error(function(data){
+    //             $scope.resendWorking = 'broken';
+    //             console.log('ERROR', data.error)
+    //         })
+    //     }
         
-        $scope.updatePerms = function(member, option){
-            var key = member.key;
-            member.updating = 'pending';
-            var to_send = {key: key, perms: option};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        member.updating = 'done';
-                    }
-                    else{
-                        member.updating = 'broken';
-                    }
-                })
-                .error(function(data) {
-                    member.updating = 'broken';
-                });
-        }
+    //     $scope.updatePerms = function(member, option){
+    //         var key = member.key;
+    //         member.updating = 'pending';
+    //         var to_send = {key: key, perms: option};
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     member.updating = 'done';
+    //                 }
+    //                 else{
+    //                     member.updating = 'broken';
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 member.updating = 'broken';
+    //             });
+    //     }
         
-        $scope.changeUserEmail = function(member, email){
-            var to_send = {key: member.key, email: email};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/update_users_emails', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        console.log('success');
-                    }
-                    else
-                    {
-                        console.log('ERROR: ',data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        }
+    //     $scope.changeUserEmail = function(member, email){
+    //         var to_send = {key: member.key, email: email};
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/update_users_emails', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     console.log('success');
+    //                 }
+    //                 else
+    //                 {
+    //                     console.log('ERROR: ',data);
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //     }
 
-        $scope.convertMembersToAlumni = function(){
-            keys = [];
-            console.log('converting to alumni', members);
-            $('#convertMemberModal').modal('hide');
-            for (var i = 0; i < $scope.members.length; i++){
-                if ($scope.members[i].checked){
-                    $scope.members[i].checked = false; 
-                    keys.push($scope.members[i].key);
-                    $scope.members.splice(i, 1);
-                    i--;
-                }
-            }
-            var to_send = {'keys': keys};
-            console.log(to_send);
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        console.log('success');
-                    }
-                    else
-                    {
-                        console.log('ERROR: ',data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        };
-        $scope.getMembers = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                    localStorageService.set('directory', $rootScope.directory);
-                    assignAngularViewModels($rootScope.directory.members);
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+    //     $scope.convertMembersToAlumni = function(){
+    //         keys = [];
+    //         console.log('converting to alumni', members);
+    //         $('#convertMemberModal').modal('hide');
+    //         for (var i = 0; i < $scope.members.length; i++){
+    //             if ($scope.members[i].checked){
+    //                 $scope.members[i].checked = false; 
+    //                 keys.push($scope.members[i].key);
+    //                 $scope.members.splice(i, 1);
+    //                 i--;
+    //             }
+    //         }
+    //         var to_send = {'keys': keys};
+    //         console.log(to_send);
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     console.log('success');
+    //                 }
+    //                 else
+    //                 {
+    //                     console.log('ERROR: ',data);
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //     };
+    //     $scope.getMembers = function(){
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $rootScope.directory = JSON.parse(data.data);
+    //                 localStorageService.set('directory', $rootScope.directory);
+    //                 assignAngularViewModels($rootScope.directory.members);
+    //             }
+    //             else
+    //                 console.log('ERROR: ',data);
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
         
-        }
+    //     }
         
-        function assignAngularViewModels(members){
-            $scope.members = members;
-            LoadScreen.stop();
-        }
+    //     function assignAngularViewModels(members){
+    //         $scope.members = members;
+    //         LoadScreen.stop();
+    //     }
         
-        function onPageLoad(){
-            console.log('page is loading');
-            if($rootScope.directory.members){
-                assignAngularViewModels($rootScope.directory.members);
-                $scope.getMembers();
-            }
-            else{
-                LoadScreen.start();
-                $scope.getMembers();
-            }
-        }
-        onPageLoad();
+    //     function onPageLoad(){
+    //         console.log('page is loading');
+    //         if($rootScope.directory.members){
+    //             assignAngularViewModels($rootScope.directory.members);
+    //             $scope.getMembers();
+    //         }
+    //         else{
+    //             LoadScreen.start();
+    //             $scope.getMembers();
+    //         }
+    //     }
+    //     onPageLoad();
         
-        $scope.removeMember = function(user){
-            $('#deleteMemberModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });    
-            for (var i = 0; i < $scope.members.length; i++){
-                if ($scope.members[i].key == user.key){
-                    $scope.members.splice(i, 1);
-                    break;
-                }
-            }
-        }
+    //     $scope.removeMember = function(user){
+    //         $('#deleteMemberModal').modal('hide');
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //             }
+    //             else
+    //                 console.log('ERROR: ',data);
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });    
+    //         for (var i = 0; i < $scope.members.length; i++){
+    //             if ($scope.members[i].key == user.key){
+    //                 $scope.members.splice(i, 1);
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     });
+    // });
+    // App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
+    //     routeChange();
+    //     $('.container').hide();
+    //     logoutCookies();
+    //     $.cookie(TOKEN, $stateParams.key);
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $scope.user = JSON.parse(data.data);
+    //                 $('.container').fadeIn();
+    //                 LoadScreen.stop();
+    //                 $('#body').show();
+    //             }
+    //             else
+    //                 console.log('ERROR: ',data);
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
         
-         
-    ;})
-    
-    });
-    App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
-        routeChange();
-        $('.container').hide();
-        logoutCookies();
-        $.cookie(TOKEN, $stateParams.key);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $scope.user = JSON.parse(data.data);
-                    $('.container').fadeIn();
-                    LoadScreen.stop();
-                    $('#body').show();
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-        
-        $scope.correctPerson = function(){
-            window.location.assign("#/newuserinfo");
-        }
-        $scope.incorrectPerson = function(){
-            window.location.assign("#/incorrectperson");
-        }
-    });
+    //     $scope.correctPerson = function(){
+    //         window.location.assign("#/newuserinfo");
+    //     }
+    //     $scope.incorrectPerson = function(){
+    //         window.location.assign("#/incorrectperson");
+    //     }
+    // });
 
 //incorrect person page
     App.controller('incorrectpersonController', function($scope, $http, LoadScreen){
     
     });
 
-    App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
-        routeChange();
-        Load.then(function(){
-//        //initialize a member array
-        var formObject = document.getElementById('uploadMembers');
-        if(formObject){
-            formObject.addEventListener('change', readSingleFile, false);}
-        $scope.adds = [];
+//     App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
+//         routeChange();
+//         Load.then(function(){
+// //        //initialize a member array
+//         var formObject = document.getElementById('uploadMembers');
+//         if(formObject){
+//             formObject.addEventListener('change', readSingleFile, false);}
+//         $scope.adds = [];
             
-        //initialize a filecontents variable
-        var filecontents;
+//         //initialize a filecontents variable
+//         var filecontents;
         
-        //this method will get the data from the form and add it to the newmemberList object
-        $.fn.serializeObject = function()
-        {
-            var o = {};
-            var a = this.serializeArray();
+//         //this method will get the data from the form and add it to the newmemberList object
+//         $.fn.serializeObject = function()
+//         {
+//             var o = {};
+//             var a = this.serializeArray();
             
-            $.each(a, function() {
-                if (o[this.name] !== undefined) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
-            });
-            return o;
-        };
+//             $.each(a, function() {
+//                 if (o[this.name] !== undefined) {
+//                     if (!o[this.name].push) {
+//                         o[this.name] = [o[this.name]];
+//                     }
+//                     o[this.name].push(this.value || '');
+//                 } else {
+//                     o[this.name] = this.value || '';
+//                 }
+//             });
+//             return o;
+//         };
     
-        //remove someone from list before adding everyone
-        $scope.deleteAdd = function(add){
-              var index = $scope.adds.indexOf(add);
-              $scope.adds.splice(index,1);     
-        }
+//         //remove someone from list before adding everyone
+//         $scope.deleteAdd = function(add){
+//               var index = $scope.adds.indexOf(add);
+//               $scope.adds.splice(index,1);     
+//         }
          
-        //ng-click for the form to add one member at a time        
-        $scope.addAlumnus = function(isValid){
-            if(isValid){
-                $scope.adds = $scope.adds.concat($scope.input);
-            }
-            else{
-                $scope.submitted = true;
-            }
-            $scope.input = {};
-        }
+//         //ng-click for the form to add one member at a time        
+//         $scope.addAlumnus = function(isValid){
+//             if(isValid){
+//                 $scope.adds = $scope.adds.concat($scope.input);
+//             }
+//             else{
+//                 $scope.submitted = true;
+//             }
+//             $scope.input = {};
+//         }
         
-        $scope.getAlumni = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                    localStorageService.set('directory', $rootScope.directory);
-                    assignAngularViewModels($rootScope.directory.alumni);
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+//         $scope.getAlumni = function(){
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data))
+//                 {
+//                     $rootScope.directory = JSON.parse(data.data);
+//                     localStorageService.set('directory', $rootScope.directory);
+//                     assignAngularViewModels($rootScope.directory.alumni);
+//                 }
+//                 else
+//                     console.log('ERROR: ',data);
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//             });
         
-        }
-        function assignAngularViewModels(alumni){
-            $scope.alumni = alumni;
-            LoadScreen.stop();
-        }
+//         }
+//         function assignAngularViewModels(alumni){
+//             $scope.alumni = alumni;
+//             LoadScreen.stop();
+//         }
         
-        function onPageLoad(){
-            console.log('page is loading');
-            if($rootScope.directory.alumni){
-                assignAngularViewModels($rootScope.directory.alumni);
-                $scope.getAlumni();
-            }
-            else{
-                LoadScreen.start();
-                $scope.getAlumni();
-            }
-        }
-        onPageLoad();
+//         function onPageLoad(){
+//             console.log('page is loading');
+//             if($rootScope.directory.alumni){
+//                 assignAngularViewModels($rootScope.directory.alumni);
+//                 $scope.getAlumni();
+//             }
+//             else{
+//                 LoadScreen.start();
+//                 $scope.getAlumni();
+//             }
+//         }
+//         onPageLoad();
         
-        $scope.submitAlumni = function(){
-            $scope.updating = "pending";
-            var data_tosend = {users: $scope.adds};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $scope.updating = "done";
-                    $scope.adds = [];
-                }
-                else{
-                    $scope.updating = "broken";
-                    console.log('ERROR: ',data);
-                    }
-            })
-            .error(function(data) {
-                $scope.updating = "broken";
-                console.log('Error: ' , data);
-            }); 
-        }
+//         $scope.submitAlumni = function(){
+//             $scope.updating = "pending";
+//             var data_tosend = {users: $scope.adds};
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data))
+//                 {
+//                     $scope.updating = "done";
+//                     $scope.adds = [];
+//                 }
+//                 else{
+//                     $scope.updating = "broken";
+//                     console.log('ERROR: ',data);
+//                     }
+//             })
+//             .error(function(data) {
+//                 $scope.updating = "broken";
+//                 console.log('Error: ' , data);
+//             }); 
+//         }
         
-        //this function sets up a filereader to read the CSV
-        function readSingleFile(evt) {
-                //Retrieve the first (and only!) File from the FileList object
-                var f = evt.target.files[0]; 
+//         //this function sets up a filereader to read the CSV
+//         function readSingleFile(evt) {
+//                 //Retrieve the first (and only!) File from the FileList object
+//                 var f = evt.target.files[0]; 
     
-                if (f) {
-                  var r = new FileReader();
-                  r.onload = function(e) { 
-                      filecontents = e.target.result;
-                  }
-                  r.readAsText(f);
+//                 if (f) {
+//                   var r = new FileReader();
+//                   r.onload = function(e) { 
+//                       filecontents = e.target.result;
+//                   }
+//                   r.readAsText(f);
                     
-                } else { 
-                  alert("Failed to load file");
-                }
-            }
+//                 } else { 
+//                   alert("Failed to load file");
+//                 }
+//             }
         
-//        //reads the file as it's added into the file input
-//
-       //this function takes the CSV, converts it to JSON and outputs it
-        $scope.addAlumni = function(){
+// //        //reads the file as it's added into the file input
+// //
+//        //this function takes the CSV, converts it to JSON and outputs it
+//         $scope.addAlumni = function(){
             
-            //check to see if file is being read
-            if(filecontents == null){
-             //do nothing
-            alert('you have not selected a file');
-            }
-            else{
-                //converts CSV file to array of usable objects
-                var csvMemberList = CSV2ARRAY(filecontents);
-                console.log(csvMemberList);
-                checkEmail = function(email){
-                    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    return re.test(email);
-                }
+//             //check to see if file is being read
+//             if(filecontents == null){
+//              //do nothing
+//             alert('you have not selected a file');
+//             }
+//             else{
+//                 //converts CSV file to array of usable objects
+//                 var csvMemberList = CSV2ARRAY(filecontents);
+//                 console.log(csvMemberList);
+//                 checkEmail = function(email){
+//                     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//                     return re.test(email);
+//                 }
                 
                 
-                var new_item_list = [];
-                for (var i = 0; i< csvMemberList.length; i++){
-                    var item = csvMemberList[i];
-                    var new_item = {};
-                    if (item['First']){
-                        new_item.first_name = item['First'];
-                    }
-                    if (item['Last']){
-                        new_item.last_name = item['Last'];
-                    }
-                    if (item['Pledge Year']){
-                        new_item.pledge_class_year = item['Pledge Year'];
-                    }
-                    if (item['Pledge Semester']){
-                        new_item.pledge_class_semester = item['Pledge Semester'];
-                    }
-                    if (item['Email']){
-                        new_item.email = item['Email'];
-                    }
-                    if (!new_item.email || !new_item.pledge_class_year || !new_item.pledge_class_semester){
-                        continue;
-                    }
-                    if(!checkEmail(new_item.email)){
-                        $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
-                        continue;
-                    }
-                    new_item_list.push(new_item);
-                }
-                $scope.adds = $scope.adds.concat(new_item_list);
-                $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
-                $('#uploadMembers').unwrap();
-                $('#uploadMembers').trigger('change');
-                filecontents = null;
-            }
-        };
-        });
-    });
+//                 var new_item_list = [];
+//                 for (var i = 0; i< csvMemberList.length; i++){
+//                     var item = csvMemberList[i];
+//                     var new_item = {};
+//                     if (item['First']){
+//                         new_item.first_name = item['First'];
+//                     }
+//                     if (item['Last']){
+//                         new_item.last_name = item['Last'];
+//                     }
+//                     if (item['Pledge Year']){
+//                         new_item.pledge_class_year = item['Pledge Year'];
+//                     }
+//                     if (item['Pledge Semester']){
+//                         new_item.pledge_class_semester = item['Pledge Semester'];
+//                     }
+//                     if (item['Email']){
+//                         new_item.email = item['Email'];
+//                     }
+//                     if (!new_item.email || !new_item.pledge_class_year || !new_item.pledge_class_semester){
+//                         continue;
+//                     }
+//                     if(!checkEmail(new_item.email)){
+//                         $scope.memberSkippedNotifier = true; //shows warning that not all members added correctly
+//                         continue;
+//                     }
+//                     new_item_list.push(new_item);
+//                 }
+//                 $scope.adds = $scope.adds.concat(new_item_list);
+//                 $('#uploadMembers').wrap('<form>').parent('form').trigger('reset');
+//                 $('#uploadMembers').unwrap();
+//                 $('#uploadMembers').trigger('change');
+//                 filecontents = null;
+//             }
+//         };
+//         });
+//     });
 
 
 
 
 
-    App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService){
-        routeChange();
-        Load.then(function(){
+    // App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService){
+    //     routeChange();
+    //     Load.then(function(){
 
-        $scope.openDeleteAlumniModal = function(user){
-            $('#deleteAlumniModal').modal();
-            $scope.selectedUser = user;
-        }
+    //     $scope.openDeleteAlumniModal = function(user){
+    //         $('#deleteAlumniModal').modal();
+    //         $scope.selectedUser = user;
+    //     }
         
-        $scope.openConvertAlumniModal = function(user){
-            $('#convertAlumniModal').modal();
-            $scope.selectedUser = user;
-        }
+    //     $scope.openConvertAlumniModal = function(user){
+    //         $('#convertAlumniModal').modal();
+    //         $scope.selectedUser = user;
+    //     }
         
-        $scope.resendWelcomeEmail = function(member){
-            member.updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        member.updating = 'done';
-                    }
-                    else{
-                        member.updating = 'broken';
-                    }
-                })
-                .error(function(data) {
-                    member.updating = 'broken';
-                });
-        }
+    //     $scope.resendWelcomeEmail = function(member){
+    //         member.updating = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     member.updating = 'done';
+    //                 }
+    //                 else{
+    //                     member.updating = 'broken';
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 member.updating = 'broken';
+    //             });
+    //     }
         
-        function getAlumni(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $rootScope.directory = JSON.parse(data.data);
-                        localStorageService.set('directory', $rootScope.directory);
-                        assignAngularViewModels($rootScope.directory.alumni);
-                    }
-                    else
-                    {
-                        console.log("error: ", data.error)
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        }
+    //     function getAlumni(){
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     $rootScope.directory = JSON.parse(data.data);
+    //                     localStorageService.set('directory', $rootScope.directory);
+    //                     assignAngularViewModels($rootScope.directory.alumni);
+    //                 }
+    //                 else
+    //                 {
+    //                     console.log("error: ", data.error)
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //     }
         
-        /*This function takes the data and assigns it to the DOM with angular models*/
-        function assignAngularViewModels(alumni){
-            $scope.alumni = alumni;
-            LoadScreen.stop();
-        }
-        /*This function is the first function to run when the controller starts. This deals with caching data so we dont have to pull data evertytime we load the page*/
-        function onPageLoad(){
-            console.log('page is loading');
-            if($rootScope.directory.alumni){
-                assignAngularViewModels($rootScope.directory.alumni);
-                getAlumni();
-            }
-            else{
-                LoadScreen.start();
-                getAlumni();
-            }
-        }
-        onPageLoad();
+    //     /*This function takes the data and assigns it to the DOM with angular models*/
+    //     function assignAngularViewModels(alumni){
+    //         $scope.alumni = alumni;
+    //         LoadScreen.stop();
+    //     }
+    //     /*This function is the first function to run when the controller starts. This deals with caching data so we dont have to pull data evertytime we load the page*/
+    //     function onPageLoad(){
+    //         console.log('page is loading');
+    //         if($rootScope.directory.alumni){
+    //             assignAngularViewModels($rootScope.directory.alumni);
+    //             getAlumni();
+    //         }
+    //         else{
+    //             LoadScreen.start();
+    //             getAlumni();
+    //         }
+    //     }
+    //     onPageLoad();
         
-        $scope.convertAlumniToMember = function(alumnus){
-            $scope.selectedUser = {}
-            $('#convertAlumniModal').modal('hide');
-            var to_send = {'keys': [alumnus.key]}
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                    }
-                    else
-                    {
-                        console.log("error: ", data.error)
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-                for (var i = 0; i < $scope.alumni.length; i++){
-                    if ($scope.alumni[i]. key == alumnus.key){
-                        $scope.alumni.splice(i, 1);
-                        break;
-                    }
-                }
-        }
-        $scope.removeAlumni = function(alumnus){
-            $scope.selectedUser = {}
-            $('#deleteAlumniModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus));   
-            if ($scope.alumni.indexOf(alumnus) > -1){
-                $scope.alumni.splice($scope.alumni.indexOf(alumnus), 1);
-            }
-        }
-       }); 
-    });
+    //     $scope.convertAlumniToMember = function(alumnus){
+    //         $scope.selectedUser = {}
+    //         $('#convertAlumniModal').modal('hide');
+    //         var to_send = {'keys': [alumnus.key]}
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                 }
+    //                 else
+    //                 {
+    //                     console.log("error: ", data.error)
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //             for (var i = 0; i < $scope.alumni.length; i++){
+    //                 if ($scope.alumni[i]. key == alumnus.key){
+    //                     $scope.alumni.splice(i, 1);
+    //                     break;
+    //                 }
+    //             }
+    //     }
+    //     $scope.removeAlumni = function(alumnus){
+    //         $scope.selectedUser = {}
+    //         $('#deleteAlumniModal').modal('hide');
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus));   
+    //         if ($scope.alumni.indexOf(alumnus) > -1){
+    //             $scope.alumni.splice($scope.alumni.indexOf(alumnus), 1);
+    //         }
+    //     }
+    //    }); 
+    // });
 
-    App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
-        routeChange();
-        $('.container').hide();
-        logoutCookies();
-        $.cookie(TOKEN, $stateParams.key);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $scope.user = JSON.parse(data.data);
-                    $('.container').fadeIn();
-                    LoadScreen.stop();
-                    $('#body').show();
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+    // App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
+    //     routeChange();
+    //     $('.container').hide();
+    //     logoutCookies();
+    //     $.cookie(TOKEN, $stateParams.key);
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $scope.user = JSON.parse(data.data);
+    //                 $('.container').fadeIn();
+    //                 LoadScreen.stop();
+    //                 $('#body').show();
+    //             }
+    //             else
+    //                 console.log('ERROR: ',data);
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
         
-        $scope.correctPerson = function(){
-            window.location.assign("#/newuserinfo");
-        }
-        $scope.incorrectPerson = function(){
-            window.location.assign("#/incorrectperson");
-        }
-    });
+    //     $scope.correctPerson = function(){
+    //         window.location.assign("#/newuserinfo");
+    //     }
+    //     $scope.incorrectPerson = function(){
+    //         window.location.assign("#/incorrectperson");
+    //     }
+    // });
 
 //new member info page
-    App.controller('newmemberinfoController', function($scope, $http, $rootScope, $stateParams, LoadScreen){
-        routeChange();
-        $scope.loading = true;
-        $scope.user_is_taken = false;
-        $scope.waiting_for_response = false;
-        logoutCookies();
-        $.cookie(TOKEN, $stateParams.key);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $('.container').fadeIn();
-                    LoadScreen.stop();
-                    $('#body').show();
-                    $scope.loading = false;
-                }
-                else{
-                    console.log('ERROR: ',data);
-                    window.location.assign('#/login');
-                }
-            })
-            .error(function(data) {
-                window.location.assign('#/login');
-                console.log('Error: ' , data);
-            });
-        $scope.$watch('item.user_name', function() {
-            if ($scope.user_name){
-                $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
-            }
-            $scope.unavailable = false;
-            $scope.available = false;
-        });
-        $scope.checkUserName = function(user){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $scope.available = true;
-                        $scope.unavailable = false;
-                    }
-                    else{
-                        console.log('ERROR: ',data);
-                        $scope.available = false;
-                        $scope.unavailable = true;}  
-                });
-        }
+    // App.controller('newmemberinfoController', function($scope, $http, $rootScope, $stateParams, LoadScreen){
+    //     routeChange();
+    //     $scope.loading = true;
+    //     $scope.user_is_taken = false;
+    //     $scope.waiting_for_response = false;
+    //     logoutCookies();
+    //     $.cookie(TOKEN, $stateParams.key);
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $('.container').fadeIn();
+    //                 LoadScreen.stop();
+    //                 $('#body').show();
+    //                 $scope.loading = false;
+    //             }
+    //             else{
+    //                 console.log('ERROR: ',data);
+    //                 window.location.assign('#/login');
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             window.location.assign('#/login');
+    //             console.log('Error: ' , data);
+    //         });
+    //     $scope.$watch('item.user_name', function() {
+    //         if ($scope.user_name){
+    //             $scope.item.user_name = $scope.item.user_name.replace(/\s+/g,'');
+    //         }
+    //         $scope.unavailable = false;
+    //         $scope.available = false;
+    //     });
+    //     $scope.checkUserName = function(user){
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     $scope.available = true;
+    //                     $scope.unavailable = false;
+    //                 }
+    //                 else{
+    //                     console.log('ERROR: ',data);
+    //                     $scope.available = false;
+    //                     $scope.unavailable = true;}  
+    //             });
+    //     }
         
-        $scope.createAccount = function(isValid){
+    //     $scope.createAccount = function(isValid){
             
-            if(isValid){
-            $scope.working = 'pending';
-            $scope.waiting_for_response = true;
-            var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $scope.working = 'done';
-                    var returned_data = JSON.parse(data.data);
-                    $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
-                    $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
-                    $.cookie(PERMS, returned_data.perms);
-                    $.cookie('FORM_INFO_EMPTY', 'true');
-                    console.log($.cookie(TOKEN));
-                    window.location.assign("/#/app/accountinfo");
-                }
-                else
-                {
-                    $scope.working = 'broken';
-                    if(data.error == "INVALID_USERNAME")
-                    {
-                        $scope.unavailable = true;
-                        $scope.available = false;
-                    }
-                    console.log('ERROR: ', data);
-                } 
-            })
-            .error(function(data) {
-                $scope.working = 'broken';
-                console.log('Error: ' , data);
-            });
-                //now logged in
-            $scope.waiting_for_response = false;
-            }
-            else{
-            $scope.submitted = true;
-            }
-        }
-    });
+    //         if(isValid){
+    //         $scope.working = 'pending';
+    //         $scope.waiting_for_response = true;
+    //         var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $scope.working = 'done';
+    //                 var returned_data = JSON.parse(data.data);
+    //                 $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
+    //                 $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
+    //                 $.cookie(PERMS, returned_data.perms);
+    //                 $.cookie('FORM_INFO_EMPTY', 'true');
+    //                 console.log($.cookie(TOKEN));
+    //                 window.location.assign("/#/app/accountinfo");
+    //             }
+    //             else
+    //             {
+    //                 $scope.working = 'broken';
+    //                 if(data.error == "INVALID_USERNAME")
+    //                 {
+    //                     $scope.unavailable = true;
+    //                     $scope.available = false;
+    //                 }
+    //                 console.log('ERROR: ', data);
+    //             } 
+    //         })
+    //         .error(function(data) {
+    //             $scope.working = 'broken';
+    //             console.log('Error: ' , data);
+    //         });
+    //             //now logged in
+    //         $scope.waiting_for_response = false;
+    //         }
+    //         else{
+    //         $scope.submitted = true;
+    //         }
+    //     }
+    // });
 
 //adding profile pictures
-    App.controller('profilepictureController', function($scope, $http, Load, $rootScope){
-    routeChange();
-    Load.then(function(){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $("#profilePic").attr("action", data.data);
-                    $scope.url = data.data;
-                }
-                else
-                {
-                    console.log("Error" , data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-            $scope.user_name = $.cookie(USER_NAME);
-            $scope.token = $.cookie(TOKEN);
-            $scope.type = "prof_pic";
-        //initialize profile image variable
-        var newprofileImage;
+    // App.controller('profilepictureController', function($scope, $http, Load, $rootScope){
+    // routeChange();
+    // Load.then(function(){
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $("#profilePic").attr("action", data.data);
+    //                 $scope.url = data.data;
+    //             }
+    //             else
+    //             {
+    //                 console.log("Error" , data.error)
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
+    //         $scope.user_name = $.cookie(USER_NAME);
+    //         $scope.token = $.cookie(TOKEN);
+    //         $scope.type = "prof_pic";
+    //     //initialize profile image variable
+    //     var newprofileImage;
         
-        //reads the file as it's added into the file input
+    //     //reads the file as it's added into the file input
         
-        $scope.uploadFile = function(files) {
-            newprofileImage = new FormData();
-            //Take the first selected file
-            newprofileImage.append("file", files[0]);
-        }
+    //     $scope.uploadFile = function(files) {
+    //         newprofileImage = new FormData();
+    //         //Take the first selected file
+    //         newprofileImage.append("file", files[0]);
+    //     }
         
         
-        $scope.uploadPicture = function(){
+    //     $scope.uploadPicture = function(){
             
-            console.log(newprofileImage);
-            $http.post($scope.url, newprofileImage, {
-                headers: {'Content-Type': undefined},
-                transformRequest: angular.identity,
-                })
-            .success(function(data){
-                console.log("success");
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log("failure");
-                console.log(data);
-            });
-        }
-    });
-    });
+    //         console.log(newprofileImage);
+    //         $http.post($scope.url, newprofileImage, {
+    //             headers: {'Content-Type': undefined},
+    //             transformRequest: angular.identity,
+    //             })
+    //         .success(function(data){
+    //             console.log("success");
+    //             console.log(data);
+    //         })
+    //         .error(function(data) {
+    //             console.log("failure");
+    //             console.log(data);
+    //         });
+    //     }
+    // });
+    // });
 
-    App.controller('organizationPictureController', function($scope, $http, Load, $rootScope){
-    routeChange();
-    Load.then(function(){
-        $rootScope.requirePermissions(COUNCIL);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $("#profilePic").attr("action", data.data);
-                    $scope.url = data.data;
-                }
-                else
-                {
-                    console.log("Error" , data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-            $scope.user_name = $.cookie(USER_NAME);
-            $scope.token = $.cookie(TOKEN);
-            $scope.type = "organization";
-    });
-    });
+    // App.controller('organizationPictureController', function($scope, $http, Load, $rootScope){
+    // routeChange();
+    // Load.then(function(){
+    //     $rootScope.requirePermissions(COUNCIL);
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $("#profilePic").attr("action", data.data);
+    //                 $scope.url = data.data;
+    //             }
+    //             else
+    //             {
+    //                 console.log("Error" , data.error)
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
+    //         $scope.user_name = $.cookie(USER_NAME);
+    //         $scope.token = $.cookie(TOKEN);
+    //         $scope.type = "organization";
+    // });
+    // });
 
 //the directory
-    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, directoryFilterFilter, $filter, localStorageService){
-    routeChange();
-        $scope.memberdirectorylength = 20;
-    Load.then(function(){
+//     App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, directoryFilterFilter, $filter, localStorageService){
+//     routeChange();
+//         $scope.memberdirectorylength = 20;
+//     Load.then(function(){
         
-        $scope.increaseDirectoryLength = function(){
-            if ($scope.members){
-                if ($scope.memberdirectorylength < $scope.members.length){
-//                    console.log('Increasing number of shown elements');
-                    $scope.memberdirectorylength += 20;
-                }
-            }
-        }
+//         $scope.increaseDirectoryLength = function(){
+//             if ($scope.members){
+//                 if ($scope.memberdirectorylength < $scope.members.length){
+// //                    console.log('Increasing number of shown elements');
+//                     $scope.memberdirectorylength += 20;
+//                 }
+//             }
+//         }
         
-        $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
-        $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
-        $scope.members = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'member'), 'last_name');
-        $scope.$watch('search', function(){
-            if ($scope.search){
-                $scope.memberdirectorylength = 20;
-            }
-        })
-//        function splitMembers(){
-//            var council = [];
-//            var leadership = [];
-//            var members = [];
-//            if ($rootScope.directory.members){
-//                for (var i = 0; i< $rootScope.directory.members.length; i++){
-//                    if ($rootScope.directory.members[i].perms == MEMBER){
-//                        members.push($rootScope.directory.members[i]);
-//                        continue;
-//                    }
-//                    if ($rootScope.directory.members[i].perms == LEADERSHIP){
-//                        leadership.push($rootScope.directory.members[i]);
-//                        continue;
-//                    }
-//                    if ($rootScope.directory.members[i].perms == COUNCIL){
-//                        console.log('hi')
-//                        council.push($rootScope.directory.members[i]);
-//                        continue;
-//                    }
-//                }
-//                $scope.directory = [];
-//                if (council.length > 0){
-//                    $scope.directory.push({name: 'council', data: council});             
-//                }
-//                if (leadership.length > 0){
-//                    $scope.directory.push({name: 'leadership', data: leadership});               
-//                }
-//                if (members.length > 0){
-//                    $scope.directory.push({name: 'member', data: members});          
-//                }
-//            }
-//        }
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data)
-                    console.log(directory);
-                    $rootScope.directory = directory;
-                    localStorageService.set('directory', $rootScope.directory);
-                    $scope.directory = $rootScope.directory.members;
-                    $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
-                    $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
-                    $scope.members = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'member'), 'last_name');
-                    LoadScreen.stop();
-                }
-                else
-                {
-                    console.log("error: ", data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-        $scope.showIndividual = function(member){
-            window.location.assign("#/app/directory/"+member.user_name);
-        }
-        $scope.getProfPic = function(link){
-            if (link){
-                return link + '=s50';
-            }
-            else{
-                return $rootScope.defaultProfilePicture;
-            }
+//         $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
+//         $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
+//         $scope.members = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'member'), 'last_name');
+//         $scope.$watch('search', function(){
+//             if ($scope.search){
+//                 $scope.memberdirectorylength = 20;
+//             }
+//         })
+// //        function splitMembers(){
+// //            var council = [];
+// //            var leadership = [];
+// //            var members = [];
+// //            if ($rootScope.directory.members){
+// //                for (var i = 0; i< $rootScope.directory.members.length; i++){
+// //                    if ($rootScope.directory.members[i].perms == MEMBER){
+// //                        members.push($rootScope.directory.members[i]);
+// //                        continue;
+// //                    }
+// //                    if ($rootScope.directory.members[i].perms == LEADERSHIP){
+// //                        leadership.push($rootScope.directory.members[i]);
+// //                        continue;
+// //                    }
+// //                    if ($rootScope.directory.members[i].perms == COUNCIL){
+// //                        console.log('hi')
+// //                        council.push($rootScope.directory.members[i]);
+// //                        continue;
+// //                    }
+// //                }
+// //                $scope.directory = [];
+// //                if (council.length > 0){
+// //                    $scope.directory.push({name: 'council', data: council});             
+// //                }
+// //                if (leadership.length > 0){
+// //                    $scope.directory.push({name: 'leadership', data: leadership});               
+// //                }
+// //                if (members.length > 0){
+// //                    $scope.directory.push({name: 'member', data: members});          
+// //                }
+// //            }
+// //        }
+//         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data))
+//                 {
+//                     var directory = JSON.parse(data.data)
+//                     console.log(directory);
+//                     $rootScope.directory = directory;
+//                     localStorageService.set('directory', $rootScope.directory);
+//                     $scope.directory = $rootScope.directory.members;
+//                     $scope.council = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'council'), 'last_name');
+//                     $scope.leadership = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'leadership'), 'last_name');
+//                     $scope.members = $filter('orderBy')( directoryFilterFilter($rootScope.directory.members, 'member'), 'last_name');
+//                     LoadScreen.stop();
+//                 }
+//                 else
+//                 {
+//                     console.log("error: ", data.error)
+//                 }
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//             });
+//         $scope.showIndividual = function(member){
+//             window.location.assign("#/app/directory/"+member.user_name);
+//         }
+//         $scope.getProfPic = function(link){
+//             if (link){
+//                 return link + '=s50';
+//             }
+//             else{
+//                 return $rootScope.defaultProfilePicture;
+//             }
             
-        }
+//         }
         
-        //click the buttons to search for that button text
-        $('#searchTags button').click(function(){
-            var searchValue = $(this).text();
-            $('#directorySearch').val(searchValue).change();
-        });
+//         //click the buttons to search for that button text
+//         $('#searchTags button').click(function(){
+//             var searchValue = $(this).text();
+//             $('#directorySearch').val(searchValue).change();
+//         });
         
-    });
-    });
+//     });
+//     });
 
-    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
-    routeChange();
-    Load.then(function(){
-        $scope.years = [];
-        $scope.selected_year = 0;
-        for (var i = 0; i < $rootScope.directory.alumni.length; i++){
-            if ($rootScope.directory.alumni[i].grad_year && $scope.years.indexOf({value:$rootScope.directory.alumni[i].grad_year}) == -1){
-                $scope.years.push({value:$rootScope.directory.alumni[i].grad_year});
-                if ($rootScope.directory.alumni[i].grad_year > $scope.selected_year){
-                    $scope.selected_year = $rootScope.directory.alumni[i].grad_year
-                }
-            }
-        }
-        $scope.getProfPic = function(link){
-            if (link){
-                return link + '=s50';
-            }
-            else{
-                return $rootScope.defaultProfilePicture;
-            }
-        }
-        $scope.showIndividual = function(member){
-            window.location.assign("#/app/directory/"+member.user_name);
-        }
+    // App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
+    // routeChange();
+    // Load.then(function(){
+    //     $scope.years = [];
+    //     $scope.selected_year = 0;
+    //     for (var i = 0; i < $rootScope.directory.alumni.length; i++){
+    //         if ($rootScope.directory.alumni[i].grad_year && $scope.years.indexOf({value:$rootScope.directory.alumni[i].grad_year}) == -1){
+    //             $scope.years.push({value:$rootScope.directory.alumni[i].grad_year});
+    //             if ($rootScope.directory.alumni[i].grad_year > $scope.selected_year){
+    //                 $scope.selected_year = $rootScope.directory.alumni[i].grad_year
+    //             }
+    //         }
+    //     }
+    //     $scope.getProfPic = function(link){
+    //         if (link){
+    //             return link + '=s50';
+    //         }
+    //         else{
+    //             return $rootScope.defaultProfilePicture;
+    //         }
+    //     }
+    //     $scope.showIndividual = function(member){
+    //         window.location.assign("#/app/directory/"+member.user_name);
+    //     }
         
-        //click the buttons to search for that button text
-        $('#searchTags button').click(function(){
-            var searchValue = $(this).text();
-            $('#directorySearch').val(searchValue).change();
-        });
+    //     //click the buttons to search for that button text
+    //     $('#searchTags button').click(function(){
+    //         var searchValue = $(this).text();
+    //         $('#directorySearch').val(searchValue).change();
+    //     });
         
-    });
-    });
+    // });
+    // });
 
 //member profiles
-    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService){
-    routeChange();
-    $scope.saveVcard = function(){
-        var user = $scope.member;
-        var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name
-        out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n\r';//FN
-        if (user.phone){
-        out_string += 'TEL;CELL:' + user.phone + '\n\r';} //Phone
-        if (user.email){
-        out_string += 'EMAIL;PREF;INTERNET:' + user.email + '\n\r';}//Email
-        if (user.prof_pic){
-        out_string += 'PHOTO;PNG:'+user.prof_pic + '\n\r';}//picture
-//        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
-        if (user.address){
-        out_string += 'ADR;HOME:;;'+user.address+';'+user.city+';'+user.state+';'+user.zip+';United States of America\n\r';}//address
-//        out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
-//        if (user.prof_pic.indexOf('jpg') > -1){
-//            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
-//        }
-//        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('gif') > -1){
-//            out_string += 'PHOTO;MEDIATYPE=image/gif:' + user.prof_pic + '\n';
-//        }
-//        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('png') > -1){
-//            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
-//        }
-        out_string += 'END:VCARD';
-        //var blob = new Blob([out_string], {type: "text/vcard;charset=utf-8"});
-//        var csvString = csvRows.join("%0A");
-               var a         = document.createElement('a');
-               a.href        = 'data:text/vcard,' + encodeURIComponent(out_string);
-               a.target      = '_blank';
-               a.download    = 'contact.vcf';
-               console.log(a.href);
-               document.body.appendChild(a);
-               a.click();
-               document.body.removeChild(a);
-        //saveAs(blob, ($scope.member.first_name + '_' + $scope.member.last_name) || "contact" + ".vcf");
-    }
-    Load.then(function(){
-        if ($stateParams.id.toString().length < 2){
-            window.location.assign('/#/app/directory');
-        }
+//     App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService){
+//     routeChange();
+//     $scope.saveVcard = function(){
+//         var user = $scope.member;
+//         var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name
+//         out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n\r';//FN
+//         if (user.phone){
+//         out_string += 'TEL;CELL:' + user.phone + '\n\r';} //Phone
+//         if (user.email){
+//         out_string += 'EMAIL;PREF;INTERNET:' + user.email + '\n\r';}//Email
+//         if (user.prof_pic){
+//         out_string += 'PHOTO;PNG:'+user.prof_pic + '\n\r';}//picture
+// //        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
+//         if (user.address){
+//         out_string += 'ADR;HOME:;;'+user.address+';'+user.city+';'+user.state+';'+user.zip+';United States of America\n\r';}//address
+// //        out_string += ' :;;'+ user.address + ';' + user.city + ';' + user.state + ';' + user.zip + ';' + 'United States of America\n';
+// //        if (user.prof_pic.indexOf('jpg') > -1){
+// //            out_string += 'PHOTO;MEDIATYPE=image/jpeg:' + user.prof_pic + '\n';
+// //        }
+// //        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('gif') > -1){
+// //            out_string += 'PHOTO;MEDIATYPE=image/gif:' + user.prof_pic + '\n';
+// //        }
+// //        else if (user.prof_pic.slice(user.prof_pic.length-5).indexOf('png') > -1){
+// //            out_string += 'PHOTO;MEDIATYPE=image/png:' + user.prof_pic + '\n';
+// //        }
+//         out_string += 'END:VCARD';
+//         //var blob = new Blob([out_string], {type: "text/vcard;charset=utf-8"});
+// //        var csvString = csvRows.join("%0A");
+//                var a         = document.createElement('a');
+//                a.href        = 'data:text/vcard,' + encodeURIComponent(out_string);
+//                a.target      = '_blank';
+//                a.download    = 'contact.vcf';
+//                console.log(a.href);
+//                document.body.appendChild(a);
+//                a.click();
+//                document.body.removeChild(a);
+//         //saveAs(blob, ($scope.member.first_name + '_' + $scope.member.last_name) || "contact" + ".vcf");
+//     }
+//     Load.then(function(){
+//         if ($stateParams.id.toString().length < 2){
+//             window.location.assign('/#/app/directory');
+//         }
         
-        $scope.members = $rootScope.directory.members;
-        if ($scope.members){
-            loadMemberData();
-        }
+//         $scope.members = $rootScope.directory.members;
+//         if ($scope.members){
+//             loadMemberData();
+//         }
         
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data)
-                    $rootScope.directory = directory;
-                    localStorageService.set('directory', $rootScope.directory);
-                    LoadScreen.stop();
-                    $scope.members = directory.members;
-                    loadMemberData();
-                }
-                else
-                {
-                    console.log("error: ", data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });        
+//         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data))
+//                 {
+//                     var directory = JSON.parse(data.data)
+//                     $rootScope.directory = directory;
+//                     localStorageService.set('directory', $rootScope.directory);
+//                     LoadScreen.stop();
+//                     $scope.members = directory.members;
+//                     loadMemberData();
+//                 }
+//                 else
+//                 {
+//                     console.log("error: ", data.error)
+//                 }
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//             });        
     
-        function loadMemberData(){
-            $scope.member = undefined;
-            for(var i = 0; i<$scope.members.length; i++)
-            {
-                if($scope.members[i].user_name == $stateParams.id)
-                {
-                    $scope.member = $scope.members[i];
-                    $scope.prof_pic = $scope.members[i].prof_pic;
-                     //define profile information
-                    $scope.status = $scope.member.status;
-                    var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    if ($scope.member.grad_month && $scope.member.grad_year){
-                        $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
-                    }
-                    $scope.pledgeClass = $scope.member.pledge_class_semester + ' ' + $scope.member.pledge_class_year;
-                    $scope.major = $scope.member.major;
-                    $scope.firstName = $scope.member.first_name;
-                    $scope.lastName = $scope.member.last_name;
-                    $scope.email = $scope.member.email;
-                    $scope.birthday = $scope.member.dob
-                    $scope.phone = $scope.member.phone;
-                    $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                    $scope.position = $scope.member.position;
-                    $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
-                    if ($scope.currentAddress.indexOf('null') > -1){
-                        $scope.currentAddress = null;
-                    }
-                    if ($scope.permanentAddress.indexOf('null') > -1){
-                        $scope.permanentAddress = null;
-                    }
-                    $scope.website = $scope.member.website;
-                    $scope.facebook = $scope.member.facebook;
-                    $scope.twitter = $scope.member.twitter;
-                    $scope.instagram = $scope.member.instagram;
-                    $scope.linkedin = $scope.member.linkedin;
+//         function loadMemberData(){
+//             $scope.member = undefined;
+//             for(var i = 0; i<$scope.members.length; i++)
+//             {
+//                 if($scope.members[i].user_name == $stateParams.id)
+//                 {
+//                     $scope.member = $scope.members[i];
+//                     $scope.prof_pic = $scope.members[i].prof_pic;
+//                      //define profile information
+//                     $scope.status = $scope.member.status;
+//                     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+//                     if ($scope.member.grad_month && $scope.member.grad_year){
+//                         $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
+//                     }
+//                     $scope.pledgeClass = $scope.member.pledge_class_semester + ' ' + $scope.member.pledge_class_year;
+//                     $scope.major = $scope.member.major;
+//                     $scope.firstName = $scope.member.first_name;
+//                     $scope.lastName = $scope.member.last_name;
+//                     $scope.email = $scope.member.email;
+//                     $scope.birthday = $scope.member.dob
+//                     $scope.phone = $scope.member.phone;
+//                     $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+//                     $scope.position = $scope.member.position;
+//                     $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+//                     if ($scope.currentAddress.indexOf('null') > -1){
+//                         $scope.currentAddress = null;
+//                     }
+//                     if ($scope.permanentAddress.indexOf('null') > -1){
+//                         $scope.permanentAddress = null;
+//                     }
+//                     $scope.website = $scope.member.website;
+//                     $scope.facebook = $scope.member.facebook;
+//                     $scope.twitter = $scope.member.twitter;
+//                     $scope.instagram = $scope.member.instagram;
+//                     $scope.linkedin = $scope.member.linkedin;
 
-                    return;
-                }
-            }
-            console.log('I made it to alumni');
-            for(var i = 0; i<$rootScope.directory.alumni.length; i++)
-            {
-                if($rootScope.directory.alumni[i].user_name == $stateParams.id)
-                {
-                    $scope.member = $scope.directory.alumni[i];
-                    $scope.prof_pic = $scope.member.prof_pic;
-                     //define profile information
-                    $scope.status = $scope.member.status;
-                    var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    if ($scope.member.grad_month && $scope.member.grad_year){
-                        $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
-                    }
-                    $scope.pledgeClass = $scope.member.pledge_class_semester + ' ' + $scope.member.pledge_class_year;
-                    $scope.occupation = $scope.member.occupation;
-                    $scope.position = $scope.member.position;
-                    $scope.major = $scope.member.major;
-                    $scope.firstName = $scope.member.first_name;
-                    $scope.lastName = $scope.member.last_name;
-                    $scope.email = $scope.member.email;
-                    $scope.birthday = $scope.member.dob
-                    $scope.phone = $scope.member.phone;
-                    $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
-                    $scope.position = $scope.member.position;
-                    $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
-                    if ($scope.currentAddress.indexOf('null') > -1){
-                        $scope.currentAddress = null;
-                    }
-                    if ($scope.permanentAddress.indexOf('null') > -1){
-                        $scope.permanentAddress = null;
-                    }
-                    $scope.website = $scope.member.website;
-                    $scope.facebook = $scope.member.facebook;
-                    $scope.twitter = $scope.member.twitter;
-                    $scope.instagram = $scope.member.instagram;
-                    $scope.linkedin = $scope.member.linkedin;
+//                     return;
+//                 }
+//             }
+//             console.log('I made it to alumni');
+//             for(var i = 0; i<$rootScope.directory.alumni.length; i++)
+//             {
+//                 if($rootScope.directory.alumni[i].user_name == $stateParams.id)
+//                 {
+//                     $scope.member = $scope.directory.alumni[i];
+//                     $scope.prof_pic = $scope.member.prof_pic;
+//                      //define profile information
+//                     $scope.status = $scope.member.status;
+//                     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+//                     if ($scope.member.grad_month && $scope.member.grad_year){
+//                         $scope.graduation = month[$scope.member.grad_month-1] + " " + $scope.member.grad_year;
+//                     }
+//                     $scope.pledgeClass = $scope.member.pledge_class_semester + ' ' + $scope.member.pledge_class_year;
+//                     $scope.occupation = $scope.member.occupation;
+//                     $scope.position = $scope.member.position;
+//                     $scope.major = $scope.member.major;
+//                     $scope.firstName = $scope.member.first_name;
+//                     $scope.lastName = $scope.member.last_name;
+//                     $scope.email = $scope.member.email;
+//                     $scope.birthday = $scope.member.dob
+//                     $scope.phone = $scope.member.phone;
+//                     $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
+//                     $scope.position = $scope.member.position;
+//                     $scope.permanentAddress = $scope.member.perm_address+" "+$scope.member.perm_city+" "+$scope.member.perm_state+" "+$scope.member.perm_zip;
+//                     if ($scope.currentAddress.indexOf('null') > -1){
+//                         $scope.currentAddress = null;
+//                     }
+//                     if ($scope.permanentAddress.indexOf('null') > -1){
+//                         $scope.permanentAddress = null;
+//                     }
+//                     $scope.website = $scope.member.website;
+//                     $scope.facebook = $scope.member.facebook;
+//                     $scope.twitter = $scope.member.twitter;
+//                     $scope.instagram = $scope.member.instagram;
+//                     $scope.linkedin = $scope.member.linkedin;
 
-                    break;
-                }
-            }
+//                     break;
+//                 }
+//             }
             
-        }
-    });
-    });
+//         }
+//     });
+//     });
 
     
 
 //account info
-    App.controller('accountinfoController', function($scope, $http, $rootScope, Load){
-    routeChange();
-    Load.then(function(){
-        $scope.changePassword = function(old_pass, new_pass) {
-            var to_send = {password:new_pass, old_password: old_pass};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
-            .success(function(data) {
-                if(!checkResponseErrors(data)){
-                    $scope.passwordChanged = true;
-                    $scope.changeFailed = false;
-                }
-                else{
-                    console.log('Error: ' , data);
-                    $scope.changeFailed = true;
-                    $scope.passwordChanged = false;
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.changeFailed = true;
-                $scope.passwordChanged = false;
-            });              
-        }
-        $scope.updatedInfo = false;
-        $scope.item = $rootScope.me;
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.me = JSON.parse(data.data);
-                    $scope.userName = $rootScope.me.user_name;
-                    $scope.pledgeClass = $rootScope.me.pledge_class;
-                    $scope.item = $rootScope.me;
-                }
-                else
-                {
-                    console.log('ERROR: ',data);
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+    // App.controller('accountinfoController', function($scope, $http, $rootScope, Load){
+    // routeChange();
+    // Load.then(function(){
+    //     $scope.changePassword = function(old_pass, new_pass) {
+    //         var to_send = {password:new_pass, old_password: old_pass};
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
+    //         .success(function(data) {
+    //             if(!checkResponseErrors(data)){
+    //                 $scope.passwordChanged = true;
+    //                 $scope.changeFailed = false;
+    //             }
+    //             else{
+    //                 console.log('Error: ' , data);
+    //                 $scope.changeFailed = true;
+    //                 $scope.passwordChanged = false;
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             $scope.changeFailed = true;
+    //             $scope.passwordChanged = false;
+    //         });              
+    //     }
+    //     $scope.updatedInfo = false;
+    //     $scope.item = $rootScope.me;
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $rootScope.me = JSON.parse(data.data);
+    //                 $scope.userName = $rootScope.me.user_name;
+    //                 $scope.pledgeClass = $rootScope.me.pledge_class;
+    //                 $scope.item = $rootScope.me;
+    //             }
+    //             else
+    //             {
+    //                 console.log('ERROR: ',data);
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
         
-        $scope.checkAlumni = function(){
-            return $rootScope.checkAlumni();
-        }
+    //     $scope.checkAlumni = function(){
+    //         return $rootScope.checkAlumni();
+    //     }
         
         
-        $scope.updateAccount = function(isValid){
-            if(isValid){
-                $scope.working = 'pending';
-                console.log($scope.item.dob);
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        $scope.working = 'done';
-                        $scope.updatedInfo = true;
-                        $.removeCookie('FORM_INFO_EMPTY');
-                    }
-                    else
-                    {
-                        $scope.working = 'broken';
-                        console.log('ERROR: ',data);
-                    }
+    //     $scope.updateAccount = function(isValid){
+    //         if(isValid){
+    //             $scope.working = 'pending';
+    //             console.log($scope.item.dob);
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data))
+    //                 {
+    //                     $scope.working = 'done';
+    //                     $scope.updatedInfo = true;
+    //                     $.removeCookie('FORM_INFO_EMPTY');
+    //                 }
+    //                 else
+    //                 {
+    //                     $scope.working = 'broken';
+    //                     console.log('ERROR: ',data);
+    //                 }
                     
-                })
-                .error(function(data) {
-                    $scope.working = 'broken';
-                    console.log('Error: ' , data);
-                });
-            }
-            else{
-            //for validation purposes
-            $scope.submitted = true;
-            }
-        }
-    });
-    $scope.updateEmailPrefs = function(option){
-        var to_send = {email_prefs: option}
-        $scope.emailPrefUpdating = "pending";
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $scope.emailPrefUpdating = "done";
-                }
-                else
-                {
-                    console.log('ERROR: ',data);
-                    $scope.emailPrefUpdating = "broken";
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                console.log('I should be broken');
-                $scope.emailPrefUpdating = "broken";
-            });
-    }
+    //             })
+    //             .error(function(data) {
+    //                 $scope.working = 'broken';
+    //                 console.log('Error: ' , data);
+    //             });
+    //         }
+    //         else{
+    //         //for validation purposes
+    //         $scope.submitted = true;
+    //         }
+    //     }
+    // });
+    // $scope.updateEmailPrefs = function(option){
+    //     var to_send = {email_prefs: option}
+    //     $scope.emailPrefUpdating = "pending";
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 $scope.emailPrefUpdating = "done";
+    //             }
+    //             else
+    //             {
+    //                 console.log('ERROR: ',data);
+    //                 $scope.emailPrefUpdating = "broken";
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             console.log('I should be broken');
+    //             $scope.emailPrefUpdating = "broken";
+    //         });
+    // }
     
-    $scope.getUser = function(){
-        return $.cookie(USER_NAME);
-    }
-    $scope.getToken = function(){
-        return $.cookie(TOKEN);
-    }
-    });
+    // $scope.getUser = function(){
+    //     return $.cookie(USER_NAME);
+    // }
+    // $scope.getToken = function(){
+    //     return $.cookie(TOKEN);
+    // }
+    // });
 
 //upload image
-    App.controller('uploadImageController', function($scope, $http, Load, $rootScope){
-    routeChange();
-    Load.then(function(){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    //$scope.url = JSON.parse(data.data);
-                    window.location.assign("/#/app/accountinfo");
-                }
-                else
-                {
-                    console.log("error: ", data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+    // App.controller('uploadImageController', function($scope, $http, Load, $rootScope){
+    // routeChange();
+    // Load.then(function(){
+    //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data))
+    //             {
+    //                 //$scope.url = JSON.parse(data.data);
+    //                 window.location.assign("/#/app/accountinfo");
+    //             }
+    //             else
+    //             {
+    //                 console.log("error: ", data.error)
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //         });
         
-        $scope.showIndividual = function(member){
-            window.location.assign("/#/app/directory/user/"+member.user_name);
-        }
+    //     $scope.showIndividual = function(member){
+    //         window.location.assign("/#/app/directory/user/"+member.user_name);
+    //     }
         
-    });
-    });
+    // });
+    // });
 
 //member tagging page
 //     App.controller('membertagsController', function($scope, $http, $rootScope, Load, localStorageService) {
@@ -2971,1510 +2968,1509 @@ App.config(function($stateProvider, $urlRouterProvider) {
     // });
     // });
 
-    App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout, localStorageService) {
-        routeChange();
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
-            $scope.event = {};
-            $scope.event.tag = '';
-            $scope.tags = $rootScope.tags;
-            $scope.$watch('event.tag', function() {
-                if (!$scope.event)
-                    $scope.unavailable = false;
-                $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
-                $scope.unavailable = false;
-                $scope.available = false;
-            });
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.tags = JSON.parse(data.data);
-                        $rootScope.tags = JSON.parse(data.data);
-                        localStorageService.set('tags', $rootScope.tags);
-                    }
-                    else{
-                        console.log("error: ", data.error)
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
+    // App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout, localStorageService) {
+    //     routeChange();
+    //     Load.then(function(){
+    //         $rootScope.requirePermissions(LEADERSHIP);
+    //         $scope.event = {};
+    //         $scope.event.tag = '';
+    //         $scope.tags = $rootScope.tags;
+    //         $scope.$watch('event.tag', function() {
+    //             if (!$scope.event)
+    //                 $scope.unavailable = false;
+    //             $scope.event.tag = $scope.event.tag.replace(/\s+/g,'');
+    //             $scope.unavailable = false;
+    //             $scope.available = false;
+    //         });
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $scope.tags = JSON.parse(data.data);
+    //                     $rootScope.tags = JSON.parse(data.data);
+    //                     localStorageService.set('tags', $rootScope.tags);
+    //                 }
+    //                 else{
+    //                     console.log("error: ", data.error)
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
 
-            $scope.addEvent = function(isValid, event){
-                if(isValid){
-                    $scope.working = 'pending';
-                    event.tags = getCheckedTags($scope.tags);
-                    var to_send = JSON.parse(JSON.stringify(event));
-                    console.log('date start', event.date_start + " " + event.time_start);
-                    to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
-                    to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
-                    console.log(to_send.time_end);
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            $scope.working = 'done';
-                            setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
-                        }
-                        else{
-                            $scope.working = 'broken';
-                            console.log('ERROR: ',data);}
-                        $scope.loading = false;
-                    })
-                    .error(function(data) {
-                        $scope.working = 'broken';
-                        console.log('Error: ' , data);
-                        $scope.loading = false;
-                    });
-                $scope.loading = true;
-                $scope.unavailable = false;
-                $scope.available = false;
-                }
-                else{
-                    $scope.submitted = true;
-                }
-            }
-            $scope.checkTagAvailability = function(tag){
+    //         $scope.addEvent = function(isValid, event){
+    //             if(isValid){
+    //                 $scope.working = 'pending';
+    //                 event.tags = getCheckedTags($scope.tags);
+    //                 var to_send = JSON.parse(JSON.stringify(event));
+    //                 console.log('date start', event.date_start + " " + event.time_start);
+    //                 to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
+    //                 to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
+    //                 console.log(to_send.time_end);
+    //                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
+    //                 .success(function(data){
+    //                     if (!checkResponseErrors(data)){
+    //                         $scope.working = 'done';
+    //                         setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
+    //                     }
+    //                     else{
+    //                         $scope.working = 'broken';
+    //                         console.log('ERROR: ',data);}
+    //                     $scope.loading = false;
+    //                 })
+    //                 .error(function(data) {
+    //                     $scope.working = 'broken';
+    //                     console.log('Error: ' , data);
+    //                     $scope.loading = false;
+    //                 });
+    //             $scope.loading = true;
+    //             $scope.unavailable = false;
+    //             $scope.available = false;
+    //             }
+    //             else{
+    //                 $scope.submitted = true;
+    //             }
+    //         }
+    //         $scope.checkTagAvailability = function(tag){
                 
-                if (tag == ""){
-                    $scope.isEmpty = true;
-                }
-                else{
-                    $scope.checkWorking = 'pending';
-                    $scope.unavailable = false;
-                    $scope.available = false;
-                    $scope.isEmpty = false;
-                    console.log('Im about to send', tag);
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            $scope.checkWorking = 'done';
-                            $scope.available = true;
-                            $scope.unavailable = false;
-                        }
-                        else{
-                            $scope.checkWorking = 'broken';
-                            $scope.unavailable = true;
-                            $scope.available = false;
-                        }
-                    })
-                    .error(function(data) {
-                        $scope.checkWorking = 'broken';
-                        console.log('Error: ' , data);
-                    });
-                }
-            }
-        });
-        $scope.$watch('event.date_start', function(){
-            if ($scope.event){
-                if ($scope.event.date_start && !$scope.event.date_end){
-                    $scope.event.date_end = JSON.parse(JSON.stringify($scope.event.date_start));
-                    console.log(moment().add('hours', 1).format('h:[00] A'));
+    //             if (tag == ""){
+    //                 $scope.isEmpty = true;
+    //             }
+    //             else{
+    //                 $scope.checkWorking = 'pending';
+    //                 $scope.unavailable = false;
+    //                 $scope.available = false;
+    //                 $scope.isEmpty = false;
+    //                 console.log('Im about to send', tag);
+    //                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
+    //                 .success(function(data){
+    //                     if (!checkResponseErrors(data)){
+    //                         $scope.checkWorking = 'done';
+    //                         $scope.available = true;
+    //                         $scope.unavailable = false;
+    //                     }
+    //                     else{
+    //                         $scope.checkWorking = 'broken';
+    //                         $scope.unavailable = true;
+    //                         $scope.available = false;
+    //                     }
+    //                 })
+    //                 .error(function(data) {
+    //                     $scope.checkWorking = 'broken';
+    //                     console.log('Error: ' , data);
+    //                 });
+    //             }
+    //         }
+    //     });
+    //     $scope.$watch('event.date_start', function(){
+    //         if ($scope.event){
+    //             if ($scope.event.date_start && !$scope.event.date_end){
+    //                 $scope.event.date_end = JSON.parse(JSON.stringify($scope.event.date_start));
+    //                 console.log(moment().add('hours', 1).format('h:[00] A'));
                     
-                    $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
-                    $timeout(function(){$('.picker').trigger('change')},200);
-                }
-            }
-        })
-        $scope.$watch('event.time_start', function(){
-            console.log('I see that change!!!');
-            if ($scope.event){
-                if ($scope.event.time_start){
+    //                 $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
+    //                 $timeout(function(){$('.picker').trigger('change')},200);
+    //             }
+    //         }
+    //     })
+    //     $scope.$watch('event.time_start', function(){
+    //         console.log('I see that change!!!');
+    //         if ($scope.event){
+    //             if ($scope.event.time_start){
                     
-                    $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
-                    var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
-                    if (test && $scope.event.date_start == $scope.event.date_end){
-                        console.log('difference', moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0);
-                        console.log('time_end', $scope.event.time_end);
-                        console.log('time_start', $scope.event.time_start);
-                        $scope.event.date_end = moment($scope.event.date_end).add('days', 1).format('MM/DD/YYYY');
-                    }
-                }
-                $timeout(function(){$('.picker').trigger('change')},200);
-            }
-        })
-    });
+    //                 $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+    //                 var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
+    //                 if (test && $scope.event.date_start == $scope.event.date_end){
+    //                     console.log('difference', moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0);
+    //                     console.log('time_end', $scope.event.time_end);
+    //                     console.log('time_start', $scope.event.time_start);
+    //                     $scope.event.date_end = moment($scope.event.date_end).add('days', 1).format('MM/DD/YYYY');
+    //                 }
+    //             }
+    //             $timeout(function(){$('.picker').trigger('change')},200);
+    //         }
+    //     })
+    // });
 
-    App.controller('eventsController', function($scope, $http, Load, $rootScope, localStorageService) {
-        routeChange();
+ //    App.controller('eventsController', function($scope, $http, Load, $rootScope, localStorageService) {
+ //        routeChange();
         
-        Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
-            $scope.events = $rootScope.events;
-            $scope.eventSource = [];
-            for (var i = 0; i< $scope.events.length; i++){
-                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});}
-                //send the organization and user date from registration pages
-            function getEvents(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.events = JSON.parse(data.data);
-                        $rootScope.events = $scope.events;
-                        localStorageService.set('events', $rootScope.events);
-                        for (var i = 0; i< $scope.events.length; i++){
-                            if ($scope.eventSource.indexOf({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag}) != -1){
-                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag});
-                            }
-                        }
-                        console.log($scope.eventSource);
-                    }
-                    else
-                        console.log('ERROR: ',data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    getEvents();
-                });
-            }
+ //        Load.then(function(){
+ //            $rootScope.requirePermissions(MEMBER);
+ //            $scope.events = $rootScope.events;
+ //            $scope.eventSource = [];
+ //            for (var i = 0; i< $scope.events.length; i++){
+ //                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});}
+ //                //send the organization and user date from registration pages
+ //            function getEvents(){
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data)){
+ //                        $scope.events = JSON.parse(data.data);
+ //                        $rootScope.events = $scope.events;
+ //                        localStorageService.set('events', $rootScope.events);
+ //                        for (var i = 0; i< $scope.events.length; i++){
+ //                            if ($scope.eventSource.indexOf({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag}) != -1){
+ //                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag});
+ //                            }
+ //                        }
+ //                        console.log($scope.eventSource);
+ //                    }
+ //                    else
+ //                        console.log('ERROR: ',data);
+ //                })
+ //                .error(function(data) {
+ //                    console.log('Error: ' , data);
+ //                    getEvents();
+ //                });
+ //            }
             
-            $scope.showDate = function(start, end){
-                var mStart = momentInTimezone(start);
+ //            $scope.showDate = function(start, end){
+ //                var mStart = momentInTimezone(start);
                 
-                if (mStart.diff(moment()) > 0){
-                   return mStart.calendar(); 
-                }
-                var mEnd = momentInTimezone(end);
-                if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
-                    return 'Happening Now';
-                }
-                if (mEnd.diff(moment()) < 0){
-                    return 'Already Happened';
-                }
-            }
-            $scope.showEvent = function(event){
-                window.location.assign('#/app/events/' + event.tag);
-            }
-            $scope.$watch('search', function(){
-                if ($scope.current){
-                    $scope.current.currentPage = 0;
-                    if ($scope.search){
-                        $scope.present = undefined;
-                    }
-                    else{
-                        $scope.present = true; 
-                    }
-                }
-            })
-	   });
-	});
+ //                if (mStart.diff(moment()) > 0){
+ //                   return mStart.calendar(); 
+ //                }
+ //                var mEnd = momentInTimezone(end);
+ //                if (mStart.diff(moment()) < 0 && mEnd.diff(moment())>0){
+ //                    return 'Happening Now';
+ //                }
+ //                if (mEnd.diff(moment()) < 0){
+ //                    return 'Already Happened';
+ //                }
+ //            }
+ //            $scope.showEvent = function(event){
+ //                window.location.assign('#/app/events/' + event.tag);
+ //            }
+ //            $scope.$watch('search', function(){
+ //                if ($scope.current){
+ //                    $scope.current.currentPage = 0;
+ //                    if ($scope.search){
+ //                        $scope.present = undefined;
+ //                    }
+ //                    else{
+ //                        $scope.present = true; 
+ //                    }
+ //                }
+ //            })
+	//    });
+	// });
 
 
-    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
-        routeChange();
+ //    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+ //        routeChange();
         
-        $scope.going = false;
-        $scope.not_going = false;
-        $scope.loading = true;
-        $scope.goToReport = function(){
-            window.location.assign("#/app/events/" + $stateParams.tag + "/report");
-        }
-        $scope.saveEvent = function(){
-              /*BEGIN:VCALENDAR
-                VERSION:2.0
-                BEGIN:VEVENT
-                DTEND;TZID=America/Chicago:20140709T110000
-                SUMMARY:Test Event
-                DTSTART;TZID=America/Chicago:20140709T100000
-                DESCRIPTION:This is the description!
-                END:VEVENT
-                END:VCALENDAR*/
-            var event = $scope.event;
-            var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
-            out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
-            out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
-            out_string += 'SUMMARY:'+event.title.replace(/(\r\n|\n|\r)/gm," ") + '\n';
-            out_string += 'DESCRIPTION:'+event.description.replace(/(\r\n|\n|\r)/gm," ") + '\n';
-            out_string += 'END:VEVENT\nEND:VCALENDAR';
-            var a         = document.createElement('a');
-               a.href        = 'data:text/calendar,' + encodeURIComponent(out_string);
-               a.target      = '_blank';
-               a.download    = event.title.replace(/(\r\n|\n|\r)/gm," ") + '.ics';
-               console.log(a.href);
-               document.body.appendChild(a);
-               a.click();
-               document.body.removeChild(a);
-        }
+ //        $scope.going = false;
+ //        $scope.not_going = false;
+ //        $scope.loading = true;
+ //        $scope.goToReport = function(){
+ //            window.location.assign("#/app/events/" + $stateParams.tag + "/report");
+ //        }
+ //        $scope.saveEvent = function(){
+ //              /*BEGIN:VCALENDAR
+ //                VERSION:2.0
+ //                BEGIN:VEVENT
+ //                DTEND;TZID=America/Chicago:20140709T110000
+ //                SUMMARY:Test Event
+ //                DTSTART;TZID=America/Chicago:20140709T100000
+ //                DESCRIPTION:This is the description!
+ //                END:VEVENT
+ //                END:VCALENDAR*/
+ //            var event = $scope.event;
+ //            var out_string = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
+ //            out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
+ //            out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
+ //            out_string += 'SUMMARY:'+event.title.replace(/(\r\n|\n|\r)/gm," ") + '\n';
+ //            out_string += 'DESCRIPTION:'+event.description.replace(/(\r\n|\n|\r)/gm," ") + '\n';
+ //            out_string += 'END:VEVENT\nEND:VCALENDAR';
+ //            var a         = document.createElement('a');
+ //               a.href        = 'data:text/calendar,' + encodeURIComponent(out_string);
+ //               a.target      = '_blank';
+ //               a.download    = event.title.replace(/(\r\n|\n|\r)/gm," ") + '.ics';
+ //               console.log(a.href);
+ //               document.body.appendChild(a);
+ //               a.click();
+ //               document.body.removeChild(a);
+ //        }
         
-        $scope.mapEvent = function(){
-            if ($scope.event.address){
-                return $scope.event.address.split(' ').join('+');
-            }
-            return " ";
-        }
-        Load.then(function(){
-        $rootScope.requirePermissions(MEMBER);
-        $scope.tags = $rootScope.tags;
-        var event_tag = $stateParams.tag;
-        tryLoadEvent(0);
-        getEventAndSetInfo($rootScope.events, 0);
-	   });
-        function tryLoadEvent(count){
-            LoadEvents();
-            function LoadEvents(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            var events = JSON.parse(data.data);
-                            $rootScope.events = events;
-                            getEventAndSetInfo(events, count);
-                        }
-                        else{
-                            console.log('ERROR: ',data);
-                        }
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' , data);
-                        tryLoadEvent(count+1);
-                    });
-            }
-        }   
-        function getEventAndSetInfo(events, count){
-            function getUsersFromKey(key){
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    if ($rootScope.directory.members[i].key == key){
-                        return $rootScope.directory.members[i];
-                    }
-                }
-                return null;
-            }
-            var event = undefined;
-            for (var i = 0; i < events.length; i++){
-                if (events[i].tag == $stateParams.tag){
-                    event = events[i];
-                    break;
-                }
-            }
-            if (event === undefined){
-                if (count < 3){
-                    console.log(count);
-                setTimeout(function(){tryLoadEvent(count+1)}, 500);
-                return;
-                }
-                else{
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                    console.log('I think I couldnt find the event');
-                    return;
-                }
-            }
-            event.going_list = []
-            event.not_going_list = []
-            for (var i = 0; i < event.going.length; i++){
-                var user_push = getUsersFromKey(event.going[i])
-                event.going_list.push(user_push);
-                if (user_push.user_name == $rootScope.me.user_name){
-                    $scope.going = true;
-                    $scope.not_going = false;
-                }
-            }
-            for (var i = 0; i < event.not_going.length; i++){
-                var user_push = getUsersFromKey(event.not_going[i])
-                event.not_going_list.push(user_push);
-                if (user_push.user_name == $rootScope.me.user_name){
-                    $scope.not_going = true;
-                    $scope.going = false;
-                }
-            }
-            $scope.creator = getUsersFromKey(event.creator);
-            $scope.event = event;
-                if($scope.event.address){
-                $scope.address_html = $scope.event.address.split(' ').join('+');
-                }
-                if($scope.event.location || !$scope.event.address){
-                $scope.address_html = $scope.event.location.split(' ').join('+');
-                }
-            $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
-            $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
-            $scope.loading = false;
-            $scope.eventNotFound = false;
+ //        $scope.mapEvent = function(){
+ //            if ($scope.event.address){
+ //                return $scope.event.address.split(' ').join('+');
+ //            }
+ //            return " ";
+ //        }
+ //        Load.then(function(){
+ //        $rootScope.requirePermissions(MEMBER);
+ //        $scope.tags = $rootScope.tags;
+ //        var event_tag = $stateParams.tag;
+ //        tryLoadEvent(0);
+ //        getEventAndSetInfo($rootScope.events, 0);
+	//    });
+ //        function tryLoadEvent(count){
+ //            LoadEvents();
+ //            function LoadEvents(){
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+ //                    .success(function(data){
+ //                        if (!checkResponseErrors(data)){
+ //                            var events = JSON.parse(data.data);
+ //                            $rootScope.events = events;
+ //                            getEventAndSetInfo(events, count);
+ //                        }
+ //                        else{
+ //                            console.log('ERROR: ',data);
+ //                        }
+ //                    })
+ //                    .error(function(data) {
+ //                        console.log('Error: ' , data);
+ //                        tryLoadEvent(count+1);
+ //                    });
+ //            }
+ //        }   
+ //        function getEventAndSetInfo(events, count){
+ //            function getUsersFromKey(key){
+ //                for (var i = 0; i < $rootScope.directory.members.length; i++){
+ //                    if ($rootScope.directory.members[i].key == key){
+ //                        return $rootScope.directory.members[i];
+ //                    }
+ //                }
+ //                return null;
+ //            }
+ //            var event = undefined;
+ //            for (var i = 0; i < events.length; i++){
+ //                if (events[i].tag == $stateParams.tag){
+ //                    event = events[i];
+ //                    break;
+ //                }
+ //            }
+ //            if (event === undefined){
+ //                if (count < 3){
+ //                    console.log(count);
+ //                setTimeout(function(){tryLoadEvent(count+1)}, 500);
+ //                return;
+ //                }
+ //                else{
+ //                    $scope.eventNotFound = true;
+ //                    $scope.loading = false;
+ //                    console.log('I think I couldnt find the event');
+ //                    return;
+ //                }
+ //            }
+ //            event.going_list = []
+ //            event.not_going_list = []
+ //            for (var i = 0; i < event.going.length; i++){
+ //                var user_push = getUsersFromKey(event.going[i])
+ //                event.going_list.push(user_push);
+ //                if (user_push.user_name == $rootScope.me.user_name){
+ //                    $scope.going = true;
+ //                    $scope.not_going = false;
+ //                }
+ //            }
+ //            for (var i = 0; i < event.not_going.length; i++){
+ //                var user_push = getUsersFromKey(event.not_going[i])
+ //                event.not_going_list.push(user_push);
+ //                if (user_push.user_name == $rootScope.me.user_name){
+ //                    $scope.not_going = true;
+ //                    $scope.going = false;
+ //                }
+ //            }
+ //            $scope.creator = getUsersFromKey(event.creator);
+ //            $scope.event = event;
+ //                if($scope.event.address){
+ //                $scope.address_html = $scope.event.address.split(' ').join('+');
+ //                }
+ //                if($scope.event.location || !$scope.event.address){
+ //                $scope.address_html = $scope.event.location.split(' ').join('+');
+ //                }
+ //            $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
+ //            $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
+ //            $scope.loading = false;
+ //            $scope.eventNotFound = false;
             
-            setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800);
+ //            setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800);
             
-        }
-        $scope.editEvent = function(){
-            window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
-        }
-        $scope.rsvp = function(rsvp){
-            console.log($scope.event.key);
-            var to_send = {key: $scope.event.key};
-            console.log("what is going on");
-            if (rsvp){
-                to_send.rsvp = 'going';
-            }
-            else{
-                to_send.rsvp = 'not_going';
-            }
-            to_send.key = $scope.event.key;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/rsvp', packageForSending(to_send))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            if (rsvp){
-                                $scope.going = true;
-                                $scope.not_going = false;
-                            }
-                            else{
-                                $scope.going = false;
-                                $scope.not_going = true;
-                            }
-                        }
-                        else{
-                            console.log('ERROR: ',data);
-                        }
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' , data);
-                    });
-        }
-        $scope.formatDate = function(date){
-            return moment(date).format('dddd - MMMM Do [at] h:mma');
-        }
-	});
+ //        }
+ //        $scope.editEvent = function(){
+ //            window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
+ //        }
+ //        $scope.rsvp = function(rsvp){
+ //            console.log($scope.event.key);
+ //            var to_send = {key: $scope.event.key};
+ //            console.log("what is going on");
+ //            if (rsvp){
+ //                to_send.rsvp = 'going';
+ //            }
+ //            else{
+ //                to_send.rsvp = 'not_going';
+ //            }
+ //            to_send.key = $scope.event.key;
+ //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/rsvp', packageForSending(to_send))
+ //                    .success(function(data){
+ //                        if (!checkResponseErrors(data)){
+ //                            if (rsvp){
+ //                                $scope.going = true;
+ //                                $scope.not_going = false;
+ //                            }
+ //                            else{
+ //                                $scope.going = false;
+ //                                $scope.not_going = true;
+ //                            }
+ //                        }
+ //                        else{
+ //                            console.log('ERROR: ',data);
+ //                        }
+ //                    })
+ //                    .error(function(data) {
+ //                        console.log('Error: ' , data);
+ //                    });
+ //        }
+ //        $scope.formatDate = function(date){
+ //            return moment(date).format('dddd - MMMM Do [at] h:mma');
+ //        }
+	// });
 
-    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout){
-        routeChange();
-        $scope.loading = true;
-        Load.then(function(){
-        $rootScope.requirePermissions(LEADERSHIP);
-        $scope.tags = $rootScope.tags;
-        var event_tag = $stateParams.tag;
-        tryLoadEvent(0);
-	   });
+ //    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout){
+ //        routeChange();
+ //        $scope.loading = true;
+ //        Load.then(function(){
+ //        $rootScope.requirePermissions(LEADERSHIP);
+ //        $scope.tags = $rootScope.tags;
+ //        var event_tag = $stateParams.tag;
+ //        tryLoadEvent(0);
+	//    });
         
-        //prevent form from submitting on enter
-    $('#newEvent').bind("keyup keypress", function(e) {
-          var code = e.keyCode || e.which; 
-          if (code  == 13) {               
-            e.preventDefault();
-            return false;
-          }
-    });
+ //        //prevent form from submitting on enter
+ //    $('#newEvent').bind("keyup keypress", function(e) {
+ //          var code = e.keyCode || e.which; 
+ //          if (code  == 13) {               
+ //            e.preventDefault();
+ //            return false;
+ //          }
+ //    });
         
-        $scope.openDeleteEventModal = function(){
-            $('#deleteEventModal').modal();
-        }
-        $scope.deleteEvent = function(){
-            $('#deleteEventModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
-            .success(function(data){
-                $scope.loading = true;
-                if (!checkResponseErrors(data)){
-                    window.location.replace('#/app/events');
-                    for (var i = 0; i < $rootScope.events.length; i++){
-                        if ($rootScope.events[i].tag == $stateParams.tag){
-                            $rootScope.events.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-        function tryLoadEvent(count){
-            LoadEvents();
-            function LoadEvents(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            var events = JSON.parse(data.data);
-                            $rootScope.events = events;
-                            getEventAndSetInfo(events, count);
-                        }
-                        else{
-                            console.log('ERROR: ',data);
-                        }
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' , data);
-                    });
-                }
-        }   
-        function getEventAndSetInfo(events, count){
-            function getUsersFromKey(key){
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    console.log($rootScope.directory.members[i].key);
-                    if ($rootScope.directory.members[i].key == key){
-                        return $rootScope.directory.members[i];
-                    }
-                }
-                return null;
-            }
-            var event = undefined;
-            for (var i = 0; i < events.length; i++){
-                if (events[i].tag == $stateParams.tag){
-                    event = events[i];
-                    break;
-                }
-            }
-            if (event === undefined){
-                if (count < 2){
-                    console.log(count);
-                setTimeout(function(){tryLoadEvent(count+1)}, 500);
-                return;
-                }
-                else{
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                    return;
-                }
-            }
-            event.going_list = []
-            event.not_going_list = []
-            for (var i = 0; i < event.going.length; i++){
-                event.going_list.push(getUsersFromKey(event.going[i]));
-            }
-            for (var i = 0; i < event.not_going.length; i++){
-                event.not_going_list.push(getUsersFromKey(event.not_going[i]));
-            }
-            $scope.event = event;
-            $scope.time_start = momentInTimezone($scope.event.time_start).format('hh:mm A');
-            $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
-            $scope.time_end = momentInTimezone($scope.event.time_end).format('hh:mm A');  
-            $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
-            console.log($scope.event.time_end);
+ //        $scope.openDeleteEventModal = function(){
+ //            $('#deleteEventModal').modal();
+ //        }
+ //        $scope.deleteEvent = function(){
+ //            $('#deleteEventModal').modal('hide');
+ //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
+ //            .success(function(data){
+ //                $scope.loading = true;
+ //                if (!checkResponseErrors(data)){
+ //                    window.location.replace('#/app/events');
+ //                    for (var i = 0; i < $rootScope.events.length; i++){
+ //                        if ($rootScope.events[i].tag == $stateParams.tag){
+ //                            $rootScope.events.splice(i, 1);
+ //                            break;
+ //                        }
+ //                    }
+ //                }
+ //            });
+ //        }
+ //        function tryLoadEvent(count){
+ //            LoadEvents();
+ //            function LoadEvents(){
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+ //                    .success(function(data){
+ //                        if (!checkResponseErrors(data)){
+ //                            var events = JSON.parse(data.data);
+ //                            $rootScope.events = events;
+ //                            getEventAndSetInfo(events, count);
+ //                        }
+ //                        else{
+ //                            console.log('ERROR: ',data);
+ //                        }
+ //                    })
+ //                    .error(function(data) {
+ //                        console.log('Error: ' , data);
+ //                    });
+ //                }
+ //        }   
+ //        function getEventAndSetInfo(events, count){
+ //            function getUsersFromKey(key){
+ //                for (var i = 0; i < $rootScope.directory.members.length; i++){
+ //                    console.log($rootScope.directory.members[i].key);
+ //                    if ($rootScope.directory.members[i].key == key){
+ //                        return $rootScope.directory.members[i];
+ //                    }
+ //                }
+ //                return null;
+ //            }
+ //            var event = undefined;
+ //            for (var i = 0; i < events.length; i++){
+ //                if (events[i].tag == $stateParams.tag){
+ //                    event = events[i];
+ //                    break;
+ //                }
+ //            }
+ //            if (event === undefined){
+ //                if (count < 2){
+ //                    console.log(count);
+ //                setTimeout(function(){tryLoadEvent(count+1)}, 500);
+ //                return;
+ //                }
+ //                else{
+ //                    $scope.eventNotFound = true;
+ //                    $scope.loading = false;
+ //                    return;
+ //                }
+ //            }
+ //            event.going_list = []
+ //            event.not_going_list = []
+ //            for (var i = 0; i < event.going.length; i++){
+ //                event.going_list.push(getUsersFromKey(event.going[i]));
+ //            }
+ //            for (var i = 0; i < event.not_going.length; i++){
+ //                event.not_going_list.push(getUsersFromKey(event.not_going[i]));
+ //            }
+ //            $scope.event = event;
+ //            $scope.time_start = momentInTimezone($scope.event.time_start).format('hh:mm A');
+ //            $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
+ //            $scope.time_end = momentInTimezone($scope.event.time_end).format('hh:mm A');  
+ //            $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
+ //            console.log($scope.event.time_end);
 
-            for (var i = 0; i < $scope.tags.org_tags.length; i++){
-                for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
-                    if ($scope.event.tags.org_tags[j] == $scope.tags.org_tags[i].name){
-                        $scope.tags.org_tags[i].checked = true;
-                    }
-                }
-            }
-            for (var i = 0; i < $scope.tags.perms_tags.length; i++){
-                for (var j = 0; j < $scope.event.tags.perms_tags.length; j++){
-                    if ($scope.event.tags.perms_tags[j] == $scope.tags.perms_tags[i].name.toLowerCase()){
-                        $scope.tags.perms_tags[i].checked = true;
-                    }
-                }
-            }
-            $scope.loading = false;
-            $timeout(function(){$('.picker').trigger('change')},200);
-        }
-    $scope.submitEdits = function(isValid){
-        if (isValid){
-            $scope.working = 'pending';
-            var to_send = JSON.parse(JSON.stringify($scope.event));
-            to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
-            to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
-            to_send.tags = getCheckedTags($scope.tags);
-            console.log(to_send.tags);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    $scope.working = "done";
-                    getEvents;
-                    window.location.assign('#/app/events');
-                }
-                else{
-                    $scope.working = "broken";
-                    console.log('ERROR: ',data);
-                }
-            })
-            .error(function(data) {
-                $scope.working = "broken";
-                console.log('Error: ' , data);
-            });
-        }
-    }
-	});
+ //            for (var i = 0; i < $scope.tags.org_tags.length; i++){
+ //                for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
+ //                    if ($scope.event.tags.org_tags[j] == $scope.tags.org_tags[i].name){
+ //                        $scope.tags.org_tags[i].checked = true;
+ //                    }
+ //                }
+ //            }
+ //            for (var i = 0; i < $scope.tags.perms_tags.length; i++){
+ //                for (var j = 0; j < $scope.event.tags.perms_tags.length; j++){
+ //                    if ($scope.event.tags.perms_tags[j] == $scope.tags.perms_tags[i].name.toLowerCase()){
+ //                        $scope.tags.perms_tags[i].checked = true;
+ //                    }
+ //                }
+ //            }
+ //            $scope.loading = false;
+ //            $timeout(function(){$('.picker').trigger('change')},200);
+ //        }
+ //    $scope.submitEdits = function(isValid){
+ //        if (isValid){
+ //            $scope.working = 'pending';
+ //            var to_send = JSON.parse(JSON.stringify($scope.event));
+ //            to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
+ //            to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
+ //            to_send.tags = getCheckedTags($scope.tags);
+ //            console.log(to_send.tags);
+ //        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
+ //            .success(function(data){
+ //                if (!checkResponseErrors(data)){
+ //                    $scope.working = "done";
+ //                    getEvents;
+ //                    window.location.assign('#/app/events');
+ //                }
+ //                else{
+ //                    $scope.working = "broken";
+ //                    console.log('ERROR: ',data);
+ //                }
+ //            })
+ //            .error(function(data) {
+ //                $scope.working = "broken";
+ //                console.log('Error: ' , data);
+ //            });
+ //        }
+ //    }
+	// });
 
-    App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope, $timeout) {
-        routeChange();
-        function setTimeout(scope, fn, delay) {
-            var promise = $timeout(fn, delay);
-            var deregister = scope.$on('$destroy', function() {
-                $timeout.cancel(promise);
-            });
-            promise.then(deregister);
-        }
-        update();
-        function update() {
-            console.log('starting update');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    console.log('I am updating the user check in stuff!');
-                    var users = JSON.parse(data.data);
-                    var counter = 0;
-                    if (users){
-                        for (var i = 0; i < $scope.users.length; i++){
-                            counter++;
-                            var user = $scope.users[i];
-                            if (user.attendance_data){
-                                if (user.attendance_data.in_updating || user.attendance_data.out_updating){
-                                    continue;
-                                }
-                                if (user.timestamp_moment){
-                                    if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 5){
-                                        continue;
-                                    }
-                                }
-                                $scope.users[i] = users[i];
-                            }
-                        }
-                    }
-                }
-                setTimeout($scope, update, 15000);
-            });
-        }
-        $scope.loading = true;
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
-            getCheckInData();
-            $scope.maxLength = 20;
-            $scope.maxLengthIncrease = function(){
-                if ($scope.users){
-                    if ($scope.maxLength < $scope.users.length){
-                        $scope.maxLength += 20;
-                    }
-                }
-            }
-            $scope.$watch('search', function(){
-                if ($scope.search){
-                    $scope.maxLength = 20;    
-                }
-            });
-        });
-        function getCheckInData(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    $scope.users = JSON.parse(data.data);  
-                    $scope.loading = false;
-                    console.log('Im ending get check in data');
-                }
-                else{
-                    console.log('ERROR: ',data);
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.loading = false;
-                $scope.eventNotFound = true;
-            });
-        }
-        $scope.eventTag = $stateParams.tag;
-        $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
-            member.timestamp_moment = moment();
-            if(checkStatus && member.attendance_data && member.attendance_data.time_in){
-                $('#checkInModal').modal();
-                $scope.selectedUser = member;
-                return;
-            }
-            $('#checkInModal').modal('hide');
-            var to_send = {event_tag: $stateParams.tag, user_key: member.key};
-            if (!member.attendance_data){
-                    member.attendance_data = {}
-            }
-            if (clear){
-                to_send.clear = true;
-                member.attendance_data.time_in = "";
-            }
-            else{
-                member.attendance_data.time_in = momentUTCTime();
-            }
-            member.in_updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    member.in_updating = "done";
-                    member.timestamp_moment = moment();
-                }
-                else{
-                    member.in_updating = "broken";
-                    console.log('ERROR: ',data);
-                }
-            })
-            .error(function(data) {
-                member.in_updating = "broken";
-                console.log('Error: ' , data);
-            });
-        }
-        $scope.checkOut = function(member, checkStatus, clear){
-            member.timestamp_moment = moment();
-            if(checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in){
-                $('#checkOutModal').modal();
-                $scope.selectedUser = member;
-                return;
-            }
-            $('#checkOutModal').modal('hide');
-            var to_send = {event_tag: $stateParams.tag, user_key: member.key};
-            if (!member.attendance_data){
-                member.attendance_data = {};
-            }
-            if (clear){
-                to_send.clear = true;
-                member.attendance_data.time_out = "";
-            }
-            else {
-                member.attendance_data.time_out = momentUTCTime();
-            }
-            member.out_updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    member.out_updating = 'done';
-                    member.timestamp_moment = moment();
-                }
-                else{
-                    console.log('ERROR: ', data);
-                    member.out_updating = 'broken';
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                member.out_updating = 'broken';
-            });
-        }
-        $scope.formatDate = function(date){
-            return momentInTimezone(date).format('lll');
-        }
-    });
+    // App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope, $timeout) {
+    //     routeChange();
+    //     function setTimeout(scope, fn, delay) {
+    //         var promise = $timeout(fn, delay);
+    //         var deregister = scope.$on('$destroy', function() {
+    //             $timeout.cancel(promise);
+    //         });
+    //         promise.then(deregister);
+    //     }
+    //     update();
+    //     function update() {
+    //         console.log('starting update');
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data)){
+    //                 console.log('I am updating the user check in stuff!');
+    //                 var users = JSON.parse(data.data);
+    //                 var counter = 0;
+    //                 if (users){
+    //                     for (var i = 0; i < $scope.users.length; i++){
+    //                         counter++;
+    //                         var user = $scope.users[i];
+    //                         if (user.attendance_data){
+    //                             if (user.attendance_data.in_updating || user.attendance_data.out_updating){
+    //                                 continue;
+    //                             }
+    //                             if (user.timestamp_moment){
+    //                                 if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 5){
+    //                                     continue;
+    //                                 }
+    //                             }
+    //                             $scope.users[i] = users[i];
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //             setTimeout($scope, update, 15000);
+    //         });
+    //     }
+    //     $scope.loading = true;
+    //     Load.then(function(){
+    //         $rootScope.requirePermissions(LEADERSHIP);
+    //         getCheckInData();
+    //         $scope.maxLength = 20;
+    //         $scope.maxLengthIncrease = function(){
+    //             if ($scope.users){
+    //                 if ($scope.maxLength < $scope.users.length){
+    //                     $scope.maxLength += 20;
+    //                 }
+    //             }
+    //         }
+    //         $scope.$watch('search', function(){
+    //             if ($scope.search){
+    //                 $scope.maxLength = 20;    
+    //             }
+    //         });
+    //     });
+    //     function getCheckInData(){
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data)){
+    //                 $scope.users = JSON.parse(data.data);  
+    //                 $scope.loading = false;
+    //                 console.log('Im ending get check in data');
+    //             }
+    //             else{
+    //                 console.log('ERROR: ',data);
+    //                 $scope.eventNotFound = true;
+    //                 $scope.loading = false;
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             $scope.loading = false;
+    //             $scope.eventNotFound = true;
+    //         });
+    //     }
+    //     $scope.eventTag = $stateParams.tag;
+    //     $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
+    //         member.timestamp_moment = moment();
+    //         if(checkStatus && member.attendance_data && member.attendance_data.time_in){
+    //             $('#checkInModal').modal();
+    //             $scope.selectedUser = member;
+    //             return;
+    //         }
+    //         $('#checkInModal').modal('hide');
+    //         var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+    //         if (!member.attendance_data){
+    //                 member.attendance_data = {}
+    //         }
+    //         if (clear){
+    //             to_send.clear = true;
+    //             member.attendance_data.time_in = "";
+    //         }
+    //         else{
+    //             member.attendance_data.time_in = momentUTCTime();
+    //         }
+    //         member.in_updating = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data)){
+    //                 member.in_updating = "done";
+    //                 member.timestamp_moment = moment();
+    //             }
+    //             else{
+    //                 member.in_updating = "broken";
+    //                 console.log('ERROR: ',data);
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             member.in_updating = "broken";
+    //             console.log('Error: ' , data);
+    //         });
+    //     }
+    //     $scope.checkOut = function(member, checkStatus, clear){
+    //         member.timestamp_moment = moment();
+    //         if(checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in){
+    //             $('#checkOutModal').modal();
+    //             $scope.selectedUser = member;
+    //             return;
+    //         }
+    //         $('#checkOutModal').modal('hide');
+    //         var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+    //         if (!member.attendance_data){
+    //             member.attendance_data = {};
+    //         }
+    //         if (clear){
+    //             to_send.clear = true;
+    //             member.attendance_data.time_out = "";
+    //         }
+    //         else {
+    //             member.attendance_data.time_out = momentUTCTime();
+    //         }
+    //         member.out_updating = 'pending';
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
+    //         .success(function(data){
+    //             if (!checkResponseErrors(data)){
+    //                 member.out_updating = 'done';
+    //                 member.timestamp_moment = moment();
+    //             }
+    //             else{
+    //                 console.log('ERROR: ', data);
+    //                 member.out_updating = 'broken';
+    //             }
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' , data);
+    //             member.out_updating = 'broken';
+    //         });
+    //     }
+    //     $scope.formatDate = function(date){
+    //         return momentInTimezone(date).format('lll');
+    //     }
+    // });
 
-    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter) {
-        routeChange();
-        $scope.maxLength = 0;
-        $scope.maxNoShowsLength = 0;
-        $scope.loading = true;
-        $scope.increaseMaxLength = function(){
-            if ($scope.users && $scope.shows){
-                if ($scope.maxLength < $scope.users.length){
-                    $scope.maxLength += 20;
-                    $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
-                }
-            }
-        }
-		$scope.$watch('search', function(){
-			if ($scope.search){
-				$scope.maxNoShowsLength = 10;
-				$scope.maxLength = 10;
-			}
-			else{
-				$scope.maxLength = 20;
-				$scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
-			}
-		});
+//     App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter) {
+//         routeChange();
+//         $scope.maxLength = 0;
+//         $scope.maxNoShowsLength = 0;
+//         $scope.loading = true;
+//         $scope.increaseMaxLength = function(){
+//             if ($scope.users && $scope.shows){
+//                 if ($scope.maxLength < $scope.users.length){
+//                     $scope.maxLength += 20;
+//                     $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
+//                 }
+//             }
+//         }
+// 		$scope.$watch('search', function(){
+// 			if ($scope.search){
+// 				$scope.maxNoShowsLength = 10;
+// 				$scope.maxLength = 10;
+// 			}
+// 			else{
+// 				$scope.maxLength = 20;
+// 				$scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
+// 			}
+// 		});
         
-        $scope.getProfPic = function(link){
-            if (link){
-                return link + '=s50';
-            }
-            else{
-                return $rootScope.defaultProfilePicture;
-            }   
-        }
-        Load.then(function(){
-            getCheckInData();
-            $rootScope.requirePermissions(LEADERSHIP);
-            function getCheckInData(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    $scope.users = JSON.parse(data.data);
-                    $scope.event = undefined;
-                    for (var i = 0; i < $rootScope.events.length; i++){
-                        if ($rootScope.events[i].tag == $stateParams.tag){
-                            $scope.event = $rootScope.events[i];
-                        }
-                    }
-                    $scope.invited = eventTagDirectorySearchFilter($rootScope.directory.members, $scope.event.tags);
-                    $scope.noShows = [];
-                    $scope.shows = [];
-                    if ($scope.event){
-                        for (var i = 0 ; i < $scope.users.length; i++){
-                            for (var j = 0; j < $scope.invited.length; j++){
-                                if ($scope.users[i].key == $scope.invited[j].key){
-                                    var shouldAdd = false;
-                                        if (!$scope.users[i].attendance_data){
-                                            shouldAdd=true;
-                                        }
-                                        else if (!($scope.users[i].attendance_data.time_in || $scope.users[i].attendance_data.time_out)){
-                                            shouldAdd=true;
-                                        }
-                                        if (shouldAdd){
-                                            if ($scope.event.going.indexOf($scope.users[i].key) != -1){
-                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
-                                            }
-                                            else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
-                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
-                                            }
-                                            else {
-                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
-                                            }
-                                        }
-                                        else if (!shouldAdd){
-                                            $scope.shows.push($scope.users[i]);
-                                        }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    $scope.loading = false;
-                    $scope.maxLength = 20;
-                    $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
-                }
-                else{
-                    console.log('ERROR: ', data);
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' ,  data);
-                $scope.loading = false;
-                $scope.eventNotFound = true;
-            });
-        }
-//            $scope.generateReport(){
-//                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
-//                .success(function(data){
-//                    if (!checkResponseErrors(data)){
-//                        users = JSON.parse(data.data);
-//                        $scope.loading = false;
-//                        createReport();
-//                    }
-//                    else{
-//                        console.log('ERROR: ',data);
-//                        $scope.eventNotFound = true;
-//                        $scope.loading = false;
-//                    }
-//                })
-//                .error(function(data) {
-//                    console.log('Error: ' , data);
-//                    $scope.loading = false;
-//                    $scope.eventNotFound = true;
-//                });
-//            }
+//         $scope.getProfPic = function(link){
+//             if (link){
+//                 return link + '=s50';
+//             }
+//             else{
+//                 return $rootScope.defaultProfilePicture;
+//             }   
+//         }
+//         Load.then(function(){
+//             getCheckInData();
+//             $rootScope.requirePermissions(LEADERSHIP);
+//             function getCheckInData(){
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+//             .success(function(data){
+//                 if (!checkResponseErrors(data)){
+//                     $scope.users = JSON.parse(data.data);
+//                     $scope.event = undefined;
+//                     for (var i = 0; i < $rootScope.events.length; i++){
+//                         if ($rootScope.events[i].tag == $stateParams.tag){
+//                             $scope.event = $rootScope.events[i];
+//                         }
+//                     }
+//                     $scope.invited = eventTagDirectorySearchFilter($rootScope.directory.members, $scope.event.tags);
+//                     $scope.noShows = [];
+//                     $scope.shows = [];
+//                     if ($scope.event){
+//                         for (var i = 0 ; i < $scope.users.length; i++){
+//                             for (var j = 0; j < $scope.invited.length; j++){
+//                                 if ($scope.users[i].key == $scope.invited[j].key){
+//                                     var shouldAdd = false;
+//                                         if (!$scope.users[i].attendance_data){
+//                                             shouldAdd=true;
+//                                         }
+//                                         else if (!($scope.users[i].attendance_data.time_in || $scope.users[i].attendance_data.time_out)){
+//                                             shouldAdd=true;
+//                                         }
+//                                         if (shouldAdd){
+//                                             if ($scope.event.going.indexOf($scope.users[i].key) != -1){
+//                                                 $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
+//                                             }
+//                                             else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
+//                                                 $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
+//                                             }
+//                                             else {
+//                                                 $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
+//                                             }
+//                                         }
+//                                         else if (!shouldAdd){
+//                                             $scope.shows.push($scope.users[i]);
+//                                         }
+//                                     break;
+//                                 }
+//                             }
+//                         }
+//                     }
+//                     $scope.loading = false;
+//                     $scope.maxLength = 20;
+//                     $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
+//                 }
+//                 else{
+//                     console.log('ERROR: ', data);
+//                     $scope.eventNotFound = true;
+//                     $scope.loading = false;
+//                 }
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' ,  data);
+//                 $scope.loading = false;
+//                 $scope.eventNotFound = true;
+//             });
+//         }
+// //            $scope.generateReport(){
+// //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+// //                .success(function(data){
+// //                    if (!checkResponseErrors(data)){
+// //                        users = JSON.parse(data.data);
+// //                        $scope.loading = false;
+// //                        createReport();
+// //                    }
+// //                    else{
+// //                        console.log('ERROR: ',data);
+// //                        $scope.eventNotFound = true;
+// //                        $scope.loading = false;
+// //                    }
+// //                })
+// //                .error(function(data) {
+// //                    console.log('Error: ' , data);
+// //                    $scope.loading = false;
+// //                    $scope.eventNotFound = true;
+// //                });
+// //            }
             
             
-            $scope.createReport = function(users){
-                var doc = new jsPDF();
-                if (!users){
-                    users = $scope.users;
-                }
-                users = $filter('orderBy')(users, "last_name");
-                // We'll make our own renderer to skip this editor
-                var specialElementHandlers = {
-                    '#editor': function(element, renderer){
-                        return true;
-                    }
-                };
-                var pageNumber = 1;
-                doc.setFontSize(10);
-                function newPage(){
-                    doc.addImage(NeteGreekLogo, 'PNG', 187, 5, 15, 14);
-                    doc.text(20, 14, 'Report for #'+ $stateParams.tag);
-                    doc.text(188, 288, 'Page '+pageNumber);
-                }
-                newPage();
-                var originalCurrentLine = true;
-                var current_line = 42;
-                doc.setFontSize(23);
-                var centeredText = function(text, y) {
-                    var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-                    var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
-                    doc.text(textOffset, y, text);
-                }
-                centeredText('Report for #'+ $stateParams.tag, 30);
-//                doc.text(56, 30, 'Report for #'+ $stateParams.tag);
-                doc.setFontSize(18);
-                doc.text(30, 40, 'Attendees');
-                var shifted = 20;
+//             $scope.createReport = function(users){
+//                 var doc = new jsPDF();
+//                 if (!users){
+//                     users = $scope.users;
+//                 }
+//                 users = $filter('orderBy')(users, "last_name");
+//                 // We'll make our own renderer to skip this editor
+//                 var specialElementHandlers = {
+//                     '#editor': function(element, renderer){
+//                         return true;
+//                     }
+//                 };
+//                 var pageNumber = 1;
+//                 doc.setFontSize(10);
+//                 function newPage(){
+//                     doc.addImage(NeteGreekLogo, 'PNG', 187, 5, 15, 14);
+//                     doc.text(20, 14, 'Report for #'+ $stateParams.tag);
+//                     doc.text(188, 288, 'Page '+pageNumber);
+//                 }
+//                 newPage();
+//                 var originalCurrentLine = true;
+//                 var current_line = 42;
+//                 doc.setFontSize(23);
+//                 var centeredText = function(text, y) {
+//                     var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+//                     var textOffset = (doc.internal.pageSize.width - textWidth) / 2;
+//                     doc.text(textOffset, y, text);
+//                 }
+//                 centeredText('Report for #'+ $stateParams.tag, 30);
+// //                doc.text(56, 30, 'Report for #'+ $stateParams.tag);
+//                 doc.setFontSize(18);
+//                 doc.text(30, 40, 'Attendees');
+//                 var shifted = 20;
                 
-                for (var i = 0; i < users.length; i++){
-                    if (users[i].attendance_data){
-                        if (users[i].attendance_data.time_in || users[i].attendance_data.time_out){
-                            doc.setFontSize(13);
-                            doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
-                            doc.setFontSize(10);
-                            console.log(users[i].attendance_data);
-                            if (users[i].attendance_data.time_in){
-                            doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
-                            }
-                            if (users[i].attendance_data.time_out){
-                            doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
-                            }
-                            if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
-                                doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
-                            }   
-                        }
-                    }
-                        current_line += 0;
-                    if (current_line > 250 && shifted > 20){
-                        current_line = 20;
-                        shifted = 20;
-                        pageNumber++;
-                        doc.addPage();
-                        newPage();
-                    }
-                    else if(current_line > 250){
-                        if (originalCurrentLine){
-                            current_line = 30;
-                            originalCurrentLine = false;
-                        }
-                        else{
-                            current_line = 20;
-                        }
-                        shifted = 110;
-                    }
-                }
-                if ($scope.noShows.length){
-                    if (current_line > 200){
-                        if (shifted > 20){
-                            current_line = 20;
-                            shifted = 20;
-                            pageNumber++;
-                            doc.addPage();
-                            newPage();
-                        }
-                        else{
-                            if (originalCurrentLine){
-                            current_line = 26;
-                            originalCurrentLine = false;
-                            }
-                            else{
-                                current_line = 20;
-                            }
-                            shifted = 110;
-                        }
-                    }
-                    doc.setFontSize(18);
-                    current_line+=5;
-                    doc.text(10 + shifted, current_line+=12, 'No Shows');
-                    var noShowsOrganized = $filter('orderBy')($scope.noShows, 'user.last_name');
+//                 for (var i = 0; i < users.length; i++){
+//                     if (users[i].attendance_data){
+//                         if (users[i].attendance_data.time_in || users[i].attendance_data.time_out){
+//                             doc.setFontSize(13);
+//                             doc.text(10 + shifted, current_line+=8, users[i].first_name + ' ' + users[i].last_name);
+//                             doc.setFontSize(10);
+//                             console.log(users[i].attendance_data);
+//                             if (users[i].attendance_data.time_in){
+//                             doc.text(15 + shifted, current_line+=5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
+//                             }
+//                             if (users[i].attendance_data.time_out){
+//                             doc.text(15 + shifted, current_line+=5, 'Time out: ' + $scope.formatDate(users[i].attendance_data.time_out));
+//                             }
+//                             if (users[i].attendance_data.time_in && users[i].attendance_data.time_out){
+//                                 doc.text(15 + shifted, current_line+=5, 'Duration: ' + $scope.timeDifference(users[i].attendance_data.time_in, users[i].attendance_data.time_out));
+//                             }   
+//                         }
+//                     }
+//                         current_line += 0;
+//                     if (current_line > 250 && shifted > 20){
+//                         current_line = 20;
+//                         shifted = 20;
+//                         pageNumber++;
+//                         doc.addPage();
+//                         newPage();
+//                     }
+//                     else if(current_line > 250){
+//                         if (originalCurrentLine){
+//                             current_line = 30;
+//                             originalCurrentLine = false;
+//                         }
+//                         else{
+//                             current_line = 20;
+//                         }
+//                         shifted = 110;
+//                     }
+//                 }
+//                 if ($scope.noShows.length){
+//                     if (current_line > 200){
+//                         if (shifted > 20){
+//                             current_line = 20;
+//                             shifted = 20;
+//                             pageNumber++;
+//                             doc.addPage();
+//                             newPage();
+//                         }
+//                         else{
+//                             if (originalCurrentLine){
+//                             current_line = 26;
+//                             originalCurrentLine = false;
+//                             }
+//                             else{
+//                                 current_line = 20;
+//                             }
+//                             shifted = 110;
+//                         }
+//                     }
+//                     doc.setFontSize(18);
+//                     current_line+=5;
+//                     doc.text(10 + shifted, current_line+=12, 'No Shows');
+//                     var noShowsOrganized = $filter('orderBy')($scope.noShows, 'user.last_name');
                     
-                    for (var i = 0; i < noShowsOrganized.length; i++){
-                        doc.setFontSize(12);
-                        doc.text(10 + shifted, current_line+=8, noShowsOrganized[i].user.first_name + ' ' + noShowsOrganized[i].user.last_name + ' - ' + noShowsOrganized[i].rsvp);
-                        if (current_line > 250 && shifted > 20){
-                            current_line = 20;
-                            shifted = 20;
-                            pageNumber++;
-                            doc.addPage();
-                            newPage();
+//                     for (var i = 0; i < noShowsOrganized.length; i++){
+//                         doc.setFontSize(12);
+//                         doc.text(10 + shifted, current_line+=8, noShowsOrganized[i].user.first_name + ' ' + noShowsOrganized[i].user.last_name + ' - ' + noShowsOrganized[i].rsvp);
+//                         if (current_line > 250 && shifted > 20){
+//                             current_line = 20;
+//                             shifted = 20;
+//                             pageNumber++;
+//                             doc.addPage();
+//                             newPage();
                             
-                        }
-                        else if(current_line > 250){
-                            if (originalCurrentLine){
-                                current_line = 40;
-                                originalCurrentLine = false;
-                            }
-                            else{
-                                current_line = 20;
-                            }
-                            shifted = 110;
-                        }
-                    }
-                }
+//                         }
+//                         else if(current_line > 250){
+//                             if (originalCurrentLine){
+//                                 current_line = 40;
+//                                 originalCurrentLine = false;
+//                             }
+//                             else{
+//                                 current_line = 20;
+//                             }
+//                             shifted = 110;
+//                         }
+//                     }
+//                 }
                 
-//                doc.text(20, 20, 'Do you like that?');
-                // All units are in the set measurement for the document
-                // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-//                doc.fromHTML($('#report').get(0), 15, 15, {
-//                    'width': 170, 
-//                    'elementHandlers': specialElementHandlers
-//                });
-                doc.output('dataurlnewwindow'); 
-            }
-            $scope.formatDate = function(date){
-                return momentInTimezone(date).format('lll');
-            }
+// //                doc.text(20, 20, 'Do you like that?');
+//                 // All units are in the set measurement for the document
+//                 // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
+// //                doc.fromHTML($('#report').get(0), 15, 15, {
+// //                    'width': 170, 
+// //                    'elementHandlers': specialElementHandlers
+// //                });
+//                 doc.output('dataurlnewwindow'); 
+//             }
+//             $scope.formatDate = function(date){
+//                 return momentInTimezone(date).format('lll');
+//             }
             
-            $scope.downloadCSV = function(){
-                var users = $filter('orderBy')($scope.users, 'last_name');
-                var out = [['"Last%20Name"','"First%20Name"', '"Date%20In"', '"Time%20In"', '"Date%20Out"', '"Time%20Out"']];
-                //datetime format yyyy-mm-dd hh:mm:ss
-                for (var i = 0; i < users.length; i++){
-                    var time_in = '';
-                    var time_out = '';
-                    var date_in = '';
-                    var date_out = '';
-                    if (users[i].attendance_data){
-                        if (users[i].attendance_data.time_in){
-                            var val = moment(momentInTimezone(users[i].attendance_data.time_in));
-                            time_in = val.format('hh:mm a');
-                            date_in = val.format('MM/DD/YYYY');
-                        }
-                        if (users[i].attendance_data.time_out){
-                            var val2 = moment(momentInTimezone(users[i].attendance_data.time_out));
-                            time_out = val2.format('hh:mm a');
-                            date_out = val2.format('MM/DD/YYYY');
-                        }
-                    }
-                    out.push([users[i].last_name.replaceAll(' ', '%20'), users[i].first_name.replaceAll(' ', '%20'), date_in.replaceAll(' ', '%20'), time_in.replaceAll(' ', '%20'), date_out.replaceAll(' ', '%20'), time_out.replaceAll(' ', '%20')]);
-                }
+//             $scope.downloadCSV = function(){
+//                 var users = $filter('orderBy')($scope.users, 'last_name');
+//                 var out = [['"Last%20Name"','"First%20Name"', '"Date%20In"', '"Time%20In"', '"Date%20Out"', '"Time%20Out"']];
+//                 //datetime format yyyy-mm-dd hh:mm:ss
+//                 for (var i = 0; i < users.length; i++){
+//                     var time_in = '';
+//                     var time_out = '';
+//                     var date_in = '';
+//                     var date_out = '';
+//                     if (users[i].attendance_data){
+//                         if (users[i].attendance_data.time_in){
+//                             var val = moment(momentInTimezone(users[i].attendance_data.time_in));
+//                             time_in = val.format('hh:mm a');
+//                             date_in = val.format('MM/DD/YYYY');
+//                         }
+//                         if (users[i].attendance_data.time_out){
+//                             var val2 = moment(momentInTimezone(users[i].attendance_data.time_out));
+//                             time_out = val2.format('hh:mm a');
+//                             date_out = val2.format('MM/DD/YYYY');
+//                         }
+//                     }
+//                     out.push([users[i].last_name.replaceAll(' ', '%20'), users[i].first_name.replaceAll(' ', '%20'), date_in.replaceAll(' ', '%20'), time_in.replaceAll(' ', '%20'), date_out.replaceAll(' ', '%20'), time_out.replaceAll(' ', '%20')]);
+//                 }
 
-                var csvRows = [];
+//                 var csvRows = [];
 
-                for(var i=0, l=out.length; i<l; ++i){
-                    csvRows.push(out[i].join(','));
-                }
+//                 for(var i=0, l=out.length; i<l; ++i){
+//                     csvRows.push(out[i].join(','));
+//                 }
 
-                var csvString = csvRows.join("%0A");
-                var a         = document.createElement('a');
-                a.href        = 'data:attachment/csv,' + csvString;
-                a.target      = '_blank';
-                a.download    = $stateParams.tag+'.csv';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-            $scope.timeDifference = function(start, end){
-                var mStart = moment(start);
-                var mEnd = moment(end);
-                var hours = mEnd.diff(mStart, 'hours');
-                var intermediate = mEnd.subtract(hours, 'hours');
-                var minutes = intermediate.diff(mStart, 'minutes');
-                return hours + ':' + ("0" + minutes).slice(-2);
-            }
-        });
-  });
+//                 var csvString = csvRows.join("%0A");
+//                 var a         = document.createElement('a');
+//                 a.href        = 'data:attachment/csv,' + csvString;
+//                 a.target      = '_blank';
+//                 a.download    = $stateParams.tag+'.csv';
+//                 document.body.appendChild(a);
+//                 a.click();
+//                 document.body.removeChild(a);
+//             }
+//             $scope.timeDifference = function(start, end){
+//                 var mStart = moment(start);
+//                 var mEnd = moment(end);
+//                 var hours = mEnd.diff(mStart, 'hours');
+//                 var intermediate = mEnd.subtract(hours, 'hours');
+//                 var minutes = intermediate.diff(mStart, 'minutes');
+//                 return hours + ':' + ("0" + minutes).slice(-2);
+//             }
+//         });
+//   });
 
 
-    App.controller('newPollController', function($scope, $http, Load, $rootScope) {
-        routeChange();
-        $scope.deletePollTip = {
-            "title" : "Delete Question"
-        }
-        $scope.poll = {}
-        $scope.poll.questions = [];
-        $scope.addQuestion = function(){
-            $scope.poll.questions.push({worded_question: '', type: '', choices: []});
-        }
-        $scope.removeQuestion = function(idx){
-            $scope.poll.questions.splice(idx, 1);
-        }
-        $scope.addChoice = function(question, choice){
+//     App.controller('newPollController', function($scope, $http, Load, $rootScope) {
+//         routeChange();
+//         $scope.deletePollTip = {
+//             "title" : "Delete Question"
+//         }
+//         $scope.poll = {}
+//         $scope.poll.questions = [];
+//         $scope.addQuestion = function(){
+//             $scope.poll.questions.push({worded_question: '', type: '', choices: []});
+//         }
+//         $scope.removeQuestion = function(idx){
+//             $scope.poll.questions.splice(idx, 1);
+//         }
+//         $scope.addChoice = function(question, choice){
             
-            if (choice && question.choices.indexOf(choice) == -1){
-                question.choices.push(choice);
-            }
-            question.temp_choice = undefined;
-        }
-        $scope.removeChoice = function(question, idx){
-            question.choices.splice(idx, 1);
-        }
-        $scope.createPoll = function(isValid){
-            $scope.working = 'pending';
-            var poll = $scope.poll;
-            poll.tags = getCheckedTags($scope.tags);
-            var to_send = JSON.parse(JSON.stringify(poll));
-//            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
-//            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
-            if (isValid){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.working = 'done';
-                        window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
-                    }
-                    else{
-                        $scope.working = 'broken';
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    $scope.working = 'broken';
-                    console.log('Error: ' , data);
-                });
-            }
-        }
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
-            $scope.tags = $rootScope.tags;
-        });
-	});
+//             if (choice && question.choices.indexOf(choice) == -1){
+//                 question.choices.push(choice);
+//             }
+//             question.temp_choice = undefined;
+//         }
+//         $scope.removeChoice = function(question, idx){
+//             question.choices.splice(idx, 1);
+//         }
+//         $scope.createPoll = function(isValid){
+//             $scope.working = 'pending';
+//             var poll = $scope.poll;
+//             poll.tags = getCheckedTags($scope.tags);
+//             var to_send = JSON.parse(JSON.stringify(poll));
+// //            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
+// //            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
+//             if (isValid){
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         $scope.working = 'done';
+//                         window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
+//                     }
+//                     else{
+//                         $scope.working = 'broken';
+//                         console.log('ERR');
+//                     }
+//                 })
+//                 .error(function(data) {
+//                     $scope.working = 'broken';
+//                     console.log('Error: ' , data);
+//                 });
+//             }
+//         }
+//         Load.then(function(){
+//             $rootScope.requirePermissions(LEADERSHIP);
+//             $scope.tags = $rootScope.tags;
+//         });
+// 	});
 
 
-    App.controller('pollController', function($scope, $http, Load, $rootScope, localStorageService) {
-        routeChange();
-        Load.then(function(){
-            $scope.polls = $rootScope.polls;
-            $rootScope.requirePermissions(MEMBER);
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.polls = JSON.parse(data.data);
-                        $rootScope.polls = $scope.polls;
-                        localStorageService.set('polls', $rootScope.polls);
-                    }
-                    else{
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        });
+//     App.controller('pollController', function($scope, $http, Load, $rootScope, localStorageService) {
+//         routeChange();
+//         Load.then(function(){
+//             $scope.polls = $rootScope.polls;
+//             $rootScope.requirePermissions(MEMBER);
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         $scope.polls = JSON.parse(data.data);
+//                         $rootScope.polls = $scope.polls;
+//                         localStorageService.set('polls', $rootScope.polls);
+//                     }
+//                     else{
+//                         console.log('ERR');
+//                     }
+//                 })
+//                 .error(function(data) {
+//                     console.log('Error: ' , data);
+//                 });
+//         });
         
-//        $scope.checkForMorePolls = function(polls, pageNum, max){
-//            var len = polls.length;
-//            $scope.working = true;
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/more_polls', packageForSending(len))
-//            .success(function(data){
-//                if (!checkResponseErrors(data))
-//                {
-//                    var new_polls = JSON.parse(data.data);
-//                    $rootScope.polls = new_polls;
-//                    if (new_polls.length > (pageNum*(max+1)) && (pageNum != 0 || new_polls.length > max)){
-//                        pageNum++;
-//                    }
-//                    else{
-//                        $scope.noMoreHiddens = true;
-//                    }
-//                }
-//                else{
-//                    console.log('ERROR: ',data);
-//                }
-//                $scope.working = false;
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//                $scope.working = false;
-//            }); 
-//        }
+// //        $scope.checkForMorePolls = function(polls, pageNum, max){
+// //            var len = polls.length;
+// //            $scope.working = true;
+// //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/more_polls', packageForSending(len))
+// //            .success(function(data){
+// //                if (!checkResponseErrors(data))
+// //                {
+// //                    var new_polls = JSON.parse(data.data);
+// //                    $rootScope.polls = new_polls;
+// //                    if (new_polls.length > (pageNum*(max+1)) && (pageNum != 0 || new_polls.length > max)){
+// //                        pageNum++;
+// //                    }
+// //                    else{
+// //                        $scope.noMoreHiddens = true;
+// //                    }
+// //                }
+// //                else{
+// //                    console.log('ERROR: ',data);
+// //                }
+// //                $scope.working = false;
+// //            })
+// //            .error(function(data) {
+// //                console.log('Error: ' , data);
+// //                $scope.working = false;
+// //            }); 
+// //        }
         
-        $scope.showPoll = function(poll){
-                window.location.assign('#/app/polls/' + poll.key);
-        }
+//         $scope.showPoll = function(poll){
+//                 window.location.assign('#/app/polls/' + poll.key);
+//         }
         
-	});
+// 	});
 
-    App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
-        routeChange();
-        Load.then(function(){
-            $scope.loading = true;
-            $rootScope.requirePermissions(MEMBER);
-            var to_send = {key: $stateParams.key};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.poll = JSON.parse(data.data);
-                        $scope.creator = $rootScope.getUserFromKey($scope.poll.creator);
-                    }
-                    else{
-                        $scope.notFound = true;
-                        console.log('ERR');
-                    }
-                    $scope.loading = false;
-                })
-                .error(function(data) {
-                    $scope.notFound = true;
-                    console.log('Error: ' , data);
-                    $scope.loading = false;
-                });
-        });
-        $scope.closePoll = function(close){
-            var to_send = {key: $stateParams.key};
-            if (close === true){
-                to_send.close = true;
-            }
-            else if (close === false){
-                to_send.open = true;
-            }
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/edit_poll', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        if (close){
-                            $scope.poll.open = false
-                        }
-                        else if (close === false){
-                            $scope.poll.open = true;
-                        }
-                    }
-                    else{
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        }
-        $scope.$watchCollection('poll.questions', function(){
-            console.log('Im doing stuff');
-            if ($scope.poll && $scope.poll.questions){   
-            for (var i = 0; i < $scope.poll.questions.length; i++){
-                if (!$scope.poll.questions[i].new_response){
-                    $scope.formUnfinished = true;
-                    return;
-                }
-            }
-            $scope.formUnfinished = false;}
-        })
+//     App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
+//         routeChange();
+//         Load.then(function(){
+//             $scope.loading = true;
+//             $rootScope.requirePermissions(MEMBER);
+//             var to_send = {key: $stateParams.key};
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         $scope.poll = JSON.parse(data.data);
+//                         $scope.creator = $rootScope.getUserFromKey($scope.poll.creator);
+//                     }
+//                     else{
+//                         $scope.notFound = true;
+//                         console.log('ERR');
+//                     }
+//                     $scope.loading = false;
+//                 })
+//                 .error(function(data) {
+//                     $scope.notFound = true;
+//                     console.log('Error: ' , data);
+//                     $scope.loading = false;
+//                 });
+//         });
+//         $scope.closePoll = function(close){
+//             var to_send = {key: $stateParams.key};
+//             if (close === true){
+//                 to_send.close = true;
+//             }
+//             else if (close === false){
+//                 to_send.open = true;
+//             }
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/edit_poll', packageForSending(to_send))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         if (close){
+//                             $scope.poll.open = false
+//                         }
+//                         else if (close === false){
+//                             $scope.poll.open = true;
+//                         }
+//                     }
+//                     else{
+//                         console.log('ERR');
+//                     }
+//                 })
+//                 .error(function(data) {
+//                     console.log('Error: ' , data);
+//                 });
+//         }
+//         $scope.$watchCollection('poll.questions', function(){
+//             console.log('Im doing stuff');
+//             if ($scope.poll && $scope.poll.questions){   
+//             for (var i = 0; i < $scope.poll.questions.length; i++){
+//                 if (!$scope.poll.questions[i].new_response){
+//                     $scope.formUnfinished = true;
+//                     return;
+//                 }
+//             }
+//             $scope.formUnfinished = false;}
+//         })
         
-//        #FIXME creator undefined :-P
+// //        #FIXME creator undefined :-P
         
-        $scope.deletePoll = function(){
-            var to_send = {key: $stateParams.key};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        window.location.assign('#/app/polls')
-                    }
-                    else{
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        }
+//         $scope.deletePoll = function(){
+//             var to_send = {key: $stateParams.key};
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', packageForSending(to_send))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         window.location.assign('#/app/polls')
+//                     }
+//                     else{
+//                         console.log('ERR');
+//                     }
+//                 })
+//                 .error(function(data) {
+//                     console.log('Error: ' , data);
+//                 });
+//         }
         
-        $scope.submitResponse = function(){
-            var to_send = $scope.poll;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                       window.location.assign('#/app/polls/'+$stateParams.key + '/results');
-                    }
-                    else{
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-        }
+//         $scope.submitResponse = function(){
+//             var to_send = $scope.poll;
+//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                        window.location.assign('#/app/polls/'+$stateParams.key + '/results');
+//                     }
+//                     else{
+//                         console.log('ERR');
+//                     }
+//                 })
+//                 .error(function(data) {
+//                     console.log('Error: ' , data);
+//                 });
+//         }
         
-        $scope.goToResults = function(){
-            window.location.assign('#/app/polls/'+$stateParams.key + '/results');
-        }
-	});
+//         $scope.goToResults = function(){
+//             window.location.assign('#/app/polls/'+$stateParams.key + '/results');
+//         }
+// 	});
 
-    App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams, LoadScreen) {
-        routeChange();
-        $scope.openAllQuestions = function(){
-            $('.pollSummary.collapse').collapse('show');
-        }
-        $scope.closeAllQuestions = function(){
-            $('.pollSummary.in').collapse('hide');
-        }
-        $scope.openAllIndividuals = function(){
-            $('.individualResponses.collapse').collapse('show');
-        }
-        $scope.closeAllIndividuals = function(){
-            $('.individualResponses.in').collapse('hide');
-        }
-        Load.then(function(){
-            $('html').trigger('resize');
-            $scope.loading = true;
-            if ($rootScope.currentPollResult && $rootScope.currentPollResult.key == $stateParams.key){
+    // App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams, LoadScreen) {
+    //     routeChange();
+    //     $scope.openAllQuestions = function(){
+    //         $('.pollSummary.collapse').collapse('show');
+    //     }
+    //     $scope.closeAllQuestions = function(){
+    //         $('.pollSummary.in').collapse('hide');
+    //     }
+    //     $scope.openAllIndividuals = function(){
+    //         $('.individualResponses.collapse').collapse('show');
+    //     }
+    //     $scope.closeAllIndividuals = function(){
+    //         $('.individualResponses.in').collapse('hide');
+    //     }
+    //     Load.then(function(){
+    //         $('html').trigger('resize');
+    //         $scope.loading = true;
+    //         if ($rootScope.currentPollResult && $rootScope.currentPollResult.key == $stateParams.key){
                 
-            }
-            $rootScope.requirePermissions(MEMBER);
-            var to_send = {key: $stateParams.key};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.poll = JSON.parse(data.data);
-                        if (($scope.poll.viewers != 'everyone' && !$rootScope.checkPermissions($scope.poll.viewers))){
-                            window.location.replace('#/app/polls/'+$stateParams.key);
-                        }
-                        var key_list = [];
-                        var user_list = [];
-                        for (var i = 0; i < $scope.poll.questions.length; i++){
-                            var currentQuestion = $scope.poll.questions[i];
-                            for (var j = 0; j < currentQuestion.responses.length; j++){
-                                var idx = key_list.indexOf(currentQuestion.responses[j].key);
-                                if (idx == -1){
-                                    key_list.push(currentQuestion.responses[j].key);
-                                    user_list.push({key:currentQuestion.responses[j].key, user: $rootScope.getUserFromKey(currentQuestion.responses[j].key), responses: new Array($scope.poll.questions.length)});
-                                    var idx = key_list.indexOf(currentQuestion.responses[j].key);
-                                }
-                                user_list[idx].responses[i] = {response:currentQuestion.responses[j].text, question: currentQuestion};
-                            }
-                        }
-                        $scope.individuals = user_list;
-                        console.log('User list', user_list);
-                    }
-                    else{
-                        console.log('ERR');
-                        $scope.notFound = true;
-                    }
-                    $scope.loading = false;
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    $scope.loading = false;
-                    $scope.notFound = true;
-                });
-        });
+    //         }
+    //         $rootScope.requirePermissions(MEMBER);
+    //         var to_send = {key: $stateParams.key};
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $scope.poll = JSON.parse(data.data);
+    //                     if (($scope.poll.viewers != 'everyone' && !$rootScope.checkPermissions($scope.poll.viewers))){
+    //                         window.location.replace('#/app/polls/'+$stateParams.key);
+    //                     }
+    //                     var key_list = [];
+    //                     var user_list = [];
+    //                     for (var i = 0; i < $scope.poll.questions.length; i++){
+    //                         var currentQuestion = $scope.poll.questions[i];
+    //                         for (var j = 0; j < currentQuestion.responses.length; j++){
+    //                             var idx = key_list.indexOf(currentQuestion.responses[j].key);
+    //                             if (idx == -1){
+    //                                 key_list.push(currentQuestion.responses[j].key);
+    //                                 user_list.push({key:currentQuestion.responses[j].key, user: $rootScope.getUserFromKey(currentQuestion.responses[j].key), responses: new Array($scope.poll.questions.length)});
+    //                                 var idx = key_list.indexOf(currentQuestion.responses[j].key);
+    //                             }
+    //                             user_list[idx].responses[i] = {response:currentQuestion.responses[j].text, question: currentQuestion};
+    //                         }
+    //                     }
+    //                     $scope.individuals = user_list;
+    //                     console.log('User list', user_list);
+    //                 }
+    //                 else{
+    //                     console.log('ERR');
+    //                     $scope.notFound = true;
+    //                 }
+    //                 $scope.loading = false;
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //                 $scope.loading = false;
+    //                 $scope.notFound = true;
+    //             });
+    //     });
         
         
-    });
+    // });
 
-    App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen, localStorageService){
-        routeChange();
-        $rootScope.requirePermissions(MEMBER);
-        Load.then(function(){
-            $scope.groups = $rootScope.link_groups;
-            $scope.links = $rootScope.links;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $rootScope.links = JSON.parse(data.data);
-                        $scope.links = $rootScope.links;
-                        localStorageService.set('links', $rootScope.links);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
+    // App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen, localStorageService){
+    //     routeChange();
+    //     $rootScope.requirePermissions(MEMBER);
+    //     Load.then(function(){
+    //         $scope.groups = $rootScope.link_groups;
+    //         $scope.links = $rootScope.links;
+    //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $rootScope.links = JSON.parse(data.data);
+    //                     $scope.links = $rootScope.links;
+    //                     localStorageService.set('links', $rootScope.links);
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
 
-            $scope.openEditLinkModal = function(link){
-                $scope.temp_link = {link:link.link, title:link.title, group:link.group};
-                $scope.selectedLink = link;
-                $('#editLinkModal').modal();
-            } 
-            $scope.openNewLinkModal = function(){
-                $scope.temp_link = {};
-                $('#newLinkModal').modal();
-            }
-            $scope.openDeleteLinkModal = function(link){
-                $('#deleteLinkModal').modal();
-                $scope.selectedLink = link;
-            }
-            $scope.openRenameGroupModal = function(group){
-                $('#renameGroupModal').modal();
-                $scope.selectedGroup = group;
-                $scope.newGroupName = "";
-            }
-            $scope.openDeleteGroupModal = function(group){
-                $('#deleteGroupModal').modal();
-                $scope.selectedGroup = group;
-            }
-            $scope.createGroup = function(group){
-                var to_send = {group:group};
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        if ($scope.groups.indexOf(group) == -1){
-                            $scope.groups.push(group);
-                            $scope.checkCreateGroup = "done";
-                        }
-                    }
-                    else{
-                        console.log('ERR');
-                        $scope.checkCreateGroup = "broken";
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    $scope.checkCreateGroup = "broken";
-                });
-            }
-            $scope.deleteGroup = function(group){
-                var to_send = {group:group};
-                $scope.checkDeleteGroup = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $('#deleteGroupModal').modal('hide');
-                        $scope.checkDeleteGroup = "done";
-                        for (var i = 0; i < $scope.links.length; i++){
-                            if ($scope.links[i].group == group){
-                                $scope.links.splice(i, 1);
-                                i--;
-                            }
-                            if ($scope.groups.indexOf(group) != -1){
-                                $scope.groups.splice($scope.groups.indexOf(group), 1);
-                            }
-                        }
-                    }
-                    else{
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
-            $scope.createLink = function(title, link, group){
-                var to_send = {group:group, title:title, link:link};
-                $scope.checkCreateLink = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $('#newLinkModal').modal('hide');
-                        $scope.checkCreateLink = "done";
-                        if ($scope.groups.indexOf(group) ==-1){
-                            $scope.groups.push(group);
-                        }
-                        $scope.links.push({title: title, link: link, group:group, key:JSON.parse(data.data)});
-                    }
-                    else{
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
-            $scope.deleteLink = function(link){
-                var to_send = {key:link.key};
-                $scope.checkDeleteLink = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $('#deleteLinkModal').modal('hide');
-                        $scope.checkDeleteLink = "done";
-                        for(var i = 0; i<$rootScope.links.length; i++){
-                            if ($rootScope.links[i].key == link.key){
-                                $rootScope.links.splice(i, 1); 
-                                break;
-                            }
-                        }
-                    }
-                    else{
-                        console.log('ERR', data.error);
-                        $scope.checkDeleteLink = "broken";
-                    }
-                })
-                .error(function(data) {
-                    $scope.checkDeleteLink = "broken";
-                    console.log('Error: ' , data);
-                });
-            }
-            $scope.editLink = function(title, link, group, current_link){
-                var to_send = {key:current_link.key, link:link, title:title, group:group};
-                $scope.checkEditLink = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $('#editLinkModal').modal('hide');
-                        $scope.checkEditLink = "done";
-                        current_link.title = title;
-                        current_link.group = group;
-                        current_link.link = link;
-                        if ($scope.groups.indexOf(group) == -1){
-                            $scope.groups.push(group);
-                        }
-                    }
-                    else{
-                        console.log('ERR', data.error);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
-            $scope.renameGroup = function(old_group, group){
-                var to_send = {old_group:old_group, group:group};
-                $scope.checkRenameGroup = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', packageForSending(to_send))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.checkRenameGroup = "done";
-                        $('#renameGroupModal').modal('hide');
-                       for (var i = 0; i < $scope.links.length; i++){
-                            if ($scope.links[i].group == old_group){
-                                $scope.links[i].group = group;
-                            }
-                        }
-                        if ($scope.groups.indexOf(old_group) != -1){
-                            $scope.groups[$scope.groups.indexOf(old_group)] = group;
-                            console.log("I found the old group and am changing it");
-                        }
-                        else{
-                            $scope.groups.push(group);
-                        }
+    //         $scope.openEditLinkModal = function(link){
+    //             $scope.temp_link = {link:link.link, title:link.title, group:link.group};
+    //             $scope.selectedLink = link;
+    //             $('#editLinkModal').modal();
+    //         } 
+    //         $scope.openNewLinkModal = function(){
+    //             $scope.temp_link = {};
+    //             $('#newLinkModal').modal();
+    //         }
+    //         $scope.openDeleteLinkModal = function(link){
+    //             $('#deleteLinkModal').modal();
+    //             $scope.selectedLink = link;
+    //         }
+    //         $scope.openRenameGroupModal = function(group){
+    //             $('#renameGroupModal').modal();
+    //             $scope.selectedGroup = group;
+    //             $scope.newGroupName = "";
+    //         }
+    //         $scope.openDeleteGroupModal = function(group){
+    //             $('#deleteGroupModal').modal();
+    //             $scope.selectedGroup = group;
+    //         }
+    //         $scope.createGroup = function(group){
+    //             var to_send = {group:group};
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     if ($scope.groups.indexOf(group) == -1){
+    //                         $scope.groups.push(group);
+    //                         $scope.checkCreateGroup = "done";
+    //                     }
+    //                 }
+    //                 else{
+    //                     console.log('ERR');
+    //                     $scope.checkCreateGroup = "broken";
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //                 $scope.checkCreateGroup = "broken";
+    //             });
+    //         }
+    //         $scope.deleteGroup = function(group){
+    //             var to_send = {group:group};
+    //             $scope.checkDeleteGroup = "pending";
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $('#deleteGroupModal').modal('hide');
+    //                     $scope.checkDeleteGroup = "done";
+    //                     for (var i = 0; i < $scope.links.length; i++){
+    //                         if ($scope.links[i].group == group){
+    //                             $scope.links.splice(i, 1);
+    //                             i--;
+    //                         }
+    //                         if ($scope.groups.indexOf(group) != -1){
+    //                             $scope.groups.splice($scope.groups.indexOf(group), 1);
+    //                         }
+    //                     }
+    //                 }
+    //                 else{
+    //                     console.log('ERR');
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //         }
+    //         $scope.createLink = function(title, link, group){
+    //             var to_send = {group:group, title:title, link:link};
+    //             $scope.checkCreateLink = "pending";
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $('#newLinkModal').modal('hide');
+    //                     $scope.checkCreateLink = "done";
+    //                     if ($scope.groups.indexOf(group) ==-1){
+    //                         $scope.groups.push(group);
+    //                     }
+    //                     $scope.links.push({title: title, link: link, group:group, key:JSON.parse(data.data)});
+    //                 }
+    //                 else{
+    //                     console.log('ERR');
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //         }
+    //         $scope.deleteLink = function(link){
+    //             var to_send = {key:link.key};
+    //             $scope.checkDeleteLink = "pending";
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $('#deleteLinkModal').modal('hide');
+    //                     $scope.checkDeleteLink = "done";
+    //                     for(var i = 0; i<$rootScope.links.length; i++){
+    //                         if ($rootScope.links[i].key == link.key){
+    //                             $rootScope.links.splice(i, 1); 
+    //                             break;
+    //                         }
+    //                     }
+    //                 }
+    //                 else{
+    //                     console.log('ERR', data.error);
+    //                     $scope.checkDeleteLink = "broken";
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 $scope.checkDeleteLink = "broken";
+    //                 console.log('Error: ' , data);
+    //             });
+    //         }
+    //         $scope.editLink = function(title, link, group, current_link){
+    //             var to_send = {key:current_link.key, link:link, title:title, group:group};
+    //             $scope.checkEditLink = "pending";
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $('#editLinkModal').modal('hide');
+    //                     $scope.checkEditLink = "done";
+    //                     current_link.title = title;
+    //                     current_link.group = group;
+    //                     current_link.link = link;
+    //                     if ($scope.groups.indexOf(group) == -1){
+    //                         $scope.groups.push(group);
+    //                     }
+    //                 }
+    //                 else{
+    //                     console.log('ERR', data.error);
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //         }
+    //         $scope.renameGroup = function(old_group, group){
+    //             var to_send = {old_group:old_group, group:group};
+    //             $scope.checkRenameGroup = "pending";
+    //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', packageForSending(to_send))
+    //             .success(function(data){
+    //                 if (!checkResponseErrors(data)){
+    //                     $scope.checkRenameGroup = "done";
+    //                     $('#renameGroupModal').modal('hide');
+    //                    for (var i = 0; i < $scope.links.length; i++){
+    //                         if ($scope.links[i].group == old_group){
+    //                             $scope.links[i].group = group;
+    //                         }
+    //                     }
+    //                     if ($scope.groups.indexOf(old_group) != -1){
+    //                         $scope.groups[$scope.groups.indexOf(old_group)] = group;
+    //                         console.log("I found the old group and am changing it");
+    //                     }
+    //                     else{
+    //                         $scope.groups.push(group);
+    //                     }
                         
-                    }
-                    else{
-                        console.log('ERR');
-                        $scope.checkRenameGroup = "broken";
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    $scope.checkRenameGroup = "broken";
-                });
-            }
-        });
-    });
+    //                 }
+    //                 else{
+    //                     console.log('ERR');
+    //                     $scope.checkRenameGroup = "broken";
+    //                 }
+    //             })
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //                 $scope.checkRenameGroup = "broken";
+    //             });
+    //         }
+    //     });
+    // });
         
 
-    App.controller('adminController', function($scope, $http, Load, $rootScope) {
-        routeChange();
-        $rootScope.requirePermissions(COUNCIL);
-//        $scope.loading = true;
-        Load.then(function(){
-            loadSubscriptionInfo();
-            function loadSubscriptionInfo(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.subscription = JSON.parse(data.data);
-                        $scope.subscription_raw = data.data;
-                        $scope.loading = false;
-                        $scope.pay = {};
-                    }
-                    else{
-                        console.log('ERROR: ',data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
-            $scope.cancelSubscription = function(){
-                $scope.loading = true;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        setTimeout(function(){$rootScope.refreshPage();}, 150);
-                    }
-                    else{
-                        console.log('ERROR: ',data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
+ //    App.controller('adminController', function($scope, $http, Load, $rootScope) {
+ //        routeChange();
+ //        $rootScope.requirePermissions(COUNCIL);
+ //        Load.then(function(){
+ //            loadSubscriptionInfo();
+ //            function loadSubscriptionInfo(){
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data)){
+ //                        $scope.subscription = JSON.parse(data.data);
+ //                        $scope.subscription_raw = data.data;
+ //                        $scope.loading = false;
+ //                        $scope.pay = {};
+ //                    }
+ //                    else{
+ //                        console.log('ERROR: ',data);
+ //                    }
+ //                })
+ //                .error(function(data) {
+ //                    console.log('Error: ' , data);
+ //                });
+ //            }
+ //            $scope.cancelSubscription = function(){
+ //                $scope.loading = true;
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data)){
+ //                        setTimeout(function(){$rootScope.refreshPage();}, 150);
+ //                    }
+ //                    else{
+ //                        console.log('ERROR: ',data);
+ //                    }
+ //                })
+ //                .error(function(data) {
+ //                    console.log('Error: ' , data);
+ //                });
+ //            }
             
-            $scope.subscribe = function(paymentData){
-                var toSend = "";
-                if (paymentData){
-                    toSend = paymentData;
-                }
-                $scope.loading = true;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending(toSend))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                        setTimeout(function(){$rootScope.refreshPage();}, 150);
-                    }
-                    else{
-                        console.log('ERROR: '+JSON.stringify(data));
-                        $scope.loading = false;
-                        $scope.error = JSON.stringify(data);}
-                })
-                .error(function(data) {
-                    console.log('Error: ' + JSON.stringify(data));
-                });
-            };
+ //            $scope.subscribe = function(paymentData){
+ //                var toSend = "";
+ //                if (paymentData){
+ //                    toSend = paymentData;
+ //                }
+ //                $scope.loading = true;
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending(toSend))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data))
+ //                    {
+ //                        setTimeout(function(){$rootScope.refreshPage();}, 150);
+ //                    }
+ //                    else{
+ //                        console.log('ERROR: '+JSON.stringify(data));
+ //                        $scope.loading = false;
+ //                        $scope.error = JSON.stringify(data);}
+ //                })
+ //                .error(function(data) {
+ //                    console.log('Error: ' + JSON.stringify(data));
+ //                });
+ //            };
             
-            $scope.changeTheme = function(number){
+ //            $scope.changeTheme = function(number){
                 
-                $rootScope.setColor('color'+number);
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
-                .success(function(data){
-                    if (!checkResponseErrors(data))
-                    {
-                    }
-                    else{
-                        $scope.error = true;    
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' + JSON.stringify(data));
-                });
-            }
+ //                $rootScope.setColor('color'+number);
+ //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
+ //                .success(function(data){
+ //                    if (!checkResponseErrors(data))
+ //                    {
+ //                    }
+ //                    else{
+ //                        $scope.error = true;    
+ //                    }
+ //                })
+ //                .error(function(data) {
+ //                    console.log('Error: ' + JSON.stringify(data));
+ //                });
+ //            }
             
-        });
-	});
+ //        });
+	// });
 
 //More Functions
 
@@ -5105,24 +5101,6 @@ App.directive('selectingUsers', function($rootScope){
         scope.selectTagFromTypeAhead = function(tag){
             tag.checked = true;
             scope.selectedTagName="";
-//            console.log('searching for',tag);
-//            if (tag.user){
-//                tag.checked = true;
-//                console.log('I just checked it');
-//            }
-//            var tagTypes = [scope.ngModel.org_tags, scope.ngModel.perms_tags, scope.ngModel.event_tags];
-//            for (var j = 0; j < tagTypes.length; j++){
-//                console.log(tagTypes[j]);
-//                for(var i = 0; i < tagTypes[j].length; i++){
-//                    console.log(tagTypes[j][i]);
-//                    if (tagTypes[j][i].name == tag.name)  {
-//                        console.log('I found the tag!');
-//                        tagTypes[j][i].checked = true;
-//                        scope.selectedTagName = "";
-//                        break;
-//                    }
-//                } 
-//            }
         }
         scope.clickNofity = function(){
             console.log('clicked');

@@ -1497,23 +1497,17 @@ class RESTApi(remote.Service):
         user.put()
         return OutgoingMessage(error='', data=images.get_serving_url(user.prof_pic))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
-                      http_method='POST', name='auth.directory')
-    def directory(self, request):
-        time1 = datetime.datetime.now()
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory_less',
+                      http_method='POST', name='auth.directory_less')
+    def directory_less(self, request):
         request_user = get_user(request.user_name, request.token)
-        time2 = datetime.datetime.now()
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        # agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
+        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.tags, User.email, User.phone])
         event_list_future = Event.query(Event.organization == request_user.organization,
                                         ).fetch_async(projection=[Event.going, Event.tag])
-        time3 = datetime.datetime.now()
         organization_users = organization_users_future.get_result()
-        time4 = datetime.datetime.now()
         event_list = event_list_future.get_result()
-        time5 = datetime.datetime.now()
         user_list = list()
         me = request_user.to_dict()
         del me["hash_pass"]
@@ -1549,11 +1543,90 @@ class RESTApi(remote.Service):
             else:
                 user_list.append(user_dict)
         return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
-        time6 = datetime.datetime.now()
-        times = str(time1) + " " + str(time2) + " " + str(time3) + " " + str(time4) + " " + str(time5) + " "+str(time6)
-        logging.error('Times:   ' + times)
         return OutgoingMessage(error='', data=return_data)
 
+        @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
+                      http_method='POST', name='auth.directory')
+        def directory(self, request):
+            request_user = get_user(request.user_name, request.token)
+            if not request_user:
+                return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+            organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
+            event_list_future = Event.query(Event.organization == request_user.organization,
+                                            ).fetch_async(projection=[Event.going, Event.tag])
+            organization_users = organization_users_future.get_result()
+            event_list = event_list_future.get_result()
+            user_list = list()
+            me = request_user.to_dict()
+            del me["hash_pass"]
+            del me["current_token"]
+            del me["organization"]
+            del me["timestamp"]
+            del me["notifications"]
+            del me["new_notifications"]
+            del me["hidden_notifications"]
+            alumni_list = list()
+            for user in organization_users:
+                user_dict = user.to_dict()
+                del user_dict["hash_pass"]
+                del user_dict["current_token"]
+                del user_dict["organization"]
+                del user_dict["timestamp"]
+                del user_dict["notifications"]
+                del user_dict["new_notifications"]
+                del user_dict["hidden_notifications"]
+                event_tags = list()
+                for event in event_list:
+                    if user.key in event.going:
+                        event_tags.append(event.tag)
+                user_dict["event_tags"] = event_tags
+                user_dict["key"] = user.key.urlsafe()
+                if user.dob:
+                    user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+                else:
+                    del user_dict["dob"]
+                user_dict["key"] = user.key.urlsafe()
+                if user_dict["perms"] == 'alumni':
+                    alumni_list.append(user_dict)
+                else:
+                    user_list.append(user_dict)
+            return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
+            return OutgoingMessage(error='', data=return_data)
+
+
+        @endpoints.method(IncomingMessage, OutgoingMessage, path='user/query_user',
+                      http_method='POST', name='auth.query_user')
+        def query_for_user(self, request):
+            request_user = get_user(request.user_name, request.token)
+            if not request_user:
+                return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+            json.loads(request.data);
+            user_future = User.query(User.organization == request_user.organization, User.user_name == request["user_name"]).get_async()
+            event_list_future = Event.query(Event.organization == request_user.organization,
+                                            ).fetch_async(projection=[Event.going, Event.tag])
+            user = user_future.get_result()
+            event_list = event_list_future.get_result()
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["organization"]
+            del user_dict["timestamp"]
+            del user_dict["notifications"]
+            del user_dict["new_notifications"]
+            del user_dict["hidden_notifications"]
+            event_tags = list()
+            for event in event_list:
+                if user.key in event.going:
+                    event_tags.append(event.tag)
+            user_dict["event_tags"] = event_tags
+            user_dict["key"] = user.key.urlsafe()
+            if user.dob:
+                user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+            else:
+                del user_dict["dob"]
+            user_dict["key"] = user.key.urlsafe()
+            return_data = json_dump(user_dict)
+            return OutgoingMessage(error='', data=return_data)
 
     #-------------------------
     # TAGGING Endpoints
