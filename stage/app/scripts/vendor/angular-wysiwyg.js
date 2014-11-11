@@ -189,10 +189,8 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                 };
 
                 scope.format = function(cmd, arg) {
-                    var newLink = document.execCommand(cmd, false, arg);
-                    //arg.target = "_blank";
-                    console.log('Arg', arg);
-                    console.log('newLink', newLink);
+
+                    document.execCommand(cmd, false, arg);
                 }
 
                 scope.cmdState = function(cmd, id) {
