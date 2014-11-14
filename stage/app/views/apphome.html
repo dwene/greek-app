@@ -30,7 +30,7 @@
                 <span id="count" ng-show="status.length">{{status.length}}/140</span>
         </form>
     </div>
-      
+     <load-directive ng-model="shouldLoad"> 
     <div id="upcomingEvents" ng-show="eventList.length">   
         <section>
             <div ng-show="eventList.length">
@@ -40,6 +40,7 @@
             </div>
         </section>
     </div>  
+    </load-directive>
         
     </section>
     

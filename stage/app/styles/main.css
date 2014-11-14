@@ -2803,3 +2803,12 @@ div#cropped-image {
   display: block;
   max-width: 95%;
 }
+
+
+.cssFade {
+    transition: 0.5s linear all;
+    opacity: 1;
+}
+.cssFade.ng-hide {
+    opacity: 0;
+}

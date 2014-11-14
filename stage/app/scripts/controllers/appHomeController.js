@@ -1,5 +1,9 @@
     App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout, $sce) {
         routeChange();
+        $scope.shouldLoad = false;
+        $timeout(function(){
+            $scope.shouldLoad = true;
+                }, 4000);
         $scope.noMoreHiddens = false;
         $('.modal-backdrop').remove();
         Load.then(function(){

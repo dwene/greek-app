@@ -4899,7 +4899,6 @@ App.directive('alumniYearPicker', function(){
     };
 });
 
-
 App.directive('listThing', function(){
         return {
             require: 'ngModel',
@@ -4917,6 +4916,18 @@ App.directive('listThing', function(){
             $scope.maxPageNumber = $scope.maxPageNumber || 5;
             }
         };
+});
+
+App.directive('loadDirective', function(){
+  return {
+    scope: {
+        ngModel : '='
+    },
+    restrict: 'E',
+    replace: 'true',
+    transclude: 'true',
+    templateUrl: '/views/templates/loadingTemplate.html',
+  }
 });
 
 
