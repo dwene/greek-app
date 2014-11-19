@@ -806,13 +806,10 @@ h1 {
 #manageMembers .row hr {
   margin: 8px 0px 4px 0px;
 }
-#manageMembers .row {
-  margin: 0px;
-}
-.permsSelect {
+#manageMembers .permsSelect {
   display: inline-block;
 }
-.resendWelcome {
+#manageMembers .resendWelcome {
   padding: 3px 5px;
   font-size: 10px;
 }
@@ -822,19 +819,12 @@ h1 {
 #manageMembers .memberOptions {
   margin-left: 160px;
 }
-#manageMembers #members > li {
-  padding: 10px;
-  position: relative;
-  border-bottom: 1px solid #ccc;
+#manageMembers span {
+  font-size: 12px;
+  margin-left: 15px;
 }
-#manageMembers #members > li:nth-child(odd) {
-  background: #f8f8f8;
-}
-#manageMembers #members > li:first-child {
-  border-top: 1px solid #ccc;
-}
-#manageMembers #members .col-xs-12 {
-  height: 23px;
+#manageMembers span a {
+  cursor: pointer;
 }
 /*Adding Members*/
 #addmemberForm button {
@@ -1216,10 +1206,10 @@ background-repeat: repeat-x;
   line-height: 30px;
   margin-top: 5px;
 }
-.striped li {
+.striped > li {
   padding: 5px 15px;
 }
-.striped li button {
+.striped > li button {
   margin-left: 15px;
 }
 #listHeaders {

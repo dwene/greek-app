@@ -269,18 +269,19 @@ h1{font-size:34px; font-weight:bold;}
 
 
 /*Member Management Page*/
-#manageMembers .card{margin-bottom:10px;}
-#manageMembers .form-inline{margin-bottom:10px;}
-#manageMembers .row hr{margin:8px 0px 4px 0px;}
-#manageMembers .row{margin:0px}
-.permsSelect{display:inline-block;}
-.resendWelcome{padding: 3px 5px; font-size:10px;}
-#manageMembers .members{float:left;}
-#manageMembers .memberOptions{margin-left:160px;}
-#manageMembers #members > li{padding:10px; position:relative; border-bottom:1px solid #ccc;}
-#manageMembers #members > li:nth-child(odd){background:#f8f8f8;}
-#manageMembers #members > li:first-child{border-top:1px solid #ccc;}
-#manageMembers #members .col-xs-12{height:23px;}
+#manageMembers{
+    .card{margin-bottom:10px;}
+    .form-inline{margin-bottom:10px;}
+    .row hr{margin:8px 0px 4px 0px;}
+    .permsSelect{display:inline-block;}
+    .resendWelcome{padding: 3px 5px; font-size:10px;}
+    .members{float:left;}
+    .memberOptions{margin-left:160px;}
+    span{font-size:12px; margin-left:15px;
+        a{cursor:pointer;}
+    }
+}
+
 /*Adding Members*/
 #addmemberForm button{margin-left:15px;}
 #addingMembers .trash{position:absolute; right:10px; top:50%; margin-top:-12px;}
@@ -404,8 +405,8 @@ background-repeat: repeat-x;
 /*Striped Lists*/
 .thinking{position:absolute; left:-15px; top:8px;}
 .striped{line-height:30px; margin-top:5px;}
-.striped li{padding:5px 15px;}
-.striped li button{margin-left:15px;}
+.striped > li{padding:5px 15px;}
+.striped > li button{margin-left:15px;}
 #listHeaders{font-weight:bold;}
 
 /*Upload Profile Page*/

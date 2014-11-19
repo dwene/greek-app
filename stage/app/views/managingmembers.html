@@ -14,18 +14,18 @@
 -->
    <search ng-model="search" id="manageMembersSearch"></search>
     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
-    <ul id="members">
+    <ul id="members" class="striped">
        
         <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-init="member.name = member.first_name + ' ' + member.last_name;">
            
            <div class="row">
-                <div class="col-xs-12 col-sm-6">
+                <div class="col-xs-12 col-sm-8">
                 <netemember-check ng-hide="member.user_name == $root.me.user_name" class="members" ng-model="member"></netemember-check>
                 <nete-member ng-show="member.user_name == $root.me.user_name"  class="members" ng-model="member"></nete-member>
-                <span>email@email.com <button ng-click="openChangeEmailModal(member)" class="btn btn-info btn-sm">change</button></span>
+                <span>{{member.email}}&nbsp;<a ng-click="openChangeEmailModal(member)" class="">change</a></span>
 
                 </div>
-               <div ng-hide="member.user_name == $root.me.user_name" class="col-xs-12 col-sm-6">
+               <div ng-hide="member.user_name == $root.me.user_name" class="col-xs-12 col-sm-4">
                     <div class="pull-right">
                         <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
                         <button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="btn btn-info btn-sm resendWelcome">Resend Welcome Email</button>
@@ -52,7 +52,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Remove {{userToDelete.first_name}} {{userToDelete.last_name}} ?</h4>
+        <h4 class="modal-title">Remove {{userToDelete.first_name}} {{userToDelete.last_name}}?</h4>
       </div>
       <div class="modal-body">
         <div class="profilepic" style="background-image:url({{userToDelete.prof_pic || $root.defaultProfilePicture}});" >
@@ -96,10 +96,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Change member's email?</h4>
+                <h4 class="modal-title">Change {{userToChange.first_name}} {{userToChange.last_name}}'s email?</h4>
             </div>
             <div class="modal-body">
-
+                <input name="emailToChange" type="text" class="form-control">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

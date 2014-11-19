@@ -12,17 +12,23 @@
         $scope.openDeleteMemberModal = function(user){
             $('#deleteMemberModal').modal();
             $scope.userToDelete = user;
-        }
+        };
         //#TODO this should now be fixed to where it can delete multiple checked members in this modal
         
         $scope.openConvertMembersModal = function(){
             $('#convertMemberModal').modal();
-        }
+        };
+        
+        $scope.openChangeEmailModal = function(user){
+            $('#changeEmailModal').modal();
+            $scope.userToChange = user;
+        };
+        
         $scope.loadMoreMembers = function(){
             if ($scope.memberslength < $scope.members.length){
                 $scope.memberslength += 20;
             }
-        }
+        };
         
         $scope.resendWelcomeEmail = function(member){
             member.updating = 'pending';
@@ -38,7 +44,7 @@
                 .error(function(data) {
                     member.updating = 'broken';
                 });
-        }
+        };
         $scope.resendAllWelcomeEmails = function(){
             $scope.resendWorking = 'pending';
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', packageForSending(''))
@@ -53,9 +59,9 @@
             })
             .error(function(data){
                 $scope.resendWorking = 'broken';
-                console.log('ERROR', data.error)
-            })
-        }
+                console.log('ERROR', data.error);
+            });
+        };
         
         $scope.updatePerms = function(member, option){
             var key = member.key;
@@ -73,7 +79,7 @@
                 .error(function(data) {
                     member.updating = 'broken';
                 });
-        }
+        };
         
         $scope.changeUserEmail = function(member, email){
             var to_send = {key: member.key, email: email};
@@ -91,7 +97,7 @@
                 .error(function(data) {
                     console.log('Error: ' , data);
                 });
-        }
+        };
 
         $scope.convertMembersToAlumni = function(){
             keys = [];
@@ -131,14 +137,13 @@
                     localStorageService.set('directory', $rootScope.directory);
                     assignAngularViewModels($rootScope.directory.members);
                 }
-                else
-                    console.log('ERROR: ',data);
+                else{console.log('ERROR: ',data);}
             })
             .error(function(data) {
                 console.log('Error: ' , data);
             });
         
-        }
+        };
         
         function assignAngularViewModels(members){
             $scope.members = members;
@@ -165,8 +170,7 @@
                 if (!checkResponseErrors(data))
                 {
                 }
-                else
-                    console.log('ERROR: ',data);
+                else{console.log('ERROR: ',data);}
             })
             .error(function(data) {
                 console.log('Error: ' , data);
@@ -177,6 +181,6 @@
                     break;
                 }
             }
-        }
+        };
         });
     });
