@@ -334,6 +334,7 @@ textarea.form-control{height:auto; max-width:100%;}
     .card{margin-bottom:20px;}
     .page-header div{margin-right:15px;}
     li button{border:none; background:none; height:32px; width:32px; padding-bottom:15px; margin:0px;}
+    .striped h3{display:inline;}
 }
 
 
@@ -661,14 +662,14 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation-duration: 1s;}
 
 /*ng-animation code*/
-.fadingIn.ng-enter, .fader.ng-enter{
+.fadingIn.ng-enter, .fadingIn.ng-hide-remove{
     -webkit-animation: fadeIn .5s;
     -moz-animation: fadeIn .5s;
     -ms-animation: fadeIn .5s;
     animation: fadeIn .5s;
 }
 
-.fadingOut.ng-leave, .fader.ng-leave{
+.fadingOut.ng-leave, .fadingOut.ng-hide-show{
     -webkit-animation: fadeOut .5s;
     -moz-animation: fadeOut .5s;
     -ms-animation: fadeOut .5s;

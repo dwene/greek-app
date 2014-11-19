@@ -989,6 +989,9 @@ textarea.form-control {
   padding-bottom: 15px;
   margin: 0px;
 }
+#links .striped h3 {
+  display: inline;
+}
 /*Main App Page*/
 #notifications ul {
   padding: 5px 0px;
@@ -1831,14 +1834,14 @@ nav.navbar-default:hover .refresh {
 }
 /*ng-animation code*/
 .fadingIn.ng-enter,
-.fader.ng-enter {
+.fadingIn.ng-hide-remove {
   -webkit-animation: fadeIn .5s;
   -moz-animation: fadeIn .5s;
   -ms-animation: fadeIn .5s;
   animation: fadeIn .5s;
 }
 .fadingOut.ng-leave,
-.fader.ng-leave {
+.fadingOut.ng-hide-show {
   -webkit-animation: fadeOut .5s;
   -moz-animation: fadeOut .5s;
   -ms-animation: fadeOut .5s;
