@@ -75,7 +75,7 @@
         <ul>
             <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.hidden_notifications | orderBy:'-timestamp' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">
                 <div class="notificationContent">
-                <button type="button" class="close" ng-click="unhideNotification(notify, this);$event.stopPropagation();" bs-tooltip="unarchiveTip" data-placement="left"><i class="fa fa-inbox"></i></button>
+                <button type="button" class="close" ng-click="unhideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-inbox"></i></button>
                 <span class="notificationTitle">{{notify.title}}</span>
                     <span class="notificationText">{{notify.content | htmlToPlaintext}}</span>
                 <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
