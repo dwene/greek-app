@@ -70,7 +70,7 @@ nav{backface-visibility:hidden;}
 
 /*Dropdown Menu*/
 
-.dropdown-toggle{-ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
+.dropdown-toggle{.noselect;}
 
 nav.navbar-default .dropdown-menu {
     -webkit-transition: max-height .3s ease-out;
@@ -100,17 +100,17 @@ nav.navbar-default .open .dropdown-menu {
 h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc; font-weight:bold;}
 
 /*Labels and Tags*/
-.label{display:inline-block; position:relative; padding:.4em; margin:0px 2px; -webkit-user-select:none; user-select:none;}
+.label{display:inline-block; position:relative; padding:.4em; margin:0px 2px; .noselect;}
 .checkLabel{padding:.4em .4em .4em 1.5em;}
 .checkLabel, .memberTags .badge{cursor:pointer;}
-.checkLabel li{display:inline;}
-.checkLabel input{display:none;}
+.checkLabel li{display:inline-block; .noselect;}
+.checkLabel input{display:none; }
 .checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
 .checkLabel.label-default:hover{background:#ccc;}
 .checkLabel.label-primary:hover{background:blue;}
 
 /*Selecting Members for Messaging*/
-#selectedList{position:relative; margin-bottom:10px; max-height:80px; overflow-y:scroll;}
+#selectedList{position:relative; margin-bottom:10px; max-height:48px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 #selectingUsers #messagingTags{margin-top:0px;}
@@ -127,7 +127,7 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc; font-weight:bold;}
 
 #selectingUsers > .row{margin-top:10px;}
 
-#recentTags{position:relative; margin-bottom:5px; margin-top:-15px; overflow-y:hidden; max-height:48px;}
+#recentTags{position:relative; margin-bottom:5px; margin-top:-15px; overflow-y:hidden; max-height:80px;}
 #recentTags .page-header{margin-top:0px;}
 #recentTags .btn-group{margin-bottom:4px;}
 
@@ -235,7 +235,7 @@ h1{font-size:34px; font-weight:bold;}
 
 .memberTags #seeall{right:15px !important;}
 
-.memberTags .btn-group{-webkit-user-select:none;}
+.memberTags .btn-group{.noselect;}
 .memberTags .badge{position: absolute; right: 0px; top: 0px; border-left:1px solid #ccc; padding: .3em .4em .5em .4em;
     border-radius:.25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 .memberTags .page-header{margin: 10px 0 10px !important; padding-bottom:5px;}
@@ -457,7 +457,7 @@ background-repeat: repeat-x;
 
 #eventInfo #going, #eventInfo #notGoing, #eventInfo #invited{padding:10px !important; margin-top:10px;}
 #eventInfo .card .page-header{margin: 0 0 10px;}
-#eventInfo h3{cursor:pointer; -ms-user-select:none; -moz-user-select:none; -webkit-user-select:none; user-select:none;}
+#eventInfo h3{cursor:pointer; .noselect;}
 
 /*New Event Page*/
 #createEvent .card{padding-bottom:50px;}
@@ -571,6 +571,13 @@ background-repeat: repeat-x;
 #sectionLoading{display:block; padding-top:20px; text-align:center;}
 
 /*Helper Classes*/
+.noselect{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .smallprofilepic{
     display: inline-block;
     position:absolute;
