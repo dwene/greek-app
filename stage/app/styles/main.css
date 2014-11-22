@@ -295,9 +295,9 @@ nav {
 }
 /*Dropdown Menu*/
 .dropdown-toggle {
-  -ms-user-select: none;
-  -moz-user-select: none;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 nav.navbar-default .dropdown-menu {
@@ -337,6 +337,8 @@ h2.page-header {
   padding: .4em;
   margin: 0px 2px;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 .checkLabel {
@@ -347,7 +349,11 @@ h2.page-header {
   cursor: pointer;
 }
 .checkLabel li {
-  display: inline;
+  display: inline-block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .checkLabel input {
   display: none;
@@ -367,7 +373,7 @@ h2.page-header {
 #selectedList {
   position: relative;
   margin-bottom: 10px;
-  max-height: 80px;
+  max-height: 48px;
   overflow-y: scroll;
 }
 .messagePerson {
@@ -423,7 +429,7 @@ h2.page-header {
   margin-bottom: 5px;
   margin-top: -15px;
   overflow-y: hidden;
-  max-height: 48px;
+  max-height: 80px;
 }
 #recentTags .page-header {
   margin-top: 0px;
@@ -717,6 +723,9 @@ h1 {
 }
 .memberTags .btn-group {
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .memberTags .badge {
   position: absolute;
@@ -805,13 +814,10 @@ h1 {
 #manageMembers .row hr {
   margin: 8px 0px 4px 0px;
 }
-#manageMembers .row {
-  margin: 0px;
-}
-.permsSelect {
+#manageMembers .permsSelect {
   display: inline-block;
 }
-.resendWelcome {
+#manageMembers .resendWelcome {
   padding: 3px 5px;
   font-size: 10px;
 }
@@ -821,19 +827,12 @@ h1 {
 #manageMembers .memberOptions {
   margin-left: 160px;
 }
-#manageMembers #members > li {
-  padding: 10px;
-  position: relative;
-  border-bottom: 1px solid #ccc;
+#manageMembers span {
+  font-size: 12px;
+  margin-left: 15px;
 }
-#manageMembers #members > li:nth-child(odd) {
-  background: #f8f8f8;
-}
-#manageMembers #members > li:first-child {
-  border-top: 1px solid #ccc;
-}
-#manageMembers #members .col-xs-12 {
-  height: 23px;
+#manageMembers span a {
+  cursor: pointer;
 }
 /*Adding Members*/
 #addmemberForm button {
@@ -998,8 +997,8 @@ textarea.form-control {
   padding-bottom: 15px;
   margin: 0px;
 }
-#links li a {
-  display: inline-block;
+#links .striped h3 {
+  display: inline;
 }
 /*Main App Page*/
 #notifications ul {
@@ -1218,10 +1217,10 @@ background-repeat: repeat-x;
   line-height: 30px;
   margin-top: 5px;
 }
-.striped li {
+.striped > li {
   padding: 5px 15px;
 }
-.striped li button {
+.striped > li button {
   margin-left: 15px;
 }
 #listHeaders {
@@ -1372,9 +1371,9 @@ background-repeat: repeat-x;
 }
 #eventInfo h3 {
   cursor: pointer;
-  -ms-user-select: none;
-  -moz-user-select: none;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 /*New Event Page*/
@@ -1597,9 +1596,6 @@ background-repeat: repeat-x;
 .pollSummary .summaryResponses:nth-child(even) {
   background: #f8f8f8;
 }
-#byPerson .title {
-  font-weight: bold;
-}
 .expandButtons {
   margin-top: -40px;
 }
@@ -1693,7 +1689,19 @@ background-repeat: repeat-x;
 .smallSpin {
   font-size: 20px;
 }
+/*Section Loading*/
+#sectionLoading {
+  display: block;
+  padding-top: 20px;
+  text-align: center;
+}
 /*Helper Classes*/
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .smallprofilepic {
   display: inline-block;
   position: absolute;
@@ -1840,14 +1848,14 @@ nav.navbar-default:hover .refresh {
 }
 /*ng-animation code*/
 .fadingIn.ng-enter,
-.fader.ng-enter {
+.fadingIn.ng-hide-remove {
   -webkit-animation: fadeIn .5s;
   -moz-animation: fadeIn .5s;
   -ms-animation: fadeIn .5s;
   animation: fadeIn .5s;
 }
 .fadingOut.ng-leave,
-.fader.ng-leave {
+.fadingOut.ng-hide-show {
   -webkit-animation: fadeOut .5s;
   -moz-animation: fadeOut .5s;
   -ms-animation: fadeOut .5s;
@@ -2796,10 +2804,6 @@ div#cropped-image {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
 }
 #notificationModal img {
-  display: block;
-  max-width: 95%;
-}
-#messageModal img {
   display: block;
   max-width: 95%;
 }

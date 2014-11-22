@@ -1,4 +1,4 @@
 <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
     <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
-    <input type="checkbox" ng-model="tag.checked"> <li><span ng-hide="hideHash">#</span>{{tag.name}}</li>
+    <input type="checkbox" ng-model="tag.checked"> <span ng-hide="hideHash">#</span>{{tag.name}}
 </label>

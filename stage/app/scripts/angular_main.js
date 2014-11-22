@@ -4923,7 +4923,7 @@ App.directive('loadDirective', function(){
     scope: {
         ngModel : '='
     },
-    restrict: 'E',
+    restrict: 'EA',
     replace: 'true',
     transclude: 'true',
     templateUrl: '/views/templates/loadingTemplate.html',
