@@ -51,12 +51,7 @@
 			<div class="container">
 				<div class="navbar-header">
 					
-<!--
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobileSettings">
-                        <span class="sr-only">Toggle Settings</span>
-                        <i class="fa fa-cog" style="color:white;"></i>
-                    </button>
--->
+                   
                     <button type="button"  ng-show="$root.checkLogin()" class="navbar-toggle" data-template="views/templates/aside.html" data-placement="right" bs-aside="aside" data-container="body">
                         <i class="fa fa-bars" style="color:white;"></i>
                     </button>
@@ -70,46 +65,14 @@
 				</div>
 				<div id="mainNavigation" class="hidden-xs">
                     <ul class="nav navbar-nav navbar-right" ng-hide="!$root.checkLogin()">
-
-<!--
-                        <li><a ng-href="/#/app/directory/members"><i class="fa fa-book"></i> Directory</a></li>
-                        <li ng-show="$root.checkPermissions('leadership') && $root.subscribed"><a ng-href="/#/app/messaging"><i class="fa fa-envelope"></i> Messaging</a></li>
-                        <li ng-show="$root.subscribed && $root.checkPermissions('member')"><a ng-href="/#/app/events"><i class="fa fa-calendar"></i> Events</a></li>
-                        <li ng-show="$root.subscribed && $root.checkPermissions('member')"><a ng-href="/#/app/polls"><i class="fa fa-th-list"></i> Polls</a></li>
-
-                        <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a ng-href="#/app/accountinfo"><i class="fa fa-user fa-fw"></i> Account</a></li>
-                            <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
-                            <li ng-show="$root.checkPermissions('leadership')"><a ng-href="#/app/managemembers/tag"><i class="fa fa-users fa-fw"></i> Members</a></li>
-                            <li class="divider" ng-show="$root.checkPermissions('leadership')"></li>
-                            <li ng-show="$root.checkPermissions('council')"><a ng-href="#/app/managealumni"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</a></li>
-                            <li class="divider" ng-show="$root.checkPermissions('council')"></li>
-                            <li ng-show="$root.checkPermissions('council')"><a ng-href="#/app/admin"><i class="fa fa-gears fa-fw"></i> Admin</a></li>
-                            <li class="divider" ng-show="$root.checkPermissions('council')" ></li>
-                            <li><a ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i> Log Out</a></li>
-                        </ul>
-                        </li>
--->
                         
                         <li><a class="help" data-toggle="modal" ng-show="$root.checkLogin()" data-target="#helpModal"><i class="fa fa-question-circle"></i></a></li>
                         
                     </ul>
-<!--
-                    <ul ng-hide="$root.checkLogin()" class="nav navbar-nav navbar-right">
-                        <li><a ng-href="#login"><i class="fa fa-sign-in"></i> Login</a></li>
-                        <li><a ng-href="#register"><i class="fa fa-hand-o-right"></i> Register</a></li>
-                    </ul>
--->
+
 				</div>
 				
 				
-<!--
-				<ul id="mobileDirectory" class="nav navbar-nav navbar-right" ng-hide="!$root.checkLogin() || $root.subscribed">
-                    <li><a ng-href="/#/app/directory/members"><i class="fa fa-book"></i></a></li>
-				</ul>
--->
 				
 				<a class="mobile help" ng-show="$root.checkLogin()" data-toggle="modal" data-target="#helpModal"><i class="fa fa-question-circle"></i></a>
 				
@@ -179,9 +142,7 @@
        
 </div>
        
-<div id="loadingScreen" class="mainLoadingScreen">
-<!--    <md-progress-linear md-mode="indeterminate"></md-progress-linear>-->
-        <i class="fa fa-spinner fa-spin"></i>
+<div id="loadingScreen" class="mainLoadingScreen"><br><br>
     <p id="nicePhrase" style="color: blue; font-size:24px;"></p>  
     <script>
         function getRandomInt(min, max) {
@@ -192,6 +153,7 @@
     </script>
     <p style="color:grey;">Give us one second while we setup for you...</p> 
 </div>
+       
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -297,7 +259,6 @@
 
           ga('create', 'UA-53982204-1', 'auto');
         </script>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
     </body>
 </html>

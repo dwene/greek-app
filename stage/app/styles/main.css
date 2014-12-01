@@ -1695,6 +1695,10 @@ background-repeat: repeat-x;
   padding-top: 20px;
   text-align: center;
 }
+#sectionLoading md-progress-circular {
+  display: block;
+  margin: auto;
+}
 /*Helper Classes*/
 .noselect {
   -webkit-user-select: none;
