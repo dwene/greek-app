@@ -120,7 +120,6 @@
 </header>
 
 <div ui-view ng-hide="$root.loading"  autoscroll="true" id="mainSection"></div>
-<md-progress-circular md-mode="indeterminate"></md-progress-circular>
 
 <footer><br><br></footer> 
 
@@ -181,8 +180,8 @@
 </div>
        
 <div id="loadingScreen" class="mainLoadingScreen">
-    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-    <!--    <i class="fa fa-spinner fa-spin"></i>-->
+<!--    <md-progress-linear md-mode="indeterminate"></md-progress-linear>-->
+        <i class="fa fa-spinner fa-spin"></i>
     <p id="nicePhrase" style="color: blue; font-size:24px;"></p>  
     <script>
         function getRandomInt(min, max) {
