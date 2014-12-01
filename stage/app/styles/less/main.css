@@ -1908,6 +1908,9 @@ nav.navbar-default:hover .refresh {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.modal-dialog {
+  left: 0;
+}
 @media screen and (max-width: 768px) {
   .tooltip {
     display: none !important;
