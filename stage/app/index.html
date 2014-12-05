@@ -45,67 +45,73 @@
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-<div id="body">
 <header>
-<!--
-			<nav class="navbar navbar-default" ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
-			<div class="container">
-				<div class="navbar-header">
-					
-                   
-                    <button type="button"  ng-show="$root.checkLogin()" class="navbar-toggle" data-template="views/templates/aside.html" data-placement="right" bs-aside="aside" data-container="body">
-                        <i class="fa fa-bars" style="color:white;"></i>
-                    </button>
-					
-					<a class="navbar-brand" ng-hide="$root.checkLogin()"></a>
-					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
-					<span class="badge" ng-bind="$root.notification_count"></span>
-					</a>
-                <span id="refreshNotifications" ng-show="$root.checkLogin()" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
 
-				</div>
-				<div id="mainNavigation" class="hidden-xs">
-                    <ul class="nav navbar-nav navbar-right" ng-hide="!$root.checkLogin()">
-                        
-                        <li><a class="help" data-toggle="modal" ng-show="$root.checkLogin()" data-target="#helpModal"><i class="fa fa-question-circle"></i></a></li>
-                        
-                    </ul>
-
-				</div>
-				
-				
-				
-				<a class="mobile help" ng-show="$root.checkLogin()" data-toggle="modal" data-target="#helpModal"><i class="fa fa-question-circle"></i></a>
-				
-
-			</div>
-            			
-			</nav>
--->
-
-<md-toolbar class="navbar-fixed-top">
+<md-toolbar class="navbar-fixed-top md-whiteframe-z1">
         <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
 				<div>
+<!--
 					<a class="navbar-brand" ng-hide="$root.checkLogin()"></a>
 					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
 					<span class="badge" ng-bind="$root.notification_count"></span>
 					</a>
+-->
 				</div>      
 
 				<div flex></div>
 				
-				<md-button ng-show="$root.checkLogin()" data-toggle="modal" data-target="#helpModal">
+				<md-button ng-show="$root.checkLogin()" ng-click="showHelpdialog()">
 				    <i class="fa fa-question-circle"></i>
 				</md-button>
 				
-                <md-button type="button"  ng-show="$root.checkLogin()" data-template="views/templates/aside.html" data-placement="right" bs-aside="aside" data-container="body">
+                <md-button type="button"  ng-show="$root.checkLogin()" ng-click="toggleSidenav()">
                         <i class="fa fa-bars" style="color:white;"></i>
                 </md-button>
             			
         </nav>
       </h2>
-    </md-toolbar>
+</md-toolbar>
 </header>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z3" md-component-id="sidenav">
+<div layout="column" layout-fill>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span>Menu</span>
+      <!-- fill up the space between left and right area -->
+      <span flex></span>
+      <md-button ng-click="toggleSidenav()">
+        <i class="fa fa-times"></i>
+      </md-button>
+    </div>
+  </md-toolbar>
+    <md-content class="md-padding">
+        <ul class="nav">
+            <li ng-click="toggleSidenav()"><md-button ng-href="/#/app/home"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
+            <li ng-click="toggleSidenav()"><md-button ng-href="/#/app/directory/members"><i class="fa fa-book fa-fw"></i> Directory</a></li>
+            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('leadership') && $root.subscribed"><md-button ng-href="/#/app/messaging"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/events"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/links"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
+            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/polls"><i class="fa fa-th-list fa-fw"></i> Polls</md-button></li>
+        </ul>
+    </md-content>
+    <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span>Settings</span>
+      <span flex></span>
+    </div>
+    </md-toolbar>
+    <md-content class="md-padding">
+        <ul class="nav">
+            <li ng-click="toggleSidenav()"><md-button ng-href="#/app/accountinfo"><i class="fa fa-user fa-fw"></i> Account</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('leadership')"><md-button ng-href="#/app/managemembers/tag"><i class="fa fa-users fa-fw"></i> Members</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('council')"><md-button ng-href="#/app/managealumni"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('council')"><md-button ng-href="#/app/admin"><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
+            <li ng-click="toggleSidenav()"><md-button ng-href="" ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
+        </ul>
+    </md-content>
+</div>
+</md-sidenav>
 
 <div ui-view ng-hide="$root.loading"  autoscroll="true" id="mainSection"></div>
 
@@ -126,6 +132,7 @@
 </div><!-- /.modal -->
 
      
+<!--
 <div class="modal fade" id="helpModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -160,12 +167,13 @@
         <button type="submit" class="btn btn-primary" ng-disabled="helpMessage.$invalid">Send</button>
       </div>
       </form>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>
+-->
+<!-- /.modal -->
       
        
-</div>
        
 <div id="loadingScreen" class="mainLoadingScreen"><br><br>
     <p id="nicePhrase" style="color: blue; font-size:24px;"></p>  

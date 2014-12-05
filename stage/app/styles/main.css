@@ -1945,3 +1945,26 @@ body {
   text-transform: none;
   outline: none;
 }
+.md-sidenav-backdrop {
+  z-index: 1050;
+}
+md-sidenav {
+  z-index: 1051;
+}
+.nav .md-button {
+  text-align: left;
+}
+md-divider {
+  margin-bottom: 20px;
+}
+.md-tile-content .md-subheader {
+  padding: 0px 0px 10px 0px;
+}
+/*App Home*/
+#appHome md-card:hover {
+  background: #f8f8f8;
+  cursor: pointer;
+}
+#appHome md-card:hover .md-subheader {
+  background: #f8f8f8;
+}

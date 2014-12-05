@@ -1,4 +1,4 @@
-    App.controller('indexController', function($scope, $http, LoadScreen, $rootScope) {
+    App.controller('indexController', function($scope, $http, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
         $scope.homeButton = function(){
             if ($rootScope.checkAlumni()){
                 window.location.assign('#/app/directory/members');
@@ -24,5 +24,14 @@
             else{
             //do nothing
             }
+        }
+        $scope.toggleSidenav = function(){
+            $mdSidenav('sidenav').toggle();
+        }
+        $scope.showHelpdialog = function(){
+            $mdDialog.show({
+                    controller: dialogController,
+                    templateUrl: '../views/templates/helpDialog.html'
+            });
         }
 	});
