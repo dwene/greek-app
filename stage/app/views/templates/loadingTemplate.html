@@ -2,5 +2,7 @@
 	<div ng-show="ngModel" class="fadingIn">
 		<div ng-transclude></div>
 	</div>
-	<div ng-hide="ngModel" id="sectionLoading"><i class="fa fa-spinner fa-spin"></i></div>
+	<div ng-hide="ngModel" id="sectionLoading">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+	</div>
 </div>

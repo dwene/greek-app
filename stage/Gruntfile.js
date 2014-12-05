@@ -46,8 +46,8 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:test', 'karma']
       },
         css: {
-            files: '**/*.scss',
-            tasks: ['compass']
+            files: '**/*.less',
+            tasks: ['less:development']
         },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -169,7 +169,7 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        //ignorePath:  /\.\.\//
       }
     },
 
