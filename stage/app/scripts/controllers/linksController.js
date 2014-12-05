@@ -1,21 +1,16 @@
-App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen, localStorageService){
+App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen, localStorageService, Links){
         routeChange();
-        $rootScope.requirePermissions(MEMBER);
         Load.then(function(){
+            $rootScope.requirePermissions(MEMBER);
             $scope.groups = $rootScope.link_groups;
-            $scope.links = $rootScope.links;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $rootScope.links = JSON.parse(data.data);
-                        $scope.links = $rootScope.links;
-                        localStorageService.set('links', $rootScope.links);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-
+            $scope.links = Links.get();
+            if ($scope.links){
+                $scope.loading_finished = true;
+            }
+            $scope.$on('links:updated', function(){
+                $scope.links = Links.get();
+                $scope.loading_finished = true;
+            });
             $scope.openEditLinkModal = function(link){
                 $scope.temp_link = {link:link.link, title:link.title, group:link.group};
                 $scope.selectedLink = link;

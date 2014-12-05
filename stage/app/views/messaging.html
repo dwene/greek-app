@@ -1,11 +1,11 @@
 <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<section id="messaging" ng-show="!loading" class="container">
+<section id="messaging" ng-show="!loading" class="container" load-directive ng-model="finished_loading">
 
 <div class="card">
 
 <h1 class="card-header">Send a Message</h1>
 
-<selecting-users ng-model="$root.tags" include-users="true" clear-users="clearUsers"></selecting-users>
+<selecting-users ng-model="tags" include-users="true" clear-users="clearUsers" directory="directory"></selecting-users>
 
     
     <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>

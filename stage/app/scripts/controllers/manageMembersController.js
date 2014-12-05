@@ -1,4 +1,4 @@
-    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope, localStorageService){
+    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope, localStorageService, Directory){
     routeChange();
     Load.then(function(){
         $rootScope.requirePermissions(COUNCIL);
@@ -25,8 +25,10 @@
         };
         
         $scope.loadMoreMembers = function(){
-            if ($scope.memberslength < $scope.members.length){
-                $scope.memberslength += 20;
+            if ($scope.directory){
+                if ($scope.memberslength < $scope.directory.members.length){
+                    $scope.memberslength += 20;
+                }
             }
         };
         
@@ -71,6 +73,8 @@
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         member.updating = 'done';
+                        member.perms = option;
+                        Directory.set($scope.directory);
                     }
                     else{
                         member.updating = 'broken';
@@ -87,7 +91,10 @@
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
-                        console.log('success');
+                        member.email = email;
+                        Directory.set($scope.directory);
+                        $scope.newEmail = undefined;
+                        console.log(member);
                     }
                     else
                     {
@@ -101,18 +108,17 @@
 
         $scope.convertMembersToAlumni = function(){
             keys = [];
-            console.log('converting to alumni', members);
             $('#convertMemberModal').modal('hide');
-            for (var i = 0; i < $scope.members.length; i++){
-                if ($scope.members[i].checked){
-                    $scope.members[i].checked = false; 
-                    keys.push($scope.members[i].key);
-                    $scope.members.splice(i, 1);
+            for (var i = 0; i < $scope.directory.members.length; i++){
+                if ($scope.directory.members[i].checked){
+                    $scope.directory.members[i].checked = false; 
+                    keys.push($scope.directory.members[i].key);
+                    $scope.directory.alumni.push($scope.directory.members[i]);
+                    $scope.directory.members.splice(i, 1);
                     i--;
                 }
             }
             var to_send = {'keys': keys};
-            console.log(to_send);
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data))
@@ -127,41 +133,30 @@
                 .error(function(data) {
                     console.log('Error: ' , data);
                 });
+            Directory.set($scope.directory);
         };
         $scope.getMembers = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                    localStorageService.set('directory', $rootScope.directory);
-                    assignAngularViewModels($rootScope.directory.members);
-                }
-                else{console.log('ERROR: ',data);}
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-        
+            $scope.directory = Directory.get();
+            $scope.directoryLoaded = true;
         };
-        
-        function assignAngularViewModels(members){
-            $scope.members = members;
-            LoadScreen.stop();
+        if (Directory.check()){
+            $scope.getMembers();
         }
+        $scope.$on('directory:updated', function(){
+            $scope.getMembers();
+        });
         
-        function onPageLoad(){
-            console.log('page is loading');
-            if($rootScope.directory.members){
-                assignAngularViewModels($rootScope.directory.members);
-                $scope.getMembers();
-            }
-            else{
-                LoadScreen.start();
-                $scope.getMembers();
-            }
-        }
-        onPageLoad();
+        // function onPageLoad(){
+        //     console.log('page is loading');
+        //     if($rootScope.directory.members){
+        //         assignAngularViewModels($rootScope.directory.members);
+        //         $scope.getMembers();
+        //     }
+        //     else{
+        //         $scope.getMembers();
+        //     }
+        // }
+        // onPageLoad();
         
         $scope.removeMember = function(user){
             $('#deleteMemberModal').modal('hide');
@@ -175,9 +170,10 @@
             .error(function(data) {
                 console.log('Error: ' , data);
             });    
-            for (var i = 0; i < $scope.members.length; i++){
-                if ($scope.members[i].key == user.key){
-                    $scope.members.splice(i, 1);
+            for (var i = 0; i < $scope.directory.members.length; i++){
+                if ($scope.directory.members[i].key == user.key){
+                    $scope.directory.members.splice(i, 1);
+                    Directory.set($scope.directory);
                     break;
                 }
             }

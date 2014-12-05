@@ -4560,6 +4560,8 @@ function checkResponseErrors(received_data){
     if (response){
         if (response.error == 'TOKEN_EXPIRED' || response.error == 'BAD_TOKEN' || response.error == 'BAD_FIRST_TOKEN')
         {
+            $('.mainLoadingScreen').show();
+            $('.nav').hide();
             window.location.assign("/#/login");
             console.log('ERROR: ', response.error);
             return true;
@@ -4574,6 +4576,16 @@ function checkResponseErrors(received_data){
             return true;    
         }
     }
+}
+
+function checkCacheRefresh(timestamp){
+    if (!timestamp){
+        return true;
+    }
+    else if (timestamp.add(15, 'minutes').diff(moment()) < 0){
+        return true;
+    }
+    return false;
 }
 //This function is used to arrange the tag data so that we can use checkboxes with it
 //function arrangeTagData(tag_data){
@@ -4717,11 +4729,11 @@ function CSV2ARRAY(csv) {
 }
 
 function momentInTimezone(date){
-    return moment(date).add('hours',moment().tz(jstz.determine().name()).format('ZZ')/100);
+    return moment(date).add(moment().tz(jstz.determine().name()).format('ZZ')/100, 'hours');
 }
 
 function momentUTCTime(date){
-    return moment(date).subtract('hours', moment().tz(jstz.determine().name()).format('ZZ')/100); 
+    return moment(date).subtract( moment().tz(jstz.determine().name()).format('ZZ')/100, 'hours'); 
 }
 
 //Directives and other add ons
@@ -5094,7 +5106,7 @@ App.directive('netePieChart', function() {
 
            
             
-App.directive('selectingUsers', function($rootScope){
+App.directive('selectingUsers', function($rootScope, Directory){
     return {
     restrict: 'E',
     replace: 'true',
@@ -5105,6 +5117,7 @@ App.directive('selectingUsers', function($rootScope){
         skipEvent:"=",
         includeUsers:"=?",
         clearUsers:"=?",
+        directory:"=",
     },
     transclude: true,
     link: function (scope, element, attrs) {
@@ -5117,10 +5130,11 @@ App.directive('selectingUsers', function($rootScope){
             console.log('clicked');
         }
         scope.$watch('ngModel', function(){
-            if (scope.ngModel && scope.ngModel.org_tags && scope.includeUsers){
+            if (scope.ngModel && scope.ngModel.org_tags && scope.includeUsers && scope.directory){
                 scope.usersList = [];
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    scope.usersList.push({user: $rootScope.directory.members[i], checked:false, name:$rootScope.directory.members[i].first_name + ' ' + $rootScope.directory.members[i].last_name });
+                console.log('scope.directory', scope.directory);
+                for (var i = 0; i < scope.directory.members.length; i++){
+                    scope.usersList.push({user: scope.directory.members[i], checked:false, name:scope.directory.members[i].first_name + ' ' + scope.directory.members[i].last_name });
                 }
                 scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.ngModel.event_tags)).concat(scope.usersList);
             }
@@ -5302,7 +5316,7 @@ App.filter('multipleSearch', function(){
 
 App.filter('htmlToPlaintext', function() {
     return function(text) {
-      return String(text).replace(/<[^>]+>/gm, ' ');
+      return String(text).replace(/<[^>]+>/gm, ' ').replace(/&nbsp;/gi,'');
     }
   });            
             
@@ -5671,11 +5685,20 @@ App.factory('LoadScreen', function($rootScope){
     };
 });
 
-App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, localStorageService){
+App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, localStorageService, Organization){
     var defer = $q.defer();
         if (!checkLogin()){
-        window.location.replace('#/login');
+            window.location.replace('#/login');
+            defer.resolve();
+        }
+    var organization = Organization.get();
+    if (organization){
         defer.resolve();
+    }
+    else{
+        $rootScope.$on('organization:updated', function(){
+            defer.resolve();
+        });
     }
     function executePosts() {
           var deferred = $q.defer();
@@ -5689,16 +5712,17 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
               else{
               neededCount --;}
           }
+
         console.log('user_name', $.cookie(USER_NAME));
         if ($.cookie(USER_NAME) != localStorageService.get('user_name')){
             localStorage.clear();
             localStorageService.set('user_name', $.cookie(USER_NAME));
         }
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
-            .success(function(data){
-                console.log('----------THIS-LOGIN-WORKS----------');
-                if (checkResponseErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
-            });
+        // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
+        //     .success(function(data){
+        //         console.log('----------THIS-LOGIN-WORKS----------');
+        //         if (checkResponseErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
+        //     });
             
 //        if ($cacheFactory.info()){
 //            $rootScope.directory = JSON.parse($cacheFactory.get('directory'));
@@ -5756,212 +5780,210 @@ App.factory( 'Load', function LoadRequests($http, $q, $rootScope, LoadScreen, lo
 //                console.log('Error: ' , data);
 //                checkIfDone();
 //            });
-            $rootScope.directory = localStorageService.get('directory');
-            if ($rootScope.directory){
-                $rootScope.perms = 'alumni';
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    if ($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-                        $rootScope.me = $rootScope.directory.members[i];
-                        $rootScope.perms = $rootScope.me.perms;
-                        break;
-                    }
-                }
-            }
-            else{
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $rootScope.directory = JSON.parse(data.data);
-                        localStorageService.set('directory', $rootScope.directory);
-                    }
-                    checkIfDone();
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    checkIfDone();
-                });
-            }
-            var load_data = localStorageService.get('notifications');
-            if (load_data){
-                try{
-                    $rootScope.notifications = load_data.notifications;
-                    $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
-                    for (var i = 0; i < $rootScope.notifications.length; i++){
-                            $rootScope.notifications[i].collapseOut = true; 
-                    }
-                    $rootScope.hidden_notifications = load_data.hidden_notifications;
-                    $rootScope.updateNotificationBadge();
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
-                    .success(function(data){
-                        var load_data = JSON.parse(data.data);
-                        localStorageService.set('notifications', load_data);
-                        $rootScope.notifications = load_data.notifications;
-                        $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
-                        for (var i = 0; i < $rootScope.notifications.length; i++){
-                                $rootScope.notifications[i].collapseOut = true; 
-                        }
-                        $rootScope.hidden_notifications = load_data.hidden_notifications;
-                        $rootScope.updateNotificationBadge();
-                        })
-                    .error(function(data) {
-                            console.log('Error: ' , data);
-                        });
-                }
-                catch(err){localStorageService.remove('notifications'); $rootScope.refreshPage();}
-            }
-            else {
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
-                .success(function(data){
-                    var load_data = JSON.parse(data.data);
-                    localStorageService.set('notifications', load_data);
-                    $rootScope.notifications = load_data.notifications;
-                    $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
-                    for (var i = 0; i < $rootScope.notifications.length; i++){
-                            $rootScope.notifications[i].collapseOut = true; 
-                    }
-                    $rootScope.hidden_notifications = load_data.hidden_notifications;
-                    $rootScope.updateNotificationBadge();
-                    checkIfDone();
-                    })
-                .error(function(data) {
-                        console.log('Error: ' , data);
-                        checkIfDone();
-                    });  
-            }
-//            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
-//                .success(function(data){
-//                    if (!checkResponseErrors(data)){
-//                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
-//                    }
-//                });
-            $rootScope.tags = localStorageService.get('tags');
-            if (!$rootScope.tags){
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        var tag_data = JSON.parse(data.data);
-                        $rootScope.tags = tag_data;
-                        localStorageService.set('tags', $rootScope.tags);
-                    }
-                    else{
-                        console.log("error: " , data.error)
-                    }
-                    checkIfDone();
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    checkIfDone();
-                });
-            }
-            $rootScope.organization = localStorageService.get('organization_data');
-            if ($rootScope.organization){
-                try{
-                    $rootScope.subscribed = true;
-                    $rootScope.link_groups = $rootScope.organization.link_groups;
-                    $rootScope.setColor($rootScope.organization.color);
-                    $rootScope.organization = $rootScope.organization;
-                    $rootScope.link_groups = $rootScope.organization.link_groups;
-                    $rootScope.me = $rootScope.organization.me;
-                    console.log('me', $rootScope.me);
-                    $rootScope.perms = $rootScope.me.perms;
+//             $rootScope.directory = localStorageService.get('directory');
+//             if ($rootScope.directory){
+//                 $rootScope.perms = 'alumni';
+//                 for (var i = 0; i < $rootScope.directory.members.length; i++){
+//                     if ($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
+//                         $rootScope.me = $rootScope.directory.members[i];
+//                         $rootScope.perms = $rootScope.me.perms;
+//                         break;
+//                     }
+//                 }
+//             }
+//             else{
+//                 neededCount++;
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         $rootScope.directory = JSON.parse(data.data);
+//                         localStorageService.set('directory', $rootScope.directory);
+//                     }
+//                     checkIfDone();
+//                 })
+//                 .error(function(data) {
+//                     console.log('Error: ' , data);
+//                     checkIfDone();
+//                 });
+//             }
+//             var load_data = localStorageService.get('notifications');
+//             if (load_data){
+//                 try{
+//                     $rootScope.notifications = load_data.notifications;
+//                     $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
+//                     for (var i = 0; i < $rootScope.notifications.length; i++){
+//                             $rootScope.notifications[i].collapseOut = true; 
+//                     }
+//                     $rootScope.hidden_notifications = load_data.hidden_notifications;
+//                     $rootScope.updateNotificationBadge();
+//                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+//                     .success(function(data){
+//                         var load_data = JSON.parse(data.data);
+//                         localStorageService.set('notifications', load_data);
+//                         $rootScope.notifications = load_data.notifications;
+//                         $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
+//                         for (var i = 0; i < $rootScope.notifications.length; i++){
+//                                 $rootScope.notifications[i].collapseOut = true; 
+//                         }
+//                         $rootScope.hidden_notifications = load_data.hidden_notifications;
+//                         $rootScope.updateNotificationBadge();
+//                         })
+//                     .error(function(data) {
+//                             console.log('Error: ' , data);
+//                         });
+//                 }
+//                 catch(err){localStorageService.remove('notifications'); $rootScope.refreshPage();}
+//             }
+//             else {
+//                 neededCount++;
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
+//                 .success(function(data){
+//                     var load_data = JSON.parse(data.data);
+//                     localStorageService.set('notifications', load_data);
+//                     $rootScope.notifications = load_data.notifications;
+//                     $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
+//                     for (var i = 0; i < $rootScope.notifications.length; i++){
+//                             $rootScope.notifications[i].collapseOut = true; 
+//                     }
+//                     $rootScope.hidden_notifications = load_data.hidden_notifications;
+//                     $rootScope.updateNotificationBadge();
+//                     checkIfDone();
+//                     })
+//                 .error(function(data) {
+//                         console.log('Error: ' , data);
+//                         checkIfDone();
+//                     });  
+//             }
+// //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
+// //                .success(function(data){
+// //                    if (!checkResponseErrors(data)){
+// //                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
+// //                    }
+// //                });
+//             $rootScope.tags = localStorageService.get('tags');
+//             if (!$rootScope.tags){
+//                 neededCount++;
+//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+//                 .success(function(data){
+//                     if (!checkResponseErrors(data)){
+//                         var tag_data = JSON.parse(data.data);
+//                         $rootScope.tags = tag_data;
+//                         localStorageService.set('tags', $rootScope.tags);
+//                     }
+//                     else{
+//                         console.log("error: " , data.error)
+//                     }
+//                     checkIfDone();
+//                 })
+//                 .error(function(data) {
+//                     console.log('Error: ' , data);
+//                     checkIfDone();
+//                 });
+//             }
+            // $rootScope.organization = localStorageService.get('organization_data');
+            // if ($rootScope.organization){
+            //     try{
+            //         $rootScope.subscribed = true;
+            //         $rootScope.link_groups = $rootScope.organization.link_groups;
+            //         $rootScope.setColor($rootScope.organization.color);
+            //         $rootScope.organization = $rootScope.organization;
+            //         $rootScope.link_groups = $rootScope.organization.link_groups;
+            //         $rootScope.me = $rootScope.organization.me;
+            //         console.log('me', $rootScope.me);
+            //         $rootScope.perms = $rootScope.me.perms;
 
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
-                    .success(function(data){
-                        $rootScope.setColor(JSON.parse(data.data).color);
-                        $rootScope.organization = JSON.parse(data.data);
-                        console.log('me', $rootScope.me);
-                        $rootScope.me = $rootScope.organization.me;
-                        $rootScope.link_groups = $rootScope.organization.link_groups;
-                        $rootScope.perms = $rootScope.me.perms;
-                        localStorageService.set('organization_data', $rootScope.organization);
-                    });
-                }
-                catch(err){localStorageService.remove('organization_data'); $rootScope.refreshPage();}
-            }
-            else{
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
-                .success(function(data){
-                    $rootScope.subscribed = true;
-                    $rootScope.setColor(JSON.parse(data.data).color);
-                    $rootScope.organization = JSON.parse(data.data);
-                    $rootScope.me = $rootScope.organization.me;
-                    $rootScope.link_groups = $rootScope.organization.link_groups;
-                    $rootScope.perms = $rootScope.me.perms;
-                    localStorageService.set('organization_data', JSON.parse(data.data));
-                    checkIfDone();
-                })
-                .error(function(data) {
-                    checkIfDone();
-                });
-            }
-            $rootScope.events = localStorageService.get('events');
-            if (!$rootScope.events){
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            $rootScope.events = JSON.parse(data.data);
-                            localStorageService.set('events', $rootScope.events);
-                        }
-                        else{
-                            console.log('ERROR: ',data);
-                        }
-                        checkIfDone();
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' , data);
-                        checkIfDone();
-                    });
-            }
-            $rootScope.polls = localStorageService.get('polls');
-            if (!$rootScope.polls){
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            $rootScope.polls = JSON.parse(data.data);
-                            localStorageService.set('polls', $rootScope.polls);
-                            checkIfDone();
-                        }
-                        else{
-                            checkIfDone();
-                            console.log('ERR');
-                        }
-                    })
-                    .error(function(data) {
-                        checkIfDone();
-                        console.log('Error: ' , data);
-                    });
-            }
-            $rootScope.links = localStorageService.get('links');
-            if (!$rootScope.links){
-                neededCount++;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $rootScope.links = JSON.parse(data.data);
-                        localStorageService.set('links', $rootScope.links);
-                    }
-                    checkIfDone();
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    checkIfDone();
-                });
-            }
-        checkIfDone();
+            //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+            //         .success(function(data){
+            //             $rootScope.setColor(JSON.parse(data.data).color);
+            //             $rootScope.organization = JSON.parse(data.data);
+            //             console.log('me', $rootScope.me);
+            //             $rootScope.me = $rootScope.organization.me;
+            //             $rootScope.link_groups = $rootScope.organization.link_groups;
+            //             $rootScope.perms = $rootScope.me.perms;
+            //             localStorageService.set('organization_data', $rootScope.organization);
+            //         });
+            //     }
+            //     catch(err){localStorageService.remove('organization_data'); $rootScope.refreshPage();}
+            // }
+            // else{
+            //     neededCount++;
+            //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+            //     .success(function(data){
+            //         $rootScope.subscribed = true;
+            //         $rootScope.setColor(JSON.parse(data.data).color);
+            //         $rootScope.organization = JSON.parse(data.data);
+            //         $rootScope.me = $rootScope.organization.me;
+            //         $rootScope.link_groups = $rootScope.organization.link_groups;
+            //         $rootScope.perms = $rootScope.me.perms;
+            //         localStorageService.set('organization_data', JSON.parse(data.data));
+            //         checkIfDone();
+            //     })
+            //     .error(function(data) {
+            //         checkIfDone();
+            //     });
+            // }
+        //     $rootScope.events = localStorageService.get('events');
+        //     if (!$rootScope.events){
+        //         neededCount++;
+        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+        //             .success(function(data){
+        //                 if (!checkResponseErrors(data)){
+        //                     $rootScope.events = JSON.parse(data.data);
+        //                     localStorageService.set('events', $rootScope.events);
+        //                 }
+        //                 else{
+        //                     console.log('ERROR: ',data);
+        //                 }
+        //                 checkIfDone();
+        //             })
+        //             .error(function(data) {
+        //                 console.log('Error: ' , data);
+        //                 checkIfDone();
+        //             });
+        //     }
+        //     $rootScope.polls = localStorageService.get('polls');
+        //     if (!$rootScope.polls){
+        //         neededCount++;
+        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
+        //             .success(function(data){
+        //                 if (!checkResponseErrors(data)){
+        //                     $rootScope.polls = JSON.parse(data.data);
+        //                     localStorageService.set('polls', $rootScope.polls);
+        //                     checkIfDone();
+        //                 }
+        //                 else{
+        //                     checkIfDone();
+        //                     console.log('ERR');
+        //                 }
+        //             })
+        //             .error(function(data) {
+        //                 checkIfDone();
+        //                 console.log('Error: ' , data);
+        //             });
+        //     }
+        //     $rootScope.links = localStorageService.get('links');
+        //     if (!$rootScope.links){
+        //         neededCount++;
+        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
+        //         .success(function(data){
+        //             if (!checkResponseErrors(data)){
+        //                 $rootScope.links = JSON.parse(data.data);
+        //                 localStorageService.set('links', $rootScope.links);
+        //             }
+        //             checkIfDone();
+        //         })
+        //         .error(function(data) {
+        //             console.log('Error: ' , data);
+        //             checkIfDone();
+        //         });
+        //     }
+        // checkIfDone();
         return deferred.promise;
         }
             LoadScreen.start();
-            executePosts().then(function() {
-                LoadScreen.stop();
-                console.log('I just stopped the load screen');
-                defer.resolve(); 
-        });
+        //     executePosts().then(function() {
+        //         defer.resolve(); 
+        // });
 
     return defer.promise;
 });

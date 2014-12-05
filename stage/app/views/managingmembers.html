@@ -1,8 +1,8 @@
-<div id="manageMembers" class="container">
+<div id="manageMembers" class="container" load-directive ng-model="directoryLoaded">
    
     <div class="card">
         <h1 class="card-header">Member Actions</h1>
-        <button ng-click="openConvertMembersModal()" class="btn btn-default" ng-disabled = "!((members|checkedFilter).length)">Convert To Alumni</button>
+        <button ng-click="openConvertMembersModal()" class="btn btn-default" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</button>
         <button ng-click="resendAllWelcomeEmails()" class="btn btn-primary">Resend All Welcome Emails</button><update-status ng-model="resendWorking" fn-call="resendAllWelcomeEmails()"></update-status>
     </div>        
    
@@ -16,7 +16,7 @@
     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
     <ul id="members" class="striped">
        
-        <li ng-repeat="member in members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-init="member.name = member.first_name + ' ' + member.last_name;">
+        <li ng-repeat="member in directory.members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-init="member.name = member.first_name + ' ' + member.last_name;">
            
            <div class="row">
                 <div class="col-xs-12 col-sm-8">
@@ -43,7 +43,7 @@
         </li>
     </ul>
        </div>
-        <p ng-show="members.length < 1">There are no members to manage!</p>    
+        <p ng-show="directory.members.length < 1">There are no members to manage!</p>    
     </div>
 </div>
 
@@ -81,7 +81,7 @@
         <h4 class="modal-title">Are you sure you want to convert these members to alumni?</h4>
       </div>
       <div class="modal-body">
-              <div ng-repeat="member in members" ng-show="member.checked">{{member.first_name}} {{member.last_name}}</div>
+              <div ng-repeat="member in directory.members" ng-show="member.checked">{{member.first_name}} {{member.last_name}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -99,11 +99,11 @@
                 <h4 class="modal-title">Change {{userToChange.first_name}} {{userToChange.last_name}}'s email?</h4>
             </div>
             <div class="modal-body">
-                <input name="emailToChange" type="text" class="form-control">
+                <input name="emailToChange" type="text" ng-model="newEmail" class="form-control">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" ng-click="">Change Email</button>
+                <button type="button" class="btn btn-primary" ng-click="changeUserEmail(userToChange, newEmail)">Change Email</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

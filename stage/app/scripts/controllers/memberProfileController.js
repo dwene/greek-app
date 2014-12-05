@@ -1,5 +1,18 @@
-    App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService, Directory){
     routeChange();
+    Load.then(function(){
+        $scope.directory = Directory.get();
+        if ($scope.directory){
+            loadMemberData();
+        }
+        $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.get();
+            loadMemberData();
+        });
+        if ($stateParams.id.toString().length < 2){
+            window.location.assign('/#/app/directory');
+        }
+    });
     $scope.saveVcard = function(){
         var user = $scope.member;
         var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name
@@ -36,45 +49,35 @@
                document.body.removeChild(a);
         //saveAs(blob, ($scope.member.first_name + '_' + $scope.member.last_name) || "contact" + ".vcf");
     }
-    Load.then(function(){
-        if ($stateParams.id.toString().length < 2){
-            window.location.assign('/#/app/directory');
-        }
         
-        $scope.members = $rootScope.directory.members;
-        if ($scope.members){
-            loadMemberData();
-        }
         
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    var directory = JSON.parse(data.data)
-                    $rootScope.directory = directory;
-                    localStorageService.set('directory', $rootScope.directory);
-                    LoadScreen.stop();
-                    $scope.members = directory.members;
-                    loadMemberData();
-                }
-                else
-                {
-                    console.log("error: ", data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });        
+        // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        //     .success(function(data){
+        //         if (!checkResponseErrors(data))
+        //         {
+        //             var directory = JSON.parse(data.data)
+        //             $rootScope.directory = directory;
+        //             localStorageService.set('directory', $rootScope.directory);
+        //             LoadScreen.stop();
+        //             $scope.members = directory.members;
+        //             loadMemberData();
+        //         }
+        //         else
+        //         {
+        //             console.log("error: ", data.error)
+        //         }
+        //     })
+        //     .error(function(data) {
+        //         console.log('Error: ' , data);
+        //     });        
     
-        function loadMemberData(){
-            $scope.member = undefined;
-            for(var i = 0; i<$scope.members.length; i++)
+        function loadMemberData() {
+            for(var i = 0; i<$scope.directory.members.length; i++)
             {
-                if($scope.members[i].user_name == $stateParams.id)
+                if($scope.directory.members[i].user_name == $stateParams.id)
                 {
-                    $scope.member = $scope.members[i];
-                    $scope.prof_pic = $scope.members[i].prof_pic;
-                     //define profile information
+                    $scope.member = $scope.directory.members[i];
+                    $scope.prof_pic = $scope.directory.members[i].prof_pic;
                     $scope.status = $scope.member.status;
                     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     if ($scope.member.grad_month && $scope.member.grad_year){
@@ -85,7 +88,7 @@
                     $scope.firstName = $scope.member.first_name;
                     $scope.lastName = $scope.member.last_name;
                     $scope.email = $scope.member.email;
-                    $scope.birthday = $scope.member.dob
+                    $scope.birthday = $scope.member.dob;
                     $scope.phone = $scope.member.phone;
                     $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
                     $scope.position = $scope.member.position;
@@ -101,14 +104,14 @@
                     $scope.twitter = $scope.member.twitter;
                     $scope.instagram = $scope.member.instagram;
                     $scope.linkedin = $scope.member.linkedin;
-
+                    $scope.loading_finished = true;
                     return;
                 }
             }
             console.log('I made it to alumni');
-            for(var i = 0; i<$rootScope.directory.alumni.length; i++)
+            for(var i = 0; i<$scope.directory.alumni.length; i++)
             {
-                if($rootScope.directory.alumni[i].user_name == $stateParams.id)
+                if($scope.directory.alumni[i].user_name == $stateParams.id)
                 {
                     $scope.member = $scope.directory.alumni[i];
                     $scope.prof_pic = $scope.member.prof_pic;
@@ -125,7 +128,7 @@
                     $scope.firstName = $scope.member.first_name;
                     $scope.lastName = $scope.member.last_name;
                     $scope.email = $scope.member.email;
-                    $scope.birthday = $scope.member.dob
+                    $scope.birthday = $scope.member.dob;
                     $scope.phone = $scope.member.phone;
                     $scope.currentAddress = $scope.member.address+" "+$scope.member.city+" "+$scope.member.state+" "+$scope.member.zip;
                     $scope.position = $scope.member.position;
@@ -141,11 +144,10 @@
                     $scope.twitter = $scope.member.twitter;
                     $scope.instagram = $scope.member.instagram;
                     $scope.linkedin = $scope.member.linkedin;
-
+                    $scope.loading_finished = true;
                     break;
                 }
             }
-            
-        }
-    });
-    });
+        }  
+
+});

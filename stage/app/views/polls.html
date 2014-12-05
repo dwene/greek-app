@@ -1,6 +1,6 @@
 <!--<div ng-show="!$root.polls" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>-->
 
-<div id="polls" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0};">
+<div id="polls" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0};" load-directive ng-model="polls_loaded">
 <h1 class="darkbg">Polls <a id="newPollButton" ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')" class="btn btn-default pull-right">New Poll <i class="fa fa-plus-circle"></i></a>
 </h1>
     <search ng-model="search" id="pollSearch" ng-show="polls.length"></search>

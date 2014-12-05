@@ -1,4 +1,4 @@
-<div id="taggingMembers" class="container memberTags">                    
+<div id="taggingMembers" class="container memberTags" load-directive ng-model="dataLoaded">                    
                     
        
                     <section class="row">
@@ -6,7 +6,7 @@
                     <div class="col-xs-12 col-sm-5">
                         <div id="tagMembersCard" class="card">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
+                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
                             </form>
                         
@@ -15,12 +15,12 @@
                        <h2 class="page-header" ng-show="selectedTags.length">ADD</h2>
                               
                         <ul id="selectedTags">
-                           <netetag-check ng-repeat="tag in selectedTags = (org_tags | checkedFilter)"></netetag-check>
+                           <netetag-check ng-repeat="tag in selectedTags = (tags.org_tags | checkedFilter)"></netetag-check>
                         </ul>
                         <p ng-show="!selectedTags.length && selectedUsers.length">Please select tags.</p>
                         
 <!--                        <h2 class="page-header" ng-show="selectedUsers.length">TO</h2>-->
-                        <h2 class="page-header">TO {{(selectedUsers = (users | checkedFilter)).length}} MEMBERS</h2>
+                        <h2 class="page-header">TO {{(selectedUsers = (directory.members | checkedFilter)).length}} MEMBERS</h2>
                         
 <!--
                         <ul>
@@ -56,7 +56,7 @@
                     </div>
                     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
                     <ul id="memberSelect">
-                        <li ng-repeat="user in (users | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
+                        <li ng-repeat="user in (directory.members | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
                                
                                <ul id="memberTags">
                                 <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
@@ -128,7 +128,7 @@
       </div>
       <div class="modal-body">
             <ul class="addTags">
-                <div class="btn-group" ng-repeat="tag in org_tags | orderBy : 'name'">
+                <div class="btn-group" ng-repeat="tag in tags.org_tags | orderBy : 'name'">
                     <netetag-all ></netetag-all>
                 </div>
             </ul>

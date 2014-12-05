@@ -1,5 +1,15 @@
-    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load, localStorageService, $sce) {
+    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load, localStorageService, $sce, Tags, Directory) {
     routeChange();
+    $scope.finished_loading = false;
+    $scope.directory = Directory.get();
+    $scope.$watchCollection('[directory, tags]', function(){
+        if ($scope.directory != null && $scope.tags != null ){
+            $scope.finished_loading = true;
+        }
+    });
+    $scope.$on('directory:updated', function(){
+        $scope.directory = Directory.get();
+    })
     $scope.menuOptions = [
             ['bold', 'italic', 'underline', 'strikethrough'],
             ['font'],
@@ -14,12 +24,12 @@
 
     Load.then(function(){ 
         $rootScope.requirePermissions(LEADERSHIP);
-        if ($rootScope.sentMessages){
-            $scope.sentMessages = $rootScope.sentMessages;
-        }
-        else{
-            $scope.sentMessages = [];
-        }
+        // if ($rootScope.sentMessages){
+        //     $scope.sentMessages = $rootScope.sentMessages;
+        // }
+        // else{
+        $scope.sentMessages = [];
+        // }
         $scope.clearUsers = false;
         $scope.deleteMessageTip = {
             "title" : "Delete Message"
@@ -27,27 +37,16 @@
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data)){
-                    var tag_data = JSON.parse(data.data);
-                    $scope.tags = tag_data;
-                    $rootScope.tags = tag_data;
-                    localStorageService.set('tags', $rootScope.tags);
-                }
-                else{
-                    console.log("error: ", data.error)
-                }
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+        $scope.tags = Tags.get();
+        $scope.$on('tags:updated', function(){
+            $scope.tags = Tags.get();
+        })
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
                     $scope.sentMessages = JSON.parse(data.data);
-                    $rootScope.sentMessages = $scope.sentMessages;
+                    // $rootScope.sentMessages = $scope.sentMessages;
                     console.log($scope.sentMessages);
                 }
                 else

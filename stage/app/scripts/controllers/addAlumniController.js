@@ -1,12 +1,15 @@
     App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
         routeChange();
         Load.then(function(){
-//        //initialize a member array
-        var formObject = document.getElementById('uploadMembers');
-        if(formObject){
-            formObject.addEventListener('change', readSingleFile, false);}
-        $scope.adds = [];
-            
+            $rootScope.requirePermissions(LEADERSHIP);
+            $scope.finished_loading = true;
+
+            var formObject = document.getElementById('uploadMembers');
+            if(formObject){
+                formObject.addEventListener('change', readSingleFile, false);
+            }
+            $scope.adds = [];
+        });  
         //initialize a filecontents variable
         var filecontents;
         
@@ -46,40 +49,40 @@
             $scope.input = {};
         }
         
-        $scope.getAlumni = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                    localStorageService.set('directory', $rootScope.directory);
-                    assignAngularViewModels($rootScope.directory.alumni);
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
+        // $scope.getAlumni = function(){
+        //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+        //     .success(function(data){
+        //         if (!checkResponseErrors(data))
+        //         {
+        //             $rootScope.directory = JSON.parse(data.data);
+        //             localStorageService.set('directory', $rootScope.directory);
+        //             assignAngularViewModels($rootScope.directory.alumni);
+        //         }
+        //         else
+        //             console.log('ERROR: ',data);
+        //     })
+        //     .error(function(data) {
+        //         console.log('Error: ' , data);
+        //     });
         
-        }
-        function assignAngularViewModels(alumni){
-            $scope.alumni = alumni;
-            LoadScreen.stop();
-        }
+        // }
+        // function assignAngularViewModels(alumni){
+        //     $scope.alumni = alumni;
+        //     LoadScreen.stop();
+        // }
         
-        function onPageLoad(){
-            console.log('page is loading');
-            if($rootScope.directory.alumni){
-                assignAngularViewModels($rootScope.directory.alumni);
-                $scope.getAlumni();
-            }
-            else{
-                LoadScreen.start();
-                $scope.getAlumni();
-            }
-        }
-        onPageLoad();
+        // function onPageLoad(){
+        //     console.log('page is loading');
+        //     if($rootScope.directory.alumni){
+        //         assignAngularViewModels($rootScope.directory.alumni);
+        //         $scope.getAlumni();
+        //     }
+        //     else{
+        //         LoadScreen.start();
+        //         $scope.getAlumni();
+        //     }
+        // }
+        // onPageLoad();
         
         $scope.submitAlumni = function(){
             $scope.updating = "pending";
@@ -174,5 +177,5 @@
                 filecontents = null;
             }
         };
-        });
+
     });

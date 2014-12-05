@@ -7,10 +7,10 @@
 </ul>
 </div>
 <br>
-<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<section ng-show="!loading && notFound">Sorry this webpage could not be found. :(</section>  
+<!-- <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div> -->
+<section ng-show="notFound">Sorry this webpage could not be found. :(</section>  
 
-<div id="pollResultsPage">
+<div id="pollResultsPage" load-directive ng-model="loading_finished">
    
     <div ng-show="!loading && state == 'summary'" class="container">
        <div class="btn-group btn-group-sm pull-right expandButtons">
@@ -31,7 +31,7 @@
                     </li>
                     <li class="summaryResponses" ng-repeat="response in question.responses">
                        <div class="row">
-                        <span class="col-xs-6"><span ng-hide="poll.show_names">{{$index + 1}}</span><span ng-show="poll.show_names">{{$root.getNameFromKey(response.key)}}</span></span><span class="col-xs-6">{{response.text}}</span>
+                        <span class="col-xs-6"><span ng-hide="poll.show_names">{{$index + 1}}</span><span ng-show="poll.show_names">{{response.name}}</span></span><span class="col-xs-6">{{response.text}}</span>
                         </div>
                     </li>
                 </ul>

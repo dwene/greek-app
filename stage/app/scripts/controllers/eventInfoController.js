@@ -1,9 +1,10 @@
-    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents){
+    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, Events, Directory){
         routeChange();
         
         $scope.going = false;
         $scope.not_going = false;
         $scope.loading = true;
+        var refreshed = false;
         $scope.goToReport = function(){
             window.location.assign("#/app/events/" + $stateParams.tag + "/report");
         }
@@ -42,36 +43,53 @@
         }
         Load.then(function(){
         $rootScope.requirePermissions(MEMBER);
-        $scope.tags = $rootScope.tags;
-        var event_tag = $stateParams.tag;
-        tryLoadEvent(0);
-        getEventAndSetInfo($rootScope.events, 0);
+        // var event_tag = $stateParams.tag;
+
+        if (Directory.check()){
+            $scope.directory = Directory.get();
+            getEventAndSetInfo($scope.events);
+        }
+        $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.get();
+            getEventAndSetInfo($scope.events);
+        });
+        if (Events.check()){
+            $scope.events = Events.get();
+            getEventAndSetInfo($scope.events);
+        }
+        $scope.$on('events:updated', function(){
+            $scope.events = Events.get();
+            getEventAndSetInfo($scope.events);
+        });
 	   });
-        function tryLoadEvent(count){
-            LoadEvents();
-            function LoadEvents(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            var events = JSON.parse(data.data);
-                            $rootScope.events = events;
-                            getEventAndSetInfo(events, count);
-                        }
-                        else{
-                            console.log('ERROR: ',data);
-                        }
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' , data);
-                        tryLoadEvent(count+1);
-                    });
+        // function tryLoadEvent(count){
+        //     LoadEvents();
+        //     function LoadEvents(){
+        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+        //             .success(function(data){
+        //                 if (!checkResponseErrors(data)){
+        //                     var events = JSON.parse(data.data);
+        //                     $scope.events = events;
+        //                     getEventAndSetInfo(events, count);
+        //                 }
+        //                 else{
+        //                     console.log('ERROR: ',data);
+        //                 }
+        //             })
+        //             .error(function(data) {
+        //                 console.log('Error: ' , data);
+        //                 tryLoadEvent(count+1);
+        //             });
+        //     }
+        // }   
+        function getEventAndSetInfo(events){
+            if ($scope.directory == null || $scope.events == null){
+                return;
             }
-        }   
-        function getEventAndSetInfo(events, count){
             function getUsersFromKey(key){
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    if ($rootScope.directory.members[i].key == key){
-                        return $rootScope.directory.members[i];
+                for (var i = 0; i < $scope.directory.members.length; i++){
+                    if ($scope.directory.members[i].key == key){
+                        return $scope.directory.members[i];
                     }
                 }
                 return null;
@@ -84,16 +102,16 @@
                 }
             }
             if (event === undefined){
-                if (count < 3){
-                    console.log(count);
-                setTimeout(function(){tryLoadEvent(count+1)}, 500);
-                return;
+                if (!refreshed){
+                    Events.refresh();
+                    refreshed = true;
+                    console.log('refreshing events');
+                    return;
                 }
                 else{
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                    console.log('I think I couldnt find the event');
-                    return;
+                   $scope.eventNotFound = true; 
+                   $scope.loading = false;
+                   return;
                 }
             }
             event.going_list = []
@@ -116,19 +134,18 @@
             }
             $scope.creator = getUsersFromKey(event.creator);
             $scope.event = event;
-                if($scope.event.address){
+            if($scope.event.address){
                 $scope.address_html = $scope.event.address.split(' ').join('+');
-                }
-                if($scope.event.location || !$scope.event.address){
+            }
+            if($scope.event.location || !$scope.event.address){
                 $scope.address_html = $scope.event.location.split(' ').join('+');
-                }
+            }
             $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
             $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');  
             $scope.loading = false;
             $scope.eventNotFound = false;
             
-            setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800);
-            
+            setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800); 
         }
         $scope.editEvent = function(){
             window.location.assign('#/app/events/'+$stateParams.tag+'/edit');

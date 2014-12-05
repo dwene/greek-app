@@ -1,32 +1,41 @@
-    App.controller('appHomeController', function($scope, $http, $rootScope, Load, $timeout, $sce) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, $timeout, $sce, Directory, Events, LoadScreen, removePassedEventsFilter, Load, Directory, Notifications) {
         routeChange();
-        $scope.shouldLoad = false;
-        $timeout(function(){
-            $scope.shouldLoad = true;
-                }, 4000);
-        $scope.noMoreHiddens = false;
-        $('.modal-backdrop').remove();
         Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
-//        $scope.hidden = {};
-//        $scope.current = {};
-//        $scope.hidden.currentPage = 0;
-//        $scope.hidden.pageSize = 10;
-//        $scope.hidden.maxPageNumber = 5;
-//        $scope.current.currentPage = 0;
-//        $scope.current.pageSize = 10;
-//        $scope.current.maxPageNumber = 5;
-        //TOOLTIPS
-            
-        $scope.testLoadAll = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
-            .success(function(data){
-                console.log('LoadAll Results', data.data)
-            })
-            .error(function(data) {
-                console.log('LoadAll Results ' , data);
-            }); 
+        $scope.events_loaded = false;
+        $scope.notifications_loaded = false;
+        $rootScope.requirePermissions(MEMBER);
+        $scope.noMoreHiddens = false;
+        $scope.directory = Directory.get();
+        $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.get();
+        });
+       // $scope.hidden = {};
+       // $scope.current = {};
+       // $scope.hidden.currentPage = 0;
+       // $scope.hidden.pageSize = 10;
+       // $scope.hidden.maxPageNumber = 5;
+       // $scope.current.currentPage = 0;
+       // $scope.current.pageSize = 10;
+       // $scope.current.maxPageNumber = 5;
+
+        
+       $scope.createEvents = function(){
+            $scope.events = Events.get();
+            $scope.events_loaded = Events.check();
+            console.log('Scope events updated');
         }
+        $scope.createEvents();
+        $scope.$on('events:updated', function(){ $scope.createEvents(); });
+        
+        // $scope.testLoadAll = function(){
+        //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
+        //     .success(function(data){
+        //         console.log('LoadAll Results', data.data)
+        //     })
+        //     .error(function(data) {
+        //         console.log('LoadAll Results ' , data);
+        //     }); 
+        // }
             
         $scope.archiveTip = {
             "title" : "Archive Notification"
@@ -172,9 +181,9 @@
             var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
             $scope.messageHTML = $sce.trustAsHtml(message);
             $scope.selectedNotificationUser = undefined;
-            for(var i = 0; i < $rootScope.directory.members.length; i++){
-                if ($rootScope.directory.members[i].key == notify.sender){
-                    $scope.selectedNotificationUser = $rootScope.directory.members[i];
+            for(var i = 0; i < $scope.directory.members.length; i++){
+                if ($scope.directory.members[i].key == notify.sender){
+                    $scope.selectedNotificationUser = $scope.directory.members[i];
                 }
             }
             if ($scope.selectedNotification.new){
@@ -249,7 +258,7 @@
         $scope.showDate = function(start, end){
             var mStart = momentInTimezone(start);
 
-            if (mStart.diff(moment().add('days', 6)) > 0){
+            if (mStart.diff(moment().add(6, 'days')) > 0){
                return mStart.fromNow(); 
             }
             else if (mStart.diff(moment()) > 0){
@@ -270,5 +279,5 @@
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
         }
-       }); 
-	});
+    });
+});

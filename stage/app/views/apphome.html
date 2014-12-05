@@ -30,24 +30,21 @@
                 <span id="count" ng-show="status.length">{{status.length}}/140</span>
         </form>
     </div>
-    <load-directive ng-model="shouldLoad"> 
-    <div id="upcomingEvents" ng-show="eventList.length">   
+    <load-directive ng-model="events_loaded">
+    <div id="upcomingEvents" ng-show="eventsList.length">   
         <section>
-            <div ng-show="eventList.length">
-                <a class="card" ng-repeat="event in eventList = ($root.events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)" ng-href="#/app/events/{{event.tag}}">
+                <a class="card" ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)" ng-href="#/app/events/{{event.tag}}">
                     <div class="icon"><i class="fa fa-calendar"></i> | </div><span>{{event.title}}</span><span> {{showDate(event.time_start, event.time_end)}}</span>
                 </a>
-            </div>
         </section>
     </div>  
     </load-directive>
-        
     </section>
     
     </div>
     
     <div class="col-xs-12 col-sm-6 col-md-7 col-lg-8">
-    <load-directive ng-model="shouldLoad"> 
+    <load-directive ng-model="$root.notifications">
     <section id="notifications">
 
        <h1 class="card-header darkbg">{{$root.notification_lengths.unread}} of {{$root.notification_lengths.read + $root.notification_lengths.unread}} Unread</h1>
@@ -89,7 +86,6 @@
             <button class="next btn btn-default btn-sm" ng-hide="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-arrow-right"></i></button>
             
             <button class="next btn btn-default btn-sm" ng-show="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || hidden_working  || $root.notification_lengths.hidden == $root.hidden_notifications.length" ng-click="checkForMoreHiddenNotifications(hidden.currentPage, hidden.maxPageNumber)"><span ng-show="hidden_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="hidden_working"><i class="fa fa-arrow-right"></i></span></button>
-<!--            <button class="btn btn-default btn-sm" ng-show="!noMoreHiddens && !hidden_working && $root.hidden_notifications.length < $root.notification_lengths.hidden && $root.hidden_notifications.length < 5" ng-click="checkForMoreHiddens($root.hidden_notifications, hidden.currentPage, hidden.maxPageNumber)">Load More</button>-->
             <span class="text-center notificationCount darkbg">{{(hidden.currentPage * hidden.maxPageNumber) + 1}} - {{(hidden.currentPage *hidden.maxPageNumber)+5 >= $root.notification_lengths.hidden? $root.notification_lengths.hidden: (hidden.maxPageNumber * hidden.currentPage)+5}}<span ng-hide="$root.hidden_notifications.length <= 5"> of {{$root.notification_lengths.hidden}}</span></span>
 
             </div>
@@ -97,7 +93,7 @@
     </section>
         
     </section>
-    </load-directive>
+</load-directive>
     </div>
     </div>
 </div>

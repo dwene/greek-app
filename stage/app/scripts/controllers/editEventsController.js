@@ -1,11 +1,25 @@
-    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout){
+    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout, Directory, Tags, Events){
         routeChange();
         $scope.loading = true;
+        $scope.tags = Tags.get();
+        $scope.events = Events.get();
+        $scope.directory = Directory.get();
         Load.then(function(){
         $rootScope.requirePermissions(LEADERSHIP);
-        $scope.tags = $rootScope.tags;
-        var event_tag = $stateParams.tag;
-        tryLoadEvent(0);
+
+        getEventAndSetInfo($scope.events);
+        $scope.$on('tags:updated', function(){
+            $scope.tags = Tags.get();
+            getEventAndSetInfo($scope.events);
+        });
+        $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.get();
+            getEventAndSetInfo($scope.events);
+        });
+        $scope.$on('events:updated', function(){
+            $scope.events = Events.get();
+            getEventAndSetInfo($scope.events);
+        });
 	   });
         
         //prevent form from submitting on enter
@@ -36,86 +50,70 @@
                 }
             });
         }
-        function tryLoadEvent(count){
-            LoadEvents();
-            function LoadEvents(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                    .success(function(data){
-                        if (!checkResponseErrors(data)){
-                            var events = JSON.parse(data.data);
-                            $rootScope.events = events;
-                            getEventAndSetInfo(events, count);
-                        }
-                        else{
-                            console.log('ERROR: ',data);
-                        }
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' , data);
-                    });
-                }
-        }   
-        function getEventAndSetInfo(events, count){
-            function getUsersFromKey(key){
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    console.log($rootScope.directory.members[i].key);
-                    if ($rootScope.directory.members[i].key == key){
-                        return $rootScope.directory.members[i];
-                    }
-                }
-                return null;
-            }
-            var event = undefined;
-            for (var i = 0; i < events.length; i++){
-                if (events[i].tag == $stateParams.tag){
-                    event = events[i];
-                    break;
-                }
-            }
-            if (event === undefined){
-                if (count < 2){
-                    console.log(count);
-                setTimeout(function(){tryLoadEvent(count+1)}, 500);
-                return;
-                }
-                else{
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                    return;
-                }
-            }
-            event.going_list = []
-            event.not_going_list = []
-            for (var i = 0; i < event.going.length; i++){
-                event.going_list.push(getUsersFromKey(event.going[i]));
-            }
-            for (var i = 0; i < event.not_going.length; i++){
-                event.not_going_list.push(getUsersFromKey(event.not_going[i]));
-            }
-            $scope.event = event;
-            $scope.time_start = momentInTimezone($scope.event.time_start).format('hh:mm A');
-            $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
-            $scope.time_end = momentInTimezone($scope.event.time_end).format('hh:mm A');  
-            $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
-            console.log($scope.event.time_end);
 
-            for (var i = 0; i < $scope.tags.org_tags.length; i++){
-                for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
-                    if ($scope.event.tags.org_tags[j] == $scope.tags.org_tags[i].name){
-                        $scope.tags.org_tags[i].checked = true;
-                    }
-                }
-            }
-            for (var i = 0; i < $scope.tags.perms_tags.length; i++){
-                for (var j = 0; j < $scope.event.tags.perms_tags.length; j++){
-                    if ($scope.event.tags.perms_tags[j] == $scope.tags.perms_tags[i].name.toLowerCase()){
-                        $scope.tags.perms_tags[i].checked = true;
-                    }
-                }
-            }
-            $scope.loading = false;
-            $timeout(function(){$('.picker').trigger('change')},200);
+    function getEventAndSetInfo(events){
+        if ($scope.directory == null || $scope.events == null || $scope.tags == null){
+            return;
         }
+        function getUsersFromKey(key){
+            for (var i = 0; i < $scope.directory.members.length; i++){
+                if ($scope.directory.members[i].key == key){
+                    return $scope.directory.members[i];
+                }
+            }
+            return null;
+        }
+        var event = undefined;
+        for (var i = 0; i < events.length; i++){
+            if (events[i].tag == $stateParams.tag){
+                event = events[i];
+                break;
+            }
+        }
+        if (event === undefined){
+            if (!refreshed){
+                Events.refresh();
+                refreshed = true;
+                console.log('refreshing events');
+                return;
+            }
+            else{
+               $scope.eventNotFound = true; 
+               $scope.loading = false;
+               return;
+            }
+        }
+        event.going_list = []
+        event.not_going_list = []
+        for (var i = 0; i < event.going.length; i++){
+            event.going_list.push(getUsersFromKey(event.going[i]));
+        }
+        for (var i = 0; i < event.not_going.length; i++){
+            event.not_going_list.push(getUsersFromKey(event.not_going[i]));
+        }
+        $scope.event = event;
+        $scope.time_start = momentInTimezone($scope.event.time_start).format('hh:mm A');
+        $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
+        $scope.time_end = momentInTimezone($scope.event.time_end).format('hh:mm A');  
+        $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
+
+        for (var i = 0; i < $scope.tags.org_tags.length; i++){
+            for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
+                if ($scope.event.tags.org_tags[j] == $scope.tags.org_tags[i].name){
+                    $scope.tags.org_tags[i].checked = true;
+                }
+            }
+        }
+        for (var i = 0; i < $scope.tags.perms_tags.length; i++){
+            for (var j = 0; j < $scope.event.tags.perms_tags.length; j++){
+                if ($scope.event.tags.perms_tags[j] == $scope.tags.perms_tags[i].name.toLowerCase()){
+                    $scope.tags.perms_tags[i].checked = true;
+                }
+            }
+        }
+        $scope.loading = false;
+        $timeout(function(){$('.picker').trigger('change')},200);
+    }
     $scope.submitEdits = function(isValid){
         if (isValid){
             $scope.working = 'pending';

@@ -1,20 +1,43 @@
-    App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams) {
+    App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams, Directory) {
         routeChange();
+        //$scope.polls = Polls.get();
+        $scope.directory = Directory.get();
+        // $scope.$on('polls:updated', function(){
+        //     $scope.polls = Polls.get();
+        // });
+        $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.get();
+        });
+        $scope.$watchCollection('[poll, directory]', function(){
+            if ($scope.directory && $scope.poll){
+                $scope.creator = $scope.getUserFromKey($scope.poll.creator);
+                $scope.loading_finished = true;
+            }
+        });
+        $scope.getUserFromKey = function(key){
+            if ($scope.directory.members){
+                for (var i = 0; i < $scope.directory.members.length; i++){
+                    if ($scope.directory.members[i].key == key){
+                        return $scope.directory.members[i];
+                    }
+                }
+            }
+            return undefined;
+        }
+
         Load.then(function(){
-            $scope.loading = true;
             $rootScope.requirePermissions(MEMBER);
             var to_send = {key: $stateParams.key};
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         $scope.poll = JSON.parse(data.data);
-                        $scope.creator = $rootScope.getUserFromKey($scope.poll.creator);
+                        $scope.creator = $scope.getUserFromKey($scope.poll.creator);
                     }
                     else{
                         $scope.notFound = true;
                         console.log('ERR');
                     }
-                    $scope.loading = false;
                 })
                 .error(function(data) {
                     $scope.notFound = true;

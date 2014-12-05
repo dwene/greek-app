@@ -1,4 +1,4 @@
-    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
+    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService, Directory) {
         routeChange();
         $scope.adds = [];
         Load.then(function(){
@@ -43,40 +43,29 @@
             //define variable for ng-repeat
             $scope.input = {};}
             else{$scope.submitted = true;}
-            
         };
         
+        
         $scope.getMembers = function(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-            .success(function(data){
-                if (!checkResponseErrors(data))
-                {
-                    $rootScope.directory = JSON.parse(data.data);
-                    localStorageService.set('directory', $rootScope.directory);
-                    console.log($rootScope.directory);
-                    assignAngularViewModels($rootScope.directory.members);
-                }
-                else
-                    console.log('ERROR: ',data);
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
+            $scope.directory = Directory.get();
+        }
+
+        if (Directory.check()){
+            $scope.getMembers();
+        }
+       
+        else{
+            $scope.$on('directory:updated', function(){
+                $scope.getMembers();
             });
-        
         }
-        function assignAngularViewModels(members){
-            $scope.members = members;
-            LoadScreen.stop();
-        }
-        
+
         function onPageLoad(){
             console.log('page is loading');
-            if($rootScope.directory.members){
-                assignAngularViewModels($rootScope.directory.members);
+            if(Directory.check()){
                 $scope.getMembers();
             }
             else{
-                LoadScreen.start();
                 $scope.getMembers();
             }
         }
@@ -90,7 +79,13 @@
                 if (!checkResponseErrors(data))
                 {
                     $scope.updating = "done";
+                    for (var i = 0; i < $scope.adds.length; i++){
+                        $scope.adds[i].perms = 'member';
+                    }
+                    $scope.directory.members = $scope.directory.members.concat($scope.adds);
                     $scope.adds = [];
+                    Directory.set($scope.directory);
+
                 }
                 else{
                     $scope.updating = "broken";

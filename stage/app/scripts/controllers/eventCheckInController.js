@@ -9,7 +9,6 @@
         }
         update();
         function update() {
-            console.log('starting update');
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){

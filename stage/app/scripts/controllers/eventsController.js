@@ -1,36 +1,71 @@
-    App.controller('eventsController', function($scope, $http, Load, $rootScope, localStorageService) {
+    App.controller('eventsController', function($scope, $http, Load, $rootScope, localStorageService, Events, Directory) {
         routeChange();
-        
+        $scope.$watchCollection('[directoryLoaded, eventsLoaded]', function(){
+            if ($scope.directoryLoaded && $scope.eventsLoaded){
+                $scope.dataLoaded = true;
+                console.log('data is loaded');
+            }
+        });
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);
-            $scope.events = $rootScope.events;
-            $scope.eventSource = [];
-            for (var i = 0; i< $scope.events.length; i++){
-                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});}
+            if (Events.check()){
+                getEvents();
+            }
+            $scope.$on('events:updated', function(){
+                getEvents();
+            })
+            if (Directory.check()){
+                $scope.directory = Directory.get();
+                $scope.directoryLoaded = true;
+            }
+            $scope.$on('directory:updated', function(){
+                $scope.directory = Directory.get();
+                console.log('directory updated');
+                $scope.directoryLoaded = true;
+            });
+            
                 //send the organization and user date from registration pages
             function getEvents(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-                .success(function(data){
-                    if (!checkResponseErrors(data)){
-                        $scope.events = JSON.parse(data.data);
-                        $rootScope.events = $scope.events;
-                        localStorageService.set('events', $rootScope.events);
-                        for (var i = 0; i< $scope.events.length; i++){
-                            if ($scope.eventSource.indexOf({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag}) != -1){
-                            $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag});
-                            }
-                        }
-                        console.log($scope.eventSource);
-                    }
-                    else
-                        console.log('ERROR: ',data);
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                    getEvents();
-                });
+                $scope.events = Events.get();
+                $scope.eventSource = [];
+                for (var i = 0; i< $scope.events.length; i++){
+                    $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});
+                }
+                $scope.eventsLoaded = true;
             }
+            // function getEvents(){
+            //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+            //     .success(function(data){
+            //         if (!checkResponseErrors(data)){
+            //             $scope.events = JSON.parse(data.data);
+            //             $rootScope.events = $scope.events;
+            //             localStorageService.set('events', $rootScope.events);
+            //             for (var i = 0; i< $scope.events.length; i++){
+            //                 if ($scope.eventSource.indexOf({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag}) != -1){
+            //                 $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date($scope.events[i].time_end), tag: $scope.events[i].tag});
+            //                 }
+            //             }
+            //             console.log($scope.eventSource);
+            //         }
+            //         else
+            //             console.log('ERROR: ',data);
+            //     })
+            //     .error(function(data) {
+            //         console.log('Error: ' , data);
+            //         getEvents();
+            //     });
+            // }
             
+            $scope.getNameFromKey = function(key){
+            if ($scope.directory.members){
+                for (var i = 0; i < $scope.directory.members.length; i++){
+                    if ($scope.directory.members[i].key == key){
+                        return $scope.directory.members[i].first_name + ' ' + $scope.directory.members[i].last_name;
+                    }
+                }
+            }
+            return 'Unknown';
+        }
             $scope.showDate = function(start, end){
                 var mStart = momentInTimezone(start);
                 

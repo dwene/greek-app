@@ -1,8 +1,9 @@
-    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter) {
+    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter, Directory, Events) {
         routeChange();
         $scope.maxLength = 0;
         $scope.maxNoShowsLength = 0;
         $scope.loading = true;
+        $scope.shows = [];
         $scope.increaseMaxLength = function(){
             if ($scope.users && $scope.shows){
                 if ($scope.maxLength < $scope.users.length){
@@ -31,20 +32,37 @@
             }   
         }
         Load.then(function(){
+            if (Directory.check()){
+                $scope.directory = Directory.get();
+            }
+            if (Events.check()){
+                $scope.events = Events.get();
+            }
+            $scope.$on('events:updated', function(){
+                $scope.events = Events.get();
+                getCheckInData();
+            });
+            $scope.$on('directory:updated', function(){
+                $scope.directory = Directory.get();
+                getCheckInData();
+            });
             getCheckInData();
             $rootScope.requirePermissions(LEADERSHIP);
             function getCheckInData(){
+            if ($scope.directory == null || $scope.events == null){
+                return;
+            }
             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
             .success(function(data){
                 if (!checkResponseErrors(data)){
                     $scope.users = JSON.parse(data.data);
                     $scope.event = undefined;
-                    for (var i = 0; i < $rootScope.events.length; i++){
-                        if ($rootScope.events[i].tag == $stateParams.tag){
-                            $scope.event = $rootScope.events[i];
+                    for (var i = 0; i < $scope.events.length; i++){
+                        if ($scope.events[i].tag == $stateParams.tag){
+                            $scope.event = $scope.events[i];
                         }
                     }
-                    $scope.invited = eventTagDirectorySearchFilter($rootScope.directory.members, $scope.event.tags);
+                    $scope.invited = eventTagDirectorySearchFilter($scope.directory.members, $scope.event.tags);
                     $scope.noShows = [];
                     $scope.shows = [];
                     if ($scope.event){
@@ -79,7 +97,7 @@
                     }
                     $scope.loading = false;
                     $scope.maxLength = 20;
-                    $scope.maxNoShowsLength =($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
+                    $scope.maxNoShowsLength = ($scope.maxLength - $scope.shows.length) >0 ? ( $scope.maxLength - $scope.shows.length) : 0; 
                 }
                 else{
                     console.log('ERROR: ', data);

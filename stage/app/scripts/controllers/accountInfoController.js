@@ -1,4 +1,4 @@
-    App.controller('accountinfoController', function($scope, $http, $rootScope, Load){
+    App.controller('accountinfoController', function($scope, $http, $rootScope, Organization, Load){
     routeChange();
     Load.then(function(){
         $scope.changePassword = function(old_pass, new_pass) {
@@ -49,11 +49,11 @@
         $scope.updateAccount = function(isValid){
             if(isValid){
                 $scope.working = 'pending';
-                console.log($scope.item.dob);
                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
                 .success(function(data){
                     if (!checkResponseErrors(data))
                     {
+                        $rootScope.me = $scope.item;
                         $scope.working = 'done';
                         $scope.updatedInfo = true;
                         $.removeCookie('FORM_INFO_EMPTY');
@@ -75,10 +75,10 @@
             $scope.submitted = true;
             }
         }
-    });
     $scope.updateEmailPrefs = function(option){
         var to_send = {email_prefs: option}
         $scope.emailPrefUpdating = "pending";
+        $rootScope.me.email_prefs = option;
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
             .success(function(data){
                 if (!checkResponseErrors(data))
@@ -105,3 +105,4 @@
         return $.cookie(TOKEN);
     }
     });
+});

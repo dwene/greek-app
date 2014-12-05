@@ -1,7 +1,7 @@
-<div ng-if="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<section ng-if="!loading" ng-show="notFound">Sorry this webpage could not be found. :(</section>
+<!-- <div id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div> -->
+<section  ng-show="notFound">Sorry this webpage could not be found. :(</section>
 
-<section id="pollInfo" class="container" ng-if="!loading" ng-hide="notFound || !poll" >
+<section id="pollInfo" class="container" ng-hide="notFound" load-directive ng-model="loading_finished">
 
 
         <div id="pollTitle" class="col-sm-6 col-xs-12">

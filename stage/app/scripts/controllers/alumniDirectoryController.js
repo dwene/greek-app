@@ -1,15 +1,26 @@
-    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen){
+    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, Directory){
     routeChange();
     Load.then(function(){
         $scope.years = [];
         $scope.selected_year = 0;
-        for (var i = 0; i < $rootScope.directory.alumni.length; i++){
-            if ($rootScope.directory.alumni[i].grad_year && $scope.years.indexOf({value:$rootScope.directory.alumni[i].grad_year}) == -1){
-                $scope.years.push({value:$rootScope.directory.alumni[i].grad_year});
-                if ($rootScope.directory.alumni[i].grad_year > $scope.selected_year){
-                    $scope.selected_year = $rootScope.directory.alumni[i].grad_year
+        if (Directory.check()){
+            loadDirectory();
+        }
+        $scope.$on('directory:updated', function(){
+            loadDirectory();
+        });
+        
+        function loadDirectory(){
+            $scope.directory = Directory.get();
+            for (var i = 0; i < $scope.directory.alumni.length; i++){
+                if ($scope.directory.alumni[i].grad_year && $scope.years.indexOf({value:$scope.directory.alumni[i].grad_year}) == -1){
+                    $scope.years.push({value:$scope.directory.alumni[i].grad_year});
+                    if ($scope.directory.alumni[i].grad_year > $scope.selected_year){
+                        $scope.selected_year = $scope.directory.alumni[i].grad_year
+                    }
                 }
             }
+            $scope.directoryLoaded = true;
         }
         $scope.getProfPic = function(link){
             if (link){

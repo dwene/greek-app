@@ -69,9 +69,9 @@
         </div>
            
         <div id="invited" class="card">
-                <h3 class="page-header" data-toggle="collapse" data-target="#invited_list">{{($root.directory.members|eventTagDirectorySearch:event.tags).length}} Invited <span ng-show="($root.directory.members|eventTagDirectorySearch:event.tags).length" class="pull-right"><i class="fa fa-chevron-down"></i></span></h3>
+                <h3 class="page-header" data-toggle="collapse" data-target="#invited_list">{{(directory.members|eventTagDirectorySearch:event.tags).length}} Invited <span ng-show="(directory.members|eventTagDirectorySearch:event.tags).length" class="pull-right"><i class="fa fa-chevron-down"></i></span></h3>
                     <div id="invited_list" class="collapse">
-                            <span class="messagePerson label label-primary"  ng-repeat="member in $root.directory.members | eventTagDirectorySearch:event.tags | orderBy:'last_name'">{{member.first_name}} {{member.last_name}}</span>
+                            <span class="messagePerson label label-primary"  ng-repeat="member in directory.members | eventTagDirectorySearch:event.tags | orderBy:'last_name'">{{member.first_name}} {{member.last_name}}</span>
                     </div>
         </div>
             
