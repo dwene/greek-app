@@ -56,10 +56,6 @@ nav{backface-visibility:hidden;}
 .navbar-brand{position:relative; width:210px; height:52px; border-radius:3px;}
 .navbar-brand:before{content:''; background:url(../images/NeteGreekLogoSmallWhite.png) 10px center no-repeat; position:absolute; top:0px; left:0px; width:100%; height:100%; background-size:156px 42px;}
 .navbar-brand .badge{font-size:12px; position:relative; left:160px;}
-@media screen and (max-width:767px){
-    nav.navbar{position:fixed; top:0px; width:100%;}
-    #mainSection, #loadingScreen{margin-top:82px;}
-}
 .topLeft{position:absolute; left:20px; top:10px;}
 .topRight{position:absolute; right:20px; top:10px;}
 .bottomLeft{position: absolute; left:20px; bottom:10px;}
@@ -744,247 +740,247 @@ div#cropped-image {
 /*Color Theme 1 Main: #003663, Accent: #002340*/
 @color1main:#003663;
 @color1accent:#002340;
-.color1{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color1main;}
-    .smallprofilepic, .profilepic{background-color:@color1main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color1accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color1accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color1accent;} .tooltip.top .tooltip-arrow{border-top-color:@color1accent;} .tooltip.right .tooltip-arrow{border-right-color:@color1accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color1accent;}
-    .btn-info, .btn-primary{border:1px solid @color1accent;}
-}
+//.color1{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color1main;}
+//    .smallprofilepic, .profilepic{background-color:@color1main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color1accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color1accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color1accent;} .tooltip.top .tooltip-arrow{border-top-color:@color1accent;} .tooltip.right .tooltip-arrow{border-right-color:@color1accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color1accent;}
+//    .btn-info, .btn-primary{border:1px solid @color1accent;}
+//}
 
 /*Color Theme 2 Main: #5F77BF, Accent: #3F4F7F*/
 @color2main:#5F77BF;
 @color2accent:#3F4F7F;
-.color2{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color2main;}
-    .smallprofilepic, .profilepic{background-color:@color2main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color2accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color2accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color2accent;} .tooltip.top .tooltip-arrow{border-top-color:@color2accent;} .tooltip.right .tooltip-arrow{border-right-color:@color2accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color2accent;}
-    .btn-info, .btn-primary{border:1px solid @color2accent;}
-}
+//.color2{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color2main;}
+//    .smallprofilepic, .profilepic{background-color:@color2main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color2accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color2accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color2accent;} .tooltip.top .tooltip-arrow{border-top-color:@color2accent;} .tooltip.right .tooltip-arrow{border-right-color:@color2accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color2accent;}
+//    .btn-info, .btn-primary{border:1px solid @color2accent;}
+//}
 
 /*Color Theme 3 Main: #005826, Accent: #00401C */
 @color3main:#005826;
 @color3accent:#00401C;
-.color3{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color3main;}
-    .smallprofilepic, .profilepic{background-color:@color3main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color3accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color3accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color3accent;} .tooltip.top .tooltip-arrow{border-top-color:@color3accent;} .tooltip.right .tooltip-arrow{border-right-color:@color3accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color3accent;}
-    .btn-info, .btn-primary{border:1px solid @color3accent;}
-}
+//.color3{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color3main;}
+//    .smallprofilepic, .profilepic{background-color:@color3main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color3accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color3accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color3accent;} .tooltip.top .tooltip-arrow{border-top-color:@color3accent;} .tooltip.right .tooltip-arrow{border-right-color:@color3accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color3accent;}
+//    .btn-info, .btn-primary{border:1px solid @color3accent;}
+//}
 
 /*Color Theme 4 Main: #487F48, Accent: #244024*/
 @color4main:#487F48;
 @color4accent:#244024;
-.color4{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color4main;}
-    .smallprofilepic, .profilepic{background-color:@color4main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color4accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color4accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color4accent;} .tooltip.top .tooltip-arrow{border-top-color:@color4accent;} .tooltip.right .tooltip-arrow{border-right-color:@color4accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color4accent;}
-    .btn-info, .btn-primary{border:1px solid @color4accent;}
-}
+//.color4{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color4main;}
+//    .smallprofilepic, .profilepic{background-color:@color4main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color4accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color4accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color4accent;} .tooltip.top .tooltip-arrow{border-top-color:@color4accent;} .tooltip.right .tooltip-arrow{border-right-color:@color4accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color4accent;}
+//    .btn-info, .btn-primary{border:1px solid @color4accent;}
+//}
 
 
 /*Color Theme 5 Main: #32004B, Accent: #2A0040*/
 @color5main:#32004B;
 @color5accent:#2A0040;
-.color5{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color5main;}
-    .smallprofilepic, .profilepic{background-color:@color5main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color5accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color5accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color5accent;} .tooltip.top .tooltip-arrow{border-top-color:@color5accent;} .tooltip.right .tooltip-arrow{border-right-color:@color5accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color5accent;}
-    .btn-info, .btn-primary{border:1px solid @color5accent;}
-}
+//.color5{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color5main;}
+//    .smallprofilepic, .profilepic{background-color:@color5main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color5accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color5accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color5accent;} .tooltip.top .tooltip-arrow{border-top-color:@color5accent;} .tooltip.right .tooltip-arrow{border-right-color:@color5accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color5accent;}
+//    .btn-info, .btn-primary{border:1px solid @color5accent;}
+//}
 
 /*Color Theme 6 Main: #8F5D91, Accent: #503452*/
 @color6main:#8F5D91;
 @color6accent:#503452;
-.color6{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color6main;}
-    .smallprofilepic, .profilepic{background-color:@color6main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color6accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color6accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color6accent;} .tooltip.top .tooltip-arrow{border-top-color:@color6accent;} .tooltip.right .tooltip-arrow{border-right-color:@color6accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color5accent;}
-    .btn-info, .btn-primary{border:1px solid @color6accent;}
-}
+//.color6{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color6main;}
+//    .smallprofilepic, .profilepic{background-color:@color6main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color6accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color6accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color6accent;} .tooltip.top .tooltip-arrow{border-top-color:@color6accent;} .tooltip.right .tooltip-arrow{border-right-color:@color6accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color5accent;}
+//    .btn-info, .btn-primary{border:1px solid @color6accent;}
+//}
 
 /*Color Theme 7 Main: #ED145B, Accent: #7F0B31*/
 @color7main:#ED145B;
 @color7accent:#7F0B31;
-.color7{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color7main;}
-    .smallprofilepic, .profilepic{background-color:@color7main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color7accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color7accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color7accent;} .tooltip.top .tooltip-arrow{border-top-color:@color7accent;} .tooltip.right .tooltip-arrow{border-right-color:@color7accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color7accent;}
-    .btn-info, .btn-primary{border:1px solid @color7accent;}
-}
+//.color7{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color7main;}
+//    .smallprofilepic, .profilepic{background-color:@color7main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color7accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color7accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color7accent;} .tooltip.top .tooltip-arrow{border-top-color:@color7accent;} .tooltip.right .tooltip-arrow{border-right-color:@color7accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color7accent;}
+//    .btn-info, .btn-primary{border:1px solid @color7accent;}
+//}
 
 
 /*Color Theme 8 Main: #F26C9D, Accent: #7F3952*/
 @color8main:#F26C9D;
 @color8accent:#7F3952;
-.color8{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color8main;}
-    .smallprofilepic, .profilepic{background-color:@color8main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color8accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color8accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color8accent;} .tooltip.top .tooltip-arrow{border-top-color:@color8accent;} .tooltip.right .tooltip-arrow{border-right-color:@color8accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color8accent;}
-    .btn-info, .btn-primary{border:1px solid @color8accent;}
-}
+//.color8{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color8main;}
+//    .smallprofilepic, .profilepic{background-color:@color8main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color8accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color8accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color8accent;} .tooltip.top .tooltip-arrow{border-top-color:@color8accent;} .tooltip.right .tooltip-arrow{border-right-color:@color8accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color8accent;}
+//    .btn-info, .btn-primary{border:1px solid @color8accent;}
+//}
 
 
 /*Color Theme 9 Main: #630F00 , Accent: #3D0900*/
 @color9main:#630F00;
 @color9accent:#3D0900;
-.color9{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color9main;}
-    .smallprofilepic, .profilepic{background-color:@color9main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color9accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color9accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color9accent;} .tooltip.top .tooltip-arrow{border-top-color:@color9accent;} .tooltip.right .tooltip-arrow{border-right-color:@color9accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color9accent;}
-    .btn-info, .btn-primary{border:1px solid @color9accent;}
-}
+//.color9{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color9main;}
+//    .smallprofilepic, .profilepic{background-color:@color9main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color9accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color9accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color9accent;} .tooltip.top .tooltip-arrow{border-top-color:@color9accent;} .tooltip.right .tooltip-arrow{border-right-color:@color9accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color9accent;}
+//    .btn-info, .btn-primary{border:1px solid @color9accent;}
+//}
 
 /*Color Theme 10 Main: #C72A26, Accent: #871D1A*/
 @color10main:#C72A26;
 @color10accent:#871D1A;
-.color10{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color10main;}
-    .smallprofilepic, .profilepic{background-color:@color10main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color10accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color10accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color10accent;} .tooltip.top .tooltip-arrow{border-top-color:@color10accent;} .tooltip.right .tooltip-arrow{border-right-color:@color10accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color10accent;}
-    .btn-info, .btn-primary{border:1px solid @color10accent;}
-}
+//.color10{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color10main;}
+//    .smallprofilepic, .profilepic{background-color:@color10main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color10accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color10accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color10accent;} .tooltip.top .tooltip-arrow{border-top-color:@color10accent;} .tooltip.right .tooltip-arrow{border-right-color:@color10accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color10accent;}
+//    .btn-info, .btn-primary{border:1px solid @color10accent;}
+//}
 
 
 /*Color Theme 11 Main: #91390E, Accent: #522008*/
 @color11main:#91390E;
 @color11accent:#522008;
-.color11{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color11main;}
-    .smallprofilepic, .profilepic{background-color:@color11main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color11accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color11accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color11accent;} .tooltip.top .tooltip-arrow{border-top-color:@color11accent;} .tooltip.right .tooltip-arrow{border-right-color:@color11accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color11accent;}
-    .btn-info, .btn-primary{border:1px solid @color11accent;}
-}
+//.color11{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color11main;}
+//    .smallprofilepic, .profilepic{background-color:@color11main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color11accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color11accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color11accent;} .tooltip.top .tooltip-arrow{border-top-color:@color11accent;} .tooltip.right .tooltip-arrow{border-right-color:@color11accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color11accent;}
+//    .btn-info, .btn-primary{border:1px solid @color11accent;}
+//}
 
 /*Color Theme 12 Main: #FF6100, Accent: #7F3000*/
 @color12main:#FF6100;
 @color12accent:#7F3000;
-.color12{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color12main;}
-    .smallprofilepic, .profilepic{background-color:@color12main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color12accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color12accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color12accent;} .tooltip.top .tooltip-arrow{border-top-color:@color12accent;} .tooltip.right .tooltip-arrow{border-right-color:@color12accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color12accent;}
-    .btn-info, .btn-primary{border:1px solid @color12accent;}
-}
+//.color12{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color12main;}
+//    .smallprofilepic, .profilepic{background-color:@color12main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color12accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color12accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color12accent;} .tooltip.top .tooltip-arrow{border-top-color:@color12accent;} .tooltip.right .tooltip-arrow{border-right-color:@color12accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color12accent;}
+//    .btn-info, .btn-primary{border:1px solid @color12accent;}
+//}
 
 /*Color Theme 13 Main: #FFC100, Accent: #E59F00*/
 @color13main:#FFC100;
 @color13accent:#E59F00;
-.color13{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color13main;}
-    .smallprofilepic, .profilepic{background-color:@color13main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color13accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color13accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color13accent;} .tooltip.top .tooltip-arrow{border-top-color:@color13accent;} .tooltip.right .tooltip-arrow{border-right-color:@color13accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color13accent;}
-    .btn-info, .btn-primary{border:1px solid @color13accent;}
-}
+//.color13{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color13main;}
+//    .smallprofilepic, .profilepic{background-color:@color13main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color13accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color13accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color13accent;} .tooltip.top .tooltip-arrow{border-top-color:@color13accent;} .tooltip.right .tooltip-arrow{border-right-color:@color13accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color13accent;}
+//    .btn-info, .btn-primary{border:1px solid @color13accent;}
+//}
 
 
 /*Color Theme 14 Main: #2E9685, Accent: #20665A*/
 @color14main:#2E9685;
 @color14accent:#20665A;
-.color14{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color14main;}
-    .smallprofilepic, .profilepic{background-color:@color14main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color14accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color14accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color14accent;} .tooltip.top .tooltip-arrow{border-top-color:@color14accent;} .tooltip.right .tooltip-arrow{border-right-color:@color14accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color14accent;}
-    .btn-info, .btn-primary{border:1px solid @color14accent;}
-}
+//.color14{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color14main;}
+//    .smallprofilepic, .profilepic{background-color:@color14main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color14accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color14accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color14accent;} .tooltip.top .tooltip-arrow{border-top-color:@color14accent;} .tooltip.right .tooltip-arrow{border-right-color:@color14accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color14accent;}
+//    .btn-info, .btn-primary{border:1px solid @color14accent;}
+//}
 
 /*Color Theme 15 Main: #59391E, Accent: #402915*/
 @color15main:#59391E;
 @color15accent:#402915;
-.color15{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color15main;}
-    .smallprofilepic, .profilepic{background-color:@color15main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color15accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color15accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color15accent;} .tooltip.top .tooltip-arrow{border-top-color:@color15accent;} .tooltip.right .tooltip-arrow{border-right-color:@color15accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color15accent;}
-    .btn-info, .btn-primary{border:1px solid @color15accent;}
-}
+//.color15{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color15main;}
+//    .smallprofilepic, .profilepic{background-color:@color15main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color15accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color15accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color15accent;} .tooltip.top .tooltip-arrow{border-top-color:@color15accent;} .tooltip.right .tooltip-arrow{border-right-color:@color15accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color15accent;}
+//    .btn-info, .btn-primary{border:1px solid @color15accent;}
+//}
 
 /*Color Theme 16 Main: #33302C, Accent: #141312*/
 @color16main:#33302C;
 @color16accent:#141312;
-.color16{
-    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
-    {background:@color16main;}
-    .smallprofilepic, .profilepic{background-color:@color16main;}
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
-    {background:@color16accent;}
-    .notification.new .notificationTitle, a:not(.btn)
-    {color:@color16accent;}
-    .tooltip.left .tooltip-arrow{border-left-color:@color16accent;} .tooltip.top .tooltip-arrow{border-top-color:@color16accent;} .tooltip.right .tooltip-arrow{border-right-color:@color16accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color16accent;}
-    .btn-info, .btn-primary{border:1px solid @color16accent;}
-}
+//.color16{
+//    .navbar, .navbar-default .navbar-brand:hover .badge, .btn-info, .nav-pills>li.active>a, .label-primary, .monthview-primary-with-event, #mobileMenu li, .darkbg
+//    {background:@color16main;}
+//    .smallprofilepic, .profilepic{background-color:@color16main;}
+//    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover, .navbar .badge, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus, .tooltip-inner, .btn-primary, .nav-pills>li.active>a:hover, .checkLabel.label-primary:hover, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus, .monthview-selected
+//    {background:@color16accent;}
+//    .notification.new .notificationTitle, a:not(.btn)
+//    {color:@color16accent;}
+//    .tooltip.left .tooltip-arrow{border-left-color:@color16accent;} .tooltip.top .tooltip-arrow{border-top-color:@color16accent;} .tooltip.right .tooltip-arrow{border-right-color:@color16accent;} .tooltip.bottom .tooltip-arrow{border-bottom-color:@color16accent;}
+//    .btn-info, .btn-primary{border:1px solid @color16accent;}
+//}
 
 
 /*Dark Theme Color*/
@@ -1000,3 +996,9 @@ div#cropped-image {
   display:block;
   max-width: 95%;
 }
+
+
+
+/*Material Design Styles*/
+body{padding-top:74px;}
+.aside li .md-button{text-align:left; text-transform:none; outline: none;}

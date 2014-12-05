@@ -47,6 +47,7 @@
         <![endif]-->
 <div id="body">
 <header>
+<!--
 			<nav class="navbar navbar-default" ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
 			<div class="container">
 				<div class="navbar-header">
@@ -80,6 +81,31 @@
 			</div>
             			
 			</nav>
+-->
+
+<md-toolbar class="navbar-fixed-top">
+        <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
+				<div>
+					<a class="navbar-brand" ng-hide="$root.checkLogin()"></a>
+					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
+					<span class="badge" ng-bind="$root.notification_count"></span>
+					</a>
+                <span id="refreshNotifications" ng-show="$root.checkLogin()" ng-click="$root.updateNotifications()" class="refresh"><i class="fa fa-refresh"></i></span>            
+				</div>
+				
+				<div flex></div>
+				
+				<md-button ng-show="$root.checkLogin()" data-toggle="modal" data-target="#helpModal">
+				    <i class="fa fa-question-circle"></i>
+				</md-button>
+				
+                <md-button type="button"  ng-show="$root.checkLogin()" data-template="views/templates/aside.html" data-placement="right" bs-aside="aside" data-container="body">
+                        <i class="fa fa-bars" style="color:white;"></i>
+                </md-button>
+            			
+        </nav>
+      </h2>
+    </md-toolbar>
 </header>
 
 <div ui-view ng-hide="$root.loading"  autoscroll="true" id="mainSection"></div>
