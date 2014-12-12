@@ -5675,7 +5675,7 @@ App.factory('LoadScreen', function($rootScope){
             $('.mainLoadingScreen').hide();
             $('.nav').show();
             $('.container').fadeIn();
-            $('#body').show();
+            $('body').show();
             routeChange();
             console.log('stopping load screen');
         },

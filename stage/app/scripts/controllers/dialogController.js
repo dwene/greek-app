@@ -18,8 +18,8 @@ App.controller('dialogController', function dialogController($scope, $http, Load
                 //do nothing
                 }
             }
-            
-            $scope.hideDialog = function(){
-                $mdDialog.hide();
-            }
+
+  $scope.hideDialog = function() {
+    $mdDialog.cancel();
+  };
 });
