@@ -5,15 +5,18 @@
             Send us a message and we'll get right back to you.
         </md-subheader>
             <md-divider></md-divider>
+<!--
             <div class="form-group">
-                <label for="password" class="col-sm-2 control-label">Subject</label>
-                <div class="col-sm-10">
+                <label for="password" class="col-sm-12 control-label">Subject</label>
+                <div class="col-sm-12">
                   <input type="text" class="form-control" id="subject" name="subject" ng-model="message.subject" placeholder="Subject" required>
                 </div>
+                <md-text-float label="Title" ng-model="message.subject"></md-text-float>
             </div><br><br><br>
+-->
             <div class="form-group">
-                <label for="password" class="col-sm-2 control-label">Message</label>
-                <div class="col-sm-10">
+<!--                <label for="content" class="col-sm-12 control-label">Message</label>-->
+                <div class="col-sm-12">
                  <textarea id="content" ng-model="message.message" name="content" class="form-control" placeholder="Enter your message here..." required></textarea>
                 </div>
             </div>

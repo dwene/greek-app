@@ -7,24 +7,27 @@
 -->
     
 
-<md-content>
+<md-content id="notifications">
     <md-list>
-      <md-item ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
-        <md-card>
+      <md-item>
+        <md-card ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
         <md-item-content>
           <div class="md-tile-content">
-            <md-subheader class="md-primary">{{notify.title}}</md-subheader>
-                    <p>{{notify.content | htmlToPlaintext}}</p>
-                <p class="pull-right" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+            <md-subheader class="md-primary">
+                {{notify.title}}
+            </md-subheader>
+            <md-button class="archive pull-right" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-folder-open-o"></i></md-button>
+                    <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
           </div>
         </md-item-content>
         </md-card>
       </md-item>
     </md-list>
 </md-content>
-
-
-<ul>
+        
+<!--
+         <ul>
             <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
                 <div class="notificationContent">
                 <button type="button" class="close" ng-click="hideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-folder-open-o"></i></button>
@@ -34,6 +37,8 @@
                 </div>
             </li>
         </ul>
+-->
+
         
          <ul>
             <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.hidden_notifications | orderBy:'-timestamp' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">

@@ -1,4 +1,3 @@
-console.log('hi i am the dialog controller');
 App.controller('dialogController', function dialogController($scope, $http, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
 
             $scope.sendHelpMessage = function(isValid, content){
@@ -18,5 +17,9 @@ App.controller('dialogController', function dialogController($scope, $http, Load
                 else{
                 //do nothing
                 }
+            }
+            
+            $scope.hideDialog = function(){
+                $mdDialog.hide();
             }
 });

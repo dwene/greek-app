@@ -1807,22 +1807,27 @@ Copyright (c) 2013 Daniel Eden
 
 @-webkit-keyframes flipOutX {
   0% {
-    -webkit-transform: perspective(400px) rotateX(0deg);
-    transform: perspective(400px) rotateX(0deg);
+    -webkit-transform: perspective(500px) rotateX(0deg);
+    transform: perspective(500px) rotateX(0deg);
     opacity: 1;
     max-height:120px;
-    min-height:86px;
-    margin-bottom:4px;
+    min-height:100px;
+    margin-bottom:8px;
+    margin-top:8px;
+    position:absolute;
+    top:0px;
   }
 
   100% {
-    -webkit-transform: perspective(400px) rotateX(90deg);
-    transform: perspective(400px) rotateX(90deg);
+    -webkit-transform: perspective(500px) rotateX(90deg);
+    transform: perspective(500px) rotateX(90deg);
     opacity: 0;
     max-height:0px;
     min-height:0px;
     margin-top:0px;
-    margin-bottom:-19px;
+    margin-bottom:0px;
+    position:absolute;
+    top:-40px;
   }
 }
 
@@ -1833,8 +1838,11 @@ Copyright (c) 2013 Daniel Eden
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
     max-height:120px;
-    min-height:86px;
-    margin-bottom:4px;
+    min-height:100px;
+    margin-bottom:8px;
+    margin-top:8px;
+    position:absolute;
+    top:0px;
   }
 
   100% {
@@ -1844,7 +1852,10 @@ Copyright (c) 2013 Daniel Eden
     opacity: 0;
     max-height:0px;
     min-height:0px;
-    margin-bottom:-45px;
+    margin-top:-20px;
+    margin-bottom:0px;
+    position:absolute;
+    top:-40px;
   }
 }
 

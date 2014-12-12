@@ -363,7 +363,6 @@ background-repeat: repeat-x;
 .unread{display:none;}
 .notification.new .notificationTitle .unread{display:block; position:absolute; font-size:42px; left:2px; top:50%; margin-top:-21px;}
 .notificationTitle, .notificationType, .notificationSender{width:100%; display:inline-block;}
-.notificationText{width: 100%; height:18px; font-size:16px; line-height:18px; overflow: hidden; display: block; margin-top:-2px;}
 .notificationSender{font-size:12px; font-style:italic; position:absolute; bottom:5px; right:10px; text-align:right;}
 
 #notificationModal .modal-title{font-weight:bold; font-size:18px;}
@@ -702,16 +701,17 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation: fadeOutLeftBig .5;
 }
 
-.collapseOut.new.ng-enter{-webkit-animation: flipInX .5s;
-    -moz-animation: flipInX .5s;
-    -ms-animation: flipInX .5s;
-    animation: flipInX .5;}
+.collapseOut.new.ng-enter{-webkit-animation: flipInX 5s;
+    -moz-animation: flipInX 5s;
+    -ms-animation: flipInX 5s;
+    animation: flipInX 5;
+}
 
 .collapseOut.ng-leave{
-    -webkit-animation: flipOutX .5s;
-    -moz-animation: flipOutX .5s;
-    -ms-animation: flipOutX .5s;
-    animation: flipOutX .5s;
+    -webkit-animation: flipOutX 5s;
+    -moz-animation: flipOutX 5s;
+    -ms-animation: flipOutX 5s;
+    animation: flipOutX 5s;
 }
 
 
@@ -1001,6 +1001,7 @@ div#cropped-image {
 
 /*Material Design Styles*/
 body{padding-top:74px;}
+.md-dialog-container, md-backdrop.md-opaque.md-default-theme{position:fixed;}
 .aside li .md-button{text-align:left; text-transform:none; outline: none;}
 .md-sidenav-backdrop{z-index:1050;} md-sidenav{z-index:1051;}
 .nav .md-button{text-align:left;}
@@ -1013,5 +1014,9 @@ md-divider{margin-bottom:20px;}
     md-card:hover{background:#f8f8f8; cursor:pointer;
     .md-subheader{background:#f8f8f8;}
     }
-    
+    .notificationText{width: 100%; height:18px; line-height:18px; overflow: hidden; display: block;}
+    #notifications md-item-content{
+        .md-subheader{margin-right:0px;}
+        .sentBy{margin-bottom:0px; text-align:right;}
+    }
 }
