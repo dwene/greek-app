@@ -1016,8 +1016,10 @@ md-tabs.md-default-theme md-tab:focus{border:none;}
 #appHome{
     #notifications{backface-visibility: hidden; -webkit-backface-visibility: hidden;
        md-toolbar{
+        .md-toolbar-tools > *{margin:0px;}
         md-tabs{display:inline-block; margin:0px; width:300px;}
-         .messageCount{position:absolute; top:8px; left:18px; text-align:center; width:80px; font-size:12px; font-weight:bold;}
+         .messageCount{position:absolute; top:8px; left:10px; text-align:center; width:80px; font-size:12px; font-weight:bold;}
+        #arrows{min-width:80px;}
         #left, #right{
             position:relative; top:10px; margin:0px;
         }

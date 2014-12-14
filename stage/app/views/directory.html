@@ -1,8 +1,20 @@
 <div class="container">
+<!--
 <ul class="nav nav-pills">
     <li ng-class="{ active: $state.includes('app.directory.members') }"><a ui-sref=".members">Members</a></li>
     <li ng-class="{ active: $state.includes('app.directory.alumni') }"><a ui-sref=".alumni">Alumni</a></li>
 </ul>
+-->
+
+<md-tabs>
+      <md-tab id="memberTab" ui-sref=".members">
+        Members
+      </md-tab>
+      <md-tab id="alumniTab" ui-sref=".alumni">
+        Alumni
+      </md-tab>
+</md-tabs>  
+
 </div>
 
 <br>

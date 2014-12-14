@@ -9,6 +9,7 @@
     
     <md-toolbar>
     <div class="md-toolbar-tools">
+        <div id="arrows">
         <div ng-show="data.selectedIndex == 0">
             <div class="messageCount">{{$root.notifications.length == 0? 0:(current.currentPage * current.maxPageNumber) + 1}} - {{(current.currentPage *current.maxPageNumber)+5 >= ($root.notification_lengths.unread + $root.notification_lengths.read) ? ($root.notification_lengths.unread + $root.notification_lengths.read):(current.currentPage *current.maxPageNumber)+5}}<span ng-hide="$root.notifications.length <= 5"> of {{$root.notification_lengths.unread + $root.notification_lengths.read}}</div>
             <div id="messageArrows">
@@ -25,16 +26,7 @@
                 <md-button id="right" class="btn-touch" ng-show="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || hidden_working  || $root.notification_lengths.hidden == $root.hidden_notifications.length" ng-click="checkForMoreHiddenNotifications(hidden.currentPage, hidden.maxPageNumber)"><span ng-show="hidden_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="hidden_working"><i class="fa fa-chevron-right fa-fw"></i></span></md-button>
             </div>
         </div>
-    
-<!--
-        <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1"><i class="fa fa-arrow-left"></i></button>
-            <button class="next btn btn-default btn-sm" ng-hide="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-arrow-right"></i></button>
-            
-            <button class="next btn btn-default btn-sm" ng-show="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || hidden_working  || $root.notification_lengths.hidden == $root.hidden_notifications.length" ng-click="checkForMoreHiddenNotifications(hidden.currentPage, hidden.maxPageNumber)"><span ng-show="hidden_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="hidden_working"><i class="fa fa-arrow-right"></i></span></button>
-            <span class="text-center notificationCount darkbg">{{(hidden.currentPage * hidden.maxPageNumber) + 1}} - {{(hidden.currentPage *hidden.maxPageNumber)+5 >= $root.notification_lengths.hidden? $root.notification_lengths.hidden: (hidden.maxPageNumber * hidden.currentPage)+5}}<span ng-hide="$root.hidden_notifications.length <= 5"> of {{$root.notification_lengths.hidden}}</span></span>
--->
-
-        
+        </div>
         <div flex></div>
         <md-tabs md-selected="data.selectedIndex">
           <md-tab id="inboxTab" aria-controls="inboxTab-content">

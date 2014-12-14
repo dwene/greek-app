@@ -1966,6 +1966,9 @@ md-tabs.md-default-theme md-tab:focus {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+#appHome #notifications md-toolbar .md-toolbar-tools > * {
+  margin: 0px;
+}
 #appHome #notifications md-toolbar md-tabs {
   display: inline-block;
   margin: 0px;
@@ -1974,11 +1977,14 @@ md-tabs.md-default-theme md-tab:focus {
 #appHome #notifications md-toolbar .messageCount {
   position: absolute;
   top: 8px;
-  left: 18px;
+  left: 10px;
   text-align: center;
   width: 80px;
   font-size: 12px;
   font-weight: bold;
+}
+#appHome #notifications md-toolbar #arrows {
+  min-width: 80px;
 }
 #appHome #notifications md-toolbar #left,
 #appHome #notifications md-toolbar #right {
