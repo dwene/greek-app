@@ -1855,17 +1855,11 @@ nav.navbar-default:hover .refresh {
   -ms-animation: fadeOutLeftBig .5s;
   animation: fadeOutLeftBig .5;
 }
-.collapseOut.new.ng-enter {
-  -webkit-animation: flipInX 5s;
-  -moz-animation: flipInX 5s;
-  -ms-animation: flipInX 5s;
-  animation: flipInX 5;
-}
-.collapseOut.ng-leave {
-  -webkit-animation: flipOutX 5s;
-  -moz-animation: flipOutX 5s;
-  -ms-animation: flipOutX 5s;
-  animation: flipOutX 5s;
+.removeNotification.ng-leave {
+  -webkit-animation: fadeOutUp .2s;
+  -moz-animation: fadeOutUp .2s;
+  -ms-animation: fadeOutUp .2s;
+  animation: fadeOutUp .2s;
 }
 /*Specific Fixes*/
 .bootstrap-datetimepicker-widget .btn:active,
@@ -1931,6 +1925,12 @@ div#cropped-image {
 /*Material Design Styles*/
 body {
   padding-top: 74px;
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.md-tile-content {
+  overflow: hidden;
 }
 .md-dialog-container,
 md-backdrop.md-opaque.md-default-theme {
@@ -1953,16 +1953,39 @@ md-sidenav {
 md-divider {
   margin-bottom: 20px;
 }
-.md-tile-content .md-subheader {
-  padding: 0px 0px 10px 0px;
+.collapse.in {
+  display: block !important;
+}
+.btn-touch {
+  padding: 10px;
+}
+md-tabs.md-default-theme md-tab:focus {
+  border: none;
 }
 /*App Home*/
-#appHome md-card:hover {
-  background: #f8f8f8;
-  cursor: pointer;
+#appHome #notifications {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
-#appHome md-card:hover .md-subheader {
-  background: #f8f8f8;
+#appHome #notifications md-toolbar md-tabs {
+  display: inline-block;
+  margin: 0px;
+  width: 300px;
+}
+#appHome #notifications md-toolbar .messageCount {
+  position: absolute;
+  top: 8px;
+  left: 18px;
+  text-align: center;
+  width: 80px;
+  font-size: 12px;
+  font-weight: bold;
+}
+#appHome #notifications md-toolbar #left,
+#appHome #notifications md-toolbar #right {
+  position: relative;
+  top: 10px;
+  margin: 0px;
 }
 #appHome .notificationText {
   width: 100%;
@@ -1971,10 +1994,59 @@ md-divider {
   overflow: hidden;
   display: block;
 }
-#appHome #notifications md-item-content .md-subheader {
-  margin-right: 0px;
+#appHome .message {
+  display: block;
+  -webkit-backface-visibility: hidden;
+  webkit-transform: translate3d(0, 0, 0);
 }
-#appHome #notifications md-item-content .sentBy {
+#appHome .message .isNew {
+  display: none;
+}
+#appHome .message md-card {
+  position: relative;
+  overflow: hidden;
+}
+#appHome .message md-card:hover {
+  background: #f8f8f8;
+  cursor: pointer;
+}
+#appHome .message md-item-content .md-tile-content {
+  padding: 16px 16px 12px 16px;
+}
+#appHome .message md-item-content button.archive {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+#appHome .message md-item-content .title {
+  margin-right: 40px;
+  height: 25px;
+  overflow: hidden;
+  font-size: 14px;
+  height: 18px;
+  line-height: 18px;
+  padding: 0px;
+  margin-bottom: 4px;
+}
+#appHome .message md-item-content .sentBy {
   margin-bottom: 0px;
+  margin-right: -8px;
   text-align: right;
+  line-height: .75em;
+}
+#appHome .message.new .md-subheader {
+  font-weight: bolder;
+}
+#appHome .message.new .isNew {
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 4px;
+  background: black;
+  top: 0px;
+  left: 0px;
+}
+#appHome #archived {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

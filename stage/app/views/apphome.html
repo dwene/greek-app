@@ -1,31 +1,96 @@
-<div id="appHome" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0}; current = {maxPageNumber: 5, currentPage: 0};">
-    
+<md-content id="appHome" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0}; current = {maxPageNumber: 5, currentPage: 0};">
 <!--
 <md-card class="hidden-xs">
        <img ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}">
 </md-card>
 -->
     
+<div id="notifications">
+    
+    <md-toolbar>
+    <div class="md-toolbar-tools">
+        <div ng-show="data.selectedIndex == 0">
+            <div class="messageCount">{{$root.notifications.length == 0? 0:(current.currentPage * current.maxPageNumber) + 1}} - {{(current.currentPage *current.maxPageNumber)+5 >= ($root.notification_lengths.unread + $root.notification_lengths.read) ? ($root.notification_lengths.unread + $root.notification_lengths.read):(current.currentPage *current.maxPageNumber)+5}}<span ng-hide="$root.notifications.length <= 5"> of {{$root.notification_lengths.unread + $root.notification_lengths.read}}</div>
+            <div id="messageArrows">
+                <md-button id="left" class="btn-touch" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1"><i class="fa fa-chevron-left fa-fw"></i></md-button>
+                <md-button id="right" class="btn-touch" ng-hide="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1"><i class="fa fa-chevron-right fa-fw"></i></md-button>
+                <md-button id="right" class="btn-touch" ng-show="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="noMoreNotifications || current_working || $root.notification_lengths.unread + $root.notification_lengths.read <= $root.notifications.length" ng-click="checkForMoreNotifications(current.currentPage, current.maxPageNumber)"><span ng-show="current_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="current_working"><i class="fa fa-chevron-right fa-fw"></i></span></md-button>
+            </div>
+        </div>
+        <div ng-show="data.selectedIndex == 1">
+            <div class="messageCount">{{(hidden.currentPage * hidden.maxPageNumber) + 1}} - {{(hidden.currentPage *hidden.maxPageNumber)+5 >= $root.notification_lengths.hidden? $root.notification_lengths.hidden: (hidden.maxPageNumber * hidden.currentPage)+5}}<span ng-hide="$root.hidden_notifications.length <= 5"> of {{$root.notification_lengths.hidden}}</div>
+            <div id="archivedArrows">
+                <md-button id="left" class="btn-touch" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1"><i class="fa fa-chevron-left fa-fw"></i></md-button>
+                <md-button id="right" class="btn-touch" ng-hide="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-chevron-right fa-fw"></i></md-button>
+                <md-button id="right" class="btn-touch" ng-show="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || hidden_working  || $root.notification_lengths.hidden == $root.hidden_notifications.length" ng-click="checkForMoreHiddenNotifications(hidden.currentPage, hidden.maxPageNumber)"><span ng-show="hidden_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="hidden_working"><i class="fa fa-chevron-right fa-fw"></i></span></md-button>
+            </div>
+        </div>
+    
+<!--
+        <button class="previous btn btn-default btn-sm" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1"><i class="fa fa-arrow-left"></i></button>
+            <button class="next btn btn-default btn-sm" ng-hide="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-arrow-right"></i></button>
+            
+            <button class="next btn btn-default btn-sm" ng-show="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || hidden_working  || $root.notification_lengths.hidden == $root.hidden_notifications.length" ng-click="checkForMoreHiddenNotifications(hidden.currentPage, hidden.maxPageNumber)"><span ng-show="hidden_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="hidden_working"><i class="fa fa-arrow-right"></i></span></button>
+            <span class="text-center notificationCount darkbg">{{(hidden.currentPage * hidden.maxPageNumber) + 1}} - {{(hidden.currentPage *hidden.maxPageNumber)+5 >= $root.notification_lengths.hidden? $root.notification_lengths.hidden: (hidden.maxPageNumber * hidden.currentPage)+5}}<span ng-hide="$root.hidden_notifications.length <= 5"> of {{$root.notification_lengths.hidden}}</span></span>
+-->
 
-<md-content id="notifications">
-    <md-list>
-      <md-item>
-        <md-card ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
-        <md-item-content>
-          <div class="md-tile-content">
-            <md-subheader class="md-primary">
-                {{notify.title}}
-            </md-subheader>
-            <md-button class="archive pull-right" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-folder-open-o"></i></md-button>
-                    <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
-                <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
-          </div>
-        </md-item-content>
-        </md-card>
-      </md-item>
-    </md-list>
-</md-content>
         
+        <div flex></div>
+        <md-tabs md-selected="data.selectedIndex">
+          <md-tab id="inboxTab" aria-controls="inboxTab-content">
+            Inbox
+          </md-tab>
+          <md-tab id="archivedTab" aria-controls="archivedTab-content">
+            Archived
+          </md-tab>
+        </md-tabs>  
+    </div>
+    
+    
+    </md-toolbar>
+    
+    <ng-switch on="data.selectedIndex" class="tabpanel-container">
+        <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+            <md-list>
+              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
+                <md-card ng-click="openMessagedialog(notify)">
+                <div class="isNew"></div>
+                <md-item-content>
+                  <div class="md-tile-content">
+                    <h3 class="md-primary title">
+                        {{notify.title}}
+                    </h3>
+                    <md-button class="archive pull-right btn-touch" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-folder-open-o fa-fw"></i></md-button>
+                        <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                        <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                  </div>
+                </md-item-content>
+                </md-card>
+              </md-item>
+            </md-list>
+        </div>
+        <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+            <md-list>
+              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}"  ng-repeat="notify in ($root.hidden_notifications | orderBy:'-timestamp' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">
+                <md-card ng-click="openNotificationModal(notify)">
+                <md-item-content>
+                  <div class="md-tile-content">
+                    <h3 class="md-primary title">
+                        {{notify.title}}
+                    </h3>
+                    <md-button class="archive pull-right btn-touch" type="button" ng-click="unhideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-inbox fa-fw"></i></md-button>
+                            <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                        <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                  </div>
+                </md-item-content>
+                </md-card>
+              </md-item>
+            </md-list>
+        </div>
+    </ng-switch>
+    
+</div>
+    
 <!--
          <ul>
             <li class="notification" ng-class="{new: notify.new, collapseOut: notify.garbage}" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
@@ -40,6 +105,7 @@
 -->
 
         
+<!--
          <ul>
             <li class="notification" ng-class="" ng-click="openNotificationModal(notify)" ng-repeat="notify in ($root.hidden_notifications | orderBy:'-timestamp' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">
                 <div class="notificationContent">
@@ -50,6 +116,7 @@
                 </div>
             </li>
         </ul>
+-->
 <!--
     <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
@@ -150,7 +217,7 @@
     </div>
 -->
 
-</div>
+</md-content>
 
 <div class="modal fade" id="notificationModal">
   <div class="modal-dialog">

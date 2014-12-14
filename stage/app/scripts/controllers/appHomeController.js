@@ -1,4 +1,4 @@
-    App.controller('appHomeController', function($scope, $http, $rootScope, $timeout, $sce, Directory, Events, LoadScreen, removePassedEventsFilter, Load, Directory, Notifications) {
+    App.controller('appHomeController', function($scope, $http, $rootScope, $timeout, $sce, $mdDialog, Directory, Events, LoadScreen, removePassedEventsFilter, Load, Directory, Notifications) {
         routeChange();
         Load.then(function(){
         $scope.events_loaded = false;
@@ -37,15 +37,7 @@
         //     }); 
         // }
             
-        $scope.archiveTip = {
-            "title" : "Archive Notification"
-        }    
-        $scope.unarchiveTip = {
-            "title" : "Unarchive Notification"
-        }
-        $scope.clearStatusTip = {
-            "title" : "Clear Status"
-        }
+    
         $scope.checkForMoreHiddenNotifications = function(pageNum, max){
             var len = $rootScope.hidden_notifications.length;
             $scope.hidden_working = true;
@@ -173,6 +165,31 @@
             if ($rootScope.me){
                 $rootScope.me.status = status;
             }            
+        }
+        
+        $scope.openMessagedialog = function(){
+            $mdDialog.show({
+                    controller: 'dialogController',
+                    templateUrl: '../views/templates/messageDialog.html'
+            });
+        
+            $scope.selectedNotification = notify;
+            var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            $scope.messageHTML = $sce.trustAsHtml(message);
+            $scope.selectedNotificationUser = undefined;
+            for(var i = 0; i < $scope.directory.members.length; i++){
+                if ($scope.directory.members[i].key == notify.sender){
+                    $scope.selectedNotificationUser = $scope.directory.members[i];
+                }
+            }
+            if ($scope.selectedNotification.new){
+                $scope.notification_lengths.unread --;
+                $scope.notification_lengths.read ++;
+                $scope.selectedNotification.new = false;
+            }
+            $rootScope.updateNotificationBadge();
+            var key = $scope.selectedNotification.key;
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
         }
         
         $scope.openNotificationModal = function(notify){

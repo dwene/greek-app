@@ -161,22 +161,20 @@
 <md-toolbar class="navbar-fixed-top md-whiteframe-z1">
         <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
 				<div>
-
 					<a class="navbar-brand" ng-hide="$root.checkLogin()"></a>
 					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
-					<span class="badge" ng-bind="$root.notification_count"></span>
+					    <span class="badge" ng-bind="$root.notification_count"></span>
 					</a>
-
 				</div>      
 
 				<div flex></div>
 				
 				<md-button ng-show="$root.checkLogin()" ng-click="showHelpdialog()">
-				    <i class="fa fa-question-circle"></i>
+				    <i class="fa fa-question-circle fa-fw"></i>
 				</md-button>
 				
-                <md-button type="button"  ng-show="$root.checkLogin()" ng-click="toggleSidenav()">
-                        <i class="fa fa-bars" style="color:white;"></i>
+                <md-button ng-show="$root.checkLogin()" ng-click="toggleSidenav()">
+                        <i class="fa fa-bars fa-fw" style="color:white;"></i>
                 </md-button>
             			
         </nav>
@@ -189,7 +187,7 @@
     <div class="md-toolbar-tools">
       <span>Menu</span>
       <span flex></span>
-      <md-button ng-click="toggleSidenav()">
+      <md-button class="btn-touch" ng-click="toggleSidenav()">
         <i class="fa fa-times"></i>
       </md-button>
     </div>
