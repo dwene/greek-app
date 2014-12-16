@@ -1,4 +1,70 @@
+<div class="container">
+<div id="messaging" class="md-whiteframe-z1">
+<md-toolbar>
+<md-tabs md-selected="data.selectedIndex">
+    <md-tab id="sendMessage" aria-controls="sendMessage-content">
+        Send Message
+    </md-tab>
+    <md-tab id="recentlySent" aria-controls="recentlySent-content">
+        Recently Sent
+    </md-tab>
+</md-tabs>
+</md-toolbar>
+<ng-switch on="data.selectedIndex" class="tabpanel-container">
+        <div role="tabpanel" id="sendMessage-content" aria-labelledby="sendMessage" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+                
+        <md-content class="md-padding">
+                <selecting-users ng-model="tags" include-users="true" clear-users="clearUsers" directory="directory"></selecting-users>
+
+
+                    <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>
+                        <div class="form-group" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
+                            <input type="text" id="title" ng-model="title" name="title" class="form-control" placeholder="Enter your title here..." required>
+                            <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)}">
+                            <wysiwyg textarea-id="content" textarea-class="form-control" textarea-height="180px" textarea-name="content" textarea-required ng-model="content" enable-bootstrap-title="true" textarea-menu="{{menuOptions}}"></wysiwyg>
+                            <p ng-show="(messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)" class="help-block">Please enter your message.</p>
+                        </div>
+                        <p ng-show="submitted && !selectedMembers.length" class="help-block">Please select some tags first</p>
+                        <button ng-disabled="!selectedMembers.length || !messagingForm.$valid" type="submit" class="btn btn-default"><i class="fa fa-paper-plane"></i> Send</button><update-status ng-model="updating" fn-call="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)"></update-status>
+
+                    </form>
+        </md-content>
+
+        </div>
+        <div role="tabpanel" id="recentlySent-content" aria-labelledby="recentlySent" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+            <section id="recentlySentMessages">
+
+               
+                <md-list>
+                    <md-item class="message" ng-click="openMessagedialog(notify)" ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber">
+                    <div class="isNew"></div>
+                        <md-item-content>
+                          <div class="md-tile-content">
+                            <h3 class="md-primary title">
+                                {{notify.title}}
+                            </h3>
+                            <md-button class="archive pull-right btn-touch" type="button" ng-click="openMessageModal(notify)"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                                <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                          </div>
+                    </md-item>
+                </md-list>
+
+                <div class="pagerButtons">
+                        <button class="previous btn btn-default btn-sm" ng-hide="currentPage == 0" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><i class="fa fa-arrow-left"></i></button>
+                        <button class="next btn btn-default btn-sm" ng-hide="currentPage >= sentMessages.length/maxPageNumber - 1" ng-disabled="currentPage >= sentMessages.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1"><i class="fa fa-arrow-right"></i></button>
+                </div>  
+            </section>
+        </div>
+</ng-switch>
+</div>
+</div>
+
+<!--
 <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+
 <section id="messaging" ng-show="!loading" class="container" load-directive ng-model="finished_loading">
 
 <div class="card">
@@ -14,7 +80,7 @@
             <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
         </div>
         <div class="form-group" ng-class="{ 'has-error' : (messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)}">
-            <!-- <textarea id="content" ng-model="content" name="content" class="form-control" placeholder="Enter your message here..." required></textarea> -->
+             <textarea id="content" ng-model="content" name="content" class="form-control" placeholder="Enter your message here..." required></textarea> 
             <wysiwyg textarea-id="content" textarea-class="form-control" textarea-height="180px" textarea-name="content" textarea-required ng-model="content" enable-bootstrap-title="true" textarea-menu="{{menuOptions}}"></wysiwyg>
             <p ng-show="(messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)" class="help-block">Please enter your message.</p>
         </div>
@@ -45,6 +111,7 @@
 </section>
 
 </section>
+-->
 
 <div class="modal fade" id="messageModal">
   <div class="modal-dialog">

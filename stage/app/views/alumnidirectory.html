@@ -1,15 +1,23 @@
-<div class="container" id="directory" load-directive ng-model="directoryLoaded">
-    
-    <search ng-model="search"></search>
+<div load-directive ng-model="directoryLoaded">
+<search ng-model="search"></search>
     
        <alumni-year-picker id="yearSelect" alumni="directory.alumni" selected-year="selected_year" search="search" require-registration="true"></alumni-year-picker>
-        <ul>
-            <li ng-repeat="member in directory.alumni | nameSearch:search | pledgeClassSearch:selected_year | orderBy:'last_name' " class="member" ng-click="showIndividual(member)" ng-show="member.user_name">
-            
-                <div class="smallprofilepic" style="background-image:url({{getProfPic(member.prof_pic)}});" ></div>
-                <div class="directoryContent">
-                <span class="memberName">{{member.first_name}} {{member.last_name}}</span>
+<section>
+    <md-list>
+        <md-item ng-repeat="member in directory.alumni | nameSearch:search | pledgeClassSearch:selected_year | orderBy:'last_name' " ng-click="showIndividual(member)" ng-show="member.user_name">
+            <md-card>
+            <md-item-content>
+                <div class="md-tile-left">
+                  <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
-            </li>
-        </ul>
+                <div class="md-tile-content">
+                    <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                </div>
+            <md-item-content>
+            </md-card>
+        </md-item>
+    </md-list>
+</section>
 </div>
+
+

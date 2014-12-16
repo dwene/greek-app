@@ -175,7 +175,6 @@ h1{font-size:34px; font-weight:bold;}
 #directory .memberName{font-size:18px; margin-right:4px; font-weight:bold;}
 .directoryTags{font-size:12px; font-style: italic; padding:.2em .4em; margin:4px 4px 0px 0px; top:-3px;}
 .directoryStatus{width:100%; margin-top:4px; display:block; font-size:16px; font-style:italic;}
-#directory h2{text-transform:uppercase; font-weight:bold; text-indent:10px; margin:20px 0px 0px 0px; border:0px;}
 #directory .member .smallprofilepic{left:60px;}
 #directory .member .quickButtons{width:50px; position:absolute; left:5px; top:5px;}
 #directory .member .quickButtons .btn{width:45px; margin-bottom:3px; color:black; background:white; border:0px; -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),0px 1px 0px rgba(0,0,0,0.075); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),0px 1px 0px rgba(0,0,0,0.075);}
@@ -683,8 +682,8 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation: fadeOut .5s;
 }
 
-.fadingIn.ng-enter { position:absolute !important; left:0px; right:0px; }
-.fadingOut.ng-leave { position:absolute !important; left:0px; right:0px; }
+//.fadingIn.ng-enter { position:absolute !important; left:0px; right:0px; }
+//.fadingOut.ng-leave { position:absolute !important; left:0px; right:0px; }
 
 .fadingInLeftBig.ng-enter{
     position:absolute !important; left:0px; right:0px;
@@ -1001,36 +1000,36 @@ div#cropped-image {
 
 
 /*Material Design Styles*/
-body{padding-top:74px; -webkit-transform-style: preserve-3d; backface-visibility: hidden; -webkit-backface-visibility: hidden;} 
+body{padding-top:74px; backface-visibility: hidden; -webkit-backface-visibility: hidden; height:auto; min-height:100%; background:#ececec;} 
 .md-tile-content{overflow:hidden;}
 .md-dialog-container, md-backdrop.md-opaque.md-default-theme{position:fixed;}
 .aside li .md-button{text-align:left; text-transform:none; outline: none;}
-.md-sidenav-backdrop{z-index:1050;} md-sidenav{z-index:1051;}
+.md-sidenav-backdrop{z-index:1050;} md-sidenav{z-index:1051; position:fixed; top:0;}
 .nav .md-button{text-align:left;}
 md-divider{margin-bottom:20px;}
 .collapse.in{display:block !important;}
 .btn-touch{padding:10px;}
 md-tabs.md-default-theme md-tab:focus{border:none;}
+md-input-group input{width:100%;}
+md-content.md-default-theme{background:transparent;}
+.md-whiteframe-z1, md-card{background:white;}
+@hoverColor:#f8f8f8;
+//#historyBack, #historyForward{position:fixed; bottom:15px; font-size:14px;}
+//#historyBack{left:8px;}
+//#historyForward{right:8px;}
+.navbar-brand{width:150px; margin-left:8px;
+.badge{left:100px;}
+}
+.navbar-brand:before{background-position:-50px;}
+a.navbar-brand:focus{outline:none;}
+md-toolbar{
+    md-tabs{width:300px;}
+}
 
-/*App Home*/
-#appHome{
-    #notifications{backface-visibility: hidden; -webkit-backface-visibility: hidden;
-       md-toolbar{
-        .md-toolbar-tools > *{margin:0px;}
-        md-tabs{display:inline-block; margin:0px; width:300px;}
-         .messageCount{position:absolute; top:8px; left:10px; text-align:center; width:80px; font-size:12px; font-weight:bold;}
-        #arrows{min-width:80px;}
-        #left, #right{
-            position:relative; top:10px; margin:0px;
-        }
-       }
-    }
-    .notificationText{width: 100%; height:18px; line-height:18px; overflow: hidden; display: block;}
-    .message{
-        display:block; -webkit-backface-visibility: hidden; webkit-transform: translate3d(0, 0, 0);
+.message{
+        display:block; position:relative; overflow:hidden; -webkit-backface-visibility: hidden;
+        border-bottom:1px solid #ccc;
         .isNew{display:none;}
-        md-card{position:relative; overflow:hidden;}
-        md-card:hover{background:#f8f8f8; cursor:pointer;}
         md-item-content{
             .md-tile-content{padding:16px 16px 12px 16px}
             button.archive{position:absolute; top:0px; right:0px;}
@@ -1038,9 +1037,43 @@ md-tabs.md-default-theme md-tab:focus{border:none;}
             .sentBy{margin-bottom:0px; margin-right:-8px; text-align:right; line-height:.75em;}
         }
     }
+.message:hover{background:@hoverColor; cursor:pointer;}
+
+/*App Home*/
+#appHome{
+    #notifications{backface-visibility: hidden; -webkit-backface-visibility: hidden; margin-bottom:10px;
+       md-toolbar{
+           min-height:0px;
+         .messageCount{position:absolute; top:8px; left:10px; text-align:center; width:80px; font-size:12px; font-weight:bold;}
+        #arrows{width:80px;}
+        #messageArrows, #archivedArrows{width:85px;}
+        .left, .right{
+            position:relative; top:10px; margin:0px; display:inline-block;
+        }
+       }
+    md-toolbar > *{margin:0px;}
+    }
+    .notificationText{width: 100%; height:18px; line-height:18px; overflow: hidden; display: block;}
+    
     .message.new{
-        .md-subheader{font-weight:bolder;}
-       .isNew{display:block; position:absolute; height:100%; width:4px; background:black; top:0px; left:0px;}
+        h3{font-weight:bolder;}
+       .isNew{display:block; position:absolute; height:100%; width:4px; background:black; top:0px; left:0px; border-radius:2px 0px 0px 2px;}
     }
     #archived{backface-visibility: hidden; -webkit-backface-visibility: hidden;}
+}
+
+#directory{
+    .md-padding{padding-top:0px;}
+    md-item-content{border-bottom:1px solid #ccc;}
+    md-item:last-child md-item-content{border-bottom:0px;}
+    md-item-content:hover{background:@hoverColor; cursor:pointer;}
+    md-toolbar{min-height:0px;}
+    md-input-group{margin-top:0px;}
+    .face {border-radius: 30px; border: 1px solid #ddd; width: 48px; margin: 16px;}
+
+
+}
+
+#messaging{
+md-toolbar{min-height:0px;}
 }

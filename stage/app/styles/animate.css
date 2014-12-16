@@ -1069,14 +1069,14 @@ Copyright (c) 2014 Daniel Eden
     opacity: 0;
     -webkit-transform: translate3d(0, -100%, 0);
             transform: translate3d(0, -100%, 0);
-      margin-bottom:-104px;
+      margin-bottom:-80px;
   }
 
   100% {
     opacity: 1;
     -webkit-transform: none;
             transform: none;
-      margin-bottom:8px;
+      margin-bottom:0px;
   }
 }
 
@@ -1085,14 +1085,14 @@ Copyright (c) 2014 Daniel Eden
     opacity: 0;
     -webkit-transform: translate3d(0, -100%, 0);
             transform: translate3d(0, -100%, 0);
-      margin-bottom:-104px;
+      margin-bottom:-80px;
   }
 
   100% {
     opacity: 1;
     -webkit-transform: none;
             transform: none;
-      margin-bottom:8px;
+      margin-bottom:0px;
   }
 }
 
@@ -1524,14 +1524,14 @@ Copyright (c) 2014 Daniel Eden
 @-webkit-keyframes fadeOutUp {
   0% {
     opacity: 1;
-    margin-bottom:8px;
+    margin-bottom:0px;
   }
 
   100% {
     opacity: 0;
     -webkit-transform: translate3d(0, -100%, 0);
             transform: translate3d(0, -100%, 0);
-        margin-bottom:-104px;
+        margin-bottom:-80px;
   }
     
 }
@@ -1539,14 +1539,14 @@ Copyright (c) 2014 Daniel Eden
 @keyframes fadeOutUp {
   0% {
     opacity: 1; 
-    margin-bottom:8px;
+    margin-bottom:0px;
   }
 
   100% {
     opacity: 0;
     -webkit-transform: translate3d(0, -100%, 0);
             transform: translate3d(0, -100%, 0);
-          margin-bottom:-104px;
+          margin-bottom:-80px;
 
   }
 }

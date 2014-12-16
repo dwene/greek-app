@@ -1,10 +1,66 @@
 <load-directive ng-model="loaded">
-<div class="container" id="directory">
-    
-    <section id="searchTags">
-   <search ng-model="search"></search>
-    
+<search ng-model="search"></search>
+<md-content>
+  <section ng-show="council.length">
+   <md-subheader>
+       COUNCIL
+   </md-subheader>
+    <md-list>
+        <md-item ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
+            <md-item-content>
+                <div class="md-tile-left">
+                  <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
+                </div>
+                <div class="md-tile-content">
+                    <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                </div>
+            <md-item-content>
+        </md-item>
+    </md-list>
     </section>
+    <section ng-show="leadership.length">
+   <md-subheader>
+       LEADERSHIP
+   </md-subheader>
+    <md-list>
+        <md-item ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
+            <md-item-content>
+                <div class="md-tile-left">
+                  <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
+                </div>
+                <div class="md-tile-content">
+                    <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                </div>
+            <md-item-content>
+        </md-item>
+    </md-list>
+    </section>
+    <section ng-show="members.length">
+   <md-subheader>
+       MEMBERS
+   </md-subheader>
+      <div infinite-scroll="increaseDirectoryLength()" infinite-scroll-distance="0" infinite-scroll-disabled="search">
+    <md-list>
+        <md-item ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" ng-click="showIndividual(member)">
+            <md-item-content>
+                <div class="md-tile-left">
+                  <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
+                </div>
+                <div class="md-tile-content">
+                    <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                </div>
+            <md-item-content>
+        </md-item>
+    </md-list>
+    <div style='height:1px;'></div>
+    </div>
+    </section>
+</md-content> 
+
+
+</load-directive>
+    
+<!--
     <section ng-show = "council.length">
         <h1 class="darkbg">Council</h1>
         <ul>
@@ -73,4 +129,4 @@
     <div style='height:1px;'></div>
     </div>
 </div>
-</load-directive>
+-->
