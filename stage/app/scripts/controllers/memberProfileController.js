@@ -1,4 +1,4 @@
-App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService, Directory){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService, Directory, $mdBottomSheet){
     routeChange();
     Load.then(function(){
         $scope.directory = Directory.get();
@@ -13,6 +13,25 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
             window.location.assign('/#/app/directory');
         }
     });
+    
+    $scope.showProfileoptions = function(event){
+    
+        $mdBottomSheet.show({
+          templateUrl: 'views/templates/bottomGrid.html',
+          controller: profileOptionsCtrl,
+          targetEvent: event
+        });
+    }
+    
+    function profileOptionsCtrl($scope, $mdBottomSheet) {
+        $scope.items = [
+            { name: 'SMS', icon: 'fa-mobile'},
+            { name: 'CALL', icon: 'fa-phone'},
+            { name: 'EMAIL', icon: 'fa-envelope' },
+            { name: 'SAVE', icon: 'fa-floppy-o' }
+        ];
+    };
+    
     $scope.saveVcard = function(){
         var user = $scope.member;
         var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name

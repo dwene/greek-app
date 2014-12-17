@@ -2,24 +2,49 @@
 
 <div id="profile" class="container" ng-show="member">
    <div class="md-whiteframe-z1">
-    <md-toolbar class="md-tall">
-      <h2 class="md-toolbar-tools">
-        <span>Toolbar: tall</span>
-      </h2>
+    <md-toolbar class="md-tall" layout="row" layout-align="center center">
+            <div flex="20" flex-md="25" flex-sm="45">
+                <img class="face pull-right" src="{{prof_pic || $root.defaultProfilePicture}};" alt="{{firstName}} {{lastName}}">
+            </div>
+            <div class="name" flex="80" flex-md="75" flex-sm="55">
+                <h2>{{firstName}} {{lastName}}</h2>
+                <h5 ng-show="position.length">{{position}}</h5>
+            </div>
+        <md-button id="back" class="md-fab" aria-label="back" onclick="window.history.back()">
+            <i class="fa fa-arrow-left"></i>
+        </md-button>
+        <md-button id="more-options" class="btn-touch" ng-click="showProfileoptions($event)">options</md-button>
     </md-toolbar>
     <md-content class="md-padding">
-        testing
+        <p id="status" class="text-center" ng-show="status.length">"{{status}}"</p>
+           
+        <div id="theTags" class="info"><span ng-repeat="tag in member.tags | orderBy: 'toString()'"> <span class="directoryTags label darkbg">{{tag}}</span> </span></div>
+            <div class="info" ng-show="pledgeClass.length">Pledge Class: <span class="capitalize">{{pledgeClass}}</span></div>
+            <div class="info" ng-show="birthday.length">Birthday: <span>{{birthday}}</span></div>
+            <div class="info" ng-show="major.length">Major: <span>{{major}}</span></div>
+            <div class="info" ng-show="graduation.length">Graduation: <span>{{graduation}}</span></div>
+            <div class="info" ng-show="employer.length">Employer: <span>{{employer}}</span></div>
+            <div class="info" ng-show="occupation.length">Occupation: <span>{{occupation}}</span></div>
+            <div class="info" ng-show="permanentAddress.length">Permanent Address: <span>{{permanentAddress}}</span></div>
+           
+            <md-list id="social" layout="row" layout-align="center end">
+                <md-list-item ng-show="facebook.length"><a target="_blank" href="http://{{facebook}}"><i class="fa fa-facebook-square fa-fw fa-2x"></i></a></md-list-item>
+                <md-list-item ng-show="twitter.length"><a target="_blank" href="http://{{twitter}}"><i class="fa fa-twitter-square fa-fw fa-2x"></i></a></md-list-item>
+                <md-list-item ng-show="twitter.length"><a target="_blank" href="http://{{instagram}}"><i class="fa fa-instagram fa-fw fa-2x"></i></a></md-list-item>
+                <md-list-item ng-show="linkedin.length"><a target="_blank" href="http://{{linkedin}}"><i class="fa fa-linkedin-square fa-fw fa-2x"></i></a></md-list-item>
+            </md-list>
     </md-content>
     </div>
 </div>
 
-<!--
+
 <div id="memberProfile" class="container" ng-show="member">
     
     <div id="profileContent"> 
     
     <div class="row">
         <div class="col-xs-12 col-sm-5">
+<!--
             <div class="profilepic" style="background-image:url({{prof_pic || $root.defaultProfilePicture}});" ></div>
             
             <ul id="social">
@@ -28,10 +53,13 @@
                 <li ng-show="twitter.length"><a target="_blank" href="http://{{instagram}}"><i class="fa fa-instagram"></i></a></li>
                 <li ng-show="linkedin.length"><a target="_blank" href="http://{{linkedin}}"><i class="fa fa-linkedin-square"></i></a></li>
             </ul>
+-->
             
             <ul id="contact">
+<!--
                 <li ng-show="phone.length"><a href="sms:{{phone}}"><i class="fa fa-phone-square"></i></a> <span>{{phone}}</span></li>
                 <li><a target="_blank" href="mailto:{{email}}"><i class="fa fa-envelope-square"></i></a> <span>{{email}}</span></li>
+-->
                 <li ng-show="website.length"><a target="_blank" href="http://{{website}}"><i class="fa fa-globe"></i></a> <span>{{website}}</span></li>
                 <li ng-show="currentAddress.length"><a target="_blank" href="http://www.google.com/maps/place/{{currentAddress}}"><i class="fa fa-home"></i></a> <span>{{currentAddress}}</span></li>
             </ul>
@@ -63,4 +91,4 @@
     </div>
     
     
-</div>-->
+</div>

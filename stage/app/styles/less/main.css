@@ -1914,6 +1914,9 @@ body {
   min-height: 100%;
   background: #ececec;
 }
+.container {
+  max-width: 750px;
+}
 .md-tile-content {
   overflow: hidden;
 }
@@ -1940,6 +1943,9 @@ md-sidenav {
 md-divider {
   margin-bottom: 20px;
 }
+md-bottom-sheet {
+  position: fixed;
+}
 .collapse.in {
   display: block !important;
 }
@@ -1952,16 +1958,16 @@ md-tabs.md-default-theme md-tab:focus {
 md-input-group input {
   width: 100%;
 }
-md-content.md-default-theme {
-  background: transparent;
+md-bottom-sheet.md-grid md-item {
+  height: auto;
 }
 .md-whiteframe-z1,
 md-card {
   background: white;
 }
 .navbar-brand {
-  width: 150px;
-  margin-left: 8px;
+  width: 125px;
+  margin-right: 30px;
 }
 .navbar-brand .badge {
   left: 100px;
@@ -1974,6 +1980,9 @@ a.navbar-brand:focus {
 }
 md-toolbar md-tabs {
   width: 300px;
+}
+md-bottom-sheet .fa {
+  margin-top: 15px;
 }
 .message {
   display: block;
@@ -2013,7 +2022,12 @@ md-toolbar md-tabs {
   background: #f8f8f8;
   cursor: pointer;
 }
-/*App Home*/
+#login md-content {
+  padding: 10px 30px;
+}
+#login #buttons {
+  margin-top: 10px;
+}
 #appHome #notifications {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -2096,6 +2110,50 @@ md-toolbar md-tabs {
   border: 1px solid #ddd;
   width: 48px;
   margin: 16px;
+}
+#profile md-toolbar {
+  padding: 15px;
+}
+#profile md-toolbar h2 {
+  font-weight: bold;
+}
+#profile md-toolbar h5 {
+  font-size: 18px;
+  line-height: 24px;
+}
+#profile md-toolbar .face {
+  display: block;
+  width: 120px;
+  height: 120px;
+  border-radius: 80px;
+}
+#profile md-toolbar .name {
+  margin-left: 15px;
+}
+#profile md-toolbar .md-fab {
+  position: absolute;
+  bottom: -28px;
+  color: darkgray;
+  background: #E0E0E0;
+}
+#profile md-toolbar #back {
+  position: absolute;
+  left: 15px;
+}
+#profile md-toolbar #more-options {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: darkgray;
+  background: #E0E0E0;
+}
+#profile md-content {
+  padding-top: 45px;
+}
+#profile #social {
+  margin-top: 30px;
 }
 #messaging md-toolbar {
   min-height: 0px;
