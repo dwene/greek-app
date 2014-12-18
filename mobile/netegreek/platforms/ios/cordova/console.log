@@ -1,0 +1,16 @@
+2014-12-18 09:51:14.116 HelloCordova[36256:2383858] DiskCookieStorage changing policy from 2 to 0, cookie file: file:///Users/Derek/Library/Developer/CoreSimulator/Devices/ABC90D53-AFF0-4DDD-ADBB-00F3D20DBE78/data/Containers/Data/Application/568D43EA-8D31-46C2-986A-AB84591A353B/Library/Cookies/Cookies.binarycookies
+2014-12-18 09:51:14.472 HelloCordova[36256:2383858] Apache Cordova native platform version 3.7.0 is starting.
+2014-12-18 09:51:14.473 HelloCordova[36256:2383858] Multi-tasking -> Device: YES, App: YES
+2014-12-18 09:51:14.493 HelloCordova[36256:2383858] Unlimited access to network resources
+2014-12-18 09:51:14.509 HelloCordova[36256:2383858] 
+
+Started backup to iCloud! Please be careful.
+Your application might be rejected by Apple if you store too much data.
+For more information please read "iOS Data Storage Guidelines" at:
+https://developer.apple.com/icloud/documentation/data-storage/
+To disable web storage backup to iCloud, set the BackupWebStorage preference to "local" in the Cordova config.xml file
+
+2014-12-18 09:51:15.480 HelloCordova[36256:2383858] Resetting plugins due to page load.
+2014-12-18 09:51:16.159 HelloCordova[36256:2383858] Finished load of: file:///Users/Derek/Library/Developer/CoreSimulator/Devices/ABC90D53-AFF0-4DDD-ADBB-00F3D20DBE78/data/Containers/Bundle/Application/1FD7D079-C9D1-49D2-9347-1F0F1C66DDD7/HelloCordova.app/www/index.html#/app/home
+2014-12-18 09:51:16.379 HelloCordova[36256:2383858] Resetting plugins due to page load.
+2014-12-18 09:51:16.432 HelloCordova[36256:2383858] Failed to load webpage with error: Frame load interrupted
