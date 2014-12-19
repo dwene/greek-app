@@ -43,9 +43,9 @@
     
     <ng-switch on="data.selectedIndex" class="tabpanel-container">
         <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
-            <md-list>
+            <md-list class="itemList">
               <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessagedialog(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
-                <div class="isNew"></div>
+                <div class="isNew md-primary"></div>
                 <md-item-content>
                   <div class="md-tile-content">
                     <h3 class="md-primary title">

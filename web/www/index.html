@@ -167,7 +167,7 @@
 				<div>
 					<a class="navbar-brand" ng-hide="$root.checkLogin()"></a>
 					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
-					    <span class="badge" ng-bind="$root.notification_count"></span>
+					    <span class="badge" ng-bind="$root.notification_count" ng-hide="$root.notification_count == 0"></span>
 					</a>
 				</div>      
 

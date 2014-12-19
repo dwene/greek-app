@@ -5,7 +5,7 @@
    <md-subheader>
        COUNCIL
    </md-subheader>
-    <md-list>
+    <md-list class="memberList">
         <md-item ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
             <md-item-content>
                 <div class="md-tile-left">
@@ -22,7 +22,7 @@
    <md-subheader>
        LEADERSHIP
    </md-subheader>
-    <md-list>
+    <md-list class="memberList">
         <md-item ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
             <md-item-content>
                 <div class="md-tile-left">
@@ -40,7 +40,7 @@
        MEMBERS
    </md-subheader>
       <div infinite-scroll="increaseDirectoryLength()" infinite-scroll-distance="0" infinite-scroll-disabled="search">
-    <md-list>
+    <md-list class="memberList">
         <md-item ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" ng-click="showIndividual(member)">
             <md-item-content>
                 <div class="md-tile-left">

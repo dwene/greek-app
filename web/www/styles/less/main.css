@@ -1951,10 +1951,6 @@ md-sidenav {
 md-divider {
   margin-bottom: 20px;
 }
-md-bottom-sheet {
-  position: fixed;
-  z-index: 1041;
-}
 .collapse.in {
   display: block !important;
 }
@@ -1967,12 +1963,19 @@ md-tabs.md-default-theme md-tab:focus {
 md-input-group input {
   width: 100%;
 }
-md-bottom-sheet.md-grid md-item {
+md-bottom-sheet {
+  position: fixed;
+  z-index: 1041;
+}
+md-bottom-sheet md-item {
   height: auto;
 }
 .md-whiteframe-z1,
 md-card {
   background: white;
+}
+a:focus {
+  outline: 0px;
 }
 .navbar-brand {
   width: 125px;
@@ -1990,15 +1993,41 @@ a.navbar-brand:focus {
 md-toolbar md-tabs {
   width: 300px;
 }
-md-bottom-sheet .fa {
-  margin-top: 15px;
+md-toolbar .md-fab {
+  position: absolute;
+  bottom: -28px;
+  color: darkgray !important;
+  background: #E0E0E0 !important;
 }
-.message {
+md-toolbar #back {
+  position: absolute;
+  left: 15px;
+}
+.memberList .face {
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  width: 48px;
+  margin: 16px;
+}
+.memberList md-item-content {
+  border-bottom: 1px solid #ccc;
+}
+.memberList md-item:last-child md-item-content {
+  border-bottom: 0px;
+}
+.itemList md-item {
   display: block;
   position: relative;
   overflow: hidden;
   -webkit-backface-visibility: hidden;
   border-bottom: 1px solid #ccc;
+}
+.itemList md-item:hover {
+  background: #f8f8f8;
+  cursor: pointer;
+}
+md-bottom-sheet .fa {
+  margin-top: 15px;
 }
 .message .isNew {
   display: none;
@@ -2026,10 +2055,6 @@ md-bottom-sheet .fa {
   margin-right: -8px;
   text-align: right;
   line-height: .75em;
-}
-.message:hover {
-  background: #f8f8f8;
-  cursor: pointer;
 }
 #login md-content {
   padding: 10px 30px;
@@ -2085,11 +2110,10 @@ md-bottom-sheet .fa {
   display: block;
   position: absolute;
   height: 100%;
-  width: 4px;
+  width: 2px;
   background: black;
   top: 0px;
   left: 0px;
-  border-radius: 2px 0px 0px 2px;
 }
 #appHome #archived {
   backface-visibility: hidden;
@@ -2098,27 +2122,15 @@ md-bottom-sheet .fa {
 #directory .md-padding {
   padding-top: 0px;
 }
-#directory md-item-content {
-  border-bottom: 1px solid #ccc;
-}
-#directory md-item:last-child md-item-content {
-  border-bottom: 0px;
-}
-#directory md-item-content:hover {
-  background: #f8f8f8;
-  cursor: pointer;
-}
 #directory md-toolbar {
   min-height: 0px;
 }
 #directory md-input-group {
   margin-top: 0px;
 }
-#directory .face {
-  border-radius: 30px;
-  border: 1px solid #ddd;
-  width: 48px;
-  margin: 16px;
+#directory md-item-content:hover {
+  background: #f8f8f8;
+  cursor: pointer;
 }
 #profile md-toolbar {
   padding: 15px;
@@ -2151,16 +2163,6 @@ md-bottom-sheet .fa {
 }
 #profile md-toolbar .name {
   margin-left: 15px;
-}
-#profile md-toolbar .md-fab {
-  position: absolute;
-  bottom: -28px;
-  color: darkgray;
-  background: #E0E0E0;
-}
-#profile md-toolbar #back {
-  position: absolute;
-  left: 15px;
 }
 #profile md-toolbar #more-options {
   position: absolute;
@@ -2196,4 +2198,14 @@ md-bottom-sheet .fa {
 }
 #messaging md-toolbar {
   min-height: 0px;
+}
+#events #eventList md-toolbar {
+  height: auto;
+  min-height: 0px;
+}
+#eventCheckin md-toolbar {
+  padding-bottom: 25px;
+}
+#eventCheckin md-content {
+  padding-top: 25px;
 }
