@@ -1000,15 +1000,17 @@ div#cropped-image {
 
 
 /*Material Design Styles*/
-body{padding-top:74px; backface-visibility: hidden; -webkit-backface-visibility: hidden; height:auto; min-height:100%; background:#ececec;} 
+body{padding-top:74px; padding-bottom:40px; backface-visibility: hidden; -webkit-backface-visibility: hidden; height:auto; min-height:100%; background:#ececec;} 
 .container{max-width:750px;}
+md-backdrop.md-opaque.md-default-theme{z-index:1040; background:rgba(0, 0, 0, .5);}
+.md-dialog-container{z-index:1042;}
 .md-tile-content{overflow:hidden;}
 .md-dialog-container, md-backdrop.md-opaque.md-default-theme{position:fixed;}
 .aside li .md-button{text-align:left; text-transform:none; outline: none;}
 .md-sidenav-backdrop{z-index:1050;} md-sidenav{z-index:1051; position:fixed; top:0;}
 .nav .md-button{text-align:left;}
 md-divider{margin-bottom:20px;}
-md-bottom-sheet{position:fixed;}
+md-bottom-sheet{position:fixed; z-index:1041;}
 .collapse.in{display:block !important;}
 .btn-touch{padding:10px;}
 md-tabs.md-default-theme md-tab:focus{border:none;}
@@ -1085,6 +1087,10 @@ md-bottom-sheet{
 
 #profile{
     md-toolbar{padding:15px;
+        #social{background:rgba(0,0,0,.5);}
+        #social a{color:white;}
+        min-height:0px; max-height:1000px; height:auto; padding:0px;
+        #profile-top{padding:20px 0px 40px 20px;}
         h2{font-weight:bold;}
         h5{font-size:18px; line-height:24px;}
             .face{display:block; width:120px; height:120px; border-radius:80px;}
@@ -1093,8 +1099,15 @@ md-bottom-sheet{
         #back{position:absolute; left:15px;}
         #more-options{position:absolute; right:10px; bottom:10px; font-size:12px; font-weight:bold; color:darkgray; background:#E0E0E0;}
     }
-    md-content{padding-top:45px;}
-    #social{margin-top:30px;}
+     #tags{ width:100%; font-size:12px; line-height:24px; text-align:center; margin-top:20px;
+            span:not(:last-child):after{content:', ';}
+        }
+    p{line-height:1.2;}
+    md-content{padding:45px 30px 10px 30px;}
+    #info{margin-top:20px; display:block;
+    p{margin-bottom:4px;}
+    }
+    
 }
 
 #messaging{

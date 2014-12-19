@@ -1908,6 +1908,7 @@ div#cropped-image {
 /*Material Design Styles*/
 body {
   padding-top: 74px;
+  padding-bottom: 40px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   height: auto;
@@ -1916,6 +1917,13 @@ body {
 }
 .container {
   max-width: 750px;
+}
+md-backdrop.md-opaque.md-default-theme {
+  z-index: 1040;
+  background: rgba(0, 0, 0, 0.5);
+}
+.md-dialog-container {
+  z-index: 1042;
 }
 .md-tile-content {
   overflow: hidden;
@@ -1945,6 +1953,7 @@ md-divider {
 }
 md-bottom-sheet {
   position: fixed;
+  z-index: 1041;
 }
 .collapse.in {
   display: block !important;
@@ -2113,6 +2122,19 @@ md-bottom-sheet .fa {
 }
 #profile md-toolbar {
   padding: 15px;
+  min-height: 0px;
+  max-height: 1000px;
+  height: auto;
+  padding: 0px;
+}
+#profile md-toolbar #social {
+  background: rgba(0, 0, 0, 0.5);
+}
+#profile md-toolbar #social a {
+  color: white;
+}
+#profile md-toolbar #profile-top {
+  padding: 20px 0px 40px 20px;
 }
 #profile md-toolbar h2 {
   font-weight: bold;
@@ -2149,11 +2171,28 @@ md-bottom-sheet .fa {
   color: darkgray;
   background: #E0E0E0;
 }
-#profile md-content {
-  padding-top: 45px;
+#profile #tags {
+  width: 100%;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 20px;
 }
-#profile #social {
-  margin-top: 30px;
+#profile #tags span:not(:last-child):after {
+  content: ', ';
+}
+#profile p {
+  line-height: 1.2;
+}
+#profile md-content {
+  padding: 45px 30px 10px 30px;
+}
+#profile #info {
+  margin-top: 20px;
+  display: block;
+}
+#profile #info p {
+  margin-bottom: 4px;
 }
 #messaging md-toolbar {
   min-height: 0px;
