@@ -955,9 +955,6 @@ textarea.form-control {
   left: 8px;
 }
 /*Links Page*/
-#links h1 {
-  margin-bottom: 20px;
-}
 #links .card {
   margin-bottom: 20px;
 }
@@ -1248,26 +1245,6 @@ background-repeat: repeat-x;
   display: block;
   width: 100%;
 }
-.calendar-header {
-  padding-top: 2px;
-  margin-bottom: 5px;
-}
-.calendar-header strong {
-  font-weight: bold;
-}
-.calendar-navbar .btn {
-  background: none !important;
-  border: 2px solid #000;
-}
-.calendar-navbar .today {
-  position: relative;
-  top: -2px;
-  left: 2px;
-}
-.calendar-navbar .previous,
-.calendar-navbar .next {
-  border-radius: 36px;
-}
 /*Event Info Page*/
 #eventTitle {
   margin-bottom: 10px;
@@ -1282,49 +1259,6 @@ background-repeat: repeat-x;
 #eventInfo .card {
   padding: 20px 20px 20px 46px;
   position: relative;
-}
-#eventInfo #time {
-  margin-bottom: 10px;
-}
-#eventButtons {
-  margin-top: 0px;
-  padding: 20px !important;
-}
-#eventInfo #description,
-#eventInfo #time {
-  padding-left: 56px !important;
-}
-#eventInfo #description span {
-  display: inline-block;
-  font-style: italic;
-  margin-top: 5px;
-}
-#eventInfo #description {
-  margin-bottom: 10px;
-}
-#eventInfo #location {
-  position: relative;
-  padding: 0px !important;
-  margin-bottom: 10px;
-}
-#eventInfo #location:hover {
-  background: #EDEDED;
-}
-#eventInfo #location a {
-  display: block;
-  height: 100%;
-  width: 100%;
-  padding: 20px 20px 20px 46px;
-}
-#eventInfo .card .icon {
-  font-size: 24px;
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  margin-top: -12px;
-}
-#eventInfo #location a:hover {
-  text-decoration: none;
 }
 #eventInfo #going,
 #eventInfo #notGoing,
@@ -1917,6 +1851,9 @@ body {
 .container {
   max-width: 750px;
 }
+a:hover {
+  text-decoration: none;
+}
 md-backdrop.md-opaque.md-default-theme {
   z-index: 1040;
   background: rgba(0, 0, 0, 0.5);
@@ -1969,6 +1906,9 @@ md-bottom-sheet {
 md-bottom-sheet md-item {
   height: auto;
 }
+md-bottom-sheet .fa {
+  margin-top: 15px;
+}
 .md-whiteframe-z1,
 md-card {
   background: white;
@@ -1995,12 +1935,26 @@ md-toolbar md-tabs {
 md-toolbar .md-fab {
   position: absolute;
   bottom: -28px;
-  color: darkgray !important;
-  background: #E0E0E0 !important;
 }
 md-toolbar #back {
   position: absolute;
   left: 15px;
+  color: white;
+  background: #ff8a80;
+}
+md-toolbar .more-options {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  color: white !important;
+  background: #82b1ff !important;
+  font-size: 12px;
+}
+md-toolbar.md-tall {
+  min-height: 150px;
+  max-height: 1000px;
+  height: auto;
+  padding: 0px;
 }
 .memberList .face {
   border-radius: 30px;
@@ -2019,14 +1973,13 @@ md-toolbar #back {
   position: relative;
   overflow: hidden;
   -webkit-backface-visibility: hidden;
-  border-bottom: 1px solid #ccc;
 }
 .itemList md-item:hover {
   background: #f8f8f8;
   cursor: pointer;
 }
-md-bottom-sheet .fa {
-  margin-top: 15px;
+.itemList md-item:not(:last-child) {
+  border-bottom: 1px solid #ccc;
 }
 .message .isNew {
   display: none;
@@ -2131,13 +2084,6 @@ md-bottom-sheet .fa {
   background: #f8f8f8;
   cursor: pointer;
 }
-#profile md-toolbar {
-  padding: 15px;
-  min-height: 0px;
-  max-height: 1000px;
-  height: auto;
-  padding: 0px;
-}
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -2163,15 +2109,6 @@ md-bottom-sheet .fa {
 #profile md-toolbar .name {
   margin-left: 15px;
 }
-#profile md-toolbar #more-options {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  font-size: 12px;
-  font-weight: bold;
-  color: darkgray;
-  background: #E0E0E0;
-}
 #profile #tags {
   width: 100%;
   font-size: 12px;
@@ -2186,7 +2123,7 @@ md-bottom-sheet .fa {
   line-height: 1.2;
 }
 #profile md-content {
-  padding: 45px 30px 10px 30px;
+  padding: 45px 30px 30px 30px;
 }
 #profile #info {
   margin-top: 20px;
@@ -2198,13 +2135,79 @@ md-bottom-sheet .fa {
 #messaging md-toolbar {
   min-height: 0px;
 }
+#events #calendar .calendar-header {
+  padding-top: 2px;
+  margin-bottom: 10px;
+}
+#events #calendar md-content {
+  padding-bottom: 0px;
+}
+#events #calendar #monthView md-toolbar {
+  min-height: 48px;
+}
+#events #calendar #monthView md-toolbar .md-toolbar-tools {
+  height: 48px;
+  min-height: 0px;
+}
+#events #calendar #monthView md-toolbar .md-toolbar-tools h1 {
+  width: 100%;
+  text-align: center;
+}
 #events #eventList md-toolbar {
   height: auto;
   min-height: 0px;
+}
+#eventInfo md-toolbar #date {
+  text-align: center;
+  font-size: 28px;
+}
+#eventInfo md-content {
+  padding: 45px 30px 30px 30px;
 }
 #eventCheckin md-toolbar {
   padding-bottom: 25px;
 }
 #eventCheckin md-content {
   padding-top: 25px;
+}
+#links .link-group md-toolbar {
+  min-height: 0px;
+  height: auto;
+  background: #E0E0E0 !important;
+  color: #616161;
+}
+#links .link-group md-toolbar .linkButtons {
+  margin-right: -8px;
+}
+#links .link-group md-toolbar .md-button {
+  color: #616161;
+}
+#links .link-group .md-toolbar-tools {
+  min-height: 0px;
+  height: 48px;
+}
+#links .link-group md-item {
+  width: 100%;
+  display: block;
+  min-height: 42px;
+  position: relative;
+  padding: 10px 0px;
+  cursor: auto;
+  background: transparent;
+}
+#links .link-group md-item a {
+  display: block;
+  padding: 10px 8px;
+  margin-right: 80px;
+}
+#links .link-group md-item .linkButtons {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  height: 100%;
+  font-size: 14px;
+}
+#links .link-group md-item .linkButtons .md-button:first-child {
+  margin-right: 6px;
 }

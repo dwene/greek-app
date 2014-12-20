@@ -17,12 +17,12 @@
                 <md-item ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search: 0 | limitTo:maxLength track by member.key">
                     <md-item-content>
                         <div class="md-tile-left">
-                            <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-raised btn-touch" ng-click="checkIn(member, true, false)">
-                                <i class="fa fa-sign-in"></i>
+                            <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" ng-click="checkIn(member, true, false)">
+                                <i class="fa fa-sign-in fa-lg"></i>
                                 <update-status class="updating" ng-model="member.in_updating" fn-call="checkIn(member, true, false)"></update-status>
                             </md-button>
-                            <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-raised btn-touch" ng-click="checkOut(member, true, false)">
-                                <i class="fa fa-sign-out"></i>
+                            <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, true, false)">
+                                <i class="fa fa-sign-out fa-lg"></i>
                                 <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status>
                             </md-button>
                             <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">

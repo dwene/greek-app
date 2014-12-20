@@ -1,4 +1,4 @@
-    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, Events, Directory){
+    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, Events, $mdBottomSheet, Directory){
         routeChange();
         
         $scope.going = false;
@@ -8,6 +8,28 @@
         $scope.goToReport = function(){
             window.location.assign("#/app/events/" + $stateParams.tag + "/report");
         }
+        
+        
+            $scope.showEventoptions = function(event){
+    
+                $mdBottomSheet.show({
+                  templateUrl: 'views/templates/bottomGrid.html',
+                  controller: eventOptionsCtrl,
+                  targetEvent: event
+                });
+            }
+
+            function eventOptionsCtrl($scope, $mdBottomSheet) {
+                $scope.items = [
+                    { name: 'CHECKINS', icon: 'fa-sign-in'},
+                    { name: 'REPORT', icon: 'fa-bar-chart'},
+                    { name: 'EDIT', icon: 'fa-edit' },
+                    { name: 'SAVE', icon: 'fa-floppy-o' }
+                ];
+            };
+        
+        
+        
         $scope.saveEvent = function(){
               /*BEGIN:VCALENDAR
                 VERSION:2.0
@@ -182,6 +204,16 @@
                     });
         }
         $scope.formatDate = function(date){
-            return moment(date).format('dddd - MMMM Do [at] h:mma');
+            return moment(date).format('h:mma dddd, MMMM Do');
+        }
+        $scope.eventDate = function(start_date, end_date){
+            var dayofstart = moment(start_date).format('MMM Do');
+            var dayofend = moment(end_date).format('MMM Do');
+            if( dayofstart == dayofend ){
+                return dayofstart;
+            }
+            else{
+                return dayofstart+' \u2014 '+dayofend
+            }
         }
 	});
