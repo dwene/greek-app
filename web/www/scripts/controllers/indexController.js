@@ -1,6 +1,8 @@
    
-console.log('hi i am the index controller');
 App.controller('indexController', function($scope, $http, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
+        
+        $scope.item = $rootScope.me;
+    
         $scope.homeButton = function(){
             if ($rootScope.checkAlumni()){
                 window.location.assign('#/app/directory/members');

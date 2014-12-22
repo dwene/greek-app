@@ -1899,6 +1899,12 @@ md-tabs.md-default-theme md-tab:focus {
 md-input-group input {
   width: 100%;
 }
+.face {
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  width: 48px;
+  margin: 16px;
+}
 md-bottom-sheet {
   position: fixed;
   z-index: 1041;
@@ -1929,6 +1935,13 @@ a:focus {
 a.navbar-brand:focus {
   outline: none;
 }
+#menu md-toolbar.md-tall {
+  min-height: 0px;
+}
+#menu .face {
+  position: relative;
+  top: 10px;
+}
 md-toolbar md-tabs {
   width: 300px;
 }
@@ -1955,12 +1968,6 @@ md-toolbar.md-tall {
   max-height: 1000px;
   height: auto;
   padding: 0px;
-}
-.memberList .face {
-  border-radius: 30px;
-  border: 1px solid #ddd;
-  width: 48px;
-  margin: 16px;
 }
 .memberList md-item-content {
   border-bottom: 1px solid #ccc;
@@ -2210,4 +2217,17 @@ md-toolbar.md-tall {
 }
 #links .link-group md-item .linkButtons .md-button:first-child {
   margin-right: 6px;
+}
+#surveys md-content {
+  padding-top: 0px;
+}
+#surveyInfo md-content {
+  padding: 45px 30px 30px 30px;
+}
+#surveyInfo md-content md-toolbar {
+  margin-top: 20px;
+  min-height: 0px;
+  height: auto;
+  background: #E0E0E0 !important;
+  color: #616161;
 }

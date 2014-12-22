@@ -1,4 +1,71 @@
-<!-- <div id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div> -->
+
+<div id="surveyInfo" class="container">
+    
+    <div class="md-whiteframe-z1">
+        <md-toolbar class="md-tall">
+            <div class="md-toolbar-tools">
+                <i class="fa fa-th-list"></i>
+                <h1>{{poll.name}}</h1>
+            </div>
+            <div class="text-center" ng-show="!poll.open">This survey is closed.</div>
+            <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
+                <i class="fa fa-arrow-left"></i>
+            </md-button>
+            <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showSurveyoptions($event)" ng-show="$root.checkPermissions('leadership')">options</md-button>
+        </md-toolbar>
+        
+        <md-content class="md-padding">
+            
+            <p>{{poll.description}}</p>
+            
+             <div id="responded" ng-if="poll.response_status || !poll.open">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h1>Your Response</h1>
+                    </div>
+                </md-toolbar>
+                <md-list>
+                    <md-item ng-repeat="question in poll.questions | orderBy: 'index'">
+                        <md-item-content>
+                            <div class="md-tile-content">
+                                <h3 class="md-primary title">
+                                    {{question.worded_question}}
+                                </h3>
+                                <p ng-repeat="a in question.response.answer" ng-show="question.response.answer.length"><span class="answer">{{a}}</span></p>
+                                <p ng-hide="question.response.answer.length">No Response</p>
+                            </div>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+            </div>
+            
+            <div id="response" ng-if="!(poll.response_status || !poll.open)" class="card">
+              <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h1>Your Response</h1>
+                    </div>
+                </md-toolbar>
+               <form name="response_form"  ng-submit="submitResponse()">
+                <div class="question" ng-repeat="question in poll.questions | orderBy: 'index'">
+                    <h3>{{question.worded_question}}</h3>
+                    <div class="text_question" ng-show="question.type == 'text'"> 
+                        <input type="text" name="response_form.input" ng-model="question.new_response" class="form-control col-sm-6" ng-required="question.type == 'text'">
+                    </div>
+                    <div class="multiple_choice_question" ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
+                        <input type="radio" name="response_form.input" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
+                    </div>
+                </div>
+                <input type="submit" ng-disabled="!response_form.$valid" class="btn btn-default">
+              </form>  
+            </div>
+            
+        </md-content>
+        
+    </div>
+    
+</div>
+
+<!--
 <section  ng-show="notFound">Sorry this webpage could not be found. :(</section>
 
 <section id="pollInfo" class="container" ng-hide="notFound" load-directive ng-model="loading_finished">
@@ -54,47 +121,5 @@
             
         </div>
 
-
-<!--
-<div class="jumbotron">
-			
-<a ng-href="#/app/polls" class="btn btn-default topLeft">Back <i class="fa fa-reply"></i></a>
-<button ng-click="closePoll(true)" ng-show="poll.open && $root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-pause"></i> Close Poll</button>
-<button ng-click="closePoll(false)" ng-show="poll.open === false && $root.checkPermissions('leadership')" class="btn btn-default topRight"><i class="fa fa-play"></i> Open Poll</button>
-<button ng-click="deletePoll()" ng-show="$root.checkPermissions('council')" class="btn btn-danger bottomRight"><i class="fa fa-trash"></i> Delete Poll</button>
-    
-
-<button ng-click="goToResults()" ng-show="((poll.viewers != 'everyone' && $rootScope.checkPermissions(poll.viewers))) || poll.viewers === undefined || poll.viewers == 'everyone'" class="btn btn-default bottomLeft">Results <i class="fa fa-edit"></i></button>
-
-            <div class="alert alert-warning text-center" role="alert" ng-show="poll.open === false">This poll is closed.</div>
-			<h1 class="text-center">{{poll.name}}</h1>
-			<p class="text-center">#{{poll.description}}</p>
-</div>
-<h2 class="page-header">Your Response</h2>
-
-<div class="container" ng-if="poll.response_status || !poll.open">
-    <div ng-repeat = "question in poll.questions | orderBy: 'index'">
-        <h3 class="question">{{question.worded_question}}</h3>
-        <span ng-repeat="a in question.response.answer" ng-show="question.response.answer.length"><span class="answer">{{a}}</span></span>
-        <span ng-hide="question.response.answer.length">No response</span>
-    </div>
-</div>
-
-
-<div ng-if="!(poll.response_status || !poll.open)">
-   <form name="response_form"  ng-submit="submitResponse()">
-    <div ng-repeat = "question in poll.questions | orderBy: 'index'">
-        <p>{{question.worded_question}}</p>
-        <div ng-show="question.type == 'text'"> 
-            <input type="text" name="response_form.input" ng-model="question.new_response" class="form-control col-sm-6" ng-required="question.type == 'text'">
-        </div>
-        <div ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
-            <input type="radio" name="response_form.input" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
-        </div>
-       <hr> 
-    </div>
-    <input type="submit" ng-disabled="!response_form.$valid" class="btn btn-default">
-  </form>  
-</div>
--->
 </section>
+-->

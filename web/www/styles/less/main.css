@@ -1900,6 +1900,12 @@ md-tabs.md-default-theme md-tab:focus {
 md-input-group input {
   width: 100%;
 }
+.face {
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  width: 48px;
+  margin: 16px;
+}
 md-bottom-sheet {
   position: fixed;
   z-index: 1041;
@@ -1930,6 +1936,13 @@ a:focus {
 a.navbar-brand:focus {
   outline: none;
 }
+#menu md-toolbar.md-tall {
+  min-height: 0px;
+}
+#menu .face {
+  position: relative;
+  top: 10px;
+}
 md-toolbar md-tabs {
   width: 300px;
 }
@@ -1956,12 +1969,6 @@ md-toolbar.md-tall {
   max-height: 1000px;
   height: auto;
   padding: 0px;
-}
-.memberList .face {
-  border-radius: 30px;
-  border: 1px solid #ddd;
-  width: 48px;
-  margin: 16px;
 }
 .memberList md-item-content {
   border-bottom: 1px solid #ccc;
@@ -2171,17 +2178,57 @@ md-toolbar.md-tall {
 #eventCheckin md-content {
   padding-top: 25px;
 }
-#links .link-group md-item-content > div {
-  width: 100%;
-}
 #links .link-group md-toolbar {
-  height: auto;
   min-height: 0px;
+  height: auto;
+  background: #E0E0E0 !important;
+  color: #616161;
+}
+#links .link-group md-toolbar .linkButtons {
+  margin-right: -8px;
+}
+#links .link-group md-toolbar .md-button {
+  color: #616161;
 }
 #links .link-group .md-toolbar-tools {
-  height: auto;
   min-height: 0px;
+  height: 48px;
 }
-#links .link-group .md-toolbar-tools .linkButtons {
-  margin: 0px -8px 0px 0px;
+#links .link-group md-item {
+  width: 100%;
+  display: block;
+  min-height: 42px;
+  position: relative;
+  padding: 10px 0px;
+  cursor: auto;
+  background: transparent;
+}
+#links .link-group md-item a {
+  display: block;
+  padding: 10px 8px;
+  margin-right: 80px;
+}
+#links .link-group md-item .linkButtons {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  height: 100%;
+  font-size: 14px;
+}
+#links .link-group md-item .linkButtons .md-button:first-child {
+  margin-right: 6px;
+}
+#surveys md-content {
+  padding-top: 0px;
+}
+#surveyInfo md-content {
+  padding: 45px 30px 30px 30px;
+}
+#surveyInfo md-content md-toolbar {
+  margin-top: 20px;
+  min-height: 0px;
+  height: auto;
+  background: #E0E0E0 !important;
+  color: #616161;
 }
