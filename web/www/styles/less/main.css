@@ -1919,6 +1919,7 @@ md-bottom-sheet .fa {
 .md-whiteframe-z1,
 md-card {
   background: white;
+  margin-bottom: 20px;
 }
 a:focus {
   outline: 0px;
@@ -2231,4 +2232,18 @@ md-toolbar.md-tall {
   height: auto;
   background: #E0E0E0 !important;
   color: #616161;
+}
+#accountInfo .md-subheader {
+  padding-bottom: 0px;
+}
+#accountInfo .face {
+  width: 120px;
+  border-radius: 60px;
+  display: block;
+  margin: 0 auto 20px auto;
+}
+#accountInfo #changePic {
+  margin: auto;
+  display: block;
+  width: 150px;
 }
