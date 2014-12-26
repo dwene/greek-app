@@ -1,9 +1,12 @@
 //login page
 	App.controller('loginController', function($scope, RESTService, $rootScope, LoadScreen, localStorageService, $location, AuthService, Session, AUTH_EVENTS) {
         routeChange();
-        $.removeCookie(USER_NAME);
-        $.removeCookie(TOKEN);
-        $.removeCookie('FORM_INFO_EMPTY');
+        if (AuthService.isAuthenticated() || !AuthService.loginAttempted()){
+            $location.url('app');
+        }
+        // $.removeCookie(USER_NAME);
+        // $.removeCookie(TOKEN);
+        // $.removeCookie('FORM_INFO_EMPTY');
         $rootScope.directory = {};
         LoadScreen.stop();
         $scope.login = function(user_name, password){

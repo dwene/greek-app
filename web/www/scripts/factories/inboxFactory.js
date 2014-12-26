@@ -1,5 +1,5 @@
 App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
-     var inbox = {};
+    var inbox = {};
     var load_data = localStorageService.get('notifications');
     if (load_data){
         inbox.notifications = load_data.notifications;

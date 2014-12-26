@@ -1,23 +1,12 @@
-App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, AUTH_EVENTS, OrganizationService, Inbox, Session) {
-        // $scope.homeButton = function(){
-        //     if (Session.perms == perms){
-        //         window.location.assign('#/app/directory/members');
-        //     }
-        //     else{
-        //         window.location.assign('#/app/home');
-        //     }
-        // }
-        $scope.item = OrganizationService.me;
+App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, AUTH_EVENTS, Organization, Inbox, Session) {
+        $scope.item = Organization.me;
 
         $scope.$on(AUTH_EVENTS.loginSuccess, function(){
             $scope.perms = Session.perms;
         });
-        $scope.$on('organization:updated', function(){
-            $scope.me = OrganizationService.me;
-        });
         $scope.$on('notifications:updated', function(){
             $scope.notificationLength = Inbox.getLengths();
-        })
+        });
         $scope.sendHelpMessage = function(isValid, content){
             console.log('I am getting submitted');
             if(isValid){
@@ -48,8 +37,4 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         $scope.logout = function(){
             $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         }
-        $scope.checkPerms = function(perms){
-
-        }
-
 	});

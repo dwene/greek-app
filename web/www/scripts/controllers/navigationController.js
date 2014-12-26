@@ -1,7 +1,9 @@
-App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session){
+App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization){
         routeChange();
         this.session = Session;
+        this.me = Organization.me;
         this.subscribed = true;
+        this.defaultProfilePicture = '../images/defaultprofile.png';
         this.homeButton = function(){
             if (this.checkPermissions(MEMBER)){
                 $location.url('app');

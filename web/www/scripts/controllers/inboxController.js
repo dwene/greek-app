@@ -5,7 +5,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
 	$scope.openMessagedialog = function(notify){
         Inbox.selectMessage(notify);
         $mdDialog.show({
-                controller: 'messageController',
+                controller: 'messageDialogController',
                 templateUrl: '../views/templates/messageDialog.html'
         });
         //$scope.selectedNotification = notify;
@@ -23,7 +23,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         //     $scope.notification_lengths.read ++;
         //     $scope.selectedNotification.new = false;
         // }
-        var key = $scope.selectedNotification.key;
+        //var key = $scope.selectedNotification.key;
         Inbox.read(notify);
     }
     $scope.openNotificationModal = function(notify){

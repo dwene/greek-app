@@ -1,6 +1,5 @@
-    App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet Load, Events, Directory){
+App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, Load, Events, Directory){
         routeChange();
-        
         $scope.going = false;
         $scope.not_going = false;
         $scope.loading = true;
