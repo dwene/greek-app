@@ -1,3 +1,45 @@
+<div id="links" class="container" load-directive ng-model="loading_finished">
+    <div class="md-whiteframe-z1">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Links</h1>
+                <div flex></div>
+                <md-button ng-click="openNewLinkModal()" ng-show="$root.checkPermissions('leadership')">Create New</md-button>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <md-list>
+                <md-item class="link-group" ng-repeat="group in groups track by group">
+                    <md-content class="md-padding">
+                        <md-toolbar>
+                            <div class="md-toolbar-tools">
+                                <h1>{{group}}</h1>
+                                <div flex></div>
+                                <div class="linkButtons">
+                                    <md-button class="btn-touch" ng-click="openRenameGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-edit fa-fw"></i></md-button>
+                                    <md-button class="btn-touch" ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                </div>
+                            </div>
+                        </md-toolbar>
+                        <md-list class="itemList">
+                            <md-item ng-href="http://{{link.link}}" ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
+                                    <a target="_blank" ng-href="http://{{link.link}}">{{link.title}}</a>
+                                    <div class="linkButtons" layout="row" layout-align="center center" ng-show="$root.checkPermissions(leadership)">
+                                        <md-button class="btn-touch" ng-click="openEditLinkModal(link)"><i class="fa fa-edit fa-fw"></i></md-button>
+                                        <md-button class="btn-touch" ng-click="openDeleteLinkModal(link)"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                    </div>
+                            </md-item>
+                        </md-list>
+                    </md-content>
+                </md-item>
+            </md-list>
+        </md-content>
+    </div>
+</div>
+
+
+
+<!--
 <div id="links">
 
 <div class="container" load-directive ng-model="loading_finished">
@@ -28,6 +70,7 @@
 	</ul>
         
 </div>
+-->
 
 
 <div class="modal fade" id="createGroupModal">

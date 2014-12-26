@@ -1,4 +1,4 @@
-    App.controller('pollInfoController', function($scope, RESTService, Load, $rootScope, $stateParams, Directory) {
+    App.controller('pollInfoController', function($scope, RESTService, Load, $rootScope, $stateParams, $mdBottomSheet, Directory) {
         routeChange();
         //$scope.polls = Polls.get();
         $scope.directory = Directory.get();
@@ -24,6 +24,25 @@
             }
             return undefined;
         }
+        
+        
+        $scope.showSurveyoptions = function(event){
+    
+                $mdBottomSheet.show({
+                  templateUrl: 'views/templates/bottomGrid.html',
+                  controller: surveyOptionsCtrl,
+                  targetEvent: event
+                });
+            }
+
+            function surveyOptionsCtrl($scope, $mdBottomSheet) {
+                $scope.items = [
+                    { name: 'REPORT', icon: 'fa-bar-chart'},
+                    { name: 'EDIT', icon: 'fa-edit' },
+                    { name: 'OPEN', icon: 'fa-play' },
+                    { name: 'CLOSE', icon: 'fa-pause'}
+                ];
+            };
 
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);

@@ -1,4 +1,5 @@
 <div>
+   <div id="monthView">
     <table class="table table-bordered monthview-datetable monthview-datetable">
         <thead>
         <tr>
@@ -23,6 +24,33 @@
         </tbody>
     </table>
     <div ng-if="showEventDetail" class="event-detail-container">
+        <md-toolbar ng-if="selectedDate.events">
+            <div class="md-toolbar-tools">
+                <h1>
+                    {{selectedDate.date|date: 'MMM d'}}
+                </h1>
+            </div>
+        </md-toolbar>
+        <md-list class="itemList">
+           <md-item ng-repeat="event in selectedDate.events" ng-if="selectedDate.events"  ng-click="eventSelected(event)">
+               <md-item-content>
+                    <div class="md-tile-content">
+                        <h3 class="md-primary title">
+                            {{event.title}}
+                        </h3>
+                        <p class="notificationText">{{event.startTime|date: 'hh:mma'}}
+                        -
+                        {{event.endTime|date: 'hh:mma'}}</p>
+                    </div> 
+               </md-item-content>
+           </md-item>
+        </md-list>
+        <md-item ng-if="!selectedDate.events">
+                <h3 class="md-primary">
+                    No Events on {{selectedDate.date|date: 'MMM d'}}
+                </h3>
+        </md-item>
+<!--
         <div class="scrollable" style="height: 200px">
             <table class="table table-bordered table-striped table-fixed">
                 <tr ng-repeat="event in selectedDate.events" ng-if="selectedDate.events"  ng-click="eventSelected(event)" class="calendar-point">
@@ -36,5 +64,7 @@
                 <tr ng-if="!selectedDate.events"><td class="no-event-label">No Events</td></tr>
             </table>
         </div>
+-->
+    </div>
     </div>
 </div>

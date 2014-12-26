@@ -1,4 +1,3 @@
-
 App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, AUTH_EVENTS, OrganizationService, Inbox, Session) {
         // $scope.homeButton = function(){
         //     if (Session.perms == perms){
@@ -8,6 +7,8 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         //         window.location.assign('#/app/home');
         //     }
         // }
+        $scope.item = OrganizationService.me;
+
         $scope.$on(AUTH_EVENTS.loginSuccess, function(){
             $scope.perms = Session.perms;
         });

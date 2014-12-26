@@ -1,16 +1,18 @@
 <div ng-switch="calendarMode">
     <div class="calendar-navbar">
         <div class="nav-left">
-            <button type="button" class="btn btn-default btn-sm previous" ng-click="move(-1)"><i
-                    class="fa fa-arrow-left"></i></button>
+            <md-button type="button" class="previous btn-touch" ng-click="move(-1)">
+                   <i class="fa fa-arrow-left"></i>
+            </md-button>
         </div>
         <div class="calendar-header">
-        <strong>{{title}} </strong>
-        <button class="btn btn-sm btn-default today" ng-click="today()">Today</button>
+        {{title}}
+        <md-button class="today" ng-click="today()">Today</md-button>
         </div>
         <div class="nav-right">
-            <button type="button" class="btn btn-default btn-sm next" ng-click="move(1)"><i
-                    class="fa fa-arrow-right "></i></button>
+            <md-button type="button" class="next btn-touch" ng-click="move(1)">
+                   <i class="fa fa-arrow-right "></i>
+            </md-button>
         </div>
     </div>
     <dayview ng-switch-when="day"></dayview>
