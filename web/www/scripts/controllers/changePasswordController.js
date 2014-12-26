@@ -5,9 +5,9 @@ App.controller('changePasswordController', function($scope, $http, Load, $rootSc
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
             var to_send = {password:$scope.item.password, old_password: $scope.item.old_password};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', to_send)
             .success(function(data) {
-                if(!checkResponseErrors(data)){
+                if(!RESTService.hasErrors(data)){
                     $scope.passwordChanged = true;
                     $scope.changeFailed = false;
                     $rootScope.logout();

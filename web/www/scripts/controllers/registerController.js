@@ -1,4 +1,4 @@
-    App.controller('registerController', function($scope, $http, $rootScope, registerOrganizationService, LoadScreen){
+    App.controller('registerController', function($scope, $rootScope, registerOrganizationService, LoadScreen){
         routeChange();
         $rootScope.logout();
         $scope.data = {};

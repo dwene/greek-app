@@ -1,29 +1,20 @@
-App.factory('Organization', function($http, $rootScope, localStorageService, $q, $timeout){
+App.factory('Organization', function(RESTService, localStorageService, $q, $timeout, OrganizationService){
     var organization = localStorageService.get('organization_data');
-    $rootScope.subscribed = true;
     if (organization){
-        $rootScope.organization = organization;
-        $rootScope.setColor(organization.color);
-        $rootScope.me = $rootScope.organization.me;
-        $rootScope.link_groups = $rootScope.organization.link_groups;
-        $rootScope.perms = $rootScope.me.perms;
-    }  
-    var cacheTimestamp = undefined;
+        OrganizationService.create(organization);
+    }
+    var cacheTimestamp;
     return {
         get: function () {
+            console.log('I am starting to get the organization stuff');
             if (checkCacheRefresh(cacheTimestamp)){
                 cacheTimestamp = moment();
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', '')
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         organization = JSON.parse(data.data);
-                        $rootScope.organization = organization;
-                        $rootScope.setColor(organization.color);
-                        $rootScope.me = $rootScope.organization.me;
-                        $rootScope.link_groups = $rootScope.organization.link_groups;
-                        $rootScope.perms = $rootScope.me.perms;
-                        localStorageService.set('organization_data', $rootScope.organization);
-                        $rootScope.$broadcast('organization:updated');
+                        localStorageService.set('organization_data', organization);
+                        OrganizationService.create(organization);
                     }
                     else{
                         console.log('Err', data);

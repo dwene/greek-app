@@ -1,13 +1,13 @@
-App.factory('Links', function($http, $rootScope, localStorageService, $q, $timeout){
+App.factory('Links', function(RESTService, $rootScope, localStorageService, $q, $timeout){
     var links = localStorageService.get('links');
     var cacheTimestamp = undefined;
     return {
         get: function () {
             if (checkCacheRefresh(cacheTimestamp)){
                     cacheTimestamp = moment();
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
+                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', '')
                         .success(function(data){
-                        if (!checkResponseErrors(data)){
+                        if (!RESTService.hasErrors(data)){
                             links = JSON.parse(data.data);
                             localStorageService.set('links', links);
                             $rootScope.$broadcast('links:updated');

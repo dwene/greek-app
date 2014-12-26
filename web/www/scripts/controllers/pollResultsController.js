@@ -1,4 +1,4 @@
-App.controller('pollResultsController', function($scope, $http, Load, $rootScope, $stateParams, LoadScreen, Directory) {
+App.controller('pollResultsController', function($scope, RESTService, Load, $rootScope, $stateParams, LoadScreen, Directory) {
         routeChange();
         $scope.openAllQuestions = function(){
             $('.pollSummary.collapse').collapse('show');
@@ -54,9 +54,9 @@ App.controller('pollResultsController', function($scope, $http, Load, $rootScope
             $('html').trigger('resize');
             $rootScope.requirePermissions(MEMBER);
             var to_send = {key: $stateParams.key};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', packageForSending(to_send), {cache:true})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', (to_send), {cache:true})
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $scope.poll = JSON.parse(data.data);
                         if (($scope.poll.viewers != 'everyone' && !$rootScope.checkPermissions($scope.poll.viewers))){
                             window.location.replace('#/app/polls/'+$stateParams.key);

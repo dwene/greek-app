@@ -1,4 +1,4 @@
-    App.controller('registerinfoController', function($scope, $http, registerOrganizationService, $rootScope) {
+    App.controller('registerinfoController', function($scope, RESTService, registerOrganizationService, $rootScope) {
         routeChange();
         if (registerOrganizationService.get() === undefined){
             window.location.assign('#/register');
@@ -10,9 +10,9 @@
         //ng-submit on form submit button click
         
         $scope.checkUserName = function(user){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', user)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         $scope.available = true;
                         $scope.unavailable = false;
@@ -34,9 +34,9 @@
                 //format data for the api
                 data_tosend = {organization: organization, user: item}
                 //send the organization and user date from registration pages
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_organization', packageForSending(data_tosend))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_organization', data_tosend)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         var responseData = JSON.parse(data.data);
                         $.cookie(TOKEN,  responseData.token, {expires: new Date(responseData.expires)});

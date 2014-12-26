@@ -1,4 +1,4 @@
-    App.controller('newEventController', function($scope, $http, $rootScope, Load, $timeout, localStorageService, Tags) {
+    App.controller('newEventController', function($scope, RESTService, $rootScope, Load, $timeout, localStorageService, Tags) {
         routeChange();
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
@@ -23,9 +23,9 @@
                     var to_send = JSON.parse(JSON.stringify(event));
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
                     to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', packageForSending(to_send))
+                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', to_send)
                     .success(function(data){
-                        if (!checkResponseErrors(data)){
+                        if (!RESTService.hasErrors(data)){
                             $scope.working = 'done';
                             setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
                         }
@@ -57,9 +57,9 @@
                     $scope.unavailable = false;
                     $scope.available = false;
                     $scope.isEmpty = false;
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', packageForSending(tag))
+                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', tag)
                     .success(function(data){
-                        if (!checkResponseErrors(data)){
+                        if (!RESTService.hasErrors(data)){
                             $scope.checkWorking = 'done';
                             $scope.available = true;
                             $scope.unavailable = false;

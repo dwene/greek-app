@@ -1,4 +1,4 @@
-    App.controller('eventCheckInReportController', function($scope, $http, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter, Directory, Events) {
+    App.controller('eventCheckInReportController', function($scope, RESTService, Load, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter, Directory, Events) {
         routeChange();
         $scope.maxLength = 0;
         $scope.maxNoShowsLength = 0;
@@ -52,9 +52,9 @@
             if ($scope.directory == null || $scope.events == null){
                 return;
             }
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     $scope.users = JSON.parse(data.data);
                     $scope.event = undefined;
                     for (var i = 0; i < $scope.events.length; i++){

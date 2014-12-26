@@ -1,4 +1,4 @@
-    App.controller('eventCheckInController', function($scope, $http, Load, $stateParams, $rootScope, $timeout) {
+    App.controller('eventCheckInController', function($scope, RESTService, Load, $stateParams, $rootScope, $timeout) {
         routeChange();
         function setTimeout(scope, fn, delay) {
             var promise = $timeout(fn, delay);
@@ -9,9 +9,9 @@
         }
         update();
         function update() {
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     console.log('I am updating the user check in stuff!');
                     var users = JSON.parse(data.data);
                     var counter = 0;
@@ -55,9 +55,9 @@
             });
         });
         function getCheckInData(){
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     $scope.users = JSON.parse(data.data);  
                     $scope.loading = false;
                     console.log('Im ending get check in data');
@@ -95,9 +95,9 @@
                 member.attendance_data.time_in = momentUTCTime();
             }
             member.in_updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', to_send)
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     member.in_updating = "done";
                     member.timestamp_moment = moment();
                 }
@@ -131,9 +131,9 @@
                 member.attendance_data.time_out = momentUTCTime();
             }
             member.out_updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', to_send)
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     member.out_updating = 'done';
                     member.timestamp_moment = moment();
                 }

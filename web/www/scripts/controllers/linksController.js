@@ -1,4 +1,4 @@
-App.controller('LinksController', function($scope, $rootScope, $http, Load, LoadScreen, localStorageService, Links){
+App.controller('LinksController', function($scope, $rootScope, RESTService, Load, localStorageService, Links){
         routeChange();
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);
@@ -35,9 +35,9 @@ App.controller('LinksController', function($scope, $rootScope, $http, Load, Load
             }
             $scope.createGroup = function(group){
                 var to_send = {group:group};
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         if ($scope.groups.indexOf(group) == -1){
                             $scope.groups.push(group);
                             $scope.checkCreateGroup = "done";
@@ -56,9 +56,9 @@ App.controller('LinksController', function($scope, $rootScope, $http, Load, Load
             $scope.deleteGroup = function(group){
                 var to_send = {group:group};
                 $scope.checkDeleteGroup = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $('#deleteGroupModal').modal('hide');
                         $scope.checkDeleteGroup = "done";
                         for (var i = 0; i < $scope.links.length; i++){
@@ -82,9 +82,9 @@ App.controller('LinksController', function($scope, $rootScope, $http, Load, Load
             $scope.createLink = function(title, link, group){
                 var to_send = {group:group, title:title, link:link};
                 $scope.checkCreateLink = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $('#newLinkModal').modal('hide');
                         $scope.checkCreateLink = "done";
                         if ($scope.groups.indexOf(group) ==-1){
@@ -103,9 +103,9 @@ App.controller('LinksController', function($scope, $rootScope, $http, Load, Load
             $scope.deleteLink = function(link){
                 var to_send = {key:link.key};
                 $scope.checkDeleteLink = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $('#deleteLinkModal').modal('hide');
                         $scope.checkDeleteLink = "done";
                         for(var i = 0; i<$rootScope.links.length; i++){
@@ -128,9 +128,9 @@ App.controller('LinksController', function($scope, $rootScope, $http, Load, Load
             $scope.editLink = function(title, link, group, current_link){
                 var to_send = {key:current_link.key, link:link, title:title, group:group};
                 $scope.checkEditLink = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $('#editLinkModal').modal('hide');
                         $scope.checkEditLink = "done";
                         current_link.title = title;
@@ -151,9 +151,9 @@ App.controller('LinksController', function($scope, $rootScope, $http, Load, Load
             $scope.renameGroup = function(old_group, group){
                 var to_send = {old_group:old_group, group:group};
                 $scope.checkRenameGroup = "pending";
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $scope.checkRenameGroup = "done";
                         $('#renameGroupModal').modal('hide');
                        for (var i = 0; i < $scope.links.length; i++){

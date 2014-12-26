@@ -1,4 +1,4 @@
-    App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, LoadScreen, $stateParams) {
+    App.controller('changePasswordFromTokenController', function($scope, $http, $rootScope, $stateParams, $location) {
         routeChange();
         $.removeCookie(USER_NAME);
         $.cookie(TOKEN, $stateParams.token);
@@ -6,11 +6,10 @@
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
         .success(function(data){
             if (!checkResponseErrors(data)){
-                LoadScreen.stop();
                 $scope.user = JSON.parse(data.data);
             }
             else{
-                window.location.replace('#/login');
+                $location.url('login');
             }
         })
         .error(function(data){window.location.replace('#/login')});

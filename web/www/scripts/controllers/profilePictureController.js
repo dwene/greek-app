@@ -1,9 +1,9 @@
-    App.controller('profilepictureController', function($scope, $http, Load, $rootScope){
+    App.controller('profilepictureController', function($scope, RESTService, $http, Load, $rootScope){
     routeChange();
     Load.then(function(){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', '')
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $("#profilePic").attr("action", data.data);
                     $scope.url = data.data;

@@ -1,4 +1,4 @@
-    App.controller('editEventsController', function($scope, $http, $stateParams, $rootScope, $q, Load, getEvents, $timeout, Directory, Tags, Events){
+    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, getEvents, $timeout, Directory, Tags, Events){
         routeChange();
         $scope.loading = true;
         $scope.tags = Tags.get();
@@ -36,10 +36,10 @@
         }
         $scope.deleteEvent = function(){
             $('#deleteEventModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', packageForSending({tag: $stateParams.tag}))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', {tag: $stateParams.tag})
             .success(function(data){
                 $scope.loading = true;
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     window.location.replace('#/app/events');
                     for (var i = 0; i < $rootScope.events.length; i++){
                         if ($rootScope.events[i].tag == $stateParams.tag){
@@ -122,9 +122,9 @@
             to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
             to_send.tags = getCheckedTags($scope.tags);
             console.log(to_send.tags);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', packageForSending(to_send))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', to_send)
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     $scope.working = "done";
                     getEvents;
                     window.location.assign('#/app/events');

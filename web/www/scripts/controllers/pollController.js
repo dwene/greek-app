@@ -1,4 +1,4 @@
-   App.controller('pollController', function($scope, $http, Load, $rootScope, localStorageService, Polls) {
+   App.controller('pollController', function($scope, Load, $rootScope, localStorageService, Polls) {
         routeChange();
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);

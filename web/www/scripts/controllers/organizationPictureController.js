@@ -1,10 +1,10 @@
-App.controller('organizationPictureController', function($scope, $http, Load, $rootScope){
+App.controller('organizationPictureController', function($scope, RESTService, Load, $rootScope){
     routeChange();
     Load.then(function(){
         $rootScope.requirePermissions(COUNCIL);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', packageForSending(''))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', RESTService(''))
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $("#profilePic").attr("action", data.data);
                     $scope.url = data.data;

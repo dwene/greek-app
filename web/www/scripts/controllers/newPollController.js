@@ -1,4 +1,4 @@
-    App.controller('newPollController', function($scope, $http, Load, $rootScope) {
+    App.controller('newPollController', function($scope, RESTService, Load, $rootScope) {
         routeChange();
         $scope.deletePollTip = {
             "title" : "Delete Question"
@@ -29,9 +29,9 @@
 //            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
 //            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
             if (isValid){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $scope.working = 'done';
                         window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
                     }

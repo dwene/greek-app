@@ -1,11 +1,11 @@
-    App.controller('newmemberController', function($scope, $http, $stateParams, $rootScope, LoadScreen){
+    App.controller('newmemberController', function($scope, RESTService, $stateParams, $rootScope, LoadScreen){
         routeChange();
         $('.container').hide();
         logoutCookies();
         $.cookie(TOKEN, $stateParams.key);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', '')
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $scope.user = JSON.parse(data.data);
                     $('.container').fadeIn();

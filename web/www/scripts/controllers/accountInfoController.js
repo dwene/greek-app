@@ -1,4 +1,4 @@
-    App.controller('accountinfoController', function($scope, $http, $rootScope, Organization, Load){
+    App.controller('accountinfoController', function($scope, RESTService, $rootScope, Organization, Load){
     routeChange();
     Load.then(function(){
         $scope.changePassword = function(old_pass, new_pass) {
@@ -23,9 +23,9 @@
         }
         $scope.updatedInfo = false;
         $scope.item = $rootScope.me;
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', packageForSending(''))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', '')
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $rootScope.me = JSON.parse(data.data);
                     $scope.userName = $rootScope.me.user_name;
@@ -49,9 +49,9 @@
         $scope.updateAccount = function(isValid){
             if(isValid){
                 $scope.working = 'pending';
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending($scope.item))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', $scope.item)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         $rootScope.me = $scope.item;
                         $scope.working = 'done';
@@ -79,9 +79,9 @@
         var to_send = {email_prefs: option}
         $scope.emailPrefUpdating = "pending";
         $rootScope.me.email_prefs = option;
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', packageForSending(to_send))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', to_send)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $scope.emailPrefUpdating = "done";
                 }

@@ -1,7 +1,6 @@
-    App.controller('forgotPasswordController', function($scope, $http, $rootScope, LoadScreen){
+    App.controller('forgotPasswordController', function($scope, $http, $rootScope){
         routeChange();
         $rootScope.logout();
-        LoadScreen.stop();
         console.log('I just stopped the loading in forgot password controller');
         $scope.sentEmail = false;
         $scope.reset = function(input) {

@@ -1,4 +1,4 @@
-    App.controller('pollInfoController', function($scope, $http, Load, $rootScope, $stateParams, Directory) {
+    App.controller('pollInfoController', function($scope, RESTService, Load, $rootScope, $stateParams, Directory) {
         routeChange();
         //$scope.polls = Polls.get();
         $scope.directory = Directory.get();
@@ -28,9 +28,9 @@
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);
             var to_send = {key: $stateParams.key};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $scope.poll = JSON.parse(data.data);
                         $scope.creator = $scope.getUserFromKey($scope.poll.creator);
                     }
@@ -53,9 +53,9 @@
             else if (close === false){
                 to_send.open = true;
             }
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/edit_poll', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/edit_poll', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         if (close){
                             $scope.poll.open = false
                         }
@@ -87,9 +87,9 @@
         
         $scope.deletePoll = function(){
             var to_send = {key: $stateParams.key};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         window.location.assign('#/app/polls')
                     }
                     else{
@@ -103,9 +103,9 @@
         
         $scope.submitResponse = function(){
             var to_send = $scope.poll;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                        window.location.assign('#/app/polls/'+$stateParams.key + '/results');
                     }
                     else{

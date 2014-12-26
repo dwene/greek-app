@@ -1,4 +1,4 @@
-    App.controller('eventsController', function($scope, $http, Load, $rootScope, localStorageService, Events, Directory) {
+    App.controller('eventsController', function($scope, RESTService, Load, $rootScope, localStorageService, Events, Directory) {
         routeChange();
         $scope.$watchCollection('[directoryLoaded, eventsLoaded]', function(){
             if ($scope.directoryLoaded && $scope.eventsLoaded){

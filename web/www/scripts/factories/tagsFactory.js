@@ -1,13 +1,13 @@
-App.factory('Tags', function($http, $rootScope, localStorageService, $q, $timeout){
+App.factory('Tags', function(RESTService, $rootScope, localStorageService, $q, $timeout){
     var tags = localStorageService.get('tags');
     var cacheTimestamp = undefined;
     return {
         get: function () {
             if (checkCacheRefresh(cacheTimestamp)){
                     cacheTimestamp = moment();
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', '')
                     .success(function(data){
-                        if (!checkResponseErrors(data)){
+                        if (!RESTService.hasErrors(data)){
                             tags = JSON.parse(data.data);
                             console.log('New Tags: ', tags);
                             localStorageService.set('tags', tags);

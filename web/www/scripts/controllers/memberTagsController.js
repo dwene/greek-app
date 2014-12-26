@@ -1,4 +1,4 @@
-App.controller('membertagsController', function($scope, $http, $rootScope, Load, localStorageService, Directory, Tags) 
+App.controller('membertagsController', function($scope, RESTService, $rootScope, Load, localStorageService, Directory, Tags) 
 {
     $scope.dataLoaded = $scope.directoryLoaded && $scope.tagsLoaded;
     $scope.watches = [$scope.directoryLoaded, $scope.tagsLoaded];
@@ -141,9 +141,9 @@ App.controller('membertagsController', function($scope, $http, $rootScope, Load,
     $scope.getOrganizationTags();
     $scope.addOrganizationTag = function(tag){
         $scope.addTagLoading = 'loading';
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_organization_tag', packageForSending({tag: tag}))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_organization_tag', {tag: tag})
         .success(function(data){
-            if (!checkResponseErrors(data))
+            if (!RESTService.hasErrors(data))
             {
                 $scope.addTagLoading = 'done';
                 if ($scope.tags.org_tags.indexOf({name: tag}) == -1){
@@ -170,9 +170,9 @@ App.controller('membertagsController', function($scope, $http, $rootScope, Load,
     $scope.removeOrganizationTag = function(){
         $('#deleteTagModal').modal('hide');
         $('#seeallTags').modal();
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_organization_tag', packageForSending({tag: $scope.modaledTag.name}))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_organization_tag', {tag: $scope.modaledTag.name})
         .success(function(data){
-            if(checkResponseErrors(data)){openErrorModal(data.error)}
+            if(RESTService.hasErrors(data)){openErrorModal(data.error)}
         })
         .error(function(data) {
             console.log('Error: ' , data);
@@ -200,9 +200,9 @@ App.controller('membertagsController', function($scope, $http, $rootScope, Load,
 
         if(isValid){
             $('#renameTagModal').modal('hide')
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/rename_organization_tag', packageForSending({old_tag: $scope.modaledTag.name, new_tag: new_tag}))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/rename_organization_tag', {old_tag: $scope.modaledTag.name, new_tag: new_tag})
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                 }
                 else
@@ -252,9 +252,9 @@ App.controller('membertagsController', function($scope, $http, $rootScope, Load,
     function addTagsToUsers(tags, keys){
         var to_send = {tags: tags, keys: keys};
         console.log(to_send);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_users_tags', packageForSending(to_send))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_users_tags', to_send)
         .success(function(data){
-            if (!checkResponseErrors(data))
+            if (!RESTService.hasErrors(data))
             {
                 console.log('success');
             }
@@ -302,9 +302,9 @@ App.controller('membertagsController', function($scope, $http, $rootScope, Load,
     }
     
     function removeTagFromUser(tag, user){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_users_tags', packageForSending({'tags': [tag], 'keys': [user.key]}))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_users_tags', {'tags': [tag], 'keys': [user.key]})
         .success(function(data){
-            if (!checkResponseErrors(data))
+            if (!RESTService.hasErrors(data))
             {
                 if (user.tags.indexOf(tag) > -1){
                     user.tags.splice(user.tags.indexOf(tag), 1);

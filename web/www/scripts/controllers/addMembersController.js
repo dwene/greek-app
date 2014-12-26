@@ -1,4 +1,4 @@
-    App.controller('addMembersController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService, Directory) {
+    App.controller('addMembersController', function($scope, RESTService, $rootScope, Load, localStorageService, Directory) {
         routeChange();
         $scope.adds = [];
         Load.then(function(){
@@ -74,9 +74,9 @@
         $scope.submitMembers = function(){
             $scope.updating = "pending";
             var data_tosend = {users: $scope.adds};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', packageForSending(data_tosend))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', data_tosend)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $scope.updating = "done";
                     for (var i = 0; i < $scope.adds.length; i++){

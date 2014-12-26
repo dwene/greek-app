@@ -1,22 +1,14 @@
-    App.controller('appHomeController', function($scope, $http, $rootScope, $timeout, $sce, $mdDialog, Directory, Events, LoadScreen, removePassedEventsFilter, Load, Directory, Notifications) {
+    App.controller('appHomeController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, Directory, Events, removePassedEventsFilter, Directory, Inbox) {
+        console.log('Im in the app home controller, about to start load.then');
         routeChange();
-        Load.then(function(){
+       // Load.then(function(){
         $scope.events_loaded = false;
         $scope.notifications_loaded = false;
-        $rootScope.requirePermissions(MEMBER);
         $scope.noMoreHiddens = false;
         $scope.directory = Directory.get();
         $scope.$on('directory:updated', function(){
             $scope.directory = Directory.get();
         });
-       // $scope.hidden = {};
-       // $scope.current = {};
-       // $scope.hidden.currentPage = 0;
-       // $scope.hidden.pageSize = 10;
-       // $scope.hidden.maxPageNumber = 5;
-       // $scope.current.currentPage = 0;
-       // $scope.current.pageSize = 10;
-       // $scope.current.maxPageNumber = 5;
 
         
        $scope.createEvents = function(){
@@ -26,24 +18,13 @@
         }
         $scope.createEvents();
         $scope.$on('events:updated', function(){ $scope.createEvents(); });
-        
-        // $scope.testLoadAll = function(){
-        //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load', packageForSending(''))
-        //     .success(function(data){
-        //         console.log('LoadAll Results', data.data)
-        //     })
-        //     .error(function(data) {
-        //         console.log('LoadAll Results ' , data);
-        //     }); 
-        // }
             
-    
         $scope.checkForMoreHiddenNotifications = function(pageNum, max){
             var len = $rootScope.hidden_notifications.length;
             $scope.hidden_working = true;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', packageForSending(len))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', len)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     var new_hiddens = JSON.parse(data.data);
                     var next = false;
@@ -87,9 +68,9 @@
         $scope.checkForMoreNotifications = function(pageNum, max){
             var len = $rootScope.notifications.length;
             $scope.current_working = true;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', packageForSending(len))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', len)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     var new_hiddens = JSON.parse(data.data);
                     var next = false;
@@ -142,7 +123,7 @@
 //        })
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send));
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', to_send);
             $('#status').val("");
             if ($rootScope.me){
                 $rootScope.me.status = status;
@@ -153,9 +134,9 @@
             var status = "";
             $scope.status = "";
             var to_send = {status: status};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', to_send)
             .success(function(data){
-                if (checkResponseErrors(data))
+                if (RESTService.hasErrors(data))
                     console.log('ERROR: ',data);
             })
             .error(function(data) {
@@ -189,88 +170,88 @@
             }
             $rootScope.updateNotificationBadge();
             var key = $scope.selectedNotification.key;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': key});
         }
         
-        $scope.openNotificationModal = function(notify){
-            $('#notificationModal').modal();
-            $scope.selectedNotification = notify;
-            var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            $scope.messageHTML = $sce.trustAsHtml(message);
-            $scope.selectedNotificationUser = undefined;
-            for(var i = 0; i < $scope.directory.members.length; i++){
-                if ($scope.directory.members[i].key == notify.sender){
-                    $scope.selectedNotificationUser = $scope.directory.members[i];
-                }
-            }
-            if ($scope.selectedNotification.new){
-                $scope.notification_lengths.unread --;
-                $scope.notification_lengths.read ++;
-                $scope.selectedNotification.new = false;
-            }
-            $rootScope.updateNotificationBadge();
-            var key = $scope.selectedNotification.key;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', packageForSending({'notification': key}));
-        }
+        // $scope.openNotificationModal = function(notify){
+        //     $('#notificationModal').modal();
+        //     $scope.selectedNotification = notify;
+        //     var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        //     $scope.messageHTML = $sce.trustAsHtml(message);
+        //     $scope.selectedNotificationUser = undefined;
+        //     for(var i = 0; i < $scope.directory.members.length; i++){
+        //         if ($scope.directory.members[i].key == notify.sender){
+        //             $scope.selectedNotificationUser = $scope.directory.members[i];
+        //         }
+        //     }
+        //     if ($scope.selectedNotification.new){
+        //         $scope.notification_lengths.unread --;
+        //         $scope.notification_lengths.read ++;
+        //         $scope.selectedNotification.new = false;
+        //     }
+        //     $rootScope.updateNotificationBadge();
+        //     var key = $scope.selectedNotification.key;
+        //     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': key});
+        // }
         
-        $scope.hideNotification = function(notify, domElement){
-            $timeout(function(){
-                notify.garbage = true;
-            })
-            $timeout(function(){
-                var key = notify.key;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}))
-                .error(function(data) {
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', packageForSending({'notification': key}));
-                }); 
-                $rootScope.hidden_notifications.unshift(notify);
-                if (notify.new){
-                    $rootScope.notification_lengths.unread--;//#FIXME notifications_lengths.unread is not updating as soon as it is read
-                    notify.new = false;
-                    $rootScope.updateNotificationBadge();
-                }
-                else{
-                    $rootScope.notification_lengths.read--;
-                }
-                $rootScope.notification_lengths.hidden++;
-                $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
-                if ($rootScope.notifications && $scope.current && ($scope.current.currentPage * $scope.current.maxPageNumber) == $rootScope.notifications.length && $scope.current.currentPage > 0){
-                $scope.current.currentPage = $scope.current.currentPage - 1;
-                if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length < 5){
-                $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber)
-            }
-            }
-                if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length <= 5){
-                    $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber);
-            }
-            })
-        }
+        // $scope.hideNotification = function(notify, domElement){
+        //     $timeout(function(){
+        //         notify.garbage = true;
+        //     })
+        //     $timeout(function(){
+        //         var key = notify.key;
+        //         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', {'notification': key})
+        //         .error(function(data) {
+        //             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', {'notification': key});
+        //         }); 
+        //         $rootScope.hidden_notifications.unshift(notify);
+        //         if (notify.new){
+        //             $rootScope.notification_lengths.unread--;//#FIXME notifications_lengths.unread is not updating as soon as it is read
+        //             notify.new = false;
+        //             $rootScope.updateNotificationBadge();
+        //         }
+        //         else{
+        //             $rootScope.notification_lengths.read--;
+        //         }
+        //         $rootScope.notification_lengths.hidden++;
+        //         $rootScope.notifications.splice($scope.notifications.indexOf(notify), 1);
+        //         if ($rootScope.notifications && $scope.current && ($scope.current.currentPage * $scope.current.maxPageNumber) == $rootScope.notifications.length && $scope.current.currentPage > 0){
+        //         $scope.current.currentPage = $scope.current.currentPage - 1;
+        //         if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length < 5){
+        //         $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber)
+        //     }
+        //     }
+        //         if (!$scope.noMoreNotifications && !$scope.current_working && $rootScope.notifications.length < $rootScope.notification_lengths.unread + $rootScope.notification_lengths.read && $rootScope.notifications.length <= 5){
+        //             $scope.checkForMoreNotifications($scope.current.currentPage, $scope.current.maxPageNumber);
+        //     }
+        //     })
+        // }
         
-        $scope.unhideNotification = function(notify, domElement){
-            $timeout(function(){
-                notify.garbage = true;
-            })
-            $timeout(function(){
-                $rootScope.notification_lengths.hidden--;
-                $rootScope.notification_lengths.read++;
-                var key = notify.key;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}))
-                .error(function(data) {
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', packageForSending({'notification': key}));
-                });
-                $rootScope.notifications.unshift(notify);
-                $rootScope.hidden_notifications.splice($scope.hidden_notifications.indexOf(notify), 1);
-                if ($rootScope.hidden_notifications && $scope.hidden && ($scope.hidden.currentPage * $scope.hidden.maxPageNumber) == $rootScope.hidden_notifications.length && $scope.hidden.currentPage > 0){
-                $scope.hidden.currentPage = $scope.hidden.currentPage - 1;
-                if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length < 5){
-                    $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
-                }
-            }
-                if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length <= 5){
-                    $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber);
-                }
-            })
-        }
+        // $scope.unhideNotification = function(notify, domElement){
+        //     $timeout(function(){
+        //         notify.garbage = true;
+        //     })
+        //     $timeout(function(){
+        //         $rootScope.notification_lengths.hidden--;
+        //         $rootScope.notification_lengths.read++;
+        //         var key = notify.key;
+        //         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', {'notification': key})
+        //         .error(function(data) {
+        //             RESTService.hasErrors.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', {'notification': key});
+        //         });
+        //         $rootScope.notifications.unshift(notify);
+        //         $rootScope.hidden_notifications.splice($scope.hidden_notifications.indexOf(notify), 1);
+        //         if ($rootScope.hidden_notifications && $scope.hidden && ($scope.hidden.currentPage * $scope.hidden.maxPageNumber) == $rootScope.hidden_notifications.length && $scope.hidden.currentPage > 0){
+        //         $scope.hidden.currentPage = $scope.hidden.currentPage - 1;
+        //         if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length < 5){
+        //             $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber)
+        //         }
+        //     }
+        //         if (!$scope.noMoreHiddens && !$scope.hidden_working && $rootScope.hidden_notifications.length < $rootScope.notification_lengths.hidden && $rootScope.hidden_notifications.length <= 5){
+        //             $scope.checkForMoreHiddenNotifications($scope.hidden.currentPage, $scope.hidden.maxPageNumber);
+        //         }
+        //     })
+        // }
         
         $scope.showDate = function(start, end){
             var mStart = momentInTimezone(start);
@@ -296,5 +277,5 @@
         $scope.closeNotificationModal = function(notify){
             $('#notificationModal').modal('hide');
         }
-    });
+    //});
 });

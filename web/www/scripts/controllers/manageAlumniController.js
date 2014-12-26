@@ -1,4 +1,4 @@
-    App.controller('managealumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService, Directory){
+    App.controller('managealumniController', function($scope, RESTService, $rootScope, Load, LoadScreen, localStorageService, Directory){
         routeChange();
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
@@ -23,9 +23,9 @@
         
         $scope.resendWelcomeEmail = function(member){
             member.updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', {key: member.key})
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         member.updating = 'done';
                     }
                     else{
@@ -79,9 +79,9 @@
             $scope.selectedUser = {}
             $('#convertAlumniModal').modal('hide');
             var to_send = {'keys': [alumnus.key]}
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/revert_from_alumni', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/revert_from_alumni', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                     }
                     else
@@ -102,7 +102,7 @@
         $scope.removeAlumni = function(alumnus){
             $scope.selectedUser = {}
             $('#deleteAlumniModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(alumnus));   
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', alumnus);   
             if ($scope.directory.alumni.indexOf(alumnus) > -1){
                 $scope.directory.alumni.splice($scope.directory.alumni.indexOf(alumnus), 1);
             }

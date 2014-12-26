@@ -1,4 +1,4 @@
-    App.controller('messagingController', function($scope, $http, $q, $rootScope, Load, localStorageService, $sce, Tags, Directory) {
+    App.controller('messagingController', function($scope, RESTService, $q, $rootScope, Load, localStorageService, $sce, Tags, Directory) {
     routeChange();
     $scope.finished_loading = false;
     $scope.directory = Directory.get();
@@ -23,13 +23,7 @@
         ];
 
     Load.then(function(){ 
-        $rootScope.requirePermissions(LEADERSHIP);
-        // if ($rootScope.sentMessages){
-        //     $scope.sentMessages = $rootScope.sentMessages;
-        // }
-        // else{
         $scope.sentMessages = [];
-        // }
         $scope.clearUsers = false;
         $scope.deleteMessageTip = {
             "title" : "Delete Message"
@@ -41,9 +35,9 @@
         $scope.$on('tags:updated', function(){
             $scope.tags = Tags.get();
         })
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', '')
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $scope.sentMessages = JSON.parse(data.data);
                     // $rootScope.sentMessages = $scope.sentMessages;
@@ -77,9 +71,9 @@
                 var to_send = {title: title, content: fixed_content, keys: selectedKeys};
                 console.log("what Im sending in message", to_send);
                 $scope.updating = "pending"
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/send_message', packageForSending(to_send))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/send_message', to_send)
                     .success(function(data){
-                        if (!checkResponseErrors(data))
+                        if (!RESTService.hasErrors(data))
                         {
                             $scope.updating = "done";
                             $scope.title = '';
@@ -89,9 +83,9 @@
                             clearCheckedTags($scope.tags);
                             
                             setTimeout(function(){
-                            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', packageForSending(''))
+                            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', '')
                             .success(function(data){
-                                if (!checkResponseErrors(data))
+                                if (!RESTService.hasErrors(data))
                                 {
                                     $scope.sentMessages = JSON.parse(data.data);
                                 }
@@ -121,9 +115,9 @@
         $scope.deleteMessage = function(message){
             $('#messageModal').modal('hide');
             var to_send = {message: message.key}
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/delete', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/delete', to_send)
                     .success(function(data){
-                        if (!checkResponseErrors(data))
+                        if (!RESTService.hasErrors(data))
                         {
                             console.log('message removed');
                         }

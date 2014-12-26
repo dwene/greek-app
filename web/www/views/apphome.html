@@ -5,7 +5,7 @@
 </md-card>
 -->
     
-<div id="notifications" class="md-whiteframe-z1">
+<div id="notifications" class="md-whiteframe-z1" ng-controller="inboxController">
     
     <md-toolbar>
 <!--
@@ -41,10 +41,11 @@
     
     </md-toolbar>
     
-    <ng-switch on="data.selectedIndex" class="tabpanel-container">
-        <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+
+    <div class="tabpanel-container">
+        <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
             <md-list>
-              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessagedialog(notify)" ng-repeat="notify in ($root.notifications | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
+              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessagedialog(notify)" ng-repeat="notify in (inbox | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">
                 <div class="isNew"></div>
                 <md-item-content>
                   <div class="md-tile-content">
@@ -59,23 +60,23 @@
               </md-item>
             </md-list>
         </div>
-        <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+        <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
             <md-list>
-              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openNotificationModal(notify)"  ng-repeat="notify in ($root.hidden_notifications | orderBy:'-timestamp' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">
+              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openNotificationModal(notify)"  ng-repeat="notify in (archived | orderBy:'-timestamp' | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber) track by notify.key">
                 <md-item-content>
                   <div class="md-tile-content">
                     <h3 class="md-primary title">
                         {{notify.title}}
                     </h3>
                     <md-button class="archive pull-right btn-touch" type="button" ng-click="unhideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-inbox fa-fw"></i></md-button>
-                            <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                        <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
                         <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
                   </div>
                 </md-item-content>
               </md-item>
             </md-list>
         </div>
-    </ng-switch>
+    </div>
     
 </div>
     

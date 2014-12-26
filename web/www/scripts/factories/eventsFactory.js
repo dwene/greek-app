@@ -1,15 +1,14 @@
 
-App.factory('Events', function($http, $rootScope, localStorageService, $q, $timeout){
+App.factory('Events', function(RESTService, $rootScope, localStorageService, $q, $timeout){
     var events = localStorageService.get('events');
     var cacheTimestamp = undefined;
     return {
         get: function () {
             if (checkCacheRefresh(cacheTimestamp)){
                 cacheTimestamp = moment();
-                console.log('Im getting new event data');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         if (events != JSON.parse(data.data)){
                             events = JSON.parse(data.data);
                             localStorageService.set('events', events);

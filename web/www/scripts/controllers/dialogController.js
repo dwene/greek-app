@@ -1,11 +1,11 @@
-App.controller('dialogController', function dialogController($scope, $http, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
+App.controller('dialogController', function dialogController($scope, RESTService, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
 
             $scope.sendHelpMessage = function(isValid, content){
                 console.log('I am getting submitted');
                 if(isValid){
                     $scope.sendingHelp='pending';
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
-                    .success(function(){console.log('success');
+                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', content)
+                    .success(function(){
                     $scope.helpMessage.$setPristine();
                     $scope.message={};
                     $scope.sendingHelp='done';

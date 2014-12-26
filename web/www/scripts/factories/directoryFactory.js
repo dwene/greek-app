@@ -1,12 +1,12 @@
 
-App.factory('Directory', function($http, $rootScope, localStorageService, $q){
+App.factory('Directory', function(RESTService, $rootScope, localStorageService, $q){
     var directory = localStorageService.get('directory');
     var cacheTimestamp = undefined;
     return {
         get: function () {
             if (checkCacheRefresh(cacheTimestamp)){
                 cacheTimestamp = moment();
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', '')
                 .success(function(data){
                     if (!checkResponseErrors(data)){
                         directory = JSON.parse(data.data);
@@ -31,7 +31,7 @@ App.factory('Directory', function($http, $rootScope, localStorageService, $q){
             var user = undefined;
             for (var i = 0; i < directory.length; i++){
                 if (directory[i].user_name == user_name){
-                    $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending({user_name: user_name}), {cache: true})
+                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', {user_name: user_name}, {cache: true})
                         .success(function(data){
                             directory = JSON.parse(data.data);
                             localStorageService.set('directory', directory);

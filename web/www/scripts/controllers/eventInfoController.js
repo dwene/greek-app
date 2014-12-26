@@ -1,4 +1,4 @@
-    App.controller('eventInfoController', function($scope, $http, $stateParams, $rootScope, $q, Load, Events, Directory){
+    App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, Events, Directory){
         routeChange();
         
         $scope.going = false;
@@ -161,9 +161,9 @@
                 to_send.rsvp = 'not_going';
             }
             to_send.key = $scope.event.key;
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/rsvp', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/rsvp', to_send)
                     .success(function(data){
-                        if (!checkResponseErrors(data)){
+                        if (!RESTService.hasErrors(data)){
                             if (rsvp){
                                 $scope.going = true;
                                 $scope.not_going = false;

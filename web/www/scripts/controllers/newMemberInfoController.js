@@ -1,13 +1,13 @@
-    App.controller('newmemberinfoController', function($scope, $http, $rootScope, $stateParams, LoadScreen){
+    App.controller('newmemberinfoController', function($scope, RESTService, $rootScope, $stateParams, LoadScreen){
         routeChange();
         $scope.loading = true;
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
         logoutCookies();
         $.cookie(TOKEN, $stateParams.key);
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', packageForSending(''))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', '')
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $('.container').fadeIn();
                     LoadScreen.stop();
@@ -31,9 +31,9 @@
             $scope.available = false;
         });
         $scope.checkUserName = function(user){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', packageForSending(user))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', user)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         $scope.available = true;
                         $scope.unavailable = false;
@@ -51,9 +51,9 @@
             $scope.working = 'pending';
             $scope.waiting_for_response = true;
             var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', to_send)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $scope.working = 'done';
                     var returned_data = JSON.parse(data.data);

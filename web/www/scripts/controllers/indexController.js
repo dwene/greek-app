@@ -1,19 +1,27 @@
-   
-console.log('hi i am the index controller');
-App.controller('indexController', function($scope, $http, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
-        $scope.homeButton = function(){
-            if ($rootScope.checkAlumni()){
-                window.location.assign('#/app/directory/members');
-            }
-            else{
-                window.location.assign('#/app/home');
-            }
-        }
+
+App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, AUTH_EVENTS, OrganizationService, Inbox, Session) {
+        // $scope.homeButton = function(){
+        //     if (Session.perms == perms){
+        //         window.location.assign('#/app/directory/members');
+        //     }
+        //     else{
+        //         window.location.assign('#/app/home');
+        //     }
+        // }
+        $scope.$on(AUTH_EVENTS.loginSuccess, function(){
+            $scope.perms = Session.perms;
+        });
+        $scope.$on('organization:updated', function(){
+            $scope.me = OrganizationService.me;
+        });
+        $scope.$on('notifications:updated', function(){
+            $scope.notificationLength = Inbox.getLengths();
+        })
         $scope.sendHelpMessage = function(isValid, content){
             console.log('I am getting submitted');
             if(isValid){
                 $scope.sendingHelp='pending';
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', content)
                 .success(function(){console.log('success');
 //                $('#helpModal').modal('hide');
                 $scope.helpMessage.$setPristine();
@@ -36,26 +44,11 @@ App.controller('indexController', function($scope, $http, LoadScreen, $rootScope
                     templateUrl: '../views/templates/helpDialog.html'
             });
         }
+        $scope.logout = function(){
+            $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
+        }
+        $scope.checkPerms = function(perms){
+
+        }
 
 	});
-
-// App.controller('dialogController', function dialogController($scope, $http, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
-//             $scope.sendHelpMessage = function(isValid, content){
-//                 console.log('I am getting submitted');
-//                 if(isValid){
-//                     $scope.sendingHelp='pending';
-//                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', packageForSending(content))
-//                     .success(function(){console.log('success');
-//                     $scope.helpMessage.$setPristine();
-//                     $scope.message={};
-//                     $scope.sendingHelp='done';
-//                     $mdDialog.hide();
-//                     })
-//                     .error(function(){console.log('error');
-//                     $scope.sendingHelp='broken';})
-//                 }
-//                 else{
-//                 //do nothing
-//                 }
-//             }
-// });

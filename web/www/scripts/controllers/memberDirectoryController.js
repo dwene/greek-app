@@ -1,4 +1,4 @@
-    App.controller('membersDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, directoryFilterFilter, $filter, localStorageService, Directory){
+    App.controller('membersDirectoryController', function($scope, $rootScope, Load, LoadScreen, directoryFilterFilter, $filter, localStorageService, Directory){
     routeChange();
     LoadScreen.stop();
     $scope.loaded = false;

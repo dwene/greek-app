@@ -1,12 +1,12 @@
-    App.controller('adminController', function($scope, $http, Load, $rootScope) {
+    App.controller('adminController', function($scope, RESTService, Load, $rootScope) {
         routeChange();
         $rootScope.requirePermissions(COUNCIL);
         Load.then(function(){
             loadSubscriptionInfo();
             function loadSubscriptionInfo(){
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', packageForSending(''))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', '')
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         $scope.subscription = JSON.parse(data.data);
                         $scope.subscription_raw = data.data;
                         $scope.loading = false;
@@ -22,9 +22,9 @@
             }
             $scope.cancelSubscription = function(){
                 $scope.loading = true;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', packageForSending(''))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', '')
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         setTimeout(function(){$rootScope.refreshPage();}, 150);
                     }
                     else{
@@ -42,9 +42,9 @@
                     toSend = paymentData;
                 }
                 $scope.loading = true;
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending(toSend))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', toSend)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         setTimeout(function(){$rootScope.refreshPage();}, 150);
                     }
@@ -61,9 +61,9 @@
             $scope.changeTheme = function(number){
                 
                 $rootScope.setColor('color'+number);
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', packageForSending({color: $rootScope.color}))
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {color: $rootScope.color})
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                     }
                     else{

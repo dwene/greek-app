@@ -1,12 +1,11 @@
-    App.controller('uploadImageController', function($scope, $http, Load, $rootScope){
+    App.controller('uploadImageController', function($scope, RESTService, Load, $rootScope, $location){
     routeChange();
     Load.then(function(){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', packageForSending({key: getParameterByName('key')}))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_uploaded_prof_pic', {key: getParameterByName('key')})
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    //$scope.url = JSON.parse(data.data);
-                    window.location.assign("/#/app/accountinfo");
+                    $location.url("app/accountinfo");
                 }
                 else
                 {
@@ -18,8 +17,7 @@
             });
         
         $scope.showIndividual = function(member){
-            window.location.assign("/#/app/directory/user/"+member.user_name);
+            $location.url("app/directory/user/"+member.user_name);
         }
-        
     });
     });

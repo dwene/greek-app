@@ -1,4 +1,4 @@
-    App.controller('alumniDirectoryController', function($scope, $rootScope, $http, Load, LoadScreen, Directory){
+    App.controller('alumniDirectoryController', function($scope, $rootScope, RESTService, Load, Directory){
     routeChange();
     Load.then(function(){
         $scope.years = [];

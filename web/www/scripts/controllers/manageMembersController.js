@@ -1,4 +1,4 @@
-    App.controller('manageMembersController', function($scope, $http, Load, LoadScreen, $rootScope, localStorageService, Directory){
+    App.controller('manageMembersController', function($scope, RESTService, Load, LoadScreen, $rootScope, localStorageService, Directory){
     routeChange();
     Load.then(function(){
         $rootScope.requirePermissions(COUNCIL);
@@ -34,9 +34,9 @@
         
         $scope.resendWelcomeEmail = function(member){
             member.updating = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', packageForSending({key: member.key}))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', {key: member.key})
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         member.updating = 'done';
                     }
                     else{
@@ -49,9 +49,9 @@
         };
         $scope.resendAllWelcomeEmails = function(){
             $scope.resendWorking = 'pending';
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', packageForSending(''))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', '')
             .success(function(data){
-                if (!checkResponseErrors(data)){
+                if (!RESTService.hasErrors(data)){
                     $scope.resendWorking = 'done';
                 }
                 else{
@@ -69,9 +69,9 @@
             var key = member.key;
             member.updating = 'pending';
             var to_send = {key: key, perms: option};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/manage_perms', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/manage_perms', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data)){
+                    if (!RESTService.hasErrors(data)){
                         member.updating = 'done';
                         member.perms = option;
                         Directory.set($scope.directory);
@@ -87,9 +87,9 @@
         
         $scope.changeUserEmail = function(member, email){
             var to_send = {key: member.key, email: email};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/update_users_emails', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/update_users_emails', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         member.email = email;
                         Directory.set($scope.directory);
@@ -119,9 +119,9 @@
                 }
             }
             var to_send = {'keys': keys};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', to_send)
                 .success(function(data){
-                    if (!checkResponseErrors(data))
+                    if (!RESTService.hasErrors(data))
                     {
                         console.log('success');
                     }
@@ -160,9 +160,9 @@
         
         $scope.removeMember = function(user){
             $('#deleteMemberModal').modal('hide');
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', packageForSending(user))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', user)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                 }
                 else{console.log('ERROR: ',data);}

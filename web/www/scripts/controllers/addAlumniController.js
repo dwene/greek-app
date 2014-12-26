@@ -1,4 +1,5 @@
-    App.controller('addAlumniController', function($scope, $http, $rootScope, Load, LoadScreen, localStorageService) {
+
+    App.controller('addAlumniController', function($scope, RESTService, $rootScope, Load, localStorageService) {
         routeChange();
         Load.then(function(){
             $rootScope.requirePermissions(LEADERSHIP);
@@ -49,47 +50,12 @@
             $scope.input = {};
         }
         
-        // $scope.getAlumni = function(){
-        //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-        //     .success(function(data){
-        //         if (!checkResponseErrors(data))
-        //         {
-        //             $rootScope.directory = JSON.parse(data.data);
-        //             localStorageService.set('directory', $rootScope.directory);
-        //             assignAngularViewModels($rootScope.directory.alumni);
-        //         }
-        //         else
-        //             console.log('ERROR: ',data);
-        //     })
-        //     .error(function(data) {
-        //         console.log('Error: ' , data);
-        //     });
-        
-        // }
-        // function assignAngularViewModels(alumni){
-        //     $scope.alumni = alumni;
-        //     LoadScreen.stop();
-        // }
-        
-        // function onPageLoad(){
-        //     console.log('page is loading');
-        //     if($rootScope.directory.alumni){
-        //         assignAngularViewModels($rootScope.directory.alumni);
-        //         $scope.getAlumni();
-        //     }
-        //     else{
-        //         LoadScreen.start();
-        //         $scope.getAlumni();
-        //     }
-        // }
-        // onPageLoad();
-        
         $scope.submitAlumni = function(){
             $scope.updating = "pending";
             var data_tosend = {users: $scope.adds};
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', packageForSending(data_tosend))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', data_tosend)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService.hasErrors(data))
                 {
                     $scope.updating = "done";
                     $scope.adds = [];

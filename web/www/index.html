@@ -104,7 +104,6 @@
         <script type="text/javascript" src="scripts/controllers/adminController.js"></script>
         <script type="text/javascript" src="scripts/controllers/alumniDirectoryController.js"></script>
         <script type="text/javascript" src="scripts/controllers/addMembersController.js"></script>
-
         <script type="text/javascript" src="scripts/controllers/appController.js"></script>
         <script type="text/javascript" src="scripts/controllers/appHomeController.js"></script>
         <script type="text/javascript" src="scripts/controllers/changePasswordController.js"></script>
@@ -141,6 +140,7 @@
         <script type="text/javascript" src="scripts/controllers/uploadImageController.js"></script>
         <script type="text/javascript" src="scripts/controllers/pollController.js"></script>
         <script type="text/javascript" src="scripts/controllers/dialogController.js"></script>
+        <script type="text/javascript" src="scripts/controllers/inboxController.js"></script>
 
         <script type="text/javascript" src="scripts/factories/directoryFactory.js"></script>
         <script type="text/javascript" src="scripts/factories/eventsFactory.js"></script>
@@ -149,35 +149,40 @@
         <script type="text/javascript" src="scripts/factories/pollsFactory.js"></script>
         <script type="text/javascript" src="scripts/factories/tagsFactory.js"></script>
         <script type="text/javascript" src="scripts/factories/notificationFactory.js"></script>
+        <script type="text/javascript" src="scripts/factories/authService.js"></script>
+        <script type="text/javascript" src="scripts/factories/SessionService.js"></script>
+        <script type="text/javascript" src="scripts/factories/organizationService.js"></script>
+        <script type="text/javascript" src="scripts/factories/httpFactory.js"></script>
         
         <!-- endbuild -->
 
 
     </head>
-    <body ng-app="App" ng-controller="indexController as main" ng-class="$root.color" style="display:none">
+    <body ng-app="App" ng-controller="indexController" ng-class="$root.color" ng-cloak>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
+<div ng-controller="navigationController as navigation">
 <header>
 
 <md-toolbar class="navbar-fixed-top md-whiteframe-z1">
         
-        <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true" ng-controller="navigationController as navigation">
+        <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true">
 
 				<div>
-					<a class="navbar-brand" ng-hide="$root.checkLogin()"></a>
-					<a class="navbar-brand" id="homeButton" ng-click="homeButton()" ng-show="$root.checkLogin()">
-					    <span class="badge" ng-bind="$root.notification_count"></span>
+					<a class="navbar-brand" ng-hide="navigation.session"></a>
+					<a class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="navigation.session">
+					    <span class="badge" ng-bind="notification_count"></span>
 					</a>
 				</div>      
 
 				<div flex></div>
 				
-				<md-button ng-show="$root.checkLogin()" ng-click="showHelpdialog()">
+				<md-button ng-show="navigation.session" ng-click="showHelpdialog()">
 				    <i class="fa fa-question-circle fa-fw"></i>
 				</md-button>
 				
-                <md-button ng-show="$root.checkLogin()" ng-click="toggleSidenav()">
+                <md-button ng-show="navigation.session" ng-click="toggleSidenav()">
                         <i class="fa fa-bars fa-fw" style="color:white;"></i>
                 </md-button>
                 
@@ -201,10 +206,10 @@
         <ul class="nav">
             <li ng-click="toggleSidenav()"><md-button ng-href="/#/app/home"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
             <li ng-click="toggleSidenav()"> <md-button ng-href="/#/app/directory/members"> <i class="fa fa-book fa-fw"> </i> Directory</li>
-            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('leadership') && $root.subscribed"><md-button ng-href="/#/app/messaging"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/events"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/links"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
-            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/polls"><i class="fa fa-th-list fa-fw"></i> Polls</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="navigation.checkPermissions('leadership') && navigation.subscribed"><md-button ng-href="/#/app/messaging"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="navigation.subscribed"><md-button ng-href="/#/app/events"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
+            <li ng-click="toggleSidenav()" ng-show="navigation.subscribed"><md-button ng-href="/#/app/links"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
+            <li ng-click="toggleSidenav()" ng-show="navigation.subscribed"><md-button ng-href="/#/app/polls"><i class="fa fa-th-list fa-fw"></i> Polls</md-button></li>
         </ul>
     </md-content>
     <md-toolbar>
@@ -224,8 +229,8 @@
     </md-content>
 </div>
 </md-sidenav>
-
-<div ui-view ng-hide="$root.loading"  autoscroll="true" id="mainSection"></div>
+</div>
+<div ui-view autoscroll="true" id="mainSection"></div>
 
 <!--
 <md-button id="historyBack" class="md-raised btn-touch" aria-label="back" onclick="window.history.back()"><i class="fa fa-chevron-left fa-fw"></i></md-button>

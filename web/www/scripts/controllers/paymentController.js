@@ -1,12 +1,12 @@
-    App.controller('paymentController', function($scope, $http, $rootScope) {
+    App.controller('paymentController', function($scope, RESTService, $rootScope) {
         routeChange();
         //skip payment page right now
         $scope.pay = {};
         $scope.submitPayment = function(){
             
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', packageForSending($scope.pay))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscribe', $scope.pay)
             .success(function(data){
-                if (!checkResponseErrors(data))
+                if (!RESTService(data))
                 {
                     window.location.assign("#/app");
                 }

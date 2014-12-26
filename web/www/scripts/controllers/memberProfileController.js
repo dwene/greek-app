@@ -1,4 +1,4 @@
-App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $http, Load, LoadScreen, localStorageService, Directory, $mdBottomSheet){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, RESTService, Load, LoadScreen, localStorageService, Directory, $mdBottomSheet){
     routeChange();
     Load.then(function(){
         $scope.directory = Directory.get();
