@@ -512,10 +512,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
         });
 
         $rootScope.$on(AUTH_EVENTS.logoutSuccess, function(){
+            console.log('Im logging out');
             $.removeCookie(USER_NAME);
             $.removeCookie(TOKEN);
             $.removeCookie(PERMS);
             Session.destroy();
+            console.log('Am I authenticated after destroying session?', AuthService.isAuthenticated());
             $.removeCookie('FORM_INFO_EMPTY');
             $rootScope.directory = {};
             $rootScope.me = undefined;

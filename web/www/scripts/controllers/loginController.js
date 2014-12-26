@@ -1,7 +1,10 @@
 //login page
 	App.controller('loginController', function($scope, RESTService, $rootScope, LoadScreen, localStorageService, $location, AuthService, Session, AUTH_EVENTS) {
         routeChange();
+        console.log('Did I attempt the login?', AuthService.loginAttempted());
+        console.log('Am I authenticated?!?!', AuthService.isAuthenticated());
         if (AuthService.isAuthenticated() || !AuthService.loginAttempted()){
+            console.log('this didnt work....!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
             $location.url('app');
         }
         // $.removeCookie(USER_NAME);

@@ -1,4 +1,4 @@
-App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization){
+App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization, AUTH_EVENTS){
         routeChange();
         this.session = Session;
         this.me = Organization.me;
@@ -33,7 +33,6 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         });
 
         $scope.logout = function(){
-            $rootScope.logout();
-            window.location.assign("/#/login");
+            $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         }
     });

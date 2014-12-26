@@ -3,4 +3,8 @@ App.controller('messageDialogController', function($scope, $mdDialog, $sce, AUTH
     var content = message.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
     $scope.content = $sce.trustAsHtml(content);
     $scope.message = message;
+
+    $scope.closeNotificationModal = function() {
+        $mdDialog.cancel();
+    };
 	});
