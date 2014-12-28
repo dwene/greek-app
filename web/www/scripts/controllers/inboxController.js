@@ -3,6 +3,15 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
     $scope.inbox = Inbox.notifications;
     $scope.archived = Inbox.hidden_notifications;
     $scope.lengths = Inbox.lengths;
+    if ($scope.inbox != null){
+        $scope.showInbox = true;
+    }
+    $scope.$on('inbox:updated', function(){
+        $scope.inbox = Inbox.notifications;
+        $scope.archived = Inbox.hidden_notifications;
+        $scope.lengths = Inbox.lengths;
+        $scope.showInbox = true;
+    })
 	$scope.openMessageDialog = function(notify, ev){
         Inbox.selectMessage(notify);
         $mdDialog.show({

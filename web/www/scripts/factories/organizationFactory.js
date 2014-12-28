@@ -21,6 +21,11 @@ App.factory('Organization', function(RESTService, localStorageService, $q, $time
             });
         }
     }
+    item.destroy = function(){
+        item.cacheTimestamp = undefined;
+        item.organization = undefined;
+        localStorageService.remove('organization_data');
+    }
     item.check = function(){
         if (item.organization == null){
             item.get();

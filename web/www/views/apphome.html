@@ -40,7 +40,7 @@
     
     
     </md-toolbar>
-    <div class="tabpanel-container">
+    <div class="tabpanel-container" load-directive ng-model="showInbox">
         <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
             <md-list class="itemList">
               <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox | orderBy:'-timestamp' | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber) track by notify.key">

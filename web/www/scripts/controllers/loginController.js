@@ -12,13 +12,13 @@
             $scope.showScreen = false;
             AuthService.login({user_name: user_name, password: password}).then(function (user) {
                 if (AuthService.isAuthenticated()){
-                  $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                   if (Session.perms == 'alumni'){
                     $location.path('app/directory');
                   }
                   else{
                     $location.path('app/home');
                   }
+                  //$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 }
                 else{
                     $scope.showScreen = true;

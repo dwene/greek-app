@@ -448,7 +448,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $q, $timeout, LoadScreen, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService){
+    App.run(function ($rootScope, $state, $stateParams, $q, $timeout, LoadScreen, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Inbox){
         // FastClick.attach(document.body);
 
 
@@ -518,6 +518,12 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $.removeCookie(TOKEN);
             $.removeCookie(PERMS);
             Session.destroy();
+            Inbox.destroy();
+            Directory.destroy();
+            Events.destroy();
+            Tags.destroy();
+            Polls.destroy();
+            Links.destroy();
             localStorageService.clearAll();
             $.removeCookie('FORM_INFO_EMPTY');
             $rootScope.directory = {};
@@ -529,7 +535,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.hidden_notifications = undefined;
             $rootScope.updateNotificationBadge();
             if ($location.url() != 'login'){
-                $location.url('login');
+                $location.path('login');
             }
         });
 
@@ -538,10 +544,10 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 var authorizedRoles = $state.data.permissions.only;
                 if (!AuthService.isAuthorized(authorizedRoles)) {
                     if(Session.perms == 'alumni'){
-                        $location.url('directory');
+                        $location.path('directory');
                     }
                     else{
-                        $location.url('home');
+                        $location.path('home');
                     }   
                 }
             }

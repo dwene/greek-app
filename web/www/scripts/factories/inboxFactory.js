@@ -30,7 +30,7 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
                 inbox.hidden_notifications = load_data.hidden_notifications;
                 // $rootScope.updateNotificationBadge();
                 console.log('Inbox item', inbox);
-                $rootScope.$broadcast('notifications:updated');
+                $rootScope.$broadcast('inbox:updated');
             }
             else{
                 console.log('Err', data);
