@@ -504,11 +504,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
         $rootScope.$on(AUTH_EVENTS.notAuthenticated, function(){
             if (AuthService.loginAttempted()){
                 Session.destroy();
-                console.log('location state', $location.state());
-                if ($location.state() != 'login'){
-                    $location.url('login');
+                console.log('location state', $location.path());
+                if ($location.path() != '/login'){
+                    $location.path('login');
                 }
-                $location.url('login');
+                $location.path('login');
             }
         });
 
