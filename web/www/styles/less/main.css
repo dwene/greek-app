@@ -1866,7 +1866,7 @@ md-backdrop.md-opaque.md-default-theme {
   overflow: hidden;
 }
 md-dialog {
-  border-radius: 0px;
+  border-radius: 0px !important;
 }
 md-dialog .md-subheader:not(.md-sticky-no-effect)[sticky-state="active"] {
   margin: 0px !important;
@@ -1962,6 +1962,13 @@ a.navbar-brand:focus {
 /*Helper Classes*/
 .no-padding-top {
   padding-top: 0px;
+}
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 /*Section Specific*/
 #menu md-toolbar.md-tall {

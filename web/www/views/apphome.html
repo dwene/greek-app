@@ -50,7 +50,7 @@
                     <h3 class="md-primary title">
                         {{notify.title}}
                     </h3>
-                    <md-button class="archive pull-right btn-touch" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-folder-open-o fa-fw"></i></md-button>
+                    <md-button class="archive pull-right btn-touch" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></md-button>
                         <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
                         <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
                   </div>
@@ -66,7 +66,7 @@
                     <h3 class="md-primary title">
                         {{notify.title}}
                     </h3>
-                    <md-button class="archive pull-right btn-touch" type="button" ng-click="unhideNotification(notify, this);$event.stopPropagation();"><i class="fa fa-inbox fa-fw"></i></md-button>
+                    <md-button class="archive pull-right btn-touch" type="button" ng-click="unhideNotification(notify, this);$event.stopPropagation();" aria-label="unarchive"><i class="fa fa-inbox fa-fw"></i></md-button>
                         <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
                         <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
                   </div>

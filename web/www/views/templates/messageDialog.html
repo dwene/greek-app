@@ -10,8 +10,8 @@
   </md-content>
   
   <div class="md-actions" layout="row">
-        <md-button href="mailto:{{selectedNotificationUser.email}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" ><i class="fa fa-envelope-o"></i></md-button>
-        <md-button href="sms:{{selectedNotificationUser.phone}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" ><i class="fa fa-phone"></i></md-button>
+        <md-button href="mailto:{{selectedNotificationUser.email}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" aria-label="send email"><i class="fa fa-envelope-o"></i></md-button>
+        <md-button href="sms:{{selectedNotificationUser.phone}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" aria-label="send sms"><i class="fa fa-phone"></i></md-button>
             <span flex></span>
         <md-button type="button" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</md-button>
         <md-button type="button" ng-show="selectedNotification.type == 'poll'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Poll</md-button>
