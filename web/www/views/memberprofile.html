@@ -14,7 +14,7 @@
         
         <div id="profile-top" layout="row" layout-align="center center">
             <div flex="20" flex-md="25" flex-sm="45">
-                <img class="face pull-right" src="{{prof_pic || $root.defaultProfilePicture}};" alt="{{firstName}} {{lastName}}">
+                <img class="face pull-right" ng-src="{{prof_pic || $root.defaultProfilePicture}};" alt="{{firstName}} {{lastName}}">
             </div>
             <div class="name" flex="80" flex-md="75" flex-sm="55">
                 <h2>{{firstName}} {{lastName}}</h2>

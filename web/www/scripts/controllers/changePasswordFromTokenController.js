@@ -9,7 +9,7 @@
                 $scope.user = JSON.parse(data.data);
             }
             else{
-                $location.url('login');
+                $location.path('login');
             }
         })
         .error(function(data){window.location.replace('#/login')});

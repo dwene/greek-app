@@ -51,9 +51,9 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         //     $rootScope.notifications = undefined;
         //     $rootScope.hidden_notifications = undefined;
         //     $rootScope.updateNotificationBadge();
-        //     console.log('location', $location.url());
-        //     if ($location.url() != 'login'){
-        //         $location.url('login');
+        //     console.log('location', $location.path());
+        //     if ($location.path() != 'login'){
+        //         $location.path('login');
         //     }
         // }
 	});

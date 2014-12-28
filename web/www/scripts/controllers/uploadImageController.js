@@ -4,7 +4,7 @@
             .success(function(data){
                 if (!checkResponseErrors(data))
                 {
-                    $location.url("app/accountinfo");
+                    $location.path("app/accountinfo");
                 }
                 else
                 {
@@ -16,6 +16,6 @@
             });
         
         $scope.showIndividual = function(member){
-            $location.url("app/directory/user/"+member.user_name);
+            $location.path("app/directory/user/"+member.user_name);
         }
     });

@@ -1,7 +1,7 @@
     App.controller('registerinfoController', function($scope, RESTService, registerOrganizationService, $rootScope, $location) {
         routeChange();
         if (registerOrganizationService.get() === undefined){
-            $location.url('register');
+            $location.path('register');
         }
         $scope.$watch('item.user_name', function() {
             $scope.unavailable = false;
@@ -41,7 +41,7 @@
                         Session.create(data_tosend.user.user_name.toLowerCase(),responseData.token, 'council');
                         $.cookie(TOKEN,  responseData.token, {expires: new Date(responseData.expires)});
                         $.cookie(USER_NAME, data_tosend.user.user_name,{expires: new Date(responseData.expires)});
-                        $location.url("app/managemembers/add");
+                        $location.path("app/managemembers/add");
                     }
                     else{
                         if (data.error == 'USERNAME_TAKEN'){

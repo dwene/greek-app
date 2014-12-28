@@ -1,14 +1,14 @@
-App.controller('LinksController', function($scope, $rootScope, RESTService, Load, localStorageService, Links){
+App.controller('LinksController', function($scope, $rootScope, RESTService, Load, localStorageService, Links, Organization){
         routeChange();
-        Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
-            $scope.groups = $rootScope.link_groups;
+            Organization.get();
+            $scope.groups = Organization.organization.link_groups;
             Links.get();
             $scope.links = Links.links;
             if ($scope.links){
                 $scope.loading_finished = true;
             }
             $scope.$on('links:updated', function(){
+                $scope.links = Links.links;
                 $scope.loading_finished = true;
             });
             $scope.openEditLinkModal = function(link){
@@ -180,5 +180,4 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     $scope.checkRenameGroup = "broken";
                 });
             }
-        });
     });

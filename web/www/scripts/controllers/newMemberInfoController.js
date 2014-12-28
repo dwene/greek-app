@@ -11,11 +11,11 @@
                 }
                 else{
                     console.log('ERROR: ',data);
-                    $location.url('login');
+                    $location.path('login');
                 }
             })
             .error(function(data) {
-                $location.url('login');
+                $location.path('login');
                 console.log('Error: ' , data);
             });
         $scope.$watch('item.user_name', function() {
@@ -56,7 +56,7 @@
                         $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
                         $.cookie(PERMS, returned_data.perms);
                         $.cookie('FORM_INFO_EMPTY', 'true');
-                        $location.url("app/accountinfo");
+                        $location.path("app/accountinfo");
                     }
                     else
                     {

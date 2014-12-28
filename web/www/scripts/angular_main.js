@@ -448,7 +448,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $q, $timeout, LoadScreen, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService){
+    App.run(function ($rootScope, $state, $stateParams, $q, $timeout, LoadScreen, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService){
         // FastClick.attach(document.body);
 
 
@@ -518,7 +518,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $.removeCookie(TOKEN);
             $.removeCookie(PERMS);
             Session.destroy();
-            console.log('Am I authenticated after destroying session?', AuthService.isAuthenticated());
+            localStorageService.clearAll();
             $.removeCookie('FORM_INFO_EMPTY');
             $rootScope.directory = {};
             $rootScope.me = undefined;
@@ -528,7 +528,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.notifications = undefined;
             $rootScope.hidden_notifications = undefined;
             $rootScope.updateNotificationBadge();
-            console.log('location', $location.url());
             if ($location.url() != 'login'){
                 $location.url('login');
             }

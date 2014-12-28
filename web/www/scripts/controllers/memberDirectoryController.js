@@ -1,4 +1,4 @@
-    App.controller('membersDirectoryController', function($scope, $rootScope, LoadScreen, directoryFilterFilter, $filter, localStorageService, Directory){
+    App.controller('membersDirectoryController', function($scope, $rootScope, LoadScreen, directoryFilterFilter, $filter, $location, localStorageService, Directory){
     routeChange();
     Directory.get();
     $scope.loaded = false;
@@ -23,6 +23,7 @@
             
         }
         $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.directory;
             $scope.createDirectory();
         });
         $scope.createDirectory();
@@ -32,7 +33,7 @@
             }
         })
         $scope.showIndividual = function(member){
-            window.location.assign("#/app/directory/"+member.user_name);
+            $location.path("app/directory/"+member.user_name);
         }
         $scope.getProfPic = function(link){
             if (link){

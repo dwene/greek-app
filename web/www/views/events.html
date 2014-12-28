@@ -1,4 +1,4 @@
-<div id="events" class="container" ng-init="current = {maxPageNumber: 5, currentPage: 0}; present = true; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded">
+<div id="events" class="container" ng-init="current = {maxPageNumber: 5, currentPage: 0}; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded">
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <div id="calendar" class="md-whiteframe-z1">
@@ -17,7 +17,7 @@
         <div class="col-xs-12 col-sm-6">
             <div id="eventList" class="md-whiteframe-z1">
                 <md-toolbar>
-                    <md-tabs md-selected="data.selectedIndex">
+                    <md-tabs md-selected="selectedTab">
                       <md-tab id="upcomingeventsTab" aria-controls="upcomingeventsTab-content">
                         Upcoming
                       </md-tab>
@@ -27,7 +27,7 @@
                     </md-tabs>
                 </md-toolbar>
                 <md-list class="itemList">
-                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:present | multipleSearch: search)) | orderBy:order | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber" ng-click="showEvent(event)">
+                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:order | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber" ng-click="showEvent(event)">
                         <md-item-content>
                            <div class="md-tile-content">
                                 <h3 class="md-primary title">

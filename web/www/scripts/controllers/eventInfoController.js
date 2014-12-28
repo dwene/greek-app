@@ -1,4 +1,4 @@
-App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, Load, Events, Directory){
+App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, $location, Load, Events, Directory, Session){
         routeChange();
         Events.get();
         Directory.get();
@@ -7,7 +7,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.loading = true;
         var refreshed = false;
         $scope.goToReport = function(){
-            window.location.assign("#/app/events/" + $stateParams.tag + "/report");
+           $location.path("#/app/events/" + $stateParams.tag + "/report");
         }
         
         
@@ -135,7 +135,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             for (var i = 0; i < event.going.length; i++){
                 var user_push = getUsersFromKey(event.going[i])
                 event.going_list.push(user_push);
-                if (user_push.user_name == $rootScope.me.user_name){
+                if (user_push.user_name == Session.me.user_name){
                     $scope.going = true;
                     $scope.not_going = false;
                 }
@@ -143,7 +143,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             for (var i = 0; i < event.not_going.length; i++){
                 var user_push = getUsersFromKey(event.not_going[i])
                 event.not_going_list.push(user_push);
-                if (user_push.user_name == $rootScope.me.user_name){
+                if (user_push.user_name == Session.me.user_name){
                     $scope.not_going = true;
                     $scope.going = false;
                 }
@@ -164,7 +164,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             setTimeout(function(){$('.container').trigger('resize'); console.log('resizing')}, 800); 
         }
         $scope.editEvent = function(){
-            window.location.assign('#/app/events/'+$stateParams.tag+'/edit');
+            $location.path('#/app/events/'+$stateParams.tag+'/edit');
         }
         $scope.rsvp = function(rsvp){
             console.log($scope.event.key);
