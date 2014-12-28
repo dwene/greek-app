@@ -1,10 +1,12 @@
-   App.controller('pollController', function($scope, Load, $rootScope, localStorageService, Polls) {
+   App.controller('pollController', function($scope, Load, $rootScope, $location, localStorageService, Polls) {
         routeChange();
+        Polls.get();
             $scope.polls = Polls.polls;
             if ($scope.polls != null){
                 $scope.polls_loaded = true;
             }
             $scope.$on('polls:updated', function(){
+                $scope.polls = Polls.polls;
                 $scope.polls_loaded = true;
             });
 
@@ -37,7 +39,7 @@
 //        }
         
         $scope.showPoll = function(poll){
-                $location.url('app/polls/' + poll.key);
+                $location.path('app/polls/' + poll.key);
         }
         
 	});

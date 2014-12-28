@@ -108,7 +108,7 @@
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', to_send)
                 .success(function(data){
                     if (!RESTService.hasErrors(data)){
-                        $location.url('app/polls');
+                        $location.path('app/polls');
                     }
                     else{
                         console.log('ERR');
@@ -124,7 +124,7 @@
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', to_send)
                 .success(function(data){
                     if (!RESTService.hasErrors(data)){
-                       $location.url('app/polls/'+$stateParams.key + '/results');
+                       $location.path('app/polls/'+$stateParams.key + '/results');
                     }
                     else{
                         console.log('ERR');
@@ -136,6 +136,6 @@
         }
         
         $scope.goToResults = function(){
-            $location.url('#/app/polls/'+$stateParams.key + '/results');
+            $location.path('#/app/polls/'+$stateParams.key + '/results');
         }
 	});

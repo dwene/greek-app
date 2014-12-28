@@ -170,19 +170,18 @@
         <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true">
 
 				<div>
-					<a class="navbar-brand" ng-hide="navigation.session"></a>
-					<a class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="navigation.session">
+					<a class="navbar-brand" ng-hide="navigation.session.user_name"></a>
+					<a class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="navigation.session.user_name">
 					    <span class="badge" ng-bind="notification_count" ng-hide="notification_count==0"></span>
 					</a>
 				</div>      
 
 				<div flex></div>
-				
-				<md-button ng-show="navigation.session" ng-click="showHelpdialog()" aria-label="Help Dialog">
+				<md-button ng-show="navigation.session.user_name" ng-click="showHelpdialog()" aria-label="Help Dialog">
 				    <i class="fa fa-question-circle fa-fw"></i>
 				</md-button>
 				
-                <md-button ng-show="navigation.session" ng-click="toggleSidenav()" aria-label="Menu">
+                <md-button ng-show="navigation.session.user_name" ng-click="toggleSidenav()" aria-label="Menu">
                         <i class="fa fa-bars fa-fw" style="color:white;"></i>
                 </md-button>
                 

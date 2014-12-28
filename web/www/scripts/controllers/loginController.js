@@ -1,23 +1,27 @@
 //login page
-	App.controller('loginController', function($scope, RESTService, $rootScope, localStorageService, $location, AuthService, Session, AUTH_EVENTS) {
+	App.controller('loginController', function($scope, RESTService, $rootScope, localStorageService, $location, $log, AuthService, Session, AUTH_EVENTS) {
         routeChange();
+        $scope.showScreen = true;
         if (AuthService.isAuthenticated() || !AuthService.loginAttempted()){
-            $location.url('app');
+            $location.path('app');
         }
         // $.removeCookie(USER_NAME);
         // $.removeCookie(TOKEN);
         // $.removeCookie('FORM_INFO_EMPTY');
         $scope.login = function(user_name, password){
+            $scope.showScreen = false;
             AuthService.login({user_name: user_name, password: password}).then(function (user) {
               $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
               if (Session.perms == 'alumni'){
-                $location.url('app/directory');
+                $location.path('app/directory');
               }
               else{
-                $location.url('app/home');
+                $location.path('app/home');
               }
             }, function () {
+              $scope.showScreen = true;
               $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+              $log.error('login failed');
             });
             // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', packageForSending({user_name: user_name, password: password}))
             //     .success(function(data) {
@@ -54,6 +58,6 @@
             //     });
         };
         $scope.forgotPassword = function(){
-            $location.url('#/forgotpassword'); 
+            $location.path('#/forgotpassword'); 
         }
     });

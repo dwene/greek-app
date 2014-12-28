@@ -5,7 +5,7 @@
             $scope.error = false;
             if(isValid){
                 registerOrganizationService.set(data);
-                $location.url('registerorganizationinfo');
+                $location.path('registerorganizationinfo');
             }
             else{
                 $scope.error = true;

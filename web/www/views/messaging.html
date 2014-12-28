@@ -10,8 +10,8 @@
     </md-tab>
 </md-tabs>
 </md-toolbar>
-<ng-switch on="data.selectedIndex" class="tabpanel-container">
-        <div role="tabpanel" id="sendMessage-content" aria-labelledby="sendMessage" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+<div class="tabpanel-container">
+        <div role="tabpanel" id="sendMessage-content" aria-labelledby="sendMessage" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
                 
         <md-content class="md-padding">
                 <selecting-users ng-model="tags" include-users="true" clear-users="clearUsers" directory="directory"></selecting-users>
@@ -33,8 +33,8 @@
         </md-content>
 
         </div>
-        <div role="tabpanel" id="recentlySent-content" aria-labelledby="recentlySent" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
-            <section id="recentlySentMessages">
+        <div role="tabpanel" id="recentlySent-content" aria-labelledby="recentlySent" ng-show="data.selectedIndex != 0" md-swipe-left="next()" md-swipe-right="previous()">
+            <section id="recentlySentMessages" load-directive ng-model="recentLoaded">
 
                
                 <md-list>
@@ -58,7 +58,7 @@
                 </div>  
             </section>
         </div>
-</ng-switch>
+</div>
 </div>
 </div>
 

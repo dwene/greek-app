@@ -2,7 +2,6 @@ App.factory('Tags', function(RESTService, $rootScope, localStorageService, $q, $
     var item = {};
     item.tags = localStorageService.get('tags');
     item.cacheTimestamp = undefined;
-    
 
     item.get = function () {
         if (checkCacheRefresh(item.cacheTimestamp)){
@@ -22,7 +21,6 @@ App.factory('Tags', function(RESTService, $rootScope, localStorageService, $q, $
                     console.log('Error: ' , data);
                 });
         }
-        return tags;
     }
 
     item.destroy = function(){

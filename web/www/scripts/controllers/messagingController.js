@@ -3,7 +3,13 @@
     Directory.get();
     Tags.get();
     $scope.directory = Directory.directory;
+    $scope.$on('directory:updated', function(){
+        $scope.directory = Directory.directory;
+    });
     $scope.tags = Tags.tags;
+    $scope.$on('tags:updated', function(){
+        $scope.tags = Tags.tags;
+    });
     $scope.finished_loading = false;
     $scope.$watchCollection('[directory, tags]', function(){
         if ($scope.directory != null && $scope.tags != null ){
@@ -31,8 +37,10 @@
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
+        $scope.recentLoaded = false;
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', '')
             .success(function(data){
+                $scope.recentLoaded = true;
                 if (!RESTService.hasErrors(data))
                 {
                     $scope.sentMessages = JSON.parse(data.data);
@@ -45,6 +53,7 @@
                 }
             })
             .error(function(data) {
+                $scope.recentLoaded = true;
                 console.log('Error: ' , data);
             });      
         

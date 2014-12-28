@@ -56,7 +56,7 @@ App.controller('pollResultsController', function($scope, RESTService, Load, $roo
                     if (!RESTService.hasErrors(data)){
                         $scope.poll = JSON.parse(data.data);
                         if (($scope.poll.viewers != 'everyone' && Session.perms != COUNCIL)){
-                            $location.url('app/polls/'+$stateParams.key);
+                            $location.path('app/polls/'+$stateParams.key);
                         }
                         if ($scope.directory){
                             setIndividuals();

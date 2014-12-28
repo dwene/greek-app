@@ -5,16 +5,15 @@ App.factory('Events', function(RESTService, $rootScope, localStorageService, $q,
     item.cacheTimestamp = undefined;
 
     item.get = function () {
-        if (checkCacheRefresh(cacheTimestamp)){
-            cacheTimestamp = moment();
+        if (checkCacheRefresh(item.cacheTimestamp)){
+            item.cacheTimestamp = moment();
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
             .success(function(data){
                 if (!RESTService.hasErrors(data)){
-                    if (events != JSON.parse(data.data)){
+                    if (item.events != JSON.parse(data.data)){
                         item.events = JSON.parse(data.data);
                         localStorageService.set('events', item.events);
                         $rootScope.$broadcast('events:updated');
-
                     }
                 }
                 else{

@@ -14,10 +14,10 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         })
         this.homeButton = function(){
             if (this.checkPermissions(MEMBER)){
-                $location.url('app');
+                $location.path('app');
             }
             else{
-                $location.url('app/directory');
+                $location.path('app/directory');
             }
         }
         this.checkPermissions = function(perms){

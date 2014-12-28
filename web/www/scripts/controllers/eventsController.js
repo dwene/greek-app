@@ -1,16 +1,26 @@
-    App.controller('eventsController', function($scope, RESTService, Load, $rootScope, localStorageService, Events, Directory) {
-        routeChange();
+    App.controller('eventsController', function($scope, RESTService, Load, $rootScope, $location, localStorageService, Events, Directory) {
+        Events.get();
+        Directory.get();
+        $scope.dataLoaded = false;
         $scope.directory = Directory.directory;
         $scope.events = Events.events;
         $scope.$watchCollection('[directoryLoaded, eventsLoaded]', function(){
             if ($scope.directoryLoaded && $scope.eventsLoaded){
                 $scope.dataLoaded = true;
-                console.log('data is loaded');
             }
         });
             if (Events.check()){
                 getEvents();
             }
+            $scope.$watch('selectedTab', function(){
+                console.log('I saw the tab move');
+                if ($scope.selectedTab == 0){
+                    $scope.present = true;
+                }
+                else{
+                    $scope.present = false;
+                }
+            })
             $scope.$on('events:updated', function(){
                 getEvents();
             })
@@ -77,7 +87,7 @@
                 }
             }
             $scope.showEvent = function(event){
-                window.location.assign('#/app/events/' + event.tag);
+                $location.path('app/events/' + event.tag);
             }
             $scope.$watch('search', function(){
                 if ($scope.current){

@@ -3,11 +3,12 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
     $scope.inbox = Inbox.notifications;
     $scope.archived = Inbox.hidden_notifications;
     $scope.lengths = Inbox.lengths;
-	$scope.openMessagedialog = function(notify){
+	$scope.openMessageDialog = function(notify, ev){
         Inbox.selectMessage(notify);
         $mdDialog.show({
                 controller: 'messageDialogController',
-                templateUrl: '../views/templates/messageDialog.html'
+                templateUrl: '../views/templates/messageDialog.html',
+                targetEvent: ev
         });
         //$scope.selectedNotification = notify;
         var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
