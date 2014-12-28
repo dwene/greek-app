@@ -6,10 +6,10 @@
             <md-tab id="tagmembersTab" ui-sref=".tag">
                 Tag
             </md-tab>
-            <md-tab id="managemembersTab" ui-sref=".manage">
+            <md-tab id="managemembersTab" ng-show="$parent.perms == 'council'" ui-sref=".manage">
                 Manage
             </md-tab>
-            <md-tab id="addmembersTab" ui-sref=".add">
+            <md-tab id="addmembersTab" ng-show="$parent.perms == 'council'" ui-sref=".add">
                 Add
             </md-tab>
     </md-tabs>  
