@@ -4,7 +4,7 @@ App.service('Session', function ($rootScope, AUTH_EVENTS) {
     this.token = token;
     this.me = me;
     this.perms = this.me.perms;
-    $rootScope.$broadcast(AUTH_EVENTS.loginSuccessful);
+    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
   };
   this.destroy = function () {
     this.user_name = null;

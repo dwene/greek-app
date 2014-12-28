@@ -51,7 +51,6 @@ App.factory('Directory', function(RESTService, $rootScope, localStorageService, 
     item.check = function(){
         if (item.directory == null){
             item.get();
-            console.log('I should return false', directory);
             return false; 
         }
         return true;

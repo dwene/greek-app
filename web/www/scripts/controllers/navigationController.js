@@ -7,11 +7,14 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         if (Session.me){
             $scope.prof_pic = Session.me.prof_pic;
         }
-        $scope.$on('session:updated', function(){
-            console.log('updating prof pic', Session.me.prof_pic);
+        $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
+            this.session = Session;
+            this.me = Session.me;
+            this.subscribed = true;
             $scope.prof_pic = Session.me.prof_pic;
+            console.log('I got my prof_pic', $scope.prof_pic);
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
-        })
+        });
         this.homeButton = function(){
             if (this.checkPermissions(MEMBER)){
                 $location.path('app');

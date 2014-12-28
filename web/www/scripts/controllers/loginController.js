@@ -18,7 +18,6 @@
                   else{
                     $location.path('app/home');
                   }
-                  //$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 }
                 else{
                     $scope.showScreen = true;
