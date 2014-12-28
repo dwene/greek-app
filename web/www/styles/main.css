@@ -1864,6 +1864,15 @@ md-backdrop.md-opaque.md-default-theme {
 .md-tile-content {
   overflow: hidden;
 }
+md-dialog {
+  border-radius: 0px;
+}
+md-dialog .md-subheader:not(.md-sticky-no-effect)[sticky-state="active"] {
+  margin: 0px !important;
+}
+md-dialog .md-sticky-clone[sticky-state="active"]:not(.md-sticky-no-effect):after {
+  right: 0px;
+}
 .md-dialog-container,
 md-backdrop.md-opaque.md-default-theme {
   position: fixed;
@@ -1880,6 +1889,12 @@ md-sidenav {
   z-index: 1051;
   position: fixed;
   top: 0;
+}
+md-sidenav md-toolbar md-tabs {
+  background: rgba(0, 0, 0, 0.5);
+}
+md-sidenav md-toolbar .md-header {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 .nav .md-button {
   text-align: left;
@@ -1904,9 +1919,7 @@ md-input-group {
 }
 .face {
   border-radius: 30px;
-  border: 1px solid #ddd;
   width: 48px;
-  margin: 16px;
 }
 md-bottom-sheet {
   position: fixed;
@@ -1949,15 +1962,13 @@ a.navbar-brand:focus {
 .no-padding-top {
   padding-top: 0px;
 }
+/*Section Specific*/
 #menu md-toolbar.md-tall {
   min-height: 0px;
 }
 #menu .face {
   position: relative;
   top: 10px;
-}
-md-toolbar md-tabs {
-  width: 300px;
 }
 md-toolbar .md-fab {
   position: absolute;
@@ -2104,6 +2115,9 @@ md-toolbar.md-tall {
 #directory md-item-content:hover {
   background: #f8f8f8;
   cursor: pointer;
+}
+#directory .face {
+  margin: 16px;
 }
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);

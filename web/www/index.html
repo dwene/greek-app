@@ -196,6 +196,7 @@
   <md-toolbar class="md-tall">
     <div class="md-toolbar-tools">
       <img class="face" ng-src="{{prof_pic}}">
+        <p>{{name}}</p>
       <span flex></span>
       <md-button class="btn-touch" ng-click="toggleSidenav()">
         <i class="fa fa-times"></i>
@@ -353,16 +354,5 @@
         </script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
     </body>
-<div id="loadingScreen" class="mainLoadingScreen"><br><br>
-    <p id="nicePhrase" style="color: blue; font-size:24px;"></p>  
-    <script>
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min)) + min;
-        }
-        var niceThings = ['Wow! You are looking great today!', 'Dang! Have you been working out?', 'Hope your day is great!'];
-        document.getElementById("nicePhrase").innerHTML = niceThings[getRandomInt(0, niceThings.length)];
-    </script>
-    <p style="color:grey;">Give us one second while we setup for you...</p> 
-</div>
 </html>
 

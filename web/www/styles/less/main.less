@@ -989,9 +989,25 @@ a:hover{text-decoration:none;}
 md-backdrop.md-opaque.md-default-theme{z-index:1040; background:rgba(0, 0, 0, .5);}
 .md-dialog-container{z-index:1042;}
 .md-tile-content{overflow:hidden;}
+md-dialog{
+    border-radius:0px;
+    .md-subheader:not(.md-sticky-no-effect)[sticky-state="active"]{
+        margin:0px !important;
+    }
+    .md-sticky-clone[sticky-state="active"]:not(.md-sticky-no-effect):after{right:0px;}
+}
+
+
 .md-dialog-container, md-backdrop.md-opaque.md-default-theme{position:fixed;}
 .aside li .md-button{text-align:left; text-transform:none; outline: none;}
-.md-sidenav-backdrop{z-index:1050;} md-sidenav{z-index:1051; position:fixed; top:0;}
+.md-sidenav-backdrop{z-index:1050;}
+
+md-sidenav{z-index:1051; position:fixed; top:0;
+    md-toolbar {
+        md-tabs{background:rgba(0,0,0,.5);}
+        .md-header{background-color: rgba(0,0,0,0) !important;}
+    }
+}
 .nav .md-button{text-align:left;}
 md-divider{margin-bottom:20px;}
 .collapse.in{display:block !important;}
@@ -999,7 +1015,7 @@ md-divider{margin-bottom:20px;}
 md-tabs.md-default-theme md-tab:focus{border:none;}
 md-input-group input{width:100%;}
 md-input-group{margin:0px 0px 8px 0px;}
-.face {border-radius:30px; border:1px solid #ddd; width:48px; margin:16px;}
+.face{border-radius:30px; width:48px;}
 md-bottom-sheet{position:fixed; z-index:1041;
     md-item{height:auto;}
     .fa{margin-top:15px;}
@@ -1021,13 +1037,14 @@ a.navbar-brand:focus{outline:none;}
 /*Helper Classes*/
 .no-padding-top{padding-top:0px;}
 
+/*Section Specific*/
+
 #menu{
     md-toolbar.md-tall{min-height:0px;}
     .face{position:relative; top:10px;}
 }
 
 md-toolbar{
-    md-tabs{width:300px;}
     .md-fab{position:absolute; bottom:-28px;}
     #back{position:absolute; left:15px; color:white; background:rgb(255,138,128);}
     .more-options{position:absolute; right:8px; bottom:8px; color:white !important; background:rgb(130,177,255) !important; font-size:12px;}
@@ -1088,7 +1105,7 @@ md-toolbar.md-tall{
     md-toolbar{min-height:0px;}
     md-input-group{margin-top:0px;}
     md-item-content:hover{background:@hoverColor; cursor:pointer;}
-
+    .face{margin:16px;}
 }
 
 

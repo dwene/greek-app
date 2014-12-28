@@ -1,7 +1,6 @@
 <md-dialog>
-<form id="helpMessage" name="helpMessage" ng-submit="sendHelpMessage(helpMessage.$valid, message)" novalidate>
   <md-content>
-       <md-subheader class="md-primary md-sticky-no-effect">
+       <md-subheader class="md-primary">
             {{message.title}}
             <p>{{formatTimestamp(message.timestamp)}}</p>
         </md-subheader>
@@ -16,9 +15,8 @@
             <span flex></span>
         <md-button type="button" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</md-button>
         <md-button type="button" ng-show="selectedNotification.type == 'poll'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Poll</md-button>
-        <md-button class="btn-touch" ng-click="closeNotificationModal()">OK</md-button>
+        <md-button ng-click="closeNotificationModal()">done</md-button>
   </div>
-</form>
 </md-dialog>
 
 
