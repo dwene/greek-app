@@ -11,13 +11,20 @@
         $scope.login = function(user_name, password){
             $scope.showScreen = false;
             AuthService.login({user_name: user_name, password: password}).then(function (user) {
-              $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-              if (Session.perms == 'alumni'){
-                $location.path('app/directory');
-              }
-              else{
-                $location.path('app/home');
-              }
+                if (AuthService.isAuthenticated()){
+                  $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                  if (Session.perms == 'alumni'){
+                    $location.path('app/directory');
+                  }
+                  else{
+                    $location.path('app/home');
+                  }
+                }
+                else{
+                    $scope.showScreen = true;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                    $log.error('login failed');
+                }
             }, function () {
               $scope.showScreen = true;
               $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
