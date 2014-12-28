@@ -7,7 +7,7 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         if (Session.me){
             $scope.prof_pic = Session.me.prof_pic;
         }
-        $scope.$on(AUTH_EVENTS.loginSuccess, function(){
+        $scope.$on('session:updated', function(){
             console.log('updating prof pic', Session.me.prof_pic);
             $scope.prof_pic = Session.me.prof_pic;
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;

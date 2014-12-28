@@ -10,7 +10,7 @@
         // $.removeCookie('FORM_INFO_EMPTY');
         $scope.login = function(user_name, password){
             $scope.showScreen = false;
-            AuthService.login({user_name: user_name, password: password}).then(function (user) {
+            AuthService.login({user_name: user_name.toLowerCase(), password: password}).then(function (user) {
                 if (AuthService.isAuthenticated()){
                   if (Session.perms == 'alumni'){
                     $location.path('app/directory');
