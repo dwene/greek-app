@@ -8,7 +8,7 @@
             .success(function(data){
                 if (!RESTService(data))
                 {
-                    window.location.assign("#/app");
+                    $location.url("app");
                 }
                 else
                     console.log('ERROR: '+JSON.stringify(data));

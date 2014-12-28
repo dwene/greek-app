@@ -1,13 +1,11 @@
-    App.controller('registerController', function($scope, $rootScope, registerOrganizationService, LoadScreen){
+    App.controller('registerController', function($scope, $rootScope, $location, registerOrganizationService, LoadScreen){
         routeChange();
-        $rootScope.logout();
         $scope.data = {};
-        LoadScreen.stop();
         $scope.continue = function(isValid, data){
             $scope.error = false;
             if(isValid){
                 registerOrganizationService.set(data);
-                window.location.assign('#/registerorganizationinfo');
+                $location.url('registerorganizationinfo');
             }
             else{
                 $scope.error = true;

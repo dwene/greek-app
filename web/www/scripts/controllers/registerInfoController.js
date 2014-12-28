@@ -1,7 +1,7 @@
-    App.controller('registerinfoController', function($scope, RESTService, registerOrganizationService, $rootScope) {
+    App.controller('registerinfoController', function($scope, RESTService, registerOrganizationService, $rootScope, $location) {
         routeChange();
         if (registerOrganizationService.get() === undefined){
-            window.location.assign('#/register');
+            $location.url('register');
         }
         $scope.$watch('item.user_name', function() {
             $scope.unavailable = false;
@@ -24,7 +24,6 @@
                 });
         }
         $scope.registerinfoClick = function(item, isValid){
-        
         if(isValid){
             var organization = registerOrganizationService.get();
                 //it would be great if we could add validation here to see if the organization information was correctly added from the previous page
@@ -39,11 +38,10 @@
                     if (!RESTService.hasErrors(data))
                     {
                         var responseData = JSON.parse(data.data);
+                        Session.create(data_tosend.user.user_name.toLowerCase(),responseData.token, 'council');
                         $.cookie(TOKEN,  responseData.token, {expires: new Date(responseData.expires)});
-                        $rootScope.perms =  responseData.perms;
-                        $.cookie("USER_NAME", data_tosend.user.user_name);
-                        window.location.assign("/#/app/managemembers/add");
-                        $rootScope.refresh();
+                        $.cookie(USER_NAME, data_tosend.user.user_name,{expires: new Date(responseData.expires)});
+                        $location.url("app/managemembers/add");
                     }
                     else{
                         if (data.error == 'USERNAME_TAKEN'){
@@ -62,3 +60,4 @@
             }
         };
 	});
+    

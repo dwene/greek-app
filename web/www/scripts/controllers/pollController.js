@@ -1,16 +1,12 @@
    App.controller('pollController', function($scope, Load, $rootScope, localStorageService, Polls) {
         routeChange();
-        Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
-            $scope.polls = Polls.get();
+            $scope.polls = Polls.polls;
             if ($scope.polls != null){
                 $scope.polls_loaded = true;
             }
             $scope.$on('polls:updated', function(){
-                $scope.polls= Polls.get();
                 $scope.polls_loaded = true;
             });
-        });
 
         
 //        $scope.checkForMorePolls = function(polls, pageNum, max){
@@ -41,7 +37,7 @@
 //        }
         
         $scope.showPoll = function(poll){
-                window.location.assign('#/app/polls/' + poll.key);
+                $location.url('app/polls/' + poll.key);
         }
         
 	});

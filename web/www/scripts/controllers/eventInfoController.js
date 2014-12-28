@@ -1,5 +1,7 @@
 App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, Load, Events, Directory){
         routeChange();
+        Events.get();
+        Directory.get();
         $scope.going = false;
         $scope.not_going = false;
         $scope.loading = true;
@@ -62,27 +64,20 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             }
             return " ";
         }
-        Load.then(function(){
-        $rootScope.requirePermissions(MEMBER);
-        // var event_tag = $stateParams.tag;
-
+        $scope.events = Events.events;
+        $scope.directory = Directory.directory;
         if (Directory.check()){
-            $scope.directory = Directory.get();
             getEventAndSetInfo($scope.events);
         }
         $scope.$on('directory:updated', function(){
-            $scope.directory = Directory.get();
             getEventAndSetInfo($scope.events);
         });
         if (Events.check()){
-            $scope.events = Events.get();
             getEventAndSetInfo($scope.events);
         }
         $scope.$on('events:updated', function(){
-            $scope.events = Events.get();
             getEventAndSetInfo($scope.events);
         });
-	   });
         // function tryLoadEvent(count){
         //     LoadEvents();
         //     function LoadEvents(){

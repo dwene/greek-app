@@ -34,26 +34,26 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
                     templateUrl: '../views/templates/helpDialog.html'
             });
         }
-        $scope.logout = function(){
-            $scope.$emit(AUTH_EVENTS.logoutSuccess);
-            console.log('Im logging out');
-            $.removeCookie(USER_NAME);
-            $.removeCookie(TOKEN);
-            $.removeCookie(PERMS);
-            Session.destroy();
-            console.log('Am I authenticated after destroying session?', AuthService.isAuthenticated());
-            $.removeCookie('FORM_INFO_EMPTY');
-            $rootScope.directory = {};
-            $rootScope.me = undefined;
-            $rootScope.polls = undefined;
-            $rootScope.perms = undefined;
-            $rootScope.events = undefined;
-            $rootScope.notifications = undefined;
-            $rootScope.hidden_notifications = undefined;
-            $rootScope.updateNotificationBadge();
-            console.log('location', $location.url());
-            if ($location.url() != 'login'){
-                $location.url('login');
-            }
-        }
+        // $scope.logout = function(){
+        //     $scope.$emit(AUTH_EVENTS.logoutSuccess);
+        //     console.log('Im logging out');
+        //     $.removeCookie(USER_NAME);
+        //     $.removeCookie(TOKEN);
+        //     $.removeCookie(PERMS);
+        //     Session.destroy();
+        //     console.log('Am I authenticated after destroying session?', AuthService.isAuthenticated());
+        //     $.removeCookie('FORM_INFO_EMPTY');
+        //     $rootScope.directory = {};
+        //     $rootScope.me = undefined;
+        //     $rootScope.polls = undefined;
+        //     $rootScope.perms = undefined;
+        //     $rootScope.events = undefined;
+        //     $rootScope.notifications = undefined;
+        //     $rootScope.hidden_notifications = undefined;
+        //     $rootScope.updateNotificationBadge();
+        //     console.log('location', $location.url());
+        //     if ($location.url() != 'login'){
+        //         $location.url('login');
+        //     }
+        // }
 	});

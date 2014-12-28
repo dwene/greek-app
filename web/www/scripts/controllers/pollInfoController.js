@@ -1,12 +1,13 @@
-    App.controller('pollInfoController', function($scope, RESTService, Load, $rootScope, $stateParams, $mdBottomSheet, Directory) {
+    App.controller('pollInfoController', function($scope, RESTService, $rootScope, $stateParams, $mdBottomSheet, $location, Directory) {
         routeChange();
+        Directory.get();
         //$scope.polls = Polls.get();
-        $scope.directory = Directory.get();
+        $scope.directory = Directory.directory;
         // $scope.$on('polls:updated', function(){
         //     $scope.polls = Polls.get();
         // });
         $scope.$on('directory:updated', function(){
-            $scope.directory = Directory.get();
+            $scope.directory = Directory.directory;
         });
         $scope.$watchCollection('[poll, directory]', function(){
             if ($scope.directory && $scope.poll){
@@ -28,42 +29,39 @@
         
         $scope.showSurveyoptions = function(event){
     
-                $mdBottomSheet.show({
-                  templateUrl: 'views/templates/bottomGrid.html',
-                  controller: surveyOptionsCtrl,
-                  targetEvent: event
-                });
-            }
+            $mdBottomSheet.show({
+              templateUrl: 'views/templates/bottomGrid.html',
+              controller: surveyOptionsCtrl,
+              targetEvent: event
+            });
+        }
 
-            function surveyOptionsCtrl($scope, $mdBottomSheet) {
-                $scope.items = [
-                    { name: 'REPORT', icon: 'fa-bar-chart'},
-                    { name: 'EDIT', icon: 'fa-edit' },
-                    { name: 'OPEN', icon: 'fa-play' },
-                    { name: 'CLOSE', icon: 'fa-pause'}
-                ];
-            };
+        function surveyOptionsCtrl($scope, $mdBottomSheet) {
+            $scope.items = [
+                { name: 'REPORT', icon: 'fa-bar-chart'},
+                { name: 'EDIT', icon: 'fa-edit' },
+                { name: 'OPEN', icon: 'fa-play' },
+                { name: 'CLOSE', icon: 'fa-pause'}
+            ];
+        };
 
-        Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
-            var to_send = {key: $stateParams.key};
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', to_send)
-                .success(function(data){
-                    if (!RESTService.hasErrors(data)){
-                        $scope.poll = JSON.parse(data.data);
-                        $scope.creator = $scope.getUserFromKey($scope.poll.creator);
-                    }
-                    else{
-                        $scope.notFound = true;
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
+        var to_send = {key: $stateParams.key};
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', to_send)
+            .success(function(data){
+                if (!RESTService.hasErrors(data)){
+                    $scope.poll = JSON.parse(data.data);
+                    $scope.creator = $scope.getUserFromKey($scope.poll.creator);
+                }
+                else{
                     $scope.notFound = true;
-                    console.log('Error: ' , data);
-                    $scope.loading = false;
-                });
-        });
+                    console.log('ERR');
+                }
+            })
+            .error(function(data) {
+                $scope.notFound = true;
+                console.log('Error: ' , data);
+                $scope.loading = false;
+            });
         $scope.closePoll = function(close){
             var to_send = {key: $stateParams.key};
             if (close === true){
@@ -93,13 +91,14 @@
         $scope.$watchCollection('poll.questions', function(){
             console.log('Im doing stuff');
             if ($scope.poll && $scope.poll.questions){   
-            for (var i = 0; i < $scope.poll.questions.length; i++){
-                if (!$scope.poll.questions[i].new_response){
-                    $scope.formUnfinished = true;
-                    return;
+                for (var i = 0; i < $scope.poll.questions.length; i++){
+                    if (!$scope.poll.questions[i].new_response){
+                        $scope.formUnfinished = true;
+                        return;
+                    }
                 }
+                $scope.formUnfinished = false;
             }
-            $scope.formUnfinished = false;}
         })
         
 //        #FIXME creator undefined :-P
@@ -109,7 +108,7 @@
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', to_send)
                 .success(function(data){
                     if (!RESTService.hasErrors(data)){
-                        window.location.assign('#/app/polls')
+                        $location.url('app/polls');
                     }
                     else{
                         console.log('ERR');
@@ -125,7 +124,7 @@
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', to_send)
                 .success(function(data){
                     if (!RESTService.hasErrors(data)){
-                       window.location.assign('#/app/polls/'+$stateParams.key + '/results');
+                       $location.url('app/polls/'+$stateParams.key + '/results');
                     }
                     else{
                         console.log('ERR');
@@ -137,6 +136,6 @@
         }
         
         $scope.goToResults = function(){
-            window.location.assign('#/app/polls/'+$stateParams.key + '/results');
+            $location.url('#/app/polls/'+$stateParams.key + '/results');
         }
 	});

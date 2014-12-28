@@ -1,26 +1,24 @@
     App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, getEvents, $timeout, Directory, Tags, Events){
         routeChange();
+        Directory.get();
+        Tags.get();
+        Events.get();
         $scope.loading = true;
-        $scope.tags = Tags.get();
-        $scope.events = Events.get();
-        $scope.directory = Directory.get();
-        Load.then(function(){
-        $rootScope.requirePermissions(LEADERSHIP);
+        $scope.tags = Tags.tags;
+        $scope.events = Events.events;
+        $scope.directory = Directory.directory;
 
         getEventAndSetInfo($scope.events);
         $scope.$on('tags:updated', function(){
-            $scope.tags = Tags.get();
             getEventAndSetInfo($scope.events);
         });
         $scope.$on('directory:updated', function(){
-            $scope.directory = Directory.get();
             getEventAndSetInfo($scope.events);
         });
         $scope.$on('events:updated', function(){
-            $scope.events = Events.get();
             getEventAndSetInfo($scope.events);
         });
-	   });
+	   // });
         
         //prevent form from submitting on enter
     $('#newEvent').bind("keyup keypress", function(e) {

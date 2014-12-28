@@ -1,46 +1,51 @@
 
 App.factory('Events', function(RESTService, $rootScope, localStorageService, $q, $timeout){
-    var events = localStorageService.get('events');
-    var cacheTimestamp = undefined;
-    return {
-        get: function () {
-            if (checkCacheRefresh(cacheTimestamp)){
-                cacheTimestamp = moment();
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
-                .success(function(data){
-                    if (!RESTService.hasErrors(data)){
-                        if (events != JSON.parse(data.data)){
-                            events = JSON.parse(data.data);
-                            localStorageService.set('events', events);
-                            $rootScope.$broadcast('events:updated');
+    var item = {};
+    item.events = localStorageService.get('events');
+    item.cacheTimestamp = undefined;
 
-                        }
+    item.get = function () {
+        if (checkCacheRefresh(cacheTimestamp)){
+            cacheTimestamp = moment();
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
+            .success(function(data){
+                if (!RESTService.hasErrors(data)){
+                    if (events != JSON.parse(data.data)){
+                        item.events = JSON.parse(data.data);
+                        localStorageService.set('events', item.events);
+                        $rootScope.$broadcast('events:updated');
+
                     }
-                    else{
-                        console.log('ERROR: ',data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
-            return events;
-        },
-        clear: function(){
-            events = undefined;
-        },
-        refresh: function(){
-            cacheTimestamp = undefined;
-            this.get();
-        },
-        check: function(){
-            if (events == null){
-                this.get();
-                return false;
-            }
-            return true;
+                }
+                else{
+                    console.log('ERROR: ',data);
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+            });
         }
-    };
+    }
+    item.destroy = function(){
+        item.cacheTimestamp = undefined;
+        item.events = undefined;
+        localStorageService.remove('events');
+    }
+    // item.clear = function(){
+    //     events = undefined;
+    // }
+    item.refresh = function(){
+        cacheTimestamp = undefined;
+        item.get();
+    }
+    item.check = function(){
+        if (item.events == null){
+            item.get();
+            return false;
+        }
+        return true;
+    }
+    return item;
 });
 
 /*

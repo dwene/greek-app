@@ -1,26 +1,21 @@
-    App.controller('newmemberinfoController', function($scope, RESTService, $rootScope, $stateParams, LoadScreen){
+    App.controller('newmemberinfoController', function($scope, RESTService, $rootScope, $stateParams, $location){
         routeChange();
         $scope.loading = true;
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
-        logoutCookies();
-        $.cookie(TOKEN, $stateParams.key);
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', '')
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
-                    $('.container').fadeIn();
-                    LoadScreen.stop();
-                    $('#body').show();
                     $scope.loading = false;
                 }
                 else{
                     console.log('ERROR: ',data);
-                    window.location.assign('#/login');
+                    $location.url('login');
                 }
             })
             .error(function(data) {
-                window.location.assign('#/login');
+                $location.url('login');
                 console.log('Error: ' , data);
             });
         $scope.$watch('item.user_name', function() {
@@ -48,42 +43,41 @@
         $scope.createAccount = function(isValid){
             
             if(isValid){
-            $scope.working = 'pending';
-            $scope.waiting_for_response = true;
-            var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', to_send)
-            .success(function(data){
-                if (!RESTService.hasErrors(data))
-                {
-                    $scope.working = 'done';
-                    var returned_data = JSON.parse(data.data);
-                    $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
-                    $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
-                    $.cookie(PERMS, returned_data.perms);
-                    $.cookie('FORM_INFO_EMPTY', 'true');
-                    console.log($.cookie(TOKEN));
-                    window.location.assign("/#/app/accountinfo");
-                }
-                else
-                {
-                    $scope.working = 'broken';
-                    if(data.error == "INVALID_USERNAME")
+                $scope.working = 'pending';
+                $scope.waiting_for_response = true;
+                var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', to_send)
+                .success(function(data){
+                    if (!RESTService.hasErrors(data))
                     {
-                        $scope.unavailable = true;
-                        $scope.available = false;
+                        $scope.working = 'done';
+                        var returned_data = JSON.parse(data.data);
+                        $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
+                        $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
+                        $.cookie(PERMS, returned_data.perms);
+                        $.cookie('FORM_INFO_EMPTY', 'true');
+                        $location.url("app/accountinfo");
                     }
-                    console.log('ERROR: ', data);
-                } 
-            })
-            .error(function(data) {
-                $scope.working = 'broken';
-                console.log('Error: ' , data);
-            });
-                //now logged in
-            $scope.waiting_for_response = false;
+                    else
+                    {
+                        $scope.working = 'broken';
+                        if(data.error == "INVALID_USERNAME")
+                        {
+                            $scope.unavailable = true;
+                            $scope.available = false;
+                        }
+                        console.log('ERROR: ', data);
+                    } 
+                })
+                .error(function(data) {
+                    $scope.working = 'broken';
+                    console.log('Error: ' , data);
+                });
+                    //now logged in
+                $scope.waiting_for_response = false;
             }
             else{
-            $scope.submitted = true;
+                $scope.submitted = true;
             }
         }
     });

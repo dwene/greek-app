@@ -1,9 +1,16 @@
 App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization, AUTH_EVENTS){
         routeChange();
         this.session = Session;
-        this.me = Organization.me;
+        this.me = Session.me;
         this.subscribed = true;
-        this.defaultProfilePicture = '../images/defaultprofile.png';
+        $scope.prof_pic = '../images/defaultprofile.png';
+        if (Session.me){
+            $scope.prof_pic = Session.me.prof_pic;
+        }
+        $scope.$on(AUTH_EVENTS.loginSuccess, function(){
+            console.log('updating prof pic', Session.me.prof_pic);
+            $scope.prof_pic = Session.me.prof_pic;
+        })
         this.homeButton = function(){
             if (this.checkPermissions(MEMBER)){
                 $location.url('app');

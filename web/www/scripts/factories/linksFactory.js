@@ -1,30 +1,38 @@
 App.factory('Links', function(RESTService, $rootScope, localStorageService, $q, $timeout){
-    var links = localStorageService.get('links');
-    var cacheTimestamp = undefined;
-    return {
-        get: function () {
-            if (checkCacheRefresh(cacheTimestamp)){
-                    cacheTimestamp = moment();
-                    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', '')
-                        .success(function(data){
-                        if (!RESTService.hasErrors(data)){
-                            links = JSON.parse(data.data);
-                            localStorageService.set('links', links);
-                            $rootScope.$broadcast('links:updated');
-                        }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
-            return links;
-        },
-        check: function(){
-            if (links == null){
-                this.get();
-                return false;
-            }
-            return true;
+    var item = {};
+    item.links = localStorageService.get('links');
+    item.cacheTimestamp = undefined;
+
+
+    item.get= function () {
+        if (checkCacheRefresh(item.cacheTimestamp)){
+                item.cacheTimestamp = moment();
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', '')
+                    .success(function(data){
+                    if (!RESTService.hasErrors(data)){
+                        item.links = JSON.parse(data.data);
+                        localStorageService.set('links', item.links);
+                        $rootScope.$broadcast('links:updated');
+                    }
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+            });
         }
-    };
+    }
+
+    item.destroy = function(){
+        item.cacheTimestamp = undefined;
+        item.links = undefined;
+        localStorageService.remove('links');
+    }
+
+    item.check = function(){
+        if (item.links == null){
+            item.get();
+            return false;
+        }
+        return true;
+    }
+    return item;
 });

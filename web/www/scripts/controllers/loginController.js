@@ -1,19 +1,13 @@
 //login page
-	App.controller('loginController', function($scope, RESTService, $rootScope, LoadScreen, localStorageService, $location, AuthService, Session, AUTH_EVENTS) {
+	App.controller('loginController', function($scope, RESTService, $rootScope, localStorageService, $location, AuthService, Session, AUTH_EVENTS) {
         routeChange();
-        console.log('Did I attempt the login?', AuthService.loginAttempted());
-        console.log('Am I authenticated?!?!', AuthService.isAuthenticated());
         if (AuthService.isAuthenticated() || !AuthService.loginAttempted()){
-            console.log('this didnt work....!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
             $location.url('app');
         }
         // $.removeCookie(USER_NAME);
         // $.removeCookie(TOKEN);
         // $.removeCookie('FORM_INFO_EMPTY');
-        $rootScope.directory = {};
-        LoadScreen.stop();
         $scope.login = function(user_name, password){
-            LoadScreen.start();
             AuthService.login({user_name: user_name, password: password}).then(function (user) {
               $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
               if (Session.perms == 'alumni'){

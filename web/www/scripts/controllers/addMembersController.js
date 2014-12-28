@@ -1,11 +1,11 @@
     App.controller('addMembersController', function($scope, RESTService, $rootScope, Load, localStorageService, Directory) {
         routeChange();
         $scope.adds = [];
-        Load.then(function(){
+        //Load.then(function(){
          var formObject = document.getElementById('uploadMembers');
         if(formObject){
             formObject.addEventListener('change', readSingleFile, false);}
-        $rootScope.requirePermissions(COUNCIL);
+        //$rootScope.requirePermissions(COUNCIL);
         //initialize a member array
         //initialize a filecontents variable
         var filecontents;
@@ -47,7 +47,7 @@
         
         
         $scope.getMembers = function(){
-            $scope.directory = Directory.get();
+            $scope.directory = Directory.directory;
         }
 
         if (Directory.check()){
@@ -170,5 +170,5 @@
                 
             }
         };
-        });
+        //});
     });

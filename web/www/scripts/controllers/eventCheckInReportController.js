@@ -4,6 +4,8 @@
         $scope.maxNoShowsLength = 0;
         $scope.loading = true;
         $scope.shows = [];
+        Directory.get();
+        Events.get();
         $scope.increaseMaxLength = function(){
             if ($scope.users && $scope.shows){
                 if ($scope.maxLength < $scope.users.length){
@@ -31,23 +33,16 @@
                 return $rootScope.defaultProfilePicture;
             }   
         }
-        Load.then(function(){
-            if (Directory.check()){
-                $scope.directory = Directory.get();
-            }
-            if (Events.check()){
-                $scope.events = Events.get();
-            }
+        // Load.then(function(){
+            $scope.directory = Directory.directory;
+            $scope.events = Events.events;
             $scope.$on('events:updated', function(){
-                $scope.events = Events.get();
                 getCheckInData();
             });
             $scope.$on('directory:updated', function(){
-                $scope.directory = Directory.get();
                 getCheckInData();
             });
             getCheckInData();
-            $rootScope.requirePermissions(LEADERSHIP);
             function getCheckInData(){
             if ($scope.directory == null || $scope.events == null){
                 return;
@@ -313,5 +308,5 @@
                 var minutes = intermediate.diff(mStart, 'minutes');
                 return hours + ':' + ("0" + minutes).slice(-2);
             }
-        });
+        // });
   });

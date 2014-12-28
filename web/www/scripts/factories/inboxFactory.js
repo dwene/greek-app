@@ -1,6 +1,6 @@
 App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
     var inbox = {};
-    var load_data = localStorageService.get('notifications');
+    var load_data = localStorageService.get('inbox');
     if (load_data){
         inbox.notifications = load_data.notifications;
         inbox.lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
@@ -9,13 +9,19 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
     inbox.selectMessage = function(notify){
         inbox.selected_message = notify;
     }
+    inbox.destroy = function(){
+        localStorageService.remove('inbox');
+        delete inbox.notifications;
+        delete inbox.lengths;
+        delete inbox.hidden_notifications;
+    }
     inbox.update = function () {
-        console.log('calling notifications get');
+        //console.log('calling notifications get');
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
         .success(function(data){
             if (!RESTService.hasErrors(data)){
                 var load_data = JSON.parse(data.data);
-                localStorageService.set('notifications', load_data);
+                localStorageService.set('inbox', load_data);
                 inbox.notifications = load_data.notifications;
                 inbox.lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
                 // for (var i = 0; i < $rootScope.notifications.length; i++){

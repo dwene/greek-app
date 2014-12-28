@@ -1,6 +1,5 @@
     App.controller('profilepictureController', function($scope, RESTService, $http, Load, $rootScope){
     routeChange();
-    Load.then(function(){
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', '')
             .success(function(data){
                 if (!RESTService.hasErrors(data))
@@ -10,7 +9,7 @@
                 }
                 else
                 {
-                    console.log("Error" , data.error)
+                    console.log("Error" , data.error);
                 }
             })
             .error(function(data) {
@@ -47,5 +46,4 @@
                 console.log(data);
             });
         }
-    });
     });

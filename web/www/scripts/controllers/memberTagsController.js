@@ -1,5 +1,7 @@
 App.controller('membertagsController', function($scope, RESTService, $rootScope, Load, localStorageService, Directory, Tags) 
 {
+    Tags.get();
+    Directory.get();
     $scope.dataLoaded = $scope.directoryLoaded && $scope.tagsLoaded;
     $scope.watches = [$scope.directoryLoaded, $scope.tagsLoaded];
     $scope.$watchCollection('[directoryLoaded, tagsLoaded]', function(){
@@ -60,7 +62,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         }
         function getUsers(){
             var out_users = [];
-            $scope.directory = Directory.get();
+            $scope.directory = Directory.directory;
             var users = $scope.directory.members;
             for (var i = 0; i < users.length; i ++){
                 var user = users[i];
@@ -127,12 +129,12 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         //     console.log('Error: ' , data);
         // });
             if (Tags.check()){
-                $scope.tags = Tags.get();
+                $scope.tags = Tags.tags;
                 $scope.tagsLoaded = true;
             }
             else{
                 $scope.$on('tags:updated', function(){
-                    $scope.tags = Tags.get();
+                    $scope.tags = Tags.tags;
                     $scope.tagsLoaded = true;
                 });
             }

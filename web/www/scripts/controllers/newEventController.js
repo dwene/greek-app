@@ -1,13 +1,9 @@
-    App.controller('newEventController', function($scope, RESTService, $rootScope, Load, $timeout, localStorageService, Tags) {
+App.controller('newEventController', function($scope, RESTService, $rootScope, Load, $timeout, localStorageService, Tags) {
         routeChange();
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
+            Tags.get();
+            $scope.tags = Tags.tags;
             $scope.event = {};
             $scope.event.tag = '';
-            $scope.tags = Tags.get();
-            $scope.$on('tags:updated', function(){
-                $scope.tags = Tags.get();
-            });
             $scope.$watch('event.tag', function() {
                 if (!$scope.event)
                     $scope.unavailable = false;
@@ -76,7 +72,6 @@
                     });
                 }
             }
-        });
         $scope.$watch('event.date_start', function(){
             if ($scope.event){
                 if ($scope.event.date_start && !$scope.event.date_end){
@@ -98,5 +93,5 @@
                 }
                 $timeout(function(){$('.picker').trigger('change')},200);
             }
-        });
     });
+});

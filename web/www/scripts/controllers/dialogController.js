@@ -1,4 +1,4 @@
-App.controller('dialogController', function dialogController($scope, RESTService, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
+App.controller('dialogController', function($scope, RESTService, LoadScreen, $rootScope, $timeout, $mdSidenav, $mdDialog) {
 
             $scope.sendHelpMessage = function(isValid, content){
                 console.log('I am getting submitted');

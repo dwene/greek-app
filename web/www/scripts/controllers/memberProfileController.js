@@ -1,18 +1,16 @@
-App.controller('memberprofileController', function($scope, $rootScope, $stateParams, RESTService, Load, LoadScreen, localStorageService, Directory, $mdBottomSheet){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, RESTService, localStorageService, Directory, $mdBottomSheet){
     routeChange();
-    Load.then(function(){
-        $scope.directory = Directory.get();
+        Directory.get();
+        $scope.directory = Directory.directory;
         if ($scope.directory){
             loadMemberData();
         }
         $scope.$on('directory:updated', function(){
-            $scope.directory = Directory.get();
             loadMemberData();
         });
         if ($stateParams.id.toString().length < 2){
             window.location.assign('/#/app/directory');
         }
-    });
     
     $scope.showProfileoptions = function(event){
     

@@ -1,16 +1,13 @@
     App.controller('managealumniController', function($scope, RESTService, $rootScope, Load, LoadScreen, localStorageService, Directory){
         routeChange();
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
-            $scope.directory = Directory.get();
+            Directory.get();
+            $scope.directory = Directory.directory;
             if ($scope.directory){
                 $scope.finished_loading = true;
             }
             $scope.$on('directory:updated', function(){
-                $scope.directory = Directory.get();
                 $scope.finished_loading = true;
             });
-        }); 
         $scope.openDeleteAlumniModal = function(user){
             $('#deleteAlumniModal').modal();
             $scope.selectedUser = user;

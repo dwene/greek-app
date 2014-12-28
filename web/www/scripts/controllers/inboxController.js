@@ -1,4 +1,5 @@
-App.controller('inboxController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, Events, removePassedEventsFilter, Directory, Inbox){
+App.controller('inboxController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, removePassedEventsFilter, Inbox){
+    
     $scope.inbox = Inbox.notifications;
     $scope.archived = Inbox.hidden_notifications;
     $scope.lengths = Inbox.lengths;

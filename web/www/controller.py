@@ -763,9 +763,21 @@ class RESTApi(remote.Service):
             user.timestamp = datetime.datetime.now()
             user.put()
             return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
-                                                                             datetime.timedelta(days=EXPIRE_TIME)}
+                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': user.to_dict()}
             return OutgoingMessage(data=json_dump(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/token_login',
+                      http_method='POST', name='auth.token_login')
+    def token_login(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        user = request_user.user_name;
+        token = request_user.current_token;
+        me = request_user.to_dict();
+        to_send = json_dump({'user_name':user, 'token': token, 'me': me})
+        return OutgoingMessage(error='', data=to_send)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_users',
                       http_method='POST', name='auth.add_users')

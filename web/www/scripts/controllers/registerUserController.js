@@ -1,8 +1,6 @@
     App.controller('registerUserController', function($scope, RESTService, $rootScope, registerOrganizationService, LoadScreen){
         routeChange();
-        $rootScope.logout();
         $scope.data = {};
-        LoadScreen.stop();
         $scope.findMe = function(email){
             $scope.users_load = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/find_unregistered_users', {email:email})
@@ -19,6 +17,7 @@
                     $scope.users_load = 'broken';
                 })
         }
+        
         $scope.resendEmail = function(key){
             $scope.email_load = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/resend_registration_email', {key:key})

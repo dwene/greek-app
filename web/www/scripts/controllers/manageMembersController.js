@@ -1,7 +1,7 @@
     App.controller('manageMembersController', function($scope, RESTService, Load, LoadScreen, $rootScope, localStorageService, Directory){
     routeChange();
-    Load.then(function(){
-        $rootScope.requirePermissions(COUNCIL);
+    Directory.get();
+    $scope.directory = Directory.directory;
         $scope.memberslength = 20;
         $scope.$watch('search', function(){
             if ($scope.search){
@@ -136,7 +136,7 @@
             Directory.set($scope.directory);
         };
         $scope.getMembers = function(){
-            $scope.directory = Directory.get();
+            $scope.directory = Directory.directory;
             $scope.directoryLoaded = true;
         };
         if (Directory.check()){
@@ -178,5 +178,4 @@
                 }
             }
         };
-        });
     });

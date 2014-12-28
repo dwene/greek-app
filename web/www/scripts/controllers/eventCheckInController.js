@@ -37,8 +37,8 @@
             });
         }
         $scope.loading = true;
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
+        // Load.then(function(){
+           // $rootScope.requirePermissions(LEADERSHIP);
             getCheckInData();
             $scope.maxLength = 20;
             $scope.maxLengthIncrease = function(){
@@ -53,7 +53,7 @@
                     $scope.maxLength = 20;    
                 }
             });
-        });
+        // });
         function getCheckInData(){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
             .success(function(data){

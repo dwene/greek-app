@@ -1,6 +1,6 @@
-    App.controller('membersDirectoryController', function($scope, $rootScope, Load, LoadScreen, directoryFilterFilter, $filter, localStorageService, Directory){
+    App.controller('membersDirectoryController', function($scope, $rootScope, LoadScreen, directoryFilterFilter, $filter, localStorageService, Directory){
     routeChange();
-    LoadScreen.stop();
+    Directory.get();
     $scope.loaded = false;
         $scope.memberdirectorylength = 20;
         $scope.increaseDirectoryLength = function(){
@@ -12,7 +12,7 @@
             }
         }
         $scope.createDirectory = function(){
-            $scope.directory = Directory.get();
+            $scope.directory = Directory.directory;
             console.log('directory: ', $scope.directory);
             if ($scope.directory){
                 $scope.council = $filter('orderBy')( directoryFilterFilter($scope.directory.members, 'council'), 'last_name');

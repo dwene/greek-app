@@ -26,6 +26,7 @@ I think status max should be shorter, else it doesnt really fit.
 
 //Final/static variables. These variables are used for cookies
 var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+// var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 //var ENDPOINTS_DOMAIN = '';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -98,7 +99,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl : 'views/registeruser.html',
 				controller  : 'registerUserController'
 			})
-        .state('registerorg2', {
+        .state('registerorginfo', {
                 url : '/registerorganizationinfo',
 				templateUrl : 'views/registerinfo.html',
 				controller  : 'registerinfoController'
@@ -546,10 +547,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         });
-
-            
-
-
 
 
 

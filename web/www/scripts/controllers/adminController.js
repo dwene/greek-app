@@ -1,25 +1,22 @@
     App.controller('adminController', function($scope, RESTService, Load, $rootScope) {
         routeChange();
-        $rootScope.requirePermissions(COUNCIL);
-        Load.then(function(){
-            loadSubscriptionInfo();
-            function loadSubscriptionInfo(){
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', '')
-                .success(function(data){
-                    if (!RESTService.hasErrors(data)){
-                        $scope.subscription = JSON.parse(data.data);
-                        $scope.subscription_raw = data.data;
-                        $scope.loading = false;
-                        $scope.pay = {};
-                    }
-                    else{
-                        console.log('ERROR: ',data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' , data);
-                });
-            }
+        //$rootScope.requirePermissions(COUNCIL);
+        //Load.then(function(){
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', '')
+            .success(function(data){
+                if (!RESTService.hasErrors(data)){
+                    $scope.subscription = JSON.parse(data.data);
+                    $scope.subscription_raw = data.data;
+                    $scope.loading = false;
+                    $scope.pay = {};
+                }
+                else{
+                    console.log('ERROR: ',data);
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' , data);
+            });
             $scope.cancelSubscription = function(){
                 $scope.loading = true;
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', '')
@@ -74,6 +71,4 @@
                     console.log('Error: ' + JSON.stringify(data));
                 });
             }
-            
-        });
 	});

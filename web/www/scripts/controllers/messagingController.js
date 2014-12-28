@@ -1,15 +1,15 @@
     App.controller('messagingController', function($scope, RESTService, $q, $rootScope, Load, localStorageService, $sce, Tags, Directory) {
     routeChange();
+    Directory.get();
+    Tags.get();
+    $scope.directory = Directory.directory;
+    $scope.tags = Tags.tags;
     $scope.finished_loading = false;
-    $scope.directory = Directory.get();
     $scope.$watchCollection('[directory, tags]', function(){
         if ($scope.directory != null && $scope.tags != null ){
             $scope.finished_loading = true;
         }
     });
-    $scope.$on('directory:updated', function(){
-        $scope.directory = Directory.get();
-    })
     $scope.menuOptions = [
             ['bold', 'italic', 'underline', 'strikethrough'],
             ['font'],
@@ -22,7 +22,7 @@
             ['link', 'image']
         ];
 
-    Load.then(function(){ 
+
         $scope.sentMessages = [];
         $scope.clearUsers = false;
         $scope.deleteMessageTip = {
@@ -31,10 +31,6 @@
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
-        $scope.tags = Tags.get();
-        $scope.$on('tags:updated', function(){
-            $scope.tags = Tags.get();
-        })
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', '')
             .success(function(data){
                 if (!RESTService.hasErrors(data))
@@ -143,5 +139,4 @@
               return text === "Show Recently Sent" ? "Hide Recently Sent" : "Show Recently Sent";
           })
        }); 
-    });
     });

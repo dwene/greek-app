@@ -1,7 +1,5 @@
-    App.controller('forgotPasswordController', function($scope, $http, $rootScope){
+    App.controller('forgotPasswordController', function($scope, RESTService, $rootScope){
         routeChange();
-        $rootScope.logout();
-        console.log('I just stopped the loading in forgot password controller');
         $scope.sentEmail = false;
         $scope.reset = function(input) {
             $scope.gettingnewPassword = 'pending';
@@ -16,9 +14,9 @@
                 to_send = {email: '', user_name: input.toLowerCase()};
             }
             console.log(to_send);
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', packageForSending(to_send))
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', to_send)
             .success(function(data) {
-                if(!checkResponseErrors(data)){
+                if(!RESTService.hasErrors(data)){
                     if (data.data == 'OK'){
                         $scope.sentEmail = true;
                         $scope.gettingnewPassword = 'done';

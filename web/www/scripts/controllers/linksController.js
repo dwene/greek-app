@@ -3,12 +3,12 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
         Load.then(function(){
             $rootScope.requirePermissions(MEMBER);
             $scope.groups = $rootScope.link_groups;
-            $scope.links = Links.get();
+            Links.get();
+            $scope.links = Links.links;
             if ($scope.links){
                 $scope.loading_finished = true;
             }
             $scope.$on('links:updated', function(){
-                $scope.links = Links.get();
                 $scope.loading_finished = true;
             });
             $scope.openEditLinkModal = function(link){

@@ -1,6 +1,6 @@
 App.controller('changePasswordController', function($scope, $http, Load, $rootScope) {
     routeChange();
-    Load.then(function(){    
+    // Load.then(function(){    
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
@@ -25,5 +25,5 @@ App.controller('changePasswordController', function($scope, $http, Load, $rootSc
                 $scope.passwordChanged = false;
             });              
         }
-    });
+    // });
     });

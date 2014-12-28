@@ -1,20 +1,14 @@
     App.controller('appHomeController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, Directory, Events, removePassedEventsFilter, Directory, Inbox) {
-        console.log('Im in the app home controller, about to start load.then');
         routeChange();
        // Load.then(function(){
         $scope.events_loaded = false;
         $scope.notifications_loaded = false;
         $scope.noMoreHiddens = false;
-        $scope.directory = Directory.get();
-        $scope.$on('directory:updated', function(){
-            $scope.directory = Directory.get();
-        });
-
+        $scope.directory = Directory.directory;
         
        $scope.createEvents = function(){
-            $scope.events = Events.get();
+            $scope.events = Events.events;
             $scope.events_loaded = Events.check();
-            console.log('Scope events updated');
         }
         $scope.createEvents();
         $scope.$on('events:updated', function(){ $scope.createEvents(); });

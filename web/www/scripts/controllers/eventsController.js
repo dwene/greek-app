@@ -1,13 +1,13 @@
     App.controller('eventsController', function($scope, RESTService, Load, $rootScope, localStorageService, Events, Directory) {
         routeChange();
+        $scope.directory = Directory.directory;
+        $scope.events = Events.events;
         $scope.$watchCollection('[directoryLoaded, eventsLoaded]', function(){
             if ($scope.directoryLoaded && $scope.eventsLoaded){
                 $scope.dataLoaded = true;
                 console.log('data is loaded');
             }
         });
-        Load.then(function(){
-            $rootScope.requirePermissions(MEMBER);
             if (Events.check()){
                 getEvents();
             }
@@ -15,18 +15,14 @@
                 getEvents();
             })
             if (Directory.check()){
-                $scope.directory = Directory.get();
                 $scope.directoryLoaded = true;
             }
             $scope.$on('directory:updated', function(){
-                $scope.directory = Directory.get();
-                console.log('directory updated');
                 $scope.directoryLoaded = true;
             });
             
                 //send the organization and user date from registration pages
             function getEvents(){
-                $scope.events = Events.get();
                 $scope.eventSource = [];
                 for (var i = 0; i< $scope.events.length; i++){
                     $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});
@@ -94,5 +90,4 @@
                     }
                 }
             })
-	   });
 	});

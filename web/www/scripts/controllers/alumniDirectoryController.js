@@ -11,7 +11,7 @@
         });
         
         function loadDirectory(){
-            $scope.directory = Directory.get();
+            $scope.directory = Directory.directory;
             for (var i = 0; i < $scope.directory.alumni.length; i++){
                 if ($scope.directory.alumni[i].grad_year && $scope.years.indexOf({value:$scope.directory.alumni[i].grad_year}) == -1){
                     $scope.years.push({value:$scope.directory.alumni[i].grad_year});

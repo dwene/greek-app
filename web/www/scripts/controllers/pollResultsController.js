@@ -1,5 +1,6 @@
 App.controller('pollResultsController', function($scope, RESTService, Load, $rootScope, $stateParams, LoadScreen, Directory) {
         routeChange();
+        Directory.get();
         $scope.openAllQuestions = function(){
             $('.pollSummary.collapse').collapse('show');
         }
@@ -12,9 +13,8 @@ App.controller('pollResultsController', function($scope, RESTService, Load, $roo
         $scope.closeAllIndividuals = function(){
             $('.individualResponses.in').collapse('hide');
         }
-        $scope.directory = Directory.get();
+        $scope.directory = Directory.directory;
         $scope.$on('directory:updated', function(){
-            $scope.directory = Directory.get();
             if ($scope.poll){
                 setIndividuals();
             }
@@ -48,18 +48,15 @@ App.controller('pollResultsController', function($scope, RESTService, Load, $roo
             }
             $scope.individuals = user_list;
             $scope.loading_finished = true;
-            console.log('$scope.poll', $scope.poll);
         }
-        Load.then(function(){
             $('html').trigger('resize');
-            $rootScope.requirePermissions(MEMBER);
             var to_send = {key: $stateParams.key};
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', (to_send), {cache:true})
                 .success(function(data){
                     if (!RESTService.hasErrors(data)){
                         $scope.poll = JSON.parse(data.data);
-                        if (($scope.poll.viewers != 'everyone' && !$rootScope.checkPermissions($scope.poll.viewers))){
-                            window.location.replace('#/app/polls/'+$stateParams.key);
+                        if (($scope.poll.viewers != 'everyone' && Session.perms != COUNCIL)){
+                            $location.url('app/polls/'+$stateParams.key);
                         }
                         if ($scope.directory){
                             setIndividuals();
@@ -76,5 +73,4 @@ App.controller('pollResultsController', function($scope, RESTService, Load, $roo
                     $scope.loading = false;
                     $scope.notFound = true;
                 });
-        });
     });

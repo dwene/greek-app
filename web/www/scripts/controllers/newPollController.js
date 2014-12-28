@@ -1,5 +1,7 @@
-    App.controller('newPollController', function($scope, RESTService, Load, $rootScope) {
+    App.controller('newPollController', function($scope, RESTService, Load, $rootScope, Tags) {
         routeChange();
+        Tags.get();
+        $scope.tags = Tags.tags;
         $scope.deletePollTip = {
             "title" : "Delete Question"
         }
@@ -46,8 +48,4 @@
                 });
             }
         }
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
-            $scope.tags = $rootScope.tags;
-        });
 	});

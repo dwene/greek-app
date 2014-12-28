@@ -1,8 +1,8 @@
 
     App.controller('addAlumniController', function($scope, RESTService, $rootScope, Load, localStorageService) {
         routeChange();
-        Load.then(function(){
-            $rootScope.requirePermissions(LEADERSHIP);
+        // Load.then(function(){
+        //     $rootScope.requirePermissions(LEADERSHIP);
             $scope.finished_loading = true;
 
             var formObject = document.getElementById('uploadMembers');
@@ -10,7 +10,7 @@
                 formObject.addEventListener('change', readSingleFile, false);
             }
             $scope.adds = [];
-        });  
+        //});  
         //initialize a filecontents variable
         var filecontents;
         
