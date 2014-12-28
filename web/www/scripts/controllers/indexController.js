@@ -1,9 +1,9 @@
 App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, AUTH_EVENTS, Organization, Inbox, Session) {
         $scope.item = Organization.me;
-
+        $scope.perms = Session.perms;
         $scope.$on(AUTH_EVENTS.loginSuccess, function(){
             $scope.perms = Session.perms;
-        });
+        })
         $scope.$on('notifications:updated', function(){
             $scope.notificationLength = Inbox.getLengths();
         });
@@ -13,7 +13,6 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
                 $scope.sendingHelp='pending';
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', content)
                 .success(function(){console.log('success');
-//                $('#helpModal').modal('hide');
                 $scope.helpMessage.$setPristine();
                 $scope.message={};
                 $scope.sendingHelp='done';
