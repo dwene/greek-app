@@ -20,9 +20,9 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
           targetEvent: event
         }).then(function(clickedItem) {
             switch(clickedItem.name){
-                case 'SMS': $window.open('sms:'+ $scope.phone); break;
-                case 'CALL': $window.open('phone:' + $scope.phone); break;
-                case 'EMAIL': $window.open('mailto:' + $scope.email); break;
+                case 'SMS': $window.open('sms:'+ $scope.phone, '_blank'); break;
+                case 'CALL': $window.open('phone:' + $scope.phone, '_blank'); break;
+                case 'EMAIL': $window.open('mailto:' + $scope.email, '_blank'); break;
                 case 'SAVE': $scope.saveVcard(); break;
                 default: $log('button not found');
             }
