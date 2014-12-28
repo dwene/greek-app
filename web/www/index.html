@@ -239,49 +239,11 @@
         </div>
     </div>
    
-<!--
-    <md-content class="md-padding">
-        <ul class="nav">
-            <li ng-click="toggleSidenav()"><md-button ng-href="/#/app/home"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
-            <li ng-click="toggleSidenav()"> <md-button ng-href="/#/app/directory/members"> <i class="fa fa-book fa-fw"> </i> Directory</li>
-<<<<<<< HEAD
-            <li ng-click="toggleSidenav()" ng-show="navigation.checkPermissions('leadership') && navigation.subscribed"><md-button ng-href="/#/app/messaging"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="navigation.subscribed"><md-button ng-href="/#/app/events"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="navigation.subscribed"><md-button ng-href="/#/app/links"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
-            <li ng-click="toggleSidenav()" ng-show="navigation.subscribed"><md-button ng-href="/#/app/polls"><i class="fa fa-th-list fa-fw"></i> Polls</md-button></li>
-=======
-            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('leadership') && $root.subscribed"><md-button ng-href="/#/app/messaging"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/events"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/links"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
-            <li ng-click="toggleSidenav()" ng-show="$root.subscribed"><md-button ng-href="/#/app/polls"><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>
->>>>>>> FETCH_HEAD
-        </ul>
-    </md-content>
-    <md-toolbar>
-    <div class="md-toolbar-tools">
-      <span>Settings</span>
-      <span flex></span>
-    </div>
-    </md-toolbar>
-    <md-content class="md-padding">
-        <ul class="nav">
-            <li ng-click="toggleSidenav()"><md-button ng-href="#/app/accountinfo"><i class="fa fa-user fa-fw"></i> Account</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('leadership')"><md-button ng-href="#/app/managemembers/tag"><i class="fa fa-users fa-fw"></i> Members</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('council')"><md-button ng-href="#/app/managealumni"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
-            <li ng-click="toggleSidenav()" ng-show="$root.checkPermissions('council')"><md-button ng-href="#/app/admin"><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
-            <li ng-click="toggleSidenav()"><md-button ng-href="" ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
-        </ul>
-    </md-content>
--->
 </div>
 </md-sidenav>
 </div>
 <div ui-view autoscroll="true" id="mainSection"></div>
 
-<!--
-<md-button id="historyBack" class="md-raised btn-touch" aria-label="back" onclick="window.history.back()"><i class="fa fa-chevron-left fa-fw"></i></md-button>
-<md-button id="historyForward" class="md-raised btn-touch" aria-label="forward" onclick="window.history.forward()"><i class="fa fa-chevron-right fa-fw"></i></md-button>
--->
 
 <div class="modal fade" id="errorModal" ng-click="$root.refreshPage()">
   <div class="modal-dialog">
