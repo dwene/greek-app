@@ -1,3 +1,33 @@
+
+<div id="registerOrganization" class="container">
+
+   <div class="md-whiteframe-z1">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h1>Register Your Organization</h1>
+        </div>
+    </md-toolbar>
+    <md-content class="md-padding">
+        <form id="registerForm" name="registerForm" ng-submit="continue(registerForm.$valid, data)" class="form-horizontal" role="form" novalidate>
+		    <md-text-float label="Organization Name" ng-model="data.name" required></md-text-float>
+			<p ng-show="registerForm.org_name.$invalid && !registerForm.org_name.$pristine" class="help-block">An organization name is required.</p>
+            <md-text-float label="School Name" ng-model="data.school" required></md-text-float>
+            <p ng-show="registerForm.school_name.$invalid && !registerForm.school_name.$pristine" class="help-block">Your school name is required.</p>
+            <md-radio-group ng-model="data.type" required>
+                <md-radio-button value="sorority" aria-label="sorority">Sorotity</md-radio-button>
+                <md-radio-button value="fraternity" aria-label="fraternity">Fraternity</md-radio-button>
+                <md-radio-button value="other" aria-label="other">Other</md-radio-button>
+            </md-radio-group>
+            <p ng-show="registerForm.org_type.$invalid && !registerForm.org_type.$pristine" class="help-block">Please select an organization type.</p>
+            <md-button type="submit" ng-disabled="registerForm.$invalid">Next</md-button><br><br>
+		</form>
+		
+		<p class="bg-warning"><span>NOTE: Please only use this page if you are registering a new organization.</span><br>If you are a member of an already formed organization, you should receive an email with instructions on how to login.</p>
+    </md-content>
+    </div>
+</div>
+
+<!--
 <div class="container">
     
     <h1 class="darkbg">Register Page</h1>
@@ -40,4 +70,4 @@
 		
 		<p class="bg-warning"><span>NOTE: Please only use this page if you are registering a new organization.</span><br>If you are a member of an already formed organization, you should receive an email with instructions on how to login.</p>
 		</div>
-</div>
+</div>-->

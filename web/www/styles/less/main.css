@@ -1916,6 +1916,9 @@ md-bottom-sheet md-item {
 md-bottom-sheet .fa {
   margin-top: 15px;
 }
+md-radio-group {
+  border: 0px;
+}
 .md-whiteframe-z1,
 md-card {
   background: white;

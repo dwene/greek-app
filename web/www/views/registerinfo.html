@@ -1,5 +1,42 @@
-<div class="container">
+<div id="registerInfo" class="container">
+   
+   <div class="md-whiteframe-z1">
+    <md-toolbar>
+    <div class="md-toolbar-tools">
+        <h1>Create Your Account</h1>
+    </div>
+    </md-toolbar>
     
+    <md-content class="md-padding">
+    <form id="registerinfoForm" ng-submit="registerinfoClick(item, registerinfoForm.$valid)" name="registerinfoForm" role="form" novalidate>
+            <md-text-float label="First Name" ng-model="item.first_name" required></md-text-float>
+            <p ng-show="(registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)" class="help-block">Please enter your first name.</p>
+            <md-text-float label="Last Name" ng-model="item.last_name" required></md-text-float>
+            <p ng-show="(registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)" class="help-block">Please enter your last name.</p>
+            <md-text-float label="Class Year" ng-model="item.class_year" ng-pattern="/[0-9]{4}/" required></md-text-float>
+            <p ng-show="(registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)" class="help-block">Please enter your class year.</p>
+            <md-text-float label="email@example.com" ng-model="item.email" required></md-text-float>
+            <p ng-show="(registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)" class="help-block">Please enter a valid email.</p>
+            <md-text-float label="Username" ng-model="item.user_name" required></md-text-float><md-button ng-click="checkUserName(item.user_name)" ng-disabled="registerinfoForm.user_name.$invalid">Check Username</md-button>
+            <div class="alert alert-success usernameAlert" ng-show="available">That will work!</div>
+            <div class="alert alert-danger usernameAlert" ng-show="unavailable">This user name too short or already taken (5+ characters required)</div>    
+            <p ng-show="(registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
+            <md-text-float label="Password" type="password" ng-model="item.password" ng-minlength="6" required></md-text-float>
+            <p ng-show="(registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)" class="help-block">Please enter a password at least 6 characters long.</p>
+            <md-text-float label="Repeat Password" type="password" ng-model="item.repeat_password" required></md-text-float>
+<!--            not matching currently-->
+            <p ng-show="(registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
+            <md-checkbox ng-model="item.terms" ng-pattern="true" ng-required="true" aria-label="Checkbox Terms">
+                I agree to the Terms & Conditions
+            </md-checkbox>
+            <p ng-show="(registerinfoForm.terms.$invalid && !registerinfoForm.terms.$pristine) || (registerinfoForm.terms.$invalid && submitted)" class="help-block">Please agree to the terms & conditions.</p>
+            <md-button type="submit" class="pull-right">Register</md-button>
+    </form>
+    </md-content>
+    </div>
+    
+</div>
+<!--
     <h1 class="darkbg">More Register Information</h1>
     
     
@@ -86,6 +123,7 @@
             </div>
           </div>
 		</form>
-</div>
+-->
+
             
 
