@@ -1,10 +1,7 @@
-<div id="taggingMembers" class="container memberTags" load-directive ng-model="dataLoaded">                    
+<div id="taggingMembers" class="memberTags" load-directive ng-model="dataLoaded">                    
                     
        
-                    <section class="row">
                     
-                    <div class="col-xs-12 col-sm-5">
-                        <div id="tagMembersCard" class="card">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                             <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>
                             <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
@@ -12,25 +9,20 @@
                         
                         <p ng-hide="selectedTags.length || selectedUsers.length">Please select tags and members.</p>    
                             
-                       <h2 class="page-header" ng-show="selectedTags.length">ADD</h2>
+                       <h2 ng-show="selectedTags.length">ADD</h2>
                               
                         <ul id="selectedTags">
                            <netetag-check ng-repeat="tag in selectedTags = (tags.org_tags | checkedFilter)"></netetag-check>
                         </ul>
                         <p ng-show="!selectedTags.length && selectedUsers.length">Please select tags.</p>
                         
-<!--                        <h2 class="page-header" ng-show="selectedUsers.length">TO</h2>-->
-                        <h2 class="page-header">TO {{(selectedUsers = (directory.members | checkedFilter)).length}} MEMBERS</h2>
+                        <h2>TO {{(selectedUsers = (directory.members | checkedFilter)).length}} MEMBERS</h2>
                         
-<!--
-                        <ul>
-                           <netetag-check ng-repeat="tag in selectedUsers = (users | checkedFilter)"></netetag-check>
-                        </ul>
--->
                         <p ng-show="!selectedUsers.length && selectedTags.length">Please select members.</p>
                                                 
-                        <button id="addTagsButton" ng-click="addTagsToUsers()" class="btn btn-default btn-sm btn-block" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</button>
+                        <md-button ng-click="addTagsToUsers()" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</md-button>
                         
+<!--
                         <section id="createTags">    
                             <form id="addTag" name="addTag" ng-submit="addOrganizationTag(item.tag)">
                                 <div class="form-group">
@@ -44,16 +36,9 @@
                                 </div>
                             </form>
                         </section>
-                        </div>
-                    </div>
+-->
                     
-                    <div class="col-xs-12 col-sm-7">
-                    <div class="card">
-                    <div class="col-xs-12">
-                    <div class="row">
                     <search ng-model="search" id="taggingSearch"></search>
-                    </div>
-                    </div>
                     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
                     <ul id="memberSelect">
                         <li ng-repeat="user in (directory.members | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
@@ -72,9 +57,6 @@
                         </li>
                     </ul>
                     </div>
-                    </div>
-                    </div>
-                    </section>
 
 <div class="modal fade" id="renameTagModal">
   <div class="modal-dialog">

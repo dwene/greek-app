@@ -68,8 +68,8 @@ App.constant('USER_ROLES', {
 App.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/")
     .when("/", "/app/home")
-    .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app", "/app/home")
+    .when("/app/managemembers", "/app/managemembers/manage")
     .when("/app/managealumni", "/app/managealumni/manage")
     .when("/app/directory", "/app/directory/members")
     .when("/changepasswordfromtoken", "/changepasswordfromtoken/1");
