@@ -1,4 +1,4 @@
-App.controller('memberprofileController', function($scope, $rootScope, $stateParams, RESTService, localStorageService, Directory, $mdBottomSheet){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $log, $window, RESTService, localStorageService, Directory, $mdBottomSheet){
     routeChange();
         Directory.get();
         $scope.directory = Directory.directory;
@@ -18,16 +18,30 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
           templateUrl: 'views/templates/bottomGrid.html',
           controller: profileOptionsCtrl,
           targetEvent: event
+        }).then(function(clickedItem) {
+            switch(clickedItem.name){
+                case 'SMS': $window.open('sms:'+ $scope.phone); break;
+                case 'CALL': $window.open('phone:' + $scope.phone); break;
+                case 'EMAIL': $window.open('mailto:' + $scope.email); break;
+                case 'SAVE': $scope.saveVcard(); break;
+                default: $log('button not found');
+            }
+            $scope.alert = clickedItem.name + ' clicked!';
         });
     }
     
     function profileOptionsCtrl($scope, $mdBottomSheet) {
+
         $scope.items = [
             { name: 'SMS', icon: 'fa-mobile'},
             { name: 'CALL', icon: 'fa-phone'},
             { name: 'EMAIL', icon: 'fa-envelope' },
             { name: 'SAVE', icon: 'fa-floppy-o' }
         ];
+
+        $scope.itemClick = function(item) {
+            $mdBottomSheet.hide(item);
+        }
     };
     
     $scope.saveVcard = function(){

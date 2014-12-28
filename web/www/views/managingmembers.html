@@ -5,7 +5,6 @@
         <button ng-click="openConvertMembersModal()" class="btn btn-default" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</button>
         <button ng-click="resendAllWelcomeEmails()" class="btn btn-primary">Resend All Welcome Emails</button><update-status ng-model="resendWorking" fn-call="resendAllWelcomeEmails()"></update-status>
     </div>        
-   
    <div class="card">
 <!--
     <div class="form-group">
@@ -20,12 +19,12 @@
            
            <div class="row">
                 <div class="col-xs-12 col-sm-8">
-                <netemember-check ng-hide="member.user_name == $root.me.user_name" class="members" ng-model="member"></netemember-check>
-                <nete-member ng-show="member.user_name == $root.me.user_name"  class="members" ng-model="member"></nete-member>
+                <netemember-check ng-hide="member.user_name == $parent.me.user_name" class="members" ng-model="member"></netemember-check>
+                <nete-member ng-show="member.user_name == $parent.me.user_name"  class="members" ng-model="member"></nete-member>
                 <span>{{member.email}}&nbsp;<a ng-click="openChangeEmailModal(member)" class="">change</a></span>
 
                 </div>
-               <div ng-hide="member.user_name == $root.me.user_name" class="col-xs-12 col-sm-4">
+               <div ng-hide="member.user_name == $parent.me.user_name" class="col-xs-12 col-sm-4">
                     <div class="pull-right">
                         <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
                         <button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="btn btn-info btn-sm resendWelcome">Resend Welcome Email</button>
