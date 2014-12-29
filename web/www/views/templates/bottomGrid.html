@@ -1,12 +1,14 @@
 <md-bottom-sheet class="md-grid">
-  <ul>
-    <li ng-repeat="item in items">
-      <button class="md-grid-item-content" aria-label="{{item.name}}" ng-click="itemClick(item)">
-        <!-- <i class="fa {{item.icon}} fa-fw fa-2x"></i> -->
+  <md-list>
+    <md-item ng-repeat="item in items">
+      <md-button class="md-grid-item-content" aria-label="{{item.name}}" ng-click="itemClick(item)">
+        <div class="md-icon-container" style="pointer-events: none; ">
+        <i class="fa {{item.icon}} fa-fw fa-2x"></i>
+        </div>
         <p class="md-grid-text"> {{ item.name }} </p>
-      </button>
-    </li>
-  </ul>
+      </md-button>
+    </md-item>
+  </md-list>
 </md-bottom-sheet>
 
 
