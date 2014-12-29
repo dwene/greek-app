@@ -2,7 +2,7 @@
   <md-list>
     <md-item ng-repeat="item in items">
       <md-button class="md-grid-item-content" aria-label="{{item.name}}" ng-click="itemClick(item)">
-        <div class="md-icon-container">
+        <div class="md-icon-container" style="pointer-events: none; ">
         <i class="fa {{item.icon}} fa-fw fa-2x"></i>
         </div>
         <p class="md-grid-text"> {{ item.name }} </p>
