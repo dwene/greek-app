@@ -3,10 +3,11 @@ App.factory('RESTService', function ($http, Session, AUTH_EVENTS, $rootScope) {
  
 	dataFactory.packageContent = function(_data){
 		var out = {user_name: Session.user_name, token: Session.token, data: JSON.stringify(_data)};
-		console.log('what Im sending', out);
 		return out;
 	};
 	dataFactory.post = function (url, data, extras) {
+
+		console.log(('post called: ' + url.toString()) , data);
 	    return $http.post(url, dataFactory.packageContent(data), extras);
 	};
 	dataFactory.hasErrors = function(received_data){
