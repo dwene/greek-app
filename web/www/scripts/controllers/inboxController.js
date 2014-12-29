@@ -50,7 +50,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
             }
         }
         else{
-            $scope.archivedLength = ( $scope.archivedLength + 8 ) > $scope.inbox.lengths.archived ? $scope.inbox.lengths.archived : $scope.archivedLength + 8;
+            $scope.archivedLength = ( $scope.archivedLength + 20 ) > $scope.inbox.lengths.archived ? $scope.inbox.lengths.archived : $scope.archivedLength + 20;
         }
     }
 
@@ -66,7 +66,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
             }
         }
         else{
-            $scope.messagesLength = ( $scope.messagesLength + 8 ) > ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) ? ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) : $scope.archivedLength + 8;
+            $scope.messagesLength = ( $scope.messagesLength + 20 ) > ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) ? ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) : $scope.archivedLength + 20;
         }
     }
 
