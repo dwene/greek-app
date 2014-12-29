@@ -12,12 +12,12 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
             window.location.assign('/#/app/directory');
         }
     
-    $scope.showProfileoptions = function(event){
+    $scope.showProfileoptions = function($event){
     
         $mdBottomSheet.show({
           templateUrl: 'views/templates/bottomGrid.html',
           controller: profileOptionsCtrl,
-          targetEvent: event
+          targetEvent: $event
         }).then(function(clickedItem) {
             switch(clickedItem.name){
                 case 'SMS': $window.open('sms:'+ $scope.phone, '_blank'); break;
