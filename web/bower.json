@@ -5,7 +5,7 @@
     "angular": "~1.2.0",
     "json3": "~3.3.1",
     "es5-shim": "~3.1.0",
-    "bootstrap": "~3.2.0",
+    "bootstrap": "3.3.1",
     "angular-resource": "~1.2.0",
     "angular-cookies": "~1.2.0",
     "angular-sanitize": "~1.2.0",
@@ -23,6 +23,7 @@
   "resolutions": {
     "angular": "1.3.x",
     "angular-animate": "1.3.x",
-    "angular-material": "master"
+    "angular-material": "master",
+    "bootstrap": "3.3.1"
   }
 }

@@ -1140,25 +1140,6 @@ background-repeat: repeat-x;
   margin: 10px;
   display: block;
 }
-/*Striped Lists*/
-.thinking {
-  position: absolute;
-  left: -15px;
-  top: 8px;
-}
-.striped {
-  line-height: 30px;
-  margin-top: 5px;
-}
-.striped > li {
-  padding: 5px 15px;
-}
-.striped > li button {
-  margin-left: 15px;
-}
-#listHeaders {
-  font-weight: bold;
-}
 /*Upload Profile Page*/
 #crop {
   display: block;
@@ -1651,15 +1632,6 @@ h1.darkbg {
     float: right;
   }
 }
-ul.striped > li {
-  border-bottom: 1px solid #ccc;
-}
-ul.striped > li:nth-child(odd) {
-  background: #f8f8f8;
-}
-ul.striped > li:first-child {
-  border-top: 1px solid #ccc;
-}
 .bg-warning {
   background-color: #fcf8e3;
   padding: 15px;
@@ -1825,6 +1797,9 @@ md-backdrop.md-opaque.md-default-theme {
 .md-tile-content {
   overflow: hidden;
 }
+md-list li {
+  list-style: none;
+}
 md-dialog {
   border-radius: 0px !important;
 }
@@ -1945,6 +1920,35 @@ a.navbar-brand:focus {
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+/*Striped Lists*/
+.striped > md-item {
+  border-bottom: 1px solid #ccc;
+  display: block;
+}
+.striped > li {
+  border-bottom: 1px solid #ccc;
+}
+.striped > md-item:nth-child(odd) {
+  background: #f8f8f8;
+}
+.striped > li:nth-child(odd) {
+  background: #f8f8f8;
+}
+.striped > md-item:first-child {
+  border-top: 1px solid #ccc;
+}
+.striped > li:first-child {
+  border-top: 1px solid #ccc;
+}
+.striped {
+  margin-top: 5px;
+}
+.striped md-item {
+  padding: 5px 15px;
+}
+.striped > li {
+  padding: 5px 15px;
 }
 /*Section Specific*/
 #menu md-toolbar.md-tall {

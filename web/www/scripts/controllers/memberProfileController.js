@@ -32,6 +32,11 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
     
     function profileOptionsCtrl($scope, $mdBottomSheet) {
 
+        $scope.removeTouch = function(){
+                alert();
+                document.getElementById("bottomSheet").click();
+        }
+        
         $scope.items = [
             { name: 'SMS', icon: 'fa-mobile'},
             { name: 'CALL', icon: 'fa-phone'},

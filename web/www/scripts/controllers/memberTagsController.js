@@ -150,8 +150,8 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
                 $scope.addTagLoading = 'done';
                 if ($scope.tags.org_tags.indexOf({name: tag}) == -1){
                     $scope.tags.org_tags.push({name:tag, checked:true, recent:true});
-                    Tags.set($scope.tags);
-                    $("#addTag input").val("");
+//                    Tags.set($scope.tags);
+                    $("#seeallTags input").val("");
                 }
                 // if ($scope.tags.org_tags.indexOf({tag: tag}) == -1){
                 //     $scope.tags.org_tags.push({name:tag, checked:true, recent:true});

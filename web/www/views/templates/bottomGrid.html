@@ -1,4 +1,4 @@
-<md-bottom-sheet class="md-grid">
+<md-bottom-sheet id="bottomSheet" class="md-grid" onclick="removeTouch()">
   <md-list>
     <md-item ng-repeat="item in items">
       <md-button class="md-grid-item-content" aria-label="{{item.name}}" ng-click="itemClick(item)">

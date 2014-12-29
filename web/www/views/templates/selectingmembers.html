@@ -6,6 +6,20 @@
                 <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
                 <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>
             </form>
+            
+<!--
+            <div class="col-sm-6" layout="row" layout-align="center">
+                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
+                            <md-input-group class="md-default-theme" >
+                                <label for="tag_name">Enter Tag</label>
+                                <md-input name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead></md-input>
+                            </md-input-group>
+                            </form>
+                            <md-button data-toggle="modal" data-target="#seeallTags">See All</md-button>
+            </div>    
+-->
+            
+            
             <div class="col-sm-6">
                   
                 <div id="recentTags">

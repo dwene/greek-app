@@ -1,5 +1,67 @@
-<div id="addingMembers" class="container">
+<div id="addingMembers">
 
+<md-subheading>Add Multiple Members at Once</md-subheading>
+<br><br>
+<p id="areAdded"></p>
+    <form id="addmembersForm" role="form">
+        <div class="form-group">
+            <label for="uploadMembers">Upload CSV</label>
+            <input type="file" id="uploadMembers" accept=".csv">
+        </div>
+
+        <md-button ng-click="addMembers()">Add Members</md-button><md-button href="../files/AddMembers.csv" target="_blank" download="addmembers.csv"><i class="fa fa-download"></i> CSV Template</md-button>
+        
+        <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file</p>
+    </form>
+<br><br>
+<md-subheading>Add One Member at a Time</md-subheading>
+<form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid, input)" novalidate>
+
+<div layout="row" layout-align="start center">
+    <md-text-float label="First Name" ng-model="input.first_name"></md-text-float>
+    <md-text-float label="Last Name" ng-model="input.last_name"></md-text-float>
+</div>
+
+
+</form>
+<!--
+   
+   
+    <form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid, input)" novalidate>
+         <div class="row">
+          <div class="form-group col-sm-4 col-xs-6 required">
+            <label for="firstName" class="control-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="first_name" ng-model="input.first_name" placeholder="John" required>
+          </div>
+          <div class="form-group col-sm-4 col-xs-6 required">
+            <label for="lastName" class="control-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="last_name" ng-model="input.last_name" placeholder="Doe" required>
+          </div>
+          <div class="form-group col-sm-4 col-xs-6 required">
+            <label for="classYear" class="control-label">Pledge Class Year</label>
+              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.pledge_class_year" placeholder="####" ng-pattern="/[0-9]{4}/">
+          </div>
+          <div class="form-group col-sm-4 col-xs-6 required">
+          <label for="pledge_class_year" class="control-label">Pledge Class Semester</label>
+            <select class="form-control" id="pledgeClassSemester" name="pledge_class_semester" ng-model="input.pledge_class_semester" ng-required="!checkAlumni()">
+                <option value="fall">Fall</option>
+                <option value="spring">Spring</option>
+            </select>
+          </div>
+          <div class="form-group col-sm-4 col-xs-6 required">
+            <label for="email" class="control-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
+          </div>
+          <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'has-error' : addmemberForm.$invalid && submitted}">
+             <label for="submit_form" class="control-label"></label>
+              <input name="submit_form" class="btn btn-default form-control" type="submit" ng-disabled="!addmemberForm.$valid" value="Add Member">
+              <p ng-show="addmemberForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
+          </div>
+          </div>
+     </form>
+-->
+
+<!--
     <div class="card">
     <h1 class="card-header">Add Multiple Members at Once</h1>
     <p id="areAdded"></p>
@@ -58,6 +120,7 @@
     <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
     <button id="addMembersButton" ng-click="submitMembers()" class="btn btn-default">Submit Members</button><update-status ng-model="updating"></update-status>
     </ul>
+-->
 
 
 </div>
