@@ -1922,6 +1922,11 @@ a.navbar-brand:focus {
   -o-user-select: none;
   user-select: none;
 }
+md-progress-circular.small {
+  -webkit-transform: scale(0.5) !important;
+  transform: scale(0.5) !important;
+  margin: 20px auto;
+}
 /*Striped Lists*/
 .striped > md-item {
   border-bottom: 1px solid #ccc;
