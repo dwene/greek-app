@@ -42,6 +42,20 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         $scope.itemClick = function(item) {
             $mdBottomSheet.hide(item);
         }
+
+        // $scope.items = [
+        //     { name: 'Hangout', icon: 'fa-mobile' },
+        //     { name: 'Mail', icon: 'fa-mobile' },
+        //     { name: 'Message', icon: 'fa-mobile' },
+        //     { name: 'Copy', icon: 'fa-mobile' },
+        //     { name: 'Facebook', icon: 'fa-mobile' },
+        //     { name: 'Twitter', icon: 'fa-mobile' },
+        //   ];
+        //   $scope.listItemClick = function($index) {
+        //     var clickedItem = $scope.items[$index];
+        //     $mdBottomSheet.hide(clickedItem);
+        //   };
+
     };
     
     $scope.saveVcard = function(){
