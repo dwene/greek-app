@@ -1,37 +1,33 @@
-<div id="manageMembers" class="container" load-directive ng-model="directoryLoaded">
+<div id="manageMembers" load-directive ng-model="directoryLoaded">
     <md-button ng-click="openConvertMembersModal()" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</md-button>
     <md-button ng-click="resendAllWelcomeEmails()">Resend All Welcome Emails</md-button><update-status ng-model="resendWorking" fn-call="resendAllWelcomeEmails()"></update-status>
-</div>
+
 
 <search ng-model="search"></search><br>
     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
         <md-list id="members" class="striped">
             <md-item ng-repeat="member in directory.members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-init="member.name = member.first_name + ' ' + member.last_name;">
-                <md-item-content>
-                   <div layout="row" layout-align="space-between center">
+                <div layout="row" layout-sm="column" layout-margin layout-align="space-between center">
                     <netemember-check ng-hide="member.user_name == $parent.me.user_name" class="members" ng-model="member"></netemember-check>
                     <nete-member ng-show="member.user_name == $parent.me.user_name"  class="members" ng-model="member"></nete-member>
-                    <span>{{member.email}}&nbsp;<a ng-click="openChangeEmailModal(member)" class="" href="">change</a></span>
-                    </div>
-                    <div flex></div>
-                    <div layout="row" ng-hide="member.user_name == $parent.me.user_name">
-                        <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
-                        <md-button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="resendWelcome">Resend Welcome Email</md-button>
-                        <form class="permsSelect">
-                            <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
-                                <option value="council">council</option>
-                                <option value="member">member</option>
-                                <option value="leadership">leadership</option>
-                            </select>
-                        </form>
-                        <md-button ng-click="openDeleteMemberModal(member)" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
-                    </div>
-                </md-item-content>
+                    <span flex>{{member.email}}&nbsp;<md-button ng-click="openChangeEmailModal(member)" class="" href="">change</md-button></span>
+                    <md-button flex ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="resendWelcome">Resend Welcome Email</md-button>
+                    <div class="no-margin" flex></div>
+                    <form class="permsSelect">
+                    <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
+                        <select ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
+                            <option value="council">council</option>
+                            <option value="member">member</option>
+                            <option value="leadership">leadership</option>
+                        </select>
+                    </form>
+                    <md-button ng-click="openDeleteMemberModal(member)" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                </div>
             </md-item>
         </md-list>
     </div>
         <p ng-show="directory.members.length < 1">There are no members to manage!</p>    
-
+</div>
 <!--
 <div id="manageMembers" class="container" load-directive ng-model="directoryLoaded">
    

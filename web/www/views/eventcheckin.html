@@ -1,6 +1,4 @@
-<div ng-show="loading && !eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
 <div ng-show="eventNotFound" class="text-center"><h1>Event not found :(</h1></div>
-
 <div id="eventCheckin" class="container" ng-hide="loading || eventNotFound">
     <div class="md-whiteframe-z1">
         <md-toolbar>
@@ -15,24 +13,26 @@
             <search ng-model="search"></search>
             <md-list class="memberList">
                 <md-item ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search: 0 | limitTo:maxLength track by member.key">
-                    <md-item-content>
-                        <div class="md-tile-left">
+                    <div layout="row" layout-align="center center" layout-margin>
+                        <div>
                             <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" ng-click="checkIn(member, true, false)">
-                                <i class="fa fa-sign-in fa-lg"></i>
+                                    <i class="fa fa-sign-in fa-lg"></i>
                                 <update-status class="updating" ng-model="member.in_updating" fn-call="checkIn(member, true, false)"></update-status>
                             </md-button>
                             <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, true, false)">
                                 <i class="fa fa-sign-out fa-lg"></i>
                                 <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status>
                             </md-button>
+                        </div>
+                        <div flex>
                             <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">
                         </div>
-                        <div class="md-tile-content">
+                        <div flex>
                             <div class="name">{{member.first_name}} {{member.last_name}}</div>
                                 <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}<i ng-click="checkIn(member, false, true)" class="fa fa-times"></i></span><br>
                                 <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}<i ng-click="checkOut(member, false, true)" class="fa fa-times"></i></span>
                         </div>
-                    </md-item-content>
+                    </div>
                 </md-item>
             </md-list>
         </md-content>

@@ -1,71 +1,71 @@
 <div id="taggingMembers" class="memberTags" load-directive ng-model="dataLoaded">                    
                     
        
-                    <div layout="row" layout-align="center">
-                            <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
+        <div layout="row" layout-align="center">
+                <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
 <!--                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>-->
-                            
-                            <md-input-group class="md-default-theme" >
-                                <label for="tag_name">Enter Tag</label>
-                                <md-input name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead></md-input>
-                            </md-input-group>
-                            
+
+                <md-input-group class="md-default-theme" >
+                    <label for="tag_name">Enter Tag</label>
+                    <md-input name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead></md-input>
+                </md-input-group>
+
 <!--                            <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>-->
-                            </form>
-                            <md-button data-toggle="modal" data-target="#seeallTags">See All</md-button>
-                    </div>        
-                    
-                        
+                </form>
+                <md-button data-toggle="modal" data-target="#seeallTags">See All</md-button>
+        </div>        
+
+
 <!--                        <p ng-hide="selectedTags.length || selectedUsers.length">Please select tags and members.</p>    -->
-                            
+
 <!--                       <h2 ng-show="selectedTags.length">ADD</h2>-->
-                              
-                        <ul id="selectedTags">
-                           <netetag-check ng-repeat="tag in selectedTags = (tags.org_tags | checkedFilter)"></netetag-check>
-                        </ul>
+
+            <ul id="selectedTags">
+               <netetag-check ng-repeat="tag in selectedTags = (tags.org_tags | checkedFilter)"></netetag-check>
+            </ul>
 <!--                        <p ng-show="!selectedTags.length && selectedUsers.length">Please select tags.</p>-->
-                        
+
 <!--                        <h2>TO {{(selectedUsers = (directory.members | checkedFilter)).length}} MEMBERS</h2>-->
-                        
+
 <!--                        <p ng-show="!selectedUsers.length && selectedTags.length">Please select members.</p>-->
-                                                
-                        <md-button ng-click="addTagsToUsers()" ng-class="{disabled: !(selectedTags.length && selectedUsers.length)}">Add Tags</md-button>
-                        
+
+            <md-button ng-click="addTagsToUsers()" ng-disabled="!(selectedTags && selectedUsers)">Add Tags</md-button>
+
 <!--
-                        <section id="createTags">    
-                            <form id="addTag" name="addTag" ng-submit="addOrganizationTag(item.tag)">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                       <span class="input-group-addon">#</span>
-                                        <input name="tag" id="tag" ng-trim="false" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
-                                        <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-default">Create Tag</button>
-                                         </span>
-                                    </div>
-                                </div>
-                            </form>
-                        </section>
--->
-                    
-                    <search ng-model="search" id="taggingSearch"></search>
-                    <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
-                    <ul id="memberSelect">
-                        <li ng-repeat="user in (directory.members | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
-                               
-                               <ul id="memberTags">
-                                <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
-                                <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
-                                <input type="checkbox" ng-model="user.checked"> <span>{{user.name}}</span>
-                                </label>
-                                
-                                
-                                    <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
-                                        <netetag-delete></netetag-delete>
-                                    </div>
-                                </ul>
-                        </li>
-                    </ul>
+            <section id="createTags">    
+                <form id="addTag" name="addTag" ng-submit="addOrganizationTag(item.tag)">
+                    <div class="form-group">
+                        <div class="input-group">
+                           <span class="input-group-addon">#</span>
+                            <input name="tag" id="tag" ng-trim="false" ng-model="item.tag" class="form-control" type="text" placeholder="tag name">
+                            <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">Create Tag</button>
+                             </span>
+                        </div>
                     </div>
+                </form>
+            </section>
+-->
+
+        <search ng-model="search" id="taggingSearch"></search>
+        <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
+        <ul id="memberSelect">
+            <li ng-repeat="user in (directory.members | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
+
+                   <ul id="memberTags">
+                    <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
+                    <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
+                    <input type="checkbox" ng-model="user.checked"> <span>{{user.name}}</span>
+                    </label>
+
+
+                        <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
+                            <netetag-delete></netetag-delete>
+                        </div>
+                    </ul>
+            </li>
+        </ul>
+        </div>
                     
 <div class="modal fade" id="addTagModal">
   <div class="modal-dialog">

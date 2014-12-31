@@ -1,4 +1,3 @@
-
 <div id="surveyInfo" class="container">
     
     <div class="md-whiteframe-z1">
@@ -11,7 +10,7 @@
             <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
                 <i class="fa fa-arrow-left"></i>
             </md-button>
-            <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showSurveyoptions($event)" ng-show="$root.checkPermissions('leadership')">options</md-button>
+            <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showPolloptions($event)" ng-show="$parent.perms == 'leadership'">options</md-button>
         </md-toolbar>
         
         <md-content class="md-padding">

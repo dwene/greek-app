@@ -26,8 +26,8 @@
         <link rel="stylesheet" href="styles/font-awesome.min.css">
         <link rel="stylesheet" href="styles/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" href="styles/calendar.css">
-        <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="styles/colorpicker.css">
+        <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
 <!--        Icons for iOS-->
         <link rel="apple-touch-icon" href="images/icon_57.png"/>  
@@ -66,6 +66,7 @@
         <script src="scripts/vendor/angular-ui.js"></script>
         <script src="scripts/vendor/jquery.cookie.js"></script>
         <script src="scripts/vendor/bootstrap.min.js"></script>
+        <script src="../bower_components/bootstrap/js/dropdown.js"></script>
         <script src="scripts/vendor/spin.js"></script>
         <script src="scripts/vendor/typeahead.js"></script>
         <script src="scripts/vendor/fastclick.js"></script>
@@ -214,7 +215,7 @@
   </md-toolbar>
    
     <div class="tabpanel-container">
-        <div role="tabpanel" id="menuTab-content" aria-labelledby="menuTab" ng-show="menu.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
+        <div role="tabpanel" id="menuTab-content" class="fadingIn" aria-labelledby="menuTab" ng-show="menu.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
             <md-content class="md-padding">
                 <ul class="nav">
                     <li ng-click="toggleSidenav()"><md-button ng-href="/#/app/home"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
@@ -226,7 +227,7 @@
                 </ul>
             </md-content>
         </div>
-        <div role="tabpanel" id="setingsTab-content" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
+        <div role="tabpanel" id="setingsTab-content" class="fadingIn" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
         <md-content class="md-padding">
             <ul class="nav">
                 <li ng-click="toggleSidenav()"><md-button ng-href="#/app/accountinfo"><i class="fa fa-user fa-fw"></i> Profile</md-button></li>

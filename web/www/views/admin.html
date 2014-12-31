@@ -1,9 +1,7 @@
 <div id="adminPage" class="container">
-      
-    <section>
-    <h2 class="page-header">Organization Settings</h2>
-          
-    <div id="colorPicker" class="card">
+    <md-content class="md-padding md-whiteframe-z1">
+    <md-subheader>Organization Settings</md-subheader>
+    <div id="colorPicker">
         <button id="color1" ng-click="changeTheme(1);" class="colorPick"></button>
         <button id="color2" ng-click="changeTheme(2);" class="colorPick"></button>
         <button id="color3" ng-click="changeTheme(3);" class="colorPick"></button>
@@ -21,18 +19,15 @@
         <button id="color15" ng-click="changeTheme(15);" class="colorPick"></button>
         <button id="color16" ng-click="changeTheme(16);" class="colorPick"></button>
     </div>
-    </section> 
     
-    <section>
-    <h2 class="page-header">Organization Image</h2>
-      <img class="orgLetters" ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}"><br><br>
-      <a class="btn btn-default" ng-href="#/app/uploadorganizationimage">Change Organization Image</a>
-    </section>
+    <md-subheader>Organization Image</md-subheader>
+    <img class="orgLetters img-responsive" ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}"><br>
+    <md-button ng-href="#/app/uploadorganizationimage">Change Organization Image</md-button>
       
     <section ng-hide="true">
     <h2 class="page-header">Subscription Information</h2>
       
-       <div ng-hide ="subscription.no_subscription">
+       <div ng-hide="subscription.no_subscription">
         <p>Next Billing Date: {{subscription.next_billing_date}}</p>
         </div>
         
@@ -69,4 +64,6 @@
         </div>
         
     </section>
+    </md-content>
+    
 </div>

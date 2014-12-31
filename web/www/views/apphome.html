@@ -4,31 +4,42 @@
        <img ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}">
 </md-card>
 -->
-    
+
+<div class="md-whiteframe-z1">
+        <div layout="row" layout-sm="column">
+            <div flex-gt-sm="60">
+                <md-content class="md-padding no-padding-top">
+                    <md-subheader class="no-padding-bottom" ng-hide="$root.me.status">No Status</md-subheader>
+                    <md-subheader class="no-padding-bottom" ng-show="$root.me.status">Status: {{$root.me.status}}</md-subheader>
+                    <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>        
+                    <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
+                    <md-input-group flex class="md-default-theme no-margin">
+                        <label for="update_status">Update Your status <span ng-show="status.length">({{status.length}}/140}</span></label>
+                        <md-input name="update_status" ng-model="status"  maxlength="140" required></md-input>
+                    </md-input-group>
+                    <md-button type="submit" aria-label="submit status"><i class="fa fa-check"></i></md-button>
+                    </form>
+                </md-content>
+            </div>
+            <div flex-gt-sm="40">
+                <md-content>
+                   <md-subheader>Upcoming Events</md-subheader>
+                    <md-list id="upcomingEvents" class="itemList hover">
+                        <md-item ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)">
+                            <md-item-content>
+                                <a ng-href="#/app/events/{{event.tag}}">{{event.title}} {{showDate(event.time_start, event.time_end)}}</a>
+                            </md-item-content>
+                        </md-item>
+                    </md-list>
+                </md-content>
+            </div>
+        </div>
+    </md-content>
+</div>
+
 <div id="notifications" class="md-whiteframe-z1" ng-controller="inboxController">
     
     <md-toolbar class="no-min-height">
-<!--
-        <div id="arrows">
-        <div ng-show="data.selectedIndex == 0">
-            <div class="messageCount">{{$root.notifications.length == 0? 0:(current.currentPage * current.maxPageNumber) + 1}} - {{(current.currentPage *current.maxPageNumber)+5 >= ($root.notification_lengths.unread + $root.notification_lengths.read) ? ($root.notification_lengths.unread + $root.notification_lengths.read):(current.currentPage *current.maxPageNumber)+5}}<span ng-hide="$root.notifications.length <= 5"> of {{$root.notification_lengths.unread + $root.notification_lengths.read}}</div>
-            <div id="messageArrows">
-                <md-button class="left btn-touch" ng-disabled="current.currentPage == 0" ng-click="current.currentPage=current.currentPage-1"><i class="fa fa-chevron-left fa-fw"></i></md-button>
-                <md-button class="left btn-touch" ng-hide="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-click="current.currentPage=current.currentPage+1"><i class="fa fa-chevron-right fa-fw"></i></md-button>
-                <md-button class="left btn-touch" ng-show="current.currentPage >= $root.notifications.length/current.maxPageNumber - 1" ng-disabled="noMoreNotifications || current_working || $root.notification_lengths.unread + $root.notification_lengths.read <= $root.notifications.length" ng-click="checkForMoreNotifications(current.currentPage, current.maxPageNumber)"><span ng-show="current_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="current_working"><i class="fa fa-chevron-right fa-fw"></i></span></md-button>
-            </div>
-        </div>
-        <div ng-show="data.selectedIndex == 1">
-            <div class="messageCount">{{(hidden.currentPage * hidden.maxPageNumber) + 1}} - {{(hidden.currentPage *hidden.maxPageNumber)+5 >= $root.notification_lengths.hidden? $root.notification_lengths.hidden: (hidden.maxPageNumber * hidden.currentPage)+5}}<span ng-hide="$root.hidden_notifications.length <= 5"> of {{$root.notification_lengths.hidden}}</div>
-            <div id="archivedArrows">
-                <md-button class="right btn-touch" ng-disabled="hidden.currentPage == 0" ng-click="hidden.currentPage=hidden.currentPage-1"><i class="fa fa-chevron-left fa-fw"></i></md-button>
-                <md-button class="right btn-touch" ng-hide="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-click="hidden.currentPage=hidden.currentPage+1"><i class="fa fa-chevron-right fa-fw"></i></md-button>
-                <md-button class="right btn-touch" ng-show="hidden.currentPage >= $root.hidden_notifications.length/hidden.maxPageNumber - 1" ng-disabled="noMoreHiddens || hidden_working  || $root.notification_lengths.hidden == $root.hidden_notifications.length" ng-click="checkForMoreHiddenNotifications(hidden.currentPage, hidden.maxPageNumber)"><span ng-show="hidden_working"><i class="fa fa-spinner fa-spin"></i></i></span><span ng-hide="hidden_working"><i class="fa fa-chevron-right fa-fw"></i></span></md-button>
-            </div>
-        </div>
-        </div>
-        <div flex></div>
--->
         <md-tabs md-selected="data.selectedIndex">
           <md-tab id="inboxTab" aria-controls="inboxTab-content">
             Inbox
@@ -37,12 +48,10 @@
             Archived
           </md-tab>
         </md-tabs>  
-    
-    
     </md-toolbar>
     <div class="tabpanel-container" load-directive ng-model="showInbox">
         <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
-            <md-list class="itemList">
+            <md-list class="itemList hover">
               <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | limitTo: messagesLength) track by notify.key">
                 <div class="isNew md-primary"></div>
                 <md-item-content>
@@ -59,7 +68,7 @@
             </md-list>
         </div>
         <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
-            <md-list class="itemList">
+            <md-list class="itemList hover">
               <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.archived | limitTo: archivedLength) track by notify.key">
                 <div class="isNew md-primary"></div>
                 <md-item-content>

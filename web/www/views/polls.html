@@ -12,7 +12,7 @@
         <md-content class="md-padding">
         <search ng-model="search" id="pollSearch" ng-show="polls.length"></search>
         
-        <md-list class="itemList">
+        <md-list class="itemList hover">
             <md-item ng-repeat="poll in polls | orderBy: '-timestamp' | multipleSearch:search | startFrom:hidden.currentPage*hidden.maxPageNumber | limitTo: hidden.maxPageNumber">
                 <md-item-content ng-click="showPoll(poll)" ng-class="{closed: !poll.open}">
                     <div class="md-tile-content">
