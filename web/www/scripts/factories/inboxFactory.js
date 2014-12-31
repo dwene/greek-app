@@ -15,6 +15,7 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
     inbox.destroy = function(){
         localStorageService.remove('inbox');
         delete inbox.data;
+        inbox.hasLoaded = undefined;
         inbox.data = {};
     }
     inbox.update = function(data){
@@ -26,7 +27,7 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
         if (inbox.hasLoaded){
             return;
         }
-        hasLoaded = true;
+        inbox.hasLoaded = true;
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
         .success(function(data){
             if (!RESTService.hasErrors(data)){

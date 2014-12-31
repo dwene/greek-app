@@ -19,7 +19,7 @@ App.controller('appController', function($scope, $interval, $rootScope, LoadScre
 
     $scope.$on(AUTH_EVENTS.loginSuccess, function(){
         Organization.get();
-        //Inbox.get();
+        Inbox.get();
         if (!angular.isDefined(notification_update_interval)){
             $interval(Inbox.update(), 10000);
         }
