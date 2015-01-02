@@ -29,6 +29,10 @@ App.factory('Tags', function(RESTService, $rootScope, localStorageService, $q, $
         localStorageService.remove('tags');
     }
 
+    item.set = function(data){
+        item.tags = data;
+    }
+
     // set: function (_tags) {
     //     tags = _tags;
     // },

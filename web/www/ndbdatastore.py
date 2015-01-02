@@ -59,7 +59,6 @@ class User(ndb.Model):
     email_prefs = ndb.StringProperty(default='all')
 
 
-
 class Notification(ndb.Model):
     title = ndb.StringProperty()
     type = ndb.StringProperty()
@@ -68,6 +67,15 @@ class Notification(ndb.Model):
     sender_name = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
     link = ndb.StringProperty()
+
+
+class Message(ndb.Model):
+    title = ndb.StringProperty()
+    type = ndb.StringProperty()
+    content = ndb.TextProperty()
+    sender = ndb.KeyProperty()
+    sender_name = ndb.StringProperty()
+    timestamp = ndb.DateTimeProperty()
 
 
 class Event(ndb.Model):

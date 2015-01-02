@@ -1,6 +1,6 @@
 App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
     var inbox = {};
-    inbox.hasLoaded = undefined;
+    inbox.hasLoaded = false;
     inbox.data = {};
     var load_data = localStorageService.get('inbox');
     if (load_data){
@@ -15,7 +15,7 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
     inbox.destroy = function(){
         localStorageService.remove('inbox');
         delete inbox.data;
-        inbox.hasLoaded = undefined;
+        inbox.hasLoaded = false;
         inbox.data = {};
     }
     inbox.update = function(data){
@@ -37,6 +37,7 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
                 inbox.data.lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, archived:load_data.hidden_notifications_length};
                 inbox.data.archived = load_data.hidden_notifications;
                 $rootScope.$broadcast('inbox:updated');
+                console.log('Inbox has been updated');
             }
             else{
                 console.log('Err', data);

@@ -1,25 +1,34 @@
 App.controller('membertagsController', function($scope, RESTService, $rootScope, Load, localStorageService, Directory, Tags) 
 {
+    routeChange();
     Tags.get();
     Directory.get();
+    console.log('This is the directory', Directory.directory);
+    if (Directory.directory){
+        console.log('I have the directory');
+        getUsers();
+    }
+    $scope.$on('directory:updated', function(){
+        $scope.directory = Directory.directory;
+        getUsers();
+    });
+    $scope.selectedTag = "";
     $scope.dataLoaded = $scope.directoryLoaded && $scope.tagsLoaded;
     $scope.watches = [$scope.directoryLoaded, $scope.tagsLoaded];
     $scope.$watchCollection('[directoryLoaded, tagsLoaded]', function(){
         if ($scope.tagsLoaded && $scope.directoryLoaded){
+            console.log('data is loaded!');
             $scope.dataLoaded = true;
         }
         else{
             $scope.dataLoaded = false;
         }
     })
-    routeChange();
+
     $scope.selectTagFromTypeAhead = function(tag){
-        console.log('looking for tag', tag);
-        console.log('all tags', $scope.tags);
         var tags = $scope.tags.org_tags;
         for(var i = 0; i < tags.length; i++){
             if (tags[i].name == tag.name){
-                console.log('I found the tag!');
                 tags[i].checked = true;
                 $scope.selectedTagName = "";
                 break;
@@ -36,7 +45,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     //         $scope.dataLoaded = true;
     //     }
     // })
-    $scope.selectedTag = "";
     
     $scope.checkTag = function(tag){
         if(tag.checked){
@@ -46,15 +54,14 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
             tag.checked = true;
         }
         $scope.selectedTagName = "";
+        $('#tag_name').val('');
     }
-    Load.then(function(){
-        $rootScope.requirePermissions(LEADERSHIP);
         $scope.memberslength = 20;
         $scope.$watch('search', function(){
             $scope.memberslength = 20;
         });
         $scope.loadMoreMembers = function(){
-            if ($scope.directory){
+            if ($scope.directoryLoaded){
                 if ($scope.memberslength < $scope.directory.members.length){
                     $scope.memberslength += 20;
                 }
@@ -97,13 +104,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
             // .error(function(data) {
             //     console.log('Error: ' , data);
             // });
-            }
-            if (Directory.check()){
-                getUsers();
-            }
-            $scope.$on('directory:updated', function(){
-                getUsers();
-            });
+        }
         $scope.getOrganizationTags = function(){
         //initialize ng-model variables to contain selected things
         // $('#tag').val('');
@@ -201,7 +202,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     $scope.renameOrganizationTag = function(new_tag, isValid){
 
         if(isValid){
-            $('#renameTagModal').modal('hide')
+            $('#renameTagModal').modal('hide');
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/rename_organization_tag', {old_tag: $scope.modaledTag.name, new_tag: new_tag})
             .success(function(data){
                 if (!RESTService.hasErrors(data))
@@ -227,6 +228,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
                 }
             }
             Directory.set($scope.directory);
+            Tags.set($scope.tags);
         }
         else{
             $scope.submitted = true;
@@ -253,7 +255,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     
     function addTagsToUsers(tags, keys){
         var to_send = {tags: tags, keys: keys};
-        console.log(to_send);
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_users_tags', to_send)
         .success(function(data){
             if (!RESTService.hasErrors(data))
@@ -270,7 +271,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         });
         for(var j = 0; j < $scope.directory.members.length; j++){
             var user = $scope.directory.members[j];
-            console.log(user);
             for(var i = 0; i < $scope.tags.org_tags.length; i++){
                 if ($scope.tags.org_tags[i].checked && user.checked && user.tags.indexOf($scope.tags.org_tags[i].name) < 0){
                     user.tags.push($scope.tags.org_tags[i].name);
@@ -285,7 +285,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         var users = $scope.directory.members;
         selected_tags = [];
         selected_keys = [];
-        console.log($scope.tags.org_tags);
         for (var i = 0; i < tags.length; i++){
             if (tags[i].checked){
                 selected_tags.push(tags[i].name);
@@ -296,8 +295,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
                 selected_keys.push(users[i].key);
             }
         }
-        console.log(selected_keys);
-        console.log(selected_tags);
         addTagsToUsers(selected_tags, selected_keys);
         clearCheckLabels();
         Directory.set($scope.directory);
@@ -323,13 +320,10 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     }
     
     $scope.removeTagFromUser = function(tag, user){
-        console.log(tag);
-        console.log(user);
         removeTagFromUser(tag, user);
         clearCheckLabels();
         Directory.set($scope.directory);
     }
-});
 function clearCheckLabels(){
     for (var i = 0; i < $scope.directory.members.length; i++){
         $scope.directory.members[i].checked = false;
@@ -339,3 +333,5 @@ function clearCheckLabels(){
     }
 }
 });
+
+

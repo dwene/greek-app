@@ -87,13 +87,14 @@
         
         $scope.changeUserEmail = function(member, email){
             var to_send = {key: member.key, email: email};
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/update_users_emails', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/users_emails', to_send)
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {
                         member.email = email;
                         Directory.set($scope.directory);
                         $scope.newEmail = undefined;
+                        $('#changeEmailModal').modal('hide');
                         console.log(member);
                     }
                     else

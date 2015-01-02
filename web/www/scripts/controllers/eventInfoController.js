@@ -70,12 +70,14 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             getEventAndSetInfo($scope.events);
         }
         $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.directory;
             getEventAndSetInfo($scope.events);
         });
         if (Events.check()){
             getEventAndSetInfo($scope.events);
         }
         $scope.$on('events:updated', function(){
+            $scope.events = Events.events;
             getEventAndSetInfo($scope.events);
         });
         // function tryLoadEvent(count){

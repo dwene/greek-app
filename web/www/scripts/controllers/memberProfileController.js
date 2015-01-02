@@ -2,14 +2,17 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
     routeChange();
         Directory.get();
         $scope.directory = Directory.directory;
+        console.log('here is the directory', $scope.directory);
         if ($scope.directory){
             loadMemberData();
         }
+        
         $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.directory;
             loadMemberData();
         });
         if ($stateParams.id.toString().length < 2){
-            window.location.assign('/#/app/directory');
+            $location.path('app/directory');
         }
     
     $scope.showProfileoptions = function($event){
@@ -21,7 +24,7 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         }).then(function(clickedItem) {
             switch(clickedItem.name){
                 case 'SMS': $window.open('sms:'+ $scope.phone, '_blank'); break;
-                case 'CALL': $window.open('phone:' + $scope.phone, '_blank'); break;
+                case 'CALL': $window.open('tel:' + $scope.phone, '_blank'); break;
                 case 'EMAIL': $window.open('mailto:' + $scope.email, '_blank'); break;
                 case 'SAVE': $scope.saveVcard(); break;
                 default: $log('button not found');

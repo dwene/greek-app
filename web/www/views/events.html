@@ -9,7 +9,7 @@
                         <md-button ng-href="#/app/newevent" ng-show="$root.checkPermissions('leadership')">Create New</md-button>
                     </div>
                 </md-toolbar>
-                <md-content class="md-padding">
+                <md-content class="md-padding" load-directive ng-model="eventsLoaded">
                     <calendar calendar-mode="mode" event-source="eventSource">
                 </md-content>
             </div>
@@ -41,7 +41,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 

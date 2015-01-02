@@ -9,8 +9,8 @@
         <div layout="row" layout-sm="column">
             <div flex-gt-sm="60">
                 <md-content class="md-padding no-padding-top">
-                    <md-subheader class="no-padding-bottom" ng-hide="$root.me.status">No Status</md-subheader>
-                    <md-subheader class="no-padding-bottom" ng-show="$root.me.status">Status: {{$root.me.status}}</md-subheader>
+                    <md-subheader class="no-padding-bottom" ng-hide="me.status">No Status</md-subheader>
+                    <md-subheader class="no-padding-bottom" ng-show="me.status">Status: {{me.status}}</md-subheader>
                     <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>        
                     <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
                     <md-input-group flex class="md-default-theme no-margin">
@@ -38,7 +38,6 @@
 </div>
 
 <div id="notifications" class="md-whiteframe-z1" ng-controller="inboxController">
-    
     <md-toolbar class="no-min-height">
         <md-tabs md-selected="data.selectedIndex">
           <md-tab id="inboxTab" aria-controls="inboxTab-content">
@@ -49,10 +48,11 @@
           </md-tab>
         </md-tabs>  
     </md-toolbar>
+
     <div class="tabpanel-container" load-directive ng-model="showInbox">
         <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
             <md-list class="itemList hover">
-              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | limitTo: messagesLength) track by notify.key">
+              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | orderBy:'-timestamp' | limitTo: messagesLength) track by notify.key">
                 <div class="isNew md-primary"></div>
                 <md-item-content>
                   <div class="md-tile-content">
@@ -69,7 +69,7 @@
         </div>
         <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
             <md-list class="itemList hover">
-              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.archived | limitTo: archivedLength) track by notify.key">
+              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openArchivedDialog(notify, $event)" ng-repeat="notify in (inbox.archived | orderBy:'-timestamp' | limitTo: archivedLength) track by notify.key">
                 <div class="isNew md-primary"></div>
                 <md-item-content>
                   <div class="md-tile-content">

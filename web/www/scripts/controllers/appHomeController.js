@@ -1,111 +1,113 @@
-    App.controller('appHomeController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, Directory, Events, removePassedEventsFilter, Directory, Inbox) {
+    App.controller('appHomeController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, Events, removePassedEventsFilter, Directory, Inbox, Session) {
         routeChange();
+        Events.get();
+        $scope.events = Events.events;
        // Load.then(function(){
         $scope.events_loaded = false;
         $scope.notifications_loaded = false;
         $scope.noMoreHiddens = false;
         $scope.directory = Directory.directory;
-        
+        $scope.me = Session.me;
        $scope.createEvents = function(){
             $scope.events = Events.events;
-            $scope.events_loaded = Events.check();
+            $scope.events_loaded = true;
         }
         $scope.createEvents();
         $scope.$on('events:updated', function(){ $scope.createEvents(); });
             
-        $scope.checkForMoreHiddenNotifications = function(pageNum, max){
-            var len = $rootScope.hidden_notifications.length;
-            $scope.hidden_working = true;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', len)
-            .success(function(data){
-                if (!RESTService.hasErrors(data))
-                {
-                    var new_hiddens = JSON.parse(data.data);
-                    var next = false;
-                    for (var i = 0; i < new_hiddens.length; i++){
-                        next = false;
-                        for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
-                            if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        for (var j = 0; j < $rootScope.notifications.length; j++){
-                            if ($rootScope.notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        $rootScope.hidden_notifications.push(new_hiddens[i]);
-                    }
-//                    $rootScope.hidden_notifications = new_hiddens;
-                    if ($rootScope.hidden_notifications.length > ((pageNum+1)*max)){
-                        $scope.hidden.currentPage++;
-                    }
-                    else{
-                        $scope.noMoreHiddens = true;
-                    }
-                }
-                else{
-                    console.log('ERROR: ',data);
-                }
-                $scope.hidden_working = false;
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.hidden_working = false;
-            }); 
-        }
+//         $scope.checkForMoreHiddenNotifications = function(pageNum, max){
+//             var len = $rootScope.hidden_notifications.length;
+//             $scope.hidden_working = true;
+//             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', len)
+//             .success(function(data){
+//                 if (!RESTService.hasErrors(data))
+//                 {
+//                     var new_hiddens = JSON.parse(data.data);
+//                     var next = false;
+//                     for (var i = 0; i < new_hiddens.length; i++){
+//                         next = false;
+//                         for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
+//                             if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         for (var j = 0; j < $rootScope.notifications.length; j++){
+//                             if ($rootScope.notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         $rootScope.hidden_notifications.push(new_hiddens[i]);
+//                     }
+// //                    $rootScope.hidden_notifications = new_hiddens;
+//                     if ($rootScope.hidden_notifications.length > ((pageNum+1)*max)){
+//                         $scope.hidden.currentPage++;
+//                     }
+//                     else{
+//                         $scope.noMoreHiddens = true;
+//                     }
+//                 }
+//                 else{
+//                     console.log('ERROR: ',data);
+//                 }
+//                 $scope.hidden_working = false;
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//                 $scope.hidden_working = false;
+//             }); 
+//         }
         
-        $scope.checkForMoreNotifications = function(pageNum, max){
-            var len = $rootScope.notifications.length;
-            $scope.current_working = true;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', len)
-            .success(function(data){
-                if (!RESTService.hasErrors(data))
-                {
-                    var new_hiddens = JSON.parse(data.data);
-                    var next = false;
-                    for (var i = 0; i < new_hiddens.length; i++){
-                        next = false;
-                        for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
-                            if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        for (var j = 0; j < $rootScope.notifications.length; j++){
-                            if ($rootScope.notifications[j].key == new_hiddens[i].key){
-                                next = true;
-                                break;
-                            }
-                        }
-                        if (next){ continue;}
-                        $rootScope.notifications.push(new_hiddens[i]);
-                    }
-//                    $rootScope.hidden_notifications = new_hiddens;
-                    if ($rootScope.notifications.length > ((pageNum+1)*(max))){
-                        $scope.current.currentPage++;
-                    }
-                    else{
-                        $scope.noMoreNotifications = true;
-                    }
-                }
-                else{
-                    console.log('ERROR: ',data);
-                }
-                $scope.current_working = false;
-                $scope.working = false;
-            })
-            .error(function(data) {
-                console.log('Error: ' , data);
-                $scope.current_working = false;
-                $scope.working = false;
-            }); 
-        }  
+//         $scope.checkForMoreNotifications = function(pageNum, max){
+//             var len = $rootScope.notifications.length;
+//             $scope.current_working = true;
+//             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', len)
+//             .success(function(data){
+//                 if (!RESTService.hasErrors(data))
+//                 {
+//                     var new_hiddens = JSON.parse(data.data);
+//                     var next = false;
+//                     for (var i = 0; i < new_hiddens.length; i++){
+//                         next = false;
+//                         for (var j = 0; j < $rootScope.hidden_notifications.length; j++){
+//                             if ($rootScope.hidden_notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         for (var j = 0; j < $rootScope.notifications.length; j++){
+//                             if ($rootScope.notifications[j].key == new_hiddens[i].key){
+//                                 next = true;
+//                                 break;
+//                             }
+//                         }
+//                         if (next){ continue;}
+//                         $rootScope.notifications.push(new_hiddens[i]);
+//                     }
+// //                    $rootScope.hidden_notifications = new_hiddens;
+//                     if ($rootScope.notifications.length > ((pageNum+1)*(max))){
+//                         $scope.current.currentPage++;
+//                     }
+//                     else{
+//                         $scope.noMoreNotifications = true;
+//                     }
+//                 }
+//                 else{
+//                     console.log('ERROR: ',data);
+//                 }
+//                 $scope.current_working = false;
+//                 $scope.working = false;
+//             })
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//                 $scope.current_working = false;
+//                 $scope.working = false;
+//             }); 
+//         }  
         
 //        $scope.notificationPreview = function(notify){
 //            return notify.replace(/\r?\n|\r/g," "); 
@@ -118,15 +120,20 @@
         $scope.updateStatus = function(status){
         var to_send = {'status': status};
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', to_send);
-            $('#status').val("");
-            if ($rootScope.me){
-                $rootScope.me.status = status;
+            if (Session.me){
+                Session.me.status = status;
+                $scope.me = Session.me;
             }
+            Directory.updateMyStatus(status);
             $scope.status = '';
         }
+
         $scope.clearStatus = function(){
             var status = "";
             $scope.status = "";
+            Session.me.status = "";
+            $scope.me = Session.me;
+            Directory.updateMyStatus(status);
             var to_send = {status: status};
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_status', to_send)
             .success(function(data){
@@ -135,37 +142,33 @@
             })
             .error(function(data) {
                 console.log('Error: ' , data);
-            }); 
-            $('#status').val("");
-            if ($rootScope.me){
-                $rootScope.me.status = status;
-            }            
+            });            
         }
         
-        $scope.openMessagedialog = function(){
-            $mdDialog.show({
-                    controller: 'dialogController',
-                    templateUrl: '../views/templates/messageDialog.html'
-            });
+        // $scope.openMessagedialog = function(){
+        //     $mdDialog.show({
+        //             controller: 'dialogController',
+        //             templateUrl: '../views/templates/messageDialog.html'
+        //     });
         
-            $scope.selectedNotification = notify;
-            var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            $scope.messageHTML = $sce.trustAsHtml(message);
-            $scope.selectedNotificationUser = undefined;
-            for(var i = 0; i < $scope.directory.members.length; i++){
-                if ($scope.directory.members[i].key == notify.sender){
-                    $scope.selectedNotificationUser = $scope.directory.members[i];
-                }
-            }
-            if ($scope.selectedNotification.new){
-                $scope.notification_lengths.unread --;
-                $scope.notification_lengths.read ++;
-                $scope.selectedNotification.new = false;
-            }
-            $rootScope.updateNotificationBadge();
-            var key = $scope.selectedNotification.key;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': key});
-        }
+        //     $scope.selectedNotification = notify;
+        //     var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        //     $scope.messageHTML = $sce.trustAsHtml(message);
+        //     $scope.selectedNotificationUser = undefined;
+        //     for(var i = 0; i < $scope.directory.members.length; i++){
+        //         if ($scope.directory.members[i].key == notify.sender){
+        //             $scope.selectedNotificationUser = $scope.directory.members[i];
+        //         }
+        //     }
+        //     if ($scope.selectedNotification.new){
+        //         $scope.notification_lengths.unread --;
+        //         $scope.notification_lengths.read ++;
+        //         $scope.selectedNotification.new = false;
+        //     }
+        //     $rootScope.updateNotificationBadge();
+        //     var key = $scope.selectedNotification.key;
+        //     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': key});
+        // }
         
         // $scope.openNotificationModal = function(notify){
         //     $('#notificationModal').modal();

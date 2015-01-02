@@ -5005,6 +5005,21 @@ App.directive('match', function(){
         };
 });
 
+
+
+App.directive('onFinishRender', function ($timeout) {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attr) {
+      if (scope.$last === true) {
+          console.log('I found the last element');
+          scope.$evalAsync(attr.onFinishRender);
+      }
+    }
+  }
+});
+
+
 // App.directive('targetBlank', function() {
 //     return {
 //         restrict: 'A',

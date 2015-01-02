@@ -1,5 +1,5 @@
 App.controller('inboxController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, removePassedEventsFilter, Inbox){
-    //Inbox.checkServer();
+    Inbox.get();
     var selectedMessage;
     $scope.inbox = Inbox.data;
     $scope.archivedLength = 10;
@@ -16,14 +16,14 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
     })
 
 
-    $scope.read = function(notification){
-        if (notification.new){
+    $scope.read = function(message){
+        if (message.new){
             for (var i = 0; i < $scope.inbox.messages.length; i++){
-                if ($scope.inbox.messages[i].key == notification.key){
+                if ($scope.inbox.messages[i].key == message.key){
                     if ($scope.inbox.messages[i].new){
                         $scope.inbox.messages[i].new = false;
                         $rootScope.broadcast('inbox:updated');
-                        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': notification.key});
+                        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': message.key});
                     }
                     return;
                 }
@@ -41,41 +41,27 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
                 templateUrl: '../views/templates/messageDialog.html',
                 targetEvent: ev
         });
-
-        function messageDialogController($scope, $mdDialog, $sce){
-            var message = selectedMessage;
-            var content = message.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            $scope.content = $sce.trustAsHtml(content);
-            $scope.message = message;
-
-            $scope.closeNotificationModal = function() {
-                $mdDialog.hide();
-            };
-
-            $scope.archive = function(){
-                archive(selectedMessage);
-            }
-
-            $scope.unarchive = function(){
-                unarchive(selectedMessage);
-            }
-        }
         //$scope.selectedNotification = notify;
         var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
         $scope.messageHTML = $sce.trustAsHtml(message);
+        Inbox.read(notify);
+    }
 
-        // $scope.selectedNotificationUser = undefined;
-        // for(var i = 0; i < $scope.directory.members.length; i++){
-        //     if ($scope.directory.members[i].key == notify.sender){
-        //         $scope.selectedNotificationUser = $scope.directory.members[i];
-        //     }
-        // }
-        // if ($scope.selectedNotification.new){
-        //     $scope.notification_lengths.unread --;
-        //     $scope.notification_lengths.read ++;
-        //     $scope.selectedNotification.new = false;
-        // }
-        //var key = $scope.selectedNotification.key;
+
+
+    $scope.openArchivedDialog = function(notify, ev){
+        $scope.read(notify);
+        selectedMessage = notify;
+        Inbox.selectMessage(notify);
+        $scope.selectedMessage = notify;
+        $mdDialog.show({
+                controller: messageDialogController,
+                templateUrl: '../views/templates/archivedDialog.html',
+                targetEvent: ev
+        });
+        //$scope.selectedNotification = notify;
+        var message = notify.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        $scope.messageHTML = $sce.trustAsHtml(message);
         Inbox.read(notify);
     }
 
@@ -94,8 +80,32 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
     }
 
 
+
+    function messageDialogController($scope, $mdDialog, $sce){
+        var message = selectedMessage;
+        var content = message.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        $scope.content = $sce.trustAsHtml(content);
+        $scope.message = message;
+
+        $scope.closeNotificationModal = function() {
+            $mdDialog.hide();
+        };
+
+        $scope.archive = function(){
+            $mdDialog.hide();
+            archive(selectedMessage);
+            
+        }
+
+        $scope.unarchive = function(){
+            $mdDialog.hide();
+            unarchive(selectedMessage);
+            
+        }
+    }
+
+
     $scope.increaseMessagesLength = function(){
-        console.log('increase messages length called');
         if ($scope.messagesLength >= $scope.inbox.messages.length){
             if ($scope.inbox.messages.length < ($scope.inbox.lengths.unread + $scope.inbox.lengths.read)){
                 loadMoreMessages();
@@ -109,9 +119,9 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         }
     }
 
-    function archive(notification){
+    function archive(message){
         for (var i = 0; i < $scope.inbox.messages.length; i++){
-            if ($scope.inbox.messages[i].key == notification.key){
+            if ($scope.inbox.messages[i].key == message.key){
                 if ($scope.inbox.messages[i].new){
                     $scope.inbox.messages[i].new = false;
                     $scope.inbox.lengths.unread--;
@@ -119,24 +129,24 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
                 else{
                     $scope.inbox.lengths.read--;
                 }
-                $scope.inbox.archived.append(inbox.messages[i]);
+                $scope.inbox.archived.push($scope.inbox.messages[i]);
                 $scope.inbox.messages.splice(i, 1);
-                $scope.inbox.lengths.hidden++;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', {'notification': notification.key})
+                $scope.inbox.lengths.archived++;
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', {'notification': message.key})
                 Inbox.update($scope.inbox);
                 return;
             }
         }
     }
 
-    function unarchive(notification){
+    function unarchive(message){
         for (var i = 0; i < $scope.inbox.archived.length; i++){
-            if ($scope.inbox.archived[i].key == notification.key){
-                $scope.inbox.messages.append(inbox.archived[i]);
+            if ($scope.inbox.archived[i].key == message.key){
+                $scope.inbox.messages.push($scope.inbox.archived[i]);
                 $scope.inbox.archived.splice(i, 1);
-                $scope.inbox.lengths.hidden--;
+                $scope.inbox.lengths.archived--;
                 $scope.inbox.lengths.read++;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', {'notification': notification.key});
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', {'notification': message.key});
                 Inbox.update($scope.inbox);
                 return;
             }

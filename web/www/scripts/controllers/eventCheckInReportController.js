@@ -37,9 +37,11 @@
             $scope.directory = Directory.directory;
             $scope.events = Events.events;
             $scope.$on('events:updated', function(){
+                $scope.events = Events.events;
                 getCheckInData();
             });
             $scope.$on('directory:updated', function(){
+                $scope.directory = Directory.directory;
                 getCheckInData();
             });
             getCheckInData();

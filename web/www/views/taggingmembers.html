@@ -7,7 +7,7 @@
 
                 <md-input-group class="md-default-theme" >
                     <label for="tag_name">Enter Tag</label>
-                    <md-input name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead></md-input>
+                    <md-input id="tag_name" name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead></md-input>
                 </md-input-group>
 
 <!--                            <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>-->
@@ -28,8 +28,7 @@
 <!--                        <h2>TO {{(selectedUsers = (directory.members | checkedFilter)).length}} MEMBERS</h2>-->
 
 <!--                        <p ng-show="!selectedUsers.length && selectedTags.length">Please select members.</p>-->
-
-            <md-button ng-click="addTagsToUsers()" ng-disabled="!(selectedTags && selectedUsers)">Add Tags</md-button>
+            <md-button ng-click="addTagsToUsers()" ng-disabled="!(selectedTags.length && (selectedUsers = (directory.members | checkedFilter)).length)">Add Tags</md-button>
 
 <!--
             <section id="createTags">    
@@ -50,18 +49,16 @@
         <search ng-model="search" id="taggingSearch"></search>
         <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
         <ul id="memberSelect">
-            <li ng-repeat="user in (directory.members | orderBy:'last_name' | nameSearch:search | limitTo: memberslength)  track by user.key">
-
-                   <ul id="memberTags">
+            <li ng-repeat="user in (directory.members | orderBy: 'last_name'| limitTo:memberslength)  track by user.key" on-finish-render="isDoneLoading = true;">
                     <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
                     <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
-                    <input type="checkbox" ng-model="user.checked"> <span>{{user.name}}</span>
+                    <input type="checkbox" ng-model="user.checked">
+                    <span ng-bind="user.name"></span>
                     </label>
-
-
-                        <div class="btn-group" ng-repeat="tag in user.tags | orderBy:'toString()'">
-                            <netetag-delete></netetag-delete>
-                        </div>
+                    <ul id="memberTags">
+                        <li class="btn-group" ng-repeat="tag in user.tags">
+                          <netetag-delete></netetag-delete>  
+                        </li>
                     </ul>
             </li>
         </ul>

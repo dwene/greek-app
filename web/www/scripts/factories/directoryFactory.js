@@ -1,4 +1,4 @@
-App.factory('Directory', function(RESTService, $rootScope, localStorageService, $q){
+App.factory('Directory', function(RESTService, $rootScope, localStorageService, $q, Session){
     var item = {};
     item.directory = localStorageService.get('directory');
     item.cacheTimestamp = undefined;
@@ -22,10 +22,26 @@ App.factory('Directory', function(RESTService, $rootScope, localStorageService, 
             });
         }
     }
+
+    item.set = function(data){
+        item.directory = data;
+    }
+
     item.destroy = function(){
         item.cacheTimestamp = undefined;
         item.directory = undefined;
         localStorageService.remove('directory');
+    }
+    item.updateMyStatus = function(status){
+        if (item.directory){
+            console.log('I see the directory in update My status');
+            for (var i = 0; i < item.directory.members.length; i++){
+                if (item.directory.members[i].user_name == Session.user_name){
+                    item.directory.members[i].status = status;
+                    console.log('I just set my status');
+                }
+            }
+        }
     }
         // data.set = function(_directory) {
         //     directory = _directory;
@@ -48,6 +64,10 @@ App.factory('Directory', function(RESTService, $rootScope, localStorageService, 
     //         }
     //     return undefined;
     // }
+
+
+
+
     item.check = function(){
         if (item.directory == null){
             item.get();

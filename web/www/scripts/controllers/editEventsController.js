@@ -10,12 +10,15 @@
 
         getEventAndSetInfo($scope.events);
         $scope.$on('tags:updated', function(){
+            $scope.tags = Tags.tags;
             getEventAndSetInfo($scope.events);
         });
         $scope.$on('directory:updated', function(){
+            $scope.directory = Directory.directory;
             getEventAndSetInfo($scope.events);
         });
         $scope.$on('events:updated', function(){
+            $scope.events = Events.events;
             getEventAndSetInfo($scope.events);
         });
 	   // });
