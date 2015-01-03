@@ -7,7 +7,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.loading = true;
         var refreshed = false;
         $scope.goToReport = function(){
-           $location.path("#/app/events/" + $stateParams.tag + "/report");
+           $location.url("app/events/" + $stateParams.tag + "/report");
         }
         
         
@@ -27,11 +27,20 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
                     { name: 'EDIT', icon: 'fa-edit' },
                     { name: 'SAVE', icon: 'fa-floppy-o' }
                 ];
+                $scope.itemClick = function(item){
+                    switch(item.name){
+                        case 'CHECKINS': $location.url("app/events/" + $stateParams.tag + "/checkin"); break;
+                        case 'REPORT': $location.url("app/events/" + $stateParams.tag + "/report"); break;
+                        case 'EDIT': $location.url('app/events/'+$stateParams.tag+'/edit'); break;
+                        case 'SAVE': saveEvent(); break;
+                    }
+                    $mdBottomSheet.hide();
+                }
             };
         
         
         
-        $scope.saveEvent = function(){
+        function saveEvent(){
               /*BEGIN:VCALENDAR
                 VERSION:2.0
                 BEGIN:VEVENT
@@ -52,7 +61,6 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
                a.href        = 'data:text/calendar,' + encodeURIComponent(out_string);
                a.target      = '_blank';
                a.download    = event.title.replace(/(\r\n|\n|\r)/gm," ") + '.ics';
-               console.log(a.href);
                document.body.appendChild(a);
                a.click();
                document.body.removeChild(a);

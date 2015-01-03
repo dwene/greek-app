@@ -1,5 +1,45 @@
-    App.controller('eventCheckInController', function($scope, RESTService, Load, $stateParams, $rootScope, $timeout) {
+    App.controller('eventCheckInController', function($scope, RESTService, Load, Events, $stateParams, $rootScope, $timeout) {
         routeChange();
+        Events.get();
+        $scope.events = Events.events;
+        if (Events.events){
+            getEventAndSetInfo($scope.events);
+        }
+        $scope.$on('events:updated', function(){
+            $scope.events = Events.events;
+            getEventAndSetInfo($scope.events);
+        });
+
+
+        function getEventAndSetInfo(events){
+            var event = undefined;
+            for (var i = 0; i < events.length; i++){
+                if (events[i].tag == $stateParams.tag){
+                    event = events[i];
+                    break;
+                }
+            }
+            if (event === undefined){
+                if (!refreshed){
+                    Events.refresh();
+                    refreshed = true;
+                    console.log('refreshing events');
+                    return;
+                }
+                else{
+                   $scope.eventNotFound = true; 
+                   $scope.loading = false;
+                   return;
+                }
+            }
+            else{
+                $scope.event = event;
+            }
+        }
+
+
+
+
         function setTimeout(scope, fn, delay) {
             var promise = $timeout(fn, delay);
             var deregister = scope.$on('$destroy', function() {

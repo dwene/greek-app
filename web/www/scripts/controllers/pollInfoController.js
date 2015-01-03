@@ -27,7 +27,7 @@
         }
         
         
-        $scope.showSurveyoptions = function(event){
+        $scope.showSurveyOptions = function(event){
     
             $mdBottomSheet.show({
               templateUrl: 'views/templates/bottomGrid.html',
@@ -39,10 +39,19 @@
         function surveyOptionsCtrl($scope, $mdBottomSheet) {
             $scope.items = [
                 { name: 'REPORT', icon: 'fa-bar-chart'},
-                { name: 'EDIT', icon: 'fa-edit' },
+                // { name: 'EDIT', icon: 'fa-edit' },
                 { name: 'OPEN', icon: 'fa-play' },
                 { name: 'CLOSE', icon: 'fa-pause'}
             ];
+            $scope.itemClick = function(item){
+                $mdBottomSheet.hide();
+                switch(item.name){
+                    case 'REPORT': $location.url('app/polls/'+$stateParams.key + '/results'); break;
+                    case 'OPEN': $scope.closePoll(false); break;
+                    case 'CLOSE': $scope.closePoll(true); break;
+                }
+
+            }
         };
 
         var to_send = {key: $stateParams.key};

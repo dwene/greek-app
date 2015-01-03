@@ -1,4 +1,4 @@
-    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, getEvents, $timeout, Directory, Tags, Events){
+    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, $timeout, Directory, Tags, Events){
         routeChange();
         Directory.get();
         Tags.get();
@@ -41,7 +41,7 @@
             .success(function(data){
                 $scope.loading = true;
                 if (!RESTService.hasErrors(data)){
-                    window.location.replace('#/app/events');
+                    $location.url('app/events');
                     for (var i = 0; i < $rootScope.events.length; i++){
                         if ($rootScope.events[i].tag == $stateParams.tag){
                             $rootScope.events.splice(i, 1);
@@ -127,8 +127,7 @@
             .success(function(data){
                 if (!RESTService.hasErrors(data)){
                     $scope.working = "done";
-                    getEvents;
-                    window.location.assign('#/app/events');
+                    $lcoation.url('app/events');
                 }
                 else{
                     $scope.working = "broken";

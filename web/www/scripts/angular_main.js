@@ -581,52 +581,51 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 $('body').addClass('light');
                 $('body').removeClass('dark');
             }
-            
         }
         $rootScope.routeChange = function(){
             $('.modal-backdrop').remove();
             $('.bootstrap-datetimepicker-widget').hide()
             window.scrollTo(0, 0);
         }
-        $rootScope.updateNotifications = function(){
-            $('.fa-refresh').addClass('fa-spin');
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
-            .success(function(data){
-            if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
+//         $rootScope.updateNotifications = function(){
+//             $('.fa-refresh').addClass('fa-spin');
+//             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
+//             .success(function(data){
+//             if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
                 
-                $timeout(function(){
-                    for (var i = 0; i < $rootScope.notifications.length; i++){
-                        $rootScope.notifications[i].collapseOut = false;
-                    }
-                })
-                $timeout(function(){
-                    $rootScope.notifications = JSON.parse(data.data).notifications;
-                    $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
-//                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
-//                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
-//                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
-                    for (var i = 0; i < $rootScope.notifications.length; i++){
-                        $rootScope.notifications[i].collapseOut = true; 
-//                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
-//                            function(all,text,char){
-//                                return text + "&shy;" + char;
-//                            });
+//                 $timeout(function(){
+//                     for (var i = 0; i < $rootScope.notifications.length; i++){
+//                         $rootScope.notifications[i].collapseOut = false;
+//                     }
+//                 })
+//                 $timeout(function(){
+//                     $rootScope.notifications = JSON.parse(data.data).notifications;
+//                     $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
+// //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
+// //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
+// //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
+//                     for (var i = 0; i < $rootScope.notifications.length; i++){
+//                         $rootScope.notifications[i].collapseOut = true; 
+// //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
+// //                            function(all,text,char){
+// //                                return text + "&shy;" + char;
+// //                            });
 
-                    }
-                })
-                $timeout(function(){
-                    $rootScope.updateNotificationBadge();
-                })
-            }
-                $timeout(function(){
-                    $('.fa-refresh').removeClass('fa-spin')
-                });
-            })
+//                     }
+//                 })
+//                 $timeout(function(){
+//                     $rootScope.updateNotificationBadge();
+//                 })
+//             }
+//                 $timeout(function(){
+//                     $('.fa-refresh').removeClass('fa-spin')
+//                 });
+//             })
                 
-            .error(function(data) {
-                console.log('Error: ' , data);
-            });
-        }
+//             .error(function(data) {
+//                 console.log('Error: ' , data);
+//             });
+//         }
         
         $rootScope.refreshPage = function(){
             window.location.reload();

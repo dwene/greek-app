@@ -10,9 +10,9 @@
             <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
                 <i class="fa fa-arrow-left"></i>
             </md-button>
-            <md-button class="more-options" ng-click="saveEvent()" ng-show="!$parent.perms == 'leadership' || !$parent.perms == 'council'">save</md-button>
-            <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showEventoptions($event)" ng-show="$parent.perms == 'leadership'">options</md-button>
-            <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showEventoptions($event)" ng-show="$parent.perms == 'leadership'">options</md-button>
+            <md-button class="more-options" ng-click="saveEvent()" ng-show="$parent.perms == 'leadership' || $parent.perms == 'council'">save</md-button>
+            <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showEventoptions($event)" ng-show="$parent.perms == 'leadership' || $parent.perms == 'council'">options</md-button>
+            <!-- <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showEventoptions($event)" ng-show="$parent.perms == 'leadership'">options</md-button> -->
         </md-toolbar>
         
         <md-content class="md-padding">
@@ -33,7 +33,6 @@
                 <md-subheader>What?</md-subheader>
                 <p class="preText">{{event.description}}</p>
             </div>
-            
         </md-content>
         
     </div>

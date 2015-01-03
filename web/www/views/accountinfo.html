@@ -27,7 +27,7 @@
                 <md-button class="pull-right" ng-disabled="new_pass.password != new_pass.repeat_password" ng-click="changePassword(new_pass.old_password, new_pass.password)">Change</md-button>
                 </div>
             </form>  
-            <div ng-show="passwordChanged"> Your password has been changed! Please logout and login to continue using the app.</div>
+            <div ng-show="passwordChanged"> Your password has been changed! You will be logged out in 3 seconds...</div>
             <div ng-show="changeFailed">Password change failed. Please double check your current and new password to see if they meet the correct requirements</div>
         </md-content>
     </div>
@@ -38,7 +38,7 @@
             </div>
         </md-toolbar>
         <md-content class="md-padding">
-        <img src="{{item.prof_pic || $root.defaultProfilePicture}}" class="face">
+        <img ng-src="{{item.prof_pic}}" class="face">
         <md-button id="changePic" ng-href="/#/app/uploadprofilepicture">Change Picture</md-button>
 
 <form id="memberAccount" method="POST" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>

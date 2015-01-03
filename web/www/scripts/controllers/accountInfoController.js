@@ -1,4 +1,4 @@
-App.controller('accountinfoController', function($scope, RESTService, $rootScope, Load, Organization){
+App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS){
     routeChange();
     Organization.get();
     $scope.updatedInfo = false;
@@ -6,10 +6,11 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
 
     $scope.changePassword = function(old_pass, new_pass) {
         var to_send = {password:new_pass, old_password: old_pass};
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', packageForSending(to_send))
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', to_send)
         .success(function(data) {
             if(!checkResponseErrors(data)){
                 $scope.passwordChanged = true;
+                $timeout(function(){$rootScope.$broadcast(AUTH_EVENTS.logoutSuccess)}, 4000);
                 $scope.changeFailed = false;
             }
             else{
