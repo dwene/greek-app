@@ -11,13 +11,13 @@
                 <md-content class="md-padding no-padding-top">
                     <md-subheader class="no-padding-bottom" ng-hide="me.status">No Status</md-subheader>
                     <md-subheader class="no-padding-bottom" ng-show="me.status">Status: {{me.status}}</md-subheader>
-                    <button id="clearStatus" ng-show="$root.me.status.length" type="button" class="close" ng-click="clearStatus()" bs-tooltip="clearStatusTip" data-placement="left"><i class="fa fa-times"></i></button>        
                     <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
                     <md-input-group flex class="md-default-theme no-margin">
-                        <label for="update_status">Update Your status <span ng-show="status.length">({{status.length}}/140}</span></label>
-                        <md-input name="update_status" ng-model="status"  maxlength="140" required></md-input>
+                        <label for="update_status">Update Your status <span ng-show="status">({{status.length}}/140}</span></label>
+                        <md-input name="update_status" ng-model="status"  maxlength="140"></md-input>
                     </md-input-group>
-                    <md-button type="submit" aria-label="submit status"><i class="fa fa-check"></i></md-button>
+                    <md-button type="submit" aria-label="submit status" ng-show="status"><i class="fa fa-check"></i></md-button>
+                    <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button>
                     </form>
                 </md-content>
             </div>

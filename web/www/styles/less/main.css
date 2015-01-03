@@ -2123,6 +2123,12 @@ md-toolbar.md-tall {
   height: 28px;
   margin-top: 10px;
 }
+#managingMembers #members .email {
+  padding-left: 15px;
+}
+#managingMembers #pagingButtons {
+  margin-top: 10px;
+}
 #addingMembers .addButton {
   margin: 0 auto;
   display: block;

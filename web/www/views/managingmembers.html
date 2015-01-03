@@ -1,4 +1,4 @@
-<div id="manageMembers" load-directive ng-model="directoryLoaded">
+<div id="managingMembers" load-directive ng-model="directoryLoaded">
     <md-button ng-click="openConvertMembersModal()" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</md-button>
     <md-button ng-click="resendAllWelcomeEmails()">Resend All Welcome Emails</md-button><update-status ng-model="resendWorking" fn-call="resendAllWelcomeEmails()"></update-status>
 
@@ -6,12 +6,13 @@
 <search ng-model="search"></search><br>
     <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
         <md-list id="members" class="striped">
-            <md-item ng-repeat="member in directory.members | orderBy:'last_name' | nameSearch:search| limitTo:memberslength" ng-init="member.name = member.first_name + ' ' + member.last_name;">
+            <md-item ng-repeat="member in directory.members | orderBy:'last_name' | nameSearch:search | limitTo:memberslength" ng-init="member.name = member.first_name + ' ' + member.last_name;">
                 <div layout="row" layout-sm="column" layout-margin layout-align="space-between center">
                     <netemember-check ng-hide="member.user_name == $parent.me.user_name" class="members" ng-model="member"></netemember-check>
                     <nete-member ng-show="member.user_name == $parent.me.user_name"  class="members" ng-model="member"></nete-member>
-                    <span flex>{{member.email}}&nbsp;<md-button ng-click="openChangeEmailModal(member)" class="" href="">change</md-button></span>
-                    <md-button flex ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="resendWelcome">Resend Welcome Email</md-button>
+                    <div class="email">{{member.email}}</div>
+                    <md-button ng-click="openChangeEmailModal(member)" href="" aria-label="edit email"><i class="fa fa-pencil fa-fw"></i></md-button>
+                    <md-button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="resendWelcome">Resend Email</md-button>
                     <div class="no-margin" flex></div>
                     <form class="permsSelect">
                     <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status>
@@ -25,6 +26,11 @@
                 </div>
             </md-item>
         </md-list>
+    </div>
+    <div id="pagingButtons" layout="row">
+        <md-button aria-label="page left"><i class="fa fa-arrow-left"></i></md-button>
+        <div flex></div>
+        <md-button aria-label="page right"><i class="fa fa-arrow-right"></i></md-button>
     </div>
         <p ng-show="directory.members.length < 1">There are no members to manage!</p>    
 </div>
