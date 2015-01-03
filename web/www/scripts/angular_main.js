@@ -534,7 +534,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $rootScope.notifications = undefined;
             $rootScope.hidden_notifications = undefined;
             $rootScope.updateNotificationBadge();
-            if ($location.url() != 'login'){
+            console.log($state);
+            if ($state.current.name != 'login' && $state.current.name != 'register' && $state.current.name != 'registerorg'){
                 $location.path('login');
             }
         });

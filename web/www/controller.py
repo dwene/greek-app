@@ -165,6 +165,20 @@ def add_notification_to_users(notification, users, email_prefs):
     return
 
 
+
+def add_message_to_users(msg, users):
+    future_list = list()
+    for user in users:
+        future_list.append(CronEmail(pending=True, email=user.email,
+                                            title=msg.title,
+                                            content=msg.content).put_async())
+        user.new_messages.insert(0, msg.key)
+        future_list.append(user.put_async())
+    for item in future_list:
+        item.get_result()
+    return
+
+
 def alumni_signup_email(user, organization_key, token):
     # to_email = [{'email': user['email'], 'type': 'to'}]
     org = organization_key.get()
@@ -378,6 +392,37 @@ def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
                audiences=[ANDROID_AUDIENCE])
 class RESTApi2(remote.Service):
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
+                      http_method='POST', name='message.send_message')
+    def send_message(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        user_list_future = list()
+        user_list = list()
+        if 'keys' in data:
+            for key in data['keys']:
+                user_list_future.append(ndb.Key(urlsafe=key).get_async())
+        for user in user_list_future:
+            user_list.append(user.get_result())
+        msg = Message()
+        msg.content = data['content']
+        msg.timestamp = datetime.datetime.now()
+        msg.sender = request_user.key
+        msg.user_name = request_user.user_name
+        msg.sender_name = request_user.first_name + ' ' + request_user.last_name
+        msg.title = data['title']
+        msg.put()
+        request_user.sent_messages.insert(0, notification.key)
+        future = request_user.put_async()
+        add_message_to_users(notification, user_list, True)
+        future.get_result()
+        return OutgoingMessage(error='', data='OK')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/get',
                       http_method='POST', name='notifications.get')
     def get_messages(self, request):
@@ -484,7 +529,7 @@ class RESTApi2(remote.Service):
                     msg_count = 40 - new_messages_fetch_count
             else:
                 msg_count = 0
-        if request_user.messages && msg_count > 0:
+        if request_user.messages and msg_count > 0:
             messages_future = Message.query(Message.key.IN(
                 request_user.messages)).order(-Message.timestamp).fetch_async(msg_count, offset=read_message_count)
         if request_user.new_messages and new_messages_to_get > 0:
@@ -591,6 +636,58 @@ class RESTApi2(remote.Service):
             note["key"] = msg.key.urlsafe()
             out_message.append(note)
         return OutgoingMessage(error='', data=json_dump(out_message))
+
+
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
+                      http_method='POST', name='notifications.get')
+    def get_notifications(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        notification_count = 30
+        if request_user.new_notifications:
+            new_notification_future = Notification.query(Notification.key.IN(
+                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(30)
+        if request_user.new_notifications:
+            if len(request_user.new_notifications) >= 30:
+                notification_count = 0
+            else:
+                notification_count = 30 - len(request_user.new_notifications)
+        if request_user.notifications and notification_count > 0:
+            notifications_future = Notification.query(Notification.key.IN(
+                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+        out_notifications = list()
+        if request_user.new_notifications:
+            new_notifications = new_notification_future.get_result()
+            for notify in new_notifications:
+                note = notify.to_dict()
+                note["new"] = True
+                note["key"] = notify.key.urlsafe()
+                out_notifications.append(note)
+        if request_user.notifications and notification_count > 0:
+            notifications = notifications_future.get_result()
+            for notify in notifications:
+                note = notify.to_dict()
+                note["new"] = False
+                note["key"] = notify.key.urlsafe()
+                out_notifications.append(note)
+        return OutgoingMessage(error='', data=json_dump(out_notifications))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
+                      http_method='POST', name='notifications.seen')
+    def see_notification(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["notification"])
+        if key in request_user.new_notifications:
+            request_user.new_notifications.remove(key)
+            request_user.notifications.insert(0, key)
+            request_user.put()
+        return OutgoingMessage(error='', data='OK')
 
 
 
@@ -861,33 +958,33 @@ class RESTApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_organization',
                       http_method='POST', name='auth.register_organization')
     def register_organization(self, request):
-        try:
-            clump = json.loads(request.data)
-            new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'])
-            new_org.put()
-            user = clump['user']
-            if username_available(user['user_name'].lower()):
-                new_user = User(user_name=user['user_name'].lower())
-            else:
-                return OutgoingMessage(error=USERNAME_TAKEN, data='')
-            new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
-            new_user.first_name = user['first_name']
-            new_user.last_name = user['last_name']
-            new_user.email = user['email']
-            new_user.organization = new_org.key
-            new_user.perms = 'council'
-            new_user.current_token = generate_token()
-            new_user.class_year = int(user['class_year'])
-            new_user.timestamp = datetime.datetime.now()
-            new_user.put()
-            content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
-            content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
-            content += '\nUser Name: ' + new_user.user_name
-            send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content)
-            return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms,
-                                                             'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
-        except:
-            return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
+        # try:
+        clump = json.loads(request.data)
+        new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'], type=clump['organization']['type'])
+        new_org.put()
+        user = clump['user']
+        if username_available(user['user_name'].lower()):
+            new_user = User(user_name=user['user_name'].lower())
+        else:
+            return OutgoingMessage(error=USERNAME_TAKEN, data='')
+        new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
+        new_user.first_name = user['first_name']
+        new_user.last_name = user['last_name']
+        new_user.email = user['email']
+        new_user.organization = new_org.key
+        new_user.perms = 'council'
+        new_user.current_token = generate_token()
+        new_user.class_year = int(user['class_year'])
+        new_user.timestamp = datetime.datetime.now()
+        new_user.put()
+        content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
+        content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
+        content += '\nUser Name: ' + new_user.user_name
+        send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content)
+        return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms, 'me': new_user.to_dict(),
+                                                         'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
+        # except:
+        #     return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='organization/info',
                       http_method='POST', name='auth.organization_info')
@@ -2336,14 +2433,11 @@ class RESTApi(remote.Service):
             new_event.perms_tags = ['everyone']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         notification = Notification()
-        notification.title = 'Event: ' + event_data["title"]
         notification.type = 'event'
-        notification.content = "You have been invited to the event: " + event_data["title"]
-        notification.content += ". Please check out your events page for more information!"
-        notification.sender_name = "NeteGreek Notification Service"
+        notification.content = request_user.first_name + " " + request_user.last_name + " invited to the event: " + event_data["title"]
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
-        notification.link = '/#/app/events/'+new_event.tag
+        notification.link = '/#/app/events/'+new_event.key.urlsafe()
         notification.put()
         future_list = [new_event.put_async(), request_user.put_async()]
         add_notification_to_users(notification, users, send_email)
@@ -2488,14 +2582,11 @@ class RESTApi(remote.Service):
             users = get_users_from_tags({'org_tags': event.org_tags, 'perms_tags': event.perms_tags},
                                         request_user.organization, False)
             notification = Notification()
-            notification.title = 'Event Updated: ' + event.title
             notification.type = 'event'
-            notification.content = "The event " + event.title + " has been updated."
-            notification.content += ". Please check out your events page for more information."
-            notification.sender_name = "NeteGreek Notification Service"
+            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
-            notification.link = '/#/app/events/'+event.tag
+            notification.link = '/#/app/events/'+event.key.urlsafe()
             notification.put()
             add_notification_to_users(notification, users, send_email)
             for item in futures:
@@ -2667,9 +2758,7 @@ class RESTApi(remote.Service):
             async_list.append(q.put_async())
         users = get_users_from_tags(data["tags"], request_user.organization, False)
         notification = Notification()
-        notification.title = 'Poll: ' + poll.name
-        notification.content = 'You have been invited to answer a new poll.'
-        notification.content += ' Please visit your polling page for more information.'
+        notification.content = request_user.first_name + " " + request_user.last_name + 'invited you to answer the poll: ' + poll.name
         notification.timestamp = datetime.datetime.now()
         notification.sender = request_user.key
         notification.type = 'poll'

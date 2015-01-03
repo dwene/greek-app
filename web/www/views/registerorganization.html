@@ -12,13 +12,13 @@
         
             <md-input-group class="md-default-theme" ng-class="{ 'has-error' : registerForm.org_name.$invalid && !registerForm.org_name.$pristine }">
                     <label for="org_name">Organization Name</label>
-                    <md-input name="org_name" ng-model="item.org_name" required></md-input>
+                    <md-input name="org_name" ng-model="data.name" required></md-input>
 <!--			         <p ng-show="registerForm.org_name.$invalid && !registerForm.org_name.$pristine" class="help-block">An organization name is required.</p>-->
             </md-input-group>
             
             <md-input-group class="md-default-theme" ng-class="{ 'has-error' : registerForm.school_name.$invalid && !registerForm.school_name.$pristine }">
                     <label for="school_name">School Name</label>
-                    <md-input name="school_name" ng-model="item.school_name" required></md-input>
+                    <md-input name="school_name" ng-model="data.school" required></md-input>
 <!--                    <p ng-show="registerForm.school_name.$invalid && !registerForm.school_name.$pristine" class="help-block">Your school name is required.</p>-->
             </md-input-group>
             <div ng-class="{ 'has-error' : registerForm.org_type.$invalid && !registerForm.org_type.$pristine }">

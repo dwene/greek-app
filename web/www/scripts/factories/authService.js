@@ -38,7 +38,6 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
                 if (!RESTService.hasErrors(data)) { 
                       console.log('CACHED LOGIN SUCCESS');
                       Session.create($.cookie(USER_NAME),$.cookie(TOKEN), JSON.parse(data.data).me);
-                      $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 }
                 else{
                     console.log('cached login failed.');
@@ -58,6 +57,36 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
         return deferred.promise;
   }
 
+
+  authService.token_login = function(user, token){
+    var to_send = {user_name:user, token: token, data: JSON.stringify('')};
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/token_login', to_send)
+            .success(function(data){
+              // console.log('cached login. am I authenticated?', authService.isAuthenticated());
+              // console.log('data', data);
+              loginAttempted = true;
+              if (!authService.isAuthenticated()){
+                if (!RESTService.hasErrors(data)) { 
+                      Session.create(user,token, JSON.parse(data.data).me);
+                      $.cookie(USER_NAME, user);
+                      $.cookie(TOKEN, token);
+                      $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                }
+                else{
+                    console.log('cached login failed.');
+                    $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
+                }
+              }
+                loginAttempted = true;
+                deferred.resolve();
+            })
+            .error(function(){
+                console.log('cached login failed.');
+                loginAttempted = true;
+                deferred.resolve();
+                $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
+            })
+  }
   authService.isAuthenticated = function () {
     return !!Session.user_name;
   };

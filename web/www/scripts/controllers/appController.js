@@ -10,6 +10,7 @@ App.controller('appController', function($scope, $interval, $rootScope, LoadScre
     //     $scope.authenticated = AuthService.isAuthenticated();
     //     console.log($scope.authenticated);
     // })
+    console.log('session.me', Session.me);
     var notification_update_interval;
     if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)){
         notification_update_interval = $interval(Inbox.update(), 10000);

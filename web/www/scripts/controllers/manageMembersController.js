@@ -147,18 +147,6 @@
             $scope.getMembers();
         });
         
-        // function onPageLoad(){
-        //     console.log('page is loading');
-        //     if($rootScope.directory.members){
-        //         assignAngularViewModels($rootScope.directory.members);
-        //         $scope.getMembers();
-        //     }
-        //     else{
-        //         $scope.getMembers();
-        //     }
-        // }
-        // onPageLoad();
-        
         $scope.removeMember = function(user){
             $('#deleteMemberModal').modal('hide');
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', user)

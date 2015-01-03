@@ -124,7 +124,10 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         //         console.log('Error: ' , data);
         //     });        
     
-        function loadMemberData() {
+
+
+
+        function loadMemberData(){
             for(var i = 0; i<$scope.directory.members.length; i++)
             {
                 if($scope.directory.members[i].user_name == $stateParams.id)
@@ -161,14 +164,12 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
                     return;
                 }
             }
-            console.log('I made it to alumni');
             for(var i = 0; i<$scope.directory.alumni.length; i++)
             {
                 if($scope.directory.alumni[i].user_name == $stateParams.id)
                 {
                     $scope.member = $scope.directory.alumni[i];
                     $scope.prof_pic = $scope.member.prof_pic;
-                     //define profile information
                     $scope.status = $scope.member.status;
                     var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     if ($scope.member.grad_month && $scope.member.grad_year){
@@ -200,7 +201,7 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
                     $scope.loading_finished = true;
                     break;
                 }
-            }
-        }  
-
+            }  
+        }
+            
 });

@@ -17,7 +17,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     $scope.watches = [$scope.directoryLoaded, $scope.tagsLoaded];
     $scope.$watchCollection('[directoryLoaded, tagsLoaded]', function(){
         if ($scope.tagsLoaded && $scope.directoryLoaded){
-            console.log('data is loaded!');
             $scope.dataLoaded = true;
         }
         else{
