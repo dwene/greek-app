@@ -9,8 +9,6 @@
         <div layout="row" layout-sm="column">
             <div flex-gt-sm="60">
                 <md-content class="md-padding no-padding-top">
-                    <md-subheader class="no-padding-bottom" ng-hide="me.status">No Status</md-subheader>
-                    <md-subheader class="no-padding-bottom" ng-show="me.status">Status: {{me.status}}</md-subheader>
                     <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
                     <md-input-group flex class="md-default-theme no-margin">
                         <label for="update_status">Update Your status <span ng-show="status">({{status.length}}/140}</span></label>
@@ -19,11 +17,13 @@
                     <md-button type="submit" aria-label="submit status" ng-show="status"><i class="fa fa-check"></i></md-button>
                     <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button>
                     </form>
+                    <md-subheader class="no-padding-bottom" ng-hide="me.status">No Status</md-subheader>
+                    <md-subheader class="no-padding-bottom" ng-show="me.status">{{me.status}}</md-subheader>
                 </md-content>
             </div>
             <div flex-gt-sm="40">
-                <md-content>
-                   <md-subheader>Upcoming Events</md-subheader>
+                <md-content class="md-padding">
+<!--                   <md-subheader>Upcoming Events</md-subheader>-->
                     <md-list id="upcomingEvents" class="itemList hover">
                         <md-item ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)">
                             <md-item-content>

@@ -48,20 +48,20 @@
 
         <search ng-model="search" id="taggingSearch"></search>
         <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
-        <ul id="memberSelect">
-            <li ng-repeat="user in (directory.members | orderBy: 'last_name'| limitTo:memberslength)  track by user.key" on-finish-render="isDoneLoading = true;">
-                    <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
-                    <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
-                    <input type="checkbox" ng-model="user.checked">
-                    <span ng-bind="user.name"></span>
-                    </label>
-                    <ul id="memberTags">
-                        <li class="btn-group" ng-repeat="tag in user.tags">
-                          <netetag-delete></netetag-delete>  
-                        </li>
-                    </ul>
-            </li>
-        </ul>
+            <ul id="memberSelect">
+                <li layout="row" ng-repeat="user in (directory.members | orderBy: 'last_name'| limitTo:memberslength)  track by user.key" on-finish-render="isDoneLoading = true;">
+                        <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
+                            <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
+                            <input type="checkbox" ng-model="user.checked">
+                            <span ng-bind="user.name"></span>
+                        </label>
+                        <ul id="memberTags">
+                            <li class="btn-group" ng-repeat="tag in user.tags">
+                              <netetag-delete></netetag-delete>  
+                            </li>
+                        </ul>
+                </li>
+            </ul>
         </div>
                     
 <div class="modal fade" id="addTagModal">
