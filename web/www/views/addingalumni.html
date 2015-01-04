@@ -1,3 +1,60 @@
+<div id="addingMembers">
+
+<md-subheading>Add Multiple Alumni at Once</md-subheading>
+<br><br>
+<md-button href="../files/AddMembers.csv" target="_blank" download="addmembers.csv"><i class="fa fa-download"></i> CSV Template</md-button>
+<br><br>
+<p id="areAdded"></p>
+    <form id="csvForm" name="csvForm" role="form">
+        <div class="form-group">
+            <label for="uploadAlumni">Upload CSV</label>
+            <input type="file" id="uploadAlumni" accept=".csv">
+        </div>
+        <md-button class="no-margin" ng-click="addAlumni()">Add Alumni</md-button>
+        <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file</p>
+    </form>
+    <br><br>
+<md-divider></md-divider>
+<br>
+<md-subheading>Add One Alumni at a Time</md-subheading>
+<form id="addalumnusForm" name="addalumnusForm" role="form" ng-submit="addAlumnus(addalumnusForm.$valid, input)" novalidate>
+    <div layout="row" layout-align="start center">
+        <md-text-float label="First Name" ng-model="input.first_name"></md-text-float>
+        <md-text-float label="Last Name" ng-model="input.last_name"></md-text-float>
+    </div>
+    <div layout="row" layout-align="start center">
+        <md-input-group class="md-default-theme">
+            <label for="class_year">Class Year</label>
+            <md-input name="class_year" ng-model="input.pledge_class_year" ng-pattern="/[0-9]{4}/" required></md-input>
+        </md-input-group>
+        <md-radio-group name="pledge_class_semester" ng-model="input.pledge_class_semester">
+            <md-radio-button value="fall">Fall</md-radio-button>
+            <md-radio-button value="spring">Spring</md-radio-button>
+        </md-radio-group>
+    </div>
+    <div layout="row" layout-align="start center">
+        <md-text-float type="email" name="email" ng-model="input.email" label="email@example.com"></md-text-float>
+        <md-button type="submit" ng-disabled="!addalumnusForm.$valid">Add</md-button>
+    </div>
+</form>
+
+<md-list ng-show="adds.length" id="addAlumnus" class="striped">
+    <md-item class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
+    <div layout="row" layout-sm="column" layout-margin>
+        <div flex>{{ add.first_name }} {{ add.last_name }}</div>
+        <div flex>{{ (add.pledge_class_semester+' '+add.pledge_class_year) }}</div>
+        <div flex>{{ add.email }}</div>
+        <div flex class="no-margin"></div>
+        <md-button ng-click="deleteAdd(add)"><i class="fa fa-trash-o fa-fw"></i></md-button>
+    </div>
+    </md-item>
+    <br><br>
+    <md-button class="addButton" ng-click="submitAlumnus()">Add Members</md-button><update-status ng-model="updating"></update-status>
+</md-list>
+
+</div>
+
+
 <!--
 <div class="container">
 
@@ -65,73 +122,3 @@
        
       
      
-    
-   
-  
- 
-<div id="addingMembers" class="container" load-directive ng-model="finished_loading">
-
-    <div class="card">
-    <h1 class="card-header">Add Multiple Alumni at Once</h1>
-    <p id="areAdded"></p>
-<!--    <a class="btn btn-default" ng-href="https://docs.google.com/file/d/0B4Of2nSYBtRgUjVMdjJYQmUyUGs/edit" target="_">Excel Template</a>-->
-<!--    <button type="button" class="btn btn-sm btn-primary btn-circle" data-placement="top-center" title="CSV upload" data-content="You can use this excel sheet to upload multiple alumni at one time! Just download and fill out the excel form, then export the file as a .csv file" bs-popover><i class="fa fa-question"></i></button>-->
-<!--    <p>You can use this excel sheet to upload multiple alumni at one time! Just fill out the form and export the file as a ".csv"</p>-->
-    <form id="addmembersForm" role="form">
-        <div class="form-group">
-            <label for="uploadMembers">Upload CSV</label>
-            <input type="file" id="uploadMembers" accept=".csv">
-        </div>
-        <div class="form-group">
-            <button ng-click="addAlumni()" class="btn btn-default">Add Alumni</button> <a class="btn btn-default" href="../files/AddMembers.csv" target="_blank" download="addmembers.csv"><i class="fa fa-download"></i> CSV Template</a>
-        </div>
-        <p ng-show="memberSkippedNotifier">Some alumni may have been skipped due to an invalid format in the .csv file</p>
-    </form>
-    </div>
-
-    <form id="addmemberForm" class="card" name="addmemberForm" role="form" ng-submit="addAlumnus(addmemberForm.$valid)" novalidate>
-    <h1 class="card-header">Add One Alumnus at a Time</h1>
-         <div class="row">
-          <div class="form-group col-sm-4 col-xs-6">
-            <label for="firstName" class="control-label">First Name</label>
-              <input type="text" class="form-control" id="firstName" name="first_name" ng-model="input.first_name">
-          </div>
-          <div class="form-group col-sm-4 col-xs-6">
-            <label for="lastName" class="control-label">Last Name</label>
-              <input type="text" class="form-control" id="lastName" name="last_name" ng-model="input.last_name">
-          </div>
-          <div class="form-group col-sm-4 col-xs-6 required">
-            <label for="classYear" class="control-label">Pledge Class Year</label>
-              <input type="number" class="form-control" id="classYear" name="class_year" ng-model="input.pledge_class_year" placeholder="####" ng-pattern="/[0-9]{4}/">
-          </div>
-          <div class="form-group col-sm-4 col-xs-6 required">
-          <label for="pledge_class_year" class="control-label">Pledge Class Semester</label>
-            <select class="form-control" id="pledgeClassSemester" name="pledge_class_semester" ng-model="input.pledge_class_semester" ng-required="!checkAlumni()">
-                <option value="fall">Fall</option>
-                <option value="spring">Spring</option>
-            </select>
-          </div>
-          <div class="form-group col-sm-4 col-xs-6 required">
-            <label for="email" class="control-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
-          </div>
-          <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'has-error' : addmemberForm.$invalid && submitted}">
-              <label for="submit_form" class="control-label"></label>
-              <input name="submit_form" class="btn btn-default form-control" type="submit"  ng-disabled="!addmemberForm.$valid" value="Add Alumnus">
-              <p ng-show="addmemberForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
-          </div>
-          </div>
-     </form>
-    <ul ng-show="adds.length" id="addMembers" class="card">
-    <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
-    <div class="row">
-        <div class="col-xs-4">{{ add.first_name }} {{ add.last_name }}</div>
-        <div class="col-xs-4 capitalize">{{ (add.pledge_class_semester + ' ' + add.pledge_class_year)}}</div>
-        <div class="col-xs-4">{{ add.email }}</div>
-    </div>
-    <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
-    <button id="addMembersButton" ng-click="submitAlumni()" class="btn btn-default">Submit Alumni</button><update-status ng-model="updating"></update-status>
-    </ul>
-
-
-</div>

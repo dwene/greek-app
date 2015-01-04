@@ -1,3 +1,28 @@
+
+<div id="managingAlumni" load-directive ng-model="directoryLoaded">
+<search ng-model="search"></search><br>
+   <alumni-year-picker id="yearSelect" alumni="directory.alumni" selected-year="selected_year" search="search"></alumni-year-picker>
+    <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
+        <md-list id="members" class="striped">
+            <md-item ng-repeat="alumnus in directory.alumni | orderBy:'last_name' | pledgeClassSearch:selected_year | nameSearch:search">
+                <div layout="row" layout-sm="column" layout-margin layout-align="space-between center">
+                    <div>{{alumnus.first_name + ' ' + alumnus.last_name}}</div>
+                    <div class="no-margin" flex></div>
+                    <button ng-click="resendWelcomeEmail(alumnus)" ng-hide="alumnus.user_name">Resend Welcome Email</button>
+                    <button ng-click="openConvertAlumniModal(alumnus)">Convert to Member</button>
+                    <button ng-click="openDeleteAlumniModal(alumnus)" aria-label="delete alumni"><i class="fa fa-trash-o"></i></button>
+                </div>
+            </md-item>
+        </md-list>
+    </div>
+    <div id="pagingButtons" layout="row">
+        <md-button aria-label="page left"><i class="fa fa-arrow-left"></i></md-button>
+        <div flex></div>
+        <md-button aria-label="page right"><i class="fa fa-arrow-right"></i></md-button>
+    </div>
+        <p ng-show="directory.members.length < 1">There are no members to manage!</p>    
+</div>
+
 <!--
 
 <div class="container">
@@ -17,6 +42,7 @@
 </div>
 -->
 
+<!--
 <div id="manageMembers" class="container" load-directive ng-model="finished_loading">
     <div class="card">
     <search ng-model="search" id="manageMembersSearch"></search>
@@ -45,6 +71,7 @@
         <p ng-show="members.length < 1">There are no alumni to manage!</p>    
     </div>
 </div>
+-->
 
 
 <div class="modal fade" id="deleteAlumniModal">
