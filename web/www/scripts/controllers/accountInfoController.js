@@ -1,8 +1,8 @@
-App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS){
+App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS, Session){
     routeChange();
     Organization.get();
     $scope.updatedInfo = false;
-    $scope.item = Organization.me;
+    $scope.item = Session.me;
 
     $scope.changePassword = function(old_pass, new_pass) {
         var to_send = {password:new_pass, old_password: old_pass};
