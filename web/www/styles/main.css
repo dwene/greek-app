@@ -1886,6 +1886,14 @@ md-toolbar.md-tall {
 .memberList md-item:last-child md-item-content {
   border-bottom: 0px;
 }
+.memberList .name {
+  font-weight: bold;
+  font-size: 14px;
+}
+.memberList p {
+  line-height: 1.2;
+  font-size: 12px;
+}
 .itemList md-item {
   display: block;
   position: relative;

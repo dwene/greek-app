@@ -23,7 +23,6 @@
             </div>
             <div flex-gt-sm="40">
                 <md-content class="md-padding">
-<!--                   <md-subheader>Upcoming Events</md-subheader>-->
                     <md-list id="upcomingEvents" class="itemList hover">
                         <md-item ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)">
                             <md-item-content>
@@ -51,39 +50,42 @@
 
     <div class="tabpanel-container" load-directive ng-model="showInbox">
         <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
-            <md-list class="itemList hover">
-              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | orderBy:'-timestamp' | limitTo: messagesLength) track by notify.key">
-                <div class="isNew md-primary"></div>
-                <md-item-content>
-                  <div class="md-tile-content">
-                    <h3 class="md-primary title">
-                        {{notify.title}}
-                    </h3>
-                    <!-- <md-button class="archive pull-right btn-touch" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></md-button> -->
-                        <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
-                        <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
-                  </div>
-                </md-item-content>
-              </md-item>
-            </md-list>
+            <md-content class="md-padding">
+                <md-list class="itemList hover">
+                  <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | orderBy:'-timestamp' | limitTo: messagesLength) track by notify.key">
+                    <div class="isNew md-primary"></div>
+                    <md-item-content>
+                      <div class="md-tile-content">
+                        <h3 class="md-primary title">
+                            {{notify.title}}
+                        </h3>
+                        <!-- <md-button class="archive pull-right btn-touch" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></md-button> -->
+                            <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                            <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                      </div>
+                    </md-item-content>
+                  </md-item>
+                </md-list>
+            </md-content>
         </div>
         <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
-            <md-list class="itemList hover">
-              <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openArchivedDialog(notify, $event)" ng-repeat="notify in (inbox.archived | orderBy:'-timestamp' | limitTo: archivedLength) track by notify.key">
-                <div class="isNew md-primary"></div>
-                <md-item-content>
-                  <div class="md-tile-content">
-                    <h3 class="md-primary title">
-                        {{notify.title}}
-                    </h3>
-                    <!-- <button class="archive pull-right btn-touch" type="button" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></button> -->
-                        <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
-                        <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
-                  </div>
-                </md-item-content>
-              </md-item>
-            </md-list>
-            
+            <md-content class="md-padding">
+                <md-list class="itemList hover">
+                  <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openArchivedDialog(notify, $event)" ng-repeat="notify in (inbox.archived | orderBy:'-timestamp' | limitTo: archivedLength) track by notify.key">
+                    <div class="isNew md-primary"></div>
+                    <md-item-content>
+                      <div class="md-tile-content">
+                        <h3 class="md-primary title">
+                            {{notify.title}}
+                        </h3>
+                        <!-- <button class="archive pull-right btn-touch" type="button" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></button> -->
+                            <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                            <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                      </div>
+                    </md-item-content>
+                  </md-item>
+                </md-list>
+            </md-content>
         </div>
     </div>
     <md-progress-circular md-mode="indeterminate" class="small" ng-show="loadingArchived || loadingMessages"></md-progress-circular>

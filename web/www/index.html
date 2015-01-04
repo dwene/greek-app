@@ -218,7 +218,7 @@
             <div role="tabpanel" id="setingsTab-content" class="fadingIn" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
                 <md-content class="md-padding">
                     <ul class="nav">
-                        <li ng-click="toggleSidenav()"><md-button ng-href="#/app/accountinfo"><i class="fa fa-user fa-fw"></i> Profile</md-button></li>
+                        <li ng-click="toggleSidenav()"><md-button ng-href="#/app/accountinfo"><i class="fa fa-user fa-fw"></i> Info</md-button></li>
                         <li ng-click="toggleSidenav()" ng-show="$parent.checkPermissions('leadership')"><md-button ng-href="#/app/managemembers/tag"><i class="fa fa-users fa-fw"></i> Members</md-button></li>
                         <li ng-click="toggleSidenav()" ng-show="$parent.checkPermissions('council')"><md-button ng-href="#/app/managealumni"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
                         <li ng-click="toggleSidenav()" ng-show="$parent.checkPermissions('council')"><md-button ng-href="#/app/admin"><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
