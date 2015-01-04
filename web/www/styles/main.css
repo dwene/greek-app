@@ -233,27 +233,6 @@ nav {
 .dropdown {
   cursor: pointer;
 }
-.navbar-brand {
-  position: relative;
-  width: 210px;
-  height: 52px;
-  border-radius: 3px;
-}
-.navbar-brand:before {
-  content: '';
-  background: url(../images/NeteGreekLogoSmallWhite.png) 10px center no-repeat;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background-size: 156px 42px;
-}
-.navbar-brand .badge {
-  font-size: 12px;
-  position: relative;
-  left: 160px;
-}
 .topLeft {
   position: absolute;
   left: 20px;
@@ -1754,19 +1733,6 @@ a:focus {
 md-bottom-sheet.md-grid md-item .md-icon-container {
   margin: 0 auto;
 }
-.navbar-brand {
-  width: 125px;
-  margin-right: 30px;
-}
-.navbar-brand .badge {
-  left: 100px;
-}
-.navbar-brand:before {
-  background-position: -50px;
-}
-a.navbar-brand:focus {
-  outline: none;
-}
 /*Helper Classes*/
 .no-padding-top {
   padding-top: 0px !important;
@@ -1841,12 +1807,54 @@ md-progress-circular.small {
   background: white;
 }
 /*Section Specific*/
+/*Top Bar*/
+nav .navbar-brand {
+  position: relative;
+  width: 115px;
+  border-radius: 3px;
+  margin: 0px 10px 0px 0px;
+  padding: 0px;
+}
+nav .navbar-brand:before {
+  content: '';
+  background: url(../images/NeteGreekLogoSmallWhite.png) -45px center no-repeat;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-size: 156px 42px;
+}
+nav a.navbar-brand:focus {
+  outline: none;
+}
+nav .notification_count {
+  margin: 0px 5px;
+  font-size: 12px;
+}
+nav .notification_count strong {
+  color: black;
+  font-size: 8px;
+}
 #menu md-toolbar.md-tall {
   min-height: 0px;
+}
+#menu .md-toolbar-tools {
+  margin-bottom: 20px;
 }
 #menu .face {
   position: relative;
   top: 10px;
+}
+#menu #details {
+  margin-top: 20px;
+}
+#menu #name {
+  font-weight: bold;
+}
+#menu p {
+  font-size: 14px;
+  line-height: 1.2;
 }
 md-toolbar .md-fab {
   position: absolute;

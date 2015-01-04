@@ -10,6 +10,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             $scope.perms = Session.perms;
             $scope.me = Session.me;
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
+            $scope.email = Session.me.email;
             $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : '../images/defaultprofile.png';
         })
         $scope.$on('notifications:updated', function(){
@@ -34,6 +35,9 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         }
         $scope.toggleSidenav = function(){
             $mdSidenav('sidenav').toggle();
+        }
+        $scope.toggleNotifications = function(){
+            $mdSidenav('notifications').toggle();
         }
         $scope.showHelpdialog = function(){
             $mdDialog.show({
