@@ -1,0 +1,20 @@
+        <ul>
+            <li class="notification" ng-click="openNotificationModal(notify)" ng-repeat="notify in ngModel | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber">
+                
+
+<!--
+                <div class="notificationContent">
+                <span class="notificationTitle">{{notify.title}}</span>
+                    <span>{{notify.content | limitTo: 116}}<span ng-show="notify.content.length > 116">...</span></span>
+                <span class="notificationSender" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</span>
+                </div>
+-->
+
+                
+            </li>
+        </ul>
+        
+            <div class="pagerButtons">
+            <button class="previous btn btn-default btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">&larr; Newer</button>
+            <button class="next btn btn-default btn-sm" ng-disabled="currentPage >= ngModel.length/maxPageNumber - 1" ng-click="currentPage=currentPage+1">Older &rarr;</button>
+            </div>

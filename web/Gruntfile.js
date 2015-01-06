@@ -17,8 +17,8 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath || 'www',
-    dist: 'dist'
+    app: require('./bower.json').appPath || 'app',
+    dist: 'www'
   };
     
 
@@ -45,10 +45,6 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
-        css: {
-            files: '**/*.less',
-            tasks: ['less:development']
-        },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
@@ -421,7 +417,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'less:development',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

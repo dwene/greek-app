@@ -1,38 +1,4 @@
-<div class="jumbotron text-center">
-		<h1>Upgrade Organization</h1>
-</div>
-
-
-<div class="container">
-    <div>
-<!--      action needs to be: action="/create_transaction" method="POST" -->
-      <form id="braintree-payment-form">
-        <p>
-          <label>First Name</label>
-          <input type="text" size="20" autocomplete="off" ng-model="pay.first_name" />
-        </p>
-        <p>
-          <label>Last Name</label>
-          <input type="text" size="20" autocomplete="off" ng-model="pay.last_name" />
-        </p>
-        <p>
-          <label>Card Number</label>
-          <input type="text" size="20" autocomplete="off" ng-model="pay.number" />
-        </p>
-        <p>
-          <label>CVV</label>
-          <input type="text" size="4" autocomplete="off" ng-model="pay.cvv" />
-        </p>
-        <p>
-          <label>Expiration (MM/YYYY)</label>
-          <input type="number" size="2" ng-model="pay.exp_month" /> / <input type="text" size="4" ng-model="pay.exp_year" />
-        </p>
-        <button type="submit" ng-click="submitPayment()" class="btn btn-default">Save Payment Info</button>
-      </form>
-    </div>
-<!--    <script src="https://js.braintreegateway.com/v1/braintree.js"></script>-->
-<!--    <script>
+<div class="jumbotron text-center"> <h1>Upgrade Organization</h1> </div> <div class="container"> <div> <!--      action needs to be: action="/create_transaction" method="POST" --> <form id="braintree-payment-form"> <p> <label>First Name</label> <input type="text" size="20" autocomplete="off" ng-model="pay.first_name"> </p> <p> <label>Last Name</label> <input type="text" size="20" autocomplete="off" ng-model="pay.last_name"> </p> <p> <label>Card Number</label> <input type="text" size="20" autocomplete="off" ng-model="pay.number"> </p> <p> <label>CVV</label> <input type="text" size="4" autocomplete="off" ng-model="pay.cvv"> </p> <p> <label>Expiration (MM/YYYY)</label> <input type="number" size="2" ng-model="pay.exp_month"> / <input type="text" size="4" ng-model="pay.exp_year"> </p> <button type="submit" ng-click="submitPayment()" class="btn btn-default">Save Payment Info</button> </form> </div> <!--    <script src="https://js.braintreegateway.com/v1/braintree.js"></script>--> <!--    <script>
       var braintree = Braintree.create("YourClientSideEncryptionKey");
       braintree.onSubmitEncryptForm('braintree-payment-form');
-    </script>-->
-</div>
+    </script>--> </div>

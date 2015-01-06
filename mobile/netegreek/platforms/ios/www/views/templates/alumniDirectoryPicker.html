@@ -1,8 +1,0 @@
-<!--
-<div class="btn-group" ng-show="ngModel.org_tags" ng-repeat="tag in orgTagCheck = (ngModel.org_tags | checkedFilter)">
-    <label class="label checkLabel" ng-class="{'label-primary': tag.checked, 'label-default': !tag.checked}">
-        <i class="fa checkStatus" ng-class="{'fa-check-square-o': tag.checked, 'fa-square-o': !tag.checked}"></i>
-        <input type="checkbox" ng-model="tag.checked"> <li><span ng-hide="hideHash"></span>{{tag.name}}</li>
-    </label>
-</div>
---> <span class="btn-group"> <label ng-repeat="year in years | orderBy:['-year', 'semester']" ng-click="$parent.selectedYear = year; $parent.search = undefined;" ng-class="{'label-default': selectedYear != year, 'label-primary': selectedYear == year}" class="label"> <span>{{year.value}}</span> </label> </span>

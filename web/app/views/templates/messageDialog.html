@@ -1,0 +1,42 @@
+<md-dialog>
+  <md-content>
+       <md-subheader class="md-primary">
+            {{message.title}}
+            <p>{{formatTimestamp(message.timestamp)}}</p>
+        </md-subheader>
+            <md-divider></md-divider>
+        <p ng-bind-html="content"></p>
+        <span class="sentBy pull-right">sent by: {{message.sender_name}}</span>
+  </md-content>
+  
+  <div class="md-actions" layout="row">
+        <md-button href="mailto:{{selectedNotificationUser.email}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" aria-label="send email"><i class="fa fa-envelope-o"></i></md-button>
+        <md-button href="sms:{{selectedNotificationUser.phone}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" aria-label="send sms"><i class="fa fa-phone"></i></md-button>
+            <span flex></span>
+        <md-button type="button" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</md-button>
+        <md-button type="button" ng-show="selectedNotification.type == 'poll'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Poll</md-button>
+        <md-button ng-click="archive()">archive</md-button>
+        <md-button ng-click="closeNotificationModal()">done</md-button>
+  </div>
+</md-dialog>
+
+
+<!--
+<div class="modal fade" id="notificationModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title preText">{{selectedNotification.title}}</h4>
+        <p class="">{{formatTimestamp(selectedNotification.timestamp)}}</p>
+      </div>
+      <div class="modal-body">
+        <p ng-bind-html="messageHTML"></p>
+        <br>
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+    </div>
+</div>-->

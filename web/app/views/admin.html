@@ -1,0 +1,69 @@
+<div id="adminPage" class="container">
+    <md-content class="md-padding md-whiteframe-z1">
+    <md-subheader>Organization Settings</md-subheader>
+    <div id="colorPicker">
+        <button id="color1" ng-click="changeTheme(1);" class="colorPick"></button>
+        <button id="color2" ng-click="changeTheme(2);" class="colorPick"></button>
+        <button id="color3" ng-click="changeTheme(3);" class="colorPick"></button>
+        <button id="color4" ng-click="changeTheme(4);" class="colorPick"></button>
+        <button id="color5" ng-click="changeTheme(5);" class="colorPick"></button>
+        <button id="color6" ng-click="changeTheme(6);" class="colorPick"></button>
+        <button id="color7" ng-click="changeTheme(7);" class="colorPick"></button>
+        <button id="color8" ng-click="changeTheme(8);" class="colorPick"></button>
+        <button id="color9" ng-click="changeTheme(9);" class="colorPick"></button>
+        <button id="color10" ng-click="changeTheme(10);" class="colorPick"></button>
+        <button id="color11" ng-click="changeTheme(11);" class="colorPick"></button>
+        <button id="color12" ng-click="changeTheme(12);" class="colorPick"></button>
+        <button id="color13" ng-click="changeTheme(13);" class="colorPick"></button>
+        <button id="color14" ng-click="changeTheme(14);" class="colorPick"></button>
+        <button id="color15" ng-click="changeTheme(15);" class="colorPick"></button>
+        <button id="color16" ng-click="changeTheme(16);" class="colorPick"></button>
+    </div>
+    
+    <md-subheader>Organization Image</md-subheader>
+    <img class="orgLetters img-responsive" ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}"><br>
+    <md-button ng-href="#/app/uploadorganizationimage">Change Organization Image</md-button>
+      
+    <section ng-hide="true">
+    <h2 class="page-header">Subscription Information</h2>
+      
+       <div ng-hide="subscription.no_subscription">
+        <p>Next Billing Date: {{subscription.next_billing_date}}</p>
+        </div>
+        
+        <img ng-src="{{subscription.credit_card.image_url}}"><span>{{subscription.credit_card.masked_number}}</span>
+        <p>Expires: {{subscription.credit_card.expiration}}</p>
+        <button ng-hide="subscription.no_subscription" class="btn btn-default" ng-click="cancelSubscription()">Cancel Subscription</button>
+        <button ng-show="subscription.no_subscription" class="btn btn-default" ng-click="subscribe()">Subscribe with this card</button>
+        <div ng-show="subscription.no_subscription">
+<!--      action needs to be: action="/create_transaction" method="POST" -->
+          <form id="braintree-payment-form">
+            <p>
+              <label>First Name</label>
+              <input type="text" size="20" autocomplete="off" ng-model="pay.first_name" />
+            </p>
+            <p>
+              <label>Last Name</label>
+              <input type="text" size="20" autocomplete="off" ng-model="pay.last_name" />
+            </p>
+            <p>
+              <label>Card Number</label>
+              <input type="text" size="20" autocomplete="off" ng-model="pay.number" />
+            </p>
+            <p>
+              <label>CVV</label>
+              <input type="text" size="4" autocomplete="off" ng-model="pay.cvv" />
+            </p>
+            <p>
+              <label>Expiration (MM/YYYY)</label>
+              <input type="number" size="2" ng-model="pay.exp_month" /> / <input type="text" size="4" ng-model="pay.exp_year" />
+            </p>
+            <p ng-show="$scope.error">{{error}}</p>
+            <button type="submit" ng-click="subscribe(pay)" class="btn btn-default">Save Payment Info</button>
+          </form>
+        </div>
+        
+    </section>
+    </md-content>
+    
+</div>

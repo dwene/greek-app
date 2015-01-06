@@ -1,27 +1,4 @@
-
-<div id="login" class="container" load-directive ng-model="showScreen">
-      	
-    <md-toolbar>
-       	<h2 class="md-toolbar-tools">Login</h2>
-    </md-toolbar>
-      <md-content class="md-padding md-whiteframe-z1">
-        	
-          <form class="form-horizontal" role="form">
-          <md-text-float label="username" ng-model="input.user_name"></md-text-float>
-          <md-text-float label="password" ng-model="input.password" type="password"></md-text-float>
-          <p ng-show="badLogin">Your username or password is incorrect.</p>
-          
-          <div id="buttons" class="pull-right">
-               <md-button class="btn-touch" ng-click="login(input.user_name, input.password)">Login</md-button>
-          </div>
-          </form>
-      </md-content>
-      <md-button class="btn-touch" ng-click="forgotPassword()">Forgot Password?</md-button>
-
-        
-</div>
-
-<!--
+<div id="login" class="container" load-directive ng-model="showScreen"> <md-toolbar> <h2 class="md-toolbar-tools">Login</h2> </md-toolbar> <md-content class="md-padding md-whiteframe-z1"> <form class="form-horizontal" role="form"> <md-text-float label="username" ng-model="input.user_name"></md-text-float> <md-text-float label="password" ng-model="input.password" type="password"></md-text-float> <p ng-show="badLogin">Your username or password is incorrect.</p> <div id="buttons" class="pull-right"> <md-button class="btn-touch" ng-click="login(input.user_name, input.password)">Login</md-button> </div> </form> </md-content> <md-button class="btn-touch" ng-click="forgotPassword()">Forgot Password?</md-button> </div> <!--
 
 <!--
           <div class="form-group">
@@ -31,16 +8,14 @@
               <input type="username" class="form-control" id="inputUsername" ng-model="input.user_name" placeholder="username">
             </div>
           </div>
--->
-<!--
+--> <!--
           <div class="form-group">
             <label for="inputPassword" class="col-sm-2 control-label">Password</label>
             <div class="col-sm-10">
               <input type="password" class="form-control" id="inputPassword" ng-model="input.password" placeholder="Password">
             </div>
           </div>
--->
-<!--
+--> <!--
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <div class="checkbox">
@@ -50,8 +25,7 @@
               </div>
             </div>
           </div>
--->
-<!--
+--> <!--
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <button ng-click="login(input.user_name, input.password)" class="btn btn-primary">Login</button>
@@ -59,4 +33,3 @@
             </div>
           </div>
 -->
-
