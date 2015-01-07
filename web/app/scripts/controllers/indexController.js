@@ -1,4 +1,4 @@
-App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, AUTH_EVENTS, Organization, Inbox, Session) {
+App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Inbox, Session) {
         $scope.item = Organization.me;
         $scope.perms = Session.perms;
         $scope.me = Session.me;
@@ -33,8 +33,10 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             //do nothing
             }
         }
-        $scope.toggleSidenav = function(){
+        $scope.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
+            $timeout(function(){$location.url(url);}, 500);
+            
         }
         $scope.toggleNotifications = function(){
             $mdSidenav('notifications').toggle();
@@ -42,7 +44,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         $scope.showHelpdialog = function(){
             $mdDialog.show({
                     controller: 'dialogController',
-                    templateUrl: '../views/templates/helpDialog.html'
+                    templateUrl: 'views/templates/helpDialog.html'
             });
         }
         $scope.checkPermissions = function(perms){

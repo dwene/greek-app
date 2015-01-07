@@ -14,19 +14,23 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         if ($stateParams.id.toString().length < 2){
             $location.path('app/directory');
         }
-    
+    var phone = $scope.phone;
+    var email = $scope.email;
+    var vCard = getVcard();
     $scope.showProfileoptions = function($event){
-    
+        phone = $scope.phone;
+        email = $scope.email;
+        vCard = getVcard();
         $mdBottomSheet.show({
           templateUrl: 'views/templates/bottomGrid.html',
           controller: profileOptionsCtrl,
           targetEvent: $event
         }).then(function(clickedItem) {
             switch(clickedItem.name){
-                case 'SMS': $window.open('sms:'+ $scope.phone, '_blank'); break;
-                case 'CALL': $window.open('tel:' + $scope.phone, '_blank'); break;
-                case 'EMAIL': $window.open('mailto:' + $scope.email, '_blank'); break;
-                case 'SAVE': $scope.saveVcard(); break;
+                case 'SMS': break;
+                case 'CALL': break;
+                case 'EMAIL': break;
+                case 'SAVE': break;
                 default: $log('button not found');
             }
             $scope.alert = clickedItem.name + ' clicked!';
@@ -41,10 +45,10 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         }
         
         $scope.items = [
-            { name: 'SMS', icon: 'fa-mobile'},
-            { name: 'CALL', icon: 'fa-phone'},
-            { name: 'EMAIL', icon: 'fa-envelope' },
-            { name: 'SAVE', icon: 'fa-floppy-o' }
+            { name: 'SMS', icon: 'fa-mobile', link: 'sms:'+ phone, download:undefined},
+            { name: 'CALL', icon: 'fa-phone', link: 'tel:' + phone, download:undefined},
+            { name: 'EMAIL', icon: 'fa-envelope',link: 'mailto:' + email, download:undefined},
+            { name: 'SAVE', icon: 'fa-floppy-o', link: vCard, download:'contact.vcf'}
         ];
 
         $scope.itemClick = function(item) {
@@ -65,7 +69,22 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         //   };
 
     };
-    
+    function getVcard(){
+        var user = $scope.member;
+        var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name
+        out_string += 'FN:' + user.first_name + ' ' + user.last_name + '\n\r';//FN
+        if (user.phone){
+        out_string += 'TEL;CELL:' + user.phone + '\n\r';} //Phone
+        if (user.email){
+        out_string += 'EMAIL;PREF;INTERNET:' + user.email + '\n\r';}//Email
+        if (user.prof_pic){
+        out_string += 'PHOTO;PNG:'+user.prof_pic + '\n\r';}//picture
+//        out_string += 'ADR;TYPE=home;LABEL=' + '\"' + user.address + '\\n'+ user.city + ',' + user.state + ' ' +user.zip + '\\nUnited States of America\"\n';
+        if (user.address){
+        out_string += 'ADR;HOME:;;'+user.address+';'+user.city+';'+user.state+';'+user.zip+';United States of America\n\r';}
+        out_string += 'END:VCARD';
+        return 'data:text/vcard,' + encodeURIComponent(out_string);
+    }
     $scope.saveVcard = function(){
         var user = $scope.member;
         var out_string = 'BEGIN:VCARD\nVERSION:2.1\n\rN:' + user.last_name + ';' + user.first_name + ';;;\n\r'; //name

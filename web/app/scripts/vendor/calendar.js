@@ -198,7 +198,7 @@ angular.module('ui.rCalendar', [])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: '../views/templates/rcalendar/calendar.html',
+            templateUrl: 'views/templates/rcalendar/calendar.html',
             scope: {
                 calendarMode: '=',
                 rangeChanged: '&',
@@ -219,7 +219,7 @@ angular.module('ui.rCalendar', [])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: '../views/templates/rcalendar/month.html',
+            templateUrl: 'views/templates/rcalendar/month.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
                 scope.showWeeks = ctrl.showWeeks;
