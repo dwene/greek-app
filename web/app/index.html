@@ -155,9 +155,9 @@
             <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true">
                 <div>
                     <a class="navbar-brand" ng-hide="$parent.session.user_name"></a>
-                    <md-button class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="$parent.session.user_name"></md-button>
+                    <md-button aria-label="home button" class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="$parent.session.user_name"></md-button>
                 </div>
-                <md-button aria-label="notification count" ng-click="toggleNotifications()">
+                <md-button ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
                     <span class="fa-stack notification_count">
                         <i class="fa fa-bell fa-stack-2x"></i>
                         <strong class="fa-stack-1x fa-stack-text fa-inverse" ng-bind="notification_count"></strong>
@@ -204,23 +204,23 @@
             <div role="tabpanel" id="menuTab-content" class="fadingIn" aria-labelledby="menuTab" ng-show="menu.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
                 <md-content class="md-padding">
                     <ul class="nav">
-                        <li ng-click="toggleSidenav('app/home')"><md-button><i class="fa fa-home fa-fw"></i> Home</md-button></li>
-                        <li ng-click="toggleSidenav('app/directory/members')"> <md-button> <i class="fa fa-book fa-fw"> </i> Directory </md-button></li>
-                        <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
-                        <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
-                        <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
-                        <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>
+                        <li ng-click="toggleSidenav('app/home')"><md-button class="md-primary"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
+                        <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary"><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
+                        <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
+                        <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
+                        <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
+                        <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>
                     </ul>
                 </md-content>
             </div>
             <div role="tabpanel" id="setingsTab-content" class="fadingIn" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
                 <md-content class="md-padding">
                     <ul class="nav">
-                        <li ng-click="toggleSidenav('app/accountinfo')"><md-button><i class="fa fa-user fa-fw"></i> Info</md-button></li>
-                        <li ng-click="toggleSidenav('app/managemembers')" ng-show="$parent.checkPermissions('leadership')"><md-button><i class="fa fa-users fa-fw"></i> Members</md-button></li>
-                        <li ng-click="toggleSidenav('app/managealumni')" ng-show="$parent.checkPermissions('council')"><md-button><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
-                        <li ng-click="toggleSidenav('app/admin')" ng-show="$parent.checkPermissions('council')"><md-button><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
-                        <li ng-click="toggleSidenav()"><md-button ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
+                        <li ng-click="toggleSidenav('app/accountinfo')"><md-button class="md-primary"><i class="fa fa-user fa-fw"></i> Info</md-button></li>
+                        <li ng-click="toggleSidenav('app/managemembers')" ng-show="$parent.checkPermissions('leadership')"><md-button class="md-primary"><i class="fa fa-users fa-fw"></i> Members</md-button></li>
+                        <li ng-click="toggleSidenav('app/managealumni')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
+                        <li ng-click="toggleSidenav('app/admin')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary"><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
+                        <li ng-click="toggleSidenav()"><md-button ng-click="logout()" class="md-primary"><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
                     </ul>
                 </md-content>
             </div>

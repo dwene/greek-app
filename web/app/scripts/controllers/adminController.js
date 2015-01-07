@@ -55,9 +55,9 @@
                 });
             };
             
-            $scope.changeTheme = function(number){
+            $scope.changeTheme = function(color){
                 
-                $rootScope.setColor('color'+number);
+                $rootScope.setColor('color');
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {color: $rootScope.color})
                 .success(function(data){
                     if (!RESTService.hasErrors(data))

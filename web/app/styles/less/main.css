@@ -145,9 +145,6 @@ body.modal-open {
 #homeButton {
   cursor: pointer;
 }
-nav {
-  backface-visibility: hidden;
-}
 .navbar-default .navbar-brand,
 .navbar-default .navbar-nav > li > a,
 .navbar-default .navbar-brand .badge,
@@ -159,22 +156,6 @@ nav {
   transition: background linear .3s;
 }
 /*Shape*/
-.navbar {
-  border-radius: 0px;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  /*
-    -webkit-box-shadow: 0px 2px 2px 0px rgba(50, 50, 50, 0.75);
-    -moz-box-shadow:    0px 2px 2px 0px rgba(50, 50, 50, 0.75);
-    box-shadow:         0px 2px 2px 0px rgba(50, 50, 50, 0.75);
-    */
-}
-@media screen and (max-width: 767px) {
-  .navbar {
-    padding: 5px;
-  }
-}
 .help {
   cursor: pointer;
 }
@@ -261,37 +242,6 @@ nav {
 }
 .container {
   position: relative;
-}
-/*Dropdown Menu*/
-.dropdown-toggle {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-nav.navbar-default .dropdown-menu {
-  -webkit-transition: max-height 0.3s ease-out;
-  transition: max-height 0.3s ease-out;
-  max-height: 0px;
-  display: block;
-  pointer-events: none;
-  height: 0px;
-  overflow: hidden;
-  padding: 0px;
-  border: 0px;
-}
-nav.navbar-default .open .dropdown-menu {
-  max-height: 300px;
-  height: auto;
-  pointer-events: all;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 5px 0;
-}
-/*Nav Pills*/
-@media screen and (max-width: 767px) {
-  .nav-pills {
-    font-size: 12px;
-  }
 }
 /*Page Headers*/
 h2.page-header {
@@ -1681,9 +1631,6 @@ md-sidenav md-toolbar md-tabs {
 md-sidenav md-toolbar .md-header {
   background-color: rgba(0, 0, 0, 0) !important;
 }
-.nav .md-button {
-  text-align: left;
-}
 md-divider {
   margin-bottom: 20px;
 }
@@ -1788,12 +1735,11 @@ md-progress-circular.small {
 }
 /*Dropdowns*/
 .typeahead {
-  padding: 0px;
   background: #f8f8f8;
   position: absolute;
   z-index: 100;
   width: 100%;
-  padding: 10px 0px;
+  padding: 0px;
 }
 .typeahead li {
   padding: 10px 20px;
@@ -1857,6 +1803,11 @@ nav .notification_count strong {
   font-size: 14px;
   line-height: 1.2;
 }
+.nav .md-button {
+  width: 100%;
+  text-align: left;
+  padding: 12px 8px;
+}
 md-toolbar .md-fab {
   position: absolute;
   bottom: -28px;
@@ -1872,7 +1823,6 @@ md-toolbar .more-options {
   right: 8px;
   bottom: 8px;
   color: white !important;
-  background: #82b1ff !important;
   font-size: 12px;
 }
 md-toolbar.md-tall {
@@ -2178,23 +2128,36 @@ md-toolbar.md-tall {
   width: 270px;
 }
 #adminPage #colorPicker {
-  width: 260px;
-  height: 250px;
-  margin: 0 auto;
+  padding-bottom: 8px;
 }
 #adminPage .colorPick {
   margin: 2px;
-  border: 1px solid black;
   padding: 0px;
   height: 57px;
   width: 57px;
   display: inline-block;
 }
-#adminPage .colorPick.selectedColor {
-  border: 1px solid white;
+#adminPage button.md-blue-theme {
+  background: #2196f3;
 }
-@media screen and (max-width: 500px) {
-  #adminPage #colorPicker {
-    margin-left: -5px;
-  }
+#adminPage button.md-red-theme {
+  background: #f44336;
+}
+#adminPage button.md-purple-theme {
+  background: #9c27b0;
+}
+#adminPage button.md-pink-theme {
+  background: #e91e63;
+}
+#adminPage button.md-green-theme {
+  background: #4caf50;
+}
+#adminPage button.md-orange-theme {
+  background: #ff5722;
+}
+#adminPage button.md-brown-theme {
+  background: #795548;
+}
+#adminPage button.md-gray-theme {
+  background: #9e9e9e;
 }
