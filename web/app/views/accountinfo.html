@@ -133,12 +133,12 @@
     </md-input-group>
     <div ng-show="!checkAlumni()">
         <div class="col-xs-12 col-sm-6">
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentAddress">Current Address</label>
                 <md-input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></md-input>
                 <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
             </md-input-group>
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentCity">Current City</label>
                 <md-input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></md-input>
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
@@ -207,7 +207,7 @@
                 </script>
                 <p ng-show="(memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
             </div>
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
                 <label for="zip">Current Zip</label>
                 <md-input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></md-input>
                 <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
@@ -296,12 +296,12 @@
         </div>  
     </div>
     <div ng-show="checkAlumni()">
-        <md-input-group ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentAddress">Current Address</label>
                 <md-input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></md-input>
                 <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
             </md-input-group>
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentCity">Current City</label>
                 <md-input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></md-input>
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
@@ -370,7 +370,7 @@
                 </script>
                 <p ng-show="(memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
             </div>
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
                 <label for="zip">Current Zip</label>
                 <md-input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></md-input>
                 <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
