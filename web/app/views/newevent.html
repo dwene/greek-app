@@ -49,25 +49,30 @@
             <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
         </div>
         
-        <md-checkbox ng-model="recurring" aria-label="recurring_event">
+        <md-checkbox ng-model="recurring" aria-label="recurring event">
             Is this event recurring?
         </md-checkbox>
         
-        <div ng-show="recurring">
-        
-        <md-checkbox ng-disabled="!recurring || monthly" ng-model="weekly" aria-label="recurring_event">
-            Weekly
-        </md-checkbox>
-        <md-checkbox ng-disabled="!recurring || weekly" ng-model="monthly" aria-label="recurring_event">
-            Monthly
-        </md-checkbox> 
-        
-        <date-picker id="untilDate" name="untilDate" ng-model="event.until"></date-picker>
-        
+        <div class="form-group" ng-show="recurring">
+            <div class="col-xs-12 col-sm-3">
+                <md-checkbox ng-disabled="!recurring || monthly" ng-model="weekly" aria-label="recurring weekly">
+                    Weekly
+                </md-checkbox>
+                <md-checkbox ng-disabled="!recurring || weekly" ng-model="monthly" aria-label="recurring monthly">
+                    Monthly
+                </md-checkbox> 
+            </div>
+            <div class="col-xs-12 col-sm-2" style="margin-top:15px;">
+               <label for="untilDate">Recurrs Until</label>
+            </div>
+            <div class="col-xs-12 col-sm-5" style="margin-top:15px;">
+                <date-picker id="untilDate" name="untilDate" ng-model="event.until"></date-picker>
+            </div>
+            <div class="col-xs-12 col-sm-2"></div>
         </div>
         
-        
-        <span class="pull-right"><md-button type="submit" ng-disabled= "!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button></span>
+        <br>
+        <md-button type="submit" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
     </form>
     
 

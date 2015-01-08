@@ -1,4 +1,4 @@
-App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $log, $window, RESTService, localStorageService, Directory, $mdBottomSheet){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $log, $window, RESTService, localStorageService, Directory, $mdBottomSheet, Session){
     routeChange();
         Directory.get();
         $scope.directory = Directory.directory;
@@ -144,6 +144,9 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         //     });        
     
 
+        $scope.isThisMe = function(){
+            return $scope.member.user_name == Session.me.user_name;   
+        }
 
 
         function loadMemberData(){

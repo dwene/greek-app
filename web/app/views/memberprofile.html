@@ -23,7 +23,7 @@
             
         </div>
            
-        <md-button class="edit-profile" ng-href="#/app/accountinfo">edit <i class="fa fa-fw fa-pencil-square-o"></i></md-button> 
+        <md-button class="edit-profile" ng-href="#/app/accountinfo" ng-show="isThisMe()">edit <i class="fa fa-fw fa-pencil-square-o"></i></md-button> 
         <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
             <i class="fa fa-arrow-left"></i>
         </md-button>

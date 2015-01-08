@@ -864,6 +864,7 @@ md-backdrop.md-opaque.md-default-theme{z-index:1040; background:rgba(0, 0, 0, .5
 .md-dialog-container{z-index:1042;}
 .md-tile-content{overflow:hidden;}
 md-list li{list-style:none;}
+md-tabs.md-default-theme md-tab.active{background-color: rgba(255,255,255,0.4);}
 md-dialog{
     border-radius:0px !important;
     .md-subheader:not(.md-sticky-no-effect)[sticky-state="active"]{
@@ -1161,4 +1162,8 @@ md-toolbar.md-tall{
 
 #newEvent{
     .form-group{margin:0px;}
+}
+
+@media screen and (max-width:756px){
+#selectingUsers{.row{margin:0px;}}
 }
