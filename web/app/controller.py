@@ -143,21 +143,21 @@ def test_directory():
 
 
 
-def add_notification_to_users(notification, users, email_prefs):
+def add_notification_to_users(notification, users):
     future_list = list()
     for user in users:
-        if not user.email_prefs:
-            logging.error(user)
-        elif user.email_prefs == 'all':
-            body = notification.content
-            if notification.type =='event':
-                body = '\n\n To see this event please visit: ' + DOMAIN + notification.link
-            elif notification.type == 'poll':
-                body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
-            if not email_prefs == False:
-                future_list.append(CronEmail(type='notification', pending=True, email=user.email,
-                                            title=notification.title,
-                                            content=body).put_async())
+        # if not user.email_prefs:
+        #     logging.error(user)
+        # elif user.email_prefs == 'all':
+        #     body = notification.content
+        #     if notification.type =='event':
+        #         body = '\n\n To see this event please visit: ' + DOMAIN + notification.link
+        #     elif notification.type == 'poll':
+        #         body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
+        #     if not email_prefs == False:
+        #         future_list.append(CronEmail(type='notification', pending=True, email=user.email,
+        #                                     title=notification.title,
+        #                                     content=body).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
     for item in future_list:
@@ -2724,7 +2724,6 @@ class RESTApi(remote.Service):
         new_event.time_start = datetime.datetime.strptime(event_data["time_start"], '%m/%d/%Y %I:%M %p')
         new_event.time_end = datetime.datetime.strptime(event_data["time_end"], '%m/%d/%Y %I:%M %p')
         new_event.time_created = datetime.datetime.now()
-        new_event.tag = event_data["tag"].lower()
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
         new_event.location = event_data["location"]
@@ -2751,7 +2750,7 @@ class RESTApi(remote.Service):
         notification.link = '#/app/events/'+new_event.put().urlsafe()
         notification.put()
         future_list = [request_user.put_async()]
-        add_notification_to_users(notification, users, send_email)
+        add_notification_to_users(notification, users)
         for item in future_list:
             item.get_result()
         return OutgoingMessage(error='', data='OK')
@@ -2839,8 +2838,9 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_data = json.loads(request.data)
-        event_tag = request_data["tag"]
-        event = Event.query(ndb.AND(Event.tag == event_tag, Event.organization == request_user.organization)).get()
+        event = ndb.Key(urlsafe=request_data["tag"]).get()
+        if event.organization != request_user.organization:
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
         change = False
         for key, value in request_data.iteritems():
             if key == "time_start":
@@ -2897,9 +2897,9 @@ class RESTApi(remote.Service):
             notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
-            notification.link = '/#/app/events/'+event.key.urlsafe()
+            notification.link = '#/app/events/'+event.key.urlsafe()
             notification.put()
-            add_notification_to_users(notification, users, send_email)
+            add_notification_to_users(notification, users)
             for item in futures:
                 item.get_result()
         return OutgoingMessage(error='', data='OK')
@@ -3071,7 +3071,7 @@ class RESTApi(remote.Service):
         send_email = True
         if 'send_email' in data:
             send_email = send_email['data']
-        add_notification_to_users(notification, users, send_email)
+        add_notification_to_users(notification, users)
         for item in async_list:
             poll.questions.insert(0, item.get_result())
         poll.put()

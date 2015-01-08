@@ -14,6 +14,9 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         //     $scope.prof_pic = Session.me.prof_pic;
         //     $scope.name = Session.me.first_name +' '+ Session.me.last_name;
         // });
+        $scope.goToMe = function(){
+            $location.path('app/directory/'+Session.user_name);
+        }
         this.homeButton = function(){
             if (this.checkPermissions(MEMBER)){
                 $location.path('app');

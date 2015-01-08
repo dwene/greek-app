@@ -35,6 +35,9 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             //do nothing
             }
         }
+        $scope.goToMe = function(){
+            $location.path('app/directory/'+Session.user_name);
+        }
         $scope.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
             if (url){

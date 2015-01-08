@@ -68,6 +68,28 @@ def updateNotifications():
         future.get_result()
 
 
+def deleteNotifications():
+    notifications = Notification.query().fetch()
+    users = User.query().fetch()
+    futures = list()
+    for notify in notifications:
+        futures.append(notify.key.delete_async())
+    for user in users:
+        user.notifications = []
+        user.hidden_notifications = []
+        user.new_notifications = []
+        futures.append(user.put_async())
+    for future in futures:
+        future.get_result()
+
+def deleteSentNotifications():
+    users = User.query().fetch()
+    futures = list()
+    for user in users:
+        user.sent_notifications = []
+        futures.append(user.put_async())
+    for future in futures:
+        future.get_result()
 
 def test_directory():
     time1 = datetime.datetime.now()

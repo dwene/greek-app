@@ -181,11 +181,11 @@
          
         <md-toolbar class="md-tall">
             <div class="md-toolbar-tools">
-                <img class="face" ng-src="{{prof_pic}}">
-                <span id="details">
-                    <p id="name">{{name}}</p>
-                    <p>{{email}}</p>
-                </span>
+                    <img class="face" ng-src="{{prof_pic}}" ng-click="goToMe()">
+                    <span id="details" ng-click="goToMe()">
+                        <p id="name">{{name}}</p>
+                        <p>{{email}}</p>
+                    </span>
                 <span flex></span>
                 <md-button class="btn-touch" ng-click="toggleSidenav()" aria-label="close">
                     <i class="fa fa-times"></i>
