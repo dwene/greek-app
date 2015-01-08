@@ -9,6 +9,10 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.goToReport = function(){
            $location.url("app/events/" + $stateParams.tag + "/report");
         }
+
+        $scope.back = function(){
+            $location.path('app/events');
+        }
         
         
             $scope.showEventoptions = function(event){

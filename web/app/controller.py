@@ -2727,9 +2727,6 @@ class RESTApi(remote.Service):
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
         new_event.location = event_data["location"]
-        send_email = True
-        if 'send_email' in event_data:
-            send_email = event_data['send_email']
         if 'address' in event_data:
             new_event.address = event_data["address"]
         for tag in new_event.org_tags:
@@ -2738,18 +2735,60 @@ class RESTApi(remote.Service):
             if len(request_user.recently_used_tags) > 5:
                 request_user.recently_used_tags = request_user.recently_used_tags[:5]
         new_event.perms_tags = event_data["tags"]["perms_tags"]
-        new_event.going = [request_user.key]
         if EVERYONE.lower() in event_data["tags"]["perms_tags"] or 'Everyone' in event_data["tags"]["perms_tags"]:
             new_event.perms_tags = ['everyone']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
+        new_event_key = new_event.put()
+        future_list = list()
+        recurring = False
+        if 'recurring' in event_data and event_data['recurring'] == True:
+            recurring_type = event_data['recurring_type']
+            end_date = datetime.datetime.strptime(event_data['recurring_end'], '%m/%d/%Y')
+            recurring_end = datetime.datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
+            curr_start_date = new_event.time_start
+            curr_end_date = new_event.time_end
+            if recurring_type == 'weekly':
+                curr_start_date = curr_start_date + datetime.timedelta(days=7)
+                curr_end_date = curr_end_date + datetime.timedelta(days=7)
+            elif recurring_type == 'monthly':
+                curr_start_date = curr_start_date + datetime.timedelta(months=1)
+                curr_end_date = curr_end_date + datetime.timedelta(months=1)
+            while curr_start_date <= end_date:
+                ev = Event()
+                ev.creator = new_event.creator
+                ev.description = new_event.description
+                ev.title = new_event.title
+                ev.time_start = curr_start_date
+                ev.time_end = curr_end_date
+                ev.time_created = new_event.time_created
+                ev.organization = new_event.organization
+                ev.org_tags = new_event.org_tags
+                ev.location = new_event.location
+                ev.address = new_event.address
+                ev.perms_tags = new_event.perms_tags
+                ev.parent_event = new_event_key
+                recurring = True
+                future_list.append(ev.put_async())
+                if recurring_type == 'weekly':
+                    curr_start_date = curr_start_date + datetime.timedelta(days=7)
+                    curr_end_date = curr_end_date + datetime.timedelta(days=7)
+                elif recurring_type == 'monthly':
+                    curr_start_date = curr_start_date + datetime.timedelta(months=1)
+                    curr_end_date = curr_end_date + datetime.timedelta(months=1)
+                else:
+                    break
+    
         notification = Notification()
         notification.type = 'event'
-        notification.content = request_user.first_name + " " + request_user.last_name + " invited to the event: " + event_data["title"]
+        if recurring:
+            notification.content = request_user.first_name + " " + request_user.last_name + " invited to the repeated events: " + event_data["title"]
+        else:
+            notification.content = request_user.first_name + " " + request_user.last_name + " invited to the event: " + event_data["title"]
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
-        notification.link = '#/app/events/'+new_event.put().urlsafe()
+        notification.link = '#/app/events/' + new_event_key.urlsafe()
         notification.put()
-        future_list = [request_user.put_async()]
+        future_list.append(request_user.put_async())
         add_notification_to_users(notification, users)
         for item in future_list:
             item.get_result()
@@ -3014,11 +3053,10 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        data = json.loads(request.data)
-        event = Event.query(ndb.AND(Event.tag == data["tag"], Event.organization == request_user.organization)).get()
-        event_data = AttendanceData.query(AttendanceData.event == event.key).fetch(keys_only=True)
+        event_key = ndb.Key(urlsafe=json.loads(request.data))
+        event_data = AttendanceData.query(AttendanceData.event == event_key).fetch(keys_only=True)
         ndb.delete_multi(event_data)
-        event.key.delete()
+        event_key.delete()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/create',

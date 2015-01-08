@@ -97,6 +97,7 @@ class Event(ndb.Model):
     images = ndb.BlobKeyProperty(repeated=True)
     organization = ndb.KeyProperty()
     attendance_data = ndb.KeyProperty(repeated=True)
+    parent_event = ndb.KeyProperty()
 
 
 class AttendanceData(ndb.Model):

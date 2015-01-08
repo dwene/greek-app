@@ -49,16 +49,16 @@
             <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
         </div>
         
-        <md-checkbox ng-model="recurring" aria-label="recurring event">
+        <md-checkbox ng-model="event.recurring" aria-label="recurring event">
             Is this event recurring?
         </md-checkbox>
         
-        <div class="form-group" ng-show="recurring">
+        <div class="form-group" ng-show="event.recurring">
             <div class="col-xs-12 col-sm-3">
-                <md-checkbox ng-disabled="!recurring || monthly" ng-model="weekly" aria-label="recurring weekly">
+                <md-checkbox ng-disabled="!event.recurring || monthly" ng-model="weekly" aria-label="recurring weekly">
                     Weekly
                 </md-checkbox>
-                <md-checkbox ng-disabled="!recurring || weekly" ng-model="monthly" aria-label="recurring monthly">
+                <md-checkbox ng-disabled="!event.recurring || weekly" ng-model="monthly" aria-label="recurring monthly">
                     Monthly
                 </md-checkbox> 
             </div>
@@ -73,6 +73,7 @@
         
         <br>
         <md-button type="submit" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
+
     </form>
     
 
