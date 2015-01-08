@@ -1368,7 +1368,7 @@ background-repeat: repeat-x;
 .capitalize {
   text-transform: capitalize;
 }
-.required label:before {
+.required label:after {
   content: '*';
   color: red;
 }
