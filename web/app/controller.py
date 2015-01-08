@@ -2741,22 +2741,25 @@ class RESTApi(remote.Service):
         new_event_key = new_event.put()
         future_list = list()
         recurring = False
-        if 'recurring' in event_data and event_date['recurring'] == True:
+        if 'recurring' in event_data and event_data['recurring'] == True:
             recurring_type = event_data['recurring_type']
             end_date = datetime.datetime.strptime(event_data['recurring_end'], '%m/%d/%Y')
             recurring_end = datetime.datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
-            curr_date = datetime.date.strptime(event_data["time_start"], '%m/%d/%Y')
+            curr_start_date = new_event.time_start
+            curr_end_date = new_event.time_end
             if recurring_type == 'weekly':
-                curr_date = curr_date + datetime.timedelta(days=7)
+                curr_start_date = curr_start_date + datetime.timedelta(days=7)
+                curr_end_date = curr_end_date + datetime.timedelta(days=7)
             elif recurring_type == 'monthly':
-                curr_date = curr_date + datetime.timedelta(days=7)
-            while curr_date <= end_date:
+                curr_start_date = curr_start_date + datetime.timedelta(months=1)
+                curr_end_date = curr_end_date + datetime.timedelta(months=1)
+            while curr_start_date <= end_date:
                 ev = Event()
                 ev.creator = new_event.creator
                 ev.description = new_event.description
                 ev.title = new_event.title
-                ev.time_start = new_event.time_start
-                ev.time_end = new_event.time_end
+                ev.time_start = curr_start_date
+                ev.time_end = curr_end_date
                 ev.time_created = new_event.time_created
                 ev.organization = new_event.organization
                 ev.org_tags = new_event.org_tags
@@ -2767,9 +2770,11 @@ class RESTApi(remote.Service):
                 recurring = True
                 future_list.append(ev.put_async())
                 if recurring_type == 'weekly':
-                    curr_date = curr_date + datetime.timedelta(days=7)
+                    curr_start_date = curr_start_date + datetime.timedelta(days=7)
+                    curr_end_date = curr_end_date + datetime.timedelta(days=7)
                 elif recurring_type == 'monthly':
-                    curr_date = curr_date + datetime.timedelta(months=1)
+                    curr_start_date = curr_start_date + datetime.timedelta(months=1)
+                    curr_end_date = curr_end_date + datetime.timedelta(months=1)
                 else:
                     break
     
@@ -2783,7 +2788,7 @@ class RESTApi(remote.Service):
         notification.timestamp = datetime.datetime.now()
         notification.link = '#/app/events/' + new_event_key.urlsafe()
         notification.put()
-        future_list = future_list.append(request_user.put_async())
+        future_list.append(request_user.put_async())
         add_notification_to_users(notification, users)
         for item in future_list:
             item.get_result()
@@ -3048,11 +3053,10 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        data = json.loads(request.data)
-        event = Event.query(ndb.AND(Event.tag == data["tag"], Event.organization == request_user.organization)).get()
-        event_data = AttendanceData.query(AttendanceData.event == event.key).fetch(keys_only=True)
+        event_key = ndb.Key(urlsafe=json.loads(request.data))
+        event_data = AttendanceData.query(AttendanceData.event == event_key).fetch(keys_only=True)
         ndb.delete_multi(event_data)
-        event.key.delete()
+        event_key.delete()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='poll/create',

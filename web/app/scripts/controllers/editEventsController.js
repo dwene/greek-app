@@ -1,4 +1,4 @@
-    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, $timeout, Directory, Tags, Events){
+    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, $timeout, $location, Directory, Tags, Events){
         routeChange();
         Directory.get();
         Tags.get();
@@ -37,7 +37,7 @@
         }
         $scope.deleteEvent = function(){
             $('#deleteEventModal').modal('hide');
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', {tag: $stateParams.tag})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', $stateParams.tag)
             .success(function(data){
                 $scope.loading = true;
                 if (!RESTService.hasErrors(data)){

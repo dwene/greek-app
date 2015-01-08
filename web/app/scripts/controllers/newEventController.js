@@ -19,11 +19,21 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     var to_send = JSON.parse(JSON.stringify(event));
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
                     to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
+                    if (event.recurring){
+                        if ($scope.weekly){
+                            to_send.recurring_type="weekly";
+                        }
+                        else if ($scope.monthly){
+                            to_send.recurring_type = "monthly";
+                        }
+                        to_send.recurring_end = event.recurring_end;
+                        to_send.reccuring = true;
+                    }
                     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', to_send)
                     .success(function(data){
                         if (!RESTService.hasErrors(data)){
                             $scope.working = 'done';
-                            setTimeout(function(){window.location.assign('#/app/events/'+event.tag);},500);
+                            setTimeout(function(){window.location.assign('#/app/events/'+event.key);},500);
                         }
                         else{
                             $scope.working = 'broken';

@@ -49,21 +49,21 @@
             <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
         </div>
         
-        <md-checkbox ng-model="recurring" aria-label="recurring_event">
+        <md-checkbox ng-model="event.recurring" aria-label="recurring_event">
             Is this event recurring?
         </md-checkbox>
         
 
-        <div ng-show="recurring">
+        <div ng-show="event.recurring">
         
-        <md-checkbox ng-disabled="!recurring || monthly" ng-model="weekly" aria-label="recurring_event">
+        <md-checkbox ng-disabled="!event.recurring || monthly" ng-model="weekly" aria-label="recurring_event">
             Weekly
         </md-checkbox>
-        <md-checkbox ng-disabled="!recurring || weekly" ng-model="monthly" aria-label="recurring_event">
+        <md-checkbox ng-disabled="!event.recurring || weekly" ng-model="monthly" aria-label="recurring_event">
             Monthly
         </md-checkbox> 
         
-        <date-picker id="untilDate" name="untilDate" ng-model="event.until"></date-picker>
+        <date-picker id="untilDate" name="untilDate" ng-model="event.recurring_end"></date-picker>
         
         </div>
 
