@@ -1,4 +1,4 @@
-App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization, Notifications, AUTH_EVENTS){
+App.controller('navigationController', function($scope, $http, $rootScope, $mdSidenav, $location, LoadScreen, Inbox, Session, Organization, Notifications, AUTH_EVENTS){
         routeChange();
         // this.session = Session;
         // this.me = Session.me;
@@ -15,6 +15,7 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         //     $scope.name = Session.me.first_name +' '+ Session.me.last_name;
         // });
         $scope.goToMe = function(){
+            $mdSidenav('sidenav').toggle();
             $location.path('app/directory/'+Session.user_name);
         }
         this.homeButton = function(){

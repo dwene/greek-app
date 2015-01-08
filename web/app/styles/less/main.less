@@ -99,7 +99,7 @@ input.form-control{height:34px !important;}
 .tab-pane{padding-top:10px;}
 .navbar-collapse{max-height:100%;}
 .well, .jumbotron{position:relative;}
-.alert{background-image: none; padding: 0px; margin-bottom: 5px;}
+.alert{background-image:none; margin-bottom: 5px;}
 .container .jumbotron {padding-right: 20px;padding-left: 20px;}
 .dropdown-menu>.active>a{color:white !important;}
 @media screen and (max-width: 767px){
@@ -331,8 +331,6 @@ background-repeat: repeat-x;
 #eventInfo h3{cursor:pointer; .noselect;}
 
 /*New Event Page*/
-#createEvent .card{padding-bottom:50px;}
-
 #eventTags{margin-bottom:5px;}
 #eventTags .btn-group{margin-bottom:5px;}
 #eventTags .btn-group .checkLabel{margin:0 2px;}
@@ -558,7 +556,6 @@ nav.navbar-default:hover .refresh{opacity:1;}
     -ms-animation: fadeOutLeftBig .5s;
     animation: fadeOutLeftBig .5;
 }
-
 
 //.message.ng-enter{
 //    -webkit-animation: fadeInDown .2s;
@@ -959,7 +956,7 @@ nav{
 #menu{
     md-toolbar.md-tall{min-height:0px;}
     .md-toolbar-tools{margin-bottom:20px;}
-    .face{position:relative; top:10px;}
+    .face{position:relative; top:10px; cursor:pointer;}
     #details{margin-top:20px;}
     #name{font-weight:bold;}
     p{font-size:14px; line-height:1.2;}
@@ -1049,6 +1046,7 @@ md-toolbar.md-tall{
         h5{font-size:18px; line-height:24px;}
             .face{display:block; width:120px; height:120px; border-radius:80px;}
         .name{margin-left:15px;}
+        .edit-profile{position:absolute; bottom:6px; right:80px; font-size:15px;}
     }
      #tags{ width:100%; font-size:12px; line-height:24px; text-align:center; margin-top:20px;
             span:not(:last-child):after{content:', ';}
@@ -1148,7 +1146,6 @@ md-toolbar.md-tall{
     }
 }
 
-
 #adminPage{
     #colorPicker{padding-bottom:8px;}
     .colorPick{margin:2px; padding:0px; height:57px; width:57px; display:inline-block;}
@@ -1160,4 +1157,8 @@ md-toolbar.md-tall{
     button.md-orange-theme{background:#ff5722;}
     button.md-brown-theme{background:#795548;}
     button.md-gray-theme{background:#9e9e9e;}
+}
+
+#newEvent{
+    .form-group{margin:0px;}
 }
