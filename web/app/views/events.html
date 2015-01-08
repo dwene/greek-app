@@ -6,7 +6,7 @@
                     <div class="md-toolbar-tools">
                         <h1>Events</h1>
                         <div flex></div>
-                        <md-button ng-href="#/app/newevent" ng-show="$root.checkPermissions('leadership')">Create New</md-button>
+                        <md-button ng-href="#/app/newevent" ng-show="$parent.$parent.checkPermissions('leadership')">Create New</md-button>
                     </div>
                 </md-toolbar>
                 <md-content class="md-padding" load-directive ng-model="eventsLoaded">
@@ -27,14 +27,15 @@
                     </md-tabs>
                 </md-toolbar>
                 <md-list class="itemList">
-                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:order | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber" ng-click="showEvent(event)">
+                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:order | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber">
                         <md-item-content>
-                           <div class="md-tile-content">
+
+                            <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
                                 <h3 class="md-primary title">
                                     {{event.title}}
                                 </h3>
                                 <p class="notificationText">{{showDate(event.time_start, event.time_end)}}</p>
-                            </div>
+                            </a>
                         </md-item-content>
                     </md-item>
                 </md-list>

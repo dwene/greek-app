@@ -23,7 +23,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
                     if ($scope.inbox.messages[i].new){
                         $scope.inbox.messages[i].new = false;
                         $rootScope.$broadcast('inbox:updated');
-                        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/seen', {'notification': message.key});
+                        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/messages/read', {'message': message.key});
                     }
                     return;
                 }
@@ -132,7 +132,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
                 $scope.inbox.archived.push($scope.inbox.messages[i]);
                 $scope.inbox.messages.splice(i, 1);
                 $scope.inbox.lengths.archived++;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/hide', {'notification': message.key})
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/archive', {'message': message.key})
                 Inbox.update($scope.inbox);
                 return;
             }
@@ -146,7 +146,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
                 $scope.inbox.archived.splice(i, 1);
                 $scope.inbox.lengths.archived--;
                 $scope.inbox.lengths.read++;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/unhide', {'notification': message.key});
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/unarchive', {'message': message.key});
                 Inbox.update($scope.inbox);
                 return;
             }
@@ -165,7 +165,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
             else{
                 $scope.loadingArchived = true;
                 console.log('Im doing the rest call for load more archived', $scope.inbox.archived.length);
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_hidden', $scope.inbox.archived.length)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/messages/more_archived', $scope.inbox.archived.length)
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {
@@ -207,7 +207,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
             }
             else{
                 $scope.loadingMessages = true;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/more_notifications', $scope.inbox.messages.length)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/messages/more_messages', $scope.inbox.messages.length)
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {

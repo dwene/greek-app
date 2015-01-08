@@ -32,6 +32,65 @@ def show_notifications():
             print temp    
         user.put()
 
+def updateNotifications():
+    notifications = Notification.query().fetch()
+    users = User.query().fetch()
+    count = 0
+    for notify in notifications:
+        count = count + 1
+        print 'starting message' + str(count)
+        if notify.type == 'message':
+            m = Message()
+            m.title = notify.title
+            m.content = notify.content
+            m.timestamp = notify.timestamp
+            m.sender = notify.sender
+            m.sender_name = notify.sender_name
+            key = m.put()
+            for user in users:
+                user_dict = user.to_dict()
+                if "notifications" in user_dict:
+                    if notify.key in user.notifications:
+                        user.notifications.remove(notify.key)
+                        user.messages.append(key)
+                if "hidden_notifications" in user_dict:
+                    if notify.key in user.hidden_notifications:
+                        user.hidden_notifications.remove(notify.key)
+                        user.archived_messages.append(key)
+                if "new_notifications" in user_dict:
+                    if notify.key in user.new_notifications:
+                        user.new_notifications.remove(notify.key)
+                        user.new_messages.append(key)
+    futures = list()
+    for user in users:
+        futures.append(user.put_async())
+    for future in futures:
+        future.get_result()
+
+
+def deleteNotifications():
+    notifications = Notification.query().fetch()
+    users = User.query().fetch()
+    futures = list()
+    for notify in notifications:
+        futures.append(notify.key.delete_async())
+    for user in users:
+        user.notifications = []
+        user.hidden_notifications = []
+        user.new_notifications = []
+        futures.append(user.put_async())
+    for future in futures:
+        future.get_result()
+
+def deleteSentNotifications():
+    users = User.query().fetch()
+    futures = list()
+    for user in users:
+        user.sent_notifications = []
+        futures.append(user.put_async())
+    for future in futures:
+        future.get_result()
+
 def test_directory():
     time1 = datetime.datetime.now()
     # agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA

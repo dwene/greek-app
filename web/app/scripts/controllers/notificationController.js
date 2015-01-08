@@ -11,10 +11,6 @@ App.controller('notificationController', function($scope, $http, $rootScope, $lo
                 }
             }
         });   
-        
-        $scope.$on('notifications:updated', function(){
-            $scope.notification_count = Inbox.getLengths().unread;
-        });
 
         $scope.readNotifications = function(){
         }

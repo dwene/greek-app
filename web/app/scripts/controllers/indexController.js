@@ -1,20 +1,22 @@
-App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Inbox, Session) {
+App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Inbox, Session, Notifications) {
+        $scope.notifications = Notifications.notifs;
         $scope.item = Organization.me;
         $scope.perms = Session.perms;
         $scope.me = Session.me;
         $scope.subscribed = true;
         $scope.session = Session;
-        $scope.prof_pic = '../images/defaultprofile.png';
+        $scope.prof_pic = 'images/defaultprofile.png';
         $scope.$on(AUTH_EVENTS.loginSuccess, function(){
             $scope.session = Session;
             $scope.perms = Session.perms;
             $scope.me = Session.me;
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
             $scope.email = Session.me.email;
-            $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : '../images/defaultprofile.png';
+            $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
         })
+
         $scope.$on('notifications:updated', function(){
-            $scope.notificationLength = Inbox.getLengths();
+            $scope.notifications = Notifications.notifs;
         });
         $scope.sendHelpMessage = function(isValid, content){
             console.log('I am getting submitted');
@@ -35,10 +37,13 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         }
         $scope.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
-            $timeout(function(){$location.url(url);}, 500);
+            if (url){
+                $timeout(function(){$location.url(url);}, 500);
+            }
             
         }
         $scope.toggleNotifications = function(){
+            Notifications.readAll();
             $mdSidenav('notifications').toggle();
         }
         $scope.showHelpdialog = function(){

@@ -37,7 +37,6 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
           to_send.token = creds.TOKEN;
           data = JSON.stringify('');
         }
-        console.log('what cached login is sending', to_send);
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/token_login', to_send)
             .success(function(data){
               // console.log('cached login. am I authenticated?', authService.isAuthenticated());
@@ -65,14 +64,10 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
     }
         return deferred.promise;
   }
-
-
   authService.token_login = function(user, token){
     var to_send = {user_name:user, token: token, data: JSON.stringify('')};
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/token_login', to_send)
             .success(function(data){
-              // console.log('cached login. am I authenticated?', authService.isAuthenticated());
-              // console.log('data', data);
               loginAttempted = true;
               if (!authService.isAuthenticated()){
                 if (!RESTService.hasErrors(data)) { 

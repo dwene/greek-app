@@ -388,10 +388,13 @@ def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
             return True
     return False
 
+
+
+
+
 @endpoints.api(name='netegreek', version='v2', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
 class RESTApi2(remote.Service):
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')
@@ -424,7 +427,7 @@ class RESTApi2(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/get',
-                      http_method='POST', name='notifications.get')
+                      http_method='POST', name='messages.get')
     def get_messages(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
@@ -442,7 +445,7 @@ class RESTApi2(remote.Service):
             messages_future = Message.query(Message.key.IN(
                 request_user.messages)).order(-Message.timestamp).fetch_async(message_count)
         if request_user.archived_messages:
-            archived_messages_future = Message.query(Messate.key.IN(
+            archived_messages_future = Message.query(Message.key.IN(
                 request_user.archived_messages)).order(-Message.timestamp).fetch_async(30)
         out_messages = list()
         if request_user.new_messages:
@@ -675,15 +678,14 @@ class RESTApi2(remote.Service):
                 out_notifications.append(note)
         return OutgoingMessage(error='', data=json_dump(out_notifications))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
-                      http_method='POST', name='notifications.seen')
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/read',
+                      http_method='POST', name='notifications.read')
     def see_notification(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["notification"])
-        if key in request_user.new_notifications:
+        for key in request_user.new_notifications:
             request_user.new_notifications.remove(key)
             request_user.notifications.insert(0, key)
             request_user.put()
@@ -1004,7 +1006,9 @@ class RESTApi(remote.Service):
         del me["timestamp"]
         del me["notifications"]
         del me["new_notifications"]
-        del me["hidden_notifications"]
+        del me["messages"]
+        del me["new_messages"]
+        del me["archived_messages"]
         out["me"] = me
         try:
             out["image"] = images.get_serving_url(organization.image, secure_url=True)
@@ -1317,7 +1321,6 @@ class RESTApi(remote.Service):
         del user_dict["timestamp"]
         del user_dict["notifications"]
         del user_dict["new_notifications"]
-        del user_dict["hidden_notifications"]
         del user_dict["events"]
         if user_dict["dob"]:
             user_dict["dob"] = request_user.dob.strftime("%m/%d/%Y")
@@ -1399,200 +1402,200 @@ class RESTApi(remote.Service):
             user.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load',
-                      http_method='POST', name='info.load')
-    def load_user_data(self, request):
-        time_start = datetime.datetime.now()
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        out_data = dict()
-        out_data["perms"] = request_user.perms
-        out_data["accountFilledOut"] = bool(request_user.address and request_user.dob)
-        # line up all the queries
-        events_polls_future = Event.query(Event.going == request_user.key).fetch_async(projection=[Event.tag])
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
-        event_tag_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                            Event.time_end < datetime.datetime.today() + relativedelta(months=1))
-                                            ).fetch_async(projection=[Event.going, Event.tag])
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load',
+#                       http_method='POST', name='info.load')
+#     def load_user_data(self, request):
+#         time_start = datetime.datetime.now()
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         out_data = dict()
+#         out_data["perms"] = request_user.perms
+#         out_data["accountFilledOut"] = bool(request_user.address and request_user.dob)
+#         # line up all the queries
+#         events_polls_future = Event.query(Event.going == request_user.key).fetch_async(projection=[Event.tag])
+#         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
+#         event_tag_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+#                                             Event.time_end < datetime.datetime.today() + relativedelta(months=1))
+#                                             ).fetch_async(projection=[Event.going, Event.tag])
 
-        if len(request_user.tags) > 0:
-            events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                        ndb.OR(Event.org_tags.IN(request_user.tags),
-                                        Event.perms_tags == request_user.perms,
-                                        Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
-        else:
-            events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                        ndb.OR(Event.perms_tags == request_user.perms,
-                                        Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
-        organization_future = request_user.organization.get_async()
-        notification_count = 40
-        if request_user.new_notifications:
-            new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
-        if request_user.new_notifications:
-            if len(request_user.new_notifications) >= 40:
-                notification_count = 0
-            else:
-                notification_count = 40 - len(request_user.new_notifications)
-        if request_user.notifications:
-            notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-        if request_user.hidden_notifications:
-            hidden_notifications_future = Notification.query(Notification.key.IN(
-                request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
+#         if len(request_user.tags) > 0:
+#             events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+#                                         ndb.OR(Event.org_tags.IN(request_user.tags),
+#                                         Event.perms_tags == request_user.perms,
+#                                         Event.perms_tags == 'everyone',
+#                                         Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
+#         else:
+#             events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+#                                         ndb.OR(Event.perms_tags == request_user.perms,
+#                                         Event.perms_tags == 'everyone',
+#                                         Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
+#         organization_future = request_user.organization.get_async()
+#         notification_count = 40
+#         if request_user.new_notifications:
+#             new_notification_future = Notification.query(Notification.key.IN(
+#                 request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
+#         if request_user.new_notifications:
+#             if len(request_user.new_notifications) >= 40:
+#                 notification_count = 0
+#             else:
+#                 notification_count = 40 - len(request_user.new_notifications)
+#         if request_user.notifications:
+#             notifications_future = Notification.query(Notification.key.IN(
+#                 request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+#         if request_user.hidden_notifications:
+#             hidden_notifications_future = Notification.query(Notification.key.IN(
+#                 request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
 
-#part 1 of polls
-        events_polls = events_polls_future.get_result()
-        time_middle = datetime.datetime.now()
-        poll_event_tags = list()
-        for event in events_polls:
-            poll_event_tags.append(event.tag)
-        if not request_user.tags:
-            request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
-        if poll_event_tags:
-            polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
-                                              Poll.invited_org_tags.IN(request_user.tags),
-                                              Poll.invited_perms_tags == request_user.perms,
-                                              Poll.invited_event_tags.IN(poll_event_tags),
-                                              ),
-                                              Poll.organization == request_user.organization)).\
-                order(-Poll.timestamp).fetch_async(100)
-        else:
-            polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
-                                              Poll.invited_org_tags.IN(request_user.tags),
-                                              Poll.invited_perms_tags == request_user.perms,
-                                              ),
-                                              Poll.organization == request_user.organization)).\
-                order(-Poll.timestamp).fetch_async(100)
-        if request_user.tags == ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']:
-            request_user.tags = ['']
-#get results of queries
-        organization_users = organization_users_future.get_result()
-        event_tag_list = event_tag_list_future.get_result()
-        organization = organization_future.get_result()
-        events = events_future.get_result()
-        user_list = list()
-        alumni_list = list()
-        for user in organization_users:
-            user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            del user_dict["hidden_notifications"]
-            event_tags = list()
-            for event in event_tag_list:
-                if user.key in event.going:
-                    event_tags.append(event.tag)
-            user_dict["event_tags"] = event_tags
-            user_dict["key"] = user.key.urlsafe()
-            if user.dob:
-                user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
-            else:
-                del user_dict["dob"]
-            user_dict["key"] = user.key.urlsafe()
-            if user_dict["perms"] == 'alumni':
-                alumni_list.append(user_dict)
-            else:
-                user_list.append(user_dict)
-        out_data["directory"] = {'members': user_list, 'alumni': alumni_list}
+# #part 1 of polls
+#         events_polls = events_polls_future.get_result()
+#         time_middle = datetime.datetime.now()
+#         poll_event_tags = list()
+#         for event in events_polls:
+#             poll_event_tags.append(event.tag)
+#         if not request_user.tags:
+#             request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
+#         if poll_event_tags:
+#             polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+#                                               Poll.invited_org_tags.IN(request_user.tags),
+#                                               Poll.invited_perms_tags == request_user.perms,
+#                                               Poll.invited_event_tags.IN(poll_event_tags),
+#                                               ),
+#                                               Poll.organization == request_user.organization)).\
+#                 order(-Poll.timestamp).fetch_async(100)
+#         else:
+#             polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+#                                               Poll.invited_org_tags.IN(request_user.tags),
+#                                               Poll.invited_perms_tags == request_user.perms,
+#                                               ),
+#                                               Poll.organization == request_user.organization)).\
+#                 order(-Poll.timestamp).fetch_async(100)
+#         if request_user.tags == ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']:
+#             request_user.tags = ['']
+# #get results of queries
+#         organization_users = organization_users_future.get_result()
+#         event_tag_list = event_tag_list_future.get_result()
+#         organization = organization_future.get_result()
+#         events = events_future.get_result()
+#         user_list = list()
+#         alumni_list = list()
+#         for user in organization_users:
+#             user_dict = user.to_dict()
+#             del user_dict["hash_pass"]
+#             del user_dict["current_token"]
+#             del user_dict["organization"]
+#             del user_dict["timestamp"]
+#             del user_dict["notifications"]
+#             del user_dict["new_notifications"]
+#             del user_dict["hidden_notifications"]
+#             event_tags = list()
+#             for event in event_tag_list:
+#                 if user.key in event.going:
+#                     event_tags.append(event.tag)
+#             user_dict["event_tags"] = event_tags
+#             user_dict["key"] = user.key.urlsafe()
+#             if user.dob:
+#                 user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+#             else:
+#                 del user_dict["dob"]
+#             user_dict["key"] = user.key.urlsafe()
+#             if user_dict["perms"] == 'alumni':
+#                 alumni_list.append(user_dict)
+#             else:
+#                 user_list.append(user_dict)
+#         out_data["directory"] = {'members': user_list, 'alumni': alumni_list}
 
-        # # tags section
-        # org_tags = organization.tags
-        # org_tags_list = list()
-        # for tag in request_user.recently_used_tags:
-        #     if tag in org_tags:
-        #         org_tags_list.append({"name": tag, "recent": True})
-        #         org_tags.remove(tag)
-        #     else:
-        #         request_user.recently_used_tags.remove(tag)
-        # for tag in org_tags:
-        #     org_tags_list.append({"name": tag, "recent": False})
-        # # events = event_tags_future.get_result()
-        # event_tags_list = list()
-        # for event in event_tag_list:
-        #     event_tags_list.append({"name": event.tag})
-        # perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
-        # out_data["tags"] = {'org_tags': org_tags_list, 'event_tags': event_tags_list, 'perms_tags': perm_tags_list}
+#         # # tags section
+#         # org_tags = organization.tags
+#         # org_tags_list = list()
+#         # for tag in request_user.recently_used_tags:
+#         #     if tag in org_tags:
+#         #         org_tags_list.append({"name": tag, "recent": True})
+#         #         org_tags.remove(tag)
+#         #     else:
+#         #         request_user.recently_used_tags.remove(tag)
+#         # for tag in org_tags:
+#         #     org_tags_list.append({"name": tag, "recent": False})
+#         # # events = event_tags_future.get_result()
+#         # event_tags_list = list()
+#         # for event in event_tag_list:
+#         #     event_tags_list.append({"name": event.tag})
+#         # perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+#         # out_data["tags"] = {'org_tags': org_tags_list, 'event_tags': event_tags_list, 'perms_tags': perm_tags_list}
 
-        # organization info
-        organization_data = dict(name=organization.name, school=organization.school)
-        organization_data["subscribed"] = organization.subscribed
-        organization_data["color"] = organization.color
-        try:
-            organization_data["image"] = images.get_serving_url(organization.image, secure_url=True)
-        except:
-            organization_data["image"] = ''
-        out_data["organization_data"] = organization_data
+#         # organization info
+#         organization_data = dict(name=organization.name, school=organization.school)
+#         organization_data["subscribed"] = organization.subscribed
+#         organization_data["color"] = organization.color
+#         try:
+#             organization_data["image"] = images.get_serving_url(organization.image, secure_url=True)
+#         except:
+#             organization_data["image"] = ''
+#         out_data["organization_data"] = organization_data
 
-        #events info
-        events_data = list()
-        for event in events:
-            dict_event = event.to_dict()
-            dict_event["tags"] = {"org_tags": event.org_tags, "perms_tags": event.perms_tags}
-            dict_event["key"] = event.key
-            events_data.append(dict_event)
-        out_data["events"] = events_data
+#         #events info
+#         events_data = list()
+#         for event in events:
+#             dict_event = event.to_dict()
+#             dict_event["tags"] = {"org_tags": event.org_tags, "perms_tags": event.perms_tags}
+#             dict_event["key"] = event.key
+#             events_data.append(dict_event)
+#         out_data["events"] = events_data
 
-        #notifications info
-        out_notifications = list()
-        if request_user.new_notifications:
-            new_notifications = new_notification_future.get_result()
-            for notify in new_notifications:
-                note = notify.to_dict()
-                note["new"] = True
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        if request_user.notifications:
-            notifications = notifications_future.get_result()
-            for notify in notifications:
-                note = notify.to_dict()
-                note["new"] = False
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        out_hidden_notifications = list()
-        if request_user.hidden_notifications:
-            hidden_notifications = hidden_notifications_future.get_result()
-            for notify in hidden_notifications:
-                note = notify.to_dict()
-                note["key"] = notify.key.urlsafe()
-                out_hidden_notifications.append(note)
-        out_data["notifications"] = {'notifications': out_notifications,
-                                     'hidden_notifications': out_hidden_notifications,
-                                     'notifications_length': len(request_user.notifications),
-                                     'hidden_notifications_length': len(request_user.hidden_notifications),
-                                     'new_notifications_length': len(request_user.new_notifications)}
-        org_tags_list = list()
-        # logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
-        for tag in organization.tags:
-            if tag in request_user.recently_used_tags:
-                org_tags_list.append({"name": tag, "recent": True})
-            else:
-                org_tags_list.append({"name": tag, "recent": False})
-        event_tags_list = list()
-        for event in event_tag_list:
-            event_tags_list.append({"name": event.tag})
-        perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
-        out_data["tags"] = {'org_tags': org_tags_list, 'perms_tags': perm_tags_list, 'event_tags': event_tags_list}
+#         #notifications info
+#         out_notifications = list()
+#         if request_user.new_notifications:
+#             new_notifications = new_notification_future.get_result()
+#             for notify in new_notifications:
+#                 note = notify.to_dict()
+#                 note["new"] = True
+#                 note["key"] = notify.key.urlsafe()
+#                 out_notifications.append(note)
+#         if request_user.notifications:
+#             notifications = notifications_future.get_result()
+#             for notify in notifications:
+#                 note = notify.to_dict()
+#                 note["new"] = False
+#                 note["key"] = notify.key.urlsafe()
+#                 out_notifications.append(note)
+#         out_hidden_notifications = list()
+#         if request_user.hidden_notifications:
+#             hidden_notifications = hidden_notifications_future.get_result()
+#             for notify in hidden_notifications:
+#                 note = notify.to_dict()
+#                 note["key"] = notify.key.urlsafe()
+#                 out_hidden_notifications.append(note)
+#         out_data["notifications"] = {'notifications': out_notifications,
+#                                      'hidden_notifications': out_hidden_notifications,
+#                                      'notifications_length': len(request_user.notifications),
+#                                      'hidden_notifications_length': len(request_user.hidden_notifications),
+#                                      'new_notifications_length': len(request_user.new_notifications)}
+#         org_tags_list = list()
+#         # logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
+#         for tag in organization.tags:
+#             if tag in request_user.recently_used_tags:
+#                 org_tags_list.append({"name": tag, "recent": True})
+#             else:
+#                 org_tags_list.append({"name": tag, "recent": False})
+#         event_tags_list = list()
+#         for event in event_tag_list:
+#             event_tags_list.append({"name": event.tag})
+#         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+#         out_data["tags"] = {'org_tags': org_tags_list, 'perms_tags': perm_tags_list, 'event_tags': event_tags_list}
 
-#part 2 of polls
-        dict_polls = list()
-        polls = polls_future.get_result()
-        for poll in polls:
-            add = poll.to_dict()
-            add["key"] = poll.key
-            dict_polls.append(add)
-        out_data["polls"] = dict_polls
+# #part 2 of polls
+#         dict_polls = list()
+#         polls = polls_future.get_result()
+#         for poll in polls:
+#             add = poll.to_dict()
+#             add["key"] = poll.key
+#             dict_polls.append(add)
+#         out_data["polls"] = dict_polls
 
-        time_end = datetime.datetime.now()
-        # logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
-        #               str(time_middle-time_start))
-        return OutgoingMessage(error='', data=json_dump(out_data))
+#         time_end = datetime.datetime.now()
+#         # logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
+#         #               str(time_middle-time_start))
+#         return OutgoingMessage(error='', data=json_dump(out_data))
 
 
 
@@ -1855,7 +1858,6 @@ class RESTApi(remote.Service):
         del me["timestamp"]
         del me["notifications"]
         del me["new_notifications"]
-        del me["hidden_notifications"]
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
@@ -1865,7 +1867,6 @@ class RESTApi(remote.Service):
             del user_dict["timestamp"]
             del user_dict["notifications"]
             del user_dict["new_notifications"]
-            del user_dict["hidden_notifications"]
             event_tags = list()
             for event in event_list:
                 if user.key in event.going:
@@ -1903,7 +1904,6 @@ class RESTApi(remote.Service):
         del me["timestamp"]
         del me["notifications"]
         del me["new_notifications"]
-        del me["hidden_notifications"]
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
@@ -1913,7 +1913,6 @@ class RESTApi(remote.Service):
             del user_dict["timestamp"]
             del user_dict["notifications"]
             del user_dict["new_notifications"]
-            del user_dict["hidden_notifications"]
             event_tags = list()
             for event in event_list:
                 if user.key in event.going:
@@ -1952,7 +1951,6 @@ class RESTApi(remote.Service):
         del user_dict["timestamp"]
         del user_dict["notifications"]
         del user_dict["new_notifications"]
-        del user_dict["hidden_notifications"]
         event_tags = list()
         for event in event_list:
             if user.key in event.going:
@@ -2137,6 +2135,39 @@ class RESTApi(remote.Service):
                                                          'event_tags': event_tags_list,
                                                          'perms_tags': perm_tags_list}))
 
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
+    #                   http_method='POST', name='message.send_message')
+    # def send_message(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+    #         return OutgoingMessage(error=INCORRECT_PERMS, data='')
+    #     data = json.loads(request.data)
+    #     user_list_future = list()
+    #     user_list = list()
+    #     if 'keys' in data:
+    #         for key in data['keys']:
+    #             user_list_future.append(ndb.Key(urlsafe=key).get_async())
+    #     for user in user_list_future:
+    #         user_list.append(user.get_result())
+    #     notification = Notification()
+    #     notification.type = 'message'
+    #     notification.content = data['content']
+    #     notification.timestamp = datetime.datetime.now()
+    #     notification.sender = request_user.key
+    #     notification.sender_name = request_user.first_name + ' ' + request_user.last_name
+    #     notification.title = data['title']
+    #     notification.put()
+    #     request_user.sent_notifications.insert(0, notification.key)
+    #     request_user.put()
+    #     add_notification_to_users(notification, user_list, True)
+    #     return OutgoingMessage(error='', data='OK')
+
+    #-------------------------
+    # NOTIFICATION ENDPOINTS
+    #-------------------------
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
                       http_method='POST', name='message.send_message')
     def send_message(self, request):
@@ -2153,22 +2184,236 @@ class RESTApi(remote.Service):
                 user_list_future.append(ndb.Key(urlsafe=key).get_async())
         for user in user_list_future:
             user_list.append(user.get_result())
-        notification = Notification()
-        notification.type = 'message'
-        notification.content = data['content']
-        notification.timestamp = datetime.datetime.now()
-        notification.sender = request_user.key
-        notification.sender_name = request_user.first_name + ' ' + request_user.last_name
-        notification.title = data['title']
-        notification.put()
-        request_user.sent_notifications.insert(0, notification.key)
-        request_user.put()
-        add_notification_to_users(notification, user_list, True)
+        msg = Message()
+        msg.content = data['content']
+        msg.timestamp = datetime.datetime.now()
+        msg.sender = request_user.key
+        msg.user_name = request_user.user_name
+        msg.sender_name = request_user.first_name + ' ' + request_user.last_name
+        msg.title = data['title']
+        msg.put()
+        request_user.sent_messages.insert(0, msg.key)
+        future = request_user.put_async()
+        add_message_to_users(msg, user_list)
+        future.get_result()
         return OutgoingMessage(error='', data='OK')
 
-    #-------------------------
-    # NOTIFICATION ENDPOINTS
-    #-------------------------
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/get',
+                      http_method='POST', name='messages.get')
+    def get_messages(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        message_count = 30
+        if request_user.new_messages:
+            new_messages_future = Message.query(Message.key.IN(
+                request_user.new_messages)).order(-Message.timestamp).fetch_async(40)
+        if request_user.new_messages:
+            if len(request_user.new_messages) >= 30:
+                message_count = 0
+            else:
+                message_count = 30 - len(request_user.new_messages)
+        if request_user.messages and message_count > 0:
+            messages_future = Message.query(Message.key.IN(
+                request_user.messages)).order(-Message.timestamp).fetch_async(message_count)
+        if request_user.archived_messages:
+            archived_messages_future = Message.query(Message.key.IN(
+                request_user.archived_messages)).order(-Message.timestamp).fetch_async(30)
+        out_messages = list()
+        if request_user.new_messages:
+            new_messages = new_messages_future.get_result()
+            for msg in new_messages:
+                note = msg.to_dict()
+                note["new"] = True
+                note["key"] = msg.key.urlsafe()
+                out_messages.append(note)
+        if request_user.messages and message_count > 0:
+            messages = messages_future.get_result()
+            for msg in messages:
+                note = msg.to_dict()
+                note["new"] = False
+                note["key"] = msg.key.urlsafe()
+                out_messages.append(note)
+        out_archived_messages = list()
+        if request_user.archived_messages:
+            archived_messages = archived_messages_future.get_result()
+            for msg in archived_messages:
+                note = msg.to_dict()
+                note["key"] = msg.key.urlsafe()
+                out_archived_messages.append(note)
+        out = {'messages': out_messages,
+               'archived_messages': out_archived_messages,
+               'messages_length': len(request_user.messages),
+               'archived_messages_length': len(request_user.archived_messages),
+               'new_messages_length': len(request_user.new_messages)}
+        return OutgoingMessage(error='', data=json_dump(out))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/read',
+                      http_method='POST', name='messages.seen')
+    def mark_message_read(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["message"])
+        if key in request_user.new_messages:
+            request_user.new_messages.remove(key)
+            request_user.messages.insert(0, key)
+            request_user.put()
+        return OutgoingMessage(error='', data='OK')
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_archived',
+                      http_method='POST', name='messages.more_archived')
+    def more_archived(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        out_archived_messages = list()
+
+        fetch_offset = data-2 if data-2 > 0 else data 
+        archived_messages_future = Message.query(Message.key.IN(
+            request_user.archived_messages)).order(-Message.timestamp).fetch_async(data + 40, offset=fetch_offset)
+        archived_messages = archived_messages_future.get_result()
+        for msg in archived_messages:
+            note = msg.to_dict()
+            note["key"] = msg.key.urlsafe()
+            out_archived_messages.insert(0, note)
+        return OutgoingMessage(error='', data=json_dump(out_archived_messages))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_messages',
+                      http_method='POST', name='messages.more_messages')
+    def more_messages(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        new_message_count = data.new_message_count
+        read_message_count = data.read_message_count
+        out_messages = list()
+        msg_count = 40
+
+        if request_user.new_messages:
+            new_messages_to_get = len(request_user.new_messages) - data.new_message_count
+            if new_messages_to_get > 0:
+                new_messages_fetch_count = new_messages_to_get if new_messages_to_get <=40 else 40
+                new_messages_future = Message.query(Message.key.IN(
+                request_user.new_messages)).order(-Message.timestamp).fetch_async(new_messages_fetch_count, offset=new_message_count)
+                if new_messages_fetch_count < 40:
+                    msg_count = 40 - new_messages_fetch_count
+            else:
+                msg_count = 0
+        if request_user.messages and msg_count > 0:
+            messages_future = Message.query(Message.key.IN(
+                request_user.messages)).order(-Message.timestamp).fetch_async(msg_count, offset=read_message_count)
+        if request_user.new_messages and new_messages_to_get > 0:
+            msgs = messages_future.get_result()
+            for msg in msgs:
+                note = msg.to_dict()
+                note["key"] = msg.key.urlsafe()
+                out_messages.append(note)
+        if request_user.new_messages and msg_count > 0:
+            msgs = new_messages_future.get_result()
+            for msg in msgs:
+                note = msg.to_dict()
+                note["key"] = msg.key.urlsafe()
+                note["new"] = True
+                out_messages.append(note)
+        return OutgoingMessage(error='', data=json_dump(out_messages))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/archive',
+                      http_method='POST', name='messages.archive')
+    def archive_messages(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["message"])
+        if key in request_user.messages:
+            request_user.messages.remove(key)
+            request_user.archived_messages.insert(0, key)
+            request_user.put()
+            return OutgoingMessage(error='', data='OK')
+        if key in request_user.new_messages:
+            request_user.new_messages.remove(key)
+            request_user.archived_messages.insert(0, key)
+            request_user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data='OK')
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/unarchive',
+                      http_method='POST', name='message.unarchive')
+    def unarchive_message(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["message"])
+        if key in request_user.archived_messages:
+            request_user.archived_messages.remove(key)
+            request_user.messages.insert(0, key)
+            request_user.put()
+            return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
+                      http_method='POST', name='message.delete')
+    def delete_message(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        data = json.loads(request.data)
+        key = ndb.Key(urlsafe=data["message"])
+        if key in request_user.sent_messages:
+            futures = list()
+            request_user.sent_messages.remove(key)
+            futures.append(request_user.put_async())
+            notified_users = User.query(User.messages == key).fetch_async()
+            new_notified_users = User.query(User.new_messages == key).fetch_async()
+            hidden_notified_users = User.query(User.archived_messages == key).fetch_async()
+            users = notified_users.get_result()
+            for user in users:
+                user.messages.remove(key)
+                futures.append(user.put_async())
+            users_new = new_notified_users.get_result()
+            for user in users_new:
+                user.new_messages.remove(key)
+                futures.append(user.put_async())
+            users_hidden = hidden_notified_users.get_result()
+            for user in users_hidden:
+                user.archived_messages.remove(key)
+                futures.append(user.put_async())
+            futures.append(key.delete_async())
+            for future in futures:
+                future.get_result()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/recently_sent',
+                      http_method='POST', name='messages.recently_sent')
+    def recently_sent_messages(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        if not request_user.sent_messages:
+            return OutgoingMessage(error='', data=json_dump(''))
+        sent_messages = Message.query(Message.key.IN(request_user.sent_messages)).order(
+                                                                    -Message.timestamp).fetch(30)
+        out_message = list()
+        for msg in sent_messages:
+            note = msg.to_dict()
+            note["key"] = msg.key.urlsafe()
+            out_message.append(note)
+        return OutgoingMessage(error='', data=json_dump(out_message))
+
+
+
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
                       http_method='POST', name='notifications.get')
@@ -2176,21 +2421,18 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        notification_count = 40
+        notification_count = 30
         if request_user.new_notifications:
             new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
+                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(30)
         if request_user.new_notifications:
-            if len(request_user.new_notifications) >= 40:
+            if len(request_user.new_notifications) >= 30:
                 notification_count = 0
             else:
-                notification_count = 40 - len(request_user.new_notifications)
+                notification_count = 30 - len(request_user.new_notifications)
         if request_user.notifications and notification_count > 0:
             notifications_future = Notification.query(Notification.key.IN(
                 request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-        if request_user.hidden_notifications:
-            hidden_notifications_future = Notification.query(Notification.key.IN(
-                request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
         out_notifications = list()
         if request_user.new_notifications:
             new_notifications = new_notification_future.get_result()
@@ -2206,191 +2448,260 @@ class RESTApi(remote.Service):
                 note["new"] = False
                 note["key"] = notify.key.urlsafe()
                 out_notifications.append(note)
-        out_hidden_notifications = list()
-        if request_user.hidden_notifications:
-            hidden_notifications = hidden_notifications_future.get_result()
-            for notify in hidden_notifications:
-                note = notify.to_dict()
-                note["key"] = notify.key.urlsafe()
-                out_hidden_notifications.append(note)
-        out = {'notifications': out_notifications,
-               'hidden_notifications': out_hidden_notifications,
-               'notifications_length': len(request_user.notifications),
-               'hidden_notifications_length': len(request_user.hidden_notifications),
-               'new_notifications_length': len(request_user.new_notifications)}
-        return OutgoingMessage(error='', data=json_dump(out))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
-                      http_method='POST', name='notifications.seen')
-    def see_notification(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["notification"])
-        if key in request_user.new_notifications:
-            request_user.new_notifications.remove(key)
-            request_user.notifications.insert(0, key)
-            request_user.put()
-        return OutgoingMessage(error='', data='OK')
-
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/more_hidden',
-                      http_method='POST', name='notifications.more_hidden')
-    def more_hidden(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        out_hidden_notifications = list()
-        hidden_notifications_future = Notification.query(Notification.key.IN(
-            request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(data + 20)
-        hidden_notifications = hidden_notifications_future.get_result()
-        for notify in hidden_notifications:
-            note = notify.to_dict()
-            note["key"] = notify.key.urlsafe()
-            out_hidden_notifications.insert(0, note)
-        return OutgoingMessage(error='', data=json_dump(out_hidden_notifications))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/more_notifications',
-                      http_method='POST', name='notifications.more_notifications')
-    def more_notifications(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        out_notifications = list()
-        notification_count = 40 + data
-        if request_user.new_notifications:
-            new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40 + data)
-        if request_user.new_notifications:
-            if len(request_user.new_notifications) >= 40 + data:
-                notification_count = 0
-            else:
-                notification_count = 40+data - len(request_user.new_notifications)
-        if request_user.notifications:
-            notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-        out_notifications = []
-        if request_user.notifications:
-            notifications = notifications_future.get_result()
-            for notify in notifications:
-                note = notify.to_dict()
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        if request_user.new_notifications:
-            new_notifications = new_notification_future.get_result()
-            for notify in new_notifications:
-                note = notify.to_dict()
-                note["key"] = notify.key.urlsafe()
-                note["new"] = True
-                out_notifications.append(note)
         return OutgoingMessage(error='', data=json_dump(out_notifications))
 
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hide',
-                      http_method='POST', name='notifications.hide')
-    def hide_notification(self, request):
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/read',
+                      http_method='POST', name='notifications.read')
+    def read_notification(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["notification"])
-        if key in request_user.notifications:
-            request_user.notifications.remove(key)
-            request_user.hidden_notifications.insert(0, key)
-            request_user.put()
-            return OutgoingMessage(error='', data='OK')
-        if key in request_user.new_notifications:
+        for key in request_user.new_notifications:
             request_user.new_notifications.remove(key)
-            request_user.hidden_notifications.insert(0, key)
-            request_user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error='', data='OK')
-
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/unhide',
-                      http_method='POST', name='notifications.unhide')
-    def unhide_notification(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["notification"])
-        if key in request_user.hidden_notifications:
-            request_user.hidden_notifications.remove(key)
             request_user.notifications.insert(0, key)
-            request_user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
+        request_user.put()
+        return OutgoingMessage(error='', data='OK')    
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hidden_notifications',
-                      http_method='POST', name='notifications.hidden_notifications')
-    def hidden_notifications(self, request):
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/update',
+                      http_method='POST', name='notifications.update')
+    def update_notifications(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        hidden_notifications = Notification.query(Notification.key.IN(request_user.hidden_notifications)).fetch()
-        notifications = list()
-        for notification in hidden_notifications:
-            notify = notification.to_dict()
-            notify["key"] = notification.key.urlsafe()
-            notifications.insert(0, notify)
-        return OutgoingMessage(error='', data=json_dump(notifications))
+        if (request_user.new_notifications):
+            new_notifications = Notification.query(Notification.key.IN(
+                request_user.new_notifications)).order(-Notification.timestamp).fetch(15)
+            out = list()
+            for notify in new_notifications:
+                add = notify.to_dict()
+                add["new"] = True
+                add["key"] = notify.key.urlsafe()
+                out.append(add)
+            return OutgoingMessage(error='', data=json_dump(out))
+        return OutgoingMessage(error='', data=json_dump(list()))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
-                      http_method='POST', name='notifications.revoke')
-    def revoke_notification(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["message"])
-        if key in request_user.sent_notifications:
-            futures = list()
-            request_user.sent_notifications.remove(key)
-            futures.append(request_user.put_async())
-            notified_users = User.query(User.notifications == key).fetch_async()
-            new_notified_users = User.query(User.new_notifications == key).fetch_async()
-            hidden_notified_users = User.query(User.hidden_notifications == key).fetch_async()
-            users = notified_users.get_result()
-            for user in users:
-                user.notifications.remove(key)
-                futures.append(user.put_async())
-            users_new = new_notified_users.get_result()
-            for user in users_new:
-                user.new_notifications.remove(key)
-                futures.append(user.put_async())
-            users_hidden = hidden_notified_users.get_result()
-            for user in users_hidden:
-                user.hidden_notifications.remove(key)
-                futures.append(user.put_async())
-            futures.append(key.delete_async())
-            for future in futures:
-                future.get_result()
-        return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/recently_sent',
-                      http_method='POST', name='notifications.recently_sent')
-    def recently_sent_notification(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        if not request_user.sent_notifications:
-            return OutgoingMessage(error='', data=json_dump(''))
-        sent_notifications = Notification.query(Notification.key.IN(request_user.sent_notifications)).order(
-                                                                    -Notification.timestamp).fetch(30)
-        out_message = list()
-        for notification in sent_notifications:
-            note_dict = notification.to_dict()
-            note_dict["key"] = notification.key.urlsafe()
-            out_message.append(note_dict)
-        return OutgoingMessage(error='', data=json_dump(out_message))
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
+    #                   http_method='POST', name='notifications.get')
+    # def get_notifications(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     notification_count = 40
+    #     if request_user.new_notifications:
+    #         new_notification_future = Notification.query(Notification.key.IN(
+    #             request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
+    #     if request_user.new_notifications:
+    #         if len(request_user.new_notifications) >= 40:
+    #             notification_count = 0
+    #         else:
+    #             notification_count = 40 - len(request_user.new_notifications)
+    #     if request_user.notifications and notification_count > 0:
+    #         notifications_future = Notification.query(Notification.key.IN(
+    #             request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+    #     if request_user.hidden_notifications:
+    #         hidden_notifications_future = Notification.query(Notification.key.IN(
+    #             request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
+    #     out_notifications = list()
+    #     if request_user.new_notifications:
+    #         new_notifications = new_notification_future.get_result()
+    #         for notify in new_notifications:
+    #             note = notify.to_dict()
+    #             note["new"] = True
+    #             note["key"] = notify.key.urlsafe()
+    #             out_notifications.append(note)
+    #     if request_user.notifications and notification_count > 0:
+    #         notifications = notifications_future.get_result()
+    #         for notify in notifications:
+    #             note = notify.to_dict()
+    #             note["new"] = False
+    #             note["key"] = notify.key.urlsafe()
+    #             out_notifications.append(note)
+    #     out_hidden_notifications = list()
+    #     if request_user.hidden_notifications:
+    #         hidden_notifications = hidden_notifications_future.get_result()
+    #         for notify in hidden_notifications:
+    #             note = notify.to_dict()
+    #             note["key"] = notify.key.urlsafe()
+    #             out_hidden_notifications.append(note)
+    #     out = {'notifications': out_notifications,
+    #            'hidden_notifications': out_hidden_notifications,
+    #            'notifications_length': len(request_user.notifications),
+    #            'hidden_notifications_length': len(request_user.hidden_notifications),
+    #            'new_notifications_length': len(request_user.new_notifications)}
+    #     return OutgoingMessage(error='', data=json_dump(out))
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/seen',
+    #                   http_method='POST', name='notifications.seen')
+    # def see_notification(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     data = json.loads(request.data)
+    #     key = ndb.Key(urlsafe=data["notification"])
+    #     if key in request_user.new_notifications:
+    #         request_user.new_notifications.remove(key)
+    #         request_user.notifications.insert(0, key)
+    #         request_user.put()
+    #     return OutgoingMessage(error='', data='OK')
+
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/more_hidden',
+    #                   http_method='POST', name='notifications.more_hidden')
+    # def more_hidden(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     data = json.loads(request.data)
+    #     out_hidden_notifications = list()
+    #     hidden_notifications_future = Notification.query(Notification.key.IN(
+    #         request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(data + 20)
+    #     hidden_notifications = hidden_notifications_future.get_result()
+    #     for notify in hidden_notifications:
+    #         note = notify.to_dict()
+    #         note["key"] = notify.key.urlsafe()
+    #         out_hidden_notifications.insert(0, note)
+    #     return OutgoingMessage(error='', data=json_dump(out_hidden_notifications))
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/more_notifications',
+    #                   http_method='POST', name='notifications.more_notifications')
+    # def more_notifications(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     data = json.loads(request.data)
+    #     out_notifications = list()
+    #     notification_count = 40 + data
+    #     if request_user.new_notifications:
+    #         new_notification_future = Notification.query(Notification.key.IN(
+    #             request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40 + data)
+    #     if request_user.new_notifications:
+    #         if len(request_user.new_notifications) >= 40 + data:
+    #             notification_count = 0
+    #         else:
+    #             notification_count = 40+data - len(request_user.new_notifications)
+    #     if request_user.notifications:
+    #         notifications_future = Notification.query(Notification.key.IN(
+    #             request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+    #     out_notifications = []
+    #     if request_user.notifications:
+    #         notifications = notifications_future.get_result()
+    #         for notify in notifications:
+    #             note = notify.to_dict()
+    #             note["key"] = notify.key.urlsafe()
+    #             out_notifications.append(note)
+    #     if request_user.new_notifications:
+    #         new_notifications = new_notification_future.get_result()
+    #         for notify in new_notifications:
+    #             note = notify.to_dict()
+    #             note["key"] = notify.key.urlsafe()
+    #             note["new"] = True
+    #             out_notifications.append(note)
+    #     return OutgoingMessage(error='', data=json_dump(out_notifications))
+
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hide',
+    #                   http_method='POST', name='notifications.hide')
+    # def hide_notification(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     data = json.loads(request.data)
+    #     key = ndb.Key(urlsafe=data["notification"])
+    #     if key in request_user.notifications:
+    #         request_user.notifications.remove(key)
+    #         request_user.hidden_notifications.insert(0, key)
+    #         request_user.put()
+    #         return OutgoingMessage(error='', data='OK')
+    #     if key in request_user.new_notifications:
+    #         request_user.new_notifications.remove(key)
+    #         request_user.hidden_notifications.insert(0, key)
+    #         request_user.put()
+    #         return OutgoingMessage(error='', data='OK')
+    #     return OutgoingMessage(error='', data='OK')
+
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/unhide',
+    #                   http_method='POST', name='notifications.unhide')
+    # def unhide_notification(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     data = json.loads(request.data)
+    #     key = ndb.Key(urlsafe=data["notification"])
+    #     if key in request_user.hidden_notifications:
+    #         request_user.hidden_notifications.remove(key)
+    #         request_user.notifications.insert(0, key)
+    #         request_user.put()
+    #         return OutgoingMessage(error='', data='OK')
+    #     return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/hidden_notifications',
+    #                   http_method='POST', name='notifications.hidden_notifications')
+    # def hidden_notifications(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     hidden_notifications = Notification.query(Notification.key.IN(request_user.hidden_notifications)).fetch()
+    #     notifications = list()
+    #     for notification in hidden_notifications:
+    #         notify = notification.to_dict()
+    #         notify["key"] = notification.key.urlsafe()
+    #         notifications.insert(0, notify)
+    #     return OutgoingMessage(error='', data=json_dump(notifications))
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
+    #                   http_method='POST', name='notifications.revoke')
+    # def revoke_notification(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+    #         return OutgoingMessage(error=INCORRECT_PERMS, data='')
+    #     data = json.loads(request.data)
+    #     key = ndb.Key(urlsafe=data["message"])
+    #     if key in request_user.sent_notifications:
+    #         futures = list()
+    #         request_user.sent_notifications.remove(key)
+    #         futures.append(request_user.put_async())
+    #         notified_users = User.query(User.notifications == key).fetch_async()
+    #         new_notified_users = User.query(User.new_notifications == key).fetch_async()
+    #         hidden_notified_users = User.query(User.hidden_notifications == key).fetch_async()
+    #         users = notified_users.get_result()
+    #         for user in users:
+    #             user.notifications.remove(key)
+    #             futures.append(user.put_async())
+    #         users_new = new_notified_users.get_result()
+    #         for user in users_new:
+    #             user.new_notifications.remove(key)
+    #             futures.append(user.put_async())
+    #         users_hidden = hidden_notified_users.get_result()
+    #         for user in users_hidden:
+    #             user.hidden_notifications.remove(key)
+    #             futures.append(user.put_async())
+    #         futures.append(key.delete_async())
+    #         for future in futures:
+    #             future.get_result()
+    #     return OutgoingMessage(error='', data='OK')
+
+    # @endpoints.method(IncomingMessage, OutgoingMessage, path='message/recently_sent',
+    #                   http_method='POST', name='notifications.recently_sent')
+    # def recently_sent_notification(self, request):
+    #     request_user = get_user(request.user_name, request.token)
+    #     if not request_user:
+    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+    #     if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+    #         return OutgoingMessage(error=INCORRECT_PERMS, data='')
+    #     if not request_user.sent_notifications:
+    #         return OutgoingMessage(error='', data=json_dump(''))
+    #     sent_notifications = Notification.query(Notification.key.IN(request_user.sent_notifications)).order(
+    #                                                                 -Notification.timestamp).fetch(30)
+    #     out_message = list()
+    #     for notification in sent_notifications:
+    #         note_dict = notification.to_dict()
+    #         note_dict["key"] = notification.key.urlsafe()
+    #         out_message.append(note_dict)
+    #     return OutgoingMessage(error='', data=json_dump(out_message))
 
     #-------------------------
     # EVENT ENDPOINTS
@@ -2437,9 +2748,9 @@ class RESTApi(remote.Service):
         notification.content = request_user.first_name + " " + request_user.last_name + " invited to the event: " + event_data["title"]
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
-        notification.link = '/#/app/events/'+new_event.key.urlsafe()
+        notification.link = '#/app/events/'+new_event.put().urlsafe()
         notification.put()
-        future_list = [new_event.put_async(), request_user.put_async()]
+        future_list = [request_user.put_async()]
         add_notification_to_users(notification, users, send_email)
         for item in future_list:
             item.get_result()
@@ -2601,26 +2912,18 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        event_tag = json.loads(request.data)
-        event_key = Event.query(Event.tag == event_tag).get().key
+        event_key = ndb.Key(urlsafe=json.loads(request.data))
+        event = Event.query(Event.key == event_key).get()
         users_future = User.query(User.organization ==
                                   request_user.organization).fetch_async(projection=[User.user_name, User.prof_pic,
                                                                                      User.first_name, User.last_name])
         attendance_data_future = AttendanceData.query(AttendanceData.event == event_key).fetch_async()
-        event_future = Event.query(Event.tag == event_tag).get_async()
         users = users_future.get_result()
         attendance_data = attendance_data_future.get_result()
-        event = event_future.get_result()
         data_list = list()
         for user in users:
             user_dict = user.to_dict()
             user_dict["key"] = user.key
-            if user.key in event.going:
-                user_dict["rsvp"] = 'going'
-            elif user.key in event.not_going:
-                user_dict["rsvp"] = 'not_going'
-            else:
-                user_dict["rsvp"] = 'unknown'
             for att in attendance_data:
                 if att.user == user.key:
                     user_dict["attendance_data"] = att.to_dict()

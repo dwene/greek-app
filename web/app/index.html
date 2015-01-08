@@ -142,6 +142,7 @@
     <script type="text/javascript" src="scripts/factories/authService.js"></script>
     <script type="text/javascript" src="scripts/factories/SessionService.js"></script>
     <script type="text/javascript" src="scripts/factories/httpFactory.js"></script>
+    <script type="text/javascript" src="scripts/factories/notificationFactory.js"></script>
     <!-- endbuild -->
 </head>
 <body ng-app="App" ng-controller="indexController as main" ng-class="$root.color" ng-cloak>
@@ -152,7 +153,7 @@
    
     <header>
         <md-toolbar class="navbar-fixed-top md-whiteframe-z1">
-            <nav class="container" layout="row" layout-align="center center" flex ng-show="$root.showNav === true">
+            <nav class="container" layout="row" layout-align="center center" flex>
                 <div>
                     <a class="navbar-brand" ng-hide="$parent.session.user_name"></a>
                     <md-button aria-label="home button" class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="$parent.session.user_name"></md-button>
@@ -228,7 +229,7 @@
 
         </div>
     </md-sidenav>
-    
+ </div>
     <md-sidenav id="notifications" class="md-sidenav-left md-whiteframe-z3" md-component-id="notifications">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -241,15 +242,15 @@
         </md-toolbar>
         <md-content class="md-padding">
         <ul>
-            <li ng-repeat="notify in notificaitons | orderBy:'-timestamp' | limitTo:25">
-                <span ng-bind="notify.title"></span>
+            <li ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25">
+                <span ng-bind="notify.content"></span>
             </li>
         </ul>
             Notifications can go here.
         </md-content>
     </md-sidenav>
     
-</div>
+
 
 <div ui-view autoscroll="true" id="mainSection"></div>
 

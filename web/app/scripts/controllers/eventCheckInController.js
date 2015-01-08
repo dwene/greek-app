@@ -14,7 +14,7 @@
         function getEventAndSetInfo(events){
             var event = undefined;
             for (var i = 0; i < events.length; i++){
-                if (events[i].tag == $stateParams.tag){
+                if (events[i].key == $stateParams.tag){
                     event = events[i];
                     break;
                 }

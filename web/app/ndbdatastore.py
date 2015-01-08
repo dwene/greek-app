@@ -53,7 +53,10 @@ class User(ndb.Model):
     notifications = ndb.KeyProperty(repeated=True)
     new_notifications = ndb.KeyProperty(repeated=True)
     hidden_notifications = ndb.KeyProperty(repeated=True)
-    sent_notifications = ndb.KeyProperty(repeated=True)
+    messages = ndb.KeyProperty(repeated=True)
+    new_messages = ndb.KeyProperty(repeated=True)
+    archived_messages = ndb.KeyProperty(repeated=True)
+    sent_messages = ndb.KeyProperty(repeated=True)
     events = ndb.KeyProperty(repeated=True)
     recently_used_tags = ndb.StringProperty(repeated=True)
     email_prefs = ndb.StringProperty(default='all')
@@ -71,7 +74,6 @@ class Notification(ndb.Model):
 
 class Message(ndb.Model):
     title = ndb.StringProperty()
-    type = ndb.StringProperty()
     content = ndb.TextProperty()
     sender = ndb.KeyProperty()
     sender_name = ndb.StringProperty()

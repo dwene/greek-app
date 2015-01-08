@@ -6,7 +6,7 @@
             <div class="md-toolbar-tools">
                 <h1>Polls/Surveys</h1>
                 <div flex></div>
-                <md-button ng-href="#/app/newpoll" ng-show="$root.checkPermissions('leadership')">Create New</md-button>
+                <md-button ng-href="#/app/newpoll" ng-show="$parent.$parent.checkPermissions('leadership')">Create New</md-button>
             </div>
         </md-toolbar>
         <md-content class="md-padding">

@@ -1,4 +1,4 @@
-<section id="selectingUsers"> <div class="row"> <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);"> <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead> <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a> </form> <!--
+<section id="selectingUsers"> <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto"></md-progress-circular> <div ng-show="directory"> <div class="row"> <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);"> <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead> <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a> </form> <!--
             <div class="col-sm-6" layout="row" layout-align="center">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
                             <md-input-group class="md-default-theme" >
@@ -17,4 +17,4 @@
                 <div class="btn-group" ng-repeat="tag in org_tags | orderBy : 'name'">
                     <netetag-all ></netetag-all>
                 </div>
---> </ul> </div> <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> </div> </div><!-- /.modal-content --> </div><!-- /.modal-dialog --> </div><!-- /.modal -->  </section>
+--> </ul> </div> <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> </div> </div><!-- /.modal-content --> </div><!-- /.modal-dialog --> </div><!-- /.modal --> </div>  </section>

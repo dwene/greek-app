@@ -37,7 +37,7 @@ App.controller('eventsController', function($scope, RESTService, Load, $rootScop
         function getEvents(){
             $scope.eventSource = [];
             for (var i = 0; i< $scope.events.length; i++){
-                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), tag: $scope.events[i].tag});
+                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), key: $scope.events[i].key});
             }
             $scope.eventsLoaded = true;
         }
@@ -89,7 +89,7 @@ App.controller('eventsController', function($scope, RESTService, Load, $rootScop
             }
         }
         $scope.showEvent = function(event){
-            $location.path('app/events/' + event.tag);
+            $location.path('app/events/' + event.key);
         }
         $scope.$watch('search', function(){
             if ($scope.current){

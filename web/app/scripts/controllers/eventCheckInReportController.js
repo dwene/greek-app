@@ -55,7 +55,7 @@
                     $scope.users = JSON.parse(data.data);
                     $scope.event = undefined;
                     for (var i = 0; i < $scope.events.length; i++){
-                        if ($scope.events[i].tag == $stateParams.tag){
+                        if ($scope.events[i].key == $stateParams.tag){
                             $scope.event = $scope.events[i];
                         }
                     }

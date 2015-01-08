@@ -26,7 +26,7 @@
                     <md-list id="upcomingEvents" class="itemList hover">
                         <md-item ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)">
                             <md-item-content>
-                                <a ng-href="#/app/events/{{event.tag}}">{{event.title}} {{showDate(event.time_start, event.time_end)}}</a>
+                                <a ng-href="#/app/events/{{event.key}}">{{event.title}} {{showDate(event.time_start, event.time_end)}}</a>
                             </md-item-content>
                         </md-item>
                     </md-list>

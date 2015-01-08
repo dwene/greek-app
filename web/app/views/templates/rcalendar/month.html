@@ -32,16 +32,16 @@
             </div>
         </md-toolbar>
         <md-list class="itemList">
-           <md-item ng-repeat="event in selectedDate.events" ng-if="selectedDate.events"  ng-click="eventSelected(event)">
+           <md-item ng-repeat="event in selectedDate.events" ng-if="selectedDate.events">
                <md-item-content>
-                    <div class="md-tile-content">
+                    <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
                         <h3 class="md-primary title">
                             {{event.title}}
                         </h3>
                         <p class="notificationText">{{event.startTime|date: 'hh:mma'}}
                         -
                         {{event.endTime|date: 'hh:mma'}}</p>
-                    </div> 
+                    </a> 
                </md-item-content>
            </md-item>
         </md-list>

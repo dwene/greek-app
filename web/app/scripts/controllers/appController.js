@@ -1,38 +1,46 @@
-App.controller('appController', function($scope, $interval, $rootScope, LoadScreen, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session) {
+App.controller('appController', function($scope, $interval, $rootScope, LoadScreen, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session, Notifications, Directory) {
     routeChange();
-    // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
-    //     .success(function(data){
-    //         console.log('----------THIS LOGIN WORKS----------');
-    //         if (!checkResponseErrors(data)) {LoadScreen.stop();}
-    //         else {LoadScreen.start(); window.location.replace('/#/login');}
-    //     });
-    // $scope.$watch(AuthService.isAuthenticated(), function(){
-    //     $scope.authenticated = AuthService.isAuthenticated();
-    //     console.log($scope.authenticated);
-    // })
-    console.log('session.me', Session.me);
     var notification_update_interval;
     if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)){
-        notification_update_interval = $interval(Inbox.update(), 10000);
+        notification_update_interval = $interval(function(){updates()}, 10000);
     }
     AuthService.cachedLogin();
     $scope.authenticated = AuthService.isAuthenticated();
-
+    
+    $scope.checkPermissions = function(perms){
+        if (!$scope.authenticated){
+            return false;
+        }
+        else{
+            if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)){
+                return false;
+            }
+                return true;
+        }
+    }
+    function updates(){
+        console.log('I am updating!');
+        Inbox.update();
+        Notifications.update();
+    }
     $scope.$on(AUTH_EVENTS.loginSuccess, function(){
         Organization.get();
         Inbox.get();
+        Notifications.get();
         if (!angular.isDefined(notification_update_interval)){
-            $interval(Inbox.update(), 10000);
+            notification_update_interval = $interval(function(){updates()}, 10000);
         }
         $scope.authenticated = true;
     });
     $scope.$on(AUTH_EVENTS.logoutSuccess, function(){
         $scope.authenticated = false;
+        console.log('I am logging out and canceling interval :(');
         if(angular.isDefined(notification_update_interval)){
             $interval.cancel(notification_update_interval);
         }
     });
     $scope.$on('$destroy',function(){
+        console.log('I am getting destroyed :(');
         if(angular.isDefined(notification_update_interval)){
             $interval.cancel(notification_update_interval);
         }

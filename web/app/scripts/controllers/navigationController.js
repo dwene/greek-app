@@ -1,4 +1,4 @@
-App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization, AUTH_EVENTS){
+App.controller('navigationController', function($scope, $http, $rootScope, $location, LoadScreen, Inbox, Session, Organization, Notifications, AUTH_EVENTS){
         routeChange();
         // this.session = Session;
         // this.me = Session.me;
@@ -39,7 +39,13 @@ App.controller('navigationController', function($scope, $http, $rootScope, $loca
         });
         
         $scope.$on('notifications:updated', function(){
-            $scope.notification_count = Inbox.getLengths().unread;
+            var count = 0;
+            for (var i = 0; i < Notifications.notifs.length; i++){
+                if (Notifications.notifs[i].new){
+                    count++;
+                }
+            }
+            $scope.notification_count = count;
         });
 
         $scope.logout = function(){

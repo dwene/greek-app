@@ -43,9 +43,9 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
     //         console.log('Error: ' , data);
     //     });
     
-    // $scope.checkAlumni = function(){
-    //     return $rootScope.checkAlumni();
-    // }
+    $scope.checkAlumni = function(){
+        return Session.perms != 'alumni';
+    }
         
         
     $scope.updateAccount = function(isValid){

@@ -1,5 +1,7 @@
+
 <section id="selectingUsers">
-    
+<md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto;"></md-progress-circular>
+    <div ng-show="directory">
     <div class="row">
           
            <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
@@ -111,5 +113,6 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+</div>
 </div>
 </section>

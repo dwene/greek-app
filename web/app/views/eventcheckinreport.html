@@ -21,12 +21,11 @@
 			<h1>No Shows</h1>
 			<ul>
 				<li ng-repeat="member in noShows | orderBy: 'last_name'| nameSearch:search:0 | limitTo: maxNoShowsLength" class="checkin">
-					<span>{{member.first_name}} {{member.last_name}}</span> - {{member.rsvp}}
+					<span>{{member.first_name}} {{member.last_name}}</span>
 				</li>
 			</ul>
         </div>
 
 </div>
 
-
-<div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>		
+<md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>	

@@ -11,8 +11,8 @@
 STYLING CHANGES:
 Upcoming Events in apphome
 Managemembers/managealumni
-tagging members
 memberdirectory/alumnidirectory
+tagging members
 memberprofile
 eventinfo
 eventcheckin
@@ -26,7 +26,7 @@ I think status max should be shorter, else it doesnt really fit.
 
 //Final/static variables. These variables are used for cookies
 var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-// var ENDPOINTS_DOMAIN = 'http://localhost:9001';
+ // var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 //var ENDPOINTS_DOMAIN = '';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -5528,11 +5528,15 @@ App.directive('selectingUsers', function($rootScope, Directory){
         skipEvent:"=",
         includeUsers:"=?",
         clearUsers:"=?",
-        directory:"=",
     },
     transclude: true,
     link: function (scope, element, attrs) {
         scope.usersList = [];
+        Directory.get();
+        scope.directory = Directory.directory;
+        scope.$on('directory:updated', function(){
+            scope.directory = Directory.directory;
+        });
         scope.selectTagFromTypeAhead = function(tag){
             tag.checked = true;
             scope.selectedTagName="";
