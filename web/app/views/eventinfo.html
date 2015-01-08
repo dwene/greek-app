@@ -7,7 +7,7 @@
                 <h1>{{event.title}}</h1>
             </div>
             <div id="date">{{eventDate(time_start, time_end)}}</div>
-            <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
+            <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" ng-click="back()">
                 <i class="fa fa-arrow-left"></i>
             </md-button>
             <md-button class="more-options" ng-click="saveEvent()" ng-show="$parent.perms == 'leadership' || $parent.perms == 'council'">save</md-button>
