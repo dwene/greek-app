@@ -724,7 +724,7 @@ App.config(function($mdThemingProvider) {
         $rootScope.allTags = [];
         $rootScope.defaultProfilePicture = 'images/defaultprofile.png';
         $rootScope.hasLoaded = false;
-        $rootScope.setColor = function(color){
+        $rootScope.changeTheme = function(color){
             $mdThemingProvider.theme('default').primaryColor(color);
         }
         $rootScope.routeChange = function(){

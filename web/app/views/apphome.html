@@ -51,6 +51,7 @@
     <div class="tabpanel-container" load-directive ng-model="showInbox">
         <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
             <md-content class="md-padding">
+                <span ng-show="inbox.messages < 1">You have a clear inbox!</span>
                 <md-list class="itemList hover">
                   <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | orderBy:'-timestamp' | limitTo: messagesLength) track by notify.key">
                     <div class="isNew md-primary"></div>
@@ -70,6 +71,7 @@
         </div>
         <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
             <md-content class="md-padding">
+               <span ng-show="inbox.archived < 1">You have no archived messages!</span>
                 <md-list class="itemList hover">
                   <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openArchivedDialog(notify, $event)" ng-repeat="notify in (inbox.archived | orderBy:'-timestamp' | limitTo: archivedLength) track by notify.key">
                     <div class="isNew md-primary"></div>

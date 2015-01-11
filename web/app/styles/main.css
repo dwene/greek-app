@@ -1550,7 +1550,7 @@ a:hover {
 }
 md-backdrop.md-opaque.md-default-theme {
   z-index: 1040;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
 }
 .md-dialog-container {
   z-index: 1042;
