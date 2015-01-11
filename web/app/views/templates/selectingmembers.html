@@ -26,7 +26,7 @@
                 <div id="recentTags">
                     <h2 class="page-header">Recent Tags</h2>
                     <div id="theTags">
-                    <div class="btn-group" ng-repeat="tag in ngModel.org_tags | orderBy:'name'">
+                    <div class="btn-group" ng-repeat="tag in tags.org_tags | orderBy:'name'">
                         <netetag-check ng-show="tag.recent"></netetag-check>
                     </div>
                     </div>
@@ -39,13 +39,10 @@
     <ul id="messagingTags">
     <span id="noTags" class="noneSelected" ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</span>
         <span>
-            <div class="btn-group" ng-show="ngModel.org_tags" ng-repeat="tag in orgTagCheck = (ngModel.org_tags | checkedFilter)">
+            <div class="btn-group" ng-show="tags.org_tags" ng-repeat="tag in orgTagCheck = (tags.org_tags | checkedFilter)">
                 <netetag-check></netetag-check>
             </div>
-            <div class="btn-group" ng-show="ngModel.event_tags && !skipEvent" ng-repeat="tag in eventTagCheck = ( ngModel.event_tags | checkedFilter)">
-                    <netetag-check></netetag-check>
-            </div>
-            <div class="btn-group" ng-show="ngModel.perms_tags" ng-repeat="tag in permsTagCheck = (ngModel.perms_tags | checkedFilter)">
+            <div class="btn-group" ng-show="tags.perms_tags" ng-repeat="tag in permsTagCheck = (tags.perms_tags | checkedFilter)">
                     <netetag-check></netetag-check>
             </div>
         </span>
@@ -56,7 +53,7 @@
     <div id="selectedList">
         <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
 
-        <span><netemember-check ng-repeat="tag in $parent.selectedMembers = ( directory.members | tagDirectorySearch:ngModel:usersList) | orderBy: 'last_name'" ng-model="tag" ng-show="tag.checked"></netemember-check></span>
+        <span><netemember-check ng-repeat="tag in $parent.selectedMembers = ( directory.members | tagDirectorySearch:tags:usersList) | orderBy: 'last_name'" ng-model="tag" ng-show="tag.checked"></netemember-check></span>
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers | orderBy: 'last_name'" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>
     </div>
     
@@ -79,17 +76,11 @@
             <ul class="selectTags">
             <div>
                <h2 class="page-header">Organization Tags</h2>
-                <div class="btn-group" ng-repeat="tag in ngModel.org_tags | multipleSearch:modalSearch">
+                <div class="btn-group" ng-repeat="tag in tags.org_tags | multipleSearch:modalSearch">
                     <netetag-check></netetag-check>
                 </div>
-                <div ng-hide="skipEvent">
-                    <h2 class="page-header">Event Tags</h2>
-                    <div class="btn-group" ng-repeat="tag in ngModel.event_tags | multipleSearch:modalSearch">
-                        <netetag-check></netetag-check>
-                    </div>
-                </div>
                 <h2 class="page-header">Preset Tags</h2>
-                <div class="btn-group" ng-repeat="tag in ngModel.perms_tags | multipleSearch:modalSearch">
+                <div class="btn-group" ng-repeat="tag in tags.perms_tags | multipleSearch:modalSearch">
                     <netetag-check></netetag-check>
                 </div>
                 <span ng-show="includeUsers">

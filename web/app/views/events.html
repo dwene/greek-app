@@ -27,7 +27,7 @@
                     </md-tabs>
                 </md-toolbar>
                 <md-list class="itemList">
-                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:order | startFrom:current.currentPage*current.maxPageNumber | limitTo: current.maxPageNumber">
+                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:order ">
                         <md-item-content>
 
                             <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">

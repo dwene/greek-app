@@ -2282,6 +2282,7 @@ class RESTApi(remote.Service):
             out_archived_messages.insert(0, note)
         return OutgoingMessage(error='', data=json_dump(out_archived_messages))
 
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_messages',
                       http_method='POST', name='messages.more_messages')
     def more_messages(self, request):
@@ -2393,7 +2394,7 @@ class RESTApi(remote.Service):
                 future.get_result()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/recently_sent',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/recently_sent',
                       http_method='POST', name='messages.recently_sent')
     def recently_sent_messages(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -2412,7 +2413,22 @@ class RESTApi(remote.Service):
             out_message.append(note)
         return OutgoingMessage(error='', data=json_dump(out_message))
 
-
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/update',
+                      http_method='POST', name='messages.update')
+    def update_messages(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        out_message = list()
+        new_messages = list()
+        if request_user.new_messages:
+            new_messages = Message.query(Message.key.IN(request_user.new_messages)).order(-Message.timestamp).fetch(5)
+        for msg in new_messages:
+            note = msg.to_dict()
+            note["key"] = msg.key.urlsafe()
+            note["new"] = True
+            out_message.append(note)
+        return OutgoingMessage(error='', data=json_dump(out_message))
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
@@ -2792,7 +2808,7 @@ class RESTApi(remote.Service):
         add_notification_to_users(notification, users)
         for item in future_list:
             item.get_result()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump(new_event_key.urlsafe()))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='event/check_tag_availability',
                       http_method='POST', name='event.check_tag_availability')
@@ -2877,7 +2893,7 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_data = json.loads(request.data)
-        event = ndb.Key(urlsafe=request_data["tag"]).get()
+        event = ndb.Key(urlsafe=request_data["key"]).get()
         if event.organization != request_user.organization:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         change = False

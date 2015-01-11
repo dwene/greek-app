@@ -24,7 +24,7 @@ App.factory('Notifications', function(RESTService, $rootScope, localStorageServi
             if (should_call_server){
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/read', '');
             }
-            
+            $rootScope.$broadcast('notifications:updated');
         }
     }
     item.update = function(data){
@@ -65,10 +65,6 @@ App.factory('Notifications', function(RESTService, $rootScope, localStorageServi
         });
     }
     item.get = function () {
-        if (item.hasLoaded){
-            return;
-        }
-        item.hasLoaded = true;
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
         .success(function(data){
             if (!RESTService.hasErrors(data)){

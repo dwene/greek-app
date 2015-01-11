@@ -1,4 +1,4 @@
-App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
+App.factory('Inbox', function (RESTService, $rootScope, localStorageService, $q, $mdToast){
     var inbox = {};
     inbox.hasLoaded = false;
     inbox.data = {};
@@ -18,8 +18,43 @@ App.factory('Inbox', function(RESTService, $rootScope, localStorageService, $q){
         inbox.data = {};
     }
     inbox.update = function(data){
-        //inbox.data = data;
-        //$rootScope.$broadcast('inbox:updated');
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/messages/update', '')
+        .success(function(data){
+            if (!RESTService.hasErrors(data)){
+                if (inbox.data.messages){
+                    var should_add = true;
+                    var new_messages = JSON.parse(data.data);
+                    console.log(new_messages);
+                    var has_changed = false;
+                    for (var i = 0; i < new_messages.length; i++){
+                        should_add = true;
+                        for (var j = 0; j < inbox.data.messages.length; j++){
+                            if (new_messages[i].key == inbox.data.messages[j].key){
+                                should_add = false;
+                                break;
+                            }
+                        }
+                        if (should_add){
+                            has_changed = true;
+                            inbox.data.messages.push(new_messages[i]);
+                            console.log('new message with data', new_messages[i]);
+                            $mdToast.show($mdToast.simple().content('New Message from '+ new_messages[i].sender_name));
+                        }
+                        
+                    }
+                    if (has_changed){
+                        console.log('messages:updated');
+                        $rootScope.$broadcast('messages:updated');
+                    }
+                }
+            }
+            else{
+                console.log('Err', data);
+            }
+        })
+        .error(function(data) {
+                console.log('Error: ' , data);
+        });
     }
     inbox.get = function () {
         //console.log('calling messages get');

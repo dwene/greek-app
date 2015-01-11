@@ -1,7 +1,5 @@
 App.controller('newEventController', function($scope, RESTService, $rootScope, Load, $timeout, localStorageService, Tags) {
         routeChange();
-            Tags.get();
-            $scope.tags = Tags.tags;
             $scope.event = {};
             $scope.event.tag = '';
             $scope.$watch('event.tag', function() {
@@ -33,7 +31,8 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     .success(function(data){
                         if (!RESTService.hasErrors(data)){
                             $scope.working = 'done';
-                            setTimeout(function(){window.location.assign('#/app/events/'+event.key);},500);
+                            JSON.parse(data.data);
+                            setTimeout(function(){window.location.assign('#/app/events/'+JSON.parse(data.data));},500);
                         }
                         else{
                             $scope.working = 'broken';

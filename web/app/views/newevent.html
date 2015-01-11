@@ -7,7 +7,7 @@
     </md-toolbar>
     <md-content class="md-padding">
     <br>
-    <selecting-users ng-model="tags" skip-event="true"></selecting-users>
+    <selecting-users tags="tags"></selecting-users>
     <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
         <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
@@ -41,10 +41,10 @@
         <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))}">
             <label for="date_end" class="col-xs-12 col-sm-2 control-label">End</label>
             <div class="col-xs-6 col-sm-5">
-                <date-picker id="dateendPicker" name="date_end" ng-model="event.date_end"></date-picker>
+                <date-picker id="dateendPicker" name="date_end" ng-model="event.date_end" required></date-picker>
             </div>
             <div class="col-xs-6 col-sm-5">
-                <time-picker id="timeendPicker" name="time_end" ng-model="event.time_end"></time-picker>
+                <time-picker id="timeendPicker" name="time_end" ng-model="event.time_end" required></time-picker>
             </div>
             <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
         </div>

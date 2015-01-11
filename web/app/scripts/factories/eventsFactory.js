@@ -34,7 +34,7 @@ App.factory('Events', function(RESTService, $rootScope, localStorageService, $q,
     //     events = undefined;
     // }
     item.refresh = function(){
-        cacheTimestamp = undefined;
+        item.cacheTimestamp = undefined;
         item.get();
     }
     item.check = function(){

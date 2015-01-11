@@ -3,22 +3,22 @@
         Directory.get();
         Tags.get();
         Events.get();
-        $scope.loading = true;
-        $scope.tags = Tags.tags;
         $scope.events = Events.events;
         $scope.directory = Directory.directory;
-
+        $scope.tags = Tags.tags;
+        $scope.loading = true;
         getEventAndSetInfo($scope.events);
-        $scope.$on('tags:updated', function(){
-            $scope.tags = Tags.tags;
-            getEventAndSetInfo($scope.events);
-        });
         $scope.$on('directory:updated', function(){
             $scope.directory = Directory.directory;
             getEventAndSetInfo($scope.events);
         });
         $scope.$on('events:updated', function(){
             $scope.events = Events.events;
+            getEventAndSetInfo($scope.events);
+        });
+        $scope.$on('tags:updated', function(){
+            $scope.tags = Tags.tags;
+            console.log('tags I got', $scope.tags);
             getEventAndSetInfo($scope.events);
         });
 	   // });
@@ -84,19 +84,13 @@
                return;
             }
         }
-        event.going_list = []
-        event.not_going_list = []
-        for (var i = 0; i < event.going.length; i++){
-            event.going_list.push(getUsersFromKey(event.going[i]));
-        }
-        for (var i = 0; i < event.not_going.length; i++){
-            event.not_going_list.push(getUsersFromKey(event.not_going[i]));
-        }
         $scope.event = event;
-        $scope.time_start = momentInTimezone($scope.event.time_start).format('hh:mm A');
+        $scope.time_start = momentInTimezone($scope.event.time_start).format('h:mm A');
         $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
-        $scope.time_end = momentInTimezone($scope.event.time_end).format('hh:mm A');  
-        $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');  
+        $scope.time_end = momentInTimezone($scope.event.time_end).format('h:mm A');  
+        $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY'); 
+        console.log($scope.time_start);
+        console.log($scope.time_end); 
 
         for (var i = 0; i < $scope.tags.org_tags.length; i++){
             for (var j = 0; j < $scope.event.tags.org_tags.length; j++){
@@ -118,16 +112,18 @@
     $scope.submitEdits = function(isValid){
         if (isValid){
             $scope.working = 'pending';
+            console.log('new time_start', $scope.date_start + " " + $scope.time_start);
+            console.log('new time_end', $scope.date_end + " " + $scope.time_end);
             var to_send = JSON.parse(JSON.stringify($scope.event));
             to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
             to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
             to_send.tags = getCheckedTags($scope.tags);
             console.log(to_send.tags);
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', to_send)
             .success(function(data){
                 if (!RESTService.hasErrors(data)){
                     $scope.working = "done";
-                    $lcoation.url('app/events');
+                    $location.url('app/events');
                 }
                 else{
                     $scope.working = "broken";
