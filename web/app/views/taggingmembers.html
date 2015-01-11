@@ -140,8 +140,8 @@
                     <netetag-all ></netetag-all>
                 </div>
             </ul>
-                <form layout="row" id="addTagForm" name="addTagForm" ng-submit="addOrganizationTag(item.tag)">
-                      <md-text-float label="Tag Name" ng-model="item.tag" flex></md-text-float>
+                <form layout="row" id="addTagForm" name="addTagForm" ng-submit="addOrganizationTag(new_tag)">
+                      <md-text-float label="Tag Name" ng-model="new_tag" flex></md-text-float>
                         <md-button type="submit">Add Tag</md-button>
                 </form>
       </div>

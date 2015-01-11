@@ -11,7 +11,7 @@ App.controller('notificationController', function($scope, $http, $rootScope, $lo
                 }
             }
         });   
-
+        
         $scope.readNotifications = function(){
         }
     });

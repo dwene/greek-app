@@ -140,16 +140,32 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
             }
 
         }
+
     $scope.getOrganizationTags();
+    function spliceSlice(str, index, count, add) {
+        return str.slice(0, index) + (add || "") + str.slice(index + count);
+    }
     $scope.addOrganizationTag = function(tag){
+        var real_tag = tag.toLowerCase().replace(/ /g,'');
+        var i = 0;
+        while(i < real_tag.length){
+            if (i >= real_tag.length){
+                break;
+            }
+            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._".indexOf(real_tag[i]) == -1){
+                real_tag = spliceSlice(real_tag, i, 1, '');
+                i--;
+            }
+            i++;
+        }
         $scope.addTagLoading = 'loading';
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_organization_tag', {tag: tag})
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_organization_tag', {tag: real_tag})
         .success(function(data){
             if (!RESTService.hasErrors(data))
             {
                 $scope.addTagLoading = 'done';
-                if ($scope.tags.org_tags.indexOf({name: tag}) == -1){
-                    $scope.tags.org_tags.push({name:tag, checked:true, recent:true});
+                if ($scope.tags.org_tags.indexOf({name: real_tag}) == -1){
+                    $scope.tags.org_tags.push({name:real_tag, checked:true, recent:true});
 //                    Tags.set($scope.tags);
                     $("#seeallTags input").val("");
                 }

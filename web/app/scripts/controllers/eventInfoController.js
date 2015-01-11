@@ -15,32 +15,31 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         }
         
         
-            $scope.showEventoptions = function(event){
-    
-                $mdBottomSheet.show({
-                  templateUrl: 'views/templates/bottomGrid.html',
-                  controller: eventOptionsCtrl,
-                  targetEvent: event
-                });
-            }
+        $scope.showEventoptions = function(event){
+            $mdBottomSheet.show({
+              templateUrl: 'views/templates/bottomGrid.html',
+              controller: eventOptionsCtrl,
+              targetEvent: event
+            });
+        }
 
-            function eventOptionsCtrl($scope, $mdBottomSheet) {
-                $scope.items = [
-                    { name: 'CHECKINS', icon: 'fa-sign-in'},
-                    { name: 'REPORT', icon: 'fa-bar-chart'},
-                    { name: 'EDIT', icon: 'fa-edit' },
-                    { name: 'SAVE', icon: 'fa-floppy-o' }
-                ];
-                $scope.itemClick = function(item){
-                    switch(item.name){
-                        case 'CHECKINS': $location.url("app/events/" + $stateParams.tag + "/checkin"); break;
-                        case 'REPORT': $location.url("app/events/" + $stateParams.tag + "/report"); break;
-                        case 'EDIT': $location.url('app/events/'+$stateParams.tag+'/edit'); break;
-                        case 'SAVE': saveEvent(); break;
-                    }
-                    $mdBottomSheet.hide();
+        function eventOptionsCtrl($scope, $mdBottomSheet) {
+            $scope.items = [
+                { name: 'CHECKINS', icon: 'fa-sign-in'},
+                { name: 'REPORT', icon: 'fa-bar-chart'},
+                { name: 'EDIT', icon: 'fa-edit' },
+                { name: 'SAVE', icon: 'fa-floppy-o' }
+            ];
+            $scope.itemClick = function(item){
+                switch(item.name){
+                    case 'CHECKINS': $location.url("app/events/" + $stateParams.tag + "/checkin"); break;
+                    case 'REPORT': $location.url("app/events/" + $stateParams.tag + "/report"); break;
+                    case 'EDIT': $location.url('app/events/'+$stateParams.tag+'/edit'); break;
+                    case 'SAVE': saveEvent(); break;
                 }
-            };
+                $mdBottomSheet.hide();
+            }
+        };
         
         
         

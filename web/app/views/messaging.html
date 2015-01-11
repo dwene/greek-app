@@ -14,9 +14,9 @@
         <div role="tabpanel" id="sendMessage-content" aria-labelledby="sendMessage" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
                 
         <md-content class="md-padding">
-            <selecting-users ng-model="tags" include-users="true" clear-users="clearUsers" directory="directory"></selecting-users>
+            <selecting-users tags="tags" include-users="true" clear-users="clearUsers"></selecting-users>
                 <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>
-                    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)">
+                    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
                         <label for="title">Message Title</label>
                         <md-input ng-model="title" name="title" autocomplete="off" required></md-input>
                         <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>

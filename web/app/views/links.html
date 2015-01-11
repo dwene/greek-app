@@ -14,9 +14,9 @@
                         <md-toolbar>
                             <div class="md-toolbar-tools">
                                 <h1 flex>{{group}}</h1>
-                                <div class="linkButtons">
-                                    <md-button class="btn-touch" ng-click="openRenameGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-edit fa-fw"></i></md-button>
-                                    <md-button class="btn-touch" ng-click="openDeleteGroupModal(group)" ng-show="$root.checkPermissions(leadership)"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                <div class="linkButtons" ng-show="$root.checkPermissions('leadership')">
+                                    <md-button class="btn-touch" ng-click="openRenameGroupModal(group)"><i class="fa fa-edit fa-fw"></i></md-button>
+                                    <md-button class="btn-touch" ng-click="openDeleteGroupModal(group)"><i class="fa fa-trash-o fa-fw"></i></md-button>
                                 </div>
                             </div>
                         </md-toolbar>
@@ -24,7 +24,7 @@
                             <md-item ng-href="http://{{link.link}}" ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
                                 <div layout="row" layout-align="space-between center" layout-margin>
                                     <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
-                                    <div ng-show="$root.checkPermissions(leadership)">
+                                    <div ng-show="$root.checkPermissions('leadership')">
                                         <md-button class="btn-touch" ng-click="openEditLinkModal(link)"><i class="fa fa-edit fa-fw"></i></md-button>
                                         <md-button class="btn-touch" ng-click="openDeleteLinkModal(link)"><i class="fa fa-trash-o fa-fw"></i></md-button>
                                     </div>

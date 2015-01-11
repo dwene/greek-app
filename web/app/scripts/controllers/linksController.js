@@ -1,7 +1,12 @@
 App.controller('LinksController', function($scope, $rootScope, RESTService, Load, localStorageService, Links, Organization){
         routeChange();
             Organization.get();
-            $scope.groups = Organization.organization.link_groups;
+            if (Organization.organization){
+                $scope.groups = Organization.organization.link_groups;
+            }
+            $scope.$on('organization:updated', function(){
+                $scope.groups = Organization.organization.link_groups;
+            });
             Links.get();
             $scope.links = Links.links;
             if ($scope.links){
@@ -108,9 +113,9 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     if (!RESTService.hasErrors(data)){
                         $('#deleteLinkModal').modal('hide');
                         $scope.checkDeleteLink = "done";
-                        for(var i = 0; i<$rootScope.links.length; i++){
-                            if ($rootScope.links[i].key == link.key){
-                                $rootScope.links.splice(i, 1); 
+                        for(var i = 0; i<$scope.links.length; i++){
+                            if ($scope.links[i].key == link.key){
+                                $scope.links.splice(i, 1); 
                                 break;
                             }
                         }

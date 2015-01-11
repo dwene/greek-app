@@ -1,4 +1,4 @@
-App.factory('Organization', function(RESTService, localStorageService, $q, $timeout){
+App.factory('Organization', function($rootScope, RESTService, localStorageService, $q, $timeout){
     var item = {};
     var load_data = localStorageService.get('organization_data');
     if (load_data){
@@ -13,6 +13,7 @@ App.factory('Organization', function(RESTService, localStorageService, $q, $time
                 if (!RESTService.hasErrors(data)){
                     item.organization = JSON.parse(data.data);
                     localStorageService.set('organization_data', item.organization);
+                    $rootScope.$broadcast('organization:updated');
                     item.me = item.organization.me;
                 }
                 else{

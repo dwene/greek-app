@@ -82,6 +82,7 @@
     <script src="scripts/vendor/jquery.Jcrop.min.js"></script>
     <script src="scripts/vendor/profilepic.js"></script>
     <script src="scripts/vendor/ng-infinite-scroll.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
     <script type="text/javascript" src="scripts/vendor/ngAutocomplete.js"></script>
     <script type="text/javascript" src="scripts/vendor/ng-google-chart.js"></script>
     <script type="text/javascript" src="scripts/vendor/angular-local-storage.js"></script>
@@ -178,58 +179,57 @@
 
     <md-sidenav id="menu" class="md-sidenav-right md-whiteframe-z3" md-component-id="sidenav">
         <div layout="column" layout-fill>
-         
-        <md-toolbar class="md-tall">
-            <div class="md-toolbar-tools">
-                    <img class="face" ng-src="{{prof_pic}}" ng-click="goToMe()">
-                    <span id="details" ng-click="goToMe()">
-                        <p id="name">{{name}}</p>
-                        <p>{{email}}</p>
-                    </span>
-                <span flex></span>
-                <md-button class="btn-touch" ng-click="toggleSidenav()" aria-label="close">
-                    <i class="fa fa-times"></i>
-                </md-button>
-            </div>
-            <md-tabs md-selected="menu.selectedIndex">
-                <md-tab id="menuTab" aria-controls="menuTab-content">
-                    Menu
-                </md-tab>
-                <md-tab id="settingsTab" aria-controls="settingsTab-content">
-                    Account
-                </md-tab>
-            </md-tabs>
-        </md-toolbar>
+            <md-toolbar class="md-tall">
+                <div class="md-toolbar-tools">
+                        <img class="face" ng-src="{{prof_pic}}" ng-click="goToMe()">
+                        <span id="details" ng-click="goToMe()">
+                            <p id="name">{{name}}</p>
+                            <p>{{email}}</p>
+                        </span>
+                    <span flex></span>
+                    <md-button class="btn-touch" ng-click="toggleSidenav()" aria-label="close">
+                        <i class="fa fa-times"></i>
+                    </md-button>
+                </div>
+                <md-tabs md-selected="menu.selectedIndex">
+                    <md-tab id="menuTab" aria-controls="menuTab-content">
+                        Menu
+                    </md-tab>
+                    <md-tab id="settingsTab" aria-controls="settingsTab-content">
+                        Account
+                    </md-tab>
+                </md-tabs>
+            </md-toolbar>
 
-        <div class="tabpanel-container">
-            <div role="tabpanel" id="menuTab-content" class="fadingIn" aria-labelledby="menuTab" ng-show="menu.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
-                <md-content class="md-padding">
-                    <ul class="nav">
-                        <li ng-click="toggleSidenav('app/home')"><md-button class="md-primary"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
-                        <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary"><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
-                        <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
-                        <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
-                        <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
-                        <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>
-                    </ul>
-                </md-content>
+            <div class="tabpanel-container">
+                <div role="tabpanel" id="menuTab-content" class="fadingIn" aria-labelledby="menuTab" ng-show="menu.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()">
+                    <md-content class="md-padding">
+                        <ul class="nav">
+                            <li ng-click="toggleSidenav('app/home')"><md-button class="md-primary"><i class="fa fa-home fa-fw"></i> Home</md-button></li>
+                            <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary"><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
+                            <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary"><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>
+                            <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
+                            <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
+                            <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary"><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>
+                        </ul>
+                    </md-content>
+                </div>
+                <div role="tabpanel" id="setingsTab-content" class="fadingIn" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
+                    <md-content class="md-padding">
+                        <ul class="nav">
+                            <li ng-click="toggleSidenav('app/accountinfo')"><md-button class="md-primary"><i class="fa fa-user fa-fw"></i> Info</md-button></li>
+                            <li ng-click="toggleSidenav('app/managemembers')" ng-show="$parent.checkPermissions('leadership')"><md-button class="md-primary"><i class="fa fa-users fa-fw"></i> Members</md-button></li>
+                            <li ng-click="toggleSidenav('app/managealumni')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
+                            <li ng-click="toggleSidenav('app/admin')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary"><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
+                            <li ng-click="toggleSidenav()"><md-button ng-click="logout()" class="md-primary"><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
+                        </ul>
+                    </md-content>
+                </div>
             </div>
-            <div role="tabpanel" id="setingsTab-content" class="fadingIn" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()">
-                <md-content class="md-padding">
-                    <ul class="nav">
-                        <li ng-click="toggleSidenav('app/accountinfo')"><md-button class="md-primary"><i class="fa fa-user fa-fw"></i> Info</md-button></li>
-                        <li ng-click="toggleSidenav('app/managemembers')" ng-show="$parent.checkPermissions('leadership')"><md-button class="md-primary"><i class="fa fa-users fa-fw"></i> Members</md-button></li>
-                        <li ng-click="toggleSidenav('app/managealumni')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary"><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
-                        <li ng-click="toggleSidenav('app/admin')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary"><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
-                        <li ng-click="toggleSidenav()"><md-button ng-click="logout()" class="md-primary"><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
-                    </ul>
-                </md-content>
-            </div>
-        </div>
 
         </div>
     </md-sidenav>
- </div>
+    
     <md-sidenav id="notifications" class="md-sidenav-left md-whiteframe-z3" md-component-id="notifications">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -249,7 +249,7 @@
         </md-content>
     </md-sidenav>
     
-
+</div>
 
 <div ui-view autoscroll="true" id="mainSection"></div>
 
