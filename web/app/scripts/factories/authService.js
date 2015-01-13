@@ -12,6 +12,13 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
             var creds = {USER_NAME: credentials.user_name.toLowerCase(), TOKEN: parsed_data.token};
             localStorageService.set('credentials', creds);
             Session.create(credentials.user_name, parsed_data.token, parsed_data.me);
+            Inbox.destroy();
+            Directory.destroy();
+            Events.destroy();
+            Tags.destroy();
+            Polls.destroy();
+            Links.destroy();
+            Organization.destroy();
             return credentials.user_name;
         }
       })

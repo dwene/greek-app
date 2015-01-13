@@ -757,10 +757,10 @@ App.config(function($mdThemingProvider) {
         else{
             $rootScope.color = 'default';
         }
-        $rootScope.$on('organization:updated', function(){
-            console.log('I changed');
-            $rootScope.color = Organization.organization.color;
-        })
+        // $rootScope.$on('organization:updated', function(){
+        //     console.log('I changed');
+        //     $rootScope.color = Organization.organization.color;
+        // })
         $rootScope.$state = $state;
         // $rootScope.color = 'color1';
         // $rootScope.perms = 'alumni';

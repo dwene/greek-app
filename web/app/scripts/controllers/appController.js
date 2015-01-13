@@ -1,4 +1,4 @@
-App.controller('appController', function($scope, $interval, $rootScope, LoadScreen, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session, Notifications, Directory) {
+App.controller('appController', function($scope, $interval, $rootScope, $timeout, LoadScreen, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session, Notifications, Directory) {
     routeChange();
     var notification_update_interval;
     if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)){
@@ -6,7 +6,6 @@ App.controller('appController', function($scope, $interval, $rootScope, LoadScre
     }
     AuthService.cachedLogin();
     $scope.authenticated = AuthService.isAuthenticated();
-    
     $scope.checkPermissions = function(perms){
         if (!$scope.authenticated){
             return false;
@@ -32,6 +31,14 @@ App.controller('appController', function($scope, $interval, $rootScope, LoadScre
         }
         $scope.authenticated = true;
     });
+    $scope.$on('organization:updated', function(){
+        if ($rootScope.color != Organization.organization.color){
+            $scope.authenticated = false;
+            $rootScope.color = Organization.organization.color;
+            $timeout(function(){$scope.authenticated = AuthService.isAuthenticated();}, 250); 
+        }
+        
+    })
     $scope.$on(AUTH_EVENTS.logoutSuccess, function(){
         $scope.authenticated = false;
         console.log('I am logging out and canceling interval :(');
