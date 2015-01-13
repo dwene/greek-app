@@ -13,8 +13,9 @@ App.factory('Organization', function($rootScope, RESTService, localStorageServic
                 if (!RESTService.hasErrors(data)){
                     item.organization = JSON.parse(data.data);
                     localStorageService.set('organization_data', item.organization);
-                    $rootScope.$broadcast('organization:updated');
                     item.me = item.organization.me;
+                    $rootScope.$broadcast('organization:updated');
+                    console.log('I broadcasted');
                 }
                 else{
                     console.log('Err', data);

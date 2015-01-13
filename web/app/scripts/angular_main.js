@@ -686,6 +686,7 @@ App.config(function($mdThemingProvider) {
             Tags.destroy();
             Polls.destroy();
             Links.destroy();
+            Organization.destroy();
             localStorageService.clearAll();
             $.removeCookie('FORM_INFO_EMPTY');
             $rootScope.directory = {};
@@ -746,10 +747,18 @@ App.config(function($mdThemingProvider) {
             }
         }
         if (Organization.organization){
-            $rootScope.color = Organization.organization.color;
+            if (Organization.organization.color){
+                $rootScope.color = Organization.organization.color;
+            }
+            else{
+                $rootScope.color = 'default';
+            }
         }
-        
+        else{
+            $rootScope.color = 'default';
+        }
         $rootScope.$on('organization:updated', function(){
+            console.log('I changed');
             $rootScope.color = Organization.organization.color;
         })
         $rootScope.$state = $state;
