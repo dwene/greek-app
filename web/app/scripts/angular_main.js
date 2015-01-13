@@ -637,7 +637,9 @@ App.config(function($mdThemingProvider) {
         //         return false;
         //     }
         // });
-
+        $rootScope.$on('organization:updated', function(){
+            $rootScope.color = Organization.color;
+        })
         $rootScope.$on('$stateChangeStart', function (event, next) {
             if (!next.data){console.log("I am going somewhere with no data", next); return;}
             if (!AuthService.loginAttempted()){console.log("I am ignoring the fact I cant be here", next); return;}
@@ -1887,36 +1889,29 @@ App.filter('tagDirectorySearch', function(){
     return function (objects, tags, additionalUsers) {
             var tags_list = []
         if (tags){
-        if (tags.org_tags){
-            for (var i = 0; i < tags.org_tags.length; i++){
-                if (tags.org_tags[i].checked){
-                    tags_list.push(tags.org_tags[i].name);
-                }
-            }
-        }
-        if (tags.perms_tags){
-            for (var j = 0; j < tags.perms_tags.length; j++){
-                if (tags.perms_tags[j].checked){
-                    if (tags.perms_tags[j].name == "Everyone"){
-                        tags_list.push("member");
-                        tags_list.push("leadership");
-                        tags_list.push("council");
+            if (tags.org_tags){
+                for (var i = 0; i < tags.org_tags.length; i++){
+                    if (tags.org_tags[i].checked){
+                        tags_list.push(tags.org_tags[i].name);
                     }
-                    else if (tags.perms_tags[j].name == "Members"){
-                        tags_list.push("member");
+                }
+            }
+            if (tags.perms_tags){
+                for (var j = 0; j < tags.perms_tags.length; j++){
+                    if (tags.perms_tags[j].checked){
+                        if (tags.perms_tags[j].name == "Everyone"){
+                            tags_list.push("member");
+                            tags_list.push("leadership");
+                            tags_list.push("council");
+                        }
+                        else if (tags.perms_tags[j].name == "Members"){
+                            tags_list.push("member");
+                        }
+                        else{
+                        tags_list.push(tags.perms_tags[j].name)}
                     }
-                    else{
-                    tags_list.push(tags.perms_tags[j].name)}
                 }
             }
-        }
-        if (tags.event_tags){
-            for (var i = 0; i < tags.event_tags.length; i++){
-                if (tags.event_tags[i].checked){
-                    tags_list.push(tags.event_tags[i].name);
-                }
-            }
-        }
         }
             out_string = '';
             for (var j = 0; j < tags_list.length; j++){
@@ -1940,10 +1935,6 @@ App.filter('tagDirectorySearch', function(){
                         break;
                     }
                     else if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
-                        retList.push(object);
-                        break;
-                    }
-                    else if(object.event_tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
                         retList.push(object);
                         break;
                     }
