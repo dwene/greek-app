@@ -601,6 +601,15 @@ App.config(function($mdThemingProvider) {
         'contrastDarkColors': ['50', '100', '200','300','400','A100'],
         'contrastLightColors': undefined
     });
+    $mdThemingProvider.theme('blue').primaryColor('blue');
+    $mdThemingProvider.theme('red').primaryColor('red');
+    $mdThemingProvider.theme('purple').primaryColor('purple');
+    $mdThemingProvider.theme('pink').primaryColor('pink');
+    $mdThemingProvider.theme('orange').primaryColor('orange');
+    $mdThemingProvider.theme('green').primaryColor('green');
+    $mdThemingProvider.theme('brown').primaryColor('brown');
+    $mdThemingProvider.theme('gray').primaryColor('gray');
+    
 });
 
 //Set up run commands for the app
@@ -636,8 +645,7 @@ App.config(function($mdThemingProvider) {
         //     } else {
         //         return false;
         //     }
-        // });
-
+        // });  
         $rootScope.$on('$stateChangeStart', function (event, next) {
             if (!next.data){console.log("I am going somewhere with no data", next); return;}
             if (!AuthService.loginAttempted()){console.log("I am ignoring the fact I cant be here", next); return;}
@@ -708,6 +716,24 @@ App.config(function($mdThemingProvider) {
             }
         });
 
+        
+        $rootScope.changeTheme = function(color){
+            $rootScope.color = color;
+            
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {color: $rootScope.color})
+                .success(function(data){
+                    if (!RESTService.hasErrors(data))
+                    {
+                    }
+                    else{
+                        $scope.error = true;    
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ' + JSON.stringify(data));
+                });
+            
+        }
         $rootScope.checkPermissions = function(perms){
             if (!AuthService.isAuthenticated()){
                 return false;

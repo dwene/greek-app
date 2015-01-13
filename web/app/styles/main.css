@@ -740,16 +740,6 @@ textarea.form-control {
   display: inline;
 }
 /*Main App Page*/
-#notifications ul {
-  padding: 5px 0px;
-  height: 380px;
-}
-#notifications h1 {
-  margin-bottom: 0px;
-}
-#notifications .card-header {
-  padding-left: 20px;
-}
 @media screen and (min-width: 768px) {
   #notifications .card-header {
     margin: 0px;
@@ -774,119 +764,6 @@ background-image: -moz-linear-gradient(top,#fff 0,#f8f8f8 100%);
 background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
 background-repeat: repeat-x;
 */
-.notification:hover {
-  background: #f6f6f6;
-}
-.notificationContent .close {
-  font-size: 18px;
-  height: 44px;
-  width: 44px;
-  top: -8px;
-  right: -8px;
-  position: absolute;
-  z-index: 100;
-  padding: 5px;
-}
-.notificationTitle {
-  font-weight: bold;
-  height: 22px;
-  font-size: 18px;
-  line-height: 22px;
-  padding-left: 20px;
-  margin-left: -20px;
-  margin-bottom: 0px;
-  display: block;
-  overflow: hidden;
-  margin-top: -4px;
-}
-.notificationTitle i {
-  font-size: 12px;
-  position: absolute;
-  left: -15px;
-  top: 3px;
-  display: none;
-}
-.unread {
-  display: none;
-}
-.notification.new .notificationTitle .unread {
-  display: block;
-  position: absolute;
-  font-size: 42px;
-  left: 2px;
-  top: 50%;
-  margin-top: -21px;
-}
-.notificationTitle,
-.notificationType,
-.notificationSender {
-  width: 100%;
-  display: inline-block;
-}
-.notificationSender {
-  font-size: 12px;
-  font-style: italic;
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
-  text-align: right;
-}
-#notificationModal .modal-title {
-  font-weight: bold;
-  font-size: 18px;
-}
-#notificationModal .notificationSender {
-  font-size: 14px;
-  position: absolute;
-  bottom: 0px;
-  right: 15px;
-}
-#showHidden {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-#showHidden ul {
-  min-height: 380px;
-}
-#showHiddenButton {
-  margin-top: 20px;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  background: none;
-}
-.pagerButtons {
-  margin: 5px 0px;
-  height: 30px;
-}
-.pagerButtons .btn-default[disabled] {
-  border-color: #BBB !important;
-  color: #BBB !important;
-}
-.pagerButtons .previous {
-  float: left;
-  margin-left: 5px;
-}
-.pagerButtons .next {
-  float: right;
-  margin-right: 5px;
-}
-.pagerButtons .previous,
-.pagerButtons .next {
-  background: none;
-  border: 2px solid black;
-  font-weight: bolder;
-  border-radius: 36px;
-}
-.notificationCount {
-  margin: 0 auto;
-  display: block;
-  line-height: 30px;
-  width: 160px;
-  color: white;
-  border-radius: 5px;
-  font-weight: bold;
-}
 /*Register organization page*/
 #registerButtonContainer {
   text-align: center;
@@ -1491,23 +1368,6 @@ div#cropped-image {
   width: 150px;
   overflow: hidden;
 }
-/*Color Options*/
-/*Color Theme 1 Main: #003663, Accent: #002340*/
-/*Color Theme 2 Main: #5F77BF, Accent: #3F4F7F*/
-/*Color Theme 3 Main: #005826, Accent: #00401C */
-/*Color Theme 4 Main: #487F48, Accent: #244024*/
-/*Color Theme 5 Main: #32004B, Accent: #2A0040*/
-/*Color Theme 6 Main: #8F5D91, Accent: #503452*/
-/*Color Theme 7 Main: #ED145B, Accent: #7F0B31*/
-/*Color Theme 8 Main: #F26C9D, Accent: #7F3952*/
-/*Color Theme 9 Main: #630F00 , Accent: #3D0900*/
-/*Color Theme 10 Main: #C72A26, Accent: #871D1A*/
-/*Color Theme 11 Main: #91390E, Accent: #522008*/
-/*Color Theme 12 Main: #FF6100, Accent: #7F3000*/
-/*Color Theme 13 Main: #FFC100, Accent: #E59F00*/
-/*Color Theme 14 Main: #2E9685, Accent: #20665A*/
-/*Color Theme 15 Main: #59391E, Accent: #402915*/
-/*Color Theme 16 Main: #33302C, Accent: #141312*/
 /*Dark Theme Color*/
 .dark .navbar-default .navbar-nav > .dropdown > a .caret {
   border-top-color: white !important;
@@ -1664,6 +1524,11 @@ a:focus {
 md-bottom-sheet.md-grid md-item .md-icon-container {
   margin: 0 auto;
 }
+@media screen and (max-width: 756px) {
+  #selectingUsers .row {
+    margin: 0px;
+  }
+}
 /*Helper Classes*/
 .no-padding-top {
   padding-top: 0px !important;
@@ -1747,13 +1612,13 @@ nav .navbar-brand {
 }
 nav .navbar-brand:before {
   content: '';
-  background: url(../images/NeteGreekLogoSmallWhite.png) -45px center no-repeat;
+  background: url(../images/NeteGreekLogoSmallWhite.png) center center no-repeat;
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
-  background-size: 156px 42px;
+  background-size: 111px 42px;
 }
 nav a.navbar-brand:focus {
   outline: none;
@@ -1837,6 +1702,9 @@ md-toolbar.md-tall {
 }
 .itemList md-item:not(:last-child) {
   border-bottom: 1px solid #ccc;
+}
+.itemList md-item.md-padding {
+  padding: 8px;
 }
 .itemList.hover md-item:hover {
   background: #f8f8f8;
@@ -2154,8 +2022,6 @@ md-toolbar.md-tall {
 #newEvent .form-group {
   margin: 0px;
 }
-@media screen and (max-width: 756px) {
-  #selectingUsers .row {
-    margin: 0px;
-  }
+#notifications md-item {
+  font-size: 14px;
 }
