@@ -4,7 +4,7 @@ App.factory('Events', function(RESTService, $rootScope, localStorageService, $q,
     item.events = localStorageService.get('events');
     item.cacheTimestamp = undefined;
 
-    item.get = function () {
+    item.get = function (){
         if (checkCacheRefresh(item.cacheTimestamp)){
             item.cacheTimestamp = moment();
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
@@ -23,6 +23,15 @@ App.factory('Events', function(RESTService, $rootScope, localStorageService, $q,
             .error(function(data) {
                 console.log('Error: ' , data);
             });
+        }
+    }
+    item.deleteEvent = function(key){
+        if (item.events){
+            for (var i = 0; i < item.events.length; i++){
+                if (item.events[i].key == key){
+                    item.events.splice(i, 1);
+                }
+            }
         }
     }
     item.destroy = function(){

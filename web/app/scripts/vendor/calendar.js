@@ -26,6 +26,7 @@ angular.module('ui.rCalendar', [])
             self.eventSource = value;
             if (self._onDataLoaded) {
                 self._onDataLoaded();
+                $scope.today();
             }
         });
 

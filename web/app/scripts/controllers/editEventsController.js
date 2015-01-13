@@ -41,13 +41,10 @@
             .success(function(data){
                 $scope.loading = true;
                 if (!RESTService.hasErrors(data)){
+                    Events.deleteEvent($stateParams.tag);
+                    $rootScope.$broadcast('events:updated');
                     $location.url('app/events');
-                    for (var i = 0; i < $rootScope.events.length; i++){
-                        if ($rootScope.events[i].tag == $stateParams.tag){
-                            $rootScope.events.splice(i, 1);
-                            break;
-                        }
-                    }
+                    
                 }
             });
         }

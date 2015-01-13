@@ -2731,8 +2731,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        if not check_availability_of_tag(event_data["tag"], request_user.organization):
-            return OutgoingMessage(error=TAG_INVALID, data='')
         new_event = Event()
         new_event.creator = request_user.key
         new_event.description = event_data["description"]
@@ -2797,9 +2795,9 @@ class RESTApi(remote.Service):
         notification = Notification()
         notification.type = 'event'
         if recurring:
-            notification.content = request_user.first_name + " " + request_user.last_name + " invited to the repeated events: " + event_data["title"]
+            notification.content = request_user.first_name + " " + request_user.last_name + " invited you to the repeated events: " + event_data["title"]
         else:
-            notification.content = request_user.first_name + " " + request_user.last_name + " invited to the event: " + event_data["title"]
+            notification.content = request_user.first_name + " " + request_user.last_name + " invited you to the event: " + event_data["title"]
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
         notification.link = '#/app/events/' + new_event_key.urlsafe()
@@ -2929,8 +2927,6 @@ class RESTApi(remote.Service):
                     event.perms_tags = value["perms_tags"]
                     if EVERYONE in value["perms_tags"]:
                         event.perms_tags = ['everyone']
-            elif key == "send_email":
-                send_email = value
                 # invited_users = get_users_from_tags(tags=value,
                 #                                     organization=request_user.organization,
                 #                                     keys_only=True)
@@ -2949,7 +2945,7 @@ class RESTApi(remote.Service):
                                         request_user.organization, False)
             notification = Notification()
             notification.type = 'event'
-            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title
+            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title + " which you are invited to."
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
             notification.link = '#/app/events/'+event.key.urlsafe()

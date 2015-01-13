@@ -13,7 +13,6 @@ App.controller('eventsController', function($scope, RESTService, Load, $rootScop
             getEvents();
         }
         $scope.$watch('selectedTab', function(){
-            console.log('I saw the tab move');
             if ($scope.selectedTab == 0){
                 $scope.present = true;
             }
@@ -37,7 +36,7 @@ App.controller('eventsController', function($scope, RESTService, Load, $rootScop
         function getEvents(){
             $scope.eventSource = [];
             for (var i = 0; i< $scope.events.length; i++){
-                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date($scope.events[i].time_start), endTime: new Date( $scope.events[i].time_end), key: $scope.events[i].key});
+                $scope.eventSource.push({title: $scope.events[i].title, startTime: new Date(momentInTimezone($scope.events[i].time_start)), endTime: new Date( momentInTimezone($scope.events[i].time_end)), key: $scope.events[i].key});
             }
             $scope.eventsLoaded = true;
         }

@@ -2731,8 +2731,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        if not check_availability_of_tag(event_data["tag"], request_user.organization):
-            return OutgoingMessage(error=TAG_INVALID, data='')
         new_event = Event()
         new_event.creator = request_user.key
         new_event.description = event_data["description"]
