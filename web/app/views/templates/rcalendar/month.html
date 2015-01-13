@@ -14,8 +14,8 @@
             <td ng-show="showWeeks" class="calendar-week-column text-center">
                 <small><em>{{ weekNumbers[$index] }}</em></small>
             </td>
-            <td ng-repeat="dt in row track by dt.date" class="monthview-dateCell" ng-click="select(dt.date)"
-                ng-class="{'text-center':true, 'monthview-current': dt.current&&!dt.selected,'monthview-secondary-with-event': dt.secondary&&dt.hasEvent, 'monthview-primary-with-event':!dt.secondary&&dt.hasEvent&&!dt.selected, 'monthview-selected': dt.selected}">
+            <td ng-repeat="dt in row track by dt.date" class="monthview-dateCell text-center" ng-click="select(dt.date)"
+                ng-class="{'monthview-current': dt.current&&!dt.selected,'monthview-secondary-with-event': dt.secondary&&dt.hasEvent, 'monthview-primary-with-event':!dt.secondary&&dt.hasEvent&&!dt.selected, 'monthview-selected': dt.selected, 'md-primary': dt.selected}">
                 <div ng-class="{'text-muted':dt.secondary}">
                     {{dt.label}}
                 </div>
@@ -31,7 +31,7 @@
                 </h1>
             </div>
         </md-toolbar>
-        <md-list class="itemList">
+        <md-list class="itemList hover">
            <md-item ng-repeat="event in selectedDate.events" ng-if="selectedDate.events">
                <md-item-content>
                     <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
@@ -45,10 +45,12 @@
                </md-item-content>
            </md-item>
         </md-list>
-        <md-item ng-if="!selectedDate.events">
+        <md-item ng-show="!selectedDate.events">
+            <md-content class="md-padding no-padding-top">
                 <h3 class="md-primary">
                     No Events on {{selectedDate.date|date: 'MMM d'}}
                 </h3>
+            </md-content>
         </md-item>
 <!--
         <div class="scrollable" style="height: 200px">
