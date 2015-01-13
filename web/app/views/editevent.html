@@ -1,5 +1,7 @@
+{{eventNotFound}}
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
-<div ng-hide="eventNotFound" id="newEvent" class="container">
+<md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>
+<div ng-hide="eventNotFound || loading" id="newEvent" class="container">
 <div class="md-whiteframe-z1">
     <md-toolbar>
        <div class="md-toolbar-tools">
@@ -76,8 +78,7 @@
         <md-button type="submit" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
     </form>
     
-
-</div>   
+ 
 </md-content>
 </div>
 </div>

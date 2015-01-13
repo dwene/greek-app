@@ -1,4 +1,4 @@
-App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, RESTService, $rootScope, AUTH_EVENTS, localStorageService) {
+App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, RESTService, $rootScope, AUTH_EVENTS, localStorageService, Inbox, Directory, Events, Tags, Polls, Links) {
   var authService = {};
   var loginAttempted = false;
   

@@ -7,6 +7,7 @@
         $scope.directory = Directory.directory;
         $scope.tags = Tags.tags;
         $scope.loading = true;
+        var refreshed = false;
         getEventAndSetInfo($scope.events);
         $scope.$on('directory:updated', function(){
             $scope.directory = Directory.directory;

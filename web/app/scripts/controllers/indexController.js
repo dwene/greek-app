@@ -46,6 +46,12 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             Notifications.readAll();
             $mdSidenav('notifications').toggle();
         }
+
+        $scope.goToNotification = function(notify){
+            console.log('Gong to notification link', notify.link)
+            $location.url(notify.link);
+            $scope.toggleNotifications();
+        }
         $scope.showHelpdialog = function(){
             $mdDialog.show({
                     controller: 'dialogController',

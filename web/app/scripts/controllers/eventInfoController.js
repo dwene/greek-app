@@ -6,6 +6,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.not_going = false;
         $scope.loading = true;
         var refreshed = false;
+        $scope.eventNotFound = false;
         $scope.goToReport = function(){
            $location.url("app/events/" + $stateParams.tag + "/report");
         }
@@ -13,7 +14,6 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.back = function(){
             $location.path('app/events');
         }
-        
         
         $scope.showEventoptions = function(event){
             $mdBottomSheet.show({

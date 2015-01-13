@@ -1,5 +1,6 @@
-<div id="eventInfo" class="container">
-    
+<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
+<md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>
+<div ng-hide="eventNotFound || loading" id="eventInfo" class="container">
     <div class="md-whiteframe-z1">
         <md-toolbar class="md-tall">
             <div class="md-toolbar-tools">

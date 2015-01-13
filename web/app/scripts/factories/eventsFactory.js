@@ -29,6 +29,7 @@ App.factory('Events', function(RESTService, $rootScope, localStorageService, $q,
         if (item.events){
             for (var i = 0; i < item.events.length; i++){
                 if (item.events[i].key == key){
+                    console.log('I found the event');
                     item.events.splice(i, 1);
                 }
             }
