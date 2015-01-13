@@ -745,7 +745,10 @@ App.config(function($mdThemingProvider) {
                     return true;
             }
         }
-        $rootScope.color = Organization.organization.color;
+        if (Organization.organization){
+            $rootScope.color = Organization.organization.color;
+        }
+        
         $rootScope.$on('organization:updated', function(){
             $rootScope.color = Organization.organization.color;
         })
