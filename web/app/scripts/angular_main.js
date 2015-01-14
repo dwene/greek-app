@@ -703,7 +703,22 @@ App.config(function($mdThemingProvider) {
             }
         });
 
+        var iosConfig = {
+            "badge": true,
+            "sound": true,
+            "alert": true,
+        };
+
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
+            //  document.addEventListener("deviceready", function(){
+            //     $cordovaPush.register(iosConfig).then(function(result) {
+            //       console.log("result: " + result);
+            //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_iphone_token',result.deviceToken)
+            //     }, function(err) {
+            //         console.log('something went wrong', err);
+            // });
+            // });
+
             if ($state.data){
                 var authorizedRoles = $state.data.permissions.only;
                 if (!AuthService.isAuthorized(authorizedRoles)) {
