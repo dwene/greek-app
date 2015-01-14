@@ -1,4 +1,4 @@
-    App.controller('eventCheckInController', function($scope, RESTService, Load, Events, $stateParams, $rootScope, $timeout) {
+    App.controller('eventCheckInController', function($scope, RESTService, Load, Events, $stateParams, $rootScope, $timeout, $location) {
         routeChange();
         Events.get();
         $scope.events = Events.events;
@@ -80,7 +80,7 @@
         // Load.then(function(){
            // $rootScope.requirePermissions(LEADERSHIP);
             getCheckInData();
-            $scope.maxLength = 20;
+            $scope.maxLength = 10;
             $scope.maxLengthIncrease = function(){
                 if ($scope.users){
                     if ($scope.maxLength < $scope.users.length){
@@ -88,11 +88,9 @@
                     }
                 }
             }
-            $scope.$watch('search', function(){
-                if ($scope.search){
-                    $scope.maxLength = 20;    
-                }
-            });
+            $scope.change = function(){
+                $scope.maxLength = 10;
+            }
         // });
         function getCheckInData(){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
@@ -189,5 +187,8 @@
         }
         $scope.formatDate = function(date){
             return momentInTimezone(date).format('lll');
+        }
+        $scope.back = function(){
+            $location.path('app/events/'+$scope.event.key);
         }
     });

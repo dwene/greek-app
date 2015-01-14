@@ -10,7 +10,6 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.goToReport = function(){
            $location.url("app/events/" + $stateParams.tag + "/report");
         }
-
         $scope.back = function(){
             $location.path('app/events');
         }
@@ -141,24 +140,6 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
                    $scope.eventNotFound = true; 
                    $scope.loading = false;
                    return;
-                }
-            }
-            event.going_list = []
-            event.not_going_list = []
-            for (var i = 0; i < event.going.length; i++){
-                var user_push = getUsersFromKey(event.going[i])
-                event.going_list.push(user_push);
-                if (user_push.user_name == Session.me.user_name){
-                    $scope.going = true;
-                    $scope.not_going = false;
-                }
-            }
-            for (var i = 0; i < event.not_going.length; i++){
-                var user_push = getUsersFromKey(event.not_going[i])
-                event.not_going_list.push(user_push);
-                if (user_push.user_name == Session.me.user_name){
-                    $scope.not_going = true;
-                    $scope.going = false;
                 }
             }
             $scope.creator = getUsersFromKey(event.creator);

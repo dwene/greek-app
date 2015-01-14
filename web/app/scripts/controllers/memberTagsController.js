@@ -56,15 +56,15 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         $('#tag_name').val('');
     }
         $scope.memberslength = 20;
-        $scope.$watch('search', function(){
-            $scope.memberslength = 20;
-        });
         $scope.loadMoreMembers = function(){
             if ($scope.directoryLoaded){
                 if ($scope.memberslength < $scope.directory.members.length){
                     $scope.memberslength += 20;
                 }
             }
+        }
+        $scope.change = function(){
+            $scope.memberslength = 20;
         }
         function getUsers(){
             var out_users = [];
