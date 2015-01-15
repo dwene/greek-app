@@ -1,6 +1,7 @@
 App.controller('eventsController', function($scope, RESTService, Load, $rootScope, $location, localStorageService, Events, Directory) {
     Events.get();
     Directory.get();
+    routeChange();
     $scope.dataLoaded = false;
     $scope.directory = Directory.directory;
     $scope.events = Events.events;

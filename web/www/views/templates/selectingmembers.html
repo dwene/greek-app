@@ -1,10 +1,10 @@
 <section id="selectingUsers"> <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto"></md-progress-circular> <div ng-show="directory"> <div class="row"> <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);"> <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead> <a id="seeall" ng-click="openDialog($event)">see all</a> </form> <!--
             <div class="col-sm-6" layout="row" layout-align="center">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
-                            <md-input-group class="md-default-theme" >
+                            <md-input-container class="md-default-theme" >
                                 <label for="tag_name">Enter Tag</label>
-                                <md-input name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead></md-input>
-                            </md-input-group>
+                                <input name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead></input>
+                            </md-input-container>
                             </form>
                             <md-button data-toggle="modal" data-target="#seeallTags">See All</md-button>
             </div>    

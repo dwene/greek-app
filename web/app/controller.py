@@ -1001,17 +1001,6 @@ class RESTApi(remote.Service):
         out["subscribed"] = organization.subscribed
         out["color"] = organization.color
         out["link_groups"] = organization.link_groups
-        me = request_user.to_dict()
-        del me["hash_pass"]
-        del me["current_token"]
-        del me["organization"]
-        del me["timestamp"]
-        del me["notifications"]
-        del me["new_notifications"]
-        del me["messages"]
-        del me["new_messages"]
-        del me["archived_messages"]
-        out["me"] = me
         try:
             out["image"] = images.get_serving_url(organization.image, secure_url=True)
         except:
@@ -1095,8 +1084,19 @@ class RESTApi(remote.Service):
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
+            me = user.to_dict()
+            del me["hash_pass"]
+            del me["current_token"]
+            del me["organization"]
+            del me["timestamp"]
+            del me["notifications"]
+            del me["new_notifications"]
+            del me["messages"]
+            del me["new_messages"]
+            del me["archived_messages"]
+            me["dob"] = request_user.dob.strftime("%m/%d/%Y")
             return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
-                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': user.to_dict()}
+                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': me}
             return OutgoingMessage(data=json_dump(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 
@@ -1109,6 +1109,16 @@ class RESTApi(remote.Service):
         user = request_user.user_name;
         token = request_user.current_token;
         me = request_user.to_dict();
+        del me["hash_pass"]
+        del me["current_token"]
+        del me["organization"]
+        del me["timestamp"]
+        del me["notifications"]
+        del me["new_notifications"]
+        del me["messages"]
+        del me["new_messages"]
+        del me["archived_messages"]
+        me["dob"] = request_user.dob.strftime("%m/%d/%Y")
         to_send = json_dump({'user_name':user, 'token': token, 'me': me})
         return OutgoingMessage(error='', data=to_send)
 
@@ -2947,7 +2957,7 @@ class RESTApi(remote.Service):
                                         request_user.organization, False)
             notification = Notification()
             notification.type = 'event'
-            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title + " which you are invited to."
+            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
             notification.link = 'app/events/'+event.key.urlsafe()
@@ -3118,7 +3128,6 @@ class RESTApi(remote.Service):
         notification.sender = request_user.key
         notification.type = 'poll'
         notification.link = 'app/polls/' + poll.key.urlsafe()
-        notification.sender_name = 'NeteGreek Notification Service'
         notification.put()
         send_email = True
         if 'send_email' in data:
