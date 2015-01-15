@@ -10,10 +10,10 @@
             <div flex-gt-sm="60">
                 <md-content class="md-padding no-padding-top">
                     <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
-                    <md-input-group flex class="md-default-theme no-margin">
+                    <md-input-container flex class="md-default-theme no-margin">
                         <label for="update_status">Update Your status <span ng-show="status">({{status.length}}/140}</span></label>
-                        <md-input name="update_status" ng-model="status"  maxlength="140"></md-input>
-                    </md-input-group>
+                        <input name="update_status" ng-model="status"  maxlength="140"></input>
+                    </md-input-container>
                     <md-button type="submit" aria-label="submit status" ng-show="status"><i class="fa fa-check"></i></md-button>
                     <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button>
                     </form>

@@ -1,20 +1,23 @@
 
 <div id="login" class="container" load-directive ng-model="showScreen">
-      	
     <md-toolbar>
        	<h2 class="md-toolbar-tools">Login</h2>
     </md-toolbar>
       <md-content class="md-padding md-whiteframe-z1">
-        	
-          <form class="form-horizontal" role="form">
-          <md-text-float label="username" ng-model="input.user_name"></md-text-float>
-          <md-text-float label="password" ng-model="input.password" type="password"></md-text-float>
-          <p ng-show="badLogin">Your username or password is incorrect.</p>
-          
-          <div id="buttons" class="pull-right">
-               <md-button class="btn-touch" ng-click="login(input.user_name, input.password)">Login</md-button>
-          </div>
-          </form>
+            <form class="form-horizontal" role="form" ng-submit="login(input.user_name, input.password)">
+                <md-input-container>
+                    <label for="username">Username</label>
+                    <input type="text" name="username" ng-model="input.user_name" required>
+                </md-input-container>
+                <md-input-container>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" ng-model="input.password" required>
+                </md-input-container>
+                
+                <p ng-show="badLogin">Your username or password is incorrect.</p>
+
+                <md-button class="btn-touch pull-right" type="submit">Login</md-button>
+            </form>
       </md-content>
       <md-button class="btn-touch" ng-click="forgotPassword()">Forgot Password?</md-button>
 

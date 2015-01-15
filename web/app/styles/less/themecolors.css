@@ -112,7 +112,6 @@
   color: white;
 }
 /*Fixes*/
-.md-button.md-cyan-theme.md-raised,
-.md-button.md-cyan-theme.md-fab {
+.md-button.md-cyan-theme.md-raised {
   background-color: #00bcd4 !important;
 }

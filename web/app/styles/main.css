@@ -111,8 +111,7 @@
   color: white;
 }
 /*Fixes*/
-.md-button.md-cyan-theme.md-raised,
-.md-button.md-cyan-theme.md-fab {
+.md-button.md-cyan-theme.md-raised {
   background-color: #00bcd4 !important;
 }
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
@@ -1607,10 +1606,10 @@ md-divider {
 md-tabs.md-default-theme md-tab:focus {
   border: none;
 }
-md-input-group input {
+md-input-container input {
   width: 100%;
 }
-md-input-group {
+md-input-container {
   margin: 0px 0px 8px 0px;
 }
 .face {
@@ -1929,7 +1928,7 @@ md-toolbar.md-tall {
 #directory md-toolbar {
   min-height: 0px;
 }
-#directory md-input-group {
+#directory md-input-container {
   margin-top: 0px;
 }
 #directory md-item-content:hover {

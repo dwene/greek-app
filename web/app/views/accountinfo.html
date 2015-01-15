@@ -19,16 +19,25 @@
                Change Password:
             </md-subheader>
             <form ng-hide="passwordChanged" role="form">
-               <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-                <md-text-float type="password" label="Old Password" ng-model="new_pass.old_password"></md-text-float>
-                <md-text-float type="password" label="New Password" ng-model="new_pass.password"></md-text-float>
-                <md-text-float type="password" label="Repeat Password" ng-model="new_pass.repeat_password"></md-text-float>
-                    <div ng-show="new_pass.password != new_pass.repeat_password" class="alert alert-danger usernameAlert">Passwords do not match</div>
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <md-input-container>
+                    <label for="old_password">Old Password</label>
+                    <input name="old_password" type="password" ng-model="new_pass.old_password">
+                </md-input-container>
+                <md-input-container>
+                    <label for="password">New Password</label>
+                    <input name="password" type="password" ng-model="new_pass.password">
+                </md-input-container>
+                <md-input-container>
+                    <label for="repeat_password">Repeat Password</label>
+                    <input name="repeat_password" type="password" ng-model="new_pass.repeat_password">
+                </md-input-container>
+                    <div ng-show="new_pass.password != new_pass.repeat_password" class="alert alert-danger">Passwords do not match</div>
+                    <div ng-show="passwordChanged" class="alert alert-danger">Your password has been changed! You will be logged out in 3 seconds...</div>
+                    <div ng-show="changeFailed" class="alert alert-danger">Password change failed. Please try again.</div>
                 <md-button class="pull-right" ng-disabled="new_pass.password != new_pass.repeat_password" ng-click="changePassword(new_pass.old_password, new_pass.password)">Change</md-button>
                 </div>
             </form>  
-            <div ng-show="passwordChanged"> Your password has been changed! You will be logged out in 3 seconds...</div>
-            <div ng-show="changeFailed">Password change failed. Please double check your current and new password to see if they meet the correct requirements</div>
         </md-content>
     </div>
     <div class="md-whiteframe-z1">
@@ -44,26 +53,26 @@
 
 <form id="memberAccount" method="POST" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
 <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-    <md-input-group class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
+    <md-input-container class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
         <label for="first_name">First Name</label>
-        <md-input name="first_name" ng-model="item.first_name" required></md-input>
+        <input name="first_name" ng-model="item.first_name" required></input>
         <p ng-show="(memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)" class="help-block">Please enter your first name.</p>
-    </md-input-group>
-    <md-input-group class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)}">
+    </md-input-container>
+    <md-input-container class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)}">
         <label for="last_name">Last Name</label>
-        <md-input name="last_name" ng-model="item.last_name" required></md-input>
+        <input name="last_name" ng-model="item.last_name" required></input>
         <p ng-show="(memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)" class="help-block">Please enter your last name.</p>
-    </md-input-group>
-    <md-input-group class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)}">
+    </md-input-container>
+    <md-input-container class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)}">
         <label for="email">email@example.com</label>
-        <md-input name="email" ng-model="item.email" required></md-input>
+        <input name="email" ng-model="item.email" required></input>
         <p ng-show="(memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)" class="help-block">Please a valid email.</p>
-    </md-input-group>
-    <md-input-group class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)}">
+    </md-input-container>
+    <md-input-container class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)}">
         <label for="phone">###-###-####</label>
-        <md-input type="tel" name="phone" ng-model="item.phone" required></md-input>
+        <input type="tel" name="phone" ng-model="item.phone" required></input>
         <p ng-show="(memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)" class="help-block">Please select a valid phone number.</p>
-    </md-input-group>
+    </md-input-container>
     <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
         <label for="dob" class="col-xs-4 col-sm-2 control-label">Birthday</label>
         <div class="col-xs-8 col-sm-10">
@@ -91,11 +100,11 @@
         <p ng-show="(memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted)" class="help-block">Please enter your graduation month.</p>
         </div>
     </div>
-    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni()}">
+    <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni()}">
         <label for="grad_year">Graduation Year</label>
-        <md-input type="number" name="grad_year" ng-model="item.grad_year" required></md-input>
+        <input type="number" name="grad_year" ng-model="item.grad_year" required></input>
         <p ng-show="(memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted)" class="help-block">Please enter your graduation year.</p>
-    </md-input-group>    
+    </md-input-container>    
     <div class="form-group required" ng-class="{ 'has-error' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni()}">
         <label for="currentState" class="col-xs-7 col-sm-5">Pledge Semester</label>
         <div class="col-xs-7 col-sm-5">
@@ -106,43 +115,43 @@
             <p ng-show="(memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted)" class="help-block">Please enter your graduation month.</p>
         </div>
     </div>
-    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni()}">
+    <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni()}">
         <label for="pledge_class_year">Pledge Year</label>
-        <md-input type="number" name="pledge_class_year" ng-model="item.pledge_class_year" required></md-input>
+        <input type="number" name="pledge_class_year" ng-model="item.pledge_class_year" required></input>
         <p ng-show="(memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted)" class="help-block">Please enter your pledge class year.</p>
-    </md-input-group> 
-    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
+    </md-input-container> 
+    <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
         <label for="major">Major</label>
-        <md-input name="major" ng-model="item.major" required></md-input>
+        <input name="major" ng-model="item.major" required></input>
         <p ng-show="(memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)" class="help-block">Please enter your field of study.</p>
-    </md-input-group> 
-    <md-input-group ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
+    </md-input-container> 
+    <md-input-container ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
         <label for="position">Leadership Position</label>
-        <md-input name="position" ng-model="item.position" required></md-input>
+        <input name="position" ng-model="item.position" required></input>
         <p ng-show="(memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
-    </md-input-group> 
-    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}">
+    </md-input-container> 
+    <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}">
         <label for="occupation">Occupation</label>
-        <md-input name="occupation" ng-model="item.occupation" required></md-input>
+        <input name="occupation" ng-model="item.occupation" required></input>
         <p ng-show="(memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)" class="help-block">Please enter a valid occupation</p>
-    </md-input-group>
-    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)}">
+    </md-input-container>
+    <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)}">
         <label for="employer">Employer</label>
-        <md-input name="employer" ng-model="item.employer" required></md-input>
+        <input name="employer" ng-model="item.employer" required></input>
         <p ng-show="(memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)" class="help-block">Please enter a valid employer</p>
-    </md-input-group>
+    </md-input-container>
     <div ng-show="!checkAlumni()">
         <div class="col-xs-12 col-sm-6">
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentAddress">Current Address</label>
-                <md-input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></md-input>
+                <input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
-            </md-input-group>
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentCity">Current City</label>
-                <md-input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></md-input>
+                <input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
-            </md-input-group>
+            </md-input-container>
             <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentState" class="col-xs-7 col-sm-5">Current State</label>
                 <div class="col-xs-7 col-sm-5">
@@ -207,23 +216,23 @@
                 </script>
                 <p ng-show="(memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
             </div>
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
                 <label for="zip">Current Zip</label>
-                <md-input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></md-input>
+                <input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
-            </md-input-group>
+            </md-input-container>
         </div>
         <div class="col-xs-12 col-sm-6">
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)}">
+            <md-input-container ng-class="{ 'has-error' : (memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)}">
                 <label for="perm_address">Permanent Address</label>
-                <md-input name="perm_address" ng-model="item.perm_address"></md-input>
+                <input name="perm_address" ng-model="item.perm_address"></input>
                 <p ng-show="(memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)" class="help-block">Please enter your permanent address.</p>
-            </md-input-group>
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)}">
+            </md-input-container>
+            <md-input-container ng-class="{ 'has-error' : (memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)}">
                 <label for="perm_city">Permanent City</label>
-                <md-input name="perm_city" ng-model="item.perm_city"></md-input>
+                <input name="perm_city" ng-model="item.perm_city"></input>
                 <p ng-show="(memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)" class="help-block">Please enter your permanent city.</p>
-            </md-input-group>
+            </md-input-container>
             <div class="form-group" ng-class="{ 'has-error' : (memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)}">
                 <label for="perm_state" class="col-xs-7 col-sm-5">Permanent State</label>
                 <div class="col-xs-5 col-sm-7">
@@ -288,24 +297,24 @@
                 </script>
                 <p ng-show="(memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)" class="help-block">Please enter your permanent state.</p>
             </div>
-            <md-input-group ng-class="{ 'has-error' : (memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)}">
+            <md-input-container ng-class="{ 'has-error' : (memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)}">
                 <label for="perm_zip">Permanent Zip</label>
-                <md-input type="number" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/"></md-input>
+                <input type="number" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/"></input>
                 <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
-            </md-input-group>
+            </md-input-container>
         </div>  
     </div>
     <div ng-show="checkAlumni()">
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentAddress">Current Address</label>
-                <md-input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></md-input>
+                <input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
-            </md-input-group>
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentCity">Current City</label>
-                <md-input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></md-input>
+                <input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
-            </md-input-group>
+            </md-input-container>
             <div class="form-group" ng-class="{ 'has-error' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni()}">
                 <label for="currentState2" class="col-xs-7 col-sm-5">Current State</label>
                 <div class="col-xs-7 col-sm-5">
@@ -370,87 +379,53 @@
                 </script>
                 <p ng-show="(memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted)" class="help-block">Please enter your current state.</p>
             </div>
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
                 <label for="zip">Current Zip</label>
-                <md-input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></md-input>
+                <input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted)" class="help-block">Please enter your permanent 5 digit zip code.</p>
-            </md-input-group>
+            </md-input-container>
     </div>
     
+    
+    
+    <md-input-container ng-class="{ 'has-error' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
+        <label for="website">Website</label>
+        <input type="url" name="website" ng-model="item.website" remove-http>
+        <p ng-show="(memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container ng-class="{ 'has-error' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
+        <label for="facebook">Facebook Profile</label>
+        <input type="url" name="facebook" ng-model="item.facebook" remove-http>
+        <p ng-show="(memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container ng-class="{ 'has-error' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
+        <label for="twitter">Twitter Profile</label>
+        <input type="url" name="twitter" ng-model="item.twitter" remove-http>
+        <p ng-show="(memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container ng-class="{ 'has-error' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
+        <label for="instagram">Instagram Profile</label>
+        <input type="url" name="instagram" ng-model="item.instagram" remove-http>
+        <p ng-show="(memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container ng-class="{ 'has-error' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
+        <label for="linkedin">LinkedIn Profile</label>
+        <input type="url" name="linkedin" ng-model="item.linkedin" remove-http>
+        <p ng-show="(memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
+    </md-input-container>
+    
+    
+    <md-button type="submit" class="pull-right" ng-disabled="working == 'pending'"><span ng-hide="working == 'pending'">Save Info</span><update-status ng-model="working" ng-show="working == 'pending'"></update-status></md-button>
     
 
 </div>
 
 
     
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
-        <label for="website" class="col-sm-2 control-label">Website</label>
-        <div class="col-sm-10">
-
-            <div class="input-group">
-            <span class="input-group-addon">http://</span> 
-            <input type="text" class="form-control" id="website" name="website" ng-model="item.website" remove-http>
-            </div>
-
-        </div>
-        <p ng-show="(memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
-    </div>
-        
-        
-        
-    <div class="form-group" ng-class="{ 'has-error' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
-        <label for="facebook" class="col-sm-2 control-label">Facebook Profile</label>
-        <div class="col-sm-10">
-
-            <div class="input-group">
-            <span class="input-group-addon">http://</span>
-            <input type="text" class="form-control" id="facebook" name="facebook" ng-model="item.facebook" placeholder="facebook.com/johndoe" remove-http>
-            </div>
-
-        </div>
-        <p ng-show="(memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
-    </div>    
-     
-    <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
-        <label for="twitter" class="col-sm-2 control-label">Twitter Profile</label>
-        <div class="col-sm-10">
-
-            <div class="input-group">
-                <span class="input-group-addon">http://</span>
-                <input type="text" class="form-control" id="twitter" name="twitter" ng-model="item.twitter" placeholder="twitter.com/johndoe" remove-http>
-            </div>
-
-        </div>
-        <p ng-show="(memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
-    </div>  
-    
-    <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
-        <label for="instagram" class="col-sm-2 control-label">Instagram Profile</label>
-        <div class="col-sm-10">
-
-            <div class="input-group">
-                <span class="input-group-addon">http://</span>
-                <input type="text" class="form-control" id="instagram" name="instagram" ng-model="item.instagram" placeholder="instagram.com/johndoe" remove-http>
-            </div>
-
-        </div>
-        <p ng-show="(memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
-    </div>
-    
-    <div class="form-group"  ng-class="{ 'has-error' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
-        <label for="linkedin" class="col-sm-2 control-label">LinkedIn Profile</label>
-        <div class="col-sm-10">
-
-            <div class="input-group">
-            <span class="input-group-addon">http://</span>
-            <input type="text" class="form-control" id="linkedin" name="linkedin" ng-model="item.linkedin" placeholder="www.linkedin.com/profile/view?id=112808945" remove-http>
-            </div>
-        </div>
-        <p ng-show="(memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
-    </div>
-
-
-    <button type="submit" class="btn btn-default pull-right" ng-disabled="working == 'pending'"><span ng-hide="working == 'pending'">Save Info</span><update-status ng-model="working" ng-show="working == 'pending'"></update-status></button>
     <div id="updateAccountAlert" class="alert alert-success" ng-show="updatedInfo">Account info updated!</div>
 </form>
         </md-content>

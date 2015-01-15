@@ -10,17 +10,17 @@
     <md-content class="md-padding no-padding-top">
         <form id="registerForm" name="registerForm" ng-submit="continue(registerForm.$valid, data)" class="form-horizontal" role="form" novalidate>
         
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : registerForm.org_name.$invalid && !registerForm.org_name.$pristine }">
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : registerForm.org_name.$invalid && !registerForm.org_name.$pristine }">
                     <label for="org_name">Organization Name</label>
-                    <md-input name="org_name" ng-model="data.name" required></md-input>
+                    <input name="org_name" ng-model="data.name" required></input>
 <!--			         <p ng-show="registerForm.org_name.$invalid && !registerForm.org_name.$pristine" class="help-block">An organization name is required.</p>-->
-            </md-input-group>
+            </md-input-container>
             
-            <md-input-group class="md-default-theme" ng-class="{ 'has-error' : registerForm.school_name.$invalid && !registerForm.school_name.$pristine }">
+            <md-input-container class="md-default-theme" ng-class="{ 'has-error' : registerForm.school_name.$invalid && !registerForm.school_name.$pristine }">
                     <label for="school_name">School Name</label>
-                    <md-input name="school_name" ng-model="data.school" required></md-input>
+                    <input name="school_name" ng-model="data.school" required></input>
 <!--                    <p ng-show="registerForm.school_name.$invalid && !registerForm.school_name.$pristine" class="help-block">Your school name is required.</p>-->
-            </md-input-group>
+            </md-input-container>
             <div ng-class="{ 'has-error' : registerForm.org_type.$invalid && !registerForm.org_type.$pristine }">
                 <md-radio-group name="org_type" ng-model="data.type" required>
                     <md-radio-button value="sorority" aria-label="sorority">Sorotity</md-radio-button>

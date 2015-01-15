@@ -11,11 +11,11 @@
     <br>
     <selecting-users tags="tags" local-tags="true"></selecting-users>
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
-        <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
+        <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
-            <md-input name="title" ng-model="event.title"></md-input>
+            <input name="title" ng-model="event.title"></input>
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
-        </md-input-group>    
+        </md-input-container>    
         <div class="form-group" ng-class="{ 'has-error' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
             <label for="description" class="col-sm-2 control-label">Description</label>
             <div class="col-sm-10">
@@ -23,11 +23,11 @@
                 <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
             </div>
         </div> 
-        <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
+        <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
             <label for="location">Location</label>
-            <md-input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"></md-input>
+            <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"></input>
             <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
-        </md-input-group> 
+        </md-input-container> 
 <!--        <div class="alert alert-info" ng-show="event.location">{{event.address}}</div>-->
         <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
             <label for="date_start" class="col-xs-12 col-sm-2 control-label">Start</label>

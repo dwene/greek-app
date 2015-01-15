@@ -16,11 +16,11 @@
         <md-content class="md-padding">
             <selecting-users tags="tags" include-users="true" clear-users="clearUsers"></selecting-users>
                 <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>
-                    <md-input-group class="md-default-theme" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
+                    <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
                         <label for="title">Message Title</label>
-                        <md-input ng-model="title" name="title" autocomplete="off" required></md-input>
+                        <input ng-model="title" name="title" autocomplete="off" required></input>
                         <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
-                    </md-input-group>
+                    </md-input-container>
                     <div class="form-group" ng-class="{ 'has-error' : (messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)}">
                         <wysiwyg textarea-id="content" textarea-class="form-control" textarea-height="180px" textarea-name="content" textarea-required ng-model="content" enable-bootstrap-title="true" textarea-menu="{{menuOptions}}"></wysiwyg>
                         <p ng-show="(messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)" class="help-block">Please enter your message.</p>
