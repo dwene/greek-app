@@ -19,6 +19,7 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
             Polls.destroy();
             Links.destroy();
             Organization.destroy();
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
             return credentials.user_name;
         }
       })

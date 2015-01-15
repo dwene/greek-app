@@ -6,6 +6,7 @@ App.factory('Organization', function($rootScope, RESTService, localStorageServic
     }
     item.cacheTimestamp = undefined;
     item.get = function () {
+        console.log('I am thinking about getting organization stuff');
         if (checkCacheRefresh(item.cacheTimestamp)){
             item.cacheTimestamp = moment();
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', '')

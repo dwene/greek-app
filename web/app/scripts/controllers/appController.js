@@ -18,11 +18,11 @@ App.controller('appController', function($scope, $interval, $rootScope, $timeout
         }
     }
     function updates(){
-        console.log('I am updating!');
         Inbox.update();
         Notifications.update();
     }
-    $scope.$on(AUTH_EVENTS.loginSuccess, function(){
+    $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
+        console.log('I got my login successfully! :)');
         Organization.get();
         Inbox.get();
         Notifications.get();
@@ -32,6 +32,7 @@ App.controller('appController', function($scope, $interval, $rootScope, $timeout
         $scope.authenticated = true;
     });
     $scope.$on('organization:updated', function(){
+        console.log('Organization just updated');
         if ($rootScope.color != Organization.organization.color){
             $scope.authenticated = false;
             $rootScope.color = Organization.organization.color;
@@ -39,7 +40,7 @@ App.controller('appController', function($scope, $interval, $rootScope, $timeout
         }
         
     })
-    $scope.$on(AUTH_EVENTS.logoutSuccess, function(){
+    $rootScope.$on(AUTH_EVENTS.logoutSuccess, function(){
         $scope.authenticated = false;
         console.log('I am logging out and canceling interval :(');
         if(angular.isDefined(notification_update_interval)){
