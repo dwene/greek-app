@@ -33,6 +33,7 @@ handlers:
 - url: /
   upload: index.html
   static_files: index.html
+  secure: always
 
 - url: /sendemails
   script: main.app

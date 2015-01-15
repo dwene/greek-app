@@ -90,13 +90,11 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         $scope.closeNotificationModal = function() {
             $mdDialog.hide();
         };
-
         $scope.archive = function(){
             $mdDialog.hide();
             archive(selectedMessage);
             
         }
-
         $scope.unarchive = function(){
             $mdDialog.hide();
             unarchive(selectedMessage);

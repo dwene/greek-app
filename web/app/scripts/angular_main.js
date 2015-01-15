@@ -1555,7 +1555,7 @@ App.directive('netePieChart', function() {
 
            
             
-App.directive('selectingUsers', function($rootScope, Directory, Tags){
+App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags){
     return {
     restrict: 'E',
     replace: 'true',
@@ -1568,6 +1568,8 @@ App.directive('selectingUsers', function($rootScope, Directory, Tags){
     },
     transclude: true,
     link: function (scope, element, attrs) {
+        var tags;
+        var directory;
         scope.usersList = [];
         Directory.get();
         if (!scope.localTags){
@@ -1579,12 +1581,29 @@ App.directive('selectingUsers', function($rootScope, Directory, Tags){
                 update();
             });
         }
+
+        scope.openDialog = function(ev){
+            $mdDialog.show({
+                    controller: ModalController,
+                    templateUrl: 'views/templates/tagsDialog.html',
+                    targetEvent: ev
+            });
+        }
+
+        function ModalController($scope, $mdDialog, $sce){
+            $scope.tags = scope.tags;
+            $scope.inclueUsers = scope.includeUsers;
+            $scope.clearUsers = scope.clearUsers;
+            $scope.usersList = scope.usersList;
+            $scope.closeModal = function(){
+                $mdDialog.hide();
+            }
+        }
         scope.directory = Directory.directory;
         scope.$on('directory:updated', function(){
             scope.directory = Directory.directory;
             update();
         });
-        
         update();
         scope.selectTagFromTypeAhead = function(tag){
             tag.checked = true;

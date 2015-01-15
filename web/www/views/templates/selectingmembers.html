@@ -1,4 +1,4 @@
-<section id="selectingUsers"> <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto"></md-progress-circular> <div ng-show="directory"> <div class="row"> <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);"> <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead> <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a> </form> <!--
+<section id="selectingUsers"> <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto"></md-progress-circular> <div ng-show="directory"> <div class="row"> <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);"> <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead> <a id="seeall" ng-click="openDialog($event)">see all</a> </form> <!--
             <div class="col-sm-6" layout="row" layout-align="center">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
                             <md-input-group class="md-default-theme" >
@@ -13,8 +13,22 @@
                     <input type="search" ng-model="modalSearch" placeholder="Search..." class="form-control">
                     <button ng-show="modalSearch.length" type="button" class="close clearInput" ng-click="modalSearch = ''"><i class="fa fa-times"></i></button>
                 </div>
---> <search ng-model="modalSearch"></search> <ul class="selectTags"> <div> <h2 class="page-header">Organization Tags</h2> <div class="btn-group" ng-repeat="tag in tags.org_tags | multipleSearch:modalSearch"> <netetag-check></netetag-check> </div> <h2 class="page-header">Preset Tags</h2> <div class="btn-group" ng-repeat="tag in tags.perms_tags | multipleSearch:modalSearch"> <netetag-check></netetag-check> </div> <span ng-show="includeUsers"> <h2 class="page-header">Users</h2> <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch"> <netemember-check ng-model="tag"></netemember-check> </div> </span> </div> <!--
-                <div class="btn-group" ng-repeat="tag in org_tags | orderBy : 'name'">
-                    <netetag-all ></netetag-all>
+--> <!--            <search ng-model="modalSearch"></search>
+            <ul class="selectTags">
+            <div>
+               <h2 class="page-header">Organization Tags</h2>
+                <div class="btn-group" ng-repeat="tag in tags.org_tags | multipleSearch:modalSearch">
+                    <netetag-check></netetag-check>
                 </div>
---> </ul> </div> <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> </div> </div><!-- /.modal-content --> </div><!-- /.modal-dialog --> </div><!-- /.modal --> </div>  </section>
+                <h2 class="page-header">Preset Tags</h2>
+                <div class="btn-group" ng-repeat="tag in tags.perms_tags | multipleSearch:modalSearch">
+                    <netetag-check></netetag-check>
+                </div>
+                <span ng-show="includeUsers">
+                <h2 class="page-header">Users</h2>
+                <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch">
+                    <netemember-check ng-model="tag"></netemember-check>
+                </div>
+                </span>
+            </div>
+            </ul> --> </div> <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> </div> </div><!-- /.modal-content --> </div><!-- /.modal-dialog --> </div><!-- /.modal --> </div>  </section>

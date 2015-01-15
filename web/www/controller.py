@@ -43,7 +43,9 @@ INVALID_USERNAME = 'INVALID_USERNAME'
 NOT_SUBSCRIBED = 'NOT_SUBSCRIBED'
 TAG_INVALID = "TAG_INVALID"
 DOMAIN = 'https://app.netegreek.com'
-EVERYONE = 'Everyone'
+EVERYONE = 'everyone'
+COUNCIL = 'council'
+LEADERSHIP = 'leadership'
 EXPIRE_TIME = 60 # Number of days until token expires
 
 
@@ -348,7 +350,7 @@ def get_users_from_tags(tags, organization, keys_only):
         org_tag_users_future = User.query(ndb.AND(User.tags.IN(tags["org_tags"]),
                                                   User.organization == organization)).fetch_async(keys_only=True)
     if "perms_tags" in tags and len(tags["perms_tags"]):
-        if "everyone" in tags["perms_tags"] or "Everyone" in tags["perms_tags"]:
+        if "everyone" in tags["perms_tags"].lower():
             perms_tag_users_future = User.query(ndb.AND(User.perms.IN(['member', 'leadership', 'council']),
                                                         User.organization == organization)).fetch_async(keys_only=True)
         else:
@@ -2130,7 +2132,7 @@ class RESTApi(remote.Service):
         event_tags_list = list()
         for event in events:
             event_tags_list.append({"name": event.tag})
-        perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+        perm_tags_list = [{"name": COUNCIL}, {"name": LEADERSHIP}, {"name": EVERYONE}]
         return OutgoingMessage(error='', data=json_dump({'org_tags': org_tags_list,
                                                          'event_tags': event_tags_list,
                                                          'perms_tags': perm_tags_list}))
@@ -2749,7 +2751,7 @@ class RESTApi(remote.Service):
             if len(request_user.recently_used_tags) > 5:
                 request_user.recently_used_tags = request_user.recently_used_tags[:5]
         new_event.perms_tags = event_data["tags"]["perms_tags"]
-        if EVERYONE.lower() in event_data["tags"]["perms_tags"] or 'Everyone' in event_data["tags"]["perms_tags"]:
+        if EVERYONE in event_data["tags"]["perms_tags"].lower():
             new_event.perms_tags = ['everyone']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         new_event_key = new_event.put()
@@ -3420,201 +3422,201 @@ class RESTApi(remote.Service):
 
 
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load2/{user_name}/{token}',
-                      http_method='GET', name='info.load2')
-    def load_user_data2(self, request):
-        time_start = datetime.datetime.now()
-        logging.error('user and token: ' + str(request.user_name) + ' ' + str(request.token))
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        out_data = dict()
-        out_data["perms"] = request_user.perms
-        out_data["accountFilledOut"] = bool(request_user.address and request_user.dob)
-        # line up all the queries
-        events_polls_future = Event.query(Event.going == request_user.key).fetch_async(projection=[Event.tag])
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
-        event_tag_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                            Event.time_end < datetime.datetime.today() + relativedelta(months=1))
-                                            ).fetch_async(projection=[Event.going, Event.tag])
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='info/load2/{user_name}/{token}',
+#                       http_method='GET', name='info.load2')
+#     def load_user_data2(self, request):
+#         time_start = datetime.datetime.now()
+#         logging.error('user and token: ' + str(request.user_name) + ' ' + str(request.token))
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         out_data = dict()
+#         out_data["perms"] = request_user.perms
+#         out_data["accountFilledOut"] = bool(request_user.address and request_user.dob)
+#         # line up all the queries
+#         events_polls_future = Event.query(Event.going == request_user.key).fetch_async(projection=[Event.tag])
+#         organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
+#         event_tag_list_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+#                                             Event.time_end < datetime.datetime.today() + relativedelta(months=1))
+#                                             ).fetch_async(projection=[Event.going, Event.tag])
 
-        if len(request_user.tags) > 0:
-            events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                        ndb.OR(Event.org_tags.IN(request_user.tags),
-                                        Event.perms_tags == request_user.perms,
-                                        Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
-        else:
-            events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
-                                        ndb.OR(Event.perms_tags == request_user.perms,
-                                        Event.perms_tags == 'everyone',
-                                        Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
-        organization_future = request_user.organization.get_async()
-        notification_count = 40
-        if request_user.new_notifications:
-            new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
-        if request_user.new_notifications:
-            if len(request_user.new_notifications) >= 40:
-                notification_count = 0
-            else:
-                notification_count = 40 - len(request_user.new_notifications)
-        if request_user.notifications:
-            notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-        if request_user.hidden_notifications:
-            hidden_notifications_future = Notification.query(Notification.key.IN(
-                request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
+#         if len(request_user.tags) > 0:
+#             events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+#                                         ndb.OR(Event.org_tags.IN(request_user.tags),
+#                                         Event.perms_tags == request_user.perms,
+#                                         Event.perms_tags == 'everyone',
+#                                         Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
+#         else:
+#             events_future = Event.query(ndb.AND(Event.organization == request_user.organization,
+#                                         ndb.OR(Event.perms_tags == request_user.perms,
+#                                         Event.perms_tags == 'everyone',
+#                                         Event.going == request_user.key))).order(-Event.time_start).fetch_async(100)
+#         organization_future = request_user.organization.get_async()
+#         notification_count = 40
+#         if request_user.new_notifications:
+#             new_notification_future = Notification.query(Notification.key.IN(
+#                 request_user.new_notifications)).order(-Notification.timestamp).fetch_async(40)
+#         if request_user.new_notifications:
+#             if len(request_user.new_notifications) >= 40:
+#                 notification_count = 0
+#             else:
+#                 notification_count = 40 - len(request_user.new_notifications)
+#         if request_user.notifications:
+#             notifications_future = Notification.query(Notification.key.IN(
+#                 request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+#         if request_user.hidden_notifications:
+#             hidden_notifications_future = Notification.query(Notification.key.IN(
+#                 request_user.hidden_notifications)).order(-Notification.timestamp).fetch_async(30)
 
-#part 1 of polls
-        events_polls = events_polls_future.get_result()
-        time_middle = datetime.datetime.now()
-        poll_event_tags = list()
-        for event in events_polls:
-            poll_event_tags.append(event.tag)
-        if not request_user.tags:
-            request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
-        if poll_event_tags:
-            polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
-                                              Poll.invited_org_tags.IN(request_user.tags),
-                                              Poll.invited_perms_tags == request_user.perms,
-                                              Poll.invited_event_tags.IN(poll_event_tags),
-                                              ),
-                                              Poll.organization == request_user.organization)).\
-                order(-Poll.timestamp).fetch_async(100)
-        else:
-            polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
-                                              Poll.invited_org_tags.IN(request_user.tags),
-                                              Poll.invited_perms_tags == request_user.perms,
-                                              ),
-                                              Poll.organization == request_user.organization)).\
-                order(-Poll.timestamp).fetch_async(100)
-        if request_user.tags == ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']:
-            request_user.tags = ['']
-#get results of queries
-        organization_users = organization_users_future.get_result()
-        event_tag_list = event_tag_list_future.get_result()
-        organization = organization_future.get_result()
-        events = events_future.get_result()
-        user_list = list()
-        alumni_list = list()
-        for user in organization_users:
-            user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            del user_dict["hidden_notifications"]
-            event_tags = list()
-            for event in event_tag_list:
-                if user.key in event.going:
-                    event_tags.append(event.tag)
-            user_dict["event_tags"] = event_tags
-            user_dict["key"] = user.key.urlsafe()
-            if user.dob:
-                user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
-            else:
-                del user_dict["dob"]
-            user_dict["key"] = user.key.urlsafe()
-            if user_dict["perms"] == 'alumni':
-                alumni_list.append(user_dict)
-            else:
-                user_list.append(user_dict)
-        out_data["directory"] = {'members': user_list, 'alumni': alumni_list}
+# #part 1 of polls
+#         events_polls = events_polls_future.get_result()
+#         time_middle = datetime.datetime.now()
+#         poll_event_tags = list()
+#         for event in events_polls:
+#             poll_event_tags.append(event.tag)
+#         if not request_user.tags:
+#             request_user.tags = ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']
+#         if poll_event_tags:
+#             polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+#                                               Poll.invited_org_tags.IN(request_user.tags),
+#                                               Poll.invited_perms_tags == request_user.perms,
+#                                               Poll.invited_event_tags.IN(poll_event_tags),
+#                                               ),
+#                                               Poll.organization == request_user.organization)).\
+#                 order(-Poll.timestamp).fetch_async(100)
+#         else:
+#             polls_future = Poll.query(ndb.AND(ndb.OR(Poll.invited_perms_tags == 'everyone',
+#                                               Poll.invited_org_tags.IN(request_user.tags),
+#                                               Poll.invited_perms_tags == request_user.perms,
+#                                               ),
+#                                               Poll.organization == request_user.organization)).\
+#                 order(-Poll.timestamp).fetch_async(100)
+#         if request_user.tags == ['@#$%^!^&*()%$#@!@#%^%^*^&*%#%$^']:
+#             request_user.tags = ['']
+# #get results of queries
+#         organization_users = organization_users_future.get_result()
+#         event_tag_list = event_tag_list_future.get_result()
+#         organization = organization_future.get_result()
+#         events = events_future.get_result()
+#         user_list = list()
+#         alumni_list = list()
+#         for user in organization_users:
+#             user_dict = user.to_dict()
+#             del user_dict["hash_pass"]
+#             del user_dict["current_token"]
+#             del user_dict["organization"]
+#             del user_dict["timestamp"]
+#             del user_dict["notifications"]
+#             del user_dict["new_notifications"]
+#             del user_dict["hidden_notifications"]
+#             event_tags = list()
+#             for event in event_tag_list:
+#                 if user.key in event.going:
+#                     event_tags.append(event.tag)
+#             user_dict["event_tags"] = event_tags
+#             user_dict["key"] = user.key.urlsafe()
+#             if user.dob:
+#                 user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
+#             else:
+#                 del user_dict["dob"]
+#             user_dict["key"] = user.key.urlsafe()
+#             if user_dict["perms"] == 'alumni':
+#                 alumni_list.append(user_dict)
+#             else:
+#                 user_list.append(user_dict)
+#         out_data["directory"] = {'members': user_list, 'alumni': alumni_list}
 
-        # # tags section
-        # org_tags = organization.tags
-        # org_tags_list = list()
-        # for tag in request_user.recently_used_tags:
-        #     if tag in org_tags:
-        #         org_tags_list.append({"name": tag, "recent": True})
-        #         org_tags.remove(tag)
-        #     else:
-        #         request_user.recently_used_tags.remove(tag)
-        # for tag in org_tags:
-        #     org_tags_list.append({"name": tag, "recent": False})
-        # # events = event_tags_future.get_result()
-        # event_tags_list = list()
-        # for event in event_tag_list:
-        #     event_tags_list.append({"name": event.tag})
-        # perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
-        # out_data["tags"] = {'org_tags': org_tags_list, 'event_tags': event_tags_list, 'perms_tags': perm_tags_list}
+#         # # tags section
+#         # org_tags = organization.tags
+#         # org_tags_list = list()
+#         # for tag in request_user.recently_used_tags:
+#         #     if tag in org_tags:
+#         #         org_tags_list.append({"name": tag, "recent": True})
+#         #         org_tags.remove(tag)
+#         #     else:
+#         #         request_user.recently_used_tags.remove(tag)
+#         # for tag in org_tags:
+#         #     org_tags_list.append({"name": tag, "recent": False})
+#         # # events = event_tags_future.get_result()
+#         # event_tags_list = list()
+#         # for event in event_tag_list:
+#         #     event_tags_list.append({"name": event.tag})
+#         # perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+#         # out_data["tags"] = {'org_tags': org_tags_list, 'event_tags': event_tags_list, 'perms_tags': perm_tags_list}
 
-        # organization info
-        organization_data = dict(name=organization.name, school=organization.school)
-        organization_data["subscribed"] = organization.subscribed
-        organization_data["color"] = organization.color
-        try:
-            organization_data["image"] = images.get_serving_url(organization.image, secure_url=True)
-        except:
-            organization_data["image"] = ''
-        out_data["organization_data"] = organization_data
+#         # organization info
+#         organization_data = dict(name=organization.name, school=organization.school)
+#         organization_data["subscribed"] = organization.subscribed
+#         organization_data["color"] = organization.color
+#         try:
+#             organization_data["image"] = images.get_serving_url(organization.image, secure_url=True)
+#         except:
+#             organization_data["image"] = ''
+#         out_data["organization_data"] = organization_data
 
-        #events info
-        events_data = list()
-        for event in events:
-            dict_event = event.to_dict()
-            dict_event["tags"] = {"org_tags": event.org_tags, "perms_tags": event.perms_tags}
-            dict_event["key"] = event.key
-            events_data.append(dict_event)
-        out_data["events"] = events_data
+#         #events info
+#         events_data = list()
+#         for event in events:
+#             dict_event = event.to_dict()
+#             dict_event["tags"] = {"org_tags": event.org_tags, "perms_tags": event.perms_tags}
+#             dict_event["key"] = event.key
+#             events_data.append(dict_event)
+#         out_data["events"] = events_data
 
-        #notifications info
-        out_notifications = list()
-        if request_user.new_notifications:
-            new_notifications = new_notification_future.get_result()
-            for notify in new_notifications:
-                note = notify.to_dict()
-                note["new"] = True
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        if request_user.notifications:
-            notifications = notifications_future.get_result()
-            for notify in notifications:
-                note = notify.to_dict()
-                note["new"] = False
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        out_hidden_notifications = list()
-        if request_user.hidden_notifications:
-            hidden_notifications = hidden_notifications_future.get_result()
-            for notify in hidden_notifications:
-                note = notify.to_dict()
-                note["key"] = notify.key.urlsafe()
-                out_hidden_notifications.append(note)
-        out_data["notifications"] = {'notifications': out_notifications,
-                                     'hidden_notifications': out_hidden_notifications,
-                                     'notifications_length': len(request_user.notifications),
-                                     'hidden_notifications_length': len(request_user.hidden_notifications),
-                                     'new_notifications_length': len(request_user.new_notifications)}
-        org_tags_list = list()
-        # logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
-        for tag in organization.tags:
-            if tag in request_user.recently_used_tags:
-                org_tags_list.append({"name": tag, "recent": True})
-            else:
-                org_tags_list.append({"name": tag, "recent": False})
-        event_tags_list = list()
-        for event in event_tag_list:
-            event_tags_list.append({"name": event.tag})
-        perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
-        out_data["tags"] = {'org_tags': org_tags_list, 'perms_tags': perm_tags_list, 'event_tags': event_tags_list}
+#         #notifications info
+#         out_notifications = list()
+#         if request_user.new_notifications:
+#             new_notifications = new_notification_future.get_result()
+#             for notify in new_notifications:
+#                 note = notify.to_dict()
+#                 note["new"] = True
+#                 note["key"] = notify.key.urlsafe()
+#                 out_notifications.append(note)
+#         if request_user.notifications:
+#             notifications = notifications_future.get_result()
+#             for notify in notifications:
+#                 note = notify.to_dict()
+#                 note["new"] = False
+#                 note["key"] = notify.key.urlsafe()
+#                 out_notifications.append(note)
+#         out_hidden_notifications = list()
+#         if request_user.hidden_notifications:
+#             hidden_notifications = hidden_notifications_future.get_result()
+#             for notify in hidden_notifications:
+#                 note = notify.to_dict()
+#                 note["key"] = notify.key.urlsafe()
+#                 out_hidden_notifications.append(note)
+#         out_data["notifications"] = {'notifications': out_notifications,
+#                                      'hidden_notifications': out_hidden_notifications,
+#                                      'notifications_length': len(request_user.notifications),
+#                                      'hidden_notifications_length': len(request_user.hidden_notifications),
+#                                      'new_notifications_length': len(request_user.new_notifications)}
+#         org_tags_list = list()
+#         # logging.error('recently used tags: ' + json_dump(request_user.recently_used_tags))
+#         for tag in organization.tags:
+#             if tag in request_user.recently_used_tags:
+#                 org_tags_list.append({"name": tag, "recent": True})
+#             else:
+#                 org_tags_list.append({"name": tag, "recent": False})
+#         event_tags_list = list()
+#         for event in event_tag_list:
+#             event_tags_list.append({"name": event.tag})
+#         perm_tags_list = [{"name": 'council'}, {"name": 'leadership'}, {"name": 'Everyone'}]
+#         out_data["tags"] = {'org_tags': org_tags_list, 'perms_tags': perm_tags_list, 'event_tags': event_tags_list}
 
-#part 2 of polls
-        dict_polls = list()
-        polls = polls_future.get_result()
-        for poll in polls:
-            add = poll.to_dict()
-            add["key"] = poll.key
-            dict_polls.append(add)
-        out_data["polls"] = dict_polls
+# #part 2 of polls
+#         dict_polls = list()
+#         polls = polls_future.get_result()
+#         for poll in polls:
+#             add = poll.to_dict()
+#             add["key"] = poll.key
+#             dict_polls.append(add)
+#         out_data["polls"] = dict_polls
 
-        time_end = datetime.datetime.now()
-        # logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
-        #               str(time_middle-time_start))
-        return OutgoingMessage(error='', data=json_dump(out_data))
+#         time_end = datetime.datetime.now()
+#         # logging.error('The time it took for initial load:: full time -' + str(time_end-time_start) + '   first half-' +
+#         #               str(time_middle-time_start))
+#         return OutgoingMessage(error='', data=json_dump(out_data))
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='link/get',
