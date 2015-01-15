@@ -449,21 +449,21 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
 App.config(function($mdThemingProvider) {
     
-    $mdThemingProvider.definePalette('blue', {
-        '50': 'e3f2fd',
-        '100': 'bbdefb',
-        '200': '90caf9',
-        '300': '64b5f6',
-        '400': '42a5f5',
-        '500': '2196f3',
-        '600': '1e88e5',
-        '700': '1976d2',
-        '800': '1565c0',
-        '900': '0d47a1',
-        'A100': '82b1ff',
-        'A200': '448aff',
-        'A400': '2979ff',
-        'A700': '2962ff',
+    $mdThemingProvider.definePalette('cyan', {
+        '50': 'e0f7fa',
+        '100': 'b2ebf2',
+        '200': '80deea',
+        '300': '4dd0e1',
+        '400': '26c6da',
+        '500': '00bcd4',
+        '600': '00acc1',
+        '700': '0097a7',
+        '800': '00838f',
+        '900': '006064',
+        'A100': '84ffff',
+        'A200': '18ffff',
+        'A400': '00e5ff',
+        'A700': '00b8d4',
         'contrastDefaultColor': 'light',
         'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
         'contrastLightColors': undefined
@@ -601,7 +601,8 @@ App.config(function($mdThemingProvider) {
         'contrastDarkColors': ['50', '100', '200','300','400','A100'],
         'contrastLightColors': undefined
     });
-    $mdThemingProvider.theme('blue').primaryColor('blue');
+    $mdThemingProvider.theme('default').primaryColor('cyan');
+    $mdThemingProvider.theme('cyan').primaryColor('cyan');
     $mdThemingProvider.theme('red').primaryColor('red');
     $mdThemingProvider.theme('purple').primaryColor('purple');
     $mdThemingProvider.theme('pink').primaryColor('pink');
@@ -717,7 +718,11 @@ App.config(function($mdThemingProvider) {
             }
         });
 
-        
+        $rootScope.$watch('color', function(){
+           $('body').attr('md-theme',$rootScope.color);
+           $('body').attr('class', 'theme-'+$rootScope.color);
+            console.log('I changed dat color');
+        })
         $rootScope.changeTheme = function(color){
             $rootScope.color = color;
             

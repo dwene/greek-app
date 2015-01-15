@@ -588,11 +588,11 @@ div#cropped-image {
 body{padding-top:84px; padding-bottom:40px; backface-visibility: hidden; -webkit-backface-visibility: hidden; height:auto; min-height:100%; background:#ececec;} 
 .container{max-width:750px;}
 a:hover{text-decoration:none;}
-md-backdrop.md-opaque.md-default-theme{z-index:1040; background:rgba(0, 0, 0, .2);}
+md-backdrop.md-opaque{z-index:1040 !important; background:rgba(0, 0, 0, .2) !important;}
 .md-dialog-container{z-index:1042;}
 .md-tile-content{overflow:hidden;}
 md-list li{list-style:none;}
-md-tabs.md-default-theme md-tab.active{background-color: rgba(255,255,255,0.4);}
+md-tabs md-tab.active{background-color: rgba(255,255,255,0.4);}
 md-dialog{
     border-radius:0px !important;
     .md-subheader:not(.md-sticky-no-effect)[sticky-state="active"]{
@@ -613,13 +613,12 @@ md-dialog{
     }
 }
 
-.md-dialog-container, md-backdrop.md-opaque.md-default-theme{position:fixed;}
+.md-dialog-container, md-backdrop.md-opaque{position:fixed;}
 .aside li .md-button{text-align:left; text-transform:none; outline: none;}
-.md-sidenav-backdrop{z-index:1050;}
+.md-backdrop{z-index:1050 !important;}
 
 md-sidenav{z-index:1051; position:fixed; top:0;
     md-toolbar {
-        md-tabs{background:rgba(0,0,0,.5);}
         .md-header{background-color: rgba(0,0,0,0) !important;}
     }
 }
