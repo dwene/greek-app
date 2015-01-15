@@ -111,3 +111,8 @@
   background: #3e2723;
   color: white;
 }
+/*Fixes*/
+.md-button.md-cyan-theme.md-raised,
+.md-button.md-cyan-theme.md-fab {
+  background-color: #00bcd4 !important;
+}

@@ -110,6 +110,11 @@
   background: #3e2723;
   color: white;
 }
+/*Fixes*/
+.md-button.md-cyan-theme.md-raised,
+.md-button.md-cyan-theme.md-fab {
+  background-color: #00bcd4 !important;
+}
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,
 body,
@@ -1509,6 +1514,9 @@ div#cropped-image {
   max-width: 95%;
 }
 /*Material Design Styles*/
+html {
+  background: #ececec;
+}
 body {
   padding-top: 84px;
   padding-bottom: 40px;
