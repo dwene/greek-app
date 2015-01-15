@@ -60,6 +60,9 @@ class User(ndb.Model):
     events = ndb.KeyProperty(repeated=True)
     recently_used_tags = ndb.StringProperty(repeated=True)
     email_prefs = ndb.StringProperty(default='all')
+    #mobile app stuff
+    android_tokens = ndb.StringProperty(repeated=True)
+    iphone_tokens = ndb.StringProperty(repeated=True)
 
 
 class Notification(ndb.Model):

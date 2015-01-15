@@ -52,6 +52,7 @@
     <script src="../bower_components/angular-material/angular-material.js"></script>
     <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="../bower_components/angular-permission/dist/angular-permission.js"></script>
+    <script src="../bower_components/ngCordova/dist/ng-cordova.js"></script>
     <!-- endbower -->
     <script src="scripts/vendor/angular-ui.js"></script>
     <script src="scripts/vendor/jquery.cookie.js"></script>
@@ -145,7 +146,7 @@
     <script type="text/javascript" src="scripts/factories/notificationFactory.js"></script>
     <!-- endbuild -->
 </head>
-<body ng-app="App" ng-controller="indexController as main" md-theme="cyan" ng-cloak md-theme-watch>
+<body ng-app="App" ng-controller="indexController as main" md-theme="{{$root.color}}" class="theme-{{$root.color}}" ng-cloak>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
@@ -276,6 +277,7 @@
 
       ga('create', 'UA-53982204-1', 'auto');
 </script>
+<script src="cordova.js"></script>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 </html>
 

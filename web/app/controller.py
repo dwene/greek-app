@@ -3752,7 +3752,30 @@ class RESTApi(remote.Service):
             organization.put()
         return OutgoingMessage(error='', data='OK')
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/set_iphone_token',
+                      http_method='POST', name='user.set_iphone_token')
+    def set_iphone_token(self, request):
+        data = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not data in request_user.iphone_tokens:
+            request_user.iphone_tokens.append(data)
+            request_user.put()
+        return OutgoingMessage(error='', data='OK')
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/set_android_token',
+                      http_method='POST', name='user.set_android_token')
+    def set_android_token(self, request):
+        data = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if not data in request_user.android_tokens:
+            request_user.android_tokens.append(data)
+            request_user.put()
+        return OutgoingMessage(error='', data='OK')
 
 
 APPLICATION = endpoints.api_server([RESTApi])

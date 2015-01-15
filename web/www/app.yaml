@@ -27,10 +27,12 @@ handlers:
   script: main.app
   secure: always
 
+# - url: /
+#   script: main.app
+#   secure: always
 - url: /
-  script: main.app
-  secure: always
-
+  upload: index.html
+  static_files: index.html
 
 - url: /sendemails
   script: main.app

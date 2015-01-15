@@ -13,7 +13,8 @@
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
     "angular-material": "master",
-    "angular-permission": "~0.1.6"
+    "angular-permission": "~0.1.6",
+    "ngCordova": "~0.1.10-alpha"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",

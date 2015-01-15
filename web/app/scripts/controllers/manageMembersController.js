@@ -1,13 +1,13 @@
     App.controller('manageMembersController', function($scope, RESTService, Load, LoadScreen, $rootScope, localStorageService, Directory){
     routeChange();
     Directory.get();
+    $scope.startsWith = 0;
+    $scope.change = function(){
+        console.log('I changed');
+        $scope.startsWith = 0;
+    }
     $scope.directory = Directory.directory;
         $scope.memberslength = 20;
-        $scope.$watch('search', function(){
-            if ($scope.search){
-                $scope.memberslength = 20;
-            }
-        });
         //MANAGE MEMBERS TAB
         $scope.openDeleteMemberModal = function(user){
             $('#deleteMemberModal').modal();
@@ -137,7 +137,12 @@
             Directory.set($scope.directory);
         };
         $scope.getMembers = function(){
-            $scope.directory = Directory.directory;
+            var directory = Directory.directory;
+            $scope.end = Math.floor(directory.members.length/10);
+            for (var i = 0; i < directory.members.length; i++){
+                directory.members[i].name = directory.members[i].first_name + " " + directory.members[i].last_name;
+            }
+            $scope.directory = directory;
             $scope.directoryLoaded = true;
         };
         if (Directory.check()){
@@ -146,7 +151,6 @@
         $scope.$on('directory:updated', function(){
             $scope.getMembers();
         });
-        
         $scope.removeMember = function(user){
             $('#deleteMemberModal').modal('hide');
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', user)

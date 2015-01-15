@@ -46,10 +46,10 @@
             </section>
 -->
 
-        <search ng-model="search" id="taggingSearch"></search>
+        <search ng-model="search" id="taggingSearch" change="change()"></search>
         <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
             <ul id="memberSelect">
-                <li layout="row" ng-repeat="user in (directory.members | orderBy: 'last_name'| limitTo:memberslength)  track by user.key" on-finish-render="isDoneLoading = true;">
+                <li layout="row" ng-repeat="user in (directory.members | orderBy: 'last_name'| nameSearch:search | limitTo:memberslength)  track by user.key" on-finish-render="isDoneLoading = true;">
                         <label class="label checkLabel member" ng-class="{'label-primary': user.checked, 'label-default': !user.checked}">
                             <i class="fa checkStatus" ng-class="{'fa-check-square-o': user.checked, 'fa-square-o': !user.checked}"></i>
                             <input type="checkbox" ng-model="user.checked">
