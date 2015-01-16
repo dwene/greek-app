@@ -1983,7 +1983,7 @@ App.filter('tagDirectorySearch', function(){
             if (tags.perms_tags){
                 for (var j = 0; j < tags.perms_tags.length; j++){
                     if (tags.perms_tags[j].checked){
-                        if (tags.perms_tags[j].name == "Everyone"){
+                        if (tags.perms_tags[j].name == "everyone"){
                             tags_list.push("member");
                             tags_list.push("leadership");
                             tags_list.push("council");

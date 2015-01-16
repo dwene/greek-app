@@ -64,6 +64,6 @@
             //     });
         };
         $scope.forgotPassword = function(){
-            $location.path('#/forgotpassword'); 
+            $location.url('forgotpassword'); 
         }
     });

@@ -1094,7 +1094,6 @@ class RESTApi(remote.Service):
             del me["messages"]
             del me["new_messages"]
             del me["archived_messages"]
-            me["dob"] = request_user.dob.strftime("%m/%d/%Y")
             return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
                                                                              datetime.timedelta(days=EXPIRE_TIME), 'me': me}
             return OutgoingMessage(data=json_dump(return_item), error='')
@@ -1118,7 +1117,6 @@ class RESTApi(remote.Service):
         del me["messages"]
         del me["new_messages"]
         del me["archived_messages"]
-        me["dob"] = request_user.dob.strftime("%m/%d/%Y")
         to_send = json_dump({'user_name':user, 'token': token, 'me': me})
         return OutgoingMessage(error='', data=to_send)
 
@@ -2957,7 +2955,7 @@ class RESTApi(remote.Service):
                                         request_user.organization, False)
             notification = Notification()
             notification.type = 'event'
-            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event " + event.title
+            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event: " + event.title
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
             notification.link = 'app/events/'+event.key.urlsafe()
@@ -3123,7 +3121,7 @@ class RESTApi(remote.Service):
             async_list.append(q.put_async())
         users = get_users_from_tags(data["tags"], request_user.organization, False)
         notification = Notification()
-        notification.content = request_user.first_name + " " + request_user.last_name + 'invited you to answer the poll: ' + poll.name
+        notification.content = request_user.first_name + " " + request_user.last_name + ' invited you to answer the poll: ' + poll.name
         notification.timestamp = datetime.datetime.now()
         notification.sender = request_user.key
         notification.type = 'poll'

@@ -15,8 +15,8 @@
             .error(function(data) {
                 console.log('Error: ' , data);
             });
-            $scope.user_name = $.cookie(USER_NAME);
-            $scope.token = $.cookie(TOKEN);
+            $scope.user_name = Session.user_name;
+            $scope.token = Session.token;
             $scope.type = "prof_pic";
         //initialize profile image variable
         var newprofileImage;
