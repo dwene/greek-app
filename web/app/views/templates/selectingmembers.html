@@ -30,8 +30,10 @@
             </div>
     </div>
     
-    <md-subheader ng-show="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">Tags Selected</md-subheader>
-    <md-subheader ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</md-subheader>
+    <md-subheader> 
+        <span ng-hide=" ! (orgTagCheck.length || permsTagCheck.length)">Tags Selected</span>
+        <span ng-hide="orgTagCheck.length || permsTagCheck.length">No tags are selected.</span>
+    </md-subheader>
     <ul id="messagingTags">
         <span>
             <div class="btn-group" ng-show="tags.org_tags" ng-repeat="tag in orgTagCheck = (tags.org_tags | checkedFilter)">
@@ -43,9 +45,10 @@
         </span>
     
     </ul>
-    
-    <md-subheader ng-show="$parent.selectedMembers.length">Members Selected {{$parent.selectedMembers.length}}</md-subheader>
-    <md-subheader ng-hide="$parent.selectedMembers.length">No members are selected.</md-subheader>
+    <md-subheader>
+        <span ng-show="$parent.selectedMembers.length">Members Selected {{$parent.selectedMembers.length}} </span>
+        <span ng-hide="$parent.selectedMembers.length">No members are selected.</span>
+    </md-subheader>
     <div id="selectedList">
         <span><netemember-check ng-repeat="tag in $parent.selectedMembers = ( directory.members | tagDirectorySearch:tags:usersList) | orderBy: 'last_name'" ng-model="tag" ng-show="tag.checked"></netemember-check></span>
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers | orderBy: 'last_name'" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>

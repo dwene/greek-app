@@ -22,10 +22,7 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         email = $scope.email;
         vCard = getVcard();
         $mdBottomSheet.show({
-          //templateUrl: 'views/templates/bottomGrid.html',
-          template:'<md-bottom-sheet>' +
-                '<md-button>View Options</md-button>' +
-                '</md-bottom-sheet>',
+          templateUrl: 'views/templates/bottomGrid.html',
           controller: profileOptionsCtrl,
           targetEvent: $event
         }).then(function(clickedItem) {
