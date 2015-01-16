@@ -21,5 +21,6 @@ App.controller('dialogController', function($scope, RESTService, LoadScreen, $ro
 
   $scope.hideDialog = function() {
     $mdDialog.cancel();
+    return false;
   };
 });
