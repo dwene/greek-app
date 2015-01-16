@@ -52,6 +52,7 @@
         <br>
 
 <form id="memberAccount" method="POST" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
+<div class="row">
 <div class="col-xs-12 col-sm-8 col-sm-offset-2">
     <md-input-container class="md-default-theme required" ng-class="{ 'has-error' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
         <label for="first_name">First Name</label>
@@ -387,32 +388,31 @@
     </div>
     
     
-    
-    <md-input-container ng-class="{ 'has-error' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
+    <md-input-container class="url" ng-class="{ 'has-error' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
         <label for="website">Website</label>
         <input type="text" name="website" ng-model="item.website" remove-http>
         <p ng-show="(memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </md-input-container>
     
-    <md-input-container ng-class="{ 'has-error' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
+    <md-input-container class="url" ng-class="{ 'has-error' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
         <label for="facebook">Facebook Profile</label>
         <input type="text" name="facebook" ng-model="item.facebook" remove-http>
         <p ng-show="(memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </md-input-container>
     
-    <md-input-container ng-class="{ 'has-error' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
+    <md-input-container class="url" ng-class="{ 'has-error' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
         <label for="twitter">Twitter Profile</label>
         <input type="text" name="twitter" ng-model="item.twitter" remove-http>
         <p ng-show="(memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </md-input-container>
     
-    <md-input-container ng-class="{ 'has-error' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
+    <md-input-container class="url" ng-class="{ 'has-error' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
         <label for="instagram">Instagram Profile</label>
         <input type="text" name="instagram" ng-model="item.instagram" remove-http>
         <p ng-show="(memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
     </md-input-container>
     
-    <md-input-container ng-class="{ 'has-error' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
+    <md-input-container class="url" ng-class="{ 'has-error' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
         <label for="linkedin">LinkedIn Profile</label>
         <input type="text" name="linkedin" ng-model="item.linkedin" remove-http>
         <p ng-show="(memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)" class="help-block">Please enter a valid url.</p>
@@ -423,12 +423,13 @@
     
 
 </div>
-    
+   
+</div>    
 </form>
-       
-<div id="updateAccountAlert" class="alert alert-success" ng-show="updatedInfo">Account info updated!</div>
 
-       
+    <p id="updateAccountAlert" class="alert alert-success" ng-show="updatedInfo">Account info updated!</p>
+
+                     
         </md-content>
     </div>
 </div>

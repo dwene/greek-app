@@ -12,6 +12,12 @@
   background: #006064;
   color: white;
 }
+.theme-cyan .label-primary {
+  background: #00bcd4;
+}
+.theme-cyan .checkLabel.label-primary:hover {
+  background: #80deea;
+}
 .theme-red .theme-bg {
   background: #f44336;
   color: white;
@@ -25,6 +31,12 @@
 .theme-red .theme900-bg {
   background: #b71c1c;
   color: white;
+}
+.theme-red .label-primary {
+  background: #f44336;
+}
+.theme-red .checkLabel.label-primary:hover {
+  background: #ef9a9a;
 }
 .theme-purple .theme-bg {
   background: #9c27b0;
@@ -40,6 +52,12 @@
   background: #4a148c;
   color: white;
 }
+.theme-purple .label-primary {
+  background: #9c27b0;
+}
+.theme-purple .checkLabel.label-primary:hover {
+  background: #ce93d8;
+}
 .theme-pink .theme-bg {
   background: #e91e63;
   color: white;
@@ -53,6 +71,12 @@
 .theme-pink .theme900-bg {
   background: #880e4f;
   color: white;
+}
+.theme-pink .label-primary {
+  background: #e91e63;
+}
+.theme-pink .checkLabel.label-primary:hover {
+  background: #f48fb1;
 }
 .theme-green .theme-bg {
   background: #4caf50;
@@ -68,6 +92,12 @@
   background: #1b5e20;
   color: white;
 }
+.theme-green .label-primary {
+  background: #4caf50;
+}
+.theme-green .checkLabel.label-primary:hover {
+  background: #c8e6c9;
+}
 .theme-orange .theme-bg {
   background: #ff5722;
   color: white;
@@ -82,12 +112,18 @@
   background: #bf360c;
   color: white;
 }
+.theme-orange .label-primary {
+  background: #ff5722;
+}
+.theme-orange .checkLabel.label-primary:hover {
+  background: #ffab91;
+}
 .theme-brown .theme-bg {
   background: #795548;
   color: white;
 }
 .theme-brown .theme50-bg {
-  background: #bcaaa4;
+  background: #efebe9;
 }
 .theme-brown .theme200-bg {
   background: #bcaaa4;
@@ -96,23 +132,34 @@
   background: #3e2723;
   color: white;
 }
+.theme-brown .label-primary {
+  background: #795548;
+}
+.theme-brown .checkLabel.label-primary:hover {
+  background: #bcaaa4;
+}
 .theme-gray .theme-bg {
   background: #9e9e9e;
   color: white;
 }
 .theme-gray .theme50-bg {
-  background: #efebe9;
+  background: #fafafa;
 }
 .theme-gray .theme200-bg {
-  background: #bcaaa4;
+  background: #eeeeee;
 }
 .theme-gray .theme900-bg {
-  background: #3e2723;
+  background: #212121;
   color: white;
 }
-/*Fixes*/
-#adminPage .md-button.md-cyan-theme.md-raised {
-  background-color: #00bcd4 !important;
+.theme-gray .label-primary {
+  background: #212121;
+}
+.theme-gray .checkLabel.label-primary:hover {
+  background: #9e9e9e;
+}
+.checkLabel.label-default:hover {
+  background: #ccc;
 }
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,
@@ -397,12 +444,6 @@ h2.page-header {
   left: 5px;
   top: 5px;
 }
-.checkLabel.label-default:hover {
-  background: #ccc;
-}
-.checkLabel.label-primary:hover {
-  background: blue;
-}
 /*Selecting Members for Messaging*/
 #selectedList {
   position: relative;
@@ -418,63 +459,6 @@ h2.page-header {
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
-}
-#selectingUsers #messagingTags {
-  margin-top: 0px;
-}
-#selectingUsers .noneSelected {
-  line-height: 26px;
-}
-#selectedList .noneSelected {
-  margin-bottom: -1px;
-  display: block;
-}
-#selectingUsers #messagingTags .page-header #noTags {
-  display: inline-block;
-  margin-top: 3px;
-}
-#tagtypeahead {
-  position: relative;
-  margin-bottom: 5px;
-}
-#tagtypeahead #seeall {
-  cursor: pointer;
-  position: absolute;
-  right: 25px;
-  top: 8px;
-}
-.selectTags .label {
-  margin-bottom: 4px;
-}
-#selectingUsers .page-header {
-  padding-bottom: 2px;
-  margin-bottom: 4px;
-  margin-top: 10px;
-}
-#seeallTags .page-header {
-  margin-bottom: 2px;
-  margin-top: 10px;
-}
-#selectingUsers > .row {
-  margin-top: 10px;
-}
-#recentTags {
-  position: relative;
-  margin-bottom: 5px;
-  margin-top: -15px;
-  overflow-y: hidden;
-  max-height: 80px;
-}
-#recentTags .page-header {
-  margin-top: 0px;
-}
-#recentTags .btn-group {
-  margin-bottom: 4px;
-}
-@media screen and (max-width: 767px) {
-  #recentTags {
-    margin-top: 10px;
-  }
 }
 /*Random Fixes*/
 .btn {
@@ -910,19 +894,6 @@ background-repeat: repeat-x;
 /*Register User/Password Pages*/
 .usernameAlert {
   padding: 10px;
-}
-/*Account Info Page*/
-#changePasswordButton {
-  margin: 10px 0px 0px 0px;
-}
-#changeProfileButton {
-  display: block;
-  width: 180px;
-  margin: 0px auto 20px auto;
-}
-#updateAccountAlert {
-  padding: 15px;
-  margin-right: 100px;
 }
 /*Change Password from Token*/
 #changepasswordfromToken #correctUser {
@@ -2084,6 +2055,19 @@ md-toolbar.md-tall {
   display: block;
   width: 150px;
 }
+#accountInfo .url.md-input-focused input {
+  padding-left: 54px;
+}
+#accountInfo .url.md-input-focused:before {
+  content: 'https://';
+  position: absolute;
+  bottom: 7px;
+  color: #888;
+}
+#accountInfo #updateAccountAlert {
+  padding: 15px;
+  margin-top: 10px;
+}
 #registerInfo #username .md-button {
   height: 28px;
   margin-top: 22px;
@@ -2119,8 +2103,8 @@ md-toolbar.md-tall {
   width: 57px;
   display: inline-block;
 }
-#adminPage button.md-blue-theme {
-  background: #2196f3;
+#adminPage button.md-cyan-theme {
+  background: #00bcd4;
 }
 #adminPage button.md-red-theme {
   background: #f44336;
@@ -2165,4 +2149,30 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #tagsDialog .md-actions {
   position: absolute;
   bottom: 0px;
+}
+#selectingTags > .row {
+  margin-top: 10px;
+}
+#selectingTags #messagingTags {
+  margin-top: 0px;
+}
+#selectingTags #noTags {
+  display: inline-block;
+  margin-top: 3px;
+}
+#selectingTags #seeall {
+  position: absolute;
+  right: 25px;
+  top: 12px;
+}
+#selectingTags #recentTags {
+  overflow-y: hidden;
+  max-height: 80px;
+}
+#selectingTags #recentTags .md-subheader {
+  padding: 5px 0px 5px 2px;
+}
+#selectingTags #recentTags netetag-check {
+  display: inline-block;
+  height: 22px;
 }

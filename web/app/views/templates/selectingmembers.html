@@ -1,13 +1,14 @@
-<section id="selectingUsers">
+<section id="selectingTags">
 <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto;"></md-progress-circular>
     <div ng-show="directory">
     <div class="row">
-          
            <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-                <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" placeholder="Enter Tag" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
-                <a id="seeall" ng-click="openDialog($event)">see all</a>
-            </form>
-            
+                <md-input-container>
+                    <label for="enter_tag">Enter Tag</label>
+                    <input type="text" name="enter_tag" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
+                </md-input-container>
+                <md-button id="seeall" ng-click="openDialog($event)">see all</md-button>
+            </form>        
 <!--
             <div class="col-sm-6" layout="row" layout-align="center">
                             <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
@@ -18,26 +19,20 @@
                             </form>
                             <md-button data-toggle="modal" data-target="#seeallTags">See All</md-button>
             </div>    
--->
-            
-            
+-->   
             <div class="col-sm-6">
-                  
                 <div id="recentTags">
-                    <h2 class="page-header">Recent Tags</h2>
+                    <md-subheader>Recent Tags</md-subheader>
                     <div id="theTags">
-                    <div class="btn-group" ng-repeat="tag in tags.org_tags | orderBy:'name'">
-                        <netetag-check ng-show="tag.recent"></netetag-check>
-                    </div>
+                            <netetag-check ng-repeat="tag in tags.org_tags | orderBy:'name'" ng-show="tag.recent"></netetag-check>
                     </div>
                 </div>
-
             </div>
     </div>
     
-    <h2 class="page-header">Tags Selected</h2>
+    <md-subheader ng-show="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">Tags Selected</md-subheader>
+    <md-subheader ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</md-subheader>
     <ul id="messagingTags">
-    <span id="noTags" class="noneSelected" ng-hide="orgTagCheck.length > 0 || eventTagCheck.length > 0 || permsTagCheck.length > 0">No tags are selected.</span>
         <span>
             <div class="btn-group" ng-show="tags.org_tags" ng-repeat="tag in orgTagCheck = (tags.org_tags | checkedFilter)">
                 <netetag-check></netetag-check>
@@ -49,10 +44,9 @@
     
     </ul>
     
-    <h2 class="page-header">People Selected<span ng-show="$parent.selectedMembers.length">: {{$parent.selectedMembers.length}}</span></h2>
+    <md-subheader ng-show="$parent.selectedMembers.length">Members Selected {{$parent.selectedMembers.length}}</md-subheader>
+    <md-subheader ng-hide="$parent.selectedMembers.length">No members are selected.</md-subheader>
     <div id="selectedList">
-        <span class="noneSelected" ng-hide="$parent.selectedMembers.length">No one is selected.</span>
-
         <span><netemember-check ng-repeat="tag in $parent.selectedMembers = ( directory.members | tagDirectorySearch:tags:usersList) | orderBy: 'last_name'" ng-model="tag" ng-show="tag.checked"></netemember-check></span>
         <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers | orderBy: 'last_name'" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>
     </div>

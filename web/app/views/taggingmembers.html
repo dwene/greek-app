@@ -138,15 +138,20 @@
         <h4 class="modal-title">All Tags</h4>
       </div>
       <div class="modal-body">
+           
+            <form layout="row" id="addTagForm" name="addTagForm" ng-submit="addOrganizationTag(new_tag)">
+                    <md-input-container flex>
+                        <label for="new_tag">Tag Name</label>
+                        <input type="text" name="tag_name" ng-model="new_tag">
+                    </md-input-container>
+                    <md-button type="submit">Add Tag</md-button>
+            </form>
             <ul class="addTags">
                 <div class="btn-group" ng-repeat="tag in tags.org_tags | orderBy : 'name'">
                     <netetag-all ></netetag-all>
                 </div>
             </ul>
-                <form layout="row" id="addTagForm" name="addTagForm" ng-submit="addOrganizationTag(new_tag)">
-                      <md-text-float label="Tag Name" ng-model="new_tag" flex></md-text-float>
-                        <md-button type="submit">Add Tag</md-button>
-                </form>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
