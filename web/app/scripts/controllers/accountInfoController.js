@@ -1,4 +1,4 @@
-App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS, Session){
+App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS, Session, Directory){
     routeChange();
     Organization.get();
     $scope.updatedInfo = false;
@@ -11,7 +11,8 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
         .success(function(data) {
             if(!checkResponseErrors(data)){
                 $scope.passwordChanged = true;
-                $timeout(function(){$rootScope.$broadcast(AUTH_EVENTS.logoutSuccess)}, 4000);
+                $rootScope.passwordChanged = true;
+                $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
                 $scope.changeFailed = false;
             }
             else{
@@ -56,9 +57,9 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
-                    $rootScope.me = $scope.item;
                     $scope.working = 'done';
                     $scope.updatedInfo = true;
+                    Directory.updateMe($scope.item);
                 }
                 else
                 {
@@ -80,13 +81,12 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
     $scope.updateEmailPrefs = function(option){
         var to_send = {email_prefs: option}
         $scope.emailPrefUpdating = "pending";
-        $rootScope.me.email_prefs = option;
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', to_send)
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
                     $scope.emailPrefUpdating = "done";
-                    Organization.updateMe();
+                    Session.me.email_prefs = option;
                 }
                 else
                 {

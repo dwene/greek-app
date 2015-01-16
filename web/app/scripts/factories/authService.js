@@ -3,6 +3,7 @@ App.factory('AuthService', function ($http, Session, LoadScreen, $location, $q, 
   var loginAttempted = false;
   
   authService.login = function (credentials) {
+    $rootScope.passwordChanged = false;
     return RESTService
       .post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', credentials)
       .success(function (data) {

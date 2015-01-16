@@ -15,7 +15,7 @@
                 </md-input-container>
                 
                 <p ng-show="badLogin">Your username or password is incorrect.</p>
-
+                <p ng-show="$root.passwordChanged" class="alert alert-success">Your password was changed successfully!</p>
                 <md-button class="btn-touch pull-right" type="submit">Login</md-button>
             </form>
       </md-content>

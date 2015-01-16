@@ -1,4 +1,4 @@
-App.factory('Directory', function(RESTService, $rootScope, localStorageService, $q, Session){
+App.factory('Directory', function(RESTService, $rootScope, localStorageService, $q, Session, Session){
     var item = {};
     item.directory = localStorageService.get('directory');
     item.cacheTimestamp = undefined;
@@ -39,7 +39,17 @@ App.factory('Directory', function(RESTService, $rootScope, localStorageService, 
                 if (item.directory.members[i].user_name == Session.user_name){
                     item.directory.members[i].status = status;
                     console.log('I just set my status');
+                    return;
                 }
+            }
+        }
+    }
+    item.updateMe = function(me){
+        for (var i = 0; i < item.directory.members.length; i++){
+            if (item.directory.members[i].user_name == Session.user_name){
+                item.directory.members[i] = me;
+                Session.me = me;
+                return;
             }
         }
     }

@@ -1,4 +1,4 @@
-    App.controller('profilepictureController', function($scope, RESTService, $http, Load, $rootScope){
+    App.controller('profilepictureController', function($scope, RESTService, $http, Load, $rootScope, Session){
     routeChange();
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', '')
             .success(function(data){

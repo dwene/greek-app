@@ -12,21 +12,25 @@ App.service('Session', function ($rootScope, AUTH_EVENTS) {
     this.perms = null;
     this.me = null;
   };
-  this.updateMe = function(){
-    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', '')
-        .success(function(data){
-            if (!RESTService.hasErrors(data))
-            {
-                this.me = JSON.parse(data.data);
-            }
-            else
-            {
-                console.log('ERROR: ',data);
-            }
-        })
-        .error(function(data) {
-            console.log('Error: ' , data);
-        });
-  }
+  // this.updateMe = function(){
+  //   RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', '')
+  //       .success(function(data){
+  //           if (!RESTService.hasErrors(data))
+  //           {
+  //               this.me = JSON.parse(data.data);
+  //           }
+  //           else
+  //           {
+  //               console.log('ERROR: ',data);
+  //           }
+  //       })
+  //       .error(function(data) {
+  //           console.log('Error: ' , data);
+  //       });
+  // };
+  // this.updateMe = function(me){
+  //   this.me = me;
+  //   Directory.updateMe(this.me);
+  // }
   return this;
 })

@@ -33,11 +33,11 @@
                     <input name="repeat_password" type="password" ng-model="new_pass.repeat_password">
                 </md-input-container>
                     <div ng-show="new_pass.password != new_pass.repeat_password" class="alert alert-danger">Passwords do not match</div>
-                    <div ng-show="passwordChanged" class="alert alert-danger">Your password has been changed! You will be logged out in 3 seconds...</div>
                     <div ng-show="changeFailed" class="alert alert-danger">Password change failed. Please try again.</div>
                 <md-button class="pull-right" ng-disabled="new_pass.password != new_pass.repeat_password" ng-click="changePassword(new_pass.old_password, new_pass.password)">Change</md-button>
                 </div>
             </form>  
+            <div ng-show="passwordChanged" class="alert alert-success">Your password has been changed! You will be logged out in 5 seconds...</div>
         </md-content>
     </div>
     <div class="md-whiteframe-z1">
