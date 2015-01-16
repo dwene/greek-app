@@ -1,0 +1,14 @@
+<md-dialog md-theme="{{$root.color}}">
+  <md-content>
+       <md-subheader>
+            Are you sure you want to convert these members?
+        </md-subheader>
+		<md-divider></md-divider>
+        <div ng-repeat="member in selectedUser" ng-show="member.checked">{{member.first_name}} {{member.last_name}}</div>
+  </md-content>
+  
+  <div class="md-actions" layout="row">
+        <md-button ng-click="closeDialog(selectedUser)">cancel</md-button>
+        <md-button ng-click="convertMembers()">convert</md-button>
+  </div>
+</md-dialog>

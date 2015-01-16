@@ -1,5 +1,5 @@
 <div id="managingMembers" load-directive ng-model="directoryLoaded">
-    <md-button ng-click="openConvertMembersModal()" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</md-button>
+    <md-button ng-click="openConvertMembersModal($event)" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</md-button>
     <md-button ng-click="resendAllWelcomeEmails()">Resend All Welcome Emails</md-button>
 
 <search ng-model="search" change="startsWith = 0;"></search><br>
@@ -10,7 +10,7 @@
                     <netemember-check class="members" ng-model="member"></netemember-check>
                     <!-- <nete-member ng-show="member.user_name == $parent.me.user_name"  class="members" ng-model="member"></nete-member> -->
                     <div class="email">{{member.email}}</div>
-                    <md-button ng-click="openChangeEmailModal(member)" href="" aria-label="edit email"><i class="fa fa-pencil fa-fw"></i></md-button>
+                    <md-button ng-click="openChangeEmailModal(member, $event)" href="" aria-label="edit email"><i class="fa fa-pencil fa-fw"></i></md-button>
                     <md-button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="resendWelcome">Resend Email</md-button>
                     <div class="no-margin" flex></div>
                     <form class="permsSelect">
@@ -21,7 +21,7 @@
                             <option value="leadership">leadership</option>
                         </select>
                     </form>
-                    <md-button ng-click="openDeleteMemberModal(member)" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                    <md-button ng-click="openDeleteMemberModal(member, $event)" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
                 </div>
             </md-item>
         </md-list>

@@ -1,0 +1,15 @@
+<md-dialog md-theme="{{$root.color}}">
+  <md-content>
+       <md-subheader>
+            Change email from {{selectedUser.email}}?
+        </md-subheader>
+		<md-divider></md-divider>
+
+        <input type="text" ng-model="email">
+  </md-content>
+  
+  <div class="md-actions" layout="row">
+        <md-button ng-click="closeDialog(selectedUser)">cancel</md-button>
+        <md-button ng-click="changeEmail(selectedUser, email)">convert</md-button>
+  </div>
+</md-dialog>

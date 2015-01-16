@@ -1,24 +1,54 @@
-    App.controller('managealumniController', function($scope, RESTService, $rootScope, Load, LoadScreen, localStorageService, Directory){
+    App.controller('managealumniController', function($scope, RESTService, $rootScope, $mdDialog, Load, LoadScreen, localStorageService, Directory){
         routeChange();
             Directory.get();
+            var selectedUser = undefined;
             $scope.directory = Directory.directory;
             if ($scope.directory){
                 $scope.finished_loading = true;
             }
             $scope.$on('directory:updated', function(){
+                $scope.directory = Directory.directory;
                 $scope.finished_loading = true;
             });
-        $scope.openDeleteAlumniModal = function(user){
-            $('#deleteAlumniModal').modal();
-            $scope.selectedUser = user;
+
+        $scope.openDeleteAlumniModal = function(user, ev){
+            $mdDialog.show({
+                controller: dialogController,
+                templateUrl: 'views/templates/alumni/deleteAlumniDialog.html',
+                targetEvent: ev
+            });
+            selectedUser = user;
+        }
+
+        function dialogController($scope, $mdDialog){
+            $scope.selectedUser = selectedUser;
+            $scope.removeAlumni = function(user){
+                removeAlumni(user);
+                $mdDialog.hide();
+            }
+            $scope.convertAlumni = function(user){
+                convertAlumniToMember(user);
+                $mdDialog.hide();
+            }
+            $scope.closeDialog = function(){
+                $mdDialog.hide();
+            }
+            $scope.resendWelcomeEmail = function(user){
+                resendWelcomeEmail(user);
+                $mdDialog.hide();
+            }
         }
         
-        $scope.openConvertAlumniModal = function(user){
-            $('#convertAlumniModal').modal();
-            $scope.selectedUser = user;
+        $scope.openConvertAlumniModal = function(user, ev){
+            $mdDialog.show({
+                controller: dialogController,
+                templateUrl: 'views/templates/alumni/convertAlumniDialog.html',
+                targetEvent: ev
+            });
+            selectedUser = user;
         }
         
-        $scope.resendWelcomeEmail = function(member){
+        function resendWelcomeEmail(member){
             member.updating = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', {key: member.key})
                 .success(function(data){
@@ -34,45 +64,7 @@
                 });
         }
         
-        // function getAlumni(){
-        //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-        //         .success(function(data){
-        //             if (!checkResponseErrors(data))
-        //             {
-        //                 $rootScope.directory = JSON.parse(data.data);
-        //                 localStorageService.set('directory', $rootScope.directory);
-        //                 assignAngularViewModels($rootScope.directory.alumni);
-        //             }
-        //             else
-        //             {
-        //                 console.log("error: ", data.error)
-        //             }
-        //         })
-        //         .error(function(data) {
-        //             console.log('Error: ' , data);
-        //         });
-        // }
-        
-        /*This function takes the data and assigns it to the DOM with angular models*/
-        // function assignAngularViewModels(alumni){
-        //     $scope.alumni = alumni;
-        //     LoadScreen.stop();
-        // }
-        /*This function is the first function to run when the controller starts. This deals with caching data so we dont have to pull data evertytime we load the page*/
-        // function onPageLoad(){
-        //     console.log('page is loading');
-        //     if($rootScope.directory.alumni){
-        //         assignAngularViewModels($rootScope.directory.alumni);
-        //         getAlumni();
-        //     }
-        //     else{
-        //         LoadScreen.start();
-        //         getAlumni();
-        //     }
-        // }
-        //onPageLoad();
-        
-        $scope.convertAlumniToMember = function(alumnus){
+        function convertAlumniToMember(alumnus){
             $scope.selectedUser = {}
             $('#convertAlumniModal').modal('hide');
             var to_send = {'keys': [alumnus.key]}
@@ -89,14 +81,14 @@
                 .error(function(data) {
                     console.log('Error: ' , data);
                 });
-                for (var i = 0; i < $scope.directory.alumni.length; i++){
-                    if ($scope.directory.alumni[i]. key == alumnus.key){
-                        $scope.directory.alumni.splice(i, 1);
-                        break;
-                    }
+            for (var i = 0; i < $scope.directory.alumni.length; i++){
+                if ($scope.directory.alumni[i]. key == alumnus.key){
+                    $scope.directory.alumni.splice(i, 1);
+                    break;
                 }
+            }
         }
-        $scope.removeAlumni = function(alumnus){
+        function removeAlumni(alumnus){
             $scope.selectedUser = {}
             $('#deleteAlumniModal').modal('hide');
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', alumnus);   

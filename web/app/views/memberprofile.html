@@ -34,12 +34,12 @@
         <p id="status" class="text-center" ng-show="status.length">"{{status}}"</p>
         
         <span id="info">
-        <p>Pledged {{pledgeClass}}</p>
-        <p>Born {{birthday}}</p>
-        <p>Studying {{major}}</p>
-        <p>Graduating {{graduation}}</p>
-        <p>Lives at {{currentAddress}}</p>
-        <p>Permanent Address at {{permanentAddress}}</p>
+        <p ng-show="pledgeClass">Pledged {{pledgeClass}}</p>
+        <p ng-show="birthday">Born {{birthday}}</p>
+        <p ng-show="major">Studying {{major}}</p>
+        <p ng-show="graduation">Graduating {{graduation}}</p>
+        <p ng-show="currentAddress">Lives at {{currentAddress}}</p>
+        <p ng-show="permanentAddress">Permanent Address at {{permanentAddress}}</p>
         </span>
            
 
