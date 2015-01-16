@@ -73,7 +73,10 @@
       </div>
     <form id="addTagForm" name="addTagForm" ng-submit="addOrganizationTag(item.tag)">
       <div class="modal-body">
-          <md-text-float label="Tag Name" ng-model="item.tag"></md-text-float>
+            <md-input-container>
+                <label for="tag_name">Tag Name</label>
+                <input type="text" name="tag_name" ng-model="item.tag">
+            </md-input-container>
       </div>
       <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

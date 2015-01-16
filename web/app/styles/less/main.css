@@ -112,8 +112,7 @@
   color: white;
 }
 /*Fixes*/
-.md-button.md-cyan-theme.md-raised,
-.md-button.md-cyan-theme.md-fab {
+.md-button.md-cyan-theme.md-raised {
   background-color: #00bcd4 !important;
 }
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
@@ -1578,7 +1577,7 @@ md-dialog .md-sticky-clone[sticky-state="active"]:not(.md-sticky-no-effect):afte
 }
 .md-dialog-container,
 md-backdrop.md-opaque {
-  position: fixed;
+  position: fixed !important;
 }
 .aside li .md-button {
   text-align: left;
@@ -1613,6 +1612,7 @@ md-input-container input {
 }
 md-input-container {
   margin: 0px 0px 8px 0px;
+  padding: 0px;
 }
 .face {
   border-radius: 30px;
@@ -1763,6 +1763,7 @@ nav .notification_count strong {
   position: relative;
   top: 10px;
   cursor: pointer;
+  margin-right: 5px;
 }
 #menu #details {
   margin-top: 20px;
@@ -1793,7 +1794,6 @@ md-toolbar .more-options {
   position: absolute;
   right: 8px;
   bottom: 8px;
-  color: white !important;
   font-size: 12px;
 }
 md-toolbar.md-tall {
@@ -2023,6 +2023,9 @@ md-toolbar.md-tall {
   text-align: center;
   font-size: 28px;
 }
+#eventInfo md-toolbar .fa-calendar {
+  margin-right: 5px;
+}
 #eventInfo md-content {
   padding: 45px 30px 30px 30px;
 }
@@ -2146,4 +2149,21 @@ md-toolbar.md-tall {
 }
 #notifications md-item {
   font-size: 14px;
+}
+md-dialog {
+  min-width: 80%;
+}
+md-dialog .md-subheader {
+  font-size: 18px;
+  font-weight: bold;
+}
+md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
+  visibility: hidden;
+}
+#tagsDialog {
+  min-height: 80%;
+}
+#tagsDialog .md-actions {
+  position: absolute;
+  bottom: 0px;
 }

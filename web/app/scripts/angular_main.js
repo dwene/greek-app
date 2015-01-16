@@ -601,6 +601,7 @@ App.config(function($mdThemingProvider) {
         'contrastDarkColors': ['50', '100', '200','300','400','A100'],
         'contrastLightColors': undefined
     });
+    $mdThemingProvider.theme('default').primaryColor('cyan');
     $mdThemingProvider.theme('cyan').primaryColor('cyan');
     $mdThemingProvider.theme('red').primaryColor('red');
     $mdThemingProvider.theme('purple').primaryColor('purple');

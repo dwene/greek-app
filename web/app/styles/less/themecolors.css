@@ -112,6 +112,6 @@
   color: white;
 }
 /*Fixes*/
-.md-button.md-cyan-theme.md-raised {
+#adminPage .md-button.md-cyan-theme.md-raised {
   background-color: #00bcd4 !important;
 }

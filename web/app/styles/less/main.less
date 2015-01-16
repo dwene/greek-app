@@ -613,7 +613,7 @@ md-dialog{
     }
 }
 
-.md-dialog-container, md-backdrop.md-opaque{position:fixed;}
+.md-dialog-container, md-backdrop.md-opaque{position:fixed !important;}
 .aside li .md-button{text-align:left; text-transform:none; outline: none;}
 .md-backdrop{z-index:1050 !important;}
 
@@ -627,7 +627,7 @@ md-divider{margin-bottom:20px;}
 .btn-touch{padding:10px;}
 md-tabs.md-default-theme md-tab:focus{border:none;}
 md-input-container input{width:100%;}
-md-input-container{margin:0px 0px 8px 0px;}
+md-input-container{margin:0px 0px 8px 0px; padding:0px;}
 .face{border-radius:30px; width:48px; background:#ccc;}
 md-bottom-sheet{position:fixed; z-index:1041;
     md-item{height:auto;}
@@ -686,7 +686,7 @@ nav{
 #menu{
     md-toolbar.md-tall{min-height:0px;}
     .md-toolbar-tools{margin-bottom:20px;}
-    .face{position:relative; top:10px; cursor:pointer;}
+    .face{position:relative; top:10px; cursor:pointer; margin-right:5px;}
     #details{margin-top:20px;}
     #name{font-weight:bold;}
     p{font-size:14px; line-height:1.2;}
@@ -697,7 +697,7 @@ nav{
 md-toolbar{
     .md-fab{position:absolute; bottom:-28px;}
     #back{position:absolute; left:15px; color:white; background:rgb(255,138,128);}
-    .more-options{position:absolute; right:8px; bottom:8px; color:white !important; font-size:12px;}
+    .more-options{position:absolute; right:8px; bottom:8px; font-size:12px;}
 }
 md-toolbar.md-tall{
     min-height:150px; max-height:1000px; height:auto; padding:0px;
@@ -814,6 +814,7 @@ md-toolbar.md-tall{
 #eventInfo{
     md-toolbar{
         #date{text-align:center; font-size:28px;}
+        .fa-calendar{margin-right:5px;}
     }
     md-content{padding:45px 30px 30px 30px;}
 }
@@ -896,4 +897,15 @@ md-toolbar.md-tall{
 
 #notifications{
     md-item{font-size:14px;}
+}
+
+md-dialog{
+    min-width:80%;
+    .md-subheader{font-size:18px; font-weight:bold;}
+    .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone){visibility:hidden;}
+}
+
+#tagsDialog{
+    min-height:80%;
+    .md-actions{position:absolute; bottom:0px;}
 }

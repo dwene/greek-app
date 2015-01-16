@@ -19,8 +19,14 @@
 <md-subheading>Add One Member at a Time</md-subheading>
 <form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid, input)" novalidate>
     <div layout="row" layout-align="start center">
-        <md-text-float label="First Name" ng-model="input.first_name"></md-text-float>
-        <md-text-float label="Last Name" ng-model="input.last_name"></md-text-float>
+        <md-input-container>
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" ng-model="input.first_name">
+        </md-input-container>
+        <md-input-container>
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" ng-model="input.last_name">
+        </md-input-container>
     </div>
     <div layout="row" layout-align="start center">
         <md-input-container class="md-default-theme">
