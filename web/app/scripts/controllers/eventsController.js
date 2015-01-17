@@ -13,14 +13,14 @@ App.controller('eventsController', function($scope, RESTService, Load, $rootScop
         if (Events.check()){
             getEvents();
         }
-        $scope.$watch('selectedTab', function(){
+        $scope.change = function(){
             if ($scope.selectedTab == 0){
                 $scope.present = true;
             }
             else{
                 $scope.present = false;
             }
-        })
+        }
         $scope.$on('events:updated', function(){
             $scope.events = Events.events;
             getEvents();
@@ -28,11 +28,21 @@ App.controller('eventsController', function($scope, RESTService, Load, $rootScop
         if (Directory.check()){
             $scope.directoryLoaded = true;
         }
+
         $scope.$on('directory:updated', function(){
             $scope.directory = Directory.directory;
             $scope.directoryLoaded = true;
         });
         
+        $scope.$watch('selectedTab', function(){
+            console.log('I see tab change!');
+            if ($scope.selectedTab == 0){
+                $scope.order = 'time_start';
+            }
+            else{
+                $scope.order = '-time_start';
+            }
+        })
             //send the organization and user date from registration pages
         function getEvents(){
             $scope.eventSource = [];

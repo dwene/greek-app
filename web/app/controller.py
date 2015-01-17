@@ -350,7 +350,7 @@ def get_users_from_tags(tags, organization, keys_only):
         org_tag_users_future = User.query(ndb.AND(User.tags.IN(tags["org_tags"]),
                                                   User.organization == organization)).fetch_async(keys_only=True)
     if "perms_tags" in tags and len(tags["perms_tags"]):
-        if "everyone" in tags["perms_tags"].lower():
+        if "everyone" in tags["perms_tags"]:
             perms_tag_users_future = User.query(ndb.AND(User.perms.IN(['member', 'leadership', 'council']),
                                                         User.organization == organization)).fetch_async(keys_only=True)
         else:
@@ -2759,7 +2759,7 @@ class RESTApi(remote.Service):
             if len(request_user.recently_used_tags) > 5:
                 request_user.recently_used_tags = request_user.recently_used_tags[:5]
         new_event.perms_tags = event_data["tags"]["perms_tags"]
-        if EVERYONE in event_data["tags"]["perms_tags"].lower():
+        if EVERYONE in event_data["tags"]["perms_tags"]:
             new_event.perms_tags = ['everyone']
         users = get_users_from_tags(event_data["tags"], request_user.organization, False)
         new_event_key = new_event.put()
