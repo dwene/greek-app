@@ -445,12 +445,6 @@ h2.page-header {
   top: 5px;
 }
 /*Selecting Members for Messaging*/
-#selectedList {
-  position: relative;
-  margin-bottom: 10px;
-  max-height: 48px;
-  overflow-y: scroll;
-}
 .messagePerson {
   margin-bottom: 4px;
 }
@@ -1646,9 +1640,6 @@ md-progress-circular.small {
   transform: scale(0.5) !important;
   margin: 20px auto;
 }
-.fixed-width-dialog {
-  min-width: 80%;
-}
 /*Striped Lists*/
 .striped [layout-margin] {
   margin: 0px;
@@ -2153,8 +2144,14 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #selectingTags > .row {
   margin-top: 10px;
 }
+#selectingTags .md-subheader {
+  padding: 4px 0px;
+}
 #selectingTags #messagingTags {
   margin-top: 0px;
+}
+#selectingTags #messagingTags .md-subheader {
+  padding: 8px 0px 4px 0px;
 }
 #selectingTags #noTags {
   display: inline-block;
@@ -2175,4 +2172,9 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #selectingTags #recentTags netetag-check {
   display: inline-block;
   height: 22px;
+}
+#selectingTags #selectedMembers {
+  position: relative;
+  max-height: 52px;
+  overflow-y: scroll;
 }

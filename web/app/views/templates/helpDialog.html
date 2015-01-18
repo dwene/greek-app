@@ -1,19 +1,17 @@
 <md-dialog md-theme="{{$root.color}}">
-<form id="helpMessage" name="helpMessage" ng-submit="sendHelpMessage(helpMessage.$valid, message)" ng-init="message={subject:'', content:''};" novalidate>
+<form id="helpMessage" name="helpMessage" ng-init="message={subject:'', content:''};" novalidate>
   <md-content>
        <md-subheader class="md-sticky-no-effect">
             Send us a message and we'll get right back to you.
         </md-subheader>
             <md-divider></md-divider>
             <div class="form-group">
-                <div class="col-sm-12">
                  <textarea id="content" ng-model="message.message" name="content" class="form-control" placeholder="Enter your message here..." required></textarea>
-                </div>
             </div>
   </md-content>
   <div class="md-actions" layout="row">
     <span flex></span>
-    <md-button type="submit" ng-disabled="helpMessage.$invalid">
+    <md-button type="submit" ng-disabled="helpMessage.$invalid" ng-click="sendHelpMessage(helpMessage.$valid, message)">
         Send
     </md-button>
     <md-button ng-click="hideDialog()" class="md-primary">

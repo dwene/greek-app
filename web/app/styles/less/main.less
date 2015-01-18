@@ -62,7 +62,6 @@ h2.page-header{margin:0px 0px 10px 0px; border-color:#ccc; font-weight:bold;}
 .checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
 
 /*Selecting Members for Messaging*/
-#selectedList{position:relative; margin-bottom:10px; max-height:48px; overflow-y:scroll;}
 .messagePerson{margin-bottom:4px;}
 .preText{white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
 
@@ -627,7 +626,6 @@ md-bottom-sheet.md-grid md-item .md-icon-container{margin:0 auto;}
 .no-margin{margin:0px !important;}
 .no-select{-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none;}
 md-progress-circular.small{-webkit-transform:scale(.5) !important; transform:scale(.5) !important; margin:20px auto;}
-.fixed-width-dialog{min-width:80%;}
 
 /*Striped Lists*/
 .striped [layout-margin]{margin:0px; padding:8px;}
@@ -889,12 +887,16 @@ md-dialog{
 
 #selectingTags > .row{margin-top:10px;}
 #selectingTags{
-    #messagingTags{margin-top:0px;}
+    .md-subheader{padding:4px 0px;}
+    #messagingTags{margin-top:0px;
+        .md-subheader{padding:8px 0px 4px 0px;}
+    }
     #noTags{display:inline-block; margin-top:3px;}
     #seeall{position:absolute; right:25px; top:12px;}
+    
     #recentTags{overflow-y:hidden; max-height:80px;
         .md-subheader{padding: 5px 0px 5px 2px;}
         netetag-check{display:inline-block; height:22px;}
     }
-
+    #selectedMembers{position:relative; max-height:52px; overflow-y:scroll;}
 }

@@ -21,13 +21,11 @@
             </md-content>
         </div>
         <div role="tabpanel" aria-labelledby="UsersTab" ng-show="data.selectedIndex == 1">
-            <md-content class="md-paddin no-padding-top">
               <search ng-model="modalSearch"></search>
                 <!-- <h2 class="page-header">Users</h2> -->
                 <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch">
                     <netemember-check ng-model="tag"></netemember-check>
                 </div>
-            </md-content>
         </div>
   </md-content>
   <div class="md-actions" layout="row">
