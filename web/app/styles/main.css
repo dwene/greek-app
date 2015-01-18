@@ -83,7 +83,7 @@
   color: white;
 }
 .theme-green .theme50-bg {
-  background: #4caf50;
+  background: #e8f5e9;
 }
 .theme-green .theme200-bg {
   background: #c8e6c9;
@@ -1646,6 +1646,9 @@ md-progress-circular.small {
   transform: scale(0.5) !important;
   margin: 20px auto;
 }
+.fixed-width-dialog {
+  min-width: 80%;
+}
 /*Striped Lists*/
 .striped [layout-margin] {
   margin: 0px;
@@ -2132,9 +2135,6 @@ md-toolbar.md-tall {
 }
 #notifications md-item {
   font-size: 14px;
-}
-md-dialog {
-  min-width: 80%;
 }
 md-dialog .md-subheader {
   font-size: 18px;

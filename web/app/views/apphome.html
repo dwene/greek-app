@@ -15,10 +15,12 @@
                         <input name="update_status" ng-model="status"  maxlength="140"></input>
                     </md-input-container>
                     <md-button type="submit" aria-label="submit status" ng-show="status"><i class="fa fa-check"></i></md-button>
-                    <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button>
                     </form>
-                    <md-subheader class="no-padding-bottom" ng-hide="me.status">No Status</md-subheader>
-                    <md-subheader class="no-padding-bottom" ng-show="me.status">{{me.status}}</md-subheader>
+                <md-subheader class="no-padding-bottom">
+                    <span  ng-hide="me.status">No Status</span>
+                    <span  ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button>
+</span>
+                </md-subheader>
                 </md-content>
             </div>
             <div flex-gt-sm="40">

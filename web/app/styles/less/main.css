@@ -13,6 +13,12 @@
   background: #006064;
   color: white;
 }
+.theme-cyan .label-primary {
+  background: #00bcd4;
+}
+.theme-cyan .checkLabel.label-primary:hover {
+  background: #80deea;
+}
 .theme-red .theme-bg {
   background: #f44336;
   color: white;
@@ -26,6 +32,12 @@
 .theme-red .theme900-bg {
   background: #b71c1c;
   color: white;
+}
+.theme-red .label-primary {
+  background: #f44336;
+}
+.theme-red .checkLabel.label-primary:hover {
+  background: #ef9a9a;
 }
 .theme-purple .theme-bg {
   background: #9c27b0;
@@ -41,6 +53,12 @@
   background: #4a148c;
   color: white;
 }
+.theme-purple .label-primary {
+  background: #9c27b0;
+}
+.theme-purple .checkLabel.label-primary:hover {
+  background: #ce93d8;
+}
 .theme-pink .theme-bg {
   background: #e91e63;
   color: white;
@@ -55,12 +73,18 @@
   background: #880e4f;
   color: white;
 }
+.theme-pink .label-primary {
+  background: #e91e63;
+}
+.theme-pink .checkLabel.label-primary:hover {
+  background: #f48fb1;
+}
 .theme-green .theme-bg {
   background: #4caf50;
   color: white;
 }
 .theme-green .theme50-bg {
-  background: #4caf50;
+  background: #e8f5e9;
 }
 .theme-green .theme200-bg {
   background: #c8e6c9;
@@ -68,6 +92,12 @@
 .theme-green .theme900-bg {
   background: #1b5e20;
   color: white;
+}
+.theme-green .label-primary {
+  background: #4caf50;
+}
+.theme-green .checkLabel.label-primary:hover {
+  background: #c8e6c9;
 }
 .theme-orange .theme-bg {
   background: #ff5722;
@@ -83,12 +113,18 @@
   background: #bf360c;
   color: white;
 }
+.theme-orange .label-primary {
+  background: #ff5722;
+}
+.theme-orange .checkLabel.label-primary:hover {
+  background: #ffab91;
+}
 .theme-brown .theme-bg {
   background: #795548;
   color: white;
 }
 .theme-brown .theme50-bg {
-  background: #bcaaa4;
+  background: #efebe9;
 }
 .theme-brown .theme200-bg {
   background: #bcaaa4;
@@ -97,25 +133,34 @@
   background: #3e2723;
   color: white;
 }
+.theme-brown .label-primary {
+  background: #795548;
+}
+.theme-brown .checkLabel.label-primary:hover {
+  background: #bcaaa4;
+}
 .theme-gray .theme-bg {
   background: #9e9e9e;
   color: white;
 }
 .theme-gray .theme50-bg {
-  background: #efebe9;
+  background: #fafafa;
 }
 .theme-gray .theme200-bg {
-  background: #bcaaa4;
+  background: #eeeeee;
 }
 .theme-gray .theme900-bg {
-  background: #3e2723;
+  background: #212121;
   color: white;
+}
+.theme-gray .label-primary {
+  background: #212121;
+}
+.theme-gray .checkLabel.label-primary:hover {
+  background: #9e9e9e;
 }
 .checkLabel.label-default:hover {
   background: #ccc;
-}
-.checkLabel.label-primary:hover {
-  background: blue;
 }
 /* Eric Meyer's Reset CSS v2.0 - http://cssreset.com */
 html,
@@ -1602,6 +1647,9 @@ md-progress-circular.small {
   transform: scale(0.5) !important;
   margin: 20px auto;
 }
+.fixed-width-dialog {
+  min-width: 80%;
+}
 /*Striped Lists*/
 .striped [layout-margin] {
   margin: 0px;
@@ -2088,9 +2136,6 @@ md-toolbar.md-tall {
 }
 #notifications md-item {
   font-size: 14px;
-}
-md-dialog {
-  min-width: 80%;
 }
 md-dialog .md-subheader {
   font-size: 18px;
