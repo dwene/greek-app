@@ -43,8 +43,8 @@
                     <div class="form-group" ng-init="poll.show_names=true">
                         <label class="col-sm-2 control-label">Display names in results?</label>
                         <div class="btn-group col-sm-10" ng-model="poll.show_names">
-                          <a class="btn" ng-class="{'btn-primary': poll.show_names == true,  'btn-default': !poll.show_names}" ng-click="poll.show_names = true">Yes</a>
-                          <a class="btn" ng-class="{'btn-primary': !poll.show_names,  'btn-default': poll.show_names == true}" ng-click="poll.show_names=false">No</a> 
+                          <a class="btn" ng-class="{'btn-primary': poll.show_names == 'true',  'btn-default': poll.show_names != 'true'}" ng-click="poll.show_names = true">Yes</a>
+                          <a class="btn" ng-class="{'btn-primary': poll.show_names != 'true',  'btn-default': poll.show_names == 'true'}" ng-click="poll.show_names=false">No</a> 
                         </div>    
                     </div>
                 
