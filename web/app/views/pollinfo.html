@@ -3,8 +3,7 @@
     <div class="md-whiteframe-z1">
         <md-toolbar class="md-tall">
             <div class="md-toolbar-tools">
-                <i class="fa fa-th-list"></i>
-                <h1>{{poll.name}}</h1>
+                <h1><i class="fa fa-th-list"></i> {{poll.name}}</h1>
             </div>
             <div class="text-center" ng-show="!poll.open">This survey is closed.</div>
             <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
@@ -45,16 +44,23 @@
                     </div>
                 </md-toolbar>
                <form name="response_form"  ng-submit="submitResponse()">
-                <div class="question" ng-repeat="question in poll.questions | orderBy: 'index'">
+               <md-list>
+                <md-item class="question" ng-repeat="question in poll.questions | orderBy: 'index'">
                     <h3>{{question.worded_question}}</h3>
-                    <div class="text_question" ng-show="question.type == 'text'"> 
-                        <input type="text" name="response_form.input" ng-model="question.new_response" class="form-control col-sm-6" ng-required="question.type == 'text'">
+                    <div class="text_question" ng-show="question.type == 'text'">
+                        <md-input-container>
+                        <label for="response_form">Enter response</label>
+                        <input type="text" name="response_form" ng-model="question.new_response" ng-required="question.type == 'text'">
+                        </md-input-container>
                     </div>
-                    <div class="multiple_choice_question" ng-show="question.type == 'multiple_choice'" ng-repeat="choice in question.choices"> 
-                        <input type="radio" name="response_form.input" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>
-                    </div>
-                </div>
-                <input type="submit" ng-disabled="!response_form.$valid" class="btn btn-default">
+                    <md-radio-group class="multiple_choice_question" ng-show="question.type == 'multiple_choice'" ng-model="question.new_response" ng-required="question.type == 'multiple_choice'">
+                       <md-radio-button ng-value="choice" ng-repeat="choice in question.choices">{{choice}}</md-radio-button>
+<!--                        <input type="radio" name="response_form" ng-model="question.new_response" ng-value="choice" ng-required="question.type == 'multiple_choice'"> {{choice}} <br/>-->
+                    </md-radio-group>
+                </md-item>
+                   <md-button type="submit" ng-disabled="!response_form.$valid">Submit</md-button>
+                
+                </md-list>
               </form>  
             </div>
             

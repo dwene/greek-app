@@ -9,7 +9,7 @@
                 <md-button ng-href="#/app/newpoll" ng-show="$parent.$parent.checkPermissions('leadership')">Create New</md-button>
             </div>
         </md-toolbar>
-        <md-content class="md-padding">
+        <md-content class="md-padding no-padding-top">
         <search ng-model="search" id="pollSearch" ng-show="polls.length"></search>
         
         <md-list class="itemList hover">

@@ -1,4 +1,3 @@
-
 <div id="newPoll" class="container">
 
 <div class="md-whiteframe-z1">
@@ -16,37 +15,69 @@
                     <input type="text" id="title" name="title" ng-model="poll.name" required>
                     <p ng-show="(newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
                 </md-input-container>
-                
                 <div ng-class="{ 'has-error' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
                     <textarea class="form-control" id="description" name="description" rows="6" ng-model="poll.description" placeholder="Enter your survey description here: We are having a party. Yay!" required></textarea>
                     <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
                 </div>
-                
                 <br>
+                <div ng-init="poll.viewers = 'everyone'">
+                    <label for="view_results">Who can view the results?</label>
+                    <md-radio-group name="view_results" ng-model="poll.viewers">
+                        <md-radio-button value="everyone" aria-label="everyone">Everyone</md-radio-button>
+                        <md-radio-button value="leadership" aria-label="leadership and council"> Leadership and Council </md-radio-button>
+                        <md-radio-button value="council" aria-label="council only">Council Only</md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div ng-init="poll.show_names = 'true'">
+                    <label for="view_names">Display names in results?</label>
+                    <md-radio-group name="view_names" ng-model="poll.show_names">
+                        <md-radio-button value="true" aria-label="everyone">Yes</md-radio-button>
+                        <md-radio-button value="false" aria-label="leadership and council">No, make <answers></answers> anonymous</md-radio-button>
+                    </md-radio-group>
+                </div>
                 
-                    <div ng-init="poll.viewers = 'everyone'">
-                        <label for="view_results">Who can view the results?</label>
-                        <md-radio-group name="view_results" ng-model="poll.viewers">
-                            <md-radio-button value="everyone" aria-label="everyone">Everyone</md-radio-button>
-                            <md-radio-button value="leadership" aria-label="leadership and council"> Leadership and Council </md-radio-button>
-                            <md-radio-button value="council" aria-label="council only">Council Only</md-radio-button>
-                        </md-radio-group>
+                <md-list class="itemList">
+                <md-item class="pollQuestion" ng-repeat="question in poll.questions">
+                <div class="pollQuestionContent">
+                    <div layout="row">
+                    <md-input-container flex ng-class="{ 'has-error' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
+                       <label for="question_title">Question</label>
+                       <input type="text" name="title{{$index}}" ng-model="question.worded_question" required>
+                    </md-input-container>
+                    <md-button type="button" ng-click="removeQuestion($index)"><i class="fa fa-trash-o"></i></md-button>
                     </div>
                     
-                    <div ng-init="poll.show_names == true">
-                        <label for="view_names">Display names in results?</label>
-                        <md-radio-group name="view_names" ng-model="poll.show_names">
-                            <md-radio-button value="true" aria-label="everyone">Yes</md-radio-button>
-                            <md-radio-button value="false" aria-label="leadership and council">No, make <answers></answers> anonymous</md-radio-button>
+                    <div ng-init="question.type = 'text'" ng-class="{ 'has-error' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
+                       <label for="type{{$index}}">Type</label>
+                        <md-radio-group name="type{{$index}}" ng-model="question.type" required>
+                            <md-radio-button value="text">Textbox</md-radio-button>
+                            <md-radio-button value="multiple_choice">Multiple Choice</md-radio-button>
                         </md-radio-group>
+                        <p ng-show="(newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)" class="help-block">Please enter a title.</p>
                     </div>
-                    <div class="form-group" ng-init="poll.show_names=true">
-                        <label class="col-sm-2 control-label">Display names in results?</label>
-                        <div class="btn-group col-sm-10" ng-model="poll.show_names">
-                          <a class="btn" ng-class="{'btn-primary': poll.show_names == 'true',  'btn-default': poll.show_names != 'true'}" ng-click="poll.show_names = true">Yes</a>
-                          <a class="btn" ng-class="{'btn-primary': poll.show_names != 'true',  'btn-default': poll.show_names == 'true'}" ng-click="poll.show_names=false">No</a> 
-                        </div>    
+
+                    <div ng-show="question.type === 'multiple_choice'">
+                        <div layout="row" id="addchoices" ng-hide="question.choices.length > 4">
+                            <md-input-container flex>
+                                <label for="question">Enter Choice</label>
+                                <input type="text" name="question" ng-model="question.temp_choice" ng-enter="addChoice(question, question.temp_choice);">
+                            </md-input-container>
+                            <md-button type="button" ng-disabled="!question.temp_choice" ng-click="addChoice(question, question.temp_choice);">ADD</md-button>
+                        </div>
+                        <div class="row">
+                        <label ng-show="question.choices.length" class="col-sm-2 control-label">Choices</label>
+                        <ul ng-show="question.choices.length" class="col-sm-10 multiple_choice_answers" class="list-group">
+                            <li ng-repeat="choice in question.choices" class="list-group-item">{{ choice }} <md-button type="button" class="btn-touch" ng-click="removeChoice(question, $index)"><i class="fa fa-times"></i></md-button></li>
+                        </ul>
+                        </div>
                     </div>
+                </div>
+                </md-item>
+                </md-list>
+                
+            <br><br>
+            <md-button type="button" ng-hide="poll.questions.length > 9" class="pull-left" ng-click="addQuestion()">Add Question</md-button>
+            <span class="pull-right"><update-status ng-model="working"></update-status><md-button type="button" ng-click="createPoll(newPoll.$valid)" ng-disabled="!selectedMembers.length || !newPoll.$valid || !poll.questions.length || (working && working != 'broken')">Send Poll</md-button></span>
                 
         </form>
         

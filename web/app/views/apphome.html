@@ -20,9 +20,8 @@
                     <md-button type="submit" aria-label="submit status" ng-show="status"><i class="fa fa-check"></i></md-button>
                     </form>
                 <md-subheader class="no-padding-bottom">
-                    <span  ng-hide="me.status">No Status</span>
-                    <span  ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button>
-</span>
+                    <span ng-hide="me.status">No Status</span>
+                    <span ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button></span>
                 </md-subheader>
             </div>
             <div flex-gt-sm="40" style="padding-top:16px;">
