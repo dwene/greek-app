@@ -9,10 +9,10 @@
         <md-item ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
             <md-item-content>
                 <div class="md-tile-left">
-                  <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
+                    <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
                 <div class="md-tile-content">
-                    <p class="name">{{member.first_name}} {{member.last_name}}</p>
+                    <p class="name">{{member.first_name}} {{member.last_name}} <span class="position">({{member.position}})</span></p>
                     <p class="status">{{member.status}}</p>
                 </div>
             <md-item-content>
@@ -27,10 +27,10 @@
         <md-item ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
             <md-item-content>
                 <div class="md-tile-left">
-                  <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
+                    <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
                 <div class="md-tile-content">
-                    <p class="name">{{member.first_name}} {{member.last_name}}</p>
+                    <p class="name">{{member.first_name}} {{member.last_name}} <span class="position">({{member.position}})</span></p>
                     <p class="status">{{member.status}}</p>
                 </div>
             <md-item-content>

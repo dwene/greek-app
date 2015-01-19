@@ -1410,9 +1410,10 @@ App.directive('timePicker', function($compile){
         var this_name = attrs.name;
         var this_id = attrs.id;
         
-        element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control picker" id="'+this_id+'time" name="'+this_name+'time" ng-model="ngModel"/>'
-                        +'<span class="input-group-addon"><i class="fa fa-clock-o"></i></span></div>'
+        element.append('<md-input-container>'
+                        +'<label for="time_picker">Select Time</label>'
+                        +'<input type="text" name="time_picker" class="picker" id="'+this_id+'time" name="'+this_name+'time" ng-model="ngModel"/>'
+                        +'</md-input-container>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'time").datetimepicker({'
                         +'pickDate: false,'
@@ -1445,9 +1446,10 @@ App.directive('datePicker', function($compile){
         var this_name = attrs.name;
         var this_id = attrs.id;
         
-        element.append('<div class="input-group">'
-                        +'<input type="text" class="form-control picker" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel"/>'
-                        +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
+        element.append('<md-input-container>'
+                        +'<label for="date_picker">Select Date</label>'
+                        +'<input type="text" name="date_picker" class="picker" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel"/>'
+                        +'</md-input-container>'
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'date").datetimepicker({'
                             +'pickTime: false,'

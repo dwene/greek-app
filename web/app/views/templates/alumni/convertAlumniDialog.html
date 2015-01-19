@@ -1,4 +1,3 @@
-
 <md-dialog md-theme="{{$root.color}}">
   <md-content>
        <md-subheader>
@@ -6,12 +5,13 @@
         </md-subheader>
             <md-divider></md-divider>
         <!-- <div class="profilepic" style="background-image:url({{selectedUser.prof_pic || $root.defaultProfilePicture}});" >
-        </div>  --> 
-        <img class="face pull-right" ng-src="{{prof_pic || $root.defaultProfilePicture}}" alt="{{firstName}} {{lastName}}">  
-        <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>
-        <div class="row" ng-show="selectedUser.dob">Birthday: {{selectedUser.dob}}</div>
-        <div class="row" ng-show="selectedUser.phone">Phone: {{selectedUser.phone}}</div>
-        <div class="row" ng-show="selectedUser.email">Email: {{selectedUser.email}}</div>
+        </div>  -->
+        <div id="profile-top" layout="row" layout-align="center center">
+        <img class="face" ng-src="{{prof_pic || $root.defaultProfilePicture}}" alt="{{firstName}} {{lastName}}">  
+        </div>
+        <br><br>
+        <p ng-show="selectedUser.phone">Phone: {{selectedUser.phone}}</p>
+        <p ng-show="selectedUser.email">Email: {{selectedUser.email}}</p>
   </md-content>
   
   <div class="md-actions" layout="row">

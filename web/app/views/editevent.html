@@ -17,11 +17,8 @@
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
         </md-input-container>    
         <div class="form-group" ng-class="{ 'has-error' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
-            <label for="description" class="col-sm-2 control-label">Description</label>
-            <div class="col-sm-10">
-                <textarea class="form-control" id="description" name="description" ng-model="event.description" placeholder="We are going bowling! Yay!" required></textarea>
-                <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
-            </div>
+            <textarea class="form-control" id="description" rows="6" name="description" ng-model="event.description" placeholder="Enter your event description here: We are going bowling! Yay!"></textarea>
+            <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
         </div> 
         <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
             <label for="location">Location</label>
@@ -64,7 +61,7 @@
                 </md-checkbox> 
             </div>
             <div class="col-xs-12 col-sm-2" style="margin-top:15px;">
-               <label for="untilDate">Recurrs Until</label>
+               <label for="untilDate">Recurrs Until:</label>
             </div>
             <div class="col-xs-12 col-sm-5" style="margin-top:15px;">
                 <date-picker id="untilDate" name="untilDate" ng-model="event.until"></date-picker>

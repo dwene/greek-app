@@ -15,26 +15,6 @@ body.modal-open{margin-right:0px;}
 .navbar{border:0px; transition:background linear .3s;}
 //#asideMenu{background:#fff; height:100%; position:absolute; top:0px; right:0px; border:1px solid black; z-index:1001;}
 
-/*Shape*/
-
-.help{cursor:pointer;}
-.help.mobile{color:white !important; font-size:24px; position:absolute; right:68px; top:14px; display:none;}
-
-#mobileSettings{display:none;}
-#mobileMenu{display:none !important;}
-#mobileDirectory{display:none !important;}
-@media screen and (max-width:767px){
-    .help.mobile{display:block;}
-    #mobileSettings{display:block;}
-    #mobileMenu{display:block !important;}
-    #mobileDirectory{display:block !important;}
-}
-/*fix for questions and refresh button on iPhone size*/
-@media screen and (max-width:340px){
-    #refreshNotifications{left:204px;}
-    .help.mobile{right:60px;}
-}
-
 
 @media screen and (max-width:991px){#mainNavigation>ul>li>a{padding:15px 10px 15px 10px;}}
 .navbar-toggle{display:block; position: absolute; right: 0px;}
@@ -92,20 +72,6 @@ h1{font-size:34px; font-weight:bold;}
 /*Main App ui-view*/
 #mainSection{position:relative;}
 
-/*Directory Page*/
-#directory h1.darkbg{padding: 8px 10px; font-size: 20px; margin: 10px 0px 0px 0px;}
-#directory .member{position:relative; min-height:80px; 
-    padding:10px; background-color: #FFF; box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4); -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4); -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    margin:10px 3px;
-}
-#directory .member:hover{background:#EDEDED; cursor:pointer;}
-/*makes room for the picture*/ .directoryContent{margin-left:110px;}
-#directory .memberName{font-size:18px; margin-right:4px; font-weight:bold;}
-.directoryTags{font-size:12px; font-style: italic; padding:.2em .4em; margin:4px 4px 0px 0px; top:-3px;}
-.directoryStatus{width:100%; margin-top:4px; display:block; font-size:16px; font-style:italic;}
-#directory .member .smallprofilepic{left:60px;}
-#directory .member .quickButtons{width:50px; position:absolute; left:5px; top:5px;}
-#directory .member .quickButtons .btn{width:45px; margin-bottom:3px; color:black; background:white; border:0px; -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),0px 1px 0px rgba(0,0,0,0.075); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),0px 1px 0px rgba(0,0,0,0.075);}
 
 /*Alumni Directory*/
 #yearSelect{display:block; padding:10px;}
@@ -738,6 +704,7 @@ md-toolbar.md-tall{
     md-input-container{margin-top:0px;}
     md-item-content:hover{background:@hoverColor; cursor:pointer;}
     .face{margin:16px;}
+    .position{font-weight:normal;}
 }
 
 
@@ -795,6 +762,7 @@ md-toolbar.md-tall{
 #eventCheckin{
     md-toolbar{padding-bottom:25px;}
     md-content{padding-top:25px;}
+    .face{margin-right:5px;}
 }
 
 #links{
@@ -885,8 +853,13 @@ md-dialog{
     .md-actions{position:absolute; bottom:0px;}
 }
 
+netetag-check{display:inline-block; height:22px; margin-bottom:2px;}
+
+
 #selectingTags > .row{margin-top:10px;}
 #selectingTags{
+    netetag-check{margin-bottom:2px;}
+    .row{margin:0px;}
     .md-subheader{padding:4px 0px;}
     #messagingTags{margin-top:0px;
         .md-subheader{padding:8px 0px 4px 0px;}
@@ -894,9 +867,9 @@ md-dialog{
     #noTags{display:inline-block; margin-top:3px;}
     #seeall{position:absolute; right:25px; top:12px;}
     
-    #recentTags{overflow-y:hidden; max-height:80px;
+    #recentTags{
         .md-subheader{padding: 5px 0px 5px 2px;}
-        netetag-check{display:inline-block; height:22px;}
+        #thetags{overflow-y:hidden; max-height:22px;}
     }
-    #selectedMembers{position:relative; max-height:52px; overflow-y:scroll;}
+    #selectedMembers{position:relative; max-height:50px; overflow-y:scroll;}
 }

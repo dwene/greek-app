@@ -12,26 +12,36 @@
         </md-toolbar>
         <md-content class="md-padding">
             <search ng-model="search" change="change()"></search>
-            <md-list class="memberList" >
+            <md-list class="itemList">
                 <md-item ng-repeat="member in users | orderBy:'last_name' | nameSearch: search: 0 | limitTo:maxLength track by member.key">
-                    <div layout="row" layout-align="center center" layout-margin>
+                    <div layout="row" layout-sm="column" layout-align="center center" layout-margin>
                         <div>
                             <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="check in" ng-click="checkIn(member, true, false)">
-                                    <i class="fa fa-sign-in fa-lg"></i>
+                                    <i class="fa fa-sign-in fa-lg fa-fw"></i>
                                 <!-- <update-status class="updating" ng-model="member.in_updating" fn-call="checkIn(member, true, false)"></update-status> -->
                             </md-button>
-                            <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, true, false)" aria-label="check out">
-                                <i class="fa fa-sign-out fa-lg"></i>
-                                <!-- <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status> -->
+                            <md-button ng-hide="!member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="clear check in" ng-click="checkIn(member, false, true)">
+                                    <i class="fa fa-times fa-lg fa-fw"></i>
+                                <!-- <update-status class="updating" ng-model="member.in_updating" fn-call="checkIn(member, true, false)"></update-status> -->
                             </md-button>
                         </div>
-                        <div flex>
-                            <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">
+                        <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">
+                        <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                        <div flex class="no-margin"></div>
+                        <div>
+                                <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
+                                <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span>
                         </div>
-                        <div flex>
-                            <div class="name">{{member.first_name}} {{member.last_name}}</div>
-                                <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}<i ng-click="checkIn(member, false, true)" class="fa fa-times"></i></span><br>
-                                <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}<i ng-click="checkOut(member, false, true)" class="fa fa-times"></i></span>
+                        <div flex class="no-margin"></div>
+                        <div>
+                        <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, true, false)" aria-label="check out">
+                                <i class="fa fa-sign-out fa-lg fa-fw"></i>
+                                <!-- <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status> -->
+                        </md-button>
+                        <md-button ng-show="member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, false, true)" aria-label="check out">
+                                <i class="fa fa-times fa-lg fa-fw"></i>
+                                <!-- <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status> -->
+                        </md-button>
                         </div>
                     </div>
                 </md-item>
@@ -39,49 +49,6 @@
         </md-content>
     </div>
 </div>
-
-
-
-<!--
-<div ng-show="loading && !eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
-
-<div id="checkinPage" class="container" ng-hide="loading || eventNotFound">
-
-<div id="topSearch" class="form-group">
-   <a href="/#/app/events/{{eventTag}}" class="btn btn-primary"><i class="fa fa-arrow-circle-o-left"></i></a>
-    <search ng-model="search"></search>
-</div>        
-       <div infinite-scroll="maxLengthIncrease()" infinite-scroll-disabled="search"> 
-        <ul class="row">
-            <li ng-repeat="member in users | orderBy:'rsvp' | nameSearch: search: 0 | limitTo:maxLength track by member.key" class="checkin col-xs-12 col-sm-6" ng-show="true">
-
-                <div class="checkinContent card">
-                
-                <update-status class="updating" ng-model="member.in_updating" fn-call="checkIn(member, true, false)"></update-status>
-                <update-status class="updating" ng-model="member.out_updating" fn-call="checkOut(member, true, false)"></update-status>
-
-                <div class="smallprofilepic" style="background-image:url({{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}});" ></div>
-               
-                <span class="checkinTitle"><span class="memberName">{{member.first_name}} {{member.last_name}}</span>  - <span class="rsvpStatus"><span ng-show="member.rsvp == 'not_going'">Not Going</span><span ng-show="member.rsvp == 'going'">Going</span><span ng-show="member.rsvp == 'unknown'">No Response</span></span></span>
-                <div class="checkinTimes">
-                <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}<i ng-click="checkIn(member, false, true)" class="fa fa-times"></i></span><br>
-                <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}<i ng-click="checkOut(member, false, true)" class="fa fa-times"></i></span><br>
-                </div>
-                
-                    <div class="btn-group">
-                    <button class="btn btn-lg btn-primary" ng-click="checkIn(member, true, false)"><i class="fa fa-sign-in"></i></button>
-                    <button class="btn btn-lg btn-danger" ng-click="checkOut(member, true, false)"><i class="fa fa-sign-out"></i></button>
-                    </div>
-                </div>
-
-                </li>
-        </ul>
-        </div>
-          
-</div>
--->
-
 
 
 <div class="modal fade" id="checkInModal">
