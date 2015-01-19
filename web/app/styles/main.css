@@ -303,70 +303,6 @@ body {
 body.modal-open {
   margin-right: 0px;
 }
-/*Navigation Styles*/
-#homeButton {
-  cursor: pointer;
-}
-.navbar-default .navbar-brand,
-.navbar-default .navbar-nav > li > a,
-.navbar-default .navbar-brand .badge,
-#refreshNotifications {
-  transition: background linear .3s;
-}
-.navbar {
-  border: 0px;
-  transition: background linear .3s;
-}
-@media screen and (max-width: 991px) {
-  #mainNavigation > ul > li > a {
-    padding: 15px 10px 15px 10px;
-  }
-}
-.navbar-toggle {
-  display: block;
-  position: absolute;
-  right: 0px;
-}
-#mainNavigation {
-  margin-right: 50px;
-}
-.dropdown {
-  cursor: pointer;
-}
-.topLeft {
-  position: absolute;
-  left: 20px;
-  top: 10px;
-}
-.topRight {
-  position: absolute;
-  right: 20px;
-  top: 10px;
-}
-.bottomLeft {
-  position: absolute;
-  left: 20px;
-  bottom: 10px;
-}
-.bottomLeft2 {
-  position: absolute;
-  left: 120px;
-  bottom: 10px;
-}
-.bottomRight {
-  position: absolute;
-  right: 20px;
-  bottom: 10px;
-}
-.container {
-  position: relative;
-}
-/*Page Headers*/
-h2.page-header {
-  margin: 0px 0px 10px 0px;
-  border-color: #ccc;
-  font-weight: bold;
-}
 /*Labels and Tags*/
 .label {
   display: inline-block;
@@ -400,395 +336,9 @@ h2.page-header {
   left: 5px;
   top: 5px;
 }
-/*Selecting Members for Messaging*/
-.messagePerson {
-  margin-bottom: 4px;
-}
-.preText {
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -o-pre-wrap;
-  word-wrap: break-word;
-}
-/*Random Fixes*/
-.btn {
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  -webkit-tap-highlight-color: transparent;
-  outline: 0px auto -webkit-focus-ring-color !important;
-}
-.btn-info {
-  font-weight: bold;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
-}
-#registerForm #orgType input {
-  margin-right: 5px;
-}
-#correctPerson {
-  text-align: center;
-  margin-bottom: 15px;
-}
-#logoutbutton {
-  margin: 7px;
-}
-input.form-control {
-  height: 34px !important;
-}
-.tab-pane {
-  padding-top: 10px;
-}
-.navbar-collapse {
-  max-height: 100%;
-}
-.well,
-.jumbotron {
-  position: relative;
-}
-.alert {
-  background-image: none;
-  margin-bottom: 5px;
-}
-.container .jumbotron {
-  padding-right: 20px;
-  padding-left: 20px;
-}
-.dropdown-menu > .active > a {
-  color: white !important;
-}
-@media screen and (max-width: 767px) {
-  .jumbotron {
-    padding-top: 50px;
-    padding-bottom: 50px;
-  }
-}
-.fa-times-circle {
-  width: 16px;
-}
-.collapse {
-  display: none !important;
-}
-h1.darkbg {
-  margin-bottom: 10px;
-}
-h1 {
-  font-size: 34px;
-  font-weight: bold;
-}
 /*Main App ui-view*/
 #mainSection {
   position: relative;
-}
-/*Alumni Directory*/
-#yearSelect {
-  display: block;
-  padding: 10px;
-}
-/*Member Profile Page*/
-#profileContent {
-  position: relative;
-  margin: 20px auto;
-}
-#profileContent .status {
-  text-align: center;
-  width: 100%;
-  display: inline-block;
-  font-size: 18px;
-  margin: 10px 0px 5px;
-}
-#profileContent .card {
-  position: relative;
-}
-#profileContent #theTags {
-  padding-right: 36px;
-}
-#memberProfile #social {
-  text-align: center;
-  font-size: 40px;
-}
-#memberProfile #social li {
-  display: inline-block;
-}
-#memberProfile #contact {
-  text-align: left;
-  width: 300px;
-  position: relative;
-  left: 50%;
-  margin: 10px 0px 10px -150px;
-}
-#memberProfile #contact li {
-  display: inline-block;
-  width: 100%;
-  min-height: 45px;
-}
-#memberProfile #contact a {
-  position: absolute;
-  font-size: 40px;
-}
-#memberProfile #contact span {
-  display: inline-block;
-  font-size: 14px;
-  line-height: 14px;
-  margin: 12px 0px 0px 45px;
-  position: relative;
-}
-#memberProfile #saveContact {
-  display: block;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-#memberProfile #name {
-  margin: 0px auto 0 auto;
-}
-#memberProfile h1 {
-  padding: 10px;
-  margin-left: -15px;
-  margin-bottom: 20px;
-}
-#memberProfile .position {
-  margin-bottom: 10px;
-  font-weight: bold;
-  margin-right: 38px;
-}
-#memberProfile #name p {
-  font-style: italic;
-  margin-right: 38px;
-}
-#memberProfile #name .info {
-  margin-bottom: 5px;
-}
-#memberProfile #name .info span {
-  font-weight: bold;
-}
-@media screen and (max-width: 767px) {
-  #memberProfile #name {
-    width: 300px;
-  }
-  #memberProfile h1 {
-    margin-right: -15px;
-  }
-}
-#memberProfile #name p {
-  margin: 8px 0px;
-}
-@media screen and (min-width: 768px) {
-  #memberProfile #name h1 {
-    font-size: 60px;
-  }
-  #memberProfile #name p {
-    font-size: 32px;
-  }
-  #memberProfile .position {
-    font-size: 42px;
-  }
-  #memberProfile .card {
-    margin-right: 0px !important;
-  }
-}
-/*Member Tagging Page*/
-#addTagsButton {
-  margin: 15px 0px;
-}
-#selectedTags {
-  display: inline;
-}
-.memberTags .badge:hover {
-  background: #d9534f;
-}
-.memberTags .btn-group,
-.messagingTags .btn-group {
-  margin: 0px 4px 0px 0px;
-}
-#taggingSearch {
-  margin-bottom: 10px;
-  display: block;
-}
-.memberTags #seeall {
-  right: 15px !important;
-}
-.memberTags .btn-group {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-.memberTags .badge {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  border-left: 1px solid #ccc;
-  padding: .3em .4em .5em .4em;
-  border-radius: .25em;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-}
-.memberTags .page-header {
-  margin: 10px 0 10px !important;
-  padding-bottom: 5px;
-}
-#memberTags .label:not(.member) {
-  padding: .4em 2em .4em .6em;
-}
-.memberTags .checkLabel {
-  margin-bottom: 4px;
-}
-#memberTags .badge {
-  padding: .4em .4em .4em .3em;
-}
-@media screen and (max-width: 767px) {
-  #memberTags {
-    left: -2px;
-    margin-top: 2px;
-  }
-}
-#memberSelect row {
-  margin: 4px -15px 4px -15px;
-}
-#memberSelect hr {
-  margin: 8px 0px;
-}
-.addTags .label {
-  padding: .4em 2em .4em 1.5em;
-}
-.addTags .btn-group {
-  margin: 2px 0px;
-}
-.addTags .open .dropdown-toggle {
-  background: #ccc;
-}
-.dropdown-menu > li > a {
-  cursor: pointer;
-}
-#addTag button,
-#addTag input {
-  display: inline-block;
-}
-#createTags {
-  margin-top: 10px;
-}
-.modal-title span {
-  font-weight: bold !important;
-}
-#deleteTagModal {
-  z-index: 9999;
-}
-#renameTagModal {
-  z-index: 9999;
-}
-#tagMembersCard {
-  margin-bottom: 10px;
-}
-#taggingMembers #memberSelect > li {
-  padding: 6px 10px 4px 10px;
-  position: relative;
-  border-bottom: 1px solid #ccc;
-}
-#taggingMembers #memberSelect > li:nth-child(odd) {
-  background: #f8f8f8;
-}
-#taggingMembers #memberSelect > li:first-child {
-  border-top: 1px solid #ccc;
-}
-/*Messaging Page*/
-textarea.form-control {
-  height: auto;
-  max-width: 100%;
-}
-#recentlySentMessages ul {
-  padding: 5px 0px;
-  min-height: 380px;
-}
-#recentlySentMessages h2 {
-  margin-bottom: 0px;
-  border: 0px;
-}
-#messagingTags {
-  margin-bottom: 5px;
-}
-#messagingTags .btn-group {
-  margin-bottom: 5px;
-}
-#messaging #content {
-  min-height: 180px;
-}
-/*Links Page*/
-#links .card {
-  margin-bottom: 20px;
-}
-#links .page-header div {
-  margin-right: 15px;
-}
-#links li button {
-  border: none;
-  background: none;
-  height: 32px;
-  width: 32px;
-  padding-bottom: 15px;
-  margin: 0px;
-}
-#links .striped h3 {
-  display: inline;
-}
-/*Main App Page*/
-@media screen and (min-width: 768px) {
-  #notifications .card-header {
-    margin: 0px;
-  }
-}
-.notification {
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-  height: 68px;
-  padding: 10px 10px 10px 16px;
-  background-color: #FFF;
-  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-  -moz-box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-  margin: 5px 3px;
-}
-/*
-background-image: -webkit-gradient(linear,left 0,left 100%,from(#fff),to(#f8f8f8));
-background-image: -webkit-linear-gradient(top,#fff,0%,#f8f8f8,100%);
-background-image: -moz-linear-gradient(top,#fff 0,#f8f8f8 100%);
-background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
-background-repeat: repeat-x;
-*/
-/*Register organization page*/
-#registerButtonContainer {
-  text-align: center;
-}
-.registerButton {
-  position: relative;
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  background: none;
-  color: white;
-  border: 2px solid white;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
-  font-weight: bolder;
-  padding: 20px;
-}
-.registerButton:hover {
-  color: white;
-}
-/*Event Info Page*/
-#goingForm .form-group {
-  width: 260px;
-  margin: 10px auto;
-}
-#goingForm .btn-group {
-  margin-left: 20px;
-}
-/*Register User/Password Pages*/
-.usernameAlert {
-  padding: 10px;
-}
-/*Change Password from Token*/
-#changepasswordfromToken #correctUser {
-  font-weight: bold;
-  margin: 10px;
-  display: block;
 }
 /*Upload Profile Page*/
 #crop {
@@ -800,461 +350,24 @@ background-repeat: repeat-x;
   padding-bottom: 5px;
   margin: 10px 0 5px;
 }
-/*Event Page*/
-#calendar {
-  margin-bottom: 15px;
-}
-#calendar table {
-  margin-bottom: 0px;
-}
-#newEventButton,
-#showPastButton {
-  margin: 0px 0px 15px 0px;
-}
-#showPastButton {
-  position: absolute;
-  right: 15px;
-  top: 0px;
-}
-#events ul {
-  padding: 5px 0px;
-  height: 380px;
-}
-.event {
-  cursor: pointer;
-  position: relative;
-}
-.event:hover {
-  background: #EDEDED;
-}
-.event {
-  border-top: 1px solid #777;
-}
-.event:last-child {
-  border-bottom: 1px solid #777;
-}
-.eventContent {
-  padding: 20px 10px;
-}
-.eventName {
-  display: inline-block;
-  width: 100%;
-  font-size: 16px;
-  font-weight: bold;
-}
-.eventTime {
-  display: block;
-  width: 100%;
-}
-/*Event Info Page*/
-#eventTitle {
-  margin-bottom: 10px;
-}
-#eventTitle h1 {
-  margin-bottom: 10px;
-}
-#eventTitle h1 p {
-  font-size: 14px;
-  margin-top: 8px;
-}
-#eventInfo .card {
-  padding: 20px 20px 20px 46px;
-  position: relative;
-}
-#eventInfo #going,
-#eventInfo #notGoing,
-#eventInfo #invited {
-  padding: 10px !important;
-  margin-top: 10px;
-}
-#eventInfo .card .page-header {
-  margin: 0 0 10px;
-}
-#eventInfo h3 {
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-/*New Event Page*/
-#eventTags {
-  margin-bottom: 5px;
-}
-#eventTags .btn-group {
-  margin-bottom: 5px;
-}
-#eventTags .btn-group .checkLabel {
-  margin: 0 2px;
-}
-/*Edit Event Page*/
-/*Check In Page*/
-#checkinPage #topSearch {
-  padding-left: 45px;
-  margin-top: -15px;
-}
-#checkinPage #topSearch .btn {
-  margin-bottom: -46px;
-  margin-left: -46px;
-}
-/*makes room for the picture*/
-.checkinContent {
-  height: 140px;
-  padding: 15px 15px 44px 75px !important;
-  position: relative;
-}
-.checkinContent .btn-group {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  width: 100%;
-}
-.checkinContent .btn {
-  width: 50%;
-  border-radius: 0px;
-  height: 34px;
-  padding: 0px;
-}
-.checkinContent .checkinTitle {
-  font-size: 18px;
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-.checkinContent .updating {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-.checkinContent .checkinTimes {
-  margin: 15px 0 0 -60px;
-}
-.rsvpStatus {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 18px;
-  font-style: italic;
-}
-#checkinPage .btn-group .btn + .btn {
-  margin-left: 0px;
-}
-#checkinPage .smallprofilepic {
-  top: 12px;
-  left: 12px;
-  margin-top: 0px;
-}
-#checkinPage li {
-  margin-bottom: 10px;
-}
-.checkedIn,
-.checkedOut {
-  display: block;
-  padding: 5px 0px;
-}
-/*Check In Report*/
-#report h1 {
-  margin-bottom: 10px;
-}
-#report .card {
-  margin-bottom: 10px;
-}
-#report .card .smallprofilepic {
-  left: 15px;
-}
-#report .checkinContent {
-  height: 110px;
-}
-#noShows ul {
-  border-top: 1px solid #ccc;
-}
-#noShows li:nth-child(even) {
-  background: #f8f8f8;
-}
-#noShows li {
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
-}
-#noShows li span {
-  font-weight: bold;
-}
-/*Poll Page*/
-#newPollButton {
-  margin-bottom: 15px;
-}
-#polls ul {
-  padding: 5px 0px;
-  height: 380px;
-}
-/*New Poll Page*/
-#newPoll .card {
-  padding-bottom: 50px;
-}
-#newPoll .input-group {
-  margin-bottom: 15px;
-}
-.pollQuestionContent {
-  margin: 40px 0px 5px 0px;
-}
-.pollQuestion {
-  padding: 15px;
-  border-top: 1px solid #ccc;
-}
-.pollQuestion:last-of-type {
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-}
-.pollQuestion ul .close {
-  margin-top: -3px;
-}
-/*Poll Info Page*/
-.question {
-  font-weight: bold;
-  margin: 10px 0 5px 0;
-}
-#polls .closed .notificationTitle:after {
-  content: ' - closed';
-}
-#pollInfo #description {
-  padding-left: 56px !important;
-  margin: 10px 0px;
-  position: relative;
-}
-#pollInfo #description span {
-  display: inline-block;
-  font-style: italic;
-  margin-top: 5px;
-}
-#pollInfo .card .icon {
-  font-size: 24px;
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  margin-top: -12px;
-}
-#pollInfo h3 {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-#pollInfo #responded h1.card-header,
-#pollInfo #response h1.card-header {
-  margin-bottom: 20px;
-}
-#pollButtons {
-  min-height: 74px;
-  margin-top: 0px;
-  margin-bottom: 10px;
-  padding: 20px !important;
-}
-#pollInfo #response .question {
-  margin-bottom: 20px;
-}
-#pollInfo .text_question {
-  min-height: 34px;
-}
-#pollInfo h1 .alert {
-  font-size: 14px;
-  margin-top: 10px;
-  padding: 10px;
-}
-/*Poll Results Page*/
-.resultsQuestion {
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-#pollResultsPage li {
-  list-style: none;
-}
-.pollSummaryList {
-  margin-bottom: 20px;
-  list-style: none;
-}
-.tabSelect {
-  cursor: pointer;
-}
-#pollResultsPage .card {
-  margin-bottom: 10px;
-}
-.pollSummary {
-  list-style: none;
-  margin-top: 20px;
-}
-.summaryHeader .row,
-.summaryResponses .row {
-  margin: 0px;
-}
-.pollSummary h3 {
-  font-weight: bold;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #ccc;
-}
-.pollSummary .summaryResponses .row {
-  padding: 10px 0px;
-  border-bottom: 1px solid #ccc;
-}
-.pollSummary .summaryResponses:nth-child(even) {
-  background: #f8f8f8;
-}
-.expandButtons {
-  margin-top: -40px;
-}
-/*Helper Classes*/
-.smallprofilepic {
-  display: inline-block;
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  top: 50%;
-  margin: -25px 0 0 0px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  border-radius: 25px;
-}
-.profilepic {
-  display: block;
-  width: 250px;
-  height: 250px;
-  margin: 0px auto 10px auto;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
-  border-radius: 125px;
-}
-.btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.42;
-  border-radius: 15px;
-}
-.capitalize {
-  text-transform: capitalize;
-}
-.required label:after {
-  content: '*';
-  color: red;
-}
-h1.darkbg {
-  color: white;
-  border-radius: 5px;
-  padding: 10px;
-}
-.darkbg .btn {
-  background: none;
-  color: white;
-  border: 2px solid white;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
-  font-weight: bolder;
-}
-.noNotifications {
-  font-size: 40px;
-  margin: 40px 0px;
-  font-weight: bolder;
-  color: #ccc;
-}
-.card {
-  padding: 20px;
-  overflow: hidden;
-  background-color: #FFF;
-  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-  -moz-box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-}
-@media screen and (min-width: 768px) {
-  .md-pull-right {
-    float: right;
-  }
-}
-/*ng-animation code*/
-.fadingIn.ng-enter,
-.fadingIn.ng-hide-remove {
-  -webkit-animation: fadeIn .5s;
-  -moz-animation: fadeIn .5s;
-  -ms-animation: fadeIn .5s;
-  animation: fadeIn .5s;
-}
-.fadingOut.ng-leave,
-.fadingOut.ng-hide-show {
-  -webkit-animation: fadeOut .5s;
-  -moz-animation: fadeOut .5s;
-  -ms-animation: fadeOut .5s;
-  animation: fadeOut .5s;
-}
-.fadingInLeftBig.ng-enter {
-  position: absolute !important;
-  left: 0px;
-  right: 0px;
-  visibility: hidden;
-  -webkit-animation: fadeInRightBig .5s;
-  -moz-animation: fadeInRightBig .5s;
-  -ms-animation: fadeInRightBig .5s;
-  animation: fadeInRightBig .5s;
-}
-.fadingInLeftBig.ng-enter.ng-enter-active {
-  visibility: visible;
-}
-.fadingOutRightBig.ng-leave {
-  position: absolute !important;
-  left: 0px;
-  right: 0px;
-  -webkit-animation: fadeOutLeftBig .5s;
-  -moz-animation: fadeOutLeftBig .5s;
-  -ms-animation: fadeOutLeftBig .5s;
-  animation: fadeOutLeftBig .5;
-}
-.removeNotification.ng-leave {
-  -webkit-animation: fadeOutUp .2s;
-  -moz-animation: fadeOutUp .2s;
-  -ms-animation: fadeOutUp .2s;
-  animation: fadeOutUp .2s;
-}
 /*Specific Fixes*/
 .bootstrap-datetimepicker-widget .btn:active,
 .bootstrap-datetimepicker-widget .btn.active {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.modal-dialog {
-  left: 0;
+/*Random Fixes*/
+.btn {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: transparent;
+  outline: 0px auto -webkit-focus-ring-color !important;
 }
-@media screen and (max-width: 768px) {
-  .tooltip {
-    display: none !important;
-  }
+input.form-control {
+  height: 34px !important;
 }
-/*Angular Picture Cropping*/
-div#cropped-image {
-  height: 150px;
-  width: 150px;
-  overflow: hidden;
-}
-/*Dark Theme Color*/
-.dark .navbar-default .navbar-nav > .dropdown > a .caret {
-  border-top-color: white !important;
-  border-bottom-color: white !important;
-}
-.dark .navbar-default .navbar-brand,
-.dark .navbar-default .navbar-nav > li > a,
-.dark .navbar-default .navbar-brand .badge,
-.dark #refreshNotifications {
-  color: white !important;
-  transition: background linear .3s;
-}
-@media screen and (max-width: 767px) {
-  .dark .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: white !important;
-  }
-}
-.dark .btn-primary {
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
-}
-#notificationModal img {
-  display: block;
-  max-width: 95%;
+.alert {
+  background-image: none;
+  margin-bottom: 5px;
 }
 /*Material Design Styles*/
 html {
@@ -1424,6 +537,13 @@ md-progress-circular.small {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.required label:after {
+  content: '*';
+  color: red;
 }
 /*Striped Lists*/
 .striped [layout-margin] {
@@ -1691,6 +811,11 @@ md-toolbar.md-tall {
 }
 #directory .position {
   font-weight: normal;
+}
+/*Alumni Directory*/
+#yearSelect {
+  display: block;
+  padding: 10px;
 }
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
@@ -1975,4 +1100,47 @@ netetag-check {
   position: relative;
   max-height: 50px;
   overflow-y: scroll;
+}
+/*ng-animation code*/
+.fadingIn.ng-enter,
+.fadingIn.ng-hide-remove {
+  -webkit-animation: fadeIn .5s;
+  -moz-animation: fadeIn .5s;
+  -ms-animation: fadeIn .5s;
+  animation: fadeIn .5s;
+}
+.fadingOut.ng-leave,
+.fadingOut.ng-hide-show {
+  -webkit-animation: fadeOut .5s;
+  -moz-animation: fadeOut .5s;
+  -ms-animation: fadeOut .5s;
+  animation: fadeOut .5s;
+}
+.fadingInLeftBig.ng-enter {
+  position: absolute !important;
+  left: 0px;
+  right: 0px;
+  visibility: hidden;
+  -webkit-animation: fadeInRightBig .5s;
+  -moz-animation: fadeInRightBig .5s;
+  -ms-animation: fadeInRightBig .5s;
+  animation: fadeInRightBig .5s;
+}
+.fadingInLeftBig.ng-enter.ng-enter-active {
+  visibility: visible;
+}
+.fadingOutRightBig.ng-leave {
+  position: absolute !important;
+  left: 0px;
+  right: 0px;
+  -webkit-animation: fadeOutLeftBig .5s;
+  -moz-animation: fadeOutLeftBig .5s;
+  -ms-animation: fadeOutLeftBig .5s;
+  animation: fadeOutLeftBig .5;
+}
+.removeNotification.ng-leave {
+  -webkit-animation: fadeOutUp .2s;
+  -moz-animation: fadeOutUp .2s;
+  -ms-animation: fadeOutUp .2s;
+  animation: fadeOutUp .2s;
 }

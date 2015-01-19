@@ -1,3 +1,63 @@
+
+<div id="newPoll" class="container">
+
+<div class="md-whiteframe-z1">
+    <md-toolbar>
+       <div class="md-toolbar-tools">
+           <h1>New Survey</h1>
+       </div>
+    </md-toolbar>
+    <md-content class="md-padding no-padding-top">
+        <selecting-users tags="tags"></selecting-users>
+        
+        <form id="newPoll" name="newPoll" ng-submit="createPoll(newPoll.$valid)" class="form-horizontal" role="form" novalidate>
+                <md-input-container ng-class="{ 'has-error' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" ng-model="poll.name" required>
+                    <p ng-show="(newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
+                </md-input-container>
+                
+                <div ng-class="{ 'has-error' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
+                    <textarea class="form-control" id="description" name="description" rows="6" ng-model="poll.description" placeholder="Enter your survey description here: We are having a party. Yay!" required></textarea>
+                    <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
+                </div>
+                
+                <br>
+                
+                    <div ng-init="poll.viewers = 'everyone'">
+                        <label for="view_results">Who can view the results?</label>
+                        <md-radio-group name="view_results" ng-model="poll.viewers">
+                            <md-radio-button value="everyone" aria-label="everyone">Everyone</md-radio-button>
+                            <md-radio-button value="leadership" aria-label="leadership and council"> Leadership and Council </md-radio-button>
+                            <md-radio-button value="council" aria-label="council only">Council Only</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                    
+                    <div ng-init="poll.show_names == true">
+                        <label for="view_names">Display names in results?</label>
+                        <md-radio-group name="view_names" ng-model="poll.show_names">
+                            <md-radio-button value="true" aria-label="everyone">Yes</md-radio-button>
+                            <md-radio-button value="false" aria-label="leadership and council">No, make <answers></answers> anonymous</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                    <div class="form-group" ng-init="poll.show_names=true">
+                        <label class="col-sm-2 control-label">Display names in results?</label>
+                        <div class="btn-group col-sm-10" ng-model="poll.show_names">
+                          <a class="btn" ng-class="{'btn-primary': poll.show_names == true,  'btn-default': !poll.show_names}" ng-click="poll.show_names = true">Yes</a>
+                          <a class="btn" ng-class="{'btn-primary': !poll.show_names,  'btn-default': poll.show_names == true}" ng-click="poll.show_names=false">No</a> 
+                        </div>    
+                    </div>
+                
+        </form>
+        
+        
+        
+    </md-content>
+</div>    
+    
+</div>
+
+<!--
 <div id="newPoll" class="container">
 
 <div class="card">
@@ -24,16 +84,6 @@
         </div>
         <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
     </div>     
-      
-      
-<!--
-
-<div class="btn-group" ng-model="button.radio" bs-radio-group>
-  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="First">Everyone</label>
-  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1"> Second</label>
-  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="2"> Third</label>  
--->
-      
       
     <div class="form-group" ng-init="poll.viewers = 'everyone'">
         <label class="col-sm-2 control-label">Who can view results?</label>
@@ -106,4 +156,4 @@
 </div>
 
  <div ng-show="loading" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
-</div>
+</div>-->
