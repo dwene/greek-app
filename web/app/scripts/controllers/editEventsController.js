@@ -73,7 +73,7 @@
         });
         $scope.$watch('time_start', function(){
             if ($scope.time_start){
-                if ($scope.date_start == $scope.date_end){
+                if ($scope.date_start == $scope.date_end && moment($scope.time_end).diff($scope.time_start) <= 0){
                     $scope.time_end = moment($scope.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
                 }
             }

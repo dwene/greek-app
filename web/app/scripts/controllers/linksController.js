@@ -1,4 +1,4 @@
-App.controller('LinksController', function($scope, $rootScope, RESTService, Load, localStorageService, Links, Organization){
+App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTService, Load, localStorageService, Links, Organization){
         routeChange();
             Organization.get();
             if (Organization.organization){
@@ -16,14 +16,21 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                 $scope.links = Links.links;
                 $scope.loading_finished = true;
             });
+            var selectedGroup;
+            var selectedLink;
+            var groups;
             $scope.openEditLinkModal = function(link){
                 $scope.temp_link = {link:link.link, title:link.title, group:link.group};
                 $scope.selectedLink = link;
                 $('#editLinkModal').modal();
             } 
             $scope.openNewLinkModal = function(){
-                $scope.temp_link = {};
-                $('#newLinkModal').modal();
+                groups = $scope.groups;
+                selectedLink = {};
+                $mdDialog.show({
+                    controller: DialogController,
+                    templateUrl: 'views/templates/links/newLinkDialog.html'
+                });
             }
             $scope.openDeleteLinkModal = function(link){
                 $('#deleteLinkModal').modal();
@@ -38,7 +45,40 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                 $('#deleteGroupModal').modal();
                 $scope.selectedGroup = group;
             }
-            $scope.createGroup = function(group){
+
+
+
+            function DialogController($mdDialog, $scope){
+                $scope.groups = groups;
+                $scope.closeDialog = function(){
+                    $mdDialog.hide();
+                }
+                $scope.deleteGroup = function(group){
+                    deleteGroup(group);
+                    $mdDialog.hide();
+                }
+                $scope.renameGroup = function(old_group, group){
+                    renameGroup(old_group, group);
+                    $mdDialog.hide();
+                }
+                $scope.createLink = function(title, link, group){
+                    createLink(title, link, group);
+                    $mdDialog.hide();
+                }
+                $scope.deleteLink = function(link){
+                    deleteLink(link);
+                    $mdDialog.hide();
+                }
+                $scope.editLink = function(title, link, group, current_link){
+                    editLink(title, link, group, current_link);
+                    $mdDialog.hide();
+                }
+                $scope.createGroup = function(group){
+                    createGroup(group);
+                    $mdDialog.hide();
+                }
+            }
+            function createGroup(group){
                 var to_send = {group:group};
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', to_send)
                 .success(function(data){
@@ -58,7 +98,7 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     $scope.checkCreateGroup = "broken";
                 });
             }
-            $scope.deleteGroup = function(group){
+            function deleteGroup(group){
                 var to_send = {group:group};
                 $scope.checkDeleteGroup = "pending";
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', to_send)
@@ -84,7 +124,7 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     console.log('Error: ' , data);
                 });
             }
-            $scope.createLink = function(title, link, group){
+            function createLink(title, link, group){
                 var to_send = {group:group, title:title, link:link};
                 $scope.checkCreateLink = "pending";
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', to_send)
@@ -105,7 +145,7 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     console.log('Error: ' , data);
                 });
             }
-            $scope.deleteLink = function(link){
+            function deleteLink(link){
                 var to_send = {key:link.key};
                 $scope.checkDeleteLink = "pending";
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', to_send)
@@ -130,7 +170,7 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     console.log('Error: ' , data);
                 });
             }
-            $scope.editLink = function(title, link, group, current_link){
+            function editLink(title, link, group, current_link){
                 var to_send = {key:current_link.key, link:link, title:title, group:group};
                 $scope.checkEditLink = "pending";
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', to_send)
@@ -153,7 +193,7 @@ App.controller('LinksController', function($scope, $rootScope, RESTService, Load
                     console.log('Error: ' , data);
                 });
             }
-            $scope.renameGroup = function(old_group, group){
+            function renameGroup(old_group, group){
                 var to_send = {old_group:old_group, group:group};
                 $scope.checkRenameGroup = "pending";
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', to_send)

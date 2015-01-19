@@ -1571,6 +1571,7 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
     },
     transclude: true,
     link: function (scope, element, attrs) {
+        console.log('I am starting selectingmembers');
         var tags;
         var directory;
         scope.usersList = [];
@@ -1584,7 +1585,18 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                 update();
             });
         }
-
+        scope.$on('$destroy', function(){
+            for (var i = 0; i < scope.tags.org_tags.length; i++){
+                if (scope.tags.org_tags[i].checked){
+                    scope.tags.org_tags[i].checked = false;
+                }
+            }
+            for (var i = 0; i < scope.tags.perms_tags.length; i++){
+                if (scope.tags.perms_tags[i].checked){
+                    scope.tags.perms_tags[i].checked = false;
+                }
+            }
+        })
         scope.openDialog = function(ev){
             $mdDialog.show({
                     controller: ModalController,

@@ -1,0 +1,97 @@
+<md-dialog md-theme="{{$root.color}}">
+  <md-content>
+       <md-subheader>
+            New Link
+        </md-subheader>
+        <md-divider></md-divider>
+        <div class="form-group">
+          <label for="newTitle" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newTitle" name="newTitle" ng-model="title" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newLink" class="col-sm-2 control-label">Link</label>
+          <div class="col-sm-10">
+          <div class="input-group">
+            <span class="input-group-addon">http://</span>
+            <input type="text" class="form-control" id="newLink" name="newLink" ng-model="link" remove-http required>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newGroup" class="col-sm-2 control-label">Group</label>
+          <div class="col-sm-10">
+          <select class="form-control" id="newGroup" name="newGroup" ng-model="group" required>
+            <option ng-repeat="group in groups">{{group}}</option>
+            <option value="new_group_listing">Add New Group</option>
+          </select>
+        </div>
+        </div>
+
+        <div class="form-group" ng-show="group == 'new_group_listing'">
+          <label for="newTitle" class="col-sm-2 control-label">New Group</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newGroupValue" name="newGroupValue" ng-model="new_group" ng-required="temp_link.group === 'new_group_listing'">
+          </div>
+        </div>
+  </md-content>
+  
+  <div class="md-actions" layout="row">
+        <md-button ng-click="closeDialog()">cancel</md-button>
+        <md-button ng-click="createLink(title, link, group == 'new_group_listing' ? new_group : group)">add</md-button>
+  </div>
+</md-dialog>
+
+
+
+<!-- <div class="modal fade" id="newLinkModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">New Link</h4>
+      </div>
+      <form id="newLinkForm" name="newLinkForm" class="form-horizontal" ng-submit="createLink(temp_link.title, temp_link.link, temp_link.group == 'new_group_listing' ? temp_link.new_group : temp_link.group)" novalidate>
+      <div class="modal-body">
+      <div class="form-group">
+          <label for="newTitle" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newTitle" name="newTitle" ng-model="temp_link.title" required>
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="newLink" class="col-sm-2 control-label">Link</label>
+          <div class="col-sm-10">
+          <div class="input-group">
+            <span class="input-group-addon">http://</span>
+            <input type="text" class="form-control" id="newLink" name="newLink" ng-model="temp_link.link" remove-http required>
+            </div>
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="newGroup" class="col-sm-2 control-label">Group</label>
+          <div class="col-sm-10">
+          <select class="form-control" id="newGroup" name="newGroup" ng-model="temp_link.group" required>
+            <option ng-repeat="group in groups">{{group}}</option>
+            <option value="new_group_listing">Add New Group</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" ng-show="temp_link.group == 'new_group_listing'">
+          <label for="newTitle" class="col-sm-2 control-label">New Group</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="newGroupValue" name="newGroupValue" ng-model="temp_link.new_group" ng-required="temp_link.group === 'new_group_listing'">
+          </div>
+      </div>
+      
+      </div>
+      <div class="modal-footer">
+        <md-button type="button" class="btn btn-default" data-dismiss="modal">Cancel</md-button>
+        <md-button type="submit" ng-disabled="!newLinkForm.$valid" class="btn btn-primary">Save</md-button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>-->

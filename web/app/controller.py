@@ -2742,14 +2742,16 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         new_event = Event()
         new_event.creator = request_user.key
-        new_event.description = event_data["description"]
+        if "description" in event_data:
+            new_event.description = event_data["description"]
         new_event.title = event_data["title"]
         new_event.time_start = datetime.datetime.strptime(event_data["time_start"], '%m/%d/%Y %I:%M %p')
         new_event.time_end = datetime.datetime.strptime(event_data["time_end"], '%m/%d/%Y %I:%M %p')
         new_event.time_created = datetime.datetime.now()
         new_event.organization = request_user.organization
         new_event.org_tags = event_data["tags"]["org_tags"]
-        new_event.location = event_data["location"]
+        if "location" in event_data:
+            new_event.location = event_data["location"]
         if 'address' in event_data:
             new_event.address = event_data["address"]
         for tag in new_event.org_tags:
@@ -2974,8 +2976,8 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_key = ndb.Key(urlsafe=json.loads(request.data))
         event = Event.query(Event.key == event_key).get()
-        users_future = User.query(User.organization ==
-                                  request_user.organization).fetch_async(projection=[User.user_name, User.prof_pic,
+        users_future = User.query(ndb.AND(User.organization ==
+                                  request_user.organization, User.perms != 'alumni')) .fetch_async(projection=[User.user_name, User.prof_pic,
                                                                                      User.first_name, User.last_name])
         attendance_data_future = AttendanceData.query(AttendanceData.event == event_key).fetch_async()
         users = users_future.get_result()
