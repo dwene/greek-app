@@ -319,39 +319,10 @@ background-repeat: repeat-x;
 .expandButtons{margin-top:-40px;}
 
 
-#color1{background:#003663;}
-#color2{background:#5F77BF;}
-#color3{background:#005826;}
-#color4{background:#487F48;}
-#color5{background:#32004B;}
-#color6{background:#8F5D91;}
-#color7{background:#ED145B;}
-#color8{background:#F26C9D;}
-#color9{background:#630F00;}
-#color10{background:#C72A26;}
-#color11{background:#91390E;}
-#color12{background:#FF6100;}
-#color13{background:#FFC100;}
-#color14{background:#2E9685;}
-#color15{background:#59391E;}
-#color16{background:#33302C;}
-
-/*Loading Screen*/
-#loadingScreen{width:100%; text-align:center;}
-#loadingScreen .fa-spin{margin-top:40px; font-size:80px;}
-.smallSpin{font-size:20px;}
-
-
-/*Section Loading*/
 
 
 /*Helper Classes*/
-.noselect{
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+
 
 .smallprofilepic{
     display: inline-block;
@@ -390,9 +361,6 @@ background-repeat: repeat-x;
 .required label:after {content:'*'; color:red;}
 
 
-h1.card-header{font-size:24px; margin-top:-5px; margin-bottom:5px;}
-h2.card-header{font-size:24px; font-weight:bold; margin:10px 0px;}
-
 h1.darkbg{color:white; border-radius:5px; padding:10px;}
 .darkbg .btn{background:none; color:white; border:2px solid white; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); font-weight:bolder;}
 
@@ -408,37 +376,6 @@ h1.darkbg{color:white; border-radius:5px; padding:10px;}
 
 
 
-.bg-warning{
-    background-color: #fcf8e3;
-    padding:15px;
-    border-radius:5px;
-}
-.bg-warning span{font-weight:bold; width:100%;}
-
-.trash{padding: 0px 5px; font-size: 14px;}
-
-.refresh{
-    position:absolute;
-    left:220px;
-    top:18px;
-    cursor:pointer;
-    padding: 0px 2px;
-    font-size: 16px;
-    display:inline-block;
-    opacity:0;
-    transition:opacity .2s linear;
-    -webkit-transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-}
-
-
-@media screen and (max-width:767px){
-    .refresh{opacity:1 !important;}
-}
-
-nav.navbar-default:hover .refresh{opacity:1;}
-#refreshNotifications .fa-spin.fa-refresh{-webkit-animation-duration: 1s; /* Safari and Chrome */
-    animation-duration: 1s;}
 
 /*ng-animation code*/
 .fadingIn.ng-enter, .fadingIn.ng-hide-remove{
@@ -455,9 +392,6 @@ nav.navbar-default:hover .refresh{opacity:1;}
     animation: fadeOut .5s;
 }
 
-//.fadingIn.ng-enter { position:absolute !important; left:0px; right:0px; }
-//.fadingOut.ng-leave { position:absolute !important; left:0px; right:0px; }
-
 .fadingInLeftBig.ng-enter{
     position:absolute !important; left:0px; right:0px; visibility:hidden;
     -webkit-animation: fadeInRightBig .5s;
@@ -473,13 +407,6 @@ nav.navbar-default:hover .refresh{opacity:1;}
     -ms-animation: fadeOutLeftBig .5s;
     animation: fadeOutLeftBig .5;
 }
-
-//.message.ng-enter{
-//    -webkit-animation: fadeInDown .2s;
-//    -moz-animation: fadeInDown .2s;
-//    -ms-animation: fadeInDown .2s;
-//    animation: fadeInDown .2;
-//}
 
 .removeNotification.ng-leave{
     -webkit-animation: fadeOutUp .2s;
@@ -592,6 +519,7 @@ md-bottom-sheet.md-grid md-item .md-icon-container{margin:0 auto;}
 .no-margin{margin:0px !important;}
 .no-select{-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none;}
 md-progress-circular.small{-webkit-transform:scale(.5) !important; transform:scale(.5) !important; margin:20px auto;}
+.noselect{-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}
 
 /*Striped Lists*/
 .striped [layout-margin]{margin:0px; padding:8px;}
