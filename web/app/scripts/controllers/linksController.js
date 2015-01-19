@@ -20,9 +20,14 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
             var selectedLink;
             var groups;
             $scope.openEditLinkModal = function(link){
-                $scope.temp_link = {link:link.link, title:link.title, group:link.group};
-                $scope.selectedLink = link;
-                $('#editLinkModal').modal();
+                selectedLink = link;
+                groups = $scope.groups;
+                $mdDialog.show({
+                    controller: DialogController,
+                    templateUrl: 'views/templates/links/editLinkDialog.html'
+                });
+
+                
             } 
             $scope.openNewLinkModal = function(){
                 groups = $scope.groups;
@@ -33,8 +38,11 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
                 });
             }
             $scope.openDeleteLinkModal = function(link){
-                $('#deleteLinkModal').modal();
-                $scope.selectedLink = link;
+                selectedLink = link;
+                $mdDialog.show({
+                    controller: DialogController,
+                    templateUrl: 'views/templates/links/deleteLinkDialog.html'
+                });
             }
             $scope.openRenameGroupModal = function(group){
                 selectedGroup = group;
@@ -56,6 +64,8 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
             function DialogController($mdDialog, $scope){
                 $scope.groups = groups;
                 $scope.selectedGroup = selectedGroup;
+                $scope.selectedLink = selectedLink;
+                $scope.temp_link = {link:selectedLink.link, title:selectedLink.title, group:selectedLink.group};
                 $scope.closeDialog = function(){
                     $mdDialog.hide();
                 }
