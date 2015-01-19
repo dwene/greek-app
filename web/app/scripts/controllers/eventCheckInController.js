@@ -121,7 +121,7 @@
                 return;
             }
             $('#checkInModal').modal('hide');
-            var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+            var to_send = {event_key: $stateParams.tag, user_key: member.key};
             if (!member.attendance_data){
                     member.attendance_data = {}
             }
@@ -157,7 +157,7 @@
                 return;
             }
             $('#checkOutModal').modal('hide');
-            var to_send = {event_tag: $stateParams.tag, user_key: member.key};
+            var to_send = {event_key: $stateParams.tag, user_key: member.key};
             if (!member.attendance_data){
                 member.attendance_data = {};
             }

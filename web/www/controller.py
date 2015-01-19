@@ -1023,8 +1023,6 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         message = json.loads(request.data)
-        subject = message['subject']
-        content_original = message['message']
         email = 'support@netegreek.com'
         content = 'Subject: '+subject+'\n'
         content += 'Content: '+content_original+'\n\n From: '+request_user.first_name+' '+request_user.last_name

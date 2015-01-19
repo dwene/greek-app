@@ -18,23 +18,6 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         $scope.$on('notifications:updated', function(){
             $scope.notifications = Notifications.notifs;
         });
-        $scope.sendHelpMessage = function(isValid, content){
-            console.log('I am getting submitted');
-            if(isValid){
-                $scope.sendingHelp='pending';
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', content)
-                .success(function(){console.log('success');
-                $scope.helpMessage.$setPristine();
-                $scope.message={};
-                $scope.sendingHelp='done';
-                })
-                .error(function(){console.log('error');
-                $scope.sendingHelp='broken';})
-            }
-            else{
-            //do nothing
-            }
-        }
         $scope.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
             if (url){
@@ -52,11 +35,26 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             $location.url(notify.link);
             $scope.toggleNotifications();
         }
+        
         $scope.showHelpdialog = function(){
             $mdDialog.show({
-                    controller: 'dialogController',
+                    controller: helpDialogController,
                     templateUrl: 'views/templates/helpDialog.html'
             });
+        }
+
+        function helpDialogController($mdDialog, $scope){
+            $scope.message = '';
+            $scope.sendHelpMessage = function(){
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', $scope.message)
+                .success(function(){console.log('success');})
+                .error(function(){console.log('error');});
+                $scope.message = '';
+                $mdDialog.hide();
+            }
+            $scope.hide = function(){
+                $mdDialog.hide();
+            }
         }
         $scope.checkPermissions = function(perms){
             if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)){
