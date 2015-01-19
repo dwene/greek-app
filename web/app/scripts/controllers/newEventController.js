@@ -52,6 +52,7 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     $scope.submitted = true;
                 }
             }
+
             $scope.checkTagAvailability = function(tag){
                 
                 if (tag == ""){
@@ -81,20 +82,36 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     });
                 }
             }
+
+
+        var date_difference = 0;
         $scope.$watch('event.date_start', function(){
             if ($scope.event){
                 if ($scope.event.date_start && !$scope.event.date_end){
-                    $scope.event.date_end = JSON.parse(JSON.stringify($scope.event.date_start));
+                    $scope.event.date_end = moment($scope.event.date_start).add(date_difference).format('MM/DD/YYYY');
                     $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
-                    $timeout(function(){$('.picker').trigger('change')},200);
+                    $timeout(function(){$('.picker').trigger('change')});
+                }
+                else if ($scope.event.date_start){
+                    $scope.event.date_end = moment($scope.event.date_start).add(date_difference).format('MM/DD/YYYY');
+                    $timeout(function(){$('.picker').trigger('change')});
+                }
+            }
+        });
+        $scope.$watch('event.date_end', function(){
+            if ($scope.event){
+                if ($scope.event.date_start && $scope.event.date_end){
+                    date_difference = moment($scope.event.date_end).diff($scope.event.date_start);
                 }
             }
         });
         $scope.$watch('event.time_start', function(){
-            console.log('I see that change!!!');
             if ($scope.event){
                 if ($scope.event.time_start){
-                    $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    //$scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    if (moment($scope.event.time_end).diff(moment($scope.event.time_start)) <= 0){
+                        $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    }
                     var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
                     if (test && $scope.event.date_start == $scope.event.date_end){
                         $scope.event.date_end = moment($scope.event.date_end).add('days', 1).format('MM/DD/YYYY');
@@ -102,5 +119,68 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                 }
                 $timeout(function(){$('.picker').trigger('change')},200);
             }
-    });
+        });
+        $scope.$watch('event.time_end', function(){
+            if ($scope.event.time_start){
+                    if (moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0){
+                        $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    }
+                }
+        });
+
+
+
+
+
+
+        // $scope.$watch('date_start', function(){
+        //     if ($scope.date_start){
+        //         $scope.date_end = moment($scope.date_start).add(date_difference).format('MM/DD/YYYY');
+        //         $timeout(function(){$('.picker').trigger('change')});
+        //     }
+        // });
+        // $scope.$watch('date_end', function(){
+        //     if ($scope.date_start && $scope.date_end){
+        //         if (moment($scope.date_end, 'MM/DD/YYYY').diff($scope.date_start, 'MM/DD/YYYY') < 0){
+        //             $scope.date_end = $scope.date_start;
+        //         }
+        //         date_difference = moment($scope.date_end, 'MM/DD/YYYY').diff($scope.date_start, 'MM/DD/YYYY');
+        //         if ($scope.time_start){
+        //             if (moment($scope.time_end, 'h:mm A').diff(moment($scope.time_start, 'h:mm A')) < 0){
+        //                 $scope.time_end = moment($scope.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+        //             }
+        //         }
+        //     }
+        //     $timeout(function(){$('.picker').trigger('change')});
+        // });
+        // $scope.$watch('time_start', function(){
+        //     if ($scope.time_start){
+        //         if ($scope.date_start == $scope.date_end){
+        //             $scope.time_end = moment($scope.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+        //         }
+        //     }
+        //     $timeout(function(){$('.picker').trigger('change')});
+        // });
+        // $scope.$watch('time_end', function(){
+        //     if ($scope.time_start){
+        //             if (moment($scope.time_end, 'h:mm A').diff(moment($scope.time_start, 'h:mm A')) < 0){
+        //                 $scope.time_end = moment($scope.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+        //             }
+        //         }
+        // });
+
+
+
+
+
+
+
+
+
+
+
+
+        $timeout(function(){
+            $scope.event.date_start = moment().format('MM/DD/YYYY');
+        });
 });
