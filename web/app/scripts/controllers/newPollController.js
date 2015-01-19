@@ -13,6 +13,7 @@
         $scope.removeQuestion = function(idx){
             $scope.poll.questions.splice(idx, 1);
         }
+
         $scope.addChoice = function(question, choice){
             
             if (choice && question.choices.indexOf(choice) == -1){

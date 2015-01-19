@@ -1,4 +1,4 @@
-    App.controller('eventCheckInController', function($scope, RESTService, Load, Events, $stateParams, $rootScope, $timeout, $location) {
+    App.controller('eventCheckInController', function($scope, RESTService, Load, Events, $stateParams, $rootScope, $timeout, $location, $interval) {
         routeChange();
         Events.get();
         $scope.events = Events.events;
@@ -40,14 +40,13 @@
 
 
 
-        function setTimeout(scope, fn, delay) {
-            var promise = $timeout(fn, delay);
-            var deregister = scope.$on('$destroy', function() {
-                $timeout.cancel(promise);
-            });
-            promise.then(deregister);
-        }
-        update();
+        // function setTimeout(scope, fn, delay) {
+        //     var promise = $timeout(fn, delay);
+        //     var deregister = scope.$on('$destroy', function() {
+        //         $timeout.cancel(promise);
+        //     });
+        //     promise.then(deregister);
+        // }
         function update() {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
             .success(function(data){
@@ -55,7 +54,7 @@
                     console.log('I am updating the user check in stuff!');
                     var users = JSON.parse(data.data);
                     var counter = 0;
-                    if (users){
+                    if (users && $scope.users){
                         for (var i = 0; i < $scope.users.length; i++){
                             counter++;
                             var user = $scope.users[i];
@@ -73,7 +72,6 @@
                         }
                     }
                 }
-                setTimeout($scope, update, 15000);
             });
         }
         $scope.loading = true;
@@ -92,12 +90,17 @@
                 $scope.maxLength = 10;
             }
         // });
+            var interval_variable;
         function getCheckInData(){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
             .success(function(data){
                 if (!RESTService.hasErrors(data)){
                     $scope.users = JSON.parse(data.data);  
                     $scope.loading = false;
+                    if (!angular.isDefined(interval_variable)){
+                        interval_variable = $interval(function(){update()}, 10000);
+                    }
+                    $interval()
                     console.log('Im ending get check in data');
                 }
                 else{
@@ -112,6 +115,13 @@
                 $scope.eventNotFound = true;
             });
         }
+
+        $scope.$on('$destroy',function(){
+            if(angular.isDefined(interval_variable)){
+                $interval.cancel(interval_variable);
+            }
+        });
+
         $scope.eventTag = $stateParams.tag;
         $scope.checkIn = function(member, checkStatus, clear){ //#TODO: fix controller so we can check in more than once
             member.timestamp_moment = moment();
