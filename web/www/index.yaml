@@ -21,14 +21,14 @@ indexes:
   - name: organization
   - name: time_start
     direction: desc
-    
+
 - kind: Event
   properties:
   - name: org_tags
   - name: organization
   - name: time_start
     direction: desc
-    
+
 - kind: Event
   properties:
   - name: organization
@@ -40,13 +40,21 @@ indexes:
   properties:
   - name: going
   - name: tag
-  
+- kind: User
+  properties:
+  - name: organization
+  - name: perms
+  - name: first_name
+  - name: last_name
+  - name: prof_pic
+  - name: user_name
+
 - kind: Event
   properties:
   - name: organization
   - name: tag
   - name: going
-    
+
 - kind: Notification
   properties:
   - name: key

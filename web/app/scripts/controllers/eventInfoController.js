@@ -147,7 +147,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             if($scope.event.address){
                 $scope.address_html = $scope.event.address.split(' ').join('+');
             }
-            if($scope.event.location || !$scope.event.address){
+            if($scope.event.location){
                 $scope.address_html = $scope.event.location.split(' ').join('+');
             }
             $scope.time_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY hh:mm A');
