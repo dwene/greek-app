@@ -552,8 +552,8 @@ md-progress-circular.small {
   padding: 8px;
 }
 .striped > md-item {
-  border-bottom: 1px solid #ccc;
   display: block;
+  border-top: 1px solid #ccc;
 }
 .striped > li {
   border-bottom: 1px solid #ccc;
@@ -563,9 +563,6 @@ md-progress-circular.small {
 }
 .striped > li:nth-child(odd) {
   background: #f8f8f8;
-}
-.striped > md-item:first-child {
-  border-top: 1px solid #ccc;
 }
 .striped > li:first-child {
   border-top: 1px solid #ccc;
@@ -936,9 +933,6 @@ md-toolbar.md-tall {
   border: 1px solid #ccc;
   margin-bottom: 10px;
 }
-#surveyInfo md-toolbar i {
-  margin-top: 5px;
-}
 #surveyInfo md-content {
   padding: 45px 30px 30px 30px;
 }
@@ -1102,13 +1096,33 @@ netetag-check {
   max-height: 50px;
   overflow-y: scroll;
 }
-#newPoll .multiple_choice_answers .md-button {
+#newSurvey .multiple_choice_answers .md-button {
   position: absolute;
   right: 0px;
   top: 0px;
 }
-#newPoll .pollQuestionContent {
+#newSurvey .pollQuestionContent {
   padding: 20px 0px;
+}
+#surveyResults h3 {
+  margin-bottom: 8px;
+}
+#surveyResults .bordered {
+  margin-bottom: 10px;
+  display: block;
+  border: 1px solid #ccc;
+}
+#surveyResults md-toolbar {
+  min-height: 0px;
+  height: auto;
+  background: #E0E0E0 !important;
+  color: #616161;
+}
+#surveyResults #byPerson h3 {
+  margin: 8px 0px;
+}
+#surveyResults .responses {
+  padding: 10px;
 }
 /*ng-animation code*/
 .fadingIn.ng-enter,

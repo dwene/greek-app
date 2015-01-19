@@ -113,11 +113,10 @@ md-progress-circular.small{-webkit-transform:scale(.5) !important; transform:sca
 
 /*Striped Lists*/
 .striped [layout-margin]{margin:0px; padding:8px;}
-.striped > md-item{border-bottom:1px solid #ccc; display:block;}
+.striped > md-item{display:block; border-top:1px solid #ccc;}
 .striped > li{border-bottom:1px solid #ccc;}
 .striped > md-item:nth-child(odd){background:#f8f8f8;}
 .striped > li:nth-child(odd){background:#f8f8f8;}
-.striped > md-item:first-child{border-top:1px solid #ccc;}
 .striped > li:first-child{border-top:1px solid #ccc;}
 .striped > li{padding:5px 15px;}
 
@@ -298,9 +297,6 @@ md-toolbar.md-tall{
     }
 
 #surveyInfo{
-    md-toolbar{
-        i{margin-top:5px;}
-    }
     md-content{padding:45px 30px 30px 30px;
         md-toolbar{margin-top:20px; min-height:0px; height:auto; background: #E0E0E0 !important; color: #616161;}
         h3{margin-bottom:8px;}
@@ -392,11 +388,19 @@ netetag-check{display:inline-block; height:22px; margin-bottom:2px;}
     #selectedMembers{position:relative; max-height:50px; overflow-y:scroll;}
 }
 
-#newPoll{
+#newSurvey{
     .multiple_choice_answers .md-button{position:absolute; right:0px; top:0px;}
     .pollQuestionContent{padding:20px 0px;}
 }
 
+
+#surveyResults{
+    h3{margin-bottom:8px;}
+    .bordered{margin-bottom:10px; display:block; border:1px solid #ccc;}
+    md-toolbar{min-height:0px; height:auto; background: #E0E0E0 !important; color: #616161;}
+    #byPerson h3{margin:8px 0px;}
+    .responses{padding:10px;}
+}
 
 /*ng-animation code*/
 .fadingIn.ng-enter, .fadingIn.ng-hide-remove{
