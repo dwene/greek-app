@@ -85,7 +85,7 @@
                         $scope.time_end = moment($scope.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
                     }
                 }
-        })
+        });
     function getEventAndSetInfo(events){
         if ($scope.directory == null || $scope.events == null || $scope.tags == null){
             return;
