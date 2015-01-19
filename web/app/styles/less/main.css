@@ -337,6 +337,27 @@ body.modal-open {
   left: 5px;
   top: 5px;
 }
+.checkLabel {
+  display: inline-block;
+  height: 22px;
+  margin-bottom: 2px;
+}
+netetag-delete .label {
+  padding: .4em 24px .4em .4em;
+}
+.memberTags .badge {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  border-left: 1px solid #ccc;
+  padding: .3em .4em .5em .4em;
+  border-radius: .25em;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+.memberTags .badge:hover {
+  background: #ff8a80;
+}
 /*Main App ui-view*/
 #mainSection {
   position: relative;
@@ -1051,11 +1072,6 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #tagsDialog .md-actions {
   position: absolute;
   bottom: 0px;
-}
-netetag-check {
-  display: inline-block;
-  height: 22px;
-  margin-bottom: 2px;
 }
 #selectingTags > .row {
   margin-top: 10px;

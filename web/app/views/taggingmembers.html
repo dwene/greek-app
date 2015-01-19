@@ -3,14 +3,12 @@
        
         <div layout="row" layout-align="center">
                 <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
-<!--                            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>-->
-
-                <md-input-container class="md-default-theme" >
+<!--            <input type="text" class="form-control" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" placeholder="Enter Tag" ng-enter="checkTag(selectedTagName);" bs-typeahead>-->
+                <md-input-container class="md-default-theme">
                     <label for="tag_name">Enter Tag</label>
                     <input id="tag_name" name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead></input>
                 </md-input-container>
-
-<!--                            <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>-->
+<!--            <a id="seeall" data-toggle="modal" data-target="#seeallTags">see all</a>-->
                 </form>
                 <md-button data-toggle="modal" data-target="#seeallTags">See All</md-button>
         </div>        
