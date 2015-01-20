@@ -87,12 +87,8 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
         var date_difference = 0;
         $scope.$watch('event.date_start', function(){
             if ($scope.event){
-                if ($scope.event.date_start && !$scope.event.date_end){
-                    $scope.event.date_end = moment($scope.event.date_start).add(date_difference).format('MM/DD/YYYY');
-                    $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
-                    $timeout(function(){$('.picker').trigger('change')});
-                }
-                else if ($scope.event.date_start){
+                if ($scope.event.date_start){
+                    console.log('Now I am doing this...');
                     $scope.event.date_end = moment($scope.event.date_start).add(date_difference).format('MM/DD/YYYY');
                     $timeout(function(){$('.picker').trigger('change')});
                 }
@@ -100,6 +96,9 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
         });
         $scope.$watch('event.date_end', function(){
             if ($scope.event){
+                if (moment($scope.event.date_end).diff(moment($scope.event.date_start)) < 0){
+                    $scope.event.date_end = $scope.event.date_start;
+                }
                 if ($scope.event.date_start && $scope.event.date_end){
                     date_difference = moment($scope.event.date_end).diff($scope.event.date_start);
                 }
@@ -114,6 +113,7 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     }
                     var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
                     if (test && $scope.event.date_start == $scope.event.date_end){
+                        console.log('I am doing this....');
                         $scope.event.date_end = moment($scope.event.date_end).add('days', 1).format('MM/DD/YYYY');
                     }
                 }
@@ -189,5 +189,8 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
 
         $timeout(function(){
             $scope.event.date_start = moment().format('MM/DD/YYYY');
+            $scope.event.date_end = moment().format('MM/DD/YYYY');
+            $scope.event.time_start = moment().add('hours', 1).format('h:[00] A');
+            $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
         });
 });
