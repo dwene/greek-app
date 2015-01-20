@@ -8,7 +8,7 @@
     <md-content class="md-padding no-padding-top">
     <br>
     <selecting-users tags="tags"></selecting-users>
-    <form id="newEvent" name="newEvent" ng-submit="addEvent(newEvent.$valid, event)" class="form-horizontal" role="form" novalidate>
+    <form id="newEvent" name="newEvent" class="form-horizontal" role="form" novalidate>
         <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
             <input name="title" ng-model="event.title" required></input>
@@ -68,9 +68,10 @@
         </div>
         
         <br>
-        <md-button type="submit" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
+        </form>
+        <md-button ng-click="addEvent(newEvent.$valid, event)" ng-enter="$root.doNothing()" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
 
-    </form>
+
     
 
 </div>   

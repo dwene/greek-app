@@ -1,4 +1,4 @@
-App.controller('newEventController', function($scope, RESTService, $rootScope, Load, $timeout, localStorageService, Tags) {
+App.controller('newEventController', function($scope, RESTService, $rootScope, Load, $timeout, $location, localStorageService, Tags) {
         routeChange();
             $scope.event = {};
             $scope.event.tag = '';
@@ -17,14 +17,14 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     var to_send = JSON.parse(JSON.stringify(event));
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
                     to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
-                    if (event.recurring){
+                    if ($scope.event.recurring){
                         if ($scope.weekly){
                             to_send.recurring_type="weekly";
                         }
                         else if ($scope.monthly){
                             to_send.recurring_type = "monthly";
                         }
-                        to_send.recurring_end = event.recurring_end;
+                        to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
                         to_send.reccuring = true;
                     }
                     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', to_send)
@@ -32,7 +32,7 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                         if (!RESTService.hasErrors(data)){
                             $scope.working = 'done';
                             JSON.parse(data.data);
-                            setTimeout(function(){window.location.assign('#/app/events/'+JSON.parse(data.data));},500);
+                            $timeout(function(){$location.url('app/events/'+JSON.parse(data.data));},500);
                         }
                         else{
                             $scope.working = 'broken';
@@ -127,6 +127,13 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
                     }
                 }
         });
+        $scope.$watch('event.until', function(){
+            if ($scope.event.until && $scope.event.recurring){
+                if (moment($scope.event.until).diff($scope.event.date_end) < 0){
+                    $scope.event.until = $scope.event.date_end;
+                }
+            }
+        })
 
 
 

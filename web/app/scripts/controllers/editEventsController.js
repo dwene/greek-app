@@ -1,4 +1,4 @@
-    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, $timeout, $location, Directory, Tags, Events){
+    App.controller('editEventsController', function($scope, RESTService, $stateParams, $rootScope, $q, Load, $timeout, $location, $mdDialog, Directory, Tags, Events){
         routeChange();
         Directory.get();
         Tags.get();
@@ -34,7 +34,28 @@
         });
         
         $scope.openDeleteEventModal = function(){
-            $('#deleteEventModal').modal();
+            $mdDialog.show({
+                    controller: DialogController,
+                    templateUrl: 'views/templates/deleteEventDialog.html'
+                });
+        }
+        function DialogController($mdDialog, $scope){
+            $scope.delete = function(){
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', $stateParams.tag)
+                .success(function(data){
+                    $scope.loading = true;
+                    if (!RESTService.hasErrors(data)){
+                        Events.deleteEvent($stateParams.tag);
+                        $rootScope.$broadcast('events:updated');
+                        $location.url('app/events');
+                        
+                    }
+                });
+                $mdDialog.hide();
+            }
+            $scope.cancelDialog = function(){
+                $mdDialog.hide();
+            }
         }
         $scope.deleteEvent = function(){
             $('#deleteEventModal').modal('hide');

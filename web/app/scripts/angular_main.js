@@ -846,7 +846,9 @@ App.config(function($mdThemingProvider) {
         $rootScope.refreshPage = function(){
             window.location.reload();
         }
-        
+        $rootScope.doNothing = function(){
+            return false;
+        }
         $rootScope.requirePermissions = function(perms){
             // if ($rootScope.perms){
             //     if (!$rootScope.checkPermissions(perms)){
@@ -1445,7 +1447,7 @@ App.directive('datePicker', function($compile){
         
         var this_name = attrs.name;
         var this_id = attrs.id;
-        
+        var this_future = attrs.id
         element.append('<md-input-container>'
                         +'<label for="date_picker">Select Date</label>'
                         +'<input type="text" name="date_picker" class="picker" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel"/>'
@@ -1453,6 +1455,7 @@ App.directive('datePicker', function($compile){
                         +'<script type="text/javascript">'
                         +'$("#'+this_id+'date").datetimepicker({'
                             +'pickTime: false,'
+                            //+ 'minDate: moment(),'
                             +'icons: {time: "fa fa-clock-o", date: "fa fa-calendar", up: "fa fa-arrow-up", down: "fa fa-arrow-down"'
                         +'}});'
                         +'$("#'+this_id+'date").focusout(function(){'

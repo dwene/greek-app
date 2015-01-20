@@ -2768,7 +2768,7 @@ class RESTApi(remote.Service):
         recurring = False
         if 'recurring' in event_data and event_data['recurring'] == True:
             recurring_type = event_data['recurring_type']
-            end_date = datetime.datetime.strptime(event_data['recurring_end'], '%m/%d/%Y')
+            end_date = datetime.datetime.strptime(event_data['until'], '%m/%d/%Y')
             recurring_end = datetime.datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59)
             curr_start_date = new_event.time_start
             curr_end_date = new_event.time_end
@@ -2788,8 +2788,10 @@ class RESTApi(remote.Service):
                 ev.time_created = new_event.time_created
                 ev.organization = new_event.organization
                 ev.org_tags = new_event.org_tags
-                ev.location = new_event.location
-                ev.address = new_event.address
+                if "location" in event_data:
+                    ev.location = event_data["location"]
+                if 'address' in event_data:
+                    ev.address = event_data["address"]
                 ev.perms_tags = new_event.perms_tags
                 ev.parent_event = new_event_key
                 recurring = True
@@ -2812,6 +2814,7 @@ class RESTApi(remote.Service):
         notification.sender = new_event.creator
         notification.timestamp = datetime.datetime.now()
         notification.link = 'app/events/' + new_event_key.urlsafe()
+        notification.created_key = new_event_key
         notification.put()
         future_list.append(request_user.put_async())
         add_notification_to_users(notification, users)
@@ -3078,7 +3081,9 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_key = ndb.Key(urlsafe=json.loads(request.data))
         event_data = AttendanceData.query(AttendanceData.event == event_key).fetch(keys_only=True)
+        notifications = Notification.query(Notification.created_key == event_key).fetch(keys_only=True)
         ndb.delete_multi(event_data)
+        ndb.delete_multi(notifications)
         event_key.delete()
         return OutgoingMessage(error='', data='OK')
 
@@ -3127,6 +3132,7 @@ class RESTApi(remote.Service):
         notification.sender = request_user.key
         notification.type = 'poll'
         notification.link = 'app/polls/' + poll.key.urlsafe()
+        notification.created_key = poll.key
         notification.put()
         send_email = True
         if 'send_email' in data:
@@ -3408,6 +3414,8 @@ class RESTApi(remote.Service):
             question.key.delete()
         for response in responses:
             response.key.delete()
+        notifications = Notification.query(Notification.created_key == poll.key).fetch(keys_only=True)
+        ndb.delete_multi(notifications)
         poll.key.delete()
         return OutgoingMessage(error='', data='OK')
 

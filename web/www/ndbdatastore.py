@@ -73,6 +73,7 @@ class Notification(ndb.Model):
     sender_name = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
     link = ndb.StringProperty()
+    created_key = ndb.KeyProperty()
 
 
 class Message(ndb.Model):
