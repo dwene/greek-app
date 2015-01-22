@@ -1,4 +1,4 @@
-App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, $location, Load, Events, Directory, Session){
+App.controller('eventInfoController', function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, $mdDialog, $location, Load, Events, Directory, Session){
         routeChange();
         Events.get();
         Directory.get();
@@ -15,14 +15,14 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         }
         
         $scope.showEventoptions = function(event){
-            $mdBottomSheet.show({
-              templateUrl: 'views/templates/bottomGrid.html',
+            $mdDialog.show({
+              templateUrl: 'views/templates/bottomDialog.html',
               controller: eventOptionsCtrl,
               targetEvent: event
             });
         }
 
-        function eventOptionsCtrl($scope, $mdBottomSheet) {
+        function eventOptionsCtrl($scope, $mdBottomSheet, $mdDialog) {
             $scope.items = [
                 { name: 'CHECKINS', icon: 'fa-sign-in'},
                 { name: 'REPORT', icon: 'fa-bar-chart'},
@@ -36,7 +36,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
                     case 'EDIT': $location.url('app/events/'+$stateParams.tag+'/edit'); break;
                     case 'SAVE': saveEvent(); break;
                 }
-                $mdBottomSheet.hide();
+                $mdDialog.hide();
             }
         };
         

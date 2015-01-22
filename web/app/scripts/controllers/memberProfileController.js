@@ -1,4 +1,4 @@
-App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $log, $window, RESTService, localStorageService, Directory, $mdBottomSheet, Session){
+App.controller('memberprofileController', function($scope, $rootScope, $stateParams, $log, $window, $mdDialog, RESTService, localStorageService, Directory, $mdBottomSheet, Session){
         routeChange();
         Directory.get();
         $scope.directory = Directory.directory;
@@ -21,8 +21,8 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         phone = $scope.phone;
         email = $scope.email;
         vCard = getVcard();
-        $mdBottomSheet.show({
-          templateUrl: 'views/templates/bottomGrid.html',
+        $mdDialog.show({
+          templateUrl: 'views/templates/bottomDialog.html',
           controller: profileOptionsCtrl,
           targetEvent: $event
         }).then(function(clickedItem) {
@@ -38,12 +38,6 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
     }
     
     function profileOptionsCtrl($scope, $mdBottomSheet) {
-
-        $scope.removeTouch = function(){
-                alert();
-                document.getElementById("bottomSheet").click();
-        }
-        
         $scope.items = [
             { name: 'SMS', icon: 'fa-mobile', link: 'sms:'+ phone, download:undefined},
             { name: 'CALL', icon: 'fa-phone', link: 'tel:' + phone, download:undefined},
@@ -52,7 +46,10 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         ];
 
         $scope.itemClick = function(item) {
-            $mdBottomSheet.hide(item);
+            $mdDialog.hide(item);
+        }
+        $scope.closeDialog = function(){
+            $mdDialog.hide();
         }
 
         // $scope.items = [
