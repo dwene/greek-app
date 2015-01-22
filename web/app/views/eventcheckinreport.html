@@ -1,10 +1,45 @@
+<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>  
+<div id="report" class="container" ng-hide="eventNotFound || loading" infinite-scroll="increaseMaxLength()">
+<div class="md-whiteframe-z1">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h1>Checkin Report for {{event.title}}</h1>
+                <div flex></div>
+            <md-button class="pull-right" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</md-button>
+        </div>
+    </md-toolbar>
+    <md-content class="md-padding no-padding-top">
+        <search ng-model="search"></search>
+        <md-list>
+            <md-item ng-repeat="member in currentShows = (shows | orderBy:['rsvp', 'last_name'] | nameSearch:search:0 | limitTo:maxLength)" class="checkin">
+                <md-item-content layout-padding layout-sm="column">
+                    <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
+                    <h1 flex>{{member.first_name}} {{member.last_name}}</h1>
+                    <div flex>In: <span ng-show="member.attendance_data.time_in">{{formatDate(member.attendance_data.time_in)}}</span></div>
+                    <div flex>Out: <span ng-show="member.attendance_data.time_out">{{formatDate(member.attendance_data.time_out)}}</span></div>
+                    <div flex>Duration: <span ng-show="member.attendance_data.time_in && member.attendance_data.time_out">{{timeDifference(member.attendance_data.time_in, member.attendance_data.time_out)}}</span></div>
+                </md-item-content>
+            </md-item>
+        </md-list>
+        <md-divider ng-show="noShows.length > 0"></md-divider>
+			<h1 ng-show="noShows.length > 0">No Check In</h1>
+			<md-list>
+				<md-item ng-repeat="member in noShows | orderBy: 'last_name'| nameSearch:search:0 | limitTo: maxNoShowsLength">
+					<span>{{member.first_name}} {{member.last_name}}</span>
+				</md-item>
+			</md-list>        
+    </md-content>
+</div>
+
+
+
+<!--
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
 
 <div id="report" class="container" ng-hide="eventNotFound || loading" infinite-scroll="increaseMaxLength()">
-			
 
-			<h1 class="darkbg">Report for #{{event.tag}} <a class="btn btn-default" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</a></h1>
-       <search ng-model="search"></search>
+        <h1 class="darkbg">Report for #{{event.tag}} <a class="btn btn-default" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</a></h1>
+        <search ng-model="search"></search>
         <ul>
 
             <li ng-repeat="member in currentShows = (shows | orderBy:['rsvp', 'last_name'] | nameSearch:search:0 | limitTo:maxLength)" class="checkin">
@@ -29,3 +64,4 @@
 </div>
 
 <md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>	
+-->

@@ -74,19 +74,13 @@
                                             shouldAdd=true;
                                         }
                                         if (shouldAdd){
-                                            if ($scope.event.going.indexOf($scope.users[i].key) != -1){
-                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
-                                            }
-                                            else if ($scope.event.not_going.indexOf($scope.users[i].key) != -1){
-                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
-                                            }
-                                            else {
-                                                $scope.noShows.push({first_name: $scope.users[i].first_name, last_name:$scope.users[i].last_name, rsvp: 'Going'});
-                                            }
+                                            console.log('Im adding');
+                                            $scope.noShows.push($scope.users[i]);
                                         }
                                         else if (!shouldAdd){
                                             $scope.shows.push($scope.users[i]);
                                         }
+                                    console.log('found a user: ' + $scope.users[i].first_name);
                                     break;
                                 }
                             }
