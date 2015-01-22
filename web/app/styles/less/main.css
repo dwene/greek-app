@@ -1140,6 +1140,9 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #surveyResults .responses {
   padding: 10px;
 }
+#bottomSheet md-item a {
+  display: block;
+}
 /*ng-animation code*/
 .fadingIn.ng-enter,
 .fadingIn.ng-hide-remove {
