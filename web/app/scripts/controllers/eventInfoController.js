@@ -38,6 +38,9 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
                 }
                 $mdDialog.hide();
             }
+            $scope.closeDialog = function(){
+                $mdDialog.hide();
+            }
         };
         
         

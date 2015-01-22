@@ -1,4 +1,4 @@
-    App.controller('pollInfoController', function($scope, RESTService, $rootScope, $stateParams, $mdBottomSheet, $location, Directory) {
+    App.controller('pollInfoController', function($scope, RESTService, $rootScope, $stateParams, $mdDialog, $location, Directory) {
         routeChange();
         Directory.get();
         //$scope.polls = Polls.get();
@@ -28,9 +28,8 @@
         
         
         $scope.showSurveyOptions = function(event){
-    
-            $mdBottomSheet.show({
-              templateUrl: 'views/templates/bottomGrid.html',
+            $mdDialog.show({
+              templateUrl: 'views/templates/bottomDialog.html',
               controller: surveyOptionsCtrl,
               targetEvent: event
             });
@@ -44,13 +43,15 @@
                 { name: 'CLOSE', icon: 'fa-pause'}
             ];
             $scope.itemClick = function(item){
-                $mdBottomSheet.hide();
+                $mdDialog.hide();
                 switch(item.name){
                     case 'REPORT': $location.url('app/polls/'+$stateParams.key + '/results'); break;
-                    case 'OPEN': $scope.closePoll(false); break;
-                    case 'CLOSE': $scope.closePoll(true); break;
+                    case 'OPEN': closePoll(false); break;
+                    case 'CLOSE': closePoll(true); break;
                 }
-
+            }
+            $scope.closeDialog = function(){
+                $mdDialog.hide();
             }
         };
 
@@ -71,7 +72,7 @@
                 console.log('Error: ' , data);
                 $scope.loading = false;
             });
-        $scope.closePoll = function(close){
+        function closePoll(close){
             var to_send = {key: $stateParams.key};
             if (close === true){
                 to_send.close = true;
