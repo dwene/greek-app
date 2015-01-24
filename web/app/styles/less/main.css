@@ -981,18 +981,18 @@ md-toolbar.md-tall {
   display: block;
   width: 150px;
 }
-#accountInfo .url.md-input-focused input {
+#accountInfo #updateAccountAlert {
+  padding: 15px;
+  margin-top: 10px;
+}
+.url.md-input-focused input {
   padding-left: 54px;
 }
-#accountInfo .url.md-input-focused:before {
+.url.md-input-focused:before {
   content: 'https://';
   position: absolute;
   bottom: 7px;
   color: #888;
-}
-#accountInfo #updateAccountAlert {
-  padding: 15px;
-  margin-top: 10px;
 }
 #registerInfo #username .md-button {
   height: 28px;
