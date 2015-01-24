@@ -10,8 +10,8 @@
 
 <div class="md-whiteframe-z1">
     <md-content class="md-padding no-padding-top">
-        <div layout="column" >
-            <div flex-gt-sm="60">
+        <div>
+            <div>
                     <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
                     <md-input-container flex class="md-default-theme no-margin">
                         <label for="update_status">Update Your status <span ng-show="status">({{status.length}}/140}</span></label>
@@ -24,7 +24,7 @@
                     <span ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button></span>
                 </md-subheader>
             </div>
-            <div flex-gt-sm="40" style="padding-top:16px;">
+            <div style="padding-top:16px;">
                     <md-list id="upcomingEvents" class="itemList hover">
                         <md-item ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)">
                             <md-item-content>

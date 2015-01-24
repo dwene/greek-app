@@ -601,15 +601,15 @@ App.config(function($mdThemingProvider) {
         'contrastDarkColors': ['50', '100', '200','300','400','A100'],
         'contrastLightColors': undefined
     });
-    $mdThemingProvider.theme('default').primaryColor('cyan');
-    $mdThemingProvider.theme('cyan').primaryColor('cyan');
-    $mdThemingProvider.theme('red').primaryColor('red');
-    $mdThemingProvider.theme('purple').primaryColor('purple');
-    $mdThemingProvider.theme('pink').primaryColor('pink');
-    $mdThemingProvider.theme('orange').primaryColor('orange');
-    $mdThemingProvider.theme('green').primaryColor('green');
-    $mdThemingProvider.theme('brown').primaryColor('brown');
-    $mdThemingProvider.theme('gray').primaryColor('gray');
+    $mdThemingProvider.theme('default').primaryPalette('cyan');
+    $mdThemingProvider.theme('cyan').primaryPalette('cyan');
+    $mdThemingProvider.theme('red').primaryPalette('red');
+    $mdThemingProvider.theme('purple').primaryPalette('purple');
+    $mdThemingProvider.theme('pink').primaryPalette('pink');
+    $mdThemingProvider.theme('orange').primaryPalette('orange');
+    $mdThemingProvider.theme('green').primaryPalette('green');
+    $mdThemingProvider.theme('brown').primaryPalette('brown');
+    $mdThemingProvider.theme('gray').primaryPalette('gray');
     
 });
 
@@ -796,7 +796,7 @@ App.config(function($mdThemingProvider) {
         $rootScope.defaultProfilePicture = 'images/defaultprofile.png';
         // $rootScope.hasLoaded = false;
         $rootScope.setColor = function(color){
-            $mdThemingProvider.theme('default').primaryColor(color);
+            $mdThemingProvider.theme('default').primaryPalette(color);
         }
         $rootScope.routeChange = function(){
             $('.modal-backdrop').remove();
