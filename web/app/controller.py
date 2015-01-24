@@ -1152,10 +1152,10 @@ class RESTApi(remote.Service):
             if 'pledge_class_semester' in user:
                 new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             new_user.perms = 'member'
-            futures.append(new_user.put_async())
-        for future in futures:
-            future.get_result()
-        return OutgoingMessage(error='', data='OK')
+            user['future'] = new_user.put_async()
+        for user in clump['users']:
+            user['key'] = user['future'].get_result()
+        return OutgoingMessage(error='', data=json_dump(clump['users']))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
                       http_method='POST', name='auth.add_alumni')

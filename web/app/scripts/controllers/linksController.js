@@ -65,7 +65,9 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
                 $scope.groups = groups;
                 $scope.selectedGroup = selectedGroup;
                 $scope.selectedLink = selectedLink;
-                $scope.temp_link = {link:selectedLink.link, title:selectedLink.title, group:selectedLink.group};
+                if (selectedLink){
+                    $scope.temp_link = {link:selectedLink.link, title:selectedLink.title, group:selectedLink.group};
+                }
                 $scope.closeDialog = function(){
                     $mdDialog.hide();
                 }
