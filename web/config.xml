@@ -7,6 +7,14 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
     </author>
+    
     <content src="index.html" />
     <access origin="*" />
+    <access origin="tel:*" launch-external="yes"/>
+	<access origin="sms:*" launch-external="yes"/>
+	<access origin="mailto:*" launch-external="yes"/>
+	<access origin="file:*" launch-external="yes"/>
+	<access origin="data:text/vcard*" launch-external="yes"/>
+	<access origin="data:text/calendar*" launch-external="yes"/>
+
 </widget>
