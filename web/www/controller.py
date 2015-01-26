@@ -46,7 +46,7 @@ DOMAIN = 'https://app.netegreek.com'
 EVERYONE = 'everyone'
 COUNCIL = 'council'
 LEADERSHIP = 'leadership'
-EXPIRE_TIME = 60 # Number of days until token expires
+EXPIRE_TIME = 120 # Number of days until token expires
 
 
 class IncomingMessage(messages.Message):
@@ -1078,8 +1078,8 @@ class RESTApi(remote.Service):
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
         if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest():
-            dt = (datetime.datetime.now() - user.timestamp)
-            if dt.seconds/60/60 > 2:
+            dt = ((user.timestamp + datetime.timedelta(days=EXPIRE_TIME)) - datetime.datetime.now())
+            if dt.seconds/60/60 < 2:
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
@@ -1208,8 +1208,26 @@ class RESTApi(remote.Service):
                 new_user.pledge_class_year = int(user['pledge_class_year'])
             new_user.perms = 'alumni'
             futures.append(new_user.put_async())
+            futures_2 = list()
         for future in futures:
-            future.get_result()
+            futures2.append(future.get_result().get_async())
+        return_users = list()
+        for future in futures2:
+            user = future.get_result()
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["organization"]
+            del user_dict["timestamp"]
+            del user_dict["notifications"]
+            del user_dict["new_notifications"]
+            del user_dict["messages"]
+            del user_dict["new_messages"]
+            del user_dict["archived_messages"]
+            user_dict["key"] = added_user.key.urlsafe()
+            return_users.append(user_dict)
+        return OutgoingMessage(error='', data=json_dump(return_users))
+
 
         # for user in clump['users']:
         #     email_item = alumni_signup_email(user, request_user)
@@ -1236,7 +1254,7 @@ class RESTApi(remote.Service):
         #     new_user.put()
         #
         # to_send = json_dump({'errors': rpc_data['errors']})
-        return OutgoingMessage(error='', data='OK')
+        # return OutgoingMessage(error='', data='OK')
 
     # @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/get_users',
     #                   http_method='POST', name='auth.get_users')

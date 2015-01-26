@@ -26,8 +26,6 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
                     controller: DialogController,
                     templateUrl: 'views/templates/links/editLinkDialog.html'
                 });
-
-                
             } 
             $scope.openNewLinkModal = function(){
                 groups = $scope.groups;

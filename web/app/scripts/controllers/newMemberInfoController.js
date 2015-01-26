@@ -1,9 +1,9 @@
-    App.controller('newmemberinfoController', function($scope, RESTService, $rootScope, $stateParams, $location){
+    App.controller('newmemberinfoController', function($scope, RESTService, $http, $rootScope, $stateParams, $location){
         routeChange();
         $scope.loading = true;
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', '')
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', JSON.stringify({token:$stateParams.key}))
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
@@ -26,7 +26,7 @@
             $scope.available = false;
         });
         $scope.checkUserName = function(user){
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', user)
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', user)
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {
@@ -41,12 +41,11 @@
         }
         
         $scope.createAccount = function(isValid){
-            
             if(isValid){
                 $scope.working = 'pending';
                 $scope.waiting_for_response = true;
                 var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', to_send)
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', to_send)
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {

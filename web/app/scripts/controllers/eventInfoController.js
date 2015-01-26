@@ -60,6 +60,9 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
             out_string += 'DTSTART:'+moment(event.time_start).format('YYYYMMDDTHHmmss')+'Z\n';
             out_string += 'DTEND:'+moment(event.time_end).format('YYYYMMDDTHHmmss') + 'Z\n';
             out_string += 'SUMMARY:'+event.title.replace(/(\r\n|\n|\r)/gm," ") + '\n';
+            if (event.address){
+            out_string += 'LOCATION:' + event.address + '\n';
+            }
             out_string += 'DESCRIPTION:'+event.description.replace(/(\r\n|\n|\r)/gm," ") + '\n';
             out_string += 'END:VEVENT\nEND:VCALENDAR';
             var a         = document.createElement('a');

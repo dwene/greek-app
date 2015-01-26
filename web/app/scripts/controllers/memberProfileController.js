@@ -16,7 +16,7 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         }
     var phone = $scope.phone;
     var email = $scope.email;
-    var vCard = getVcard();
+    var vCard = undefined;
     $scope.showProfileoptions = function($event){
         phone = $scope.phone;
         email = $scope.email;
@@ -142,7 +142,9 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
     
 
         $scope.isThisMe = function(){
-            return $scope.member.user_name == Session.me.user_name;   
+            if ($scope.member){return $scope.member.user_name == Session.me.user_name;}
+            return false;
+            
         }
 
 
