@@ -1,21 +1,42 @@
 <div class="container">
+<div class="md-whiteframe-z1">
+    <md-toolbar>
+       <div class="md-toolbar-tools">
+           <h1>New Member Account</h1>
+       </div>
+    </md-toolbar>
 
-<h1 class="darkbg">New Member Account</h1>
+    <md-content class="md-padding">
 
-<form id="newmemberAccount" name="newmemberAccount" ng-submit="createAccount(newmemberAccount.$valid)" class="form-horizontal" role="form" novalidate>
+    <form id="newmemberAccount" name="newmemberAccount" ng-submit="createAccount(newmemberAccount.$valid)" class="form-horizontal" role="form" novalidate>
     
     <div layout="row">
-    <md-input-container flex ng-class="{'has-success' : available, 'has-error' : (newmemberAccount.user_name.$invalid && !newmemberAccount.user_name.$pristine) || (newmemberAccount.user_name.$invalid && submitted) || unavailable}">
-        <label for="username">Username</label>
-        <input type="text" name="username" ng-model="item.user_name" user-name-input required>
-        <div class="form-control-feedback alert alert-success usernameAlert" ng-show="available && !unavailable">That will work!</div>
-        <div class="form-control-feedback alert alert-danger usernameAlert" ng-show="unavailable">This user name too short or already taken (5 + characters required)</div>
-    </md-input-container>
-    <button ng-click="checkUserName(item.user_name)" class="btn btn-default" type="button" ng-disabled="newmemberAccount.user_name.$invalid">Check</button>
+        <md-input-container flex>
+            <label for="username">Username</label>
+            <input type="text" name="username" ng-model="item.user_name" required>
+            <div class="form-control-feedback alert alert-success usernameAlert" ng-show="available && !unavailable">That will work!</div>
+            <div class="form-control-feedback alert alert-danger usernameAlert" ng-show="unavailable">This user name too short or already taken (5 + characters required)</div>
+        </md-input-container>
+        <md-button ng-click="checkUserName(item.user_name)" type="button" ng-disabled="newmemberAccount.user_name.$invalid">Check</md-button>
     </div>
     
+    <md-input-container ng-class="{'has-error' : (newmemberAccount.password.$invalid && !newmemberAccount.password.$pristine) || (newmemberAccount.password.$invalid && submitted)}">
+        <label for="password">Password</label>
+        <input type="password" name="password" ng-model="item.password" required>
+        <p ng-show="(newmemberAccount.password.$invalid && !newmemberAccount.password.$pristine) || (newmemberAccount.password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
+    </md-input-container>
     
+    <md-input-container>
+        <label for="repeat_password">Repeat Password</label>
+        <input type="password" name="repeat_password" ng-model="item.repeat_password" match="item.password" required>
+        <p ng-show="(newmemberAccount.repeat_password.$invalid && !newmemberAccount.repeat_password.$pristine) || (newmemberAccount.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
+    </md-input-container>
     
+    <br>
+    <md-button type="submit" ng-disabled="waiting_for_response" class="pull-right" ng-disabled="working || newmemberAccount.$invalid">Create Account</md-button>
+
+    
+<!--
     <div class="form-group" ng-class="{'has-success' : available, 'has-error' : (newmemberAccount.user_name.$invalid && !newmemberAccount.user_name.$pristine) || (newmemberAccount.user_name.$invalid && submitted) || unavailable}">
         <label for="userName" class="col-sm-2 control-label">User Name</label>
         <div class="col-sm-10">
@@ -30,7 +51,9 @@
         </div>
         <p class="form-control-feedback" ng-show="(newmemberAccount.user_name.$invalid && !newmemberAccount.user_name.$pristine) || (newmemberAccount.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
     </div>
+-->
     
+<!--
     <div class="form-group" ng-class="{'has-error' : (newmemberAccount.password.$invalid && !newmemberAccount.password.$pristine) || (newmemberAccount.password.$invalid && submitted)}">
         <label for="password" class="col-sm-2 control-label">Password</label>
         <div class="col-sm-10">
@@ -47,5 +70,8 @@
         <p ng-show="(newmemberAccount.repeat_password.$invalid && !newmemberAccount.repeat_password.$pristine) || (newmemberAccount.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
     </div>
     <button type="submit" ng-disabled="waiting_for_response" class="btn btn-default pull-right" ng-disabled="working">Submit</button><update-status ng-model="working"></update-status>
+-->
 </form>
+   </md-content>
+    </div>
 </div>
