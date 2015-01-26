@@ -16,23 +16,23 @@
         <br>
         
         <div class="form-group">
-          <select class="form-control" placeholder="Select a Group" id="newGroup" name="newGroup" ng-model="group" required>
+          <select class="form-control" id="newGroup" name="newGroup" ng-model="group" required>
+            <option value="" disabled selected>Select a Group</option>
             <option ng-repeat="group in groups">{{group}}</option>
             <option value="new_group_listing">Add New Group</option>
           </select>
         </div>
+        
+        <md-input-container>
+            <label for="new_group">New Group</label>
+            <input type="text" name="new_group" ng-model="new_group" ng-required="temp_link.group === 'new_group_listing'">
+        </md-input-container>
 
-        <div class="form-group" ng-show="group == 'new_group_listing'">
-          <label for="newTitle" class="col-sm-2 control-label">New Group</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="newGroupValue" name="newGroupValue" ng-model="new_group" ng-required="temp_link.group === 'new_group_listing'">
-          </div>
-        </div>
   </md-content>
   
   <div class="md-actions" layout="row">
+        <md-button ng-click="createLink(title, link, group == 'new_group_listing' ? new_group : group)" ng-disabled="title='' || link='' || new_group=''">add</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
-        <md-button ng-click="createLink(title, link, group == 'new_group_listing' ? new_group : group)">add</md-button>
   </div>
 </md-dialog>
 

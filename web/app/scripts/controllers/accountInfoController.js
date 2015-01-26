@@ -1,4 +1,4 @@
-App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS, Session, Directory){
+App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS, Session, Directory, $location){
     routeChange();
     Organization.get();
     $scope.updatedInfo = false;
@@ -27,6 +27,11 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
             $scope.passwordChanged = false;
         });              
     }
+    
+    $scope.goToMe = function(){
+            $location.path('app/directory/'+Session.user_name);
+    }
+    
     // RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', '')
     //     .success(function(data){
     //         if (!RESTService.hasErrors(data))
