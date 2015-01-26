@@ -11,22 +11,22 @@
     <br>
     <selecting-users tags="tags" local-tags="true"></selecting-users>
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
-        <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
+        <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
             <input name="title" ng-model="event.title"></input>
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
         </md-input-container>    
-        <div class="form-group" ng-class="{ 'has-error' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
             <textarea class="form-control" id="description" rows="6" name="description" ng-model="event.description" placeholder="Enter your event description here: We are going bowling! Yay!"></textarea>
             <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
         </div> 
-        <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
+        <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
             <label for="location">Location</label>
             <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"></input>
             <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
         </md-input-container> 
 <!--        <div class="alert alert-info" ng-show="event.location">{{event.address}}</div>-->
-        <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
             <label for="date_start" class="col-xs-12 col-sm-2 control-label">Start</label>
             <div class="col-xs-6 col-sm-5">
                 <date-picker id="datestartPicker" name="date_start"  ng-model="date_start"></date-picker>
@@ -36,7 +36,7 @@
             </div>
             <p ng-show="((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))" class="help-block">Please enter start date and time.</p>
         </div>   
-        <div class="form-group" ng-class="{ 'has-error' : ((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))}">
             <label for="date_end" class="col-xs-12 col-sm-2 control-label">End</label>
             <div class="col-xs-6 col-sm-5">
                 <date-picker id="dateendPicker" name="date_end" ng-model="date_end"></date-picker>

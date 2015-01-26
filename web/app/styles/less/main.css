@@ -529,6 +529,12 @@ md-bottom-sheet.md-grid md-item .md-icon-container {
     margin: 0px;
   }
 }
+.invalid-text {
+  display: none;
+}
+.md-input-invalid .invalid-text {
+  display: block;
+}
 /*Helper Classes*/
 .no-padding-top {
   padding-top: 0px !important;
@@ -969,6 +975,9 @@ md-toolbar.md-tall {
 }
 #accountInfo .md-subheader {
   padding-bottom: 0px;
+}
+#accountInfo .row {
+  margin: 0px;
 }
 #accountInfo .face {
   width: 120px;

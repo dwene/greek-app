@@ -94,7 +94,7 @@
       </div>
     <form id="renameTagForm" name="renameTagForm" ng-submit="renameOrganizationTag(rename, renameTagForm.$valid)" novalidate>
       <div class="modal-body">
-            <div ng-class="{ 'has-error' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
+            <div ng-class="{ 'md-input-invalid' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
             <input type="text" name="rename" ng-model="rename" class="form-control" placeholder="enter new tag name" required>
             <p ng-show="(renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)" class="help-block">Please enter a new tag name.</p>
             </div>

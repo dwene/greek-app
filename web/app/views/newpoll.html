@@ -10,12 +10,12 @@
         <selecting-users tags="tags"></selecting-users>
         
         <form id="newPoll" name="newPoll" ng-submit="createPoll(newPoll.$valid)" class="form-horizontal" role="form" novalidate>
-                <md-input-container ng-class="{ 'has-error' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
+                <md-input-container ng-class="{ 'md-input-invalid' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" ng-model="poll.name" required>
                     <p ng-show="(newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
                 </md-input-container>
-                <div ng-class="{ 'has-error' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
+                <div ng-class="{ 'md-input-invalid' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
                     <textarea class="form-control" id="description" name="description" rows="6" ng-model="poll.description" placeholder="Enter your survey description here: We are having a party. Yay!" required></textarea>
                     <p ng-show="(newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
                 </div>
@@ -40,14 +40,14 @@
                 <md-item class="pollQuestion" ng-repeat="question in poll.questions">
                 <div class="pollQuestionContent">
                     <div layout="row">
-                    <md-input-container flex ng-class="{ 'has-error' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
+                    <md-input-container flex ng-class="{ 'md-input-invalid' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
                        <label for="question_title">Question</label>
                        <input type="text" name="title{{$index}}" ng-model="question.worded_question" required>
                     </md-input-container>
                     <md-button type="button" ng-click="removeQuestion($index)"><i class="fa fa-trash-o"></i></md-button>
                     </div>
                     
-                    <div ng-init="question.type = 'text'" ng-class="{ 'has-error' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
+                    <div ng-init="question.type = 'text'" ng-class="{ 'md-input-invalid' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
                        <label for="type{{$index}}">Type</label>
                         <md-radio-group name="type{{$index}}" ng-model="question.type" required>
                             <md-radio-button value="text">Textbox</md-radio-button>
@@ -100,7 +100,7 @@
 <h2 class="card-header">Poll Info</h2>
 
     <form id="newPoll" name="newPoll" ng-submit="createPoll(newPoll.$valid)" class="form-horizontal" role="form" novalidate>
-    <div class="form-group" ng-class="{ 'has-error' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'md-input-invalid' : (newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)}">
         <label for="title" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
           <input type="text" class="form-control" id="title" name="title" ng-model="poll.name" placeholder="Questions for our Next Party" required>
@@ -108,7 +108,7 @@
         <p ng-show="(newPoll.title.$invalid && !newPoll.title.$pristine) || (newPoll.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
     </div>
     
-    <div class="form-group" ng-class="{ 'has-error' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'md-input-invalid' : (newPoll.description.$invalid && !newPoll.description.$pristine) || (newPoll.description.$invalid && submitted)}">
         <label for="description" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
           <textarea class="form-control" id="description" name="description" ng-model="poll.description" placeholder="We are having a party. Yay!" required></textarea>
@@ -139,14 +139,14 @@
         <div class="pollQuestionContent">
         
         
-            <div class="form-group" ng-class="{ 'has-error' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)}">
                 <label for="title" class="col-sm-2 control-label">Question</label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" name="title{{$index}}" ng-model="question.worded_question" placeholder="What kind of ice cream should we get?" required>
                 </div>
                 <p ng-show="(newPoll.title{{$index}}.$invalid && !newPoll.title{{$index}}.$pristine) || (newPoll.title{{$index}}.$invalid && submitted)" class="help-block">Please enter a question.</p>
             </div>
-            <div class="form-group" ng-class="{ 'has-error' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (newPoll.type{{$index}}.$invalid && !newPoll.type{{$index}}.$pristine) || (newPoll.type{{$index}}.$invalid && submitted)}">
                 <label for="title" class="col-sm-2 control-label">Type</label>
                 <div class="col-sm-10">
                   <select type="text" class="form-control" name="type{{$index}}" ng-model="question.type" required>
