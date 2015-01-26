@@ -1171,6 +1171,10 @@ function momentUTCTime(date){
     return moment(date).subtract( moment().tz(jstz.determine().name()).format('ZZ')/100, 'hours'); 
 }
 
+function spliceSlice(str, index, count) {
+  return str.slice(0, index) + str.slice(index + count);
+}
+
 //Directives and other add ons
 App.directive('match', function(){
         return {
@@ -1222,18 +1226,20 @@ App.directive('userNameInput', function(){
             scope: {
                 ngModel: '='
             },
-            controller: function(scope, elem, attrs, ctrl) {
-                scope.$watch('ngModel', function() {
-                    if (scope.ngModel){
-                        var value = true;
-//                        console.log(scope.ngModel);
-                        for (var i = 0; i < scope.ngModel.length; i++){
-                            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._".indexOf(scope.ngModel[i]) == -1){
-                                value = false;
+            controller: function($scope) {
+                $scope.$watch('ngModel', function() {
+                    if ($scope.ngModel){
+                        var i = 0;
+                       while(true){
+                            if (i >= $scope.ngModel.length){
                                 break;
                             }
+                            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._".indexOf($scope.ngModel[i]) == -1 && $scope.ngModel.length > 0){
+                                $scope.ngModel = spliceSlice($scope.ngModel, i, 1);
+                                if (i > 0){ i--;} continue;
+                            }
+                            i++;
                         }
-                        ctrl.$setValidity('userNameInput', value);
                     }
                 });
             }

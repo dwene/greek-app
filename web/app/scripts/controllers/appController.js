@@ -36,7 +36,7 @@ App.controller('appController', function($scope, $interval, $rootScope, $timeout
         if ($rootScope.color != Organization.organization.color){
             $scope.authenticated = false;
             $rootScope.color = Organization.organization.color;
-            $timeout(function(){$scope.authenticated = AuthService.isAuthenticated();}, 250); 
+            $timeout(function(){$scope.authenticated = AuthService.isAuthenticated();}); 
         }
         
     })
