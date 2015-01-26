@@ -70,10 +70,10 @@ class OutgoingMessage(messages.Message):
 
 class DateEncoder(json.JSONEncoder):
     def default(self, obj):
-        if hasattr(obj, 'isoformat'):
-            return obj.isoformat()
-        elif isinstance(obj, ndb.Key):
+        if isinstance(obj, ndb.Key):
             return obj.urlsafe()
+        elif hasattr(obj, 'isoformat'):
+            return obj.isoformat()
         elif isinstance(obj, ndb.BlobKey):
             return images.get_serving_url(obj, secure_url=True)
         else:
@@ -1153,9 +1153,25 @@ class RESTApi(remote.Service):
                 new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             new_user.perms = 'member'
             user['future'] = new_user.put_async()
+        new_users = list()
         for user in clump['users']:
-            user['key'] = user['future'].get_result()
-        return OutgoingMessage(error='', data=json_dump(clump['users']))
+            new_users.append(user['future'].get_result().get_async())
+        return_users = list()
+        for user in new_users:
+            added_user = user.get_result()
+            user_dict = added_user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["organization"]
+            del user_dict["timestamp"]
+            del user_dict["notifications"]
+            del user_dict["new_notifications"]
+            del user_dict["messages"]
+            del user_dict["new_messages"]
+            del user_dict["archived_messages"]
+            user_dict["key"] = added_user.key.urlsafe()
+            return_users.append(user_dict)
+        return OutgoingMessage(error='', data=json_dump(return_users))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/add_alumni',
                       http_method='POST', name='auth.add_alumni')

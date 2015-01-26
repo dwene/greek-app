@@ -78,11 +78,9 @@
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
-                    $scope.updating = "done";
-                    for (var i = 0; i < $scope.adds.length; i++){
-                        $scope.adds[i].perms = 'member';
-                    }
-                    $scope.directory.members = $scope.directory.members.concat($scope.adds);
+                    var users = JSON.parse(data.data);
+                    console.log('Here are the new users!', users);
+                    $scope.directory.members = $scope.directory.members.concat(users);
                     $scope.adds = [];
                     Directory.set($scope.directory);
 
