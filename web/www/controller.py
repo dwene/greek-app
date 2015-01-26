@@ -80,7 +80,7 @@ class DateEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 def member_signup_email(user, token):
-    signup_link = DOMAIN+'newuser/'+token
+    signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
@@ -185,7 +185,7 @@ def alumni_signup_email(user, organization_key, token):
     # to_email = [{'email': user['email'], 'type': 'to'}]
     org = organization_key.get()
     user['token'] = token
-    signup_link = DOMAIN+'newuser/'+token
+    signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"
     body = "Hello!\n"
     body += org.name + " at " + org.school + " has requested to add you to their database of alumni. If you would like" \
@@ -250,7 +250,7 @@ def forgotten_password_email(user):
     token = generate_token() + user.user_name
     user.current_token = token
     user.put()
-    link = DOMAIN+ 'changepasswordfromtoken/'+token
+    link = DOMAIN+ '/#/changepasswordfromtoken/'+token
     body = 'Hello\n\n'
     body += 'Please follow the link to reset your password for the NeteGreek app.\n' + link + '\nHave a great day!\nNeteGreek Team'
     send_email(from_email, to_email, subject, body)
@@ -1338,9 +1338,12 @@ class RESTApi(remote.Service):
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(error='',
-                                   data=json_dump({'token': user.current_token, 'perms': user.perms,
-                                                   'expires': user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["organization"]
+            return OutgoingMessage({'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
+                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': user_dict})
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_username',

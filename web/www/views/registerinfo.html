@@ -1,10 +1,71 @@
-<div id="registerInfo" class="container"> <div class="md-whiteframe-z1"> <md-toolbar> <div class="md-toolbar-tools"> <h1>Create Your Account</h1> </div> </md-toolbar> <md-content class="md-padding no-padding-top"> <form id="registerinfoForm" ng-submit="registerinfoClick(item, registerinfoForm.$valid)" name="registerinfoForm" role="form" novalidate> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)}"> <label for="first_name">First Name </label> <input name="first_name" ng-model="item.first_name" required> <p ng-show="(registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)" class="help-block">Please enter your first name.</p> </md-input-container> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)}"> <label for="last_name">Last Name </label> <input name="last_name" ng-model="item.last_name" required> <p ng-show="(registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)" class="help-block">Please enter your last name.</p> </md-input-container> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)}"> <label for="class_year">Class Year</label> <input name="class_year" ng-model="item.class_year" ng-pattern="/[0-9]{4}/" required> <p ng-show="(registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)" class="help-block">Please enter your class year.</p> </md-input-container> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)}"> <label for="email">email@example.com</label> <input type="email" name="email" ng-model="item.email" required> <p ng-show="(registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)" class="help-block">Please enter a valid email.</p> </md-input-container> <div id="username" layout="row"> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}" flex> <label for="user_name">Username</label> <input type="text" name="user_name" ng-model="item.user_name" required> <p ng-show="(registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p> <p class="text-success" ng-show="available">That will work!</p> <p class="text-danger" ng-show="unavailable">This user name too short or already taken (5+ characters required)</p> </md-input-container> <md-button ng-click="checkUserName(item.user_name)" type="button" ng-disabled="registerinfoForm.user_name.$invalid">Check</md-button> </div> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)}"> <label for="password">Password</label> <input type="password" name="password" ng-model="item.password" ng-minlength="6" required> <p ng-show="(registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)" class="help-block">Please enter a password at least 6 characters long.</p> </md-input-container> <md-input-container class="md-default-theme" ng-class="{ 'has-error' : (registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)}"> <label for="repeat_password">Password</label> <input type="password" name="repeat_password" ng-model="item.repeat_password" match="item.password" required> <p ng-show="(registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p> </md-input-container> <md-checkbox ng-model="item.terms" ng-pattern="true" ng-required="true" aria-label="Checkbox Terms"> I agree to the Terms & Conditions </md-checkbox> <p ng-show="(registerinfoForm.terms.$invalid && !registerinfoForm.terms.$pristine) || (registerinfoForm.terms.$invalid && submitted)" class="help-block">Please agree to the terms & conditions.</p> <md-button type="submit" class="pull-right">Register</md-button> </form> </md-content> </div> </div> <!--
+<div id="registerInfo" class="container">
+   
+   <div class="md-whiteframe-z1">
+    <md-toolbar>
+    <div class="md-toolbar-tools">
+        <h1>Create Your Account</h1>
+    </div>
+    </md-toolbar>
+    
+    <md-content class="md-padding no-padding-top">
+    <form id="registerinfoForm" ng-submit="registerinfoClick(item, registerinfoForm.$valid)" name="registerinfoForm" role="form" novalidate>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)}">
+                <label for="first_name">First Name </label>
+                <input name="first_name" ng-model="item.first_name" required></input>
+                <p ng-show="(registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)" class="help-block">Please enter your first name.</p>
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)}">
+                <label for="last_name">Last Name </label>
+                <input name="last_name" ng-model="item.last_name" required></input>
+                <p ng-show="(registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)" class="help-block">Please enter your last name.</p>
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)}">
+                <label for="class_year">Class Year</label>
+                <input name="class_year" ng-model="item.class_year" ng-pattern="/[0-9]{4}/" required></input>
+                <p ng-show="(registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)" class="help-block">Please enter your class year.</p>
+            </md-input-container> 
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)}">
+                <label for="email">email@example.com</label>
+                <input type="email" name="email" ng-model="item.email" required></input>
+                <p ng-show="(registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)" class="help-block">Please enter a valid email.</p>
+            </md-input-container>
+            <div id="username" layout="row">
+                <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}" flex>
+                    <label for="user_name">Username</label>
+                    <input type="text" name="user_name" ng-model="item.user_name" required></input>
+                    <p ng-show="(registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)" class="help-block">Please enter a username.</p>
+                    <p class="text-success" ng-show="available">That will work!</p>
+                    <p class="text-danger" ng-show="unavailable">This user name too short or already taken (5+ characters required)</p>
+                </md-input-container>
+                <md-button ng-click="checkUserName(item.user_name)" type="button" ng-disabled="registerinfoForm.user_name.$invalid">Check</md-button>
+            </div>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)}">
+                <label for="password">Password</label>
+                <input type="password" name="password" ng-model="item.password" ng-minlength="6" required></input>
+                <p ng-show="(registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)" class="help-block">Please enter a password at least 6 characters long.</p>
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)}">
+                <label for="repeat_password">Password</label>
+                <input type="password" name="repeat_password" ng-model="item.repeat_password" match="item.password" required></input>
+                <p ng-show="(registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
+            </md-input-container>
+            <md-checkbox ng-model="item.terms" ng-pattern="true" ng-required="true" aria-label="Checkbox Terms">
+                I agree to the Terms & Conditions
+            </md-checkbox>
+            <p ng-show="(registerinfoForm.terms.$invalid && !registerinfoForm.terms.$pristine) || (registerinfoForm.terms.$invalid && submitted)" class="help-block">Please agree to the terms & conditions.</p>
+            <md-button type="submit" class="pull-right">Register</md-button>
+    </form>
+    </md-content>
+    </div>
+    
+</div>
+<!--
     <h1 class="darkbg">More Register Information</h1>
     
     
 		<form id="registerinfoForm" ng-submit="registerinfoClick(item, registerinfoForm.$valid)" name="registerinfoForm" class="form-horizontal" role="form" novalidate>
 
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)}">
 			<label for="firstName" class="col-sm-2 control-label">First Name</label>
 			<div class="col-sm-10">
 			  <input type="text" class="form-control" id="firstName" name="first_name" ng-model="item.first_name" placeholder="John" required>
@@ -12,7 +73,7 @@
             <p ng-show="(registerinfoForm.first_name.$invalid && !registerinfoForm.first_name.$pristine) || (registerinfoForm.first_name.$invalid && submitted)" class="help-block">Please enter your first name.</p>
         </div>
         
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)}">
 			<label for="lastName" class="col-sm-2 control-label">Last Name</label>
 			<div class="col-sm-10">
 			  <input type="text" class="form-control" id="lastName" name="last_name" ng-model="item.last_name" placeholder="Doe" required>
@@ -20,7 +81,7 @@
             <p ng-show="(registerinfoForm.last_name.$invalid && !registerinfoForm.last_name.$pristine) || (registerinfoForm.last_name.$invalid && submitted)" class="help-block">Please enter your last name.</p>
         </div>
         
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)}">
 			<label for="classYear" class="col-sm-2 control-label">Class Year</label>
 			<div class="col-sm-10">
 			  <input type="text" class="form-control" id="classYear" name="class_year" ng-model="item.class_year" placeholder="2014" ng-pattern="/[0-9]{4}/" required>
@@ -28,7 +89,7 @@
             <p ng-show="(registerinfoForm.class_year.$invalid && !registerinfoForm.class_year.$pristine) || (registerinfoForm.class_year.$invalid && submitted)" class="help-block">Please enter your class year.</p>
         </div>
         
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.user_name.$invalid && !registerinfoForm.user_name.$pristine) || (registerinfoForm.user_name.$invalid && submitted)}">
 			<label for="userName" class="col-sm-2 control-label">User Name</label>
 			<div class="col-sm-10">
 			  <div class="input-group">
@@ -44,7 +105,7 @@
         </div>
         
         
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)}">
 			<label for="password" class="col-sm-2 control-label">Password</label>
 			<div class="col-sm-10">
 			  <input type="password" class="form-control" id="password" name="password" ng-model="item.password" ng-minlength="6" placeholder="***********" required>
@@ -52,7 +113,7 @@
             <p ng-show="(registerinfoForm.password.$invalid && !registerinfoForm.password.$pristine) || (registerinfoForm.password.$invalid && submitted)" class="help-block">Please enter a password at least 6 characters long.</p>
         </div>
         
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)}">
 			<label for="repeatPassword" class="col-sm-2 control-label">Repeat Password</label>
 			<div class="col-sm-10">
 			  <input type="password" class="form-control" id="repeatPassword" name="repeat_password" ng-model="item.repeat_password" match="item.password" placeholder="***********" required>
@@ -60,7 +121,7 @@
             <p ng-show="(registerinfoForm.repeat_password.$invalid && !registerinfoForm.repeat_password.$pristine) || (registerinfoForm.repeat_password.$invalid && submitted)" class="help-block">These passwords must be exactly the same.</p>
         </div>
         
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)}">
 			<label for="email" class="col-sm-2 control-label">Primary Email</label>
 			<div class="col-sm-10">
 			  <input type="email" class="form-control" id="email" name="email" ng-model="item.email" placeholder="john.doe@email.com" required>
@@ -68,7 +129,7 @@
             <p ng-show="(registerinfoForm.email.$invalid && !registerinfoForm.email.$pristine) || (registerinfoForm.email.$invalid && submitted)" class="help-block">Please enter a valid email.</p>
         </div>
                 
-        <div class="form-group" ng-class="{ 'has-error' : (registerinfoForm.terms.$invalid && !registerinfoForm.terms.$pristine) || (registerinfoForm.terms.$invalid && submitted)}">
+        <div class="form-group" ng-class="{ 'md-input-invalid' : (registerinfoForm.terms.$invalid && !registerinfoForm.terms.$pristine) || (registerinfoForm.terms.$invalid && submitted)}">
             <div class="col-sm-offset-2 col-sm-10">
               <div class="checkbox">
                 <label>
@@ -86,3 +147,6 @@
           </div>
 		</form>
 -->
+
+            
+

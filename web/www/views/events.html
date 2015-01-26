@@ -1,4 +1,67 @@
-<div id="events" class="container" ng-init="current = {maxPageNumber: 5, currentPage: 0}; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded"> <div class="row"> <div class="col-xs-12 col-sm-6"> <div id="calendar" class="md-whiteframe-z1"> <md-toolbar> <div class="md-toolbar-tools"> <h1>Events</h1> <div flex></div> <md-button ng-href="#/app/newevent" ng-show="$parent.$parent.checkPermissions('leadership')">Create New</md-button> </div> </md-toolbar> <md-content class="md-padding" load-directive ng-model="eventsLoaded"> <calendar calendar-mode="mode" event-source="eventSource"> </calendar></md-content> </div> </div> <div class="col-xs-12 col-sm-6"> <div id="eventList" class="md-whiteframe-z1"> <md-toolbar> <md-tabs md-selected="selectedTab"> <md-tab id="upcomingeventsTab" aria-controls="upcomingeventsTab-content"> Upcoming </md-tab> <md-tab id="pasteventsTab" aria-controls="pasteventsTab-content"> Past </md-tab> </md-tabs> </md-toolbar> <md-list class="itemList hover" ng-show="selectedTab==0"> <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:'time_start' "> <md-item-content> <a class="md-tile-content" ng-href="#/app/events/{{event.key}}"> <h3 class="md-primary title"> {{event.title}} </h3> <p class="notificationText">{{showDate(event.time_start, event.time_end)}}</p> </a> </md-item-content> </md-item> </md-list> <md-list class="itemList hover" ng-show="selectedTab==1"> <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:'-time_start' "> <md-item-content> <a class="md-tile-content" ng-href="#/app/events/{{event.key}}"> <h3 class="md-primary title"> {{event.title}} </h3> <p class="notificationText">{{showDate(event.time_start, event.time_end)}}</p> </a> </md-item-content> </md-item> </md-list> </div> </div> </div> </div> <!--
+<div id="events" class="container" ng-init="current = {maxPageNumber: 5, currentPage: 0}; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <div id="calendar" class="md-whiteframe-z1">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h1>Events</h1>
+                        <div flex></div>
+                        <md-button ng-href="#/app/newevent" ng-show="$parent.$parent.checkPermissions('leadership')">Create New</md-button>
+                    </div>
+                </md-toolbar>
+                <md-content class="md-padding" load-directive ng-model="eventsLoaded">
+                    <calendar calendar-mode="mode" event-source="eventSource">
+                </md-content>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <div id="eventList" class="md-whiteframe-z1">
+                <md-toolbar>
+                    <md-tabs md-selected="selectedTab">
+                      <md-tab id="upcomingeventsTab" aria-controls="upcomingeventsTab-content">
+                        Upcoming
+                      </md-tab>
+                      <md-tab id="pasteventsTab" aria-controls="pasteventsTab-content">
+                        Past
+                      </md-tab>
+                    </md-tabs>
+                </md-toolbar>
+                <md-list class="itemList hover" ng-show= "selectedTab==0">
+                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:'time_start' ">
+                        <md-item-content>
+
+                            <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
+                                <h3 class="md-primary title">
+                                    {{event.title}}
+                                </h3>
+                                <p class="notificationText">{{showDate(event.time_start, event.time_end)}}</p>
+                            </a>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+                <md-list class="itemList hover" ng-show="selectedTab==1">
+                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:'-time_start' ">
+                        <md-item-content>
+
+                            <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
+                                <h3 class="md-primary title">
+                                    {{event.title}}
+                                </h3>
+                                <p class="notificationText">{{showDate(event.time_start, event.time_end)}}</p>
+                            </a>
+                        </md-item-content>
+                    </md-item>
+                </md-list>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--
 <section class="container" id="events" ng-init="current = {maxPageNumber: 5, currentPage: 0}; present = true; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded">
        <div class="row">
         <div class="col-xs-12 col-sm-6 col-lg-4">
