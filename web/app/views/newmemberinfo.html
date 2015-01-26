@@ -13,7 +13,7 @@
     <div layout="row">
         <md-input-container flex>
             <label for="username">Username</label>
-            <input type="text" name="username" ng-model="item.user_name" required>
+            <input type="text" name="username" ng-model="item.user_name" user-name-input required>
             <div class="form-control-feedback alert alert-success usernameAlert" ng-show="available && !unavailable">That will work!</div>
             <div class="form-control-feedback alert alert-danger usernameAlert" ng-show="unavailable">This user name too short or already taken (5 + characters required)</div>
         </md-input-container>

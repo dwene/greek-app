@@ -26,7 +26,7 @@
             $scope.available = false;
         });
         $scope.checkUserName = function(user){
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username', user)
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_username',{data:JSON.stringify(user)})
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {
