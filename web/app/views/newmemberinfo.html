@@ -13,15 +13,13 @@
     <div layout="row">
         <md-input-container flex>
             <label for="username">Username</label>
-
             <input type="text" name="username" ng-model="item.user_name" user-name-input required>
-            <div class="row">
-            <div class="form-control-feedback alert alert-success usernameAlert" ng-show="available && !unavailable">That will work!</div>
-            <div class="form-control-feedback alert alert-danger usernameAlert" ng-show="unavailable">This user name too short or already taken (5 + characters required)</div>
-            </div>
         </md-input-container>
         <md-button ng-click="checkUserName(item.user_name)" type="button" ng-disabled="newmemberAccount.user_name.$invalid">Check</md-button>
     </div>
+    
+    <div class="alert alert-success" ng-show="available && !unavailable">That will work!</div>
+    <div class="alert alert-danger" ng-show="unavailable">This user name too short or already taken (5 + characters required)</div>
     
     <md-input-container ng-class="{'has-error' : (newmemberAccount.password.$invalid && !newmemberAccount.password.$pristine) || (newmemberAccount.password.$invalid && submitted)}">
         <label for="password">Password</label>
