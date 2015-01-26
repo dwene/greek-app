@@ -3,7 +3,9 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
     Organization.get();
     $scope.updatedInfo = false;
     $scope.item = Session.me;
-    $scope.item.dob = moment($scope.item.dob).format('MM/DD/YYYY');
+    if ($scope.item.dob){
+        $scope.item.dob = moment($scope.item.dob).format('MM/DD/YYYY');
+    }
 
     $scope.changePassword = function(old_pass, new_pass) {
         var to_send = {password:new_pass, old_password: old_pass};

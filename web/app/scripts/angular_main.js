@@ -699,7 +699,7 @@ App.config(function($mdThemingProvider) {
             $rootScope.hidden_notifications = undefined;
             $rootScope.updateNotificationBadge();
             console.log($state);
-            if ($state.current.name != 'login' && $state.current.name != 'register' && $state.current.name != 'registerorg'){
+            if ($state.current.name != 'login' && $state.current.name != 'register' && $state.current.name != 'registerorg' && $state.current.name != 'newmember'){
                 $location.path('login');
             }
         });

@@ -1338,9 +1338,12 @@ class RESTApi(remote.Service):
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
-            return OutgoingMessage(error='',
-                                   data=json_dump({'token': user.current_token, 'perms': user.perms,
-                                                   'expires': user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
+            user_dict = user.to_dict()
+            del user_dict["hash_pass"]
+            del user_dict["current_token"]
+            del user_dict["organization"]
+            return OutgoingMessage('token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
+                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': user_dict)
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_username',

@@ -1,5 +1,6 @@
-    App.controller('newmemberinfoController', function($scope, RESTService, $http, $rootScope, $stateParams, $location){
+    App.controller('newmemberinfoController', function($scope, RESTService, $http, $rootScope, $stateParams, $location, AUTH_EVENTS){
         routeChange();
+        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         $scope.loading = true;
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
@@ -44,17 +45,13 @@
             if(isValid){
                 $scope.working = 'pending';
                 $scope.waiting_for_response = true;
-                var to_send = {user_name: $scope.item.user_name, password: $scope.item.password}
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', to_send)
+                var to_send = {user_name: $scope.item.user_name.toLowerCase(), password: $scope.item.password}
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', {data:JSON.stringify(to_send), token:$stateParams.key})
                 .success(function(data){
                     if (!RESTService.hasErrors(data))
                     {
-                        $scope.working = 'done';
-                        var returned_data = JSON.parse(data.data);
-                        $.cookie(TOKEN,returned_data.token, {expires: new Date(returned_data.expires)});
-                        $.cookie(USER_NAME, $scope.item.user_name, {expires: new Date(returned_data.expires)});
-                        $.cookie(PERMS, returned_data.perms);
-                        $.cookie('FORM_INFO_EMPTY', 'true');
+                        var ret_data = JSON.parse(data.data);
+                        Session.create(to_send.user_name, ret_data.token, ret_data.me);
                         $location.path("app/accountinfo");
                     }
                     else
