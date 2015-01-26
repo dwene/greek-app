@@ -131,7 +131,7 @@
     <md-input-container ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
         <label for="position">Leadership Position</label>
         <input name="position" ng-model="item.position" required></input>
-        <p class="text-danger invalid-text"Please enter a leadership position.</p>
+        <p class="text-danger invalid-text">Please enter a leadership position.</p>
     </md-input-container> 
     <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}">
         <label for="occupation">Occupation</label>

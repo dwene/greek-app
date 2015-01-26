@@ -13,13 +13,13 @@
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : registerForm.org_name.$invalid && !registerForm.org_name.$pristine }">
                     <label for="org_name">Organization Name</label>
                     <input name="org_name" ng-model="data.name" required></input>
-<!--			         <p ng-show="registerForm.org_name.$invalid && !registerForm.org_name.$pristine" class="help-block">An organization name is required.</p>-->
+			         <p class="text-danger invalid-text">An organization name is required.</p>
             </md-input-container>
             
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : registerForm.school_name.$invalid && !registerForm.school_name.$pristine }">
                     <label for="school_name">School Name</label>
                     <input name="school_name" ng-model="data.school" required></input>
-<!--                    <p ng-show="registerForm.school_name.$invalid && !registerForm.school_name.$pristine" class="help-block">Your school name is required.</p>-->
+                    <p class="text-danger invalid-text">Your school name is required.</p>
             </md-input-container>
             <div ng-class="{ 'md-input-invalid' : registerForm.org_type.$invalid && !registerForm.org_type.$pristine }">
                 <md-radio-group name="org_type" ng-model="data.type" required>
@@ -27,7 +27,7 @@
                     <md-radio-button value="fraternity" aria-label="fraternity">Fraternity</md-radio-button>
                     <md-radio-button value="other" aria-label="other">Other</md-radio-button>
                 </md-radio-group>
-<!--                <p ng-show="registerForm.org_type.$invalid && !registerForm.org_type.$pristine" class="help-block">Please select an organization type.</p>-->
+                <p class="text-danger invalid-text">Please select an organization type.</p>
             </div>
             <md-button type="submit" ng-disabled="registerForm.$invalid">Next</md-button><br><br>
 		</form>
