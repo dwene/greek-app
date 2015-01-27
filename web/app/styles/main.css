@@ -1020,6 +1020,9 @@ md-toolbar.md-tall {
   height: 28px;
   margin-top: 10px;
 }
+#taggingMembers #memberSelect .member {
+  margin-top: 2px;
+}
 #managingMembers #members .email {
   padding-left: 15px;
 }
