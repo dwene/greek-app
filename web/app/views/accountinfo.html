@@ -53,7 +53,7 @@
         <md-button id="changePic" ng-href="#/app/uploadprofilepicture">Change Picture</md-button>
         <br>
 
-<form id="memberAccount" method="POST" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
+<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(true)" class="form-horizontal" role="form" novalidate>
 <div class="row">
 <div class="col-xs-12 col-sm-8 col-sm-offset-2">
     <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
@@ -83,10 +83,10 @@
         </div>
         <p class="text-danger invalid-text">Please enter your birthday.</p>
     </div>
-    <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted), required:!checkAlumni()}">
+    <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted), required:!checkAlumni}">
         <label for="grad_month" class="col-xs-7 col-sm-5">Graduation Month</label>
         <div class="col-xs-7 col-sm-5">
-        <select id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni()" style="width:100%;">
+        <select id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni" style="width:100%;">
             <option value="1">January</option>
             <option value="2">February</option>
             <option value="3">March</option>
@@ -103,22 +103,22 @@
         <p class="text-danger invalid-text">Please enter your graduation month.</p>
         </div>
     </div>
-    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni()}">
+    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni}">
         <label for="grad_year">Graduation Year</label>
         <input type="number" name="grad_year" ng-model="item.grad_year" required></input>
         <p class="text-danger invalid-text">Please enter your graduation year.</p>
     </md-input-container>    
-    <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni()}">
+    <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni}">
         <label for="currentState" class="col-xs-7 col-sm-5">Pledge Semester</label>
         <div class="col-xs-7 col-sm-5">
-            <select id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" ng-required="!checkAlumni()" style="width:100%;">
+            <select id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" ng-required="!checkAlumni" style="width:100%;">
                 <option value="fall">Fall</option>
                 <option value="spring">Spring</option>
             </select>
             <p class="text-danger invalid-text">Please enter your graduation month.</p>
         </div>
     </div>
-    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni()}">
+    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni}">
         <label for="pledge_class_year">Pledge Year</label>
         <input type="number" name="pledge_class_year" ng-model="item.pledge_class_year" required></input>
         <p class="text-danger invalid-text">Please enter your pledge class year.</p>
@@ -143,22 +143,22 @@
         <input name="employer" ng-model="item.employer" required></input>
         <p class="text-danger invalid-text">Please enter a valid employer</p>
     </md-input-container>
-    <div ng-show="!checkAlumni()">
+    <div ng-show="!checkAlumni">
         <div class="col-xs-12 col-sm-6">
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni}">
                 <label for="currentAddress">Current Address</label>
                 <input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
             </md-input-container>
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni}">
                 <label for="currentCity">Current City</label>
                 <input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></input>
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
             </md-input-container>
-            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni()}">
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
                 <label for="currentState" class="col-xs-7 col-sm-5">Current State</label>
                 <div class="col-xs-7 col-sm-5">
-                <select id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni()">
+                <select id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni">
                     <option value="AL">Alabama</option>
                     <option value="AK">Alaska</option>
                     <option value="AZ">Arizona</option>
@@ -219,7 +219,7 @@
                 </script>
                 <p class="text-danger invalid-text">Please enter your current state.</p>
             </div>
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni}">
                 <label for="zip">Current Zip</label>
                 <input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></input>
                 <p class="text-danger invalid-text">Please enter your permanent 5 digit zip code.</p>
@@ -307,21 +307,21 @@
             </md-input-container>
         </div>  
     </div>
-    <div ng-show="checkAlumni()">
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni()}">
+    <div ng-show="checkAlumni">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni}">
                 <label for="currentAddress">Current Address</label>
                 <input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></input>
                 <p class="text-danger invalid-text">Please enter your current address.</p>
             </md-input-container>
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni}">
                 <label for="currentCity">Current City</label>
                 <input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></input>
                 <p class="text-danger invalid-text">Please enter your current city.</p>
             </md-input-container>
-            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni()}">
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
                 <label for="currentState2" class="col-xs-7 col-sm-5">Current State</label>
                 <div class="col-xs-7 col-sm-5">
-                <select id="currentState2" name="state" ng-model="item.state" ng-required="!checkAlumni()">
+                <select id="currentState2" name="state" ng-model="item.state" ng-required="!checkAlumni">
                     <option value="AL">Alabama</option>
                     <option value="AK">Alaska</option>
                     <option value="AZ">Arizona</option>
@@ -382,7 +382,7 @@
                 </script>
                 <p class="text-danger invalid-text">Please enter your current state.</p>
             </div>
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni()}">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni}">
                 <label for="zip">Current Zip</label>
                 <input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></input>
                 <p class="text-danger invalid-text">Please enter your permanent 5 digit zip code.</p>

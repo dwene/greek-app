@@ -1877,15 +1877,14 @@ App.filter('linkGroup', function(){
     }
 });
             
-//App.filter('capitalizeFirst', function(){ 
-//    return function (objects) {
-//        if (objects){
-////            console.log(objects);
-//            return objects[0].toUpperCase() + objects.slice(1);
-//        }
-//        return retList;
-//    }
-//});
+App.filter('capitalizeFirst', function(){ 
+   return function (objects) {
+       if (objects){
+           return objects[0].toUpperCase() + objects.slice(1);
+       }
+       return retList;
+   }
+});
             
 App.filter('yearSearch', function(){ 
     return function (objects, search) {
