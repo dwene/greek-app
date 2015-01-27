@@ -1084,6 +1084,12 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
   position: absolute;
   bottom: 0px;
 }
+#taggingMembersDialog h2 {
+  margin: 0px;
+}
+#taggingMembersDialog md-content {
+  padding-bottom: 100px;
+}
 #selectingTags > .row {
   margin-top: 10px;
 }
