@@ -15,10 +15,11 @@ body.modal-open{margin-right:0px;}
 .checkLabel, .memberTags .badge{cursor:pointer;}
 .checkLabel li{display:inline-block; .noselect;}
 .checkLabel input{display:none; }
-.checkLabel .checkStatus{position:absolute; left:5px; top:5px;}
-.checkLabel{display:inline-block; height:22px; margin-bottom:2px;}
-netetag-delete .label{padding:.4em 24px .4em .4em;}
-.memberTags .badge {position: absolute; right: 0px; top: 0px; border-left: 1px solid #ccc; padding: .3em .4em .5em .4em; border-radius: .25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
+.checkLabel .checkStatus{position:absolute; left:5px; top:6px;}
+.checkLabel{display:inline-block; height:22px; margin-bottom:2px; line-height:14px}
+netetag-delete .label{padding:.4em 28px .4em .4em;}
+netetag-all .label{padding:.4em 28px .4em 1.5em; line-height:14px}
+.memberTags .badge {position: absolute; right: 0px; top: 0px; border-left: 1px solid #ccc; height:22px; line-height: 1.4em; border-radius: .25em; border-bottom-left-radius: 0; border-top-left-radius: 0;}
 .memberTags .badge:hover{background:#ff8a80;}
 
 /*Main App ui-view*/
@@ -333,6 +334,9 @@ md-toolbar.md-tall{
 
 #taggingMembers{
     .md-button{height:28px; margin-top:10px;}
+    #memberSelect{
+        .member{margin-top:2px;}
+    }
 }
 
 #managingMembers{

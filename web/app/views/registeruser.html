@@ -17,34 +17,26 @@
             </md-input-container>
             <md-button type="submit" ng-disabled="users_load == 'pending'">Submit</md-button>
         </div>
-        
         </form>
-
-
+        
     <div ng-show="loadedUsers">
         <p ng-hide="users.length">No users with that email. Try again.</p>
-        <div class="row">
-        <div id="listHeaders" ng-show="users.length"> 
-            <div class="col-xs-4">Name</div>
-            <div class="col-xs-4">Organization</div>
-            <div class="col-xs-4">Resend Registration Email</div>
-        </div>
-        </div>
-        <ul class="striped">
-            <li ng-repeat = "user in users">
-               <div class="row">
-                <div class="col-xs-4">{{user.first_name + ' ' + user.last_name}}</div>
-                <div class="col-xs-4">{{user.org_name}}</div>
-                <div class="col-xs-4"><button ng-click="resendEmail(user.key)" ng-disabled="email_load == 'pending'" class="btn btn-primary btn-sm"><i class="fa fa-paper-plane-o"></i> Send Email</button><update-status ng-model="email_load"></update-status></div>
+        <md-list class="itemList striped">
+            <md-item ng-repeat="user in users">
+                <div layout="row" layout-sm="column" layout-padding>
+                    <div flex>{{user.first_name + ' ' + user.last_name}}</div>
+                    <div flex>{{user.org_name}}</div>
+                    <div flex></div>
+                    <md-button ng-click="resendEmail(user.key)" ng-disabled="email_load == 'pending'">Send Email</md-button>
                 </div>
-            </li>
-        </ul>
+            </md-item>
+        </md-list>
     </div>
 
 </div>
 
 <div ng-show="sentEmail">
-    <p>An email has been sent with instructions on how to register for your account.</p>
+    <p>We have sent you an email with a link and more instructions on how to register your account. Thanks!</p>
 </div>
         
        </md-content>
