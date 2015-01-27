@@ -31,8 +31,8 @@ App.factory('Tags', function(RESTService, $rootScope, localStorageService, $q, $
 
     item.set = function(data){
         item.tags = data;
+        localStorageService.set('tags', data);
     }
-
     // set: function (_tags) {
     //     tags = _tags;
     // },

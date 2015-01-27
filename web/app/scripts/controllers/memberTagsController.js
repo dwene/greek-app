@@ -45,12 +45,14 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         }
 
         $scope.tag = selectedTag;
-        $scope.renameTag = function(new_tag){
-            renameTag(selectedTag, new_tag);
-            $scope.showRename = false;
+        $scope.renameTag = function(new_tag, isValid){
+            if (isValid){
+                renameOrganizationTag(new_tag, $scope.selectedTag);
+                $scope.showRename = false;
+            }
         }
         $scope.deleteTag = function(){
-            removeOrganizationTag(selectedTag);
+            removeOrganizationTag($scope.selectedTag);
             $scope.showDelete = false;
         }
     }
