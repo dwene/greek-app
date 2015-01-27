@@ -335,22 +335,28 @@ body.modal-open {
 .checkLabel .checkStatus {
   position: absolute;
   left: 5px;
-  top: 5px;
+  top: 6px;
 }
 .checkLabel {
   display: inline-block;
   height: 22px;
   margin-bottom: 2px;
+  line-height: 14px;
 }
 netetag-delete .label {
-  padding: .4em 24px .4em .4em;
+  padding: .4em 28px .4em .4em;
+}
+netetag-all .label {
+  padding: .4em 28px .4em 1.5em;
+  line-height: 14px;
 }
 .memberTags .badge {
   position: absolute;
   right: 0px;
   top: 0px;
   border-left: 1px solid #ccc;
-  padding: .3em .4em .5em .4em;
+  height: 22px;
+  line-height: 1.4em;
   border-radius: .25em;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
