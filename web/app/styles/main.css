@@ -848,6 +848,9 @@ md-toolbar.md-tall {
   display: block;
   padding: 10px;
 }
+#yearSelect label {
+  cursor: pointer;
+}
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -1093,6 +1096,9 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #tagsDialog .md-actions {
   position: absolute;
   bottom: 0px;
+}
+#taggingMembersDialog {
+  overflow-x: visible;
 }
 #taggingMembersDialog h2 {
   margin: 0px !important;
