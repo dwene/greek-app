@@ -753,6 +753,9 @@ md-toolbar.md-tall {
   line-height: .75em;
   font-style: italic;
 }
+#messageDialog .name {
+  font-style: italic;
+}
 #login md-content {
   padding: 10px 30px;
 }
@@ -1086,7 +1089,7 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
   bottom: 0px;
 }
 #taggingMembersDialog h2 {
-  margin: 0px;
+  margin: 0px !important;
 }
 #taggingMembersDialog md-content {
   padding-bottom: 100px;

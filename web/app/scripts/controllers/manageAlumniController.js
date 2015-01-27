@@ -82,7 +82,8 @@
                     console.log('Error: ' , data);
                 });
             for (var i = 0; i < $scope.directory.alumni.length; i++){
-                if ($scope.directory.alumni[i]. key == alumnus.key){
+                if ($scope.directory.alumni[i].key == alumnus.key){
+                    $scope.directory.members.push($scope.directory.alumni[i]);
                     $scope.directory.alumni.splice(i, 1);
                     break;
                 }
