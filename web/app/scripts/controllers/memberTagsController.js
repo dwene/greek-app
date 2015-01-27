@@ -1,8 +1,9 @@
-App.controller('membertagsController', function($scope, RESTService, $rootScope, Load, localStorageService, Directory, Tags) 
+App.controller('membertagsController', function($scope, RESTService, $rootScope, $mdDialog, Load, localStorageService, Directory, Tags) 
 {
     routeChange();
     Tags.get();
     Directory.get();
+    var tags;
     console.log('This is the directory', Directory.directory);
     if (Directory.directory){
         console.log('I have the directory');
@@ -12,6 +13,23 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         $scope.directory = Directory.directory;
         getUsers();
     });
+
+    $scope.openSeeAllDialog = function(ev){
+        tags = $scope.tags;
+        $mdDialog.show({
+                controller: tagMembersController,
+                templateUrl: 'views/templates/taggingMembersTagsDialog.html',
+                targetEvent: ev
+        });
+    }
+
+    function tagMembersController($scope, $mdDialog){
+        $scope.tags = tags;
+        $scope.closeModal = function(){
+            $mdDialog.hide();
+        }
+    }
+
     $scope.selectedTag = "";
     $scope.dataLoaded = $scope.directoryLoaded && $scope.tagsLoaded;
     $scope.watches = [$scope.directoryLoaded, $scope.tagsLoaded];

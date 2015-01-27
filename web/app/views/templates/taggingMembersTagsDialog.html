@@ -1,0 +1,13 @@
+<md-dialog id="tagsDialog" md-theme="{{$root.color}}">
+  <md-content>
+      <md-subheader class="md-sticky-no-effect">
+          View Tags
+      </md-subheader>
+        <div class="btn-group" ng-repeat="tag in tags.org_tags | orderBy : 'name'">
+            <netetag-all></netetag-all>
+        </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <md-button class="pull-right" ng-click="closeModal()">done</md-button>
+  </div>
+</md-dialog>
