@@ -728,15 +728,15 @@ md-toolbar.md-tall {
 .message .isNew {
   display: none;
 }
-.message md-item-content .md-tile-content {
+.message .md-tile-content {
   padding: 16px 16px 12px 16px;
 }
-.message md-item-content button.archive {
+.message button.archive {
   position: absolute;
   top: 0px;
   right: 0px;
 }
-.message md-item-content .title {
+.message .title {
   margin-right: 40px;
   height: 25px;
   overflow: hidden;
@@ -746,11 +746,12 @@ md-toolbar.md-tall {
   padding: 0px;
   margin-bottom: 4px;
 }
-.message md-item-content .sentBy {
+.message .sentBy {
   margin-bottom: 0px;
   margin-right: -8px;
   text-align: right;
   line-height: .75em;
+  font-style: italic;
 }
 #login md-content {
   padding: 10px 30px;
