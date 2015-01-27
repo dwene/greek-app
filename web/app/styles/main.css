@@ -1006,6 +1006,9 @@ md-toolbar.md-tall {
   height: 28px;
   margin-top: 22px;
 }
+#registerOrganization .bg-warning {
+  padding: 10px;
+}
 #taggingMembers .md-button {
   height: 28px;
   margin-top: 10px;
