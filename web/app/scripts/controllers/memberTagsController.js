@@ -1,4 +1,4 @@
-App.controller('membertagsController', function($scope, RESTService, $rootScope, $mdDialog, Load, localStorageService, Directory, Tags) 
+App.controller('membertagsController', function($scope, RESTService, $rootScope, $mdDialog, $timeout, Load, localStorageService, Directory, Tags) 
 {
     routeChange();
     Tags.get();
@@ -22,13 +22,64 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
                 targetEvent: ev
         });
     }
-
+    var selectedTag;
     function tagMembersController($scope, $mdDialog){
+        $scope.addOrganizationTag = function(new_tag){
+            addOrganizationTag(new_tag);
+            $mdDialog.hide();
+        }
         $scope.tags = tags;
         $scope.closeModal = function(){
             $mdDialog.hide();
         }
+
+        $scope.openRenameTagModal = function(tag){
+            $scope.selectedTag = tag;
+            $scope.showRename = true;
+            $scope.new_name = "";
+        }
+    
+        $scope.openDeleteTagModal = function(tag, ev){
+            $scope.selectedTag = tag;
+            $scope.showDelete = true;
+        }
+
+        $scope.tag = selectedTag;
+        $scope.renameTag = function(new_tag){
+            renameTag(selectedTag, new_tag);
+            $scope.showRename = false;
+        }
+        $scope.deleteTag = function(){
+            removeOrganizationTag(selectedTag);
+            $scope.showDelete = false;
+        }
     }
+    $scope.openDeleteTagModal = function(){
+        openDeleteTagModal($scope.tags.org_tags[0], undefined);
+    }
+    // function openRenameTagModal(tag, ev){
+    //     selectedTag = tag;
+    //     $mdDialog.show({
+    //             controller: tagMembersController,
+    //             templateUrl: 'views/templates/renameTagDialog.html',
+    //             targetEvent: ev
+    //     });
+    // }
+
+    // function openDeleteTagModal(tag, ev){
+    //     selectedTag = tag;
+    //     $mdDialog.show({
+    //             controller: anotherController,
+    //             templateUrl: 'views/templates/deleteTagDialog.html',
+    //             targetEvent: ev
+    //     });
+    // }
+
+    // function anotherController($mdDialog, $scope){
+    //     $scope.closeModal = function(){
+    //         $mdDialog.hide();
+    //     }
+    // }
 
     $scope.selectedTag = "";
     $scope.dataLoaded = $scope.directoryLoaded && $scope.tagsLoaded;
@@ -163,7 +214,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     function spliceSlice(str, index, count, add) {
         return str.slice(0, index) + (add || "") + str.slice(index + count);
     }
-    $scope.addOrganizationTag = function(tag){
+    function addOrganizationTag(tag){
         var real_tag = tag.toLowerCase().replace(/ /g,'');
         var i = 0;
         while(i < real_tag.length){
@@ -199,26 +250,21 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         })
         .error(function(data) {
             console.log('Error: ' , data);
-        });
-        
+        }); 
     }
     
-    $scope.removeOrganizationTag = function(){
-        $('#deleteTagModal').modal('hide');
-        $('#seeallTags').modal();
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_organization_tag', {tag: $scope.modaledTag.name})
+    function removeOrganizationTag(tag){
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/remove_organization_tag', {tag: tag.name})
         .success(function(data){
             if(RESTService.hasErrors(data)){openErrorModal(data.error)}
         })
         .error(function(data) {
             console.log('Error: ' , data);
         });
-        var idx = $scope.tags.org_tags.indexOf($scope.modaledTag);
+        var idx = $scope.tags.org_tags.indexOf(tag);
         $scope.tags.org_tags.splice(idx, 1);
         // $scope.tags.org_tags.splice($scope.tags.org_tags.indexOf($scope.modaledTag), 1);
         Tags.set($scope.tags);
-        var tag = $scope.modaledTag;
-        $scope.modaledTag = null;
         for (var i = 0; i< $scope.directory.members.length; i++){
             if ($scope.directory.members[i].tags.indexOf(tag.name) > -1){
                 $scope.directory.members[i].tags.splice($scope.directory.members[i].tags.indexOf(tag.name), 1);
@@ -232,11 +278,9 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         // }
     }
     
-    $scope.renameOrganizationTag = function(new_tag, isValid){
+    function renameOrganizationTag(new_tag, tag){
 
-        if(isValid){
-            $('#renameTagModal').modal('hide');
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/rename_organization_tag', {old_tag: $scope.modaledTag.name, new_tag: new_tag})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/rename_organization_tag', {old_tag: tag.name, new_tag: new_tag})
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
@@ -249,12 +293,10 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
             .error(function(data) {
                 console.log('Error: ' , data);
             });
-            var tag = $scope.modaledTag;
             $scope.rename = null;
             // var idx = $scope.tags.org_tags.indexOf(tag);
             // $scope.tags.org_tags[idx] = {name:new_tag, checked:false};
             $scope.tags.org_tags[$scope.tags.org_tags.indexOf(tag)] = {name:new_tag, checked:false};
-            $scope.modaledTag = null;
             for (var i = 0; i< $scope.directory.members.length; i++){
                 if ($scope.directory.members[i].tags.indexOf(tag.name) > -1){
                     $scope.directory.members[i].tags[scope.directory.members[i].tags.indexOf(tag.name)] = new_tag;
@@ -262,10 +304,6 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
             }
             Directory.set($scope.directory);
             Tags.set($scope.tags);
-        }
-        else{
-            $scope.submitted = true;
-        }
     }
     
     $scope.$watch('item.tag', function() {
@@ -274,17 +312,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
         }
     });
 
-    $scope.openRenameTagModal = function(tag){
-        $('#renameTagModal').modal();
-        $scope.modaledTag = tag;
-        $('#seeallTags').modal('hide')
-    }
     
-    $scope.openDeleteTagModal = function(tag){
-        $('#deleteTagModal').modal();
-        $scope.modaledTag = tag;
-        $('#seeallTags').modal('hide');
-    }
     
     function addTagsToUsers(tags, keys){
         var to_send = {tags: tags, keys: keys};
