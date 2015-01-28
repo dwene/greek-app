@@ -5,4 +5,4 @@
         <input type="checkbox" ng-model="tag.checked"> <li><span ng-hide="hideHash"></span>{{tag.name}}</li>
     </label>
 </div>
---> <span class="btn-group"> <label ng-repeat="year in years | orderBy:['-year', 'semester']" ng-click="$parent.selectedYear = year; $parent.search = undefined;" ng-class="{'label-default': selectedYear != year, 'label-primary': selectedYear == year}" class="label"> <span>{{year.value}}</span> </label> </span>
+--> <span class="btn-group"> <label ng-repeat="year in years | orderBy:['-year', 'semester']" ng-click="$parent.selectedYear = year; $parent.search = undefined;" ng-class="{'label-default': selectedYear != year, 'label-primary': selectedYear == year}" class="label"> <span>{{year.value | capitalizeFirst}}</span> </label> </span>

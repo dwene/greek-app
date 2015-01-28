@@ -337,7 +337,8 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                         '<button ng-show="isLink" tabindex="-1" title="Unlink" type="button" unselectable="on" class="btn btn-default" ng-click="format(\'unlink\')"><i class="fa fa-unlink"></i> </button>';
                     break;
                 case 'image':
-                    return '<button title="Image" tabindex="-1" type="button" unselectable="on" class="btn btn-default" ng-click="insertImage()"><i class="fa fa-picture-o"></i> </button>';
+                    return '';
+                    //return '<button title="Image" tabindex="-1" type="button" unselectable="on" class="btn btn-default" ng-click="insertImage()"><i class="fa fa-picture-o"></i> </button>';
                     break;
                 default:
                     console.log('Angular.wysiwyg: Unknown menu item.')

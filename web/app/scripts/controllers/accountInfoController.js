@@ -61,6 +61,7 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
     $scope.updateAccount = function(isValid){
         console.log(isValid);
         if(isValid){
+            console.log($scope.item);
             $scope.working = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', $scope.item)
             .success(function(data){

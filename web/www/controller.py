@@ -1711,8 +1711,9 @@ class RESTApi(remote.Service):
     def update_user_directory_info(self, request):
         user = User.query(User.user_name == request.user_name).get()
         user_data = json.loads(request.data)
+        logging.error(user_data)
         for key, value in user_data.iteritems():
-            if not value:
+            if not value and value != "":
                 continue
             if key == "email":
                 user.email = value

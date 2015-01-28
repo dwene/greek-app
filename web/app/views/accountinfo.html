@@ -130,17 +130,17 @@
     </md-input-container> 
     <md-input-container ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
         <label for="position">Leadership Position</label>
-        <input name="position" ng-model="item.position" required></input>
+        <input name="position" ng-model="item.position"></input>
         <p class="text-danger invalid-text">Please enter a leadership position.</p>
     </md-input-container> 
     <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}">
         <label for="occupation">Occupation</label>
-        <input name="occupation" ng-model="item.occupation" required></input>
+        <input name="occupation" ng-model="item.occupation"></input>
         <p class="text-danger invalid-text">Please enter a valid occupation</p>
     </md-input-container>
     <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)}">
         <label for="employer">Employer</label>
-        <input name="employer" ng-model="item.employer" required></input>
+        <input name="employer" ng-model="item.employer"></input>
         <p class="text-danger invalid-text">Please enter a valid employer</p>
     </md-input-container>
     <div ng-show="!checkAlumni">
