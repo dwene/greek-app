@@ -11,12 +11,16 @@
               </md-input-container>
               <md-button type="submit">Add Tag</md-button>
       </form>
+       <div id="memberTags">
         <div class="btn-group memberTags" ng-repeat="tag in tags.org_tags | orderBy : 'name'">
             <netetag-all></netetag-all>
         </div>
+        </div>
+        
+        <div id="tagOptions">
         
         <div ng-show="showRename">
-        <md-subheader>Rename "{{selectedTag.name}}"?</md-subheader>
+        <h2>Rename "{{selectedTag.name}}"?</h2>
             <form id="renameTagForm" name="renameTagForm" ng-submit="renameTag(new_name, renameTagForm.$valid)" novalidate>
                <md-input-container ng-class="{ 'md-input-invalid' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
                    <label for="rename_tag">New Tag Name</label>
@@ -27,7 +31,7 @@
                 <input type="text" name="rename" ng-model="rename" class="form-control" placeholder="enter new tag name" required>
                 <p ng-show="(renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)" class="help-block">Please enter a new tag name.</p>
                 </div> -->
-
+                <br>
                 <md-button type="button" data-dismiss="modal">Cancel</md-button>
                 <md-button type="submit">Rename Tag</md-button>
             </form>
@@ -35,9 +39,11 @@
         </div>
         
         <div ng-show="showDelete">
-            <md-subheader>Are you sure you want to delete "{{selectedTag.name}}"?</md-subheader>
+            <h2>Are you sure you want to delete "{{selectedTag.name}}"?</h2><br>
             <md-button ng-click="showDelete = false">Cancel</md-button>
             <md-button ng-click="deleteTag()">Delete</md-button>
+        </div>
+        
         </div>
         
   </md-content>

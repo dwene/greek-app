@@ -35,12 +35,14 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
 
         $scope.openRenameTagModal = function(tag){
             $scope.selectedTag = tag;
+            $scope.showDelete = false;
             $scope.showRename = true;
             $scope.new_name = "";
         }
     
         $scope.openDeleteTagModal = function(tag, ev){
             $scope.selectedTag = tag;
+            $scope.showRename = false;
             $scope.showDelete = true;
         }
 
