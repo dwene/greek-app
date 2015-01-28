@@ -124,7 +124,7 @@ class Organization(ndb.Model):
     cancel_subscription = ndb.DateProperty()
     trial_period = ndb.BooleanProperty(default=True)
     cost = ndb.FloatProperty(default=1.0)
-    color = ndb.StringProperty(default='color1')
+    color = ndb.StringProperty(default='cyan')
     image = ndb.BlobKeyProperty()
     link_groups = ndb.StringProperty(repeated=True)
 
