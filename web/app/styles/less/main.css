@@ -1006,7 +1006,7 @@ md-toolbar.md-tall {
   display: block;
   width: 150px;
 }
-#accountInfo #updateAccountAlert {
+#accountInfo .alert {
   padding: 15px;
   margin-top: 10px;
 }

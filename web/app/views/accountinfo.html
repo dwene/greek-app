@@ -53,7 +53,7 @@
         <md-button id="changePic" ng-href="#/app/uploadprofilepicture">Change Picture</md-button>
         <br>
 
-<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(true)" class="form-horizontal" role="form" novalidate>
+<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
 <div class="row">
 <div class="col-xs-12 col-sm-8 col-sm-offset-2">
     <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
@@ -76,7 +76,7 @@
         <input type="tel" name="phone" ng-model="item.phone" required></input>
         <p class="text-danger invalid-text">Please select a valid phone number.</p>
     </md-input-container>
-    <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
+    <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
         <label for="dob" class="col-xs-4 col-sm-2 control-label">Birthday</label>
         <div class="col-xs-8 col-sm-10">
         <date-picker id="dob" name="dob" ng-model="item.dob"></date-picker>
@@ -103,7 +103,7 @@
         <p class="text-danger invalid-text">Please enter your graduation month.</p>
         </div>
     </div>
-    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni}">
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni}">
         <label for="grad_year">Graduation Year</label>
         <input type="number" name="grad_year" ng-model="item.grad_year" required></input>
         <p class="text-danger invalid-text">Please enter your graduation year.</p>
@@ -111,21 +111,21 @@
     <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni}">
         <label for="currentState" class="col-xs-7 col-sm-5">Pledge Semester</label>
         <div class="col-xs-7 col-sm-5">
-            <select id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" ng-required="!checkAlumni" style="width:100%;">
+            <select id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" style="width:100%;" required>
                 <option value="fall">Fall</option>
                 <option value="spring">Spring</option>
             </select>
             <p class="text-danger invalid-text">Please enter your graduation month.</p>
         </div>
     </div>
-    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni}">
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni}">
         <label for="pledge_class_year">Pledge Year</label>
         <input type="number" name="pledge_class_year" ng-model="item.pledge_class_year" required></input>
         <p class="text-danger invalid-text">Please enter your pledge class year.</p>
     </md-input-container> 
     <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
         <label for="major">Major</label>
-        <input name="major" ng-model="item.major" required></input>
+        <input name="major" ng-model="item.major"></input>
         <p class="text-danger invalid-text">Please enter your field of study.</p>
     </md-input-container> 
     <md-input-container ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
@@ -429,7 +429,8 @@
 </div>    
 </form>
 
-    <p id="updateAccountAlert" class="alert alert-success" ng-show="updatedInfo">Account info updated! <md-button ng-click="goToMe()">View Profile</md-button></p>
+    <p class="alert alert-success" ng-show="updatedInfo">Account info updated! <md-button ng-click="goToMe()">View Profile</md-button></p>
+    <p class="alert alert-danger" ng-show="memberAccount.$valid == false">Please make sure you have filled out everything correctly.</p>
 
                      
         </md-content>
