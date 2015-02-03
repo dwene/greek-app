@@ -21,7 +21,7 @@
                     </form>
                 <md-subheader class="no-padding-bottom">
                     <span ng-hide="me.status">No Status</span>
-                    <span ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="clearStatus()" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button></span>
+                    <span ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="openClearStatusDialog($event)" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button></span>
                 </md-subheader>
             </div>
             <div style="padding-top:16px;">

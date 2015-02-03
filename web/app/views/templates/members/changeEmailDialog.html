@@ -11,7 +11,8 @@
   </md-content>
   
   <div class="md-actions" layout="row">
-        <md-button ng-click="closeDialog(selectedUser)">cancel</md-button>
-        <md-button ng-click="changeEmail(selectedUser, email)" ng-disabled="!email">change</md-button>
+      <md-button ng-click="changeEmail(selectedUser, email)" ng-disabled="!email" class="md-primary">change</md-button>
+      <md-button ng-click="closeDialog(selectedUser)">cancel</md-button>
+        
   </div>
 </md-dialog>

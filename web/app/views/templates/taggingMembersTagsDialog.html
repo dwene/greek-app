@@ -28,7 +28,7 @@
                 <p ng-show="(renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)" class="help-block">Please enter a new tag name.</p>
                 </div> -->
 
-                <md-button type="button" data-dismiss="modal">Cancel</md-button>
+                <md-button type="button" ng-click="showRename = false">Cancel</md-button>
                 <md-button type="submit">Rename Tag</md-button>
             </form>
         
@@ -37,7 +37,7 @@
         <div ng-show="showDelete">
             <md-subheader>Are you sure you want to delete "{{selectedTag.name}}"?</md-subheader>
             <md-button ng-click="showDelete = false">Cancel</md-button>
-            <md-button ng-click="deleteTag()">Delete</md-button>
+            <md-button ng-click="deleteTag()" class="md-warn">Delete</md-button>
         </div>
         
   </md-content>

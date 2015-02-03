@@ -12,11 +12,14 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
 
             $scope.addEvent = function(isValid, event){
                 if(isValid){
-                    $scope.working = 'pending';
                     event.tags = getCheckedTags($scope.tags);
                     var to_send = JSON.parse(JSON.stringify(event));
                     to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
                     to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
+                    if (moment(to_send.time_end).diff(moment(to_send.time_start)) < 0){
+                        $scope.time_broken = true;
+                        return;
+                    }
                     if ($scope.event.recurring){
                         if ($scope.weekly){
                             to_send.recurring_type="weekly";
@@ -108,11 +111,13 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
             if ($scope.event){
                 if ($scope.event.time_start){
                     //$scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
-                    if (moment($scope.event.time_end).diff(moment($scope.event.time_start)) <= 0){
-                        $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    // console.log(moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')));
+                    if (moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) <= 0 && $scope.event.date_start == $scope.event.date_end){
+                        console.log('I am doing this frist!');
+                        $scope.event.time_end = moment($scope.event.time_start, 'h:[00] A').add('hours', 1).format('h:[00] A');
                     }
-                    var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
-                    if (test && $scope.event.date_start == $scope.event.date_end){
+                    // var test = moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0;
+                    if ($scope.event.date_start == $scope.event.date_end && moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0){
                         console.log('I am doing this....');
                         $scope.event.date_end = moment($scope.event.date_end).add('days', 1).format('MM/DD/YYYY');
                     }
@@ -122,8 +127,8 @@ App.controller('newEventController', function($scope, RESTService, $rootScope, L
         });
         $scope.$watch('event.time_end', function(){
             if ($scope.event.time_start){
-                    if (moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) < 0){
-                        $scope.event.time_end = moment($scope.event.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    if (moment($scope.event.time_end, 'h:mm A').diff(moment($scope.event.time_start, 'h:mm A')) <= 0 && $scope.event.date_start == $scope.event.date_end){
+                        $scope.event.time_start = moment($scope.event.time_end, 'h:mm A').subtract('hours', 1).format('h:[00] A');
                     }
                 }
         });

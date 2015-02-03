@@ -81,7 +81,7 @@
         $scope.$watch('date_end', function(){
             if ($scope.date_start && $scope.date_end){
                 if (moment($scope.date_end, 'MM/DD/YYYY').diff($scope.date_start, 'MM/DD/YYYY') < 0){
-                    $scope.date_end = $scope.date_start;
+                    $scope.date_start = moment($scope.date_end).subtract(date_difference).format('MM/DD/YYYY');
                 }
                 date_difference = moment($scope.date_end, 'MM/DD/YYYY').diff($scope.date_start, 'MM/DD/YYYY');
                 if ($scope.time_start){
@@ -102,8 +102,8 @@
         });
         $scope.$watch('time_end', function(){
             if ($scope.time_start){
-                    if (moment($scope.time_end, 'h:mm A').diff(moment($scope.time_start, 'h:mm A')) < 0){
-                        $scope.time_end = moment($scope.time_start, 'h:mm A').add('hours', 1).format('h:[00] A');
+                    if (moment($scope.time_end, 'h:mm A').diff(moment($scope.time_start, 'h:mm A')) < 0 && $scope.date_end == $scope.date_start){
+                        $scope.time_start = moment($scope.time_end, 'h:mm A').subtract('hours', 1).format('h:[00] A');
                     }
                 }
         });
@@ -166,12 +166,14 @@
     }
     $scope.submitEdits = function(isValid){
         if (isValid){
-            $scope.working = 'pending';
-            console.log('new time_start', $scope.date_start + " " + $scope.time_start);
-            console.log('new time_end', $scope.date_end + " " + $scope.time_end);
+            
             var to_send = JSON.parse(JSON.stringify($scope.event));
             to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
             to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
+            if (moment(to_send.time_end).diff(moment(to_send.time_start)) < 0){
+                $scope.time_broken = true;
+                return;
+            }
             to_send.tags = getCheckedTags($scope.tags);
             console.log(to_send.tags);
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', to_send)
