@@ -86,6 +86,7 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
         else{
         //for validation purposes
         $scope.submitted = true;
+        $scope.updatedInfo = false;
         }
     }
     $scope.updateEmailPrefs = function(option){

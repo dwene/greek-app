@@ -384,6 +384,9 @@ netetag-all .label {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.dropdown-menu li {
+  cursor: pointer;
+}
 /*Random Fixes*/
 .btn {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
@@ -1003,7 +1006,7 @@ md-toolbar.md-tall {
   display: block;
   width: 150px;
 }
-#accountInfo #updateAccountAlert {
+#accountInfo .alert {
   padding: 15px;
   margin-top: 10px;
 }
@@ -1107,8 +1110,11 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #taggingMembersDialog h2 {
   margin: 0px !important;
 }
-#taggingMembersDialog md-content {
-  padding-bottom: 100px;
+#taggingMembersDialog #memberTags {
+  padding-bottom: 60px;
+}
+#tagOptions md-subheader {
+  adding: 0px;
 }
 #selectingTags > .row {
   margin-top: 10px;

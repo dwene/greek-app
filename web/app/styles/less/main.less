@@ -35,6 +35,7 @@ netetag-all .label{padding:.4em 28px .4em 1.5em; line-height:14px}
 /*Specific Fixes*/
 .bootstrap-datetimepicker-widget .btn:active,
 .bootstrap-datetimepicker-widget .btn.active {-webkit-box-shadow: none; box-shadow: none;}
+.dropdown-menu li{cursor:pointer;}
 
 /*Random Fixes*/
 .btn{-webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-tap-highlight-color: transparent; 
@@ -319,7 +320,7 @@ md-toolbar.md-tall{
     .row{margin:0px;}
     .face{width:120px; border-radius:60px; display:block; margin:0 auto 20px auto;}
     #changePic{margin:auto; display:block; width:150px;}
-    #updateAccountAlert{padding:15px; margin-top:10px;}
+    .alert{padding:15px; margin-top:10px;}
 }
     .url.md-input-focused input{padding-left:54px;}
     .url.md-input-focused:before{content:'https://'; position:absolute; bottom:7px; color:#888;}
@@ -389,7 +390,11 @@ md-dialog{
 #taggingMembersDialog{
     overflow-x:visible;
     h2{margin:0px !important;}
-    md-content{padding-bottom:100px;}
+    #memberTags{padding-bottom:60px;}
+}
+
+#tagOptions{
+    md-subheader{ adding:0px;}
 }
 
 #selectingTags > .row{margin-top:10px;}
