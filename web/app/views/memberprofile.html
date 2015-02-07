@@ -29,24 +29,51 @@
         </md-button>
         <md-button class="more-options md-raised md-primary md-hue-2" ng-click="showProfileoptions($event)">options</md-button>
     </md-toolbar>
-    <md-content class="md-padding">
-       
-        <p id="status" class="text-center" ng-show="status.length">"{{status}}"</p>
-        
-        <span id="info">
-        <!-- <a href="sms://+3490322111?body=messagebody">Send Text</a> -->
-        <p ng-show="phone">Phone: {{phone}}</p>
-        <p ng-show="email">Email: {{email}}</p>
-        <p ng-show="pledgeClass">Pledged {{pledgeClass | capitalizeFirst}}</p>
-        <p ng-show="birthday">Born {{birthday}}</p>
-        <p ng-show="major">Studying {{major}}</p>
-        <p ng-show="graduation">Graduating {{graduation}}</p>
-        <p ng-show="currentAddress">Lives at {{currentAddress}}</p>
-        <p ng-show="permanentAddress">Permanent Address at {{permanentAddress}}</p>
-        </span>
-           
-
-        <div id="tags"> <span ng-repeat="tag in member.tags | orderBy: 'toString()'">{{tag}}</span></div>
+    <md-content class="md-padding">   
+    <span id="info">
+        <div class="row">
+            <div class="col-xs-12">
+                <p id="status" class="text-center theme-color" ng-show="status.length">"{{status}}"</p>
+            </div>
+        </div>
+        <div class="row border">
+            <div class="col-xs-12 col-sm-6" ng-show="phone">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-phone fa-3x theme-color" flex="30"></i><p flex>{{phone}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="email">
+               <div layout="row" layout-align="start center"><i class="fa fa-fw fa-envelope-o fa-3x theme-color" flex="30"></i><p flex>{{email}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="pledgeClass">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-shield fa-3x theme-color" flex="30"></i><p flex>Pledged {{pledgeClass | capitalizeFirst}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="birthday">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-birthday-cake fa-3x theme-color" flex="30"></i><p flex>{{birthday}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="major">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-book fa-3x theme-color" flex="30"></i><p flex>{{major}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="graduation">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-graduation-cap fa-3x theme-color" flex="30"></i><p flex>{{graduation}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="currentAddress">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-home fa-3x theme-color" flex="30"></i><p flex>Lives at {{currentAddress}}</p></div>
+            </div>
+            <div class="col-xs-12 col-sm-6" ng-show="permanentAddress">
+                <div layout="row" layout-align="start center"><i class="fa fa-fw fa-heart-o fa-3x theme-color" flex="30"></i><p flex>Permanent Address at {{permanentAddress}}</p></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+               <div layout="row" layout-align="center center">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x theme-color"></i>
+                        <i class="fa fa-tag fa-fw fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p id="tags"><span ng-repeat="tag in member.tags | orderBy: 'toString()'">{{tag}}</span></p>
+                </div>
+            </div>
+        </div>
+    </span>
     </md-content>
     </div>
 </div>
