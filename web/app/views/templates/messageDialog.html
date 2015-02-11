@@ -15,8 +15,8 @@
             <span flex></span>
         <md-button type="button" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</md-button>
         <md-button type="button" ng-show="selectedNotification.type == 'poll'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Poll</md-button>
-        <md-button ng-click="archive()">archive</md-button>
-        <md-button ng-click="closeNotificationModal()" class="md-primary">done</md-button>
+        <md-button ng-click="archive()" class="md-primary">archive</md-button>
+        <md-button ng-click="closeNotificationModal()">done</md-button>
   </div>
 </md-dialog>
 
