@@ -26,7 +26,7 @@
             </md-item>
         </md-list>
     </div>
-    <div id="pagingButtons" layout="row" ng-show="directory.members > 10">
+    <div id="pagingButtons" layout="row" ng-show="directory.members >= 10">
         <md-button aria-label="page left" ng-disabled="startsWith == 0" ng-click="startsWith = startsWith - 10;"><i class="fa fa-arrow-left"></i></md-button>
         <div flex></div>
         <md-button aria-label="page right" ng-disabled= "startsWith == end*10" ng-click="startsWith = startsWith + 10;"><i class="fa fa-arrow-right"></i></md-button>

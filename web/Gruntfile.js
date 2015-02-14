@@ -17,8 +17,9 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath || 'app',
-    dist: 'www'
+    app:'app',
+    dist: 'www',
+    mobile: 'mobile',
   };
     
 
@@ -166,6 +167,9 @@ module.exports = function (grunt) {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
         //ignorePath:  /\.\.\//
+      },
+      mobile: {
+        src:['<%= yeoman.mobile %>/index.html'],
       }
     },
 
@@ -184,19 +188,19 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
-      options: {
-        dest: '<%= yeoman.dist %>',
-        flow: {
-          html: {
-            steps: {
-              js: ['concat'],
-              css: ['cssmin']
-            },
-            post: {}
+        html: '<%= yeoman.app %>/index.html',
+        options: {
+          dest: '<%= yeoman.dist %>',
+          flow: {
+            html: {
+              steps: {
+                js: ['concat'],
+                css: ['cssmin']
+              },
+              post: {}
+            }
           }
         }
-      }
     },
 
     // Performs rewrites based on filerev and the useminPrepare configuration

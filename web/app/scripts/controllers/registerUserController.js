@@ -1,4 +1,4 @@
-    App.controller('registerUserController', function($scope, RESTService, $rootScope, registerOrganizationService, LoadScreen){
+    App.controller('registerUserController', function($scope, RESTService, $rootScope, Session, registerOrganizationService, LoadScreen){
         routeChange();
         $scope.data = {};
         $scope.findMe = function(email){

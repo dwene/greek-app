@@ -1,0 +1,128 @@
+<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
+<md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>
+<div ng-hide="eventNotFound || loading" id="eventInfo" class="container">
+    <div class="md-whiteframe-z1">
+        <md-toolbar class="md-tall">
+            <div class="md-toolbar-tools">
+                <h1><i class="fa fa-calendar"></i> {{event.title}}</h1>
+            </div>
+            <div id="date">{{eventDate(time_start, time_end)}}</div>
+            <md-button id="back" class="md-fab md-warn md-hue-3" aria-label="back" ng-click="back()">
+                <i class="fa fa-arrow-left"></i>
+            </md-button>
+            <md-button class="more-options" ng-click="saveEvent()" ng-show="$parent.perms == 'leadership' || $parent.perms == 'council'">save</md-button>
+            <md-button class="more-options md-raised md-primary md-hue-2" ng-click="showEventoptions($event)" ng-show="$parent.perms == 'leadership' || $parent.perms == 'council'">options</md-button>
+            <!-- <md-button class="more-options md-raised md-primary md-hue-3" ng-click="showEventoptions($event)" ng-show="$parent.perms == 'leadership'">options</md-button> -->
+        </md-toolbar>
+        
+        <md-content class="md-padding">
+            
+            <div ng-show="event.time_start || event.time_end" id="time">
+                <md-subheader>When?</md-subheader>
+                <p>{{formatDate(time_start)}} &mdash; {{formatDate(time_end)}}</p>
+            </div>
+            
+            <div ng-show="event.location" id="location">
+                <md-subheader>Where?</md-subheader>
+                <a ng-click="openMaps(address_html)">
+                    <p>{{event.location}}</p>
+                </a>
+            </div>    
+            
+            <div ng-show="event.description" id="description">
+                <md-subheader>What?</md-subheader>
+                <p class="preText">{{event.description}}</p>
+            </div>
+        </md-content>
+        
+    </div>
+    
+</div>
+
+
+
+<!--
+<div ng-show="loading && !eventNotFound" id="loadingScreen"><i class="fa fa-spinner fa-spin"></i></div>
+<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
+
+<div id="eventInfo" ng-hide="loading || eventNotFound" class="container">
+  
+<div class="row">
+        <div id="eventTitle" class="col-sm-6 col-xs-12">
+            <h1 class="text-center darkbg">{{event.title}}<br>
+            <p class="text-center">#{{event.tag}}</p>
+            </h1>
+            
+            <div id="time" class="card">
+                <div class="icon"><i class="fa fa-clock-o"></i> | </div><span><p>Start: {{formatDate(time_start)}}</p>
+                <p>End: {{formatDate(time_end)}}</p></span>
+            </div>
+            
+            <div ng-show="event.location.length" id="location" class="card">
+                <a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">
+                <div class="icon"><i class="fa fa-map-marker"></i> | </div><span>{{event.location}}</span>
+                </a>
+            </div>    
+            
+            <div id="description" class="card">
+                <div class="icon"><i class="fa fa-quote-left"></i> | </div><p class="preText">{{event.description}}</p>
+                <span>Created by: {{creator.first_name}} {{creator.last_name}}</span>
+            </div>
+            
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            
+            
+        <div id="eventButtons" class="card">
+            <button ng-click="goToReport()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-bar-chart-o"></i></button>
+            <a id="eventcheckinButton" ng-show="$root.checkPermissions('leadership')" class="btn btn-default" ng-href="#/app/events/{{event.tag}}/checkin"><i class="fa fa-sign-in"></i></a>
+            <div class="pull-right">
+            <button ng-click="editEvent()" ng-show="$root.checkPermissions('leadership')" class="btn btn-default"><i class="fa fa-edit"></i></button>
+            <button ng-click="saveEvent()" class="btn btn-info"><i class="fa fa-floppy-o"></i></button>
+            </div>
+        
+           <div ng-hide="event.creator == $root.me.key">
+            <hr>
+                    
+                <form id="goingForm" class="inline-form">
+                <div class="form-group">
+                <span>Are you going?
+                <div class="btn-group btn-group">
+                <button class="btn btn btn-default" ng-class="{ 'btn-primary' : going, 'btn-default' : not_going }" ng-click="rsvp(true)">Yes</button>
+                <button class="btn btn btn-default"  ng-class="{ 'btn-default' : going,  'btn-primary' : not_going }" ng-click="rsvp(false)">No</button>
+                </div>
+                </span>
+                </div>
+                </form>
+            </div>
+            
+        </div>
+        
+        <div id="going" class="card">
+                <h3 class="page-header" data-toggle="collapse" data-target="#going_list">{{event.going_list.length}} Going <span ng-show="event.going_list.length" class="pull-right"><i class="fa fa-chevron-down"></i></span></h3>
+                    <div id="going_list" class="collapse">
+                        <span class="messagePerson label label-primary" ng-repeat="person in event.going_list | orderBy:'last_name'">{{person.first_name}} {{person.last_name}}</span>
+                    </div>
+        </div>
+        
+        <div id="notGoing" class="card">
+                <h3 class="page-header" data-toggle="collapse" data-target="#notGoing_list">{{event.not_going_list.length}} Not Going <span class="pull-right"><i ng-show="event.not_going_list.length" class="fa fa-chevron-down"></i></span></h3>
+                    <div id="notGoing_list" class="collapse">
+                        <span class="messagePerson label label-primary"  ng-repeat="person in event.not_going_list  | orderBy:'last_name'">{{person.first_name}} {{person.last_name}}</span>
+                    </div>
+        </div>
+           
+        <div id="invited" class="card">
+                <h3 class="page-header" data-toggle="collapse" data-target="#invited_list">{{(directory.members|eventTagDirectorySearch:event.tags).length}} Invited <span ng-show="(directory.members|eventTagDirectorySearch:event.tags).length" class="pull-right"><i class="fa fa-chevron-down"></i></span></h3>
+                    <div id="invited_list" class="collapse">
+                            <span class="messagePerson label label-primary"  ng-repeat="member in directory.members | eventTagDirectorySearch:event.tags | orderBy:'last_name'">{{member.first_name}} {{member.last_name}}</span>
+                    </div>
+        </div>
+            
+        </div>
+</div>
+
+
+</div>
+
+-->

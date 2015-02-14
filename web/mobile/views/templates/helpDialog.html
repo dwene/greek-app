@@ -1,0 +1,22 @@
+<md-dialog md-theme="{{$root.color}}">
+<!-- <form id="helpMessage" name="helpMessage" ng-init="message={subject:'', content:''};" novalidate> -->
+  <md-content>
+       <md-subheader class="md-sticky-no-effect">
+            Send us a message and we'll get right back to you.
+        </md-subheader>
+            <md-divider></md-divider>
+            <div class="form-group">
+                 <textarea id="content" ng-model="message" name="content" class="form-control" placeholder="Enter your message here..." required></textarea>
+            </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button class="md-primary" ng-click="sendHelpMessage(message)">
+        Send
+    </md-button>
+    <md-button ng-click="hide()">
+        Cancel
+    </md-button>
+  </div>
+<!-- </form> -->
+</md-dialog>

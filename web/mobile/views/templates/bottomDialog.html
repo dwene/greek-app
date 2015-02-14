@@ -1,0 +1,25 @@
+<md-dialog md-theme="{{$root.color}}" id="bottomSheet" style="min-width:80%;">
+  <md-content>
+  <md-list layout="row" layout-sm="column" layout-align="space-around center">
+    <md-item ng-repeat="item in items" ng-show="download">
+      <md-button ng-show="clickable" ng-click="itemClick(item)">
+        <div class="md-icon-container" style="pointer-events: none; ">
+        <i class="fa {{item.icon}} fa-fw fa-2x"></i>
+        </div>
+        <p class="md-grid-text"> {{ item.name }} </p>
+      </md-button>
+    </md-item>
+    <md-item ng-repeat="item in items" ng-hide="clickable">
+      <md-button ng-hide="download" aria-label="{{item.name}}" ng-href="{{item.link}}" target="_blank" ng-click="itemClick(item)">
+        <div class="md-icon-container" style="pointer-events: none; ">
+        <i class="fa {{item.icon}} fa-fw fa-2x"></i>
+        </div>
+        <p class="md-grid-text"> {{ item.name }} </p>
+      </md-button>
+    </md-item>
+  </md-list>
+  </md-content>
+    <div class="md-actions" layout="row">
+        <md-button ng-click="closeDialog()">close</md-button>
+  </div>
+</md-dialog>

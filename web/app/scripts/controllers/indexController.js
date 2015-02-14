@@ -14,7 +14,12 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             $scope.email = Session.me.email;
             $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
         })
-
+        $rootScope.$on('me:updated', function(){
+            $scope.me = Session.me;
+            $scope.name = Session.me.first_name +' '+ Session.me.last_name;
+            $scope.email = Session.me.email;
+            $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
+        });
         $scope.$on('notifications:updated', function(){
             $scope.notifications = Notifications.notifs;
         });

@@ -1,0 +1,438 @@
+<div id="accountInfo" class="container">    
+    <div class="md-whiteframe-z1">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Account Settings</h1>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+<!--
+            <md-subheader>
+               Email Preferences:
+            </md-subheader>
+             <md-radio-group ng-model="item.email_prefs">
+              <md-radio-button value="all" aria-label="all" ng-click="item.email_prefs = 'all'; updateEmailPrefs('all');">All</md-radio-button>
+              <md-radio-button value="daily" aria-label="daily" ng-click="item.email_prefs = 'daily'; updateEmailPrefs('daily');">Daily</md-radio-button>
+              <md-radio-button value="none" aria-label="none" ng-click="item.email_prefs = 'none'; updateEmailPrefs('none');">None</md-radio-button>
+            </md-radio-group>
+-->
+            <md-subheader>
+               Change Password:
+            </md-subheader>
+            <form name="change_password" ng-hide="passwordChanged" role="form">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+                <md-input-container>
+                    <label for="old_password">Old Password</label>
+                    <input name="old_password" type="password" ng-model="new_pass.old_password">
+                </md-input-container>
+                <md-input-container>
+                    <label for="password">New Password</label>
+                    <input name="password" type="password" ng-model="new_pass.password">
+                </md-input-container>
+                <md-input-container ng-class="{'md-input-invalid' : new_pass.password != new_pass.repeat_password && !change_password.repeat_password.$pristine}">
+                    <label for="repeat_password">Repeat Password</label>
+                    <input name="repeat_password" type="password" ng-model="new_pass.repeat_password">
+                    <p class="text-danger invalid-text">Passwords do not match</p>
+                </md-input-container>
+                    <div ng-show="changeFailed" class="alert alert-danger">Password change failed. Please try again.</div>
+                    <br>
+                <md-button class="pull-right" ng-disabled="new_pass.password != new_pass.repeat_password" ng-click="changePassword(new_pass.old_password, new_pass.password)">Change</md-button>
+                </div>
+            </form>  
+            <div ng-show="passwordChanged" class="alert alert-success">Your password has been changed! You will be logged out in 5 seconds...</div>
+        </md-content>
+    </div>
+    <div class="md-whiteframe-z1">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Account Info</h1>
+            </div>
+        </md-toolbar>
+        <md-content class="md-padding">
+        <img ng-src="{{item.prof_pic}}" class="face">
+        <md-button id="changePic" ng-href="#/app/uploadprofilepicture">Change Picture</md-button>
+        <br>
+
+<form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>
+<div class="row">
+<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.first_name.$invalid && !memberAccount.first_name.$pristine) || (memberAccount.first_name.$invalid && submitted)}">
+        <label for="first_name">First Name</label>
+        <input name="first_name" ng-model="item.first_name" required></input>
+        <p class="text-danger invalid-text">Please enter your first name.</p>
+    </md-input-container>
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.last_name.$invalid && !memberAccount.last_name.$pristine) || (memberAccount.last_name.$invalid && submitted)}">
+        <label for="last_name">Last Name</label>
+        <input name="last_name" ng-model="item.last_name" required></input>
+        <p class="text-danger invalid-text">Please enter your last name.</p>
+    </md-input-container>
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.email.$invalid && !memberAccount.email.$pristine) || (memberAccount.email.$invalid && submitted)}">
+        <label for="email">email@example.com</label>
+        <input name="email" ng-model="item.email" required></input>
+        <p class="text-danger invalid-text">Please a valid email.</p>
+    </md-input-container>
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)}">
+        <label for="phone">###-###-####</label>
+        <input type="tel" name="phone" ng-model="item.phone" required></input>
+        <p class="text-danger invalid-text">Please select a valid phone number.</p>
+    </md-input-container>
+    <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">
+        <label for="dob" class="col-xs-4 col-sm-2 control-label">Birthday</label>
+        <div class="col-xs-8 col-sm-10">
+        <date-picker id="dob" name="dob" ng-model="item.dob"></date-picker>
+        </div>
+        <p class="text-danger invalid-text">Please enter your birthday.</p>
+    </div>
+    <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted), required:!checkAlumni}">
+        <label for="grad_month" class="col-xs-7 col-sm-5">Graduation Month</label>
+        <div class="col-xs-7 col-sm-5">
+        <select id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni" style="width:100%;">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">Septempber</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+        <p class="text-danger invalid-text">Please enter your graduation month.</p>
+        </div>
+    </div>
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.grad_year.$invalid && !memberAccount.grad_year.$pristine) || (memberAccount.grad_year.$invalid && submitted), required:checkAlumni}">
+        <label for="grad_year">Graduation Year</label>
+        <input type="number" name="grad_year" ng-model="item.grad_year" required></input>
+        <p class="text-danger invalid-text">Please enter your graduation year.</p>
+    </md-input-container>    
+    <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni}">
+        <label for="currentState" class="col-xs-7 col-sm-5">Pledge Semester</label>
+        <div class="col-xs-7 col-sm-5">
+            <select id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" style="width:100%;" required>
+                <option value="fall">Fall</option>
+                <option value="spring">Spring</option>
+            </select>
+            <p class="text-danger invalid-text">Please enter your graduation month.</p>
+        </div>
+    </div>
+    <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_year.$invalid && !memberAccount.pledge_class_year.$pristine) || (memberAccount.pledge_class_year.$invalid && submitted), required: checkAlumni}">
+        <label for="pledge_class_year">Pledge Year</label>
+        <input type="number" name="pledge_class_year" ng-model="item.pledge_class_year" required></input>
+        <p class="text-danger invalid-text">Please enter your pledge class year.</p>
+    </md-input-container> 
+    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.major.$invalid && !memberAccount.major.$pristine) || (memberAccount.major.$invalid && submitted)}">
+        <label for="major">Major</label>
+        <input name="major" ng-model="item.major"></input>
+        <p class="text-danger invalid-text">Please enter your field of study.</p>
+    </md-input-container> 
+    <md-input-container ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
+        <label for="position">Leadership Position</label>
+        <input name="position" ng-model="item.position"></input>
+        <p class="text-danger invalid-text">Please enter a leadership position.</p>
+    </md-input-container> 
+    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.occupation.$invalid && !memberAccount.occupation.$pristine) || (memberAccount.occupation.$invalid && submitted)}">
+        <label for="occupation">Occupation</label>
+        <input name="occupation" ng-model="item.occupation"></input>
+        <p class="text-danger invalid-text">Please enter a valid occupation</p>
+    </md-input-container>
+    <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.employer.$invalid && !memberAccount.employer.$pristine) || (memberAccount.employer.$invalid && submitted)}">
+        <label for="employer">Employer</label>
+        <input name="employer" ng-model="item.employer"></input>
+        <p class="text-danger invalid-text">Please enter a valid employer</p>
+    </md-input-container>
+    <div ng-show="!checkAlumni">
+        <div class="col-xs-12 col-sm-6">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni}">
+                <label for="currentAddress">Current Address</label>
+                <input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></input>
+                <p ng-show="(memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted)" class="help-block">Please enter your current address.</p>
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni}">
+                <label for="currentCity">Current City</label>
+                <input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></input>
+                <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
+            </md-input-container>
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
+                <label for="currentState" class="col-xs-7 col-sm-5">Current State</label>
+                <div class="col-xs-7 col-sm-5">
+                <select id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni">
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+                </div>
+                <script>
+                    $('#currentState').focusout(function(){
+                        $(this).trigger("change");
+                    });
+                </script>
+                <p class="text-danger invalid-text">Please enter your current state.</p>
+            </div>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni}">
+                <label for="zip">Current Zip</label>
+                <input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></input>
+                <p class="text-danger invalid-text">Please enter your permanent 5 digit zip code.</p>
+            </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <md-input-container ng-class="{ 'md-input-invalid' : (memberAccount.perm_address.$invalid && !memberAccount.perm_address.$pristine) || (memberAccount.perm_address.$invalid && submitted)}">
+                <label for="perm_address">Permanent Address</label>
+                <input name="perm_address" ng-model="item.perm_address"></input>
+                <p class="text-danger invalid-text">Please enter your permanent address.</p>
+            </md-input-container>
+            <md-input-container ng-class="{ 'md-input-invalid' : (memberAccount.perm_city.$invalid && !memberAccount.perm_city.$pristine) || (memberAccount.perm_city.$invalid && submitted)}">
+                <label for="perm_city">Permanent City</label>
+                <input name="perm_city" ng-model="item.perm_city"></input>
+                <p class="text-danger invalid-text">Please enter your permanent city.</p>
+            </md-input-container>
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)}">
+                <label for="perm_state" class="col-xs-7 col-sm-5">Permanent State</label>
+                <div class="col-xs-5 col-sm-7">
+                <select class="form-control" id="perm_state" name="perm_state" ng-model="item.perm_state">
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+                </div>
+                <script>
+                    $('#currentState').focusout(function(){
+                        $(this).trigger("change");
+                    });
+                </script>
+                <p class="text-danger invalid-text">Please enter your permanent state.</p>
+            </div>
+            <md-input-container ng-class="{ 'md-input-invalid' : (memberAccount.perm_zip.$invalid && !memberAccount.perm_zip.$pristine) || (memberAccount.perm_zip.$invalid && submitted)}">
+                <label for="perm_zip">Permanent Zip</label>
+                <input type="number" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/"></input>
+                <p class="text-danger invalid-text">Please enter your permanent 5 digit zip code.</p>
+            </md-input-container>
+        </div>  
+    </div>
+    <div ng-show="checkAlumni">
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.address.$invalid && !memberAccount.address.$pristine) || (memberAccount.address.$invalid && submitted), required: !checkAlumni}">
+                <label for="currentAddress">Current Address</label>
+                <input name="currentAddress" ng-model="item.address" ng-required="!checkAlumni"></input>
+                <p class="text-danger invalid-text">Please enter your current address.</p>
+            </md-input-container>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted), required: !checkAlumni}">
+                <label for="currentCity">Current City</label>
+                <input name="currentCity" ng-model="item.city" ng-required="!checkAlumni"></input>
+                <p class="text-danger invalid-text">Please enter your current city.</p>
+            </md-input-container>
+            <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
+                <label for="currentState2" class="col-xs-7 col-sm-5">Current State</label>
+                <div class="col-xs-7 col-sm-5">
+                <select id="currentState2" name="state" ng-model="item.state" ng-required="!checkAlumni">
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+                </div>
+                <script>
+                    $('#currentState2').focusout(function(){
+                        $(this).trigger("change");
+                    });
+                </script>
+                <p class="text-danger invalid-text">Please enter your current state.</p>
+            </div>
+            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.zip.$invalid && !memberAccount.zip.$pristine) || (memberAccount.zip.$invalid && submitted), required: !checkAlumni}">
+                <label for="zip">Current Zip</label>
+                <input type="number" name="zip" ng-model="item.zip" ng-pattern="/[0-9]{5}/" ng-required="!checkAlumni"></input>
+                <p class="text-danger invalid-text">Please enter your permanent 5 digit zip code.</p>
+            </md-input-container>
+    </div>
+    
+    
+    <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
+        <label for="website">Website</label>
+        <input type="text" name="website" ng-model="item.website" remove-http>
+        <p class="text-danger invalid-text">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
+        <label for="facebook">Facebook Profile</label>
+        <input type="text" name="facebook" ng-model="item.facebook" remove-http>
+        <p class="text-danger invalid-text">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
+        <label for="twitter">Twitter Profile</label>
+        <input type="text" name="twitter" ng-model="item.twitter" remove-http>
+        <p class="text-danger invalid-text">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
+        <label for="instagram">Instagram Profile</label>
+        <input type="text" name="instagram" ng-model="item.instagram" remove-http>
+        <p class="text-danger invalid-text">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
+        <label for="linkedin">LinkedIn Profile</label>
+        <input type="text" name="linkedin" ng-model="item.linkedin" remove-http>
+        <p class="text-danger invalid-text">Please enter a valid url.</p>
+    </md-input-container>
+    
+    <br>
+<md-button type="submit" class="pull-right" ng-disabled="working == 'pending'"><span ng-hide="working == 'pending'">Save Info</span><span ng-show="working == 'pending'">Saving</span></md-button>
+    
+
+</div>
+   
+</div>    
+</form>
+
+    <p class="alert alert-success" ng-show="updatedInfo">Account info updated! <md-button ng-click="goToMe()">View Profile</md-button></p>
+    <p class="alert alert-danger" ng-show="memberAccount.$valid == false">Please make sure you have filled out everything correctly.</p>
+
+                     
+        </md-content>
+    </div>
+</div>

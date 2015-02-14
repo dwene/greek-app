@@ -1,4 +1,4 @@
-    App.controller('newmemberinfoController', function($scope, RESTService, $http, $rootScope, $stateParams, $location, AUTH_EVENTS){
+    App.controller('newmemberinfoController', function($scope, RESTService, $http, $rootScope, $stateParams, $location, Session, AUTH_EVENTS){
         routeChange();
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         $scope.loading = true;
