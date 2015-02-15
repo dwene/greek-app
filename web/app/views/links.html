@@ -9,6 +9,7 @@
         </md-toolbar>
         <md-content class="md-padding">
             <md-list>
+            <p ng-show="group.length == 0">There are no links yet.</p>
                 <md-item class="link-group" ng-repeat="group in groups track by group">
                     <md-content>
                         <md-toolbar>

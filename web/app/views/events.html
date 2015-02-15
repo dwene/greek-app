@@ -26,10 +26,10 @@
                       </md-tab>
                     </md-tabs>
                 </md-toolbar>
-                <md-list class="itemList hover" ng-show= "selectedTab==0">
-                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:'time_start' ">
+                <md-list class="itemList hover" ng-show="selectedTab==0">
+                   <md-content class="md-padding" ng-show="current_events.length == 0">There are no upcoming events.</md-content>
+                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:true) | multipleSearch: search) | orderBy:'time_start' ">
                         <md-item-content>
-
                             <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
                                 <h3 class="md-primary title">
                                     {{event.title}}
@@ -40,9 +40,9 @@
                     </md-item>
                 </md-list>
                 <md-list class="itemList hover" ng-show="selectedTab==1">
-                    <md-item ng-repeat="event in (current_events = (events | removePassedEvents:(selectedTab == 0) | multipleSearch: search)) | orderBy:'-time_start' ">
+                   <md-content class="md-padding" ng-show="past_events.length == 0">There are no past events.</md-content>
+                    <md-item ng-repeat="event in (past_events = (events | removePassedEvents:false | multipleSearch: search)) | orderBy:'-time_start' ">
                         <md-item-content>
-
                             <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
                                 <h3 class="md-primary title">
                                     {{event.title}}
