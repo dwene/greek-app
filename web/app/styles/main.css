@@ -488,6 +488,7 @@ md-dialog .md-sticky-clone[sticky-state="active"]:not(.md-sticky-no-effect):afte
 .md-dialog-container,
 md-backdrop.md-opaque {
   position: fixed !important;
+  top: 0 !important;
 }
 .aside li .md-button {
   text-align: left;
