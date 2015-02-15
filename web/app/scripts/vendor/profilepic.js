@@ -43,7 +43,7 @@ angular.module('aj.crop', [])
                 });
               }
             , aspectRatio: scope.ratio || 1
-            , boxWidth: 300
+            , boxWidth: 240
             }
           , function () {
               // Use the API to get the real image size  
@@ -178,16 +178,16 @@ angular.module('App')
       scope.picHeight = cords.h;
 
       console.log('scale');
-      if (scope.picWidth > 300) {
-        scale = (300 / scope.picWidth);
+      if (scope.picWidth > 240) {
+        scale = (240 / scope.picWidth);
         console.log(scope.picHeight);
         scope.picHeight *= scale;
         scope.picWidth *= scale;
         console.log(scale);
       }
 
-      if (scope.picHeight > 300) {
-        scale = (300 / scope.picHeight);
+      if (scope.picHeight > 240) {
+        scale = (240 / scope.picHeight);
         scope.picHeight *= scale;
         scope.picWidth *= scale;
         console.log(scale);
