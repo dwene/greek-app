@@ -12,6 +12,7 @@ from google.appengine.ext import ndb
 import json
 from ndbdatastore import *
 from dateutil.relativedelta import relativedelta
+import cloudstorage as gcs
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
 from google.appengine.api import images
@@ -78,6 +79,20 @@ class DateEncoder(json.JSONEncoder):
             return images.get_serving_url(obj, secure_url=True)
         else:
             return json.JSONEncoder.default(self, obj)
+
+
+def CreateFile(filename, data):
+    # Create a GCS file with GCS client.
+    with gcs.open(filename, 'w') as f:
+        f.write(data)
+
+    # Blobstore API requires extra /gs to distinguish against blobstore files.
+    blobstore_filename = '/gs' + filename
+    # This blob_key works with blobstore APIs that do not expect a
+    # corresponding BlobInfo in datastore.
+    return blobstore.create_gs_key(blobstore_filename)
+
+
 
 def member_signup_email(user, token):
     signup_link = DOMAIN+'/#/newuser/'+token
@@ -1342,8 +1357,7 @@ class RESTApi(remote.Service):
             del user_dict["hash_pass"]
             del user_dict["current_token"]
             del user_dict["organization"]
-            return OutgoingMessage({'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
-                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': user_dict})
+            return OutgoingMessage(error='' ,data=json_dump({'token': user.current_token, 'perms': user.perms, 'me': user_dict}))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_username',
@@ -3831,6 +3845,19 @@ class RESTApi(remote.Service):
         if not data in request_user.android_tokens:
             request_user.android_tokens.append(data)
             request_user.put()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/change_profile_image',
+                      http_method='POST', name='user.change_profile_image')
+    def set_android_token(self, request):
+        data = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        img_data = data.img_data
+        mime_type = data.mime
+        createFile(request_user.user_name+'prof_pic')
+        
         return OutgoingMessage(error='', data='OK')
 
 

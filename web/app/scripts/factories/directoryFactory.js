@@ -45,12 +45,17 @@ App.factory('Directory', function(RESTService, $rootScope, localStorageService, 
         }
     }
     item.updateMe = function(me){
-        for (var i = 0; i < item.directory.members.length; i++){
-            if (item.directory.members[i].user_name == Session.user_name){
-                item.directory.members[i] = me;
-                Session.me = me;
-                return;
+        if (item.directory){
+            for (var i = 0; i < item.directory.members.length; i++){
+                if (item.directory.members[i].user_name == Session.user_name){
+                    item.directory.members[i] = me;
+                    Session.me = me;
+                    return;
+                }
             }
+        }
+        else{
+            item.get();
         }
     }
         // data.set = function(_directory) {

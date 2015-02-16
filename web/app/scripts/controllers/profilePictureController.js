@@ -1,4 +1,4 @@
-    App.controller('profilepictureController', function($scope, RESTService, $http, Load, $rootScope, Session){
+    App.controller('profilepictureController', function($scope, $location, RESTService, $http, Load, $rootScope, Session, Directory){
     routeChange();
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', '')
             .success(function(data){
@@ -23,12 +23,34 @@
         
         //reads the file as it's added into the file input
         
-        $scope.uploadFile = function(files) {
-            newprofileImage = new FormData();
-            //Take the first selected file
-            newprofileImage.append("file", files[0]);
-        }
+        // $scope.uploadFile = function(files) {
+        //     newprofileImage = new FormData();
+        //     newprofileImage.append("file", files[0]);
+        //     console.log(newprofileImage);
+        // }
         
+        $scope.uploadImage = function(src, crop_data){
+            // console.log(src);
+            // var header = src.slice(0, src.indexOf(';'));
+            // console.log('header',header);
+            // var mime = header.slice(src.indexOf(':')+1);
+            // console.log('mime',mime);
+            console.log(crop_data);
+            var img = src.slice(src.indexOf(',')+1);
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/change_profile_image', {img:img, crop:crop_data})
+            .success(function(data){
+                console.log("success");
+                var me = Session.me;
+                me.prof_pic = JSON.parse(data.data);
+                Directory.updateMe(me);
+                Session.updateMe(me);
+                $location.url('app/accountinfo');
+            })
+            .error(function(data) {
+                console.log("failure");
+                
+            });
+        }
         
         $scope.uploadPicture = function(){
             

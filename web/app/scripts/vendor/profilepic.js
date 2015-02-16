@@ -123,14 +123,8 @@ angular.module('App')
   .controller('ProfilePicCtrl', function ($window, $timeout, $scope, fileReader) {
     var scope = this
       ;
-
-    console.log(fileReader);
-
     scope.file = {};
     scope.getFile = function () {
-      console.log('getFile() called.');
-      console.log(scope.ajModel);
-      console.log(scope.file);
         scope.cropData = false;
         $scope.cropped = false;
       $scope.progress = 0;

@@ -8,7 +8,7 @@
 			<img id="preview" ng-src="{{ P.imageSrc }}">
 		</div>
     </section>
-	<form action="/upload" method="post" enctype="multipart/form-data" ng-submit="uploading_image = 'pending'" id="profilePic">
+	<form enctype="multipart/form-data" ng-submit="uploadImage(P.imageSrc, P.cropData)" id="profilePic">
 	<input type="file" name="file" accept="image/*" value="upload" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
 	<input name="user_name" ng-model="user_name" style="display: none;">
 	<input name="token" ng-model="token" style="display: none;">
@@ -17,5 +17,5 @@
 	<br>
     <input  ng-disabled="!P.cropData || uploading_image" type="submit" name="submit" value="Upload" class="btn btn-default">
     <update-status ng-model="uploading_image"></update-status>
-   </form>  
+   </form>
 </div>
