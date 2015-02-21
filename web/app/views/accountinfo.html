@@ -154,8 +154,8 @@
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
             </md-input-container>
             <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
-                <label for="currentState" class="col-xs-7 col-sm-5">Current State</label>
-                <div class="col-xs-7 col-sm-5">
+                <label for="currentState" class="col-xs-12 col-sm-7">Current State</label>
+                <div class="col-xs-12 col-sm-5">
                 <select id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni">
                     <option value="AL">Alabama</option>
                     <option value="AK">Alaska</option>
@@ -234,8 +234,8 @@
                 <p class="text-danger invalid-text">Please enter your permanent city.</p>
             </md-input-container>
             <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)}">
-                <label for="perm_state" class="col-xs-7 col-sm-5">Permanent State</label>
-                <div class="col-xs-5 col-sm-7">
+                <label for="perm_state" class="col-xs-12 col-sm-5">Permanent State</label>
+                <div class="col-xs-12 col-sm-7">
                 <select id="perm_state" name="perm_state" ng-model="item.perm_state">
                     <option value="AL">Alabama</option>
                     <option value="AK">Alaska</option>
