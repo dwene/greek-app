@@ -70,11 +70,9 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
                     $scope.working = 'done';
                     $scope.updatedInfo = true;
                     Directory.updateMe($scope.item);
-                    Session.updateMe($scope.item);
                 }
                 else
                 {
-                    $scope.working = 'broken';
                     console.log('ERROR: ',data);
                 }
                 

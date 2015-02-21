@@ -25,8 +25,8 @@ I think status max should be shorter, else it doesnt really fit.
 */
 
 //Final/static variables. These variables are used for cookies
-// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
- var ENDPOINTS_DOMAIN = 'http://localhost:9001';
+var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+ // var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 //var ENDPOINTS_DOMAIN = '';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -222,7 +222,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.uploadprofilepicture', {
                     url : '/uploadprofilepicture',
                     templateUrl : 'views/uploadprofilepicture.html',
-                    controller : 'profilepictureController',
+                    controller : 'profilePictureController',
                     data: {
                         permissions: {
                             only: [LOGGED_IN],
@@ -1268,6 +1268,41 @@ App.directive('removeHttp', function(){
             })
         }};
 });
+
+
+
+App.directive('fileChange', ['$parse', function($parse) {
+
+    return {
+      restrict: 'A',
+      link: function ($scope, element, attrs) {
+
+        // Get the function provided in the file-change attribute.
+        // Note the attribute has become an angular expression,
+        // which is what we are parsing. The provided handler is 
+        // wrapped up in an outer function (attrHandler) - we'll 
+        // call the provided event handler inside the handler()
+        // function below.
+        var attrHandler = $parse(attrs['fileChange']);
+
+        // This is a wrapper handler which will be attached to the
+        // HTML change event.
+        var handler = function (e) {
+
+          $scope.$apply(function () {
+
+            // Execute the provided handler in the directive's scope.
+            // The files variable will be available for consumption
+            // by the event handler.
+            attrHandler($scope, { $event: e, files: e.target.files });
+          });
+        };
+
+        // Attach the handler to the HTML change event 
+        element[0].addEventListener('change', handler, false);
+      }
+    };
+  }]);
 
 
 App.directive('removeHashTag', function(){

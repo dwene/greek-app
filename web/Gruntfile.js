@@ -321,6 +321,7 @@ module.exports = function (grunt) {
             'email_footers/*',
             'files/*',
             'requests/*',
+            'cloudstorage/*',
             'lib/{,*/*/}*',
             'scripts/vendor/profilepic.js'
           ]

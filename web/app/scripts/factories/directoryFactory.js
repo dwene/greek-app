@@ -49,14 +49,16 @@ App.factory('Directory', function(RESTService, $rootScope, localStorageService, 
             for (var i = 0; i < item.directory.members.length; i++){
                 if (item.directory.members[i].user_name == Session.user_name){
                     item.directory.members[i] = me;
-                    Session.me = me;
-                    return;
+                    break;
                 }
             }
         }
         else{
             item.get();
         }
+        Session.me = me;
+        console.log('Im broadcasting', me.prof_pic);
+        $rootScope.$broadcast('me:updated');
     }
         // data.set = function(_directory) {
         //     directory = _directory;

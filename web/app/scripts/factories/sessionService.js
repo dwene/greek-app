@@ -12,10 +12,10 @@ App.service('Session', function ($rootScope, AUTH_EVENTS) {
     this.perms = null;
     this.me = null;
   };
-  this.updateMe = function(item){
-    this.me = item;
-    $rootScope.$broadcast('me:updated');
-  };
+  // this.updateMe = function(item){
+  //   this.me = item;
+  //   $rootScope.$broadcast('me:updated');
+  // };
   // this.updateMe = function(){
   //   RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', '')
   //       .success(function(data){

@@ -1,4 +1,5 @@
 from ndbdatastore import *
+from google.appengine.ext import blobstore
 import json
 import datetime
 from google.appengine.ext import ndb
@@ -31,6 +32,11 @@ def show_notifications():
                 user.hidden_notifications.remove(item)
             print temp    
         user.put()
+
+def deleteMyPicture():
+    derek = User.query(User.user_name == 'dwene').get()
+    derek.prof_pic = None
+    derek.put()
 
 def updateNotifications():
     notifications = Notification.query().fetch()

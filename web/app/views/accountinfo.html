@@ -346,7 +346,7 @@
 </form>
 
     <p class="alert alert-success" ng-show="updatedInfo">Account info updated! <md-button ng-click="goToMe()">View Profile</md-button></p>
-    <p class="alert alert-danger" ng-show="memberAccount.$valid == false">Please make sure you have filled out everything correctly.</p>
+    <p class="alert alert-danger" ng-show="memberAccount.$valid == false && submitted">Please make sure you have filled out everything correctly.</p>
 
                      
         </md-content>

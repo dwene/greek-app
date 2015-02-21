@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import uuid
 import braintree
+import base64
 from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
@@ -18,6 +19,8 @@ from google.appengine.ext import blobstore
 from google.appengine.api import images
 import urllib
 from google.appengine.api import urlfetch
+import string
+import random
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id="b9hg6czg7dy9njgm",
@@ -80,16 +83,30 @@ class DateEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
-def CreateFile(filename, data):
-    # Create a GCS file with GCS client.
-    with gcs.open(filename, 'w') as f:
-        f.write(data)
-
-    # Blobstore API requires extra /gs to distinguish against blobstore files.
-    blobstore_filename = '/gs' + filename
-    # This blob_key works with blobstore APIs that do not expect a
-    # corresponding BlobInfo in datastore.
+def set_profile_picture(filename, data, crop_data):
+    # Create a GCS file with GCS client. 
+    image = base64.b64decode(str(data))
+    real_filename = '/greek-app.appspot.com/prof_pic/'+filename
+    blobstore_filename = '/gs' + real_filename
+    img = images.Image(image_data=image)
+    logging.error(crop_data)
+    left = float(crop_data['x'])/float(crop_data['bx'])
+    right = float(crop_data['x2'])/float(crop_data['bx'])
+    top = float(crop_data['y'])/float(crop_data['by'])
+    bottom = float(crop_data['y2'])/float(crop_data['by'])
+    if crop_data:
+        img.crop(left_x=left,
+            right_x=right,
+            top_y=top,
+            bottom_y=bottom)
+    img.resize(width=600, height=600)
+    img.im_feeling_lucky()
+    thumbnail = img.execute_transforms(output_encoding=images.PNG)
+    with gcs.open(real_filename, 'w', content_type='image/png') as f:
+        f.write(thumbnail)
     return blobstore.create_gs_key(blobstore_filename)
 
 
@@ -3849,16 +3866,20 @@ class RESTApi(remote.Service):
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/change_profile_image',
                       http_method='POST', name='user.change_profile_image')
-    def set_android_token(self, request):
+    def change_prof_pic(self, request):
         data = json.loads(request.data)
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        img_data = data.img_data
-        mime_type = data.mime
-        createFile(request_user.user_name+'prof_pic')
-        
-        return OutgoingMessage(error='', data='OK')
+        img_data = data["img"]
+        crop_data = json.loads(data["crop"])
+        logging.error(data["crop"])
+        blob_key = set_profile_picture(request_user.user_name+'_'+id_generator(), img_data, crop_data)
+        if request_user.prof_pic:
+            blobstore.delete(request_user.prof_pic)
+        request_user.prof_pic = blobstore.BlobKey(blob_key)
+        request_user.put()
+        return OutgoingMessage(error='', data=json_dump(images.get_serving_url(blob_key)))
 
 
 APPLICATION = endpoints.api_server([RESTApi])

@@ -19,6 +19,8 @@ from google.appengine.ext import blobstore
 from google.appengine.api import images
 import urllib
 from google.appengine.api import urlfetch
+import string
+import random
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id="b9hg6czg7dy9njgm",
@@ -81,6 +83,8 @@ class DateEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def set_profile_picture(filename, data, crop_data):
     # Create a GCS file with GCS client. 
@@ -3870,9 +3874,9 @@ class RESTApi(remote.Service):
         img_data = data["img"]
         crop_data = json.loads(data["crop"])
         logging.error(data["crop"])
-        blob_key = set_profile_picture(request_user.user_name+'.prof_pic', img_data, crop_data)
-        logging.error('LOGGING THE URL')
-        logging.error(blob_key)
+        blob_key = set_profile_picture(request_user.user_name+'_'+id_generator(), img_data, crop_data)
+        if request_user.prof_pic:
+            blobstore.delete(request_user.prof_pic)
         request_user.prof_pic = blobstore.BlobKey(blob_key)
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(images.get_serving_url(blob_key)))

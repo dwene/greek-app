@@ -24,8 +24,8 @@ angular.module('aj.crop', [])
         scope.$watch('src', function (nv) {
           clear();
 
-          console.log('[src]');
-          console.log(nv);
+          //console.log('[src]');
+          //console.log(nv);
           if (!nv) { // newValue
             return;
           }
@@ -65,7 +65,9 @@ angular.module('App')
     var onLoad = function (reader, deferred, Sscope) {
       return function () {
         Sscope.$apply(function () {
-          deferred.resolve(reader.result);
+        checkEXIFData(reader.result).then(function (result_2){
+          deferred.resolve(result_2);
+        })
         });
       };
     };
@@ -93,6 +95,81 @@ angular.module('App')
       reader.onprogress = onProgress(reader, Sscope);
       return reader;
     };
+    var checkEXIFData = function(result){
+      var bin = atob(result.split(',')[1]);
+      var exif = EXIF.readFromBinaryFile(new BinaryFile(bin));
+      var orientation = exif.Orientation;
+      var new_result;
+      var deferred = $q.defer();
+      if (orientation){
+          var transform;
+          var img = new Image();
+          img.src = result;
+          img.onload = function(){
+            var canvas = document.createElement('canvas');
+            switch (orientation) {
+              case  8:
+                    canvas.width = img.height;
+                    canvas.height = img.width;
+                    transform = "left";
+              break;
+              case  6:
+                    canvas.width = img.height;
+                    canvas.height = img.width;
+                    transform = "right";
+              break;
+              case  1:
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+              break;
+              case  3:
+                    canvas.width = img.height;
+                    canvas.height = img.width;
+                    transform = "flip";
+              break;
+         
+              default:
+                    width = img.width;
+                    height = img.height;
+            }
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+           // console.log('transform', transform);
+            switch (transform) {
+         
+                case ('left'):
+                      ctx.setTransform(0, -1, 1, 0, 0, canvas.height);
+                      ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+                      
+                break;
+                case ('right'):
+                      ctx.setTransform(0, 1, -1, 0, canvas.width, 0);
+                      ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+                      // ctx.drawImage(img, 0, 0, 100, 100);
+                break;
+                case ('flip'):
+                      ctx.setTransform(1, 0, 0, -1, 0, canvas.height);
+                      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                      // ctx.drawImage(img, 0, 0, 100, 100);
+                default:
+                      ctx.setTransform(1, 0, 0, 1, 0, 0);
+                      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                      // ctx.drawImage(img, 0, 0, 100, 100);
+            }
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          new_result = canvas.toDataURL();
+          canvas.remove();
+          img.remove();
+          //console.log('new result a', new_result);
+          deferred.resolve(new_result);
+          }
+        }
+        else{
+          deferred.resolve(result);
+        }
+        return deferred.promise;
+    }
     var readAsDataURL = function (file, Sscope) {
       var deferred = $q.defer();
       var reader = getReader(deferred, Sscope);
@@ -128,22 +205,159 @@ angular.module('App')
         scope.cropData = false;
         $scope.cropped = false;
       $scope.progress = 0;
+      
+      $scope.loading_image = true;
       fileReader.readAsDataUrl(scope.file.file, $scope).then(function (result) {
-        console.log('readAsDataUrl: result.length === ', result.length);
+        //console.log('readAsDataUrl: result.length === ', result.length);
         //console.log(result);
+        // var bin = atob(result.split(',')[1]);
+        // var exif = EXIF.readFromBinaryFile(new BinaryFile(bin));
+        // // alert(exif.Orientation);
+        // console.log('about to enter if');
+        // var new_result;
+
+        // if (exif.Orientation){
+        //   var transform;
+        //   var img = new Image();
+        //   img.src = result;
+        //   img.onload = function(){
+        //     var canvas = document.createElement('canvas');
+        //     switch (exif.Orientation) {
+        //       case  8:
+        //             canvas.width = img.height;
+        //             canvas.height = img.width;
+        //             transform = "left";
+        //       break;
+        //       case  6:
+        //             canvas.width = img.height;
+        //             canvas.height = img.width;
+        //             transform = "right";
+        //       break;
+        //       case  1:
+        //             canvas.width = img.width;
+        //             canvas.height = img.height;
+        //       break;
+        //       case  3:
+        //             canvas.width = img.height;
+        //             canvas.height = img.width;
+        //             transform = "flip";
+        //       break;
+         
+        //       default:
+        //             width = img.width;
+        //             height = img.height;
+        //     }
+
+        //     var ctx = canvas.getContext("2d");
+        //     ctx.fillStyle = 'white';
+        //     ctx.fillRect(0, 0, canvas.width, canvas.height);
+        //     console.log('transform', transform);
+        //     switch (transform) {
+         
+        //         case ('left'):
+        //               ctx.setTransform(0, -1, 1, 0, 0, canvas.height);
+        //               ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+                      
+        //         break;
+        //         case ('flip'):
+        //               ctx.setTransform(0, 1, -1, 0, canvas.width, 0);
+        //               ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+        //               // ctx.drawImage(img, 0, 0, 100, 100);
+        //         break;
+        //         case ('right'):
+        //               ctx.setTransform(1, 0, 0, -1, 0, canvas.height);
+        //               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        //               // ctx.drawImage(img, 0, 0, 100, 100);
+        //         default:
+        //               ctx.setTransform(1, 0, 0, 1, 0, 0);
+        //               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        //               // ctx.drawImage(img, 0, 0, 100, 100);
+        //     }
+        //   //ctx.setTransform(1, 0, 0, 1, 0, 0);
+        //   new_result = canvas.toDataURL();
+        //   console.log('this new result', new_result);
+        //   canvas.remove();
+        //   }
+        //   img.remove();
+        // }
+        // checkEXIFData(result, exif.Orientation);
+        // console.log('new_result', good_stuff);
+        //console.log('here is the result', result);
+        $scope.loading_image = false;
         scope.imageSrc = result;
         $scope.imageSrc = result;
-        $timeout(function () {
-          scope.initJcrop();
+        $timeout(function(){
+          //scope.initJcrop();
         });
       });
     };
+
+
+    $scope.rotateImage = function(direction){
+            var new_result;
+            var transform;
+            var img = new Image();
+            img.src = $scope.imageSrc;
+            img.onload = function(){
+              var canvas = document.createElement('canvas');
+              switch (direction) {
+                case  "left":
+                      canvas.width = img.height;
+                      canvas.height = img.width;
+                      transform = "left";
+                break;
+                case  "right":
+                      canvas.width = img.height;
+                      canvas.height = img.width;
+                      transform = "right";
+                break;
+                default:
+                      canvas.width = img.width;
+                      canvas.height = img.height;
+              }
+              var ctx = canvas.getContext("2d");
+              ctx.fillStyle = 'white';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+             // console.log('transform', transform);
+              switch (transform) {
+                  case ('left'):
+                        ctx.setTransform(0, -1, 1, 0, 0, canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+                        
+                  break;
+                  case ('right'):
+                        ctx.setTransform(0, 1, -1, 0, canvas.width, 0);
+                        ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+                        // ctx.drawImage(img, 0, 0, 100, 100);
+                  break;
+                  case ('flip'):
+                        ctx.setTransform(1, 0, 0, -1, 0, canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        // ctx.drawImage(img, 0, 0, 100, 100);
+                  default:
+                        ctx.setTransform(1, 0, 0, 1, 0, 0);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        // ctx.drawImage(img, 0, 0, 100, 100);
+              }
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            new_result = canvas.toDataURL();
+            canvas.remove();
+            img.remove();
+            $scope.imageSrc = new_result;
+            scope.imageSrc = new_result;
+            $timeout(function(){
+              $scope.cropped = false;
+              scope.initJcrop();
+            })   
+        }
+    }
 
     $scope.$on("fileProgress", function(e, progress) {
       $scope.progress = progress.loaded / progress.total;
     });
 
     scope.initJcrop = function () {
+
       console.log('init jcrop');
       $window.jQuery('img.aj-crop').Jcrop({
         onSelect: function () {
@@ -199,11 +413,29 @@ angular.module('App')
         , imageObj = $window.jQuery('img#preview')[0]
         ;
 
-      $window.jQuery('.canvas-preview').children().remove();
+      //$window.jQuery('.canvas-preview').children().remove();
+      // context.translate(cords.w/2, cords.h/2);
+      // context.rotate(90 * (Math.PI/180));
       canvas.width = cords.w;
       canvas.height = cords.h;
-      context.drawImage(imageObj, cords.x, cords.y, cords.w, cords.h, 0, 0, cords.w, cords.h);
-      $window.jQuery('.canvas-preview').append(canvas);
+      // context.clearRect(0,0,canvas.width,canvas.height);
+      // context.save();
+      // context.translate(canvas.width/2,canvas.height/2);
+
+      // // rotate the canvas to the specified degrees
+      // context.rotate(90*Math.PI/180);
+
+      // // draw the image
+      // // since the context is rotated, the image will be rotated also
+      // context.drawImage(imageObj,-canvas.width/2,-canvas.height/2);
+
+      // // we’re done with the rotating so restore the unrotated context
+      // context.restore();
+
+
+      //context.drawImage(imageObj, cords.x, cords.y, cords.w, cords.h, 0, 0, cords.w, cords.h);
+      //context.drawImage(imageObj, 0, 0);
+      //$window.jQuery('.canvas-preview').append(canvas);
 
       $window.jQuery('img#preview').css({
         width: Math.round(rx * cords.bx) + 'px',
@@ -212,5 +444,83 @@ angular.module('App')
         marginTop: '-' + Math.round(ry * cords.y) + 'px'
           
       });
+
+
+
     };
   });
+    // function checkEXIFData($q, result){
+    //   var bin = atob(reader.result.split(',')[1]);
+    //   var exif = EXIF.readFromBinaryFile(new BinaryFile(bin));
+    //   var orientation = exif.Orientation;
+    //   var new_result;
+    //   var deferred = $q.defer();
+    //   if (orientation){
+    //       var transform;
+    //       var img = new Image();
+    //       img.src = result;
+    //       img.onload = function(){
+    //         var canvas = document.createElement('canvas');
+    //         switch (orientation) {
+    //           case  8:
+    //                 canvas.width = img.height;
+    //                 canvas.height = img.width;
+    //                 transform = "left";
+    //           break;
+    //           case  6:
+    //                 canvas.width = img.height;
+    //                 canvas.height = img.width;
+    //                 transform = "right";
+    //           break;
+    //           case  1:
+    //                 canvas.width = img.width;
+    //                 canvas.height = img.height;
+    //           break;
+    //           case  3:
+    //                 canvas.width = img.height;
+    //                 canvas.height = img.width;
+    //                 transform = "flip";
+    //           break;
+         
+    //           default:
+    //                 width = img.width;
+    //                 height = img.height;
+    //         }
+    //         var ctx = canvas.getContext("2d");
+    //         ctx.fillStyle = 'white';
+    //         ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //         console.log('transform', transform);
+    //         switch (transform) {
+         
+    //             case ('left'):
+    //                   ctx.setTransform(0, -1, 1, 0, 0, canvas.height);
+    //                   ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+                      
+    //             break;
+    //             case ('flip'):
+    //                   ctx.setTransform(0, 1, -1, 0, canvas.width, 0);
+    //                   ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
+    //                   // ctx.drawImage(img, 0, 0, 100, 100);
+    //             break;
+    //             case ('right'):
+    //                   ctx.setTransform(1, 0, 0, -1, 0, canvas.height);
+    //                   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    //                   // ctx.drawImage(img, 0, 0, 100, 100);
+    //             default:
+    //                   ctx.setTransform(1, 0, 0, 1, 0, 0);
+    //                   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    //                   // ctx.drawImage(img, 0, 0, 100, 100);
+    //         }
+    //       ctx.setTransform(1, 0, 0, 1, 0, 0);
+    //       new_result = canvas.toDataURL();
+    //       canvas.remove();
+    //       img.remove();
+    //       console.log('new result a', new_result);
+    //       deferred.resolve(new_result);
+    //       }
+    //     }
+    //     else{
+    //       deferred.resolve(result);
+    //     }
+    //     return deferred.promise;
+    // }
