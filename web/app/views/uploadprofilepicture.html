@@ -2,13 +2,15 @@
 	<md-progress-circular md-mode="indeterminate" ng-show="uploading" style="margin:20px auto;"></md-progress-circular>
 	<div ng-hide="uploading">
 	    <section id="crop">
+	    
 	    <div ng-show="imageSrc.length">
-	    	<p ng-show="loading_image">loading image</p>
-			<h2 class="page-header" ng-show="imageSrc.length">Image <i class="fa fa-crop"></i></h2>
+			<h2 class="page-header" ng-show="imageSrc.length">Image<i class="fa fa-crop"></i></h2>
 			<img-cropped src="imageSrc" selected="selected(cords)" ratio="1"></img-cropped>
 			<div class="image_rotate_button_box">
 			<md-button ng-click="rotateImage('left')">left</md-button>
 			<md-button ng-click="rotateImage('right')">right</md-button>
+			<br>
+			<md-progress-linear ng-show="loading_image" md-mode="indeterminate"></md-progress-linear>
 			</div>
 		</div>
 			<h2 class="page-header" ng-show="P.cropData.length">Preview</h2>

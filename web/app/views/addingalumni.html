@@ -33,7 +33,7 @@
             <label for="class_year">Class Year</label>
             <input name="class_year" ng-model="input.pledge_class_year" ng-pattern="/[0-9]{4}/" required></input>
         </md-input-container>
-        <md-radio-group name="pledge_class_semester" ng-model="input.pledge_class_semester">
+        <md-radio-group name="pledge_class_semester" ng-model="input.pledge_class_semester" required>
             <md-radio-button value="fall">Fall</md-radio-button>
             <md-radio-button value="spring">Spring</md-radio-button>
         </md-radio-group>
@@ -41,7 +41,7 @@
     <div layout="row" layout-align="start center">
         <md-input-container>
             <label for="email">email@example.com</label>
-            <input type="email" name="email" ng-model="input.email">
+            <input type="email" name="email" ng-model="input.email" required>
         </md-input-container>
         <md-button type="submit" ng-disabled="!addalumnusForm.$valid">Add</md-button>
     </div>

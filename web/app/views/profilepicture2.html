@@ -2,6 +2,7 @@
 	<md-progress-circular md-mode="indeterminate" ng-show="uploading" style="margin:20px auto;"></md-progress-circular>
 	<div ng-hide="uploading">
 	    <section id="crop">
+	    	<p ng-show="image_loading">LOADING IMAGE! :D</p>
 			<h2 class="page-header" ng-show="imageSrc.length">Image <i class="fa fa-crop"></i></h2>
 			<!-- <img-cropped src="imageSrc" selected="selected(cords)" ratio="1"></img-cropped> -->
 			<div id="result" ng-bind-html="content">

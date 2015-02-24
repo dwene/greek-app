@@ -187,6 +187,7 @@ angular.module('App').directive("ajFileSelect", function () {
     }
   , link: function(dirScope, el) {
       el.bind("change", function(e) {
+        $('#loading_image').show();
         console.log(e.currentTarget.files[0]);
         dirScope.ajModel.file = (e.srcElement || e.target || e.currentTarget).files[0];
         console.log('ajFileSelect about to call getFile()', dirScope.ajModel);
@@ -205,95 +206,22 @@ angular.module('App')
         scope.cropData = false;
         $scope.cropped = false;
       $scope.progress = 0;
-      
-      $scope.loading_image = true;
-      fileReader.readAsDataUrl(scope.file.file, $scope).then(function (result) {
-        //console.log('readAsDataUrl: result.length === ', result.length);
-        //console.log(result);
-        // var bin = atob(result.split(',')[1]);
-        // var exif = EXIF.readFromBinaryFile(new BinaryFile(bin));
-        // // alert(exif.Orientation);
-        // console.log('about to enter if');
-        // var new_result;
-
-        // if (exif.Orientation){
-        //   var transform;
-        //   var img = new Image();
-        //   img.src = result;
-        //   img.onload = function(){
-        //     var canvas = document.createElement('canvas');
-        //     switch (exif.Orientation) {
-        //       case  8:
-        //             canvas.width = img.height;
-        //             canvas.height = img.width;
-        //             transform = "left";
-        //       break;
-        //       case  6:
-        //             canvas.width = img.height;
-        //             canvas.height = img.width;
-        //             transform = "right";
-        //       break;
-        //       case  1:
-        //             canvas.width = img.width;
-        //             canvas.height = img.height;
-        //       break;
-        //       case  3:
-        //             canvas.width = img.height;
-        //             canvas.height = img.width;
-        //             transform = "flip";
-        //       break;
-         
-        //       default:
-        //             width = img.width;
-        //             height = img.height;
-        //     }
-
-        //     var ctx = canvas.getContext("2d");
-        //     ctx.fillStyle = 'white';
-        //     ctx.fillRect(0, 0, canvas.width, canvas.height);
-        //     console.log('transform', transform);
-        //     switch (transform) {
-         
-        //         case ('left'):
-        //               ctx.setTransform(0, -1, 1, 0, 0, canvas.height);
-        //               ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
-                      
-        //         break;
-        //         case ('flip'):
-        //               ctx.setTransform(0, 1, -1, 0, canvas.width, 0);
-        //               ctx.drawImage(img, 0, 0, canvas.height, canvas.width);
-        //               // ctx.drawImage(img, 0, 0, 100, 100);
-        //         break;
-        //         case ('right'):
-        //               ctx.setTransform(1, 0, 0, -1, 0, canvas.height);
-        //               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        //               // ctx.drawImage(img, 0, 0, 100, 100);
-        //         default:
-        //               ctx.setTransform(1, 0, 0, 1, 0, 0);
-        //               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        //               // ctx.drawImage(img, 0, 0, 100, 100);
-        //     }
-        //   //ctx.setTransform(1, 0, 0, 1, 0, 0);
-        //   new_result = canvas.toDataURL();
-        //   console.log('this new result', new_result);
-        //   canvas.remove();
-        //   }
-        //   img.remove();
-        // }
-        // checkEXIFData(result, exif.Orientation);
-        // console.log('new_result', good_stuff);
-        //console.log('here is the result', result);
-        $scope.loading_image = false;
+      $timeout(function(){
+        fileReader.readAsDataUrl(scope.file.file, $scope).then(function (result) {
+        $('#loading_image').hide();
         scope.imageSrc = result;
         $scope.imageSrc = result;
         $timeout(function(){
           //scope.initJcrop();
         });
       });
+      })
+
     };
 
 
     $scope.rotateImage = function(direction){
+            $scope.loading_image = true;
             var new_result;
             var transform;
             var img = new Image();
@@ -345,6 +273,7 @@ angular.module('App')
             img.remove();
             $scope.imageSrc = new_result;
             scope.imageSrc = new_result;
+            $scope.loading_image = false;
             $timeout(function(){
               $scope.cropped = false;
               scope.initJcrop();

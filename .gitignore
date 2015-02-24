@@ -6,4 +6,6 @@ main.pyc
 controller.pyc
 
 web/www
+web/www/
 web/GoogleAppEngineCloudStorageClient-1.9.15.0-py2.7.egg-info
+web/www/index.html

@@ -41,7 +41,8 @@
             $scope.adds = $scope.adds.concat($scope.input);
             //$('#result').text(JSON.stringify(newmemberList));
             //define variable for ng-repeat
-            $scope.input = {};}
+            $scope.input = {};
+            $scope.addmemberForm.$setPristine();}
             else{$scope.submitted = true;}
         };
         

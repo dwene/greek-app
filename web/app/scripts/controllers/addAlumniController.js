@@ -43,11 +43,12 @@
         $scope.addAlumnus = function(isValid){
             if(isValid){
                 $scope.adds = $scope.adds.concat($scope.input);
+                $scope.input = {};
+                $scope.addalumnusForm.$setPristine();
             }
             else{
                 $scope.submitted = true;
             }
-            $scope.input = {};
         }
         
         $scope.submitAlumni = function(){
