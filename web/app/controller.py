@@ -21,6 +21,9 @@ import urllib
 from google.appengine.api import urlfetch
 import string
 import random
+import time
+from apns import APNs, Frame, Payload
+
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id="b9hg6czg7dy9njgm",
@@ -62,14 +65,6 @@ class IncomingMessage(messages.Message):
 class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
     data = messages.StringField(2)
-
-
-# class CST(datetime.tzinfo):
-#     def utcoffset(self, dt):
-#         return datetime.timedelta(hours=-5)
-#
-#     def dst(self, dt):
-#         return datetime.timedelta(0)
 
 
 class DateEncoder(json.JSONEncoder):
@@ -179,6 +174,13 @@ def test_directory():
 
 def add_notification_to_users(notification, users):
     future_list = list()
+    apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+    payload = Payload(alert=notification.content, sound="default", badge=1)
+    frame = Frame()
+    identifier = 1
+    expiry = time.time()+3600
+    priority = 10
+    iphone_user = False
     for user in users:
         # if not user.email_prefs:
         #     logging.error(user)
@@ -194,20 +196,39 @@ def add_notification_to_users(notification, users):
         #                                     content=body).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
+        if user.iphone_tokens:
+            for token in user.iphone_tokens:
+                # apns.gateway_server.send_notification(token, payload)
+                frame.add_item(token, payload, identifier, expiry, priority)
+                iphone_user = True
+    if iphone_user:
+        apns.gateway_server.send_notification_multiple(frame)    
     for item in future_list:
         item.get_result()
     return
 
-
-
 def add_message_to_users(msg, users):
     future_list = list()
+    apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+    payload = Payload(alert="New Message: " + msg.title, sound="default", badge=1)
+    frame = Frame()
+    identifier = 1
+    expiry = time.time()+3600
+    priority = 10
+    iphone_user = False
     for user in users:
         future_list.append(CronEmail(pending=True, email=user.email,
                                             title=msg.title,
                                             content=msg.content).put_async())
         user.new_messages.insert(0, msg.key)
         future_list.append(user.put_async())
+        if user.iphone_tokens:
+            for token in user.iphone_tokens:
+                apns.gateway_server.send_notification(token, payload)
+                # frame.add_item(token, payload, identifier, expiry, priority)
+                iphone_user = True
+    # if iphone_user:
+        # apns.gateway_server.send_notification_multiple(frame)
     for item in future_list:
         item.get_result()
     return
@@ -421,10 +442,6 @@ def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
         if len(frozenset(user_event_tags).intersection(event_tags)) > 0:
             return True
     return False
-
-
-
-
 
 @endpoints.api(name='netegreek', version='v2', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                audiences=[ANDROID_AUDIENCE])
@@ -3843,14 +3860,21 @@ class RESTApi(remote.Service):
                       http_method='POST', name='user.set_iphone_token')
     def set_iphone_token(self, request):
         data = json.loads(request.data)
+        futures = list()
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        users = User.query(User.iphone_tokens == data).fetch()
+        for user in users:
+            if not user.key == request_user.key:
+                user.iphone_tokens.remove(data)
+                futures.append(user.put_async())
         if not data in request_user.iphone_tokens:
             request_user.iphone_tokens.append(data)
-            request_user.put()
+            futures.append(request_user.put_async())
+        for f in futures:
+            f.get_result()
         return OutgoingMessage(error='', data='OK')
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/set_android_token',
                       http_method='POST', name='user.set_android_token')

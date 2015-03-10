@@ -1,4 +1,5 @@
-'use strict';
+(function () {
+    'use strict';
 
 /*
 Usage: <wysiwyg textarea-id="question" textarea-class="form-control"  textarea-height="80px" textarea-name="textareaQuestion" textarea-required ng-model="question.question" enable-bootstrap-title="true"></wysiwyg>
@@ -17,129 +18,130 @@ Requires:
 
 */
 
-angular.module('wysiwyg.module', ['colorpicker.module'])
-    .directive('wysiwyg', function($timeout, wysiwgGui, $compile) {
-        return {
-            template: '<div></div>',
-            restrict: 'E',
-            scope: {
-                value: '=ngModel',
-                textareaHeight: '@textareaHeight',
-                textareaName: '@textareaName',
-                textareaPlaceholder: '@textareaPlaceholder',
-                textareaClass: '@textareaClass',
-                textareaRequired: '@textareaRequired',
-                textareaId: '@textareaId',
-                textareaMenu: '@textareaMenu'
-            },
-            replace: true,
-            require: 'ngModel',
-            link: function(scope, element, attrs, ngModelController) {
-                //Create the menu system
-                element.html(wysiwgGui.createMenu(attrs.textareaMenu));
-                $compile(element.contents())(scope);
+    angular.module('wysiwyg.module', ['colorpicker.module'])
+        .directive('wysiwyg', function ($timeout, wysiwgGui, $compile) {
+            return {
+                template: '<div></div>',
+                restrict: 'E',
+                scope: {
+                    value: '=ngModel',
+                    textareaHeight: '@textareaHeight',
+                    textareaName: '@textareaName',
+                    textareaPlaceholder: '@textareaPlaceholder',
+                    textareaClass: '@textareaClass',
+                    textareaRequired: '@textareaRequired',
+                    textareaId: '@textareaId',
+                    textareaMenu: '@textareaMenu'
+                },
+                replace: true,
+                require: 'ngModel',
+                link: function (scope, element, attrs, ngModelController) {
+                    //Create the menu system
+                    element.html(wysiwgGui.createMenu(attrs.textareaMenu));
+                    $compile(element.contents())(scope);
                 
-                var textarea = element.find('div.wysiwyg-textarea');
+                    var textarea = element.find('div.wysiwyg-textarea');
 
-                scope.fonts = [
-                    'Georgia',
-                    'Palatino Linotype',
-                    'Times New Roman',
-                    'Arial',
-                    'Helvetica',
-                    'Arial Black',
-                    'Comic Sans MS',
-                    'Impact',
-                    'Lucida Sans Unicode',
-                    'Tahoma',
-                    'Trebuchet MS',
-                    'Verdana',
-                    'Courier New',
-                    'Lucida Console',
-                    'Helvetica Neue'
-                ].sort();
+                    scope.fonts = [
+                        'Georgia',
+                        'Palatino Linotype',
+                        'Times New Roman',
+                        'Arial',
+                        'Helvetica',
+                        'Arial Black',
+                        'Comic Sans MS',
+                        'Impact',
+                        'Lucida Sans Unicode',
+                        'Tahoma',
+                        'Trebuchet MS',
+                        'Verdana',
+                        'Courier New',
+                        'Lucida Console',
+                        'Helvetica Neue'
+                    ].sort();
 
-                scope.font = scope.fonts[6];
+                    scope.font = scope.fonts[6];
 
-                scope.fontSizes = [{
-                    value: '1',
-                    size: '10px'
-                }, {
-                    value: '2',
-                    size: '13px'
-                }, {
-                    value: '3',
-                    size: '16px'
-                }, {
-                    value: '4',
-                    size: '18px'
-                }, {
-                    value: '5',
-                    size: '24px'
-                }, {
-                    value: '6',
-                    size: '32px'
-                }, {
-                    value: '7',
-                    size: '48px'
-                }];
+                    scope.fontSizes = [{
+                        value: '1',
+                        size: '10px'
+                    }, {
+                        value: '2',
+                        size: '13px'
+                    }, {
+                        value: '3',
+                        size: '16px'
+                    }, {
+                        value: '4',
+                        size: '18px'
+                    }, {
+                        value: '5',
+                        size: '24px'
+                    }, {
+                        value: '6',
+                        size: '32px'
+                    }, {
+                        value: '7',
+                        size: '48px'
+                    }];
 
-                scope.fontSize = scope.fontSizes[1];
+                    scope.fontSize = scope.fontSizes[1];
 
-                if (attrs.enableBootstrapTitle === "true" && attrs.enableBootstrapTitle !== undefined)
-                    element.find('button[title]').tooltip({
-                        container: 'body'
-                    })
+                    if (attrs.enableBootstrapTitle === 'true' && attrs.enableBootstrapTitle !== undefined) {
+                        element.find('button[title]').tooltip({container: 'body'});
+                    }
 
 
-                textarea.on('keyup mouseup', function() {
-                    scope.$apply(function readViewText() {
-                        var html = textarea.html();
+                    textarea.on('keyup mouseup', function () {
+                        scope.$apply(function readViewText() {
+                            var html = textarea.html();
 
-                        if (html == '<br>') {
-                            html = '';
-                        }
+                            if (html === '<br>') {
+                                html = '';
+                            }
 
-                        ngModelController.$setViewValue(html);
+                            ngModelController.$setViewValue(html);
+                        });
                     });
-                });
-                scope.isLink = false;
+                    scope.isLink = false;
 
 
                 //Used to detect things like A tags and others that dont work with cmdValue().
-                function itemIs(tag) {
-                    var selection = window.getSelection().getRangeAt(0);
-                    if (selection) {
-                        if (selection.startContainer.parentNode.tagName === tag.toUpperCase() || selection.endContainer.parentNode.tagName === tag.toUpperCase()) {
-                            return true;
+                    function itemIs(tag) {
+                        var selection = window.getSelection().getRangeAt(0);
+                        if (selection) {
+                            if (selection.startContainer.parentNode.tagName === tag.toUpperCase() || selection.endContainer.parentNode.tagName === tag.toUpperCase()) {
+                                return true;
+                            } else {
+                                return false;
+                            }
                         } else {
                             return false;
                         }
-                    } else {
-                        return false;
                     }
-                }
 
                 //Used to detect things like A tags and others that dont work with cmdValue().
-                function getHiliteColor() {
-                    var selection = window.getSelection().getRangeAt(0);
-                    if (selection) {
-                        var style = $(selection.startContainer.parentNode).attr('style');
+                    function getHiliteColor() {
+                        var selection = window.getSelection().getRangeAt(0);
+                        if (selection) {
+                            var style = $(selection.startContainer.parentNode).attr('style');
 
-                        if (!angular.isDefined(style))
-                            return false;
+                            if (!angular.isDefined(style)) {
+                                return false;
+                            }
 
-                        var a = style.split(';');
-                        for (var i = 0; i < a.length; i++) {
-                            var s = a[i].split(':');
-                            if (s[0] === 'background-color')
-                                return s[1];
+                            var a = style.split(';');
+                            for (var i = 0; i < a.length; i++) {
+                                var s = a[i].split(':');
+                                if (s[0] === 'background-color') {
+                                    return s[1];
+                                }
+                            }
+                            return '#fff';
+                        } else {
+                            return '#fff';
                         }
-                        return '#fff';
-                    } else {
-                        return '#fff';
                     }
-                }
 
 
                 textarea.on('click keyup focus mouseup', function() {
@@ -153,8 +155,8 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                         scope.isRightJustified = scope.cmdState('justifyright');
                         scope.isLeftJustified = scope.cmdState('justifyleft');
                         scope.isCenterJustified = scope.cmdState('justifycenter');
-                        scope.isPre = scope.cmdValue('formatblock') == "pre";
-                        scope.isBlockquote = scope.cmdValue('formatblock') == "blockquote";
+                        scope.isPre = scope.cmdValue('formatblock') === 'pre';
+                        scope.isBlockquote = scope.cmdValue('formatblock') === 'blockquote';
 
                         scope.isOrderedList = scope.cmdState('insertorderedlist');
                         scope.isUnorderedList = scope.cmdState('insertunorderedlist');
@@ -171,7 +173,7 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                                 scope.fontSize = v;
                                 return false;
                             }
-                        })
+                        });
 
                         scope.hiliteColor = getHiliteColor();
                         element.find('button.wysiwyg-hiliteColor').css("background-color", scope.hiliteColor);
@@ -189,45 +191,45 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                 };
 
                 scope.format = function(cmd, arg) {
-
                     document.execCommand(cmd, false, arg);
-                }
+                };
 
                 scope.cmdState = function(cmd, id) {
                     return document.queryCommandState(cmd);
-                }
+                };
 
                 scope.cmdValue = function(cmd) {
                     return document.queryCommandValue(cmd);
-                }
+                };
 
                 scope.createLink = function() {
                     var input = prompt('Enter the link URL');
-                    if (input && input !== undefined)
+                    if (input && input !== undefined) {
                         scope.format('createlink', input);
-                }
+                    }
+                };
 
                 scope.insertImage = function() {
                     var input = prompt('Enter the image URL');
                     if (input && input !== undefined)
                         scope.format('insertimage', input);
-                }
+                };
 
                 scope.setFont = function() {
-                    scope.format('fontname', scope.font)
-                }
+                    scope.format('fontname', scope.font);
+                };
 
                 scope.setFontSize = function() {
-                    scope.format('fontsize', scope.fontSize.value)
-                }
+                    scope.format('fontsize', scope.fontSize.value);
+                };
 
                 scope.setFontColor = function() {
-                    scope.format('forecolor', scope.fontColor)
-                }
+                    scope.format('forecolor', scope.fontColor);
+                };
 
                 scope.setHiliteColor = function() {
-                    scope.format('hiliteColor', scope.hiliteColor)
-                }
+                    scope.format('hiliteColor', scope.hiliteColor);
+                };
 
                 scope.format('enableobjectresizing', true);
                 scope.format('styleWithCSS', true);
@@ -256,15 +258,15 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                 '   .wysiwyg-select{ height:30px;margin-bottom:1px;}' +
                 '   .wysiwyg-colorpicker{ font-family: arial, sans-serif !important;font-size:16px !important; padding:2px 10px !important;}' +
                 '</style>';
-        }
+        };
 
         var getMenuTextArea = function() {
             return '<div id="{{textareaId}}" style="resize:vertical;height:{{textareaHeight || \'80px\'}}; overflow:auto" contentEditable="true" class="{{textareaClass}} wysiwyg-textarea" rows="{{textareaRows}}" name="{{textareaName}}" required="{{textareaRequired}}" placeholder="{{textareaPlaceholder}}" ng-model="value"></div>';
-        }
+        };
 
         var getMenuGroup = function() {
-            return '<div class="btn-group btn-group-sm wysiwyg-btn-group-margin">'
-        }
+            return '<div class="btn-group btn-group-sm wysiwyg-btn-group-margin">';
+        };
 
         var getMenuItem = function(item) {
             item = item.toLowerCase().replace(' ', '-');
@@ -341,19 +343,21 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
                     //return '<button title="Image" tabindex="-1" type="button" unselectable="on" class="btn btn-default" ng-click="insertImage()"><i class="fa fa-picture-o"></i> </button>';
                     break;
                 default:
-                    console.log('Angular.wysiwyg: Unknown menu item.')
+                    console.log('Angular.wysiwyg: Unknown menu item.');
                     return '';
                     break;
             }
 
-        }
+        };
 
         var createMenu = function(menu) {
             
-            if (angular.isDefined(menu) && menu !== '')
-                menu = stringToArray(menu)
-            else
-                menu = defaultMenu;
+            if (angular.isDefined(menu) && menu !== '') {
+                menu = stringToArray(menu);
+            }
+            else {
+                menu = defaultMenu; 
+            }
 
             var menuHtml = '<div>';
             menuHtml += getMenuStyles();
@@ -368,7 +372,7 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
             menuHtml += getMenuTextArea();
             menuHtml += '</div>';
             return menuHtml;
-        }
+        };
 
         var stringToArray = function(string) {
             var ret;
@@ -377,10 +381,12 @@ angular.module('wysiwyg.module', ['colorpicker.module'])
             } catch (e) {
             }
             return ret;
-        }
+        };
 
         return {
             createMenu: createMenu
-        }
+        };
 
     });
+    
+}());

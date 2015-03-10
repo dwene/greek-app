@@ -317,6 +317,7 @@ module.exports = function (grunt) {
             'braintree/{,*/}*',
             'braintree/util/{,*/}*',
             'dateutil/{,*/}*',
+            'certs/*',
             'email/*',
             'email_footers/*',
             'files/*',

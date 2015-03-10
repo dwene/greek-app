@@ -237,7 +237,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.uploadprofilepicture', {
                     url : '/uploadprofilepicture',
                     templateUrl : 'views/uploadprofilepicture.html',
-                    controller : 'profilepictureController',
+                    controller : 'profilePictureController',
                     data: {
                         permissions: {
                             only: [LOGGED_IN],
@@ -726,14 +726,32 @@ App.config(function($mdThemingProvider) {
         };
 
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
-            //  document.addEventListener("deviceready", function(){
-            //     $cordovaPush.register(iosConfig).then(function(result) {
-            //       console.log("result: " + result);
-            //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_iphone_token',result.deviceToken)
-            //     }, function(err) {
-            //         console.log('something went wrong', err);
-            // });
-            // });
+            document.addEventListener("deviceready", function(){
+                pushNotification = window.plugins.pushNotification;
+                pushNotification.register(
+                    tokenHandler,
+                    errorHandler,
+                    {
+                        "badge":"true",
+                        "sound":"true",
+                        "alert":"true",
+                        "ecb":"onNotificationAPN"
+                    });
+            });
+
+            function tokenHandler (result) {
+                // Your iOS push server needs to know the token before it can push to this device
+                // here is where you might want to send it the token for later use.
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/set_iphone_token',result)
+                .success(function(data){
+                })
+                .error(function(data){
+                    alert('Push Registration failed :(');
+                });
+            }
+            function errorHandler (error) {
+                alert('error = ' + error);
+            }
 
             if ($state.data){
                 var authorizedRoles = $state.data.permissions.only;

@@ -3,7 +3,16 @@ from google.appengine.ext import blobstore
 import json
 import datetime
 from google.appengine.ext import ndb
+from apns import APNs, Frame, Payload
+import time
+apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
 
+
+
+def test_push():
+    token_hex = '8812b1c4bc78bc74e27a5e7c4128697aaafdf5f617c92fbfa3a2afc1c705f850'
+    payload = Payload(alert="Hello World!", sound="default", badge=1)
+    apns.gateway_server.send_notification(token_hex, payload)
 
 
 def show_notifications():

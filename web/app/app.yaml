@@ -70,5 +70,8 @@ libraries:
 - name: PIL
   version: latest
 
+- name: ssl
+  version: latest
+
 
 

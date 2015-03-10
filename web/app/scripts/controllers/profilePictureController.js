@@ -21,14 +21,6 @@
         //initialize profile image variable
         var newprofileImage;
         
-        //reads the file as it's added into the file input
-        
-        // $scope.uploadFile = function(files) {
-        //     newprofileImage = new FormData();
-        //     newprofileImage.append("file", files[0]);
-        //     console.log(newprofileImage);
-        // }
-        
         $scope.uploadImage = function(src, crop_data){
             console.log(crop_data);
             $scope.uploading = true;

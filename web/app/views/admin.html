@@ -21,12 +21,12 @@
     <img class="orgLetters img-responsive" ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}"><br>
     <md-button ng-href="#/app/uploadorganizationimage">Change Organization Image</md-button> -->
       
-    <section ng-hide="true">
+    <section ng-hide="false">
     <h2 class="page-header">Subscription Information</h2>
-      
+<!--       
        <div ng-hide="subscription.no_subscription">
         <p>Next Billing Date: {{subscription.next_billing_date}}</p>
-        </div>
+        </div> -->
         
         <img ng-src="{{subscription.credit_card.image_url}}"><span>{{subscription.credit_card.masked_number}}</span>
         <p>Expires: {{subscription.credit_card.expiration}}</p>
@@ -55,7 +55,7 @@
               <label>Expiration (MM/YYYY)</label>
               <input type="number" size="2" ng-model="pay.exp_month" /> / <input type="text" size="4" ng-model="pay.exp_year" />
             </p>
-            <p ng-show="$scope.error">{{error}}</p>
+            <p ng-show="error">{{error}}</p>
             <button type="submit" ng-click="subscribe(pay)" class="btn btn-default">Save Payment Info</button>
           </form>
         </div>

@@ -1,6 +1,0 @@
-First Logged In
-Receive Message
-Birthdays
-Events
-    - changes
-    - deleted
