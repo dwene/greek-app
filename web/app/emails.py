@@ -1,4 +1,6 @@
 
 
 def birthdayEmail(user):
-	birthday = {'title':'Happy Birthday from NeteGreek!', 'content':'yay content!'}
+	title = 'Happy Birthday from NeteGreek'
+	content = 'Content here'
+	return {'title': title, 'content': content}
