@@ -165,13 +165,20 @@ class Response(ndb.Model):
     poll = ndb.KeyProperty()
 
 
-class CronEmail(ndb.Model):
+class EmailTask(ndb.Model):
     type = ndb.StringProperty()
     pending = ndb.BooleanProperty(default=True)
     email = ndb.StringProperty()
     content = ndb.TextProperty()
     title = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
+
+class PushTask(ndb.Model):
+    pending = ndb.BooleanProperty()
+    content = ndb.StringProperty()
+    timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
+    ios_tokens = ndb.StringProperty(repeated=True)
+
 
 class Link(ndb.Model):
     title = ndb.StringProperty()

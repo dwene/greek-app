@@ -35,7 +35,11 @@ handlers:
   static_files: index.html
   secure: always
 
-- url: /sendemails
+- url: /robots.txt
+  static_files: media/robots.txt
+  upload: media/robots.txt
+
+- url: /tasks/.*
   script: main.app
   secure: always
 

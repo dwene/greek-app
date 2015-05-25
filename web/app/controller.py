@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import endpoints
 import logging
@@ -17,12 +18,13 @@ import cloudstorage as gcs
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
 from google.appengine.api import images
-import urllib
+from google.appengine.api import taskqueue
 from google.appengine.api import urlfetch
+import urllib
 import string
 import random
 import time
-from apns import APNs, Frame, Payload
+# from apns import APNs, Frame, Payload
 
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
@@ -174,13 +176,13 @@ def test_directory():
 
 def add_notification_to_users(notification, users):
     future_list = list()
-    apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
-    payload = Payload(alert=notification.content, sound="default", badge=1)
-    frame = Frame()
-    identifier = 1
-    expiry = time.time()+3600
-    priority = 10
-    iphone_user = False
+    # apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+    # payload = Payload(alert=notification.content, sound="default", badge=1)
+    # frame = Frame()
+    # identifier = 1
+    # expiry = time.time()+3600
+    # priority = 10
+    # iphone_user = False
     for user in users:
         # if not user.email_prefs:
         #     logging.error(user)
@@ -191,46 +193,38 @@ def add_notification_to_users(notification, users):
         #     elif notification.type == 'poll':
         #         body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
         #     if not email_prefs == False:
-        #         future_list.append(CronEmail(type='notification', pending=True, email=user.email,
+        #         future_list.append(EmailTask(type='notification', pending=True, email=user.email,
         #                                     title=notification.title,
         #                                     content=body).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
         if user.iphone_tokens:
-            for token in user.iphone_tokens:
-                # apns.gateway_server.send_notification(token, payload)
-                frame.add_item(token, payload, identifier, expiry, priority)
-                iphone_user = True
-    if iphone_user:
-        apns.gateway_server.send_notification_multiple(frame)    
+            future_list.append(PushTask(pending=True, content=notification.content, ios_tokens=user.iphone_tokens))
+            # for token in user.iphone_tokens:
+            #     # apns.gateway_server.send_notification(token, payload)
+
+            #     frame.add_item(token, payload, identifier, expiry, priority)
+            #     iphone_user = True
+    # if iphone_user:
+    #     apns.gateway_server.send_notification_multiple(frame)    
     for item in future_list:
         item.get_result()
+    taskqueue.add(url='/tasks/sendpushnotifications')
     return
 
 def add_message_to_users(msg, users):
     future_list = list()
-    apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
-    payload = Payload(alert="New Message: " + msg.title, sound="default", badge=1)
-    frame = Frame()
-    identifier = 1
-    expiry = time.time()+3600
-    priority = 10
     iphone_user = False
     for user in users:
-        future_list.append(CronEmail(pending=True, email=user.email,
-                                            title=msg.title,
-                                            content=msg.content).put_async())
+        future_list.append(EmailTask(pending=True, email=user.email,title=msg.title,content=msg.content).put_async())
         user.new_messages.insert(0, msg.key)
         future_list.append(user.put_async())
         if user.iphone_tokens:
-            for token in user.iphone_tokens:
-                apns.gateway_server.send_notification(token, payload)
-                # frame.add_item(token, payload, identifier, expiry, priority)
-                iphone_user = True
-    # if iphone_user:
-        # apns.gateway_server.send_notification_multiple(frame)
+            future_list.append(PushTask(pending=True, content="New Message: " + msg.title, ios_tokens=user.iphone_tokens).put_async())
     for item in future_list:
         item.get_result()
+    taskqueue.add(url='/tasks/sendemails')
+    taskqueue.add(url='/tasks/sendpushnotifications')
     return
 
 
@@ -292,7 +286,7 @@ def removal_email(user):
     body += "' Please email your NeteGreek administrators for more information\n"
     body += "Have a great day\n\n"
     body += "NeteGreek Team"
-    CronEmail(type='member_removal', title=subject, content=body, email=user.email,
+    EmailTask(type='member_removal', title=subject, content=body, email=user.email,
               pending=True, timestamp=datetime.datetime.now()).put()
 
 
@@ -443,315 +437,304 @@ def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
             return True
     return False
 
-@endpoints.api(name='netegreek', version='v2', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
-               audiences=[ANDROID_AUDIENCE])
-class RESTApi2(remote.Service):
+# @endpoints.api(name='netegreek', version='v2', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
+#                audiences=[ANDROID_AUDIENCE])
+# class RESTApi2(remote.Service):
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
-                      http_method='POST', name='message.send_message')
-    def send_message(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        data = json.loads(request.data)
-        user_list_future = list()
-        user_list = list()
-        if 'keys' in data:
-            for key in data['keys']:
-                user_list_future.append(ndb.Key(urlsafe=key).get_async())
-        for user in user_list_future:
-            user_list.append(user.get_result())
-        msg = Message()
-        msg.content = data['content']
-        msg.timestamp = datetime.datetime.now()
-        msg.sender = request_user.key
-        msg.user_name = request_user.user_name
-        msg.sender_name = request_user.first_name + ' ' + request_user.last_name
-        msg.title = data['title']
-        msg.put()
-        request_user.sent_messages.insert(0, notification.key)
-        future = request_user.put_async()
-        add_message_to_users(notification, user_list, True)
-        future.get_result()
-        return OutgoingMessage(error='', data='OK')
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
+#                       http_method='POST', name='message.send_message')
+#     def send_message(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+#             return OutgoingMessage(error=INCORRECT_PERMS, data='')
+#         data = json.loads(request.data)
+#         user_list_future = list()
+#         user_list = list()
+#         if 'keys' in data:
+#             for key in data['keys']:
+#                 user_list_future.append(ndb.Key(urlsafe=key).get_async())
+#         for user in user_list_future:
+#             user_list.append(user.get_result())
+#         msg = Message()
+#         msg.content = data['content']
+#         msg.timestamp = datetime.datetime.now()
+#         msg.sender = request_user.key
+#         msg.user_name = request_user.user_name
+#         msg.sender_name = request_user.first_name + ' ' + request_user.last_name
+#         msg.title = data['title']
+#         msg.put()
+#         request_user.sent_messages.insert(0, notification.key)
+#         future = request_user.put_async()
+#         add_message_to_users(notification, user_list, True)
+#         future.get_result()
+#         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/get',
-                      http_method='POST', name='messages.get')
-    def get_messages(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        message_count = 30
-        if request_user.new_messages:
-            new_messages_future = Message.query(Message.key.IN(
-                request_user.new_messages)).order(-Message.timestamp).fetch_async(40)
-        if request_user.new_messages:
-            if len(request_user.new_messages) >= 30:
-                message_count = 0
-            else:
-                message_count = 30 - len(request_user.new_messages)
-        if request_user.messages and message_count > 0:
-            messages_future = Message.query(Message.key.IN(
-                request_user.messages)).order(-Message.timestamp).fetch_async(message_count)
-        if request_user.archived_messages:
-            archived_messages_future = Message.query(Message.key.IN(
-                request_user.archived_messages)).order(-Message.timestamp).fetch_async(30)
-        out_messages = list()
-        if request_user.new_messages:
-            new_messages = new_messages_future.get_result()
-            for msg in new_messages:
-                note = msg.to_dict()
-                note["new"] = True
-                note["key"] = msg.key.urlsafe()
-                out_messages.append(note)
-        if request_user.messages and message_count > 0:
-            messages = messages_future.get_result()
-            for msg in messages:
-                note = msg.to_dict()
-                note["new"] = False
-                note["key"] = msg.key.urlsafe()
-                out_messages.append(note)
-        out_archived_messages = list()
-        if request_user.archived_messages:
-            archived_messages = archived_messages_future.get_result()
-            for msg in archived_messages:
-                note = msg.to_dict()
-                note["key"] = msg.key.urlsafe()
-                out_archived_messages.append(note)
-        out = {'messages': out_messages,
-               'archived_messages': out_archived_messages,
-               'messages_length': len(request_user.messages),
-               'archived_messages_length': len(request_user.archived_messages),
-               'new_messages_length': len(request_user.new_messages)}
-        return OutgoingMessage(error='', data=json_dump(out))
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/get',
+#                       http_method='POST', name='messages.get')
+#     def get_messages(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         message_count = 30
+#         if request_user.new_messages:
+#             new_messages_future = Message.query(Message.key.IN(
+#                 request_user.new_messages)).order(-Message.timestamp).fetch_async(40)
+#         if request_user.new_messages:
+#             if len(request_user.new_messages) >= 30:
+#                 message_count = 0
+#             else:
+#                 message_count = 30 - len(request_user.new_messages)
+#         if request_user.messages and message_count > 0:
+#             messages_future = Message.query(Message.key.IN(
+#                 request_user.messages)).order(-Message.timestamp).fetch_async(message_count)
+#         if request_user.archived_messages:
+#             archived_messages_future = Message.query(Message.key.IN(
+#                 request_user.archived_messages)).order(-Message.timestamp).fetch_async(30)
+#         out_messages = list()
+#         if request_user.new_messages:
+#             new_messages = new_messages_future.get_result()
+#             for msg in new_messages:
+#                 note = msg.to_dict()
+#                 note["new"] = True
+#                 note["key"] = msg.key.urlsafe()
+#                 out_messages.append(note)
+#         if request_user.messages and message_count > 0:
+#             messages = messages_future.get_result()
+#             for msg in messages:
+#                 note = msg.to_dict()
+#                 note["new"] = False
+#                 note["key"] = msg.key.urlsafe()
+#                 out_messages.append(note)
+#         out_archived_messages = list()
+#         if request_user.archived_messages:
+#             archived_messages = archived_messages_future.get_result()
+#             for msg in archived_messages:
+#                 note = msg.to_dict()
+#                 note["key"] = msg.key.urlsafe()
+#                 out_archived_messages.append(note)
+#         out = {'messages': out_messages,
+#                'archived_messages': out_archived_messages,
+#                'messages_length': len(request_user.messages),
+#                'archived_messages_length': len(request_user.archived_messages),
+#                'new_messages_length': len(request_user.new_messages)}
+#         return OutgoingMessage(error='', data=json_dump(out))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/read',
-                      http_method='POST', name='messages.seen')
-    def mark_message_read(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["message"])
-        if key in request_user.new_messages:
-            request_user.new_messages.remove(key)
-            request_user.messages.insert(0, key)
-            request_user.put()
-        return OutgoingMessage(error='', data='OK')
-
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_archived',
-                      http_method='POST', name='messages.more_archived')
-    def more_archived(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        out_archived_messages = list()
-
-        fetch_offset = data-2 if data-2 > 0 else data 
-        archived_messages_future = Message.query(Message.key.IN(
-            request_user.archived_messages)).order(-Message.timestamp).fetch_async(data + 40, offset=fetch_offset)
-        archived_messages = archived_messages_future.get_result()
-        for msg in archived_messages:
-            note = msg.to_dict()
-            note["key"] = msg.key.urlsafe()
-            out_archived_messages.insert(0, note)
-        return OutgoingMessage(error='', data=json_dump(out_archived_messages))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_messages',
-                      http_method='POST', name='messages.more_messages')
-    def more_messages(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        new_message_count = data.new_message_count
-        read_message_count = data.read_message_count
-        out_messages = list()
-        msg_count = 40
-
-        if request_user.new_messages:
-            new_messages_to_get = len(request_user.new_messages) - data.new_message_count
-            if new_messages_to_get > 0:
-                new_messages_fetch_count = new_messages_to_get if new_messages_to_get <=40 else 40
-                new_messages_future = Message.query(Message.key.IN(
-                request_user.new_messages)).order(-Message.timestamp).fetch_async(new_messages_fetch_count, offset=new_message_count)
-                if new_messages_fetch_count < 40:
-                    msg_count = 40 - new_messages_fetch_count
-            else:
-                msg_count = 0
-        if request_user.messages and msg_count > 0:
-            messages_future = Message.query(Message.key.IN(
-                request_user.messages)).order(-Message.timestamp).fetch_async(msg_count, offset=read_message_count)
-        if request_user.new_messages and new_messages_to_get > 0:
-            msgs = messages_future.get_result()
-            for msg in msgs:
-                note = msg.to_dict()
-                note["key"] = msg.key.urlsafe()
-                out_messages.append(note)
-        if request_user.new_messages and msg_count > 0:
-            msgs = new_messages_future.get_result()
-            for msg in msgs:
-                note = msg.to_dict()
-                note["key"] = msg.key.urlsafe()
-                note["new"] = True
-                out_messages.append(note)
-        return OutgoingMessage(error='', data=json_dump(out_messages))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/archive',
-                      http_method='POST', name='messages.archive')
-    def archive_messages(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["message"])
-        if key in request_user.messages:
-            request_user.messages.remove(key)
-            request_user.archived_messages.insert(0, key)
-            request_user.put()
-            return OutgoingMessage(error='', data='OK')
-        if key in request_user.new_messages:
-            request_user.new_messages.remove(key)
-            request_user.archived_messages.insert(0, key)
-            request_user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error='', data='OK')
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/read',
+#                       http_method='POST', name='messages.seen')
+#     def mark_message_read(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         data = json.loads(request.data)
+#         key = ndb.Key(urlsafe=data["message"])
+#         if key in request_user.new_messages:
+#             request_user.new_messages.remove(key)
+#             request_user.messages.insert(0, key)
+#             request_user.put()
+#         return OutgoingMessage(error='', data='OK')
 
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/unarchive',
-                      http_method='POST', name='message.unarchive')
-    def unarchive_message(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["message"])
-        if key in request_user.archived_messages:
-            request_user.archived_messages.remove(key)
-            request_user.messages.insert(0, key)
-            request_user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_archived',
+#                       http_method='POST', name='messages.more_archived')
+#     def more_archived(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         data = json.loads(request.data)
+#         out_archived_messages = list()
+
+#         fetch_offset = data-2 if data-2 > 0 else data 
+#         archived_messages_future = Message.query(Message.key.IN(
+#             request_user.archived_messages)).order(-Message.timestamp).fetch_async(data + 40, offset=fetch_offset)
+#         archived_messages = archived_messages_future.get_result()
+#         for msg in archived_messages:
+#             note = msg.to_dict()
+#             note["key"] = msg.key.urlsafe()
+#             out_archived_messages.insert(0, note)
+#         return OutgoingMessage(error='', data=json_dump(out_archived_messages))
+
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_messages',
+#                       http_method='POST', name='messages.more_messages')
+#     def more_messages(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         data = json.loads(request.data)
+#         new_message_count = data.new_message_count
+#         read_message_count = data.read_message_count
+#         out_messages = list()
+#         msg_count = 40
+
+#         if request_user.new_messages:
+#             new_messages_to_get = len(request_user.new_messages) - data.new_message_count
+#             if new_messages_to_get > 0:
+#                 new_messages_fetch_count = new_messages_to_get if new_messages_to_get <=40 else 40
+#                 new_messages_future = Message.query(Message.key.IN(
+#                 request_user.new_messages)).order(-Message.timestamp).fetch_async(new_messages_fetch_count, offset=new_message_count)
+#                 if new_messages_fetch_count < 40:
+#                     msg_count = 40 - new_messages_fetch_count
+#             else:
+#                 msg_count = 0
+#         if request_user.messages and msg_count > 0:
+#             messages_future = Message.query(Message.key.IN(
+#                 request_user.messages)).order(-Message.timestamp).fetch_async(msg_count, offset=read_message_count)
+#         if request_user.new_messages and new_messages_to_get > 0:
+#             msgs = messages_future.get_result()
+#             for msg in msgs:
+#                 note = msg.to_dict()
+#                 note["key"] = msg.key.urlsafe()
+#                 out_messages.append(note)
+#         if request_user.new_messages and msg_count > 0:
+#             msgs = new_messages_future.get_result()
+#             for msg in msgs:
+#                 note = msg.to_dict()
+#                 note["key"] = msg.key.urlsafe()
+#                 note["new"] = True
+#                 out_messages.append(note)
+#         return OutgoingMessage(error='', data=json_dump(out_messages))
+
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/archive',
+#                       http_method='POST', name='messages.archive')
+#     def archive_messages(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         data = json.loads(request.data)
+#         key = ndb.Key(urlsafe=data["message"])
+#         if key in request_user.messages:
+#             request_user.messages.remove(key)
+#             request_user.archived_messages.insert(0, key)
+#             request_user.put()
+#             return OutgoingMessage(error='', data='OK')
+#         if key in request_user.new_messages:
+#             request_user.new_messages.remove(key)
+#             request_user.archived_messages.insert(0, key)
+#             request_user.put()
+#             return OutgoingMessage(error='', data='OK')
+#         return OutgoingMessage(error='', data='OK')
 
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
-                      http_method='POST', name='message.delete')
-    def delete_message(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        data = json.loads(request.data)
-        key = ndb.Key(urlsafe=data["message"])
-        if key in request_user.sent_messages:
-            futures = list()
-            request_user.sent_messages.remove(key)
-            futures.append(request_user.put_async())
-            notified_users = User.query(User.messages == key).fetch_async()
-            new_notified_users = User.query(User.new_messages == key).fetch_async()
-            hidden_notified_users = User.query(User.archived_messages == key).fetch_async()
-            users = notified_users.get_result()
-            for user in users:
-                user.messages.remove(key)
-                futures.append(user.put_async())
-            users_new = new_notified_users.get_result()
-            for user in users_new:
-                user.new_messages.remove(key)
-                futures.append(user.put_async())
-            users_hidden = hidden_notified_users.get_result()
-            for user in users_hidden:
-                user.archived_messages.remove(key)
-                futures.append(user.put_async())
-            futures.append(key.delete_async())
-            for future in futures:
-                future.get_result()
-        return OutgoingMessage(error='', data='OK')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/recently_sent',
-                      http_method='POST', name='messages.recently_sent')
-    def recently_sent_messages(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        if not request_user.sent_messages:
-            return OutgoingMessage(error='', data=json_dump(''))
-        sent_messages = Message.query(Message.key.IN(request_user.sent_messages)).order(
-                                                                    -Message.timestamp).fetch(30)
-        out_message = list()
-        for msg in sent_messages:
-            note = msg.to_dict()
-            note["key"] = msg.key.urlsafe()
-            out_message.append(note)
-        return OutgoingMessage(error='', data=json_dump(out_message))
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/unarchive',
+#                       http_method='POST', name='message.unarchive')
+#     def unarchive_message(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         data = json.loads(request.data)
+#         key = ndb.Key(urlsafe=data["message"])
+#         if key in request_user.archived_messages:
+#             request_user.archived_messages.remove(key)
+#             request_user.messages.insert(0, key)
+#             request_user.put()
+#             return OutgoingMessage(error='', data='OK')
+#         return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
 
 
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
+#                       http_method='POST', name='message.delete')
+#     def delete_message(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+#             return OutgoingMessage(error=INCORRECT_PERMS, data='')
+#         data = json.loads(request.data)
+#         key = ndb.Key(urlsafe=data["message"])
+#         if key in request_user.sent_messages:
+#             futures = list()
+#             request_user.sent_messages.remove(key)
+#             futures.append(request_user.put_async())
+#             notified_users = User.query(User.messages == key).fetch_async()
+#             new_notified_users = User.query(User.new_messages == key).fetch_async()
+#             hidden_notified_users = User.query(User.archived_messages == key).fetch_async()
+#             users = notified_users.get_result()
+#             for user in users:
+#                 user.messages.remove(key)
+#                 futures.append(user.put_async())
+#             users_new = new_notified_users.get_result()
+#             for user in users_new:
+#                 user.new_messages.remove(key)
+#                 futures.append(user.put_async())
+#             users_hidden = hidden_notified_users.get_result()
+#             for user in users_hidden:
+#                 user.archived_messages.remove(key)
+#                 futures.append(user.put_async())
+#             futures.append(key.delete_async())
+#             for future in futures:
+#                 future.get_result()
+#         return OutgoingMessage(error='', data='OK')
 
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
-                      http_method='POST', name='notifications.get')
-    def get_notifications(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        notification_count = 30
-        if request_user.new_notifications:
-            new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(30)
-        if request_user.new_notifications:
-            if len(request_user.new_notifications) >= 30:
-                notification_count = 0
-            else:
-                notification_count = 30 - len(request_user.new_notifications)
-        if request_user.notifications and notification_count > 0:
-            notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-        out_notifications = list()
-        if request_user.new_notifications:
-            new_notifications = new_notification_future.get_result()
-            for notify in new_notifications:
-                note = notify.to_dict()
-                note["new"] = True
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        if request_user.notifications and notification_count > 0:
-            notifications = notifications_future.get_result()
-            for notify in notifications:
-                note = notify.to_dict()
-                note["new"] = False
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        return OutgoingMessage(error='', data=json_dump(out_notifications))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/read',
-                      http_method='POST', name='notifications.read')
-    def see_notification(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        data = json.loads(request.data)
-        for key in request_user.new_notifications:
-            request_user.new_notifications.remove(key)
-            request_user.notifications.insert(0, key)
-            request_user.put()
-        return OutgoingMessage(error='', data='OK')
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/recently_sent',
+#                       http_method='POST', name='messages.recently_sent')
+#     def recently_sent_messages(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+#             return OutgoingMessage(error=INCORRECT_PERMS, data='')
+#         if not request_user.sent_messages:
+#             return OutgoingMessage(error='', data=json_dump(''))
+#         sent_messages = Message.query(Message.key.IN(request_user.sent_messages)).order(
+#                                                                     -Message.timestamp).fetch(30)
+#         out_message = list()
+#         for msg in sent_messages:
+#             note = msg.to_dict()
+#             note["key"] = msg.key.urlsafe()
+#             out_message.append(note)
+#         return OutgoingMessage(error='', data=json_dump(out_message))
 
 
 
 
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
+#                       http_method='POST', name='notifications.get')
+#     def get_notifications(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         notification_count = 30
+#         if request_user.new_notifications:
+#             new_notification_future = Notification.query(Notification.key.IN(
+#                 request_user.new_notifications)).order(-Notification.timestamp).fetch_async(30)
+#         if request_user.new_notifications:
+#             if len(request_user.new_notifications) >= 30:
+#                 notification_count = 0
+#             else:
+#                 notification_count = 30 - len(request_user.new_notifications)
+#         if request_user.notifications and notification_count > 0:
+#             notifications_future = Notification.query(Notification.key.IN(
+#                 request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
+#         out_notifications = list()
+#         if request_user.new_notifications:
+#             new_notifications = new_notification_future.get_result()
+#             for notify in new_notifications:
+#                 note = notify.to_dict()
+#                 note["new"] = True
+#                 note["key"] = notify.key.urlsafe()
+#                 out_notifications.append(note)
+#         if request_user.notifications and notification_count > 0:
+#             notifications = notifications_future.get_result()
+#             for notify in notifications:
+#                 note = notify.to_dict()
+#                 note["new"] = False
+#                 note["key"] = notify.key.urlsafe()
+#                 out_notifications.append(note)
+#         return OutgoingMessage(error='', data=json_dump(out_notifications))
 
-
-
-
-
-
-
+#     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/read',
+#                       http_method='POST', name='notifications.read')
+#     def see_notification(self, request):
+#         request_user = get_user(request.user_name, request.token)
+#         if not request_user:
+#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+#         data = json.loads(request.data)
+#         for key in request_user.new_notifications:
+#             request_user.new_notifications.remove(key)
+#             request_user.notifications.insert(0, key)
+#             request_user.put()
+#         return OutgoingMessage(error='', data='OK')
 
 
 
@@ -1182,7 +1165,7 @@ class RESTApi(remote.Service):
         for user in clump['users']:
             token = generate_token()
             email_item = member_signup_email(user, token)
-            cron_email = CronEmail()
+            cron_email = EmailTask()
             cron_email.title = email_item["subject"]
             cron_email.content = email_item["text"]
             cron_email.email = email_item["to"]
@@ -1235,7 +1218,7 @@ class RESTApi(remote.Service):
         for user in clump['users']:
             token = generate_token()
             email_item = alumni_signup_email(user, request_user.organization, token)
-            cron_email = CronEmail()
+            cron_email = EmailTask()
             cron_email.title = email_item["subject"]
             cron_email.content = email_item["text"]
             cron_email.email = email_item["to"]
@@ -1708,7 +1691,7 @@ class RESTApi(remote.Service):
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             if user.perms == 'alumni':
                 email = alumni_signup_email(user.to_dict(), request_user.organization, user.current_token)
-                cron = CronEmail()
+                cron = EmailTask()
                 cron.content = email["text"]
                 cron.title = email["subject"]
                 cron.pending = True
@@ -1718,7 +1701,7 @@ class RESTApi(remote.Service):
                 cron.put()
             else:
                 email = member_signup_email(user=user.to_dict(), token=user.current_token)
-                cron = CronEmail()
+                cron = EmailTask()
                 cron.content = email["text"]
                 cron.title = email["subject"]
                 cron.pending = True
@@ -1742,7 +1725,7 @@ class RESTApi(remote.Service):
         for user in users:
             if not user.user_name:
                 email = member_signup_email(user=user.to_dict(), token=user.current_token)
-                cron = CronEmail()
+                cron = EmailTask()
                 cron.content = email["text"]
                 cron.title = email["subject"]
                 cron.pending = True

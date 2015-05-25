@@ -14,16 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# -*- coding: utf-8 -*-
 import os
 import urllib
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
+from google.appengine.api import taskqueue
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import images, files
 from ndbdatastore import *
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
+from apns import APNs, Frame, Payload
 import json
 import braintree
 import logging
@@ -96,7 +100,7 @@ def check_birthdays():
             notify.put()
             user.new_notifications.append(notify.key)
             futures.append(user.put_async())
-            email = CronEmail()
+            email = EmailTask()
             email.type = 'birthday'
             email.content = 'Happy Birthday from NeteGreek!'
             email.title = 'Happy Birthday!'
@@ -118,7 +122,7 @@ def check_subscriptions():
                     organization.subscribed = False
                 users = User.query(User.organization == organization.key).fetch()
                 for user in users:
-                    email = CronEmail()
+                    email = EmailTask()
                     email.title = 'Subscription Canceled'
                     email.content = """
                     This is a notice that you are no longer a premium member with NeteGreek.
@@ -136,7 +140,7 @@ def check_subscriptions():
                 if subscription.days_past_due == 2 and not subscription.canceled and organization.subscribed:
                     users = User.query(User.organization == organization.key).fetch()
                     for user in users:
-                        email = CronEmail()
+                        email = EmailTask()
                         email.title = 'Payments Missed'
                         email.content = """
                         This is a notice that your organization is now 2+ days late on payment.\n\n
@@ -164,7 +168,7 @@ def check_subscriptions():
                         organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
                         users = User.query(User.organization == organization.key).fetch()
                         for user in users:
-                            email = CronEmail()
+                            email = EmailTask()
                             email.title = 'Payments Missed'
                             email.content = """
                             This is a notice that your organization is now 4+ days late on payment.\n\n
@@ -184,7 +188,7 @@ def check_subscriptions():
                         organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
                         users = User.query(User.organization == organization.key).fetch()
                         for user in users:
-                            email = CronEmail()
+                            email = EmailTask()
                             email.title = 'Payments Missed'
                             email.content = """
                             This is a notice that your organization is now 4+ days late on payment.\n\n
@@ -301,31 +305,39 @@ class MorningTasks(webapp2.RequestHandler):
             return
         check_birthdays()
         check_subscriptions()
-        old_cron_email_tasks = CronEmail.query(CronEmail.timestamp > datetime.datetime.now() +
+        old_cron_email_tasks = EmailTask.query(EmailTask.timestamp > datetime.datetime.now() +
                                                datetime.timedelta(days=20)).fetch(keys_only=True)
         for key in old_cron_email_tasks:
             key.delete()
 
-
 class SendEmails(webapp2.RequestHandler):
-    def get(self):
-        if 'X-Appengine-Cron' not in self.request.headers:
-            return
-        emails = CronEmail.query(CronEmail.pending == True).fetch()
+    def post(self):
+        emails = EmailTask.query(EmailTask.pending == True).fetch()
+        apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
         futures = []
         for email in emails:
             body = email.content
-            # if email.type in ['event', 'poll']:
             send_email(from_email='NeteGreek <support@netegreek.com>', to_email=email.email,
                        subject=email.title, body=email.content)
-
-            # mail.send_mail(sender="support@netegreek.com", to=str(email.email),
-            #                subject=str(email.title), body=str(email.content))
             email.pending = False
             futures.append(email.put_async())
         for future in futures:
             future.get_result()
 
+class SendPushNotifications(webapp2.RequestHandler):
+    def post(self):
+        tasks = PushTask.query(PushTask.pending == True).fetch()
+        if tasks:
+            apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+            futures = []
+            for task in tasks:
+                payload = Payload(alert=task.content, sound="default", badge=1)
+                for token in task.ios_tokens:
+                    apns.gateway_server.send_notification(token, payload)
+                task.pending = False
+                futures.append(task.put_async())
+            for future in futures:
+                future.get_result()
 
 class SendDailyNotificationsEmails(webapp2.RequestHandler):
     def get(self):
@@ -383,8 +395,8 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/upload', UploadHandler),
-    ('/sendemails', SendEmails),
+    ('/tasks/sendemails', SendEmails),
+    ('/tasks/sendpushnotifications', SendPushNotifications),
     ('/dailynotifications', SendDailyNotificationsEmails),
     ('/morningtasks', MorningTasks)
-
 ], debug=True)
