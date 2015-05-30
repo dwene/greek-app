@@ -225,17 +225,24 @@ module.exports = function (grunt) {
     //     }
     //   }
     // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
+    uglify: {
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/scripts/vendor.js': [
+            '<%= yeoman.dist %>/scripts/vendor.js'
+          ]
+        }
+      }
+    },
     // concat: {
-    //   dist: {}
+    //   angular: {
+    //     src: ['<%= yeoman.app %>/scripts/angular_main.js', '<%= yeoman.app %>/scripts/controllers/*.js', '<%= yeoman.app %>/scripts/factories/*.js','<%= yeoman.app %>/scripts/vendor/*.js' ],
+    //     dest: '<%= yeoman.dist %>/scripts/scripts.js',
+    //   },
+    //   dist: {
+    //     src: ['<%= yeoman.app %>/scripts/vendor/*.js', '<%= yeoman.app %>/scripts/netegreek.js'],
+    //     dest: '<%= yeoman.dist %>/scripts/scripts.js',
+    //   }
     // },
 
     imagemin: {
@@ -284,9 +291,9 @@ module.exports = function (grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '.tmp/concat/scripts',
+          cwd: '<%= yeoman.dist %>/scripts',
           src: ['*.js'],
-          dest: '.tmp/concat/scripts'
+          dest: '<%= yeoman.dist %>/scripts'
         }]
       }
     },
@@ -294,7 +301,7 @@ module.exports = function (grunt) {
     // Replace Google CDN references
     cdnify: {
       dist: {
-        html: ['<%= yeoman.dist %>/*.html']
+        html: ['<%= yeoman.dist %>/index.html']
       }
     },
 
@@ -428,11 +435,12 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'concat',
+    // 'concat:dist',
     'ngAnnotate',
     'copy:dist',
     'cdnify',
     'cssmin',
-    // 'uglify',
+    'uglify',
     'filerev',
     'usemin',
     'htmlmin'
