@@ -1,16 +1,17 @@
-App.controller('inboxController', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, removePassedEventsFilter, Inbox){
+angular.module('App').controller('inboxController', [ '$scope', 'RESTService', '$rootScope', '$timeout', '$sce', '$mdDialog', 'removePassedEventsFilter', 'Inbox', function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, removePassedEventsFilter, Inbox) {
+
     Inbox.get();
     var selectedMessage;
     $scope.inbox = Inbox.data;
     $scope.archivedLength = 10;
     $scope.messagesLength = 10;
     console.log('scope.inbox', Inbox);
-    if ($scope.inbox){
-        if ($scope.inbox.messages != null){
+    if ($scope.inbox) {
+        if ($scope.inbox.messages != null) {
             $scope.showInbox = true;
         }
     }
-    $scope.$on('inbox:updated', function(){
+    $scope.$on('inbox:updated', function() {
         $scope.inbox = Inbox.data;
         $scope.showInbox = true;
     })
@@ -37,7 +38,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         Inbox.selectMessage(notify);
         $scope.selectedMessage = notify;
         $mdDialog.show({
-                controller: messageDialogController,
+                controller: ('messageDialogController',['$scope', '$mdDialog', '$sce', messageDialogController]),
                 templateUrl: 'views/templates/messageDialog.html',
                 targetEvent: ev
         });
@@ -55,7 +56,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         Inbox.selectMessage(notify);
         $scope.selectedMessage = notify;
         $mdDialog.show({
-                controller: messageDialogController,
+                controller: ('messageDialogController',['$scope', '$mdDialog', '$sce', messageDialogController]),
                 templateUrl: 'views/templates/archivedDialog.html',
                 targetEvent: ev
         });
@@ -102,22 +103,21 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         }
     }
 
+    // $scope.increaseMessagesLength = function(){
+    //     if ($scope.messagesLength >= $scope.inbox.messages.length) {
+    //         if ($scope.inbox.messages.length < ($scope.inbox.lengths.unread + $scope.inbox.lengths.read)) {
+    //             loadMoreMessages();
+    //         }
+    //         else{
+    //             return;
+    //         }
+    //     }
+    //     else{
+    //         $scope.messagesLength = ( $scope.messagesLength + 20 ) > ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) ? ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) : $scope.archivedLength + 20;
+    //     }
+    // }
 
-    $scope.increaseMessagesLength = function(){
-        if ($scope.messagesLength >= $scope.inbox.messages.length){
-            if ($scope.inbox.messages.length < ($scope.inbox.lengths.unread + $scope.inbox.lengths.read)){
-                loadMoreMessages();
-            }
-            else{
-                return;
-            }
-        }
-        else{
-            $scope.messagesLength = ( $scope.messagesLength + 20 ) > ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) ? ($scope.inbox.lengths.unread + $scope.inbox.lengths.read) : $scope.archivedLength + 20;
-        }
-    }
-
-    function archive(message){
+    function archive(message) {
         for (var i = 0; i < $scope.inbox.messages.length; i++){
             if ($scope.inbox.messages[i].key == message.key){
                 if ($scope.inbox.messages[i].new){
@@ -137,7 +137,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         }
     }
 
-    function unarchive(message){
+    function unarchive(message) {
         for (var i = 0; i < $scope.inbox.archived.length; i++){
             if ($scope.inbox.archived[i].key == message.key){
                 $scope.inbox.messages.push($scope.inbox.archived[i]);
@@ -151,7 +151,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         }
     }
 
-    function loadMoreArchived(){
+    function loadMoreArchived() {
         if ($scope.loadingArchived){
             return;
         }
@@ -194,7 +194,7 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
         }
     }
 
-    function loadMoreMessages(){
+    function loadMoreMessages() {
         if ($scope.loadingMessages){
             return;
         }
@@ -234,8 +234,8 @@ App.controller('inboxController', function($scope, RESTService, $rootScope, $tim
             }
         }
     }
-});
 
+}]);
 
 
 

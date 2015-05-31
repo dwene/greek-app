@@ -33,7 +33,7 @@
     <!--[if lt IE 9]>
         <script src="scripts/vendor/html5-3.6-respond-1.1.0.min.js"></script>
     <![endif]-->
-    <!-- build:js({.tmp,app}) scripts/vendor.js -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- bower:js -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
     <script src="../bower_components/es5-shim/es5-shim.js"></script>
@@ -53,9 +53,6 @@
     <script src="../bower_components/angular-permission/dist/angular-permission.js"></script>
     <script src="../bower_components/ngCordova/dist/ng-cordova.js"></script>
     <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/vendor/angular-ui.js"></script>
     <script src="scripts/vendor/jquery.cookie.js"></script>
     <script src="scripts/vendor/bootstrap.min.js"></script>
@@ -108,7 +105,7 @@
     <script type="text/javascript" src="scripts/controllers/eventInfoController.js"></script>
     <script type="text/javascript" src="scripts/controllers/eventsController.js"></script>
     <script type="text/javascript" src="scripts/controllers/forgotPasswordController.js"></script>
-    <!-- // <script type="text/javascript" src="scripts/controllers/helpMessageController.js"></script> -->
+    <script type="text/javascript" src="scripts/controllers/inboxController.js"></script>
     <script type="text/javascript" src="scripts/controllers/indexController.js"></script>
     <script type="text/javascript" src="scripts/controllers/linksController.js"></script>
     <script type="text/javascript" src="scripts/controllers/loginController.js"></script>
@@ -133,8 +130,6 @@
     <script type="text/javascript" src="scripts/controllers/registerUserController.js"></script>
     <script type="text/javascript" src="scripts/controllers/uploadImageController.js"></script>
     <script type="text/javascript" src="scripts/controllers/pollController.js"></script>
-    <!-- // <script type="text/javascript" src="scripts/controllers/dialogController.js"></script> -->
-    <script type="text/javascript" src="scripts/controllers/inboxController.js"></script>
     <script type="text/javascript" src="scripts/controllers/messageDialogController.js"></script>
     <script type="text/javascript" src="scripts/factories/directoryFactory.js"></script>
     <script type="text/javascript" src="scripts/factories/eventsFactory.js"></script>
@@ -148,6 +143,7 @@
     <script type="text/javascript" src="scripts/factories/httpFactory.js"></script>
     <script type="text/javascript" src="scripts/factories/notificationFactory.js"></script>
     <!-- endbuild -->
+
 </head>
 <body ng-app="App" ng-controller="indexController as main" md-theme="{{$root.color}}" class="theme-{{$root.color}}" ng-cloak>
         <!--[if lt IE 7]>

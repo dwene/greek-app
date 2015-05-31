@@ -13,7 +13,7 @@
 
         $scope.openDeleteAlumniModal = function(user, ev){
             $mdDialog.show({
-                controller: dialogController,
+                controller: ('dialogController'['$scope', '$mdDialog', dialogController]),
                 templateUrl: 'views/templates/alumni/deleteAlumniDialog.html',
                 targetEvent: ev
             });
@@ -41,7 +41,7 @@
         
         $scope.openConvertAlumniModal = function(user, ev){
             $mdDialog.show({
-                controller: dialogController,
+                controller: ('dialogController'['$scope', '$mdDialog', dialogController]),
                 templateUrl: 'views/templates/alumni/convertAlumniDialog.html',
                 targetEvent: ev
             });

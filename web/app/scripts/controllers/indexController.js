@@ -43,12 +43,12 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         
         $scope.showHelpdialog = function(){
             $mdDialog.show({
-                    controller: helpDialogController,
+                    controller: ('helpDialogController', ['$scope', '$mdDialog', helpDialogController]),
                     templateUrl: 'views/templates/helpDialog.html'
             });
         }
 
-        function helpDialogController($mdDialog, $scope){
+        function helpDialogController($scope, $mdDialog){
             $scope.message = '';
             $scope.sendHelpMessage = function(){
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', $scope.message)

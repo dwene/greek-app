@@ -30,12 +30,12 @@
         $scope.showSurveyOptions = function(event){
             $mdDialog.show({
               templateUrl: 'views/templates/bottomDialog.html',
-              controller: surveyOptionsCtrl,
+              controller: ('surveyOptionsCtrl', ['$scope', '$mdDialog', surveyOptionsCtrl]),
               targetEvent: event
             });
         }
 
-        function surveyOptionsCtrl($scope, $mdBottomSheet) {
+        function surveyOptionsCtrl($scope, $mdDialog) {
             $scope.items = [
                 { name: 'REPORT', icon: 'fa-bar-chart'},
                 // { name: 'EDIT', icon: 'fa-edit' },

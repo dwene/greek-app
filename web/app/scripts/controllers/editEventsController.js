@@ -35,11 +35,11 @@
         
         $scope.openDeleteEventModal = function(){
             $mdDialog.show({
-                    controller: DialogController,
+                    controller:('DialogController', ['$scope', '$mdDialog', DialogController]),
                     templateUrl: 'views/templates/deleteEventDialog.html'
                 });
         }
-        function DialogController($mdDialog, $scope){
+        function DialogController($scope, $mdDialog){
             $scope.delete = function(){
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', $stateParams.tag)
                 .success(function(data){

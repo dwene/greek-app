@@ -23,7 +23,7 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
                 selectedLink = link;
                 groups = $scope.groups;
                 $mdDialog.show({
-                    controller: DialogController,
+                    controller: ('DialogController'['$scope', '$mdDialog', DialogController]),
                     templateUrl: 'views/templates/links/editLinkDialog.html'
                 });
             } 
@@ -31,35 +31,35 @@ App.controller('LinksController', function($scope, $rootScope, $mdDialog, RESTSe
                 groups = $scope.groups;
                 selectedLink = {};
                 $mdDialog.show({
-                    controller: DialogController,
+                    controller: ('DialogController'['$scope', '$mdDialog', DialogController]),
                     templateUrl: 'views/templates/links/newLinkDialog.html'
                 });
             }
             $scope.openDeleteLinkModal = function(link){
                 selectedLink = link;
                 $mdDialog.show({
-                    controller: DialogController,
+                    controller: ('DialogController'['$scope', '$mdDialog', DialogController]),
                     templateUrl: 'views/templates/links/deleteLinkDialog.html'
                 });
             }
             $scope.openRenameGroupModal = function(group){
                 selectedGroup = group;
                 $mdDialog.show({
-                    controller: DialogController,
+                    controller: ('DialogController'['$scope', '$mdDialog', DialogController]),
                     templateUrl: 'views/templates/links/renameGroupDialog.html'
                 });
             }
             $scope.openDeleteGroupModal = function(group){
                 selectedGroup = group;
                 $mdDialog.show({
-                    controller: DialogController,
+                    controller: ('DialogController'['$scope', '$mdDialog', DialogController]),
                     templateUrl: 'views/templates/links/deleteGroupDialog.html'
                 });
             }
 
 
 
-            function DialogController($mdDialog, $scope){
+            function DialogController($scope, $mdDialog){
                 $scope.groups = groups;
                 $scope.selectedGroup = selectedGroup;
                 $scope.selectedLink = selectedLink;

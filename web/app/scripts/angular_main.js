@@ -1643,7 +1643,7 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
         })
         scope.openDialog = function(ev){
             $mdDialog.show({
-                    controller: ModalController,
+                    controller: ('ModalController', ['$scope', '$mdDialog', '$sce', ModalController]),
                     templateUrl: 'views/templates/tagsDialog.html',
                     targetEvent: ev
             });

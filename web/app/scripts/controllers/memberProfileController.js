@@ -23,7 +23,7 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         vCard = getVcard();
         $mdDialog.show({
           templateUrl: 'views/templates/bottomDialog.html',
-          controller: profileOptionsCtrl,
+          controller: ('profileOptionsCtrl', ['$scope', '$mdDialog', profileOptionsCtrl]),
           targetEvent: $event
         }).then(function(clickedItem) {
             switch(clickedItem.name){
@@ -37,7 +37,7 @@ App.controller('memberprofileController', function($scope, $rootScope, $statePar
         });
     }
     
-    function profileOptionsCtrl($scope, $mdBottomSheet) {
+    function profileOptionsCtrl($scope, $mdDialog) {
         $scope.items = [
             { name: 'SMS', icon: 'fa-mobile', link: 'sms:'+ phone, download:undefined},
             { name: 'CALL', icon: 'fa-phone', link: 'tel:' + phone, download:undefined},

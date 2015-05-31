@@ -17,7 +17,7 @@ App.controller('membertagsController', function($scope, RESTService, $rootScope,
     $scope.openSeeAllDialog = function(ev){
         tags = $scope.tags;
         $mdDialog.show({
-                controller: tagMembersController,
+                controller: ('tagMembersController', ['$scope', '$mdDialog', tagMembersController]),
                 templateUrl: 'views/templates/taggingMembersTagsDialog.html',
                 targetEvent: ev
         });

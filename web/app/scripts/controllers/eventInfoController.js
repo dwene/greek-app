@@ -17,7 +17,7 @@ App.controller('eventInfoController', function($scope, RESTService, $stateParams
         $scope.showEventoptions = function(event){
             $mdDialog.show({
               templateUrl: 'views/templates/bottomDialog.html',
-              controller: eventOptionsCtrl,
+              controller: ('eventOptionsCtrl'['$scope', '$mdBottomSheet', '$mdDialog', eventOptionsCtrl]),
               targetEvent: event
             });
         }

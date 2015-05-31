@@ -28,7 +28,7 @@ App.controller('manageMembersController', function($scope, $mdDialog, $rootScope
     $scope.openDeleteMemberModal = function(user, ev){
         selectedUser = user;
         $mdDialog.show({
-            controller: dialogController,
+            controller: ('dialogController'['$scope', '$mdDialog', dialogController]),
             templateUrl: 'views/templates/members/deleteMemberDialog.html',
             targetEvent: ev
         });
@@ -48,7 +48,7 @@ App.controller('manageMembersController', function($scope, $mdDialog, $rootScope
     $scope.openChangeEmailModal = function(user, ev){
         selectedUser = user;
         $mdDialog.show({
-            controller: dialogController,
+            controller: ('dialogController'['$scope', '$mdDialog', dialogController]),
             templateUrl: 'views/templates/members/changeEmailDialog.html',
             targetEvent: ev
         });
@@ -57,7 +57,7 @@ App.controller('manageMembersController', function($scope, $mdDialog, $rootScope
     $scope.openConvertMembersModal = function(user, ev){
         selectedUser = $scope.directory.members;
         $mdDialog.show({
-            controller: dialogController,
+            controller: ('dialogController'['$scope', '$mdDialog', dialogController]),
             templateUrl: 'views/templates/members/convertMembersDialog.html',
             targetEvent: ev
         });

@@ -17,7 +17,7 @@
             
         $scope.openClearStatusDialog = function(ev){
             $mdDialog.show({
-                    controller: dialogController,
+                    controller:('dialogController', ['$scope', '$mdDialog', dialogController]),
                     templateUrl: 'views/templates/clearStatusDialog.html',
                     targetEvent: ev
             });
