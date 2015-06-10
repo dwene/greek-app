@@ -6,8 +6,7 @@
        COUNCIL
    </md-subheader>
     <md-list class="memberList">
-        <md-item ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
-            <md-item-content>
+        <md-list-item ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
                 <div class="md-tile-left">
                     <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
@@ -15,8 +14,7 @@
                     <p class="name">{{member.first_name}} {{member.last_name}} <span class="position" ng-show="member.position">({{member.position}})</span></p>
                     <p class="status">{{member.status}}</p>
                 </div>
-            <md-item-content>
-        </md-item>
+        </md-list-item>
     </md-list>
     </section>
     <section ng-show="leadership.length">
@@ -24,8 +22,7 @@
        LEADERSHIP
    </md-subheader>
     <md-list class="memberList">
-        <md-item ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
-            <md-item-content>
+        <md-list-item ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
                 <div class="md-tile-left">
                     <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
@@ -33,8 +30,7 @@
                     <p class="name">{{member.first_name}} {{member.last_name}} <span class="position" ng-show="member.position">({{member.position}})</span></p>
                     <p class="status">{{member.status}}</p>
                 </div>
-            <md-item-content>
-        </md-item>
+        </md-list-item>
     </md-list>
     </section>
     <section ng-show="members.length">
@@ -43,8 +39,7 @@
    </md-subheader>
       <div infinite-scroll="increaseDirectoryLength()" infinite-scroll-distance="0" infinite-scroll-disabled="search">
     <md-list class="memberList">
-        <md-item ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" ng-click="showIndividual(member)">
-            <md-item-content>
+        <md-list-item ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" ng-click="showIndividual(member)">
                 <div class="md-tile-left">
                   <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
@@ -52,8 +47,7 @@
                     <p class="name">{{member.first_name}} {{member.last_name}}</p>
                     <p class="status">{{member.status}}</p>
                 </div>
-            <md-item-content>
-        </md-item>
+        </md-list-item>
     </md-list>
     <div style='height:1px;'></div>
     </div>

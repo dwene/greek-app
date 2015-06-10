@@ -47,7 +47,6 @@
     <script src="../bower_components/angular-touch/angular-touch.js"></script>
     <script src="../bower_components/angular-route/angular-route.js"></script>
     <script src="../bower_components/angular-aria/angular-aria.js"></script>
-    <script src="../bower_components/hammerjs/hammer.js"></script>
     <script src="../bower_components/angular-material/angular-material.js"></script>
     <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="../bower_components/angular-permission/dist/angular-permission.js"></script>
@@ -97,6 +96,7 @@
     <script type="text/javascript" src="scripts/controllers/addMembersController.js"></script>
     <script type="text/javascript" src="scripts/controllers/appController.js"></script>
     <script type="text/javascript" src="scripts/controllers/appHomeController.js"></script>
+    <script type="text/javascript" src="scripts/controllers/chatterController.js"></script>
     <script type="text/javascript" src="scripts/controllers/changePasswordController.js"></script>
     <script type="text/javascript" src="scripts/controllers/changePasswordFromTokenController.js"></script>
     <script type="text/javascript" src="scripts/controllers/editEventsController.js"></script>
@@ -156,9 +156,9 @@
             <nav class="container" layout="row" layout-align="center center" flex>
                 <div>
                     <a class="navbar-brand" ng-hide="$parent.session.user_name"></a>
-                    <md-button aria-label="home button" class="navbar-brand" id="homeButton" ng-click="navigation.homeButton()" ng-show="$parent.session.user_name"></md-button>
+                    <md-button aria-label="home button" class="navbar-brand btn-touch" id="homeButton" ng-click="navigation.homeButton()" ng-show="$parent.session.user_name"></md-button>
                 </div>
-                <md-button ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
+                <md-button class="btn-touch" ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
                     <span class="fa-stack notification_count">
                         <i class="fa fa-bell fa-stack-2x"></i>
                         <strong class="fa-stack-1x fa-stack-text fa-inverse" ng-bind="notification_count">0</strong>
@@ -240,10 +240,10 @@
             </div>
         </md-toolbar>
         <md-content>
-        <md-list class="itemList hover">
-            <md-item ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25" class="md-padding"  ng-click="goToNotification(notify)">
+        <md-list class="itemList">
+            <md-list-item ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25" class="md-padding"  ng-click="goToNotification(notify)">
                     <span ng-bind="notify.content"></span>
-            </md-item>
+            </md-list-item>
         </md-list>
         </md-content>
     </md-sidenav>

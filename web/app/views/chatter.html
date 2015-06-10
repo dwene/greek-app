@@ -1,0 +1,30 @@
+<div class="container">
+   <div class="md-whiteframe-z1">
+            <md-toolbar class="no-min-height">
+            <md-tabs md-selected="data.selectedIndex" class="md-primary">
+              <md-tab id="chatterTab" aria-controls="chatterTab-content">
+                All Chatter
+              </md-tab>
+              <md-tab id="importantTab" aria-controls="importantTab-content">
+                Important
+              </md-tab>
+              <md-tab id="heartsTab" aria-controls="heartsTab-content">
+                Hearts
+              </md-tab>
+            </md-tabs>  
+            </md-toolbar>
+        <div class="tabpanel-container" load-directive ng-model="showChatter">
+        <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
+            <md-content class="md-padding">
+            
+            </md-content>
+        </div>
+        <div role="tabpanel" id="importantTab-content" aria-labelledby="importantTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
+            <md-content class="md-padding">
+            
+            </md-content>
+        </div>
+    </div>
+    <md-progress-circular md-mode="indeterminate" class="small" ng-show="loadingArchived || loadingMessages"></md-progress-circular>
+    </div>
+</div>

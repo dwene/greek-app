@@ -1,29 +1,3 @@
-//#FIXME account info page, the state model is still not registering change (it can say Texas, but registers Tennessee)
-//#CHANGES 503 on update account info - SHOULD BE DONE!
-//#CHANGES upload profile pic page SHOULD BE DONE!
-//#CHANGES get label checked tags and checked people on manage people tags page - I THINK THIS IS DONE
-//#CHANGES on calendar page change event time from 2400 to 12:00 PM format - DONE!!!
-//#TODO fix check username tags in newmemberinfo and registerinfo pages
-//#TODO get it to where you can see all messages after they're hidden
-//#FIXME added some loading icons in new directive called update-satus to pages managingmembers,  eventcheckin, addingmembers. Test it by changing someones perms in managingmembers.  They could use some graphic help.
-
-/*
-STYLING CHANGES:
-Upcoming Events in apphome
-Managemembers/managealumni
-memberdirectory/alumnidirectory
-tagging members
-memberprofile
-eventinfo
-eventcheckin
-eventreport
-pollinfo
-
-Need non-typeahead for mobile tag selection
-netegreek home button with spinner half in background rectangle
-I think status max should be shorter, else it doesnt really fit.
-*/
-
 //Final/static variables. These variables are used for cookies
 var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
  // var ENDPOINTS_DOMAIN = 'http://localhost:9001';
@@ -77,7 +51,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
       $stateProvider 
         .state('home', {
                 url: '/', 
-				templateUrl : 'views/home.html',
+				templateUrl : 'views/home.html'
 			})
         .state('login', {
                 url : '/login',
@@ -133,6 +107,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 url : '/home',
                 templateUrl : 'views/apphome.html',
                 controller : 'appHomeController',
+            })
+            .state('app.chatter', {
+                url:'/chatter',
+                templateUrl : 'views/chatter.html',
+                controller : 'chatterController'
             })
             .state('app.managemembers', {
                     url : '/managemembers',

@@ -317,6 +317,9 @@ table {
 #mobileMenu {
   display: none;
 }
+*:focus {
+  outline: none;
+}
 /*Page Styles*/
 body {
   font-family: arial;
@@ -455,8 +458,16 @@ md-backdrop.md-opaque {
 md-list li {
   list-style: none;
 }
-md-tabs md-tab.active {
+md-tabs .md-active {
   background-color: rgba(255, 255, 255, 0.4);
+}
+md-tabs md-ink-bar {
+  color: rgba(0, 0, 0, 0.5) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+.md-button {
+  margin: 0px;
+  min-width: 0px;
 }
 md-dialog {
   border-radius: 0px !important;
@@ -506,6 +517,11 @@ md-sidenav {
 md-sidenav md-toolbar .md-header {
   background-color: rgba(0, 0, 0, 0) !important;
 }
+#notifications .md-button {
+  font-size: 14px;
+  line-height: 14px;
+  padding: 0px 8px;
+}
 md-divider {
   margin-bottom: 20px;
 }
@@ -514,6 +530,7 @@ md-divider {
 }
 .btn-touch {
   padding: 10px;
+  min-width: 45px;
 }
 md-tabs.md-default-theme md-tab:focus {
   border: none;
@@ -571,6 +588,9 @@ md-bottom-sheet.md-grid md-item .md-icon-container {
 /*Helper Classes*/
 .no-padding-top {
   padding-top: 0px !important;
+}
+.no-margin-bottom {
+  margin-bottom: 0px !important;
 }
 .no-padding-bottom {
   padding-bottom: 0px !important;
@@ -673,7 +693,7 @@ nav a.navbar-brand:focus {
   outline: none;
 }
 nav .notification_count {
-  margin: 0px 5px;
+  margin: 0px;
   font-size: 12px;
 }
 nav .notification_count strong {
@@ -705,7 +725,6 @@ nav .notification_count strong {
 .nav .md-button {
   width: 100%;
   text-align: left;
-  padding: 12px 8px;
 }
 md-toolbar .md-fab {
   position: absolute;
@@ -729,10 +748,10 @@ md-toolbar.md-tall {
   height: auto;
   padding: 0px;
 }
-.memberList md-item-content {
+.memberList md-list-item {
   border-bottom: 1px solid #ccc;
 }
-.memberList md-item:last-child md-item-content {
+.memberList md-list-item:last-child {
   border-bottom: 0px;
 }
 .memberList .name {
@@ -743,21 +762,17 @@ md-toolbar.md-tall {
   line-height: 1.2;
   font-size: 12px;
 }
-.itemList md-item {
+.itemList md-list-item {
   display: block;
   position: relative;
   overflow: hidden;
   -webkit-backface-visibility: hidden;
 }
-.itemList md-item:not(:last-child) {
+.itemList md-list-item:not(:last-child) {
   border-bottom: 1px solid #ccc;
 }
-.itemList md-item.md-padding {
+.itemList md-list-item.md-padding {
   padding: 8px;
-}
-.itemList.hover md-item:hover {
-  background: #f8f8f8;
-  cursor: pointer;
 }
 .message .isNew {
   display: none;
@@ -863,10 +878,6 @@ md-toolbar.md-tall {
 }
 #directory md-input-container {
   margin-top: 0px;
-}
-#directory md-item-content:hover {
-  background: #f8f8f8;
-  cursor: pointer;
 }
 #directory .face {
   margin: 16px;

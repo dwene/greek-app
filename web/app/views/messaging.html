@@ -34,9 +34,8 @@
         <div role="tabpanel" id="recentlySent-content" aria-labelledby="recentlySent" ng-show="data.selectedIndex != 0" md-swipe-left="next()" md-swipe-right="previous()">
             <section load-directive ng-model="recentLoaded">
                 <md-list>
-                    <md-item class="message" ng-click="openMessagedialog(notify)" ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber">
+                    <md-list-item class="message" ng-click="openMessagedialog(notify)" ng-repeat="notify in sentMessages | startFrom:currentPage*maxPageNumber | limitTo: maxPageNumber">
                     <div class="isNew"></div>
-                        <md-item-content>
                           <div class="md-tile-content">
                             <h3 class="md-primary title">
                                 {{notify.title}}
@@ -45,7 +44,7 @@
                                 <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
                                 <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
                           </div>
-                    </md-item>
+                    </md-list-item>
                 </md-list>
                 <div class="pagerButtons">
                     <button class="previous btn btn-default btn-sm" ng-hide="currentPage == 0" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><i class="fa fa-arrow-left"></i></button>

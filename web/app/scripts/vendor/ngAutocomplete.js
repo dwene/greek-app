@@ -33,7 +33,7 @@ angular.module( "ngAutocomplete", [])
       require: 'ngModel',
       scope: {
         ngModel: '=',
-        options: '=?',
+        info: '=?',
         details: '=?',
         address: '=?'
       },
@@ -47,15 +47,15 @@ angular.module( "ngAutocomplete", [])
         var initOpts = function() {
 
           opts = {}
-          if (scope.options) {
+          if (scope.info) {
 
-            if (scope.options.watchEnter !== true) {
+            if (scope.info.watchEnter !== true) {
               watchEnter = false
             } else {
               watchEnter = true
             }
 
-            if (scope.options.types) {
+            if (scope.info.types) {
               opts.types = []
               opts.types.push(scope.options.types)
               scope.gPlace.setTypes(opts.types)
@@ -63,14 +63,14 @@ angular.module( "ngAutocomplete", [])
               scope.gPlace.setTypes([])
             }
 
-            if (scope.options.bounds) {
+            if (scope.info.bounds) {
               opts.bounds = scope.options.bounds
               scope.gPlace.setBounds(opts.bounds)
             } else {
               scope.gPlace.setBounds(null)
             }
 
-            if (scope.options.country) {
+            if (scope.info.country) {
               opts.componentRestrictions = {
                 country: scope.options.country
               }
@@ -156,7 +156,7 @@ angular.module( "ngAutocomplete", [])
 
         //watch options provided to directive
         scope.watchOptions = function () {
-          return scope.options
+          return scope.info
         };
         scope.$watch('details', function(){
             if (scope.details){

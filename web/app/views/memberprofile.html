@@ -3,14 +3,23 @@
 <div id="profile" class="container" ng-show="loading_finished">
    <div class="md-whiteframe-z1">
     <md-toolbar class="md-tall">
+       <div id="social" layout="row" layout-align="center center" ng-show="website.length || facebook.length || twitter.length || instagram.length || linkedin.length">
+           <a target="_blank" href="http://{{website}}" class="btn-touch"><i class="fa fa-globe fa-fw"></i></a>
+           <a target="_blank" href="http://{{facebook}}" class="btn-touch"><i class="fa fa-facebook-square fa-fw"></i></a>
+           <a target="_blank" href="http://{{twitter}}" class="btn-touch"><i class="fa fa-twitter-square fa-fw"></i></a>
+           <a target="_blank" href="http://{{instagram}}" class="btn-touch"><i class="fa fa-instagram fa-fw"></i></a>
+           <a target="_blank" href="http://{{linkedin}}" class="btn-touch"><i class="fa fa-linkedin-square fa-fw"></i></a>
+       </div>
         
-        <md-list id="social" layout="row" layout-align="center end" ng-show="website.length || facebook.length || twitter.length || instagram.length || linkedin.length">
+<!--
+        <md-list id="social" layout="row" layout-align="center center" ng-show="website.length || facebook.length || twitter.length || instagram.length || linkedin.length">
             <md-list-item ng-show="website.length"><a target="_blank" href="http://{{website}}" class="btn-touch"><i class="fa fa-globe fa-fw"></i></a></md-list-item>
             <md-list-item ng-show="facebook.length"><a target="_blank" href="http://{{facebook}}" class="btn-touch"><i class="fa fa-facebook-square fa-fw"></i></a></md-list-item>
             <md-list-item ng-show="twitter.length"><a target="_blank" href="http://{{twitter}}" class="btn-touch"><i class="fa fa-twitter-square fa-fw"></i></a></md-list-item>
             <md-list-item ng-show="instagram.length"><a target="_blank" href="http://{{instagram}}" class="btn-touch"><i class="fa fa-instagram fa-fw"></i></a></md-list-item>
             <md-list-item ng-show="linkedin.length"><a target="_blank" href="http://{{linkedin}}" class="btn-touch"><i class="fa fa-linkedin-square fa-fw"></i></a></md-list-item>
         </md-list>
+-->
         
         <div id="profile-top" layout="row" layout-align="center center">
             <div flex="20" flex-md="25" flex-sm="45">
