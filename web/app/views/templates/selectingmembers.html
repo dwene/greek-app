@@ -5,7 +5,7 @@
            <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
                 <md-input-container>
                     <label for="enter_tag">Enter Tag</label>
-                    <input type="text" name="enter_tag" ng-model="selectedTagName" ng-info="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
+                    <input type="text" name="enter_tag" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
                 </md-input-container>
                 <md-button id="seeall" ng-click="openDialog($event)">see all</md-button>
             </form>        
