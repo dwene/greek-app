@@ -1,6 +1,6 @@
 //Final/static variables. These variables are used for cookies
 var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
- // var ENDPOINTS_DOMAIN = 'http://localhost:9001';
+// var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 //var ENDPOINTS_DOMAIN = '';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -10,16 +10,15 @@ var MEMBER = 'member';
 var LEADERSHIP = 'leadership';
 var COUNCIL = 'council';
 var LOGGED_IN = 'logged_in';
-var PERMS_LIST =  [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
+var PERMS_LIST = [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
 
-String.prototype.replaceAll = function(str1, str2, ignore) 
-{
-    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+String.prototype.replaceAll = function(str1, str2, ignore) {
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof(str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
 }
 
 //initialize app
-var App = angular.module('App', ['ui.router', 'ngAnimate', 'ngTouch', 'mgcrea.ngStrap', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.aside', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll', 'LocalStorageModule', 'colorpicker.module', 'wysiwyg.module', 'ngSanitize', 'ngMaterial'],  function ($compileProvider) {
-  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms|tel|data):/);
+var App = angular.module('App', ['ui.router', 'ngAnimate', 'ngTouch', 'mgcrea.ngStrap', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.aside', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll', 'LocalStorageModule', 'colorpicker.module', 'wysiwyg.module', 'ngSanitize', 'ngMaterial'], function($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms|tel|data):/);
 });
 
 App.constant('AUTH_EVENTS', {
@@ -41,68 +40,75 @@ App.constant('USER_ROLES', {
 
 App.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/")
-    .when("/", "/app/home")
-    .when("/app", "/app/home")
-    .when("/app/managemembers", "/app/managemembers/manage")
-    .when("/app/managealumni", "/app/managealumni/manage")
-    .when("/app/directory", "/app/directory/members")
-    .when("/changepasswordfromtoken", "/changepasswordfromtoken/1");
-    
-      $stateProvider 
+        .when("/", "/app/home")
+        .when("/app", "/app/home")
+        .when("/app/managemembers", "/app/managemembers/manage")
+        .when("/app/managealumni", "/app/managealumni/manage")
+        .when("/app/directory", "/app/directory/members")
+        .when("/changepasswordfromtoken", "/changepasswordfromtoken/1");
+
+    $stateProvider
         .state('home', {
+<<<<<<< Updated upstream
                 url: '/', 
 				templateUrl : 'views/home.html'
 			})
-        .state('login', {
-                url : '/login',
-				templateUrl : 'views/login.html',
-				controller  : 'loginController'
-			})
-        .state('register', {
-                url : '/register',
-				templateUrl : 'views/register.html',
-                controller : 'registerController'
-			})
-        .state('registerorg', {
-                url : '/registerorganization',
-				templateUrl : 'views/registerorganization.html',
-				controller  : 'registerController'
-			})
-        .state('registeruser', {
-                url : '/registeruser',
-				templateUrl : 'views/registeruser.html',
-				controller  : 'registerUserController'
-			})
-        .state('registerorginfo', {
-                url : '/registerorganizationinfo',
-				templateUrl : 'views/registerinfo.html',
-				controller  : 'registerinfoController'
-			})
-        .state('payment', {
-                url : '/payment',
-				templateUrl : 'views/payment.html',
-				controller  : 'paymentController'
-			})
-        .state('newmember', {
-                    url : '/newuser/:key',
-                    templateUrl : 'views/newmemberinfo.html',
-                    controller : 'newmemberinfoController'
-                })
-        .state('forgotpassword', {
-                    url : '/forgotpassword',
-                    templateUrl : 'views/forgot_password.html',
-                    controller : 'forgotPasswordController'
-                })
-        .state('changepasswordfromtoken', {
-                    url : '/changepasswordfromtoken/:token',
-                    templateUrl : 'views/change_password_from_token.html',
-                    controller : 'changePasswordFromTokenController'
-                })
-        .state('app', {
-                url : '/app',
-                templateUrl : 'views/app.html',
-                controller : 'appController',
+=======
+            url: '/',
+            templateUrl: 'views/home.html',
         })
+>>>>>>> Stashed changes
+        .state('login', {
+            url: '/login',
+            templateUrl: 'views/login.html',
+            controller: 'loginController'
+        })
+        .state('register', {
+            url: '/register',
+            templateUrl: 'views/register.html',
+            controller: 'registerController'
+        })
+        .state('registerorg', {
+            url: '/registerorganization',
+            templateUrl: 'views/registerorganization.html',
+            controller: 'registerController'
+        })
+        .state('registeruser', {
+            url: '/registeruser',
+            templateUrl: 'views/registeruser.html',
+            controller: 'registerUserController'
+        })
+        .state('registerorginfo', {
+            url: '/registerorganizationinfo',
+            templateUrl: 'views/registerinfo.html',
+            controller: 'registerinfoController'
+        })
+        .state('payment', {
+            url: '/payment',
+            templateUrl: 'views/payment.html',
+            controller: 'paymentController'
+        })
+        .state('newmember', {
+            url: '/newuser/:key',
+            templateUrl: 'views/newmemberinfo.html',
+            controller: 'newmemberinfoController'
+        })
+        .state('forgotpassword', {
+            url: '/forgotpassword',
+            templateUrl: 'views/forgot_password.html',
+            controller: 'forgotPasswordController'
+        })
+        .state('changepasswordfromtoken', {
+            url: '/changepasswordfromtoken/:token',
+            templateUrl: 'views/change_password_from_token.html',
+            controller: 'changePasswordFromTokenController'
+        })
+        .state('app', {
+            url: '/app',
+            templateUrl: 'views/app.html',
+            controller: 'appController',
+        })
+<<<<<<< Updated upstream
             .state('app.home', {
                 url : '/home',
                 templateUrl : 'views/apphome.html',
@@ -366,68 +372,328 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     }
                 })
             .state('app.newPoll',{
+=======
+        .state('app.home', {
+            url: '/home',
+            templateUrl: 'views/apphome.html',
+            controller: 'appHomeController',
+        })
+        .state('app.managemembers', {
+            url: '/managemembers',
+            templateUrl: 'views/managemembers.html',
+            data: {
+                permissions: {
+                    only: [LEADERSHIP, COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.managemembers.manage', {
+            url: '/manage',
+            templateUrl: 'views/managingmembers.html',
+            controller: 'manageMembersController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.managemembers.add', {
+            url: '/add',
+            templateUrl: 'views/addingmembers.html',
+            controller: 'addMembersController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.managemembers.tag', {
+            url: '/tag',
+            templateUrl: 'views/taggingmembers.html',
+            controller: 'membertagsController',
+            data: {
+                permissions: {
+                    only: [COUNCIL, LEADERSHIP],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.managealumni', {
+            url: '/managealumni',
+            templateUrl: 'views/managealumni.html',
+        })
+        .state('app.managealumni.add', {
+            url: '/add',
+            templateUrl: 'views/addingalumni.html',
+            controller: 'addAlumniController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.managealumni.manage', {
+            url: '/manage',
+            templateUrl: 'views/managingalumni.html',
+            controller: 'managealumniController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.incorrectperson', {
+            url: '/incorrectperson',
+            templateUrl: 'views/incorrectperson.html',
+            controller: 'incorrectpersonController'
+        })
+        .state('app.accountinfo', {
+            url: '/accountinfo',
+            templateUrl: 'views/accountinfo.html',
+            controller: 'accountinfoController',
+            data: {
+                permissions: {
+                    only: [LOGGED_IN],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.uploadprofilepicture', {
+            url: '/uploadprofilepicture',
+            templateUrl: 'views/uploadprofilepicture.html',
+            controller: 'profilePictureController',
+            data: {
+                permissions: {
+                    only: [LOGGED_IN],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.directory', {
+            url: '/directory',
+            templateUrl: 'views/directory.html',
+            data: {
+                permissions: {
+                    only: [LOGGED_IN],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.directory.members', {
+            url: '/members',
+            templateUrl: 'views/memberdirectory.html',
+            controller: 'membersDirectoryController',
+            data: {
+                permissions: {
+                    only: [LOGGED_IN],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.directory.alumni', {
+            url: '/alumni',
+            templateUrl: 'views/alumnidirectory.html',
+            controller: 'alumniDirectoryController',
+            data: {
+                permissions: {
+                    only: [LOGGED_IN],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.memberprofile', {
+            url: '/directory/:id',
+            templateUrl: 'views/memberprofile.html',
+            controller: 'memberprofileController',
+            data: {
+                permissions: {
+                    only: [LOGGED_IN],
+                    redirectTo: 'home'
+                }
+            }
+        })
+    //#CHANGES there might be a better way to do this
+    .state('app.postNewKeyPictureLink', {
+        url: '/postNewKeyPictureLink',
+        templateUrl: 'views/loading.html',
+        controller: 'uploadImageController'
+    })
+        .state('app.changepassword', {
+            url: '/changepassword',
+            templateUrl: 'views/change_password.html',
+            controller: 'changePasswordController'
+        })
+        .state('app.messaging', {
+            url: '/messaging',
+            templateUrl: 'views/messaging.html',
+            controller: 'messagingController',
+            data: {
+                permissions: {
+                    only: [COUNCIL, LEADERSHIP],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.newevent', {
+            url: '/newevent',
+            templateUrl: 'views/newevent.html',
+            controller: 'newEventController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.events', {
+            url: '/events',
+            templateUrl: 'views/events.html',
+            controller: 'eventsController',
+            data: {
+                permissions: {
+                    only: [MEMBER],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.eventInfo', {
+            url: '/events/:tag',
+            templateUrl: 'views/eventinfo.html',
+            controller: 'eventInfoController',
+            data: {
+                permissions: {
+                    only: [MEMBER],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.editEvent', {
+            url: '/events/:tag/edit',
+            templateUrl: 'views/editevent.html',
+            controller: 'editEventsController',
+            data: {
+                permissions: {
+                    only: [LEADERSHIP],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.eventCheckin', {
+            url: '/events/:tag/checkin',
+            templateUrl: 'views/eventcheckin.html',
+            controller: 'eventCheckInController',
+            data: {
+                permissions: {
+                    only: [LEADERSHIP],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.eventCheckinReport', {
+>>>>>>> Stashed changes
             //#TODO put this into each individual event :tag
-                url : '/newpoll',
-                templateUrl : 'views/newpoll.html',
-                controller : 'newPollController',
-                data: {
-                        permissions: {
-                            only: [COUNCIL],
-                            redirectTo: 'home'
-                        }
-                    }
-                })
-            .state('app.polls',{
+            url: '/events/:tag/report',
+            templateUrl: 'views/eventcheckinreport.html',
+            controller: 'eventCheckInReportController',
+            data: {
+                permissions: {
+                    only: [LEADERSHIP],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.admin', {
             //#TODO put this into each individual event :tag
-                url : '/polls',
-                templateUrl : 'views/polls.html',
-                controller : 'pollController',
-                data: {
-                        permissions: {
-                            only: [MEMBER],
-                            redirectTo: 'home'
-                        }
-                    }
-                })
-            .state('app.pollinfo',{
+            url: '/admin',
+            templateUrl: 'views/admin.html',
+            controller: 'adminController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.organizationPictureUpload', {
             //#TODO put this into each individual event :tag
-                url : '/polls/:key',
-                templateUrl : 'views/pollinfo.html',
-                controller : 'pollInfoController',
-                data: {
-                        permissions: {
-                            only: [MEMBER],
-                            redirectTo: 'home'
-                        }
-                    }
-                })
-            .state('app.pollresults',{
-        //#TODO put this into each individual event :tag
-                    url : '/polls/:key/results',
-                    templateUrl : 'views/pollresults.html',
-                    controller : 'pollResultsController',
-                    data: {
-                        permissions: {
-                            only: [MEMBER],
-                            redirectTo: 'home'
-                        }
-                    }
-                })
-            .state('app.links', {
-                    url: '/links',
-                    templateUrl : 'views/links.html',
-                    controller : 'LinksController',
-                    data: {
-                        permissions: {
-                            only: [MEMBER],
-                            redirectTo: 'home'
-                        }
-                    }
-                })
-    });
+            url: '/uploadorganizationimage',
+            templateUrl: 'views/uploadOrganizationImage.html',
+            controller: 'organizationPictureController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.newPoll', {
+            //#TODO put this into each individual event :tag
+            url: '/newpoll',
+            templateUrl: 'views/newpoll.html',
+            controller: 'newPollController',
+            data: {
+                permissions: {
+                    only: [COUNCIL],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.polls', {
+            //#TODO put this into each individual event :tag
+            url: '/polls',
+            templateUrl: 'views/polls.html',
+            controller: 'pollController',
+            data: {
+                permissions: {
+                    only: [MEMBER],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.pollinfo', {
+            //#TODO put this into each individual event :tag
+            url: '/polls/:key',
+            templateUrl: 'views/pollinfo.html',
+            controller: 'pollInfoController',
+            data: {
+                permissions: {
+                    only: [MEMBER],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.pollresults', {
+            //#TODO put this into each individual event :tag
+            url: '/polls/:key/results',
+            templateUrl: 'views/pollresults.html',
+            controller: 'pollResultsController',
+            data: {
+                permissions: {
+                    only: [MEMBER],
+                    redirectTo: 'home'
+                }
+            }
+        })
+        .state('app.links', {
+            url: '/links',
+            templateUrl: 'views/links.html',
+            controller: 'LinksController',
+            data: {
+                permissions: {
+                    only: [MEMBER],
+                    redirectTo: 'home'
+                }
+            }
+        })
+});
 
 App.config(function($mdThemingProvider) {
-    
+
     $mdThemingProvider.definePalette('cyan', {
         '50': 'e0f7fa',
         '100': 'b2ebf2',
@@ -446,7 +712,7 @@ App.config(function($mdThemingProvider) {
         'contrastDefaultColor': 'light',
         'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
         'contrastLightColors': undefined
-    });    
+    });
     $mdThemingProvider.definePalette('red', {
         '50': 'ffebee',
         '100': 'ffcdd2',
@@ -465,7 +731,7 @@ App.config(function($mdThemingProvider) {
         'contrastDefaultColor': 'light',
         'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
         'contrastLightColors': undefined
-    });    
+    });
     $mdThemingProvider.definePalette('purple', {
         '50': 'f3e5f5',
         '100': 'e1bee7',
@@ -484,7 +750,7 @@ App.config(function($mdThemingProvider) {
         'contrastDefaultColor': 'light',
         'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
         'contrastLightColors': undefined
-    });    
+    });
     $mdThemingProvider.definePalette('pink', {
         '50': 'fce4ec',
         '100': 'f8bbd0',
@@ -577,7 +843,7 @@ App.config(function($mdThemingProvider) {
         'A400': '2979ff',
         'A700': '2962ff',
         'contrastDefaultColor': 'light',
-        'contrastDarkColors': ['50', '100', '200','300','400','A100'],
+        'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
         'contrastLightColors': undefined
     });
     $mdThemingProvider.theme('default').primaryColor('cyan');
@@ -589,320 +855,325 @@ App.config(function($mdThemingProvider) {
     $mdThemingProvider.theme('green').primaryColor('green');
     $mdThemingProvider.theme('brown').primaryColor('brown');
     $mdThemingProvider.theme('gray').primaryColor('gray');
-    
+
 });
 
 //Set up run commands for the app
-    App.run(function ($rootScope, $state, $stateParams, $q, $timeout, LoadScreen, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Inbox){
-        // FastClick.attach(document.body);
+App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Inbox) {
+    // FastClick.attach(document.body);
 
 
-        // Permission
-        // .defineRole(COUNCIL, function($stateParams){
-        //     if (Auth.get() === COUNCIL){
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // })
-        // .defineRole(LEADERSHIP, function($stateParams){
-        //     if (Auth.get() == COUNCIL || Auth.get() == LEADERSHIP){
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // })
-        // .defineRole(MEMBER, function($stateParams){
-        //     if (Auth.get() == COUNCIL || Auth.get() == LEADERSHIP || Auth.get() == MEMBER){
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // })
-        // .defineRole(ALUMNI, function($stateParams){
-        //     if (Auth.get() == ALUMNI || Auth.get() ==  COUNCIL || Auth.get() == LEADERSHIP || Auth.get() == MEMBER){
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // });  
-        $rootScope.$on('$stateChangeStart', function (event, next) {
-            if (!next.data){console.log("I am going somewhere with no data", next); return;}
-            if (!AuthService.loginAttempted()){console.log("I am ignoring the fact I cant be here", next); return;}
-            else{
-                var authorizedRoles = next.data.permissions.only;
-                if (!AuthService.isAuthorized(authorizedRoles)) {
-                    console.log('I am rejecting you.');
-                  event.preventDefault();
-                  if (AuthService.isAuthenticated()){
+    // Permission
+    // .defineRole(COUNCIL, function($stateParams){
+    //     if (Auth.get() === COUNCIL){
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // })
+    // .defineRole(LEADERSHIP, function($stateParams){
+    //     if (Auth.get() == COUNCIL || Auth.get() == LEADERSHIP){
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // })
+    // .defineRole(MEMBER, function($stateParams){
+    //     if (Auth.get() == COUNCIL || Auth.get() == LEADERSHIP || Auth.get() == MEMBER){
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // })
+    // .defineRole(ALUMNI, function($stateParams){
+    //     if (Auth.get() == ALUMNI || Auth.get() ==  COUNCIL || Auth.get() == LEADERSHIP || Auth.get() == MEMBER){
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // });  
+    $rootScope.$on('$stateChangeStart', function(event, next) {
+        if (!next.data) {
+            console.log("I am going somewhere with no data", next);
+            return;
+        }
+        if (!AuthService.loginAttempted()) {
+            console.log("I am ignoring the fact I cant be here", next);
+            return;
+        } else {
+            var authorizedRoles = next.data.permissions.only;
+            if (!AuthService.isAuthorized(authorizedRoles)) {
+                console.log('I am rejecting you.');
+                event.preventDefault();
+                if (AuthService.isAuthenticated()) {
                     // user is not allowed
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-                  } else {
+                } else {
                     // user is not logged in
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-                  }
                 }
             }
-        });
-
-        $rootScope.$on(AUTH_EVENTS.notAuthenticated, function(){
-            if (AuthService.loginAttempted()){
-                Session.destroy();
-                console.log('location state', $location.path());
-                if ($location.path() != '/login'){
-                    $location.path('login');
-                }
-                $location.path('login');
-            }
-        });
-
-        $rootScope.$on(AUTH_EVENTS.logoutSuccess, function(){
-            console.log('Im logging out');
-            AuthService.destroy();
-            Session.destroy();
-            Inbox.destroy();
-            Directory.destroy();
-            Events.destroy();
-            Tags.destroy();
-            Polls.destroy();
-            Links.destroy();
-            Organization.destroy();
-            localStorageService.clearAll();
-            $.removeCookie('FORM_INFO_EMPTY');
-            $rootScope.directory = {};
-            $rootScope.me = undefined;
-            $rootScope.polls = undefined;
-            $rootScope.perms = undefined;
-            $rootScope.events = undefined;
-            $rootScope.notifications = undefined;
-            $rootScope.hidden_notifications = undefined;
-            $rootScope.updateNotificationBadge();
-            console.log($state);
-            if ($state.current.name != 'login' && $state.current.name != 'register' && $state.current.name != 'registerorg' && $state.current.name != 'newmember'){
-                $location.path('login');
-            }
-        });
-
-        var iosConfig = {
-            "badge": true,
-            "sound": true,
-            "alert": true,
-        };
-
-        $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
-            //  document.addEventListener("deviceready", function(){
-            //     $cordovaPush.register(iosConfig).then(function(result) {
-            //       console.log("result: " + result);
-            //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_iphone_token',result.deviceToken)
-            //     }, function(err) {
-            //         console.log('something went wrong', err);
-            // });
-            // });
-
-            if ($state.data){
-                var authorizedRoles = $state.data.permissions.only;
-                if (!AuthService.isAuthorized(authorizedRoles)) {
-                    if(Session.perms == 'alumni'){
-                        $location.path('directory');
-                    }
-                    else{
-                        $location.path('home');
-                    }   
-                }
-            }
-        });
-
-        $rootScope.$watch('color', function(){
-           $('body').attr('md-theme',$rootScope.color);
-           $('body').attr('class', 'theme-'+$rootScope.color);
-            console.log('I changed dat color');
-        })
-        $rootScope.changeTheme = function(color){
-            $rootScope.color = color;
-            
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {color: $rootScope.color})
-                .success(function(data){
-                    if (!RESTService.hasErrors(data))
-                    {
-                    }
-                    else{
-                        $scope.error = true;    
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ' + JSON.stringify(data));
-                });
-            
         }
-        $rootScope.checkPermissions = function(perms){
-            if (!AuthService.isAuthenticated()){
+    });
+
+    $rootScope.$on('$locationChangeStart', function(event) {
+        $('.modal-backdrop').remove();
+        $('.bootstrap-datetimepicker-widget').hide()
+        window.scrollTo(0, 0);
+    });
+
+    $rootScope.$on(AUTH_EVENTS.notAuthenticated, function() {
+        if (AuthService.loginAttempted()) {
+            Session.destroy();
+            console.log('location state', $location.path());
+            if ($location.path() != '/login') {
+                $location.path('login');
+            }
+            $location.path('login');
+        }
+    });
+
+    $rootScope.$on(AUTH_EVENTS.logoutSuccess, function() {
+        console.log('Im logging out');
+        AuthService.destroy();
+        Session.destroy();
+        Inbox.destroy();
+        Directory.destroy();
+        Events.destroy();
+        Tags.destroy();
+        Polls.destroy();
+        Links.destroy();
+        Organization.destroy();
+        localStorageService.clearAll();
+        $.removeCookie('FORM_INFO_EMPTY');
+        $rootScope.directory = {};
+        $rootScope.me = undefined;
+        $rootScope.polls = undefined;
+        $rootScope.perms = undefined;
+        $rootScope.events = undefined;
+        $rootScope.notifications = undefined;
+        $rootScope.hidden_notifications = undefined;
+        $rootScope.updateNotificationBadge();
+        console.log($state);
+        if ($state.current.name != 'login' && $state.current.name != 'register' && $state.current.name != 'registerorg' && $state.current.name != 'newmember') {
+            $location.path('login');
+        }
+    });
+
+    var iosConfig = {
+        "badge": true,
+        "sound": true,
+        "alert": true,
+    };
+
+    $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
+        //  document.addEventListener("deviceready", function(){
+        //     $cordovaPush.register(iosConfig).then(function(result) {
+        //       console.log("result: " + result);
+        //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_iphone_token',result.deviceToken)
+        //     }, function(err) {
+        //         console.log('something went wrong', err);
+        // });
+        // });
+
+        if ($state.data) {
+            var authorizedRoles = $state.data.permissions.only;
+            if (!AuthService.isAuthorized(authorizedRoles)) {
+                if (Session.perms == 'alumni') {
+                    $location.path('directory');
+                } else {
+                    $location.path('home');
+                }
+            }
+        }
+    });
+
+    $rootScope.$watch('color', function() {
+        $('body').attr('md-theme', $rootScope.color);
+        $('body').attr('class', 'theme-' + $rootScope.color);
+        console.log('I changed dat color');
+    })
+    $rootScope.changeTheme = function(color) {
+        $rootScope.color = color;
+
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {
+            color: $rootScope.color
+        })
+            .success(function(data) {
+                if (!RESTService.hasErrors(data)) {} else {
+                    $scope.error = true;
+                }
+            })
+            .error(function(data) {
+                console.log('Error: ' + JSON.stringify(data));
+            });
+
+    }
+    $rootScope.checkPermissions = function(perms) {
+        if (!AuthService.isAuthenticated()) {
+            return false;
+        } else {
+            if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)) {
                 return false;
             }
-            else{
-                if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)){
-                    return false;
-                }
-                    return true;
-            }
+            return true;
         }
-        if (Organization.organization){
-            if (Organization.organization.color){
-                $rootScope.color = Organization.organization.color;
-            }
-            else{
-                $rootScope.color = 'default';
-            }
-        }
-        else{
+    }
+    if (Organization.organization) {
+        if (Organization.organization.color) {
+            $rootScope.color = Organization.organization.color;
+        } else {
             $rootScope.color = 'default';
         }
-        // $rootScope.$on('organization:updated', function(){
-        //     console.log('I changed');
-        //     $rootScope.color = Organization.organization.color;
-        // })
-        $rootScope.$state = $state;
-        // $rootScope.color = 'color1';
-        // $rootScope.perms = 'alumni';
-        // $('body').addClass('dark');
-        // $('body').removeClass('light');
-        // $rootScope.$stateParams = $stateParams;
-        // $rootScope.directory = {};
-        // $rootScope.users = $rootScope.directory;
-        // $rootScope.notification_count = "0";
-        // $rootScope.tags = {};
-        // $rootScope.updatingNotifications = false;
-        // $rootScope.allTags = [];
-        $rootScope.defaultProfilePicture = 'images/defaultprofile.png';
-        // $rootScope.hasLoaded = false;
-        $rootScope.setColor = function(color){
-            $mdThemingProvider.theme('default').primaryColor(color);
-        }
-        $rootScope.routeChange = function(){
-            $('.modal-backdrop').remove();
-            $('.bootstrap-datetimepicker-widget').hide()
-            window.scrollTo(0, 0);
-        }
-//         $rootScope.updateNotifications = function(){
-//             $('.fa-refresh').addClass('fa-spin');
-//             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
-//             .success(function(data){
-//             if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
-                
-//                 $timeout(function(){
-//                     for (var i = 0; i < $rootScope.notifications.length; i++){
-//                         $rootScope.notifications[i].collapseOut = false;
-//                     }
-//                 })
-//                 $timeout(function(){
-//                     $rootScope.notifications = JSON.parse(data.data).notifications;
-//                     $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
-// //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
-// //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
-// //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
-//                     for (var i = 0; i < $rootScope.notifications.length; i++){
-//                         $rootScope.notifications[i].collapseOut = true; 
-// //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
-// //                            function(all,text,char){
-// //                                return text + "&shy;" + char;
-// //                            });
+    } else {
+        $rootScope.color = 'default';
+    }
+    // $rootScope.$on('organization:updated', function(){
+    //     console.log('I changed');
+    //     $rootScope.color = Organization.organization.color;
+    // })
+    $rootScope.$state = $state;
+    // $rootScope.color = 'color1';
+    // $rootScope.perms = 'alumni';
+    // $('body').addClass('dark');
+    // $('body').removeClass('light');
+    // $rootScope.$stateParams = $stateParams;
+    // $rootScope.directory = {};
+    // $rootScope.users = $rootScope.directory;
+    // $rootScope.notification_count = "0";
+    // $rootScope.tags = {};
+    // $rootScope.updatingNotifications = false;
+    // $rootScope.allTags = [];
+    $rootScope.defaultProfilePicture = 'images/defaultprofile.png';
+    // $rootScope.hasLoaded = false;
+    $rootScope.setColor = function(color) {
+        $mdThemingProvider.theme('default').primaryColor(color);
+    }
+    $rootScope.routeChange = function() {
+        $('.modal-backdrop').remove();
+        $('.bootstrap-datetimepicker-widget').hide()
+        window.scrollTo(0, 0);
+    }
+    //         $rootScope.updateNotifications = function(){
+    //             $('.fa-refresh').addClass('fa-spin');
+    //             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
+    //             .success(function(data){
+    //             if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
 
-//                     }
-//                 })
-//                 $timeout(function(){
-//                     $rootScope.updateNotificationBadge();
-//                 })
-//             }
-//                 $timeout(function(){
-//                     $('.fa-refresh').removeClass('fa-spin')
-//                 });
-//             })
-                
-//             .error(function(data) {
-//                 console.log('Error: ' , data);
-//             });
-//         }
-        
-        $rootScope.refreshPage = function(){
-            window.location.reload();
+    //                 $timeout(function(){
+    //                     for (var i = 0; i < $rootScope.notifications.length; i++){
+    //                         $rootScope.notifications[i].collapseOut = false;
+    //                     }
+    //                 })
+    //                 $timeout(function(){
+    //                     $rootScope.notifications = JSON.parse(data.data).notifications;
+    //                     $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
+    // //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
+    // //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
+    // //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
+    //                     for (var i = 0; i < $rootScope.notifications.length; i++){
+    //                         $rootScope.notifications[i].collapseOut = true; 
+    // //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
+    // //                            function(all,text,char){
+    // //                                return text + "&shy;" + char;
+    // //                            });
+
+    //                     }
+    //                 })
+    //                 $timeout(function(){
+    //                     $rootScope.updateNotificationBadge();
+    //                 })
+    //             }
+    //                 $timeout(function(){
+    //                     $('.fa-refresh').removeClass('fa-spin')
+    //                 });
+    //             })
+
+    //             .error(function(data) {
+    //                 console.log('Error: ' , data);
+    //             });
+    //         }
+
+    $rootScope.refreshPage = function() {
+        window.location.reload();
+    }
+    $rootScope.doNothing = function() {
+        return false;
+    }
+    $rootScope.requirePermissions = function(perms) {
+        // if ($rootScope.perms){
+        //     if (!$rootScope.checkPermissions(perms)){
+        //         if ($rootScope.checkAlumni()){
+        //             window.location.assign('#/app/directory/members');
+        //         }
+        //         else{
+        //             window.location.assign("/#/app/home");
+        //         }
+        //     } 
+        // }
+        // else{
+        //     window.location.assign('/#/login');
+        // }
+    }
+
+    $rootScope.checkAlumni = function() {
+        if ($rootScope.perms == ALUMNI) {
+            return true;
         }
-        $rootScope.doNothing = function(){
-            return false;
-        }
-        $rootScope.requirePermissions = function(perms){
-            // if ($rootScope.perms){
-            //     if (!$rootScope.checkPermissions(perms)){
-            //         if ($rootScope.checkAlumni()){
-            //             window.location.assign('#/app/directory/members');
-            //         }
-            //         else{
-            //             window.location.assign("/#/app/home");
-            //         }
-            //     } 
-            // }
-            // else{
-            //     window.location.assign('/#/login');
-            // }
-        }
-        
-        $rootScope.checkAlumni = function(){
-            if ($rootScope.perms == ALUMNI){
-                return true;
-            }
-            return false;
-        }
-        
-        $rootScope.checkLogin = function(){
-            return checkLogin();
-        }
-        
-        $rootScope.logout = function(){
-        }
-        
-        $rootScope.updateNotificationBadge = function(){
-            var count = 0;
-            if ($rootScope.notifications){
-                for (var i = 0; i< $rootScope.notifications.length; i++){
-                    if ($rootScope.notifications[i].new){
-                        count ++;
-                    }
-                }
-                $rootScope.notification_count = count;
-            }
-        }
-        
-        $rootScope.getNameFromKey = function(key){
-            if ($rootScope.directory.members){
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    if ($rootScope.directory.members[i].key == key){
-                        return $rootScope.directory.members[i].first_name + ' ' + $rootScope.directory.members[i].last_name;
-                    }
-                }
-            }
-            return 'Unknown';
-        }
-        $rootScope.getUserFromKey = function(key){
-            if ($rootScope.directory.members){
-                for (var i = 0; i < $rootScope.directory.members.length; i++){
-                    if ($rootScope.directory.members[i].key == key){
-                        return $rootScope.directory.members[i];
-                    }
+        return false;
+    }
+
+    $rootScope.checkLogin = function() {
+        return checkLogin();
+    }
+
+    $rootScope.logout = function() {}
+
+    $rootScope.updateNotificationBadge = function() {
+        var count = 0;
+        if ($rootScope.notifications) {
+            for (var i = 0; i < $rootScope.notifications.length; i++) {
+                if ($rootScope.notifications[i].new) {
+                    count++;
                 }
             }
-            return undefined;
+            $rootScope.notification_count = count;
         }
-        $rootScope.showNav = true;
-    });
+    }
+
+    $rootScope.getNameFromKey = function(key) {
+        if ($rootScope.directory.members) {
+            for (var i = 0; i < $rootScope.directory.members.length; i++) {
+                if ($rootScope.directory.members[i].key == key) {
+                    return $rootScope.directory.members[i].first_name + ' ' + $rootScope.directory.members[i].last_name;
+                }
+            }
+        }
+        return 'Unknown';
+    }
+    $rootScope.getUserFromKey = function(key) {
+        if ($rootScope.directory.members) {
+            for (var i = 0; i < $rootScope.directory.members.length; i++) {
+                if ($rootScope.directory.members[i].key == key) {
+                    return $rootScope.directory.members[i];
+                }
+            }
+        }
+        return undefined;
+    }
+    $rootScope.showNav = true;
+});
 
 //More Functions
 
-function routeChange(){
+function routeChange() {
     $('.modal-backdrop').remove();
     $('.bootstrap-datetimepicker-widget').hide();
     window.scrollTo(0, 0);
 }
 
 //checks to see if user is logged in or not
-function checkLogin(){
+function checkLogin() {
     // if($.cookie(USER_NAME) != undefined){
     //     return true;
     // }
@@ -911,18 +1182,18 @@ function checkLogin(){
     return true;
 }
 
- function requireLeadership(){
-//     if (!checkPermissions('leadership')){
-//         if ($rootScope.checkAlumni()){
-//             window.location.assign('#/app/directory/members');
-//         }
-//         else{
-//             window.location.assign("/#/app");
-//         }
-//     }
+function requireLeadership() {
+    //     if (!checkPermissions('leadership')){
+    //         if ($rootScope.checkAlumni()){
+    //             window.location.assign('#/app/directory/members');
+    //         }
+    //         else{
+    //             window.location.assign("/#/app");
+    //         }
+    //     }
 }
 
-function requireCouncil(){
+function requireCouncil() {
     // if (!checkPermissions('council')){
     //     if ($rootScope.checkAlumni()){
     //         window.location.assign('#/app/directory/members');
@@ -933,7 +1204,7 @@ function requireCouncil(){
     // }
 }
 
-function requireMember(){
+function requireMember() {
     // if (!checkPermissions('member')){
     //     if ($rootScope.checkAlumni()){
     //         window.location.assign('#/app/directory/members');
@@ -953,10 +1224,10 @@ function requireMember(){
 //    return true;
 //}
 
-function logoutCookies(){
+function logoutCookies() {
     $.removeCookie(USER_NAME);
     $.removeCookie(TOKEN);
-//    $.removeCookie(PERMS);
+    //    $.removeCookie(PERMS);
     $.removeCookie('FORM_INFO_EMPTY');
 }
 
@@ -968,35 +1239,32 @@ function logoutCookies(){
 //}
 
 //use packageForSending(send_data) when $http.post in order to attach data to user
-function packageForSending(send_data){
-    var output = 
-    {user_name:$.cookie(USER_NAME),
-     token: $.cookie(TOKEN),
-     data: JSON.stringify(send_data)};
-//    console.log(output);
+function packageForSending(send_data) {
+    var output = {
+        user_name: $.cookie(USER_NAME),
+        token: $.cookie(TOKEN),
+        data: JSON.stringify(send_data)
+    };
+    //    console.log(output);
     return output;
 }
 
-function checkResponseErrors(received_data){
+function checkResponseErrors(received_data) {
     response = received_data;
-    if (response){
-        if(response.error == '')
-        {
+    if (response) {
+        if (response.error == '') {
             return false;
-        }
-        else
-        {
+        } else {
             console.log('ERROR: ', response.error);
-            return true;    
+            return true;
         }
     }
 }
 
-function checkCacheRefresh(timestamp){
-    if (!timestamp){
+function checkCacheRefresh(timestamp) {
+    if (!timestamp) {
         return true;
-    }
-    else if (timestamp.add(15, 'minutes').diff(moment()) < 0){
+    } else if (timestamp.add(15, 'minutes').diff(moment()) < 0) {
         return true;
     }
     return false;
@@ -1028,7 +1296,7 @@ function checkCacheRefresh(timestamp){
 //    return tags;
 //}
 //This should be called at the beginning of any controller that uses the checkbox tags
-function clearCheckedTags(tags){
+function clearCheckedTags(tags) {
     for (var i = 0; i < tags.org_tags.length; i++)
         tags.org_tags[i].checked = false;
     for (var i = 0; i < tags.perms_tags.length; i++)
@@ -1038,28 +1306,32 @@ function clearCheckedTags(tags){
     return tags;
 }
 
-function getCheckedTags(tags){
-//    console.log(tags);
-    var org_tags= [];
+function getCheckedTags(tags) {
+    //    console.log(tags);
+    var org_tags = [];
     var perms_tags = [];
     var event_tags = [];
-    for (var i = 0; i < tags.org_tags.length; i++){
+    for (var i = 0; i < tags.org_tags.length; i++) {
         if (tags.org_tags[i].checked)
             org_tags.push(tags.org_tags[i].name);
     }
-    for (var i = 0; i < tags.event_tags.length; i++){
+    for (var i = 0; i < tags.event_tags.length; i++) {
         if (tags.event_tags[i].checked)
             event_tags.push(tags.event_tags[i].name);
     }
-    for (var i = 0; i < tags.perms_tags.length; i++){
-        if (tags.perms_tags[i].checked){
+    for (var i = 0; i < tags.perms_tags.length; i++) {
+        if (tags.perms_tags[i].checked) {
             perms_tags.push(tags.perms_tags[i].name.toLowerCase());
         }
     }
-    return {org_tags: org_tags, event_tags: event_tags, perms_tags: perms_tags};
+    return {
+        org_tags: org_tags,
+        event_tags: event_tags,
+        perms_tags: perms_tags
+    };
 }
 
-function openErrorModal(error){
+function openErrorModal(error) {
     $('#errorModal').modal();
 }
 
@@ -1078,15 +1350,17 @@ function CSVReader(strData, strDelimiter) {
     strDelimiter = (strDelimiter || ",");
     // Create a regular expression to parse the CSV values.
     var objPattern = new RegExp((
-    // Delimiters.
-    "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-    // Quoted fields.
-    "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-    // Standard fields.
-    "([^\"\\" + strDelimiter + "\\r\\n]*))"), "gi");
+        // Delimiters.
+        "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+        // Quoted fields.
+        "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+        // Standard fields.
+        "([^\"\\" + strDelimiter + "\\r\\n]*))"), "gi");
     // Create an array to hold our data. Give the array
     // a default empty first row.
-    var arrData = [[]];
+    var arrData = [
+        []
+    ];
     // Create an array to hold our individual pattern
     // matching groups.
     var arrMatches = null;
@@ -1111,7 +1385,7 @@ function CSVReader(strData, strDelimiter) {
             // We found a quoted value. When we capture
             // this value, unescape any double quotes.
             var strMatchedValue = arrMatches[2].replace(
-            new RegExp("\"\"", "g"), "\"");
+                new RegExp("\"\"", "g"), "\"");
         } else {
             // We found a non-quoted value.
             var strMatchedValue = arrMatches[3];
@@ -1136,96 +1410,89 @@ function CSV2ARRAY(csv) {
     }
 
     var json = JSON.stringify(objArray);
-//    console.log(json);
+    //    console.log(json);
     var str = json.replace(/},/g, "},\r\n");
-    
+
     return JSON.parse(str);
 }
 
-function momentInTimezone(date){
-    return moment(date).add(moment().tz(jstz.determine().name()).format('ZZ')/100, 'hours');
+function momentInTimezone(date) {
+    return moment(date).add(moment().tz(jstz.determine().name()).format('ZZ') / 100, 'hours');
 }
 
-function momentUTCTime(date){
-    return moment(date).subtract( moment().tz(jstz.determine().name()).format('ZZ')/100, 'hours'); 
+function momentUTCTime(date) {
+    return moment(date).subtract(moment().tz(jstz.determine().name()).format('ZZ') / 100, 'hours');
 }
 
 function spliceSlice(str, index, count) {
-  return str.slice(0, index) + str.slice(index + count);
+    return str.slice(0, index) + str.slice(index + count);
 }
 
 //Directives and other add ons
-App.directive('match', function(){
-        return {
-            require: 'ngModel',
-            restrict: 'A',
-            scope: {
-                match: '='
-            },
-            link: function(scope, elem, attrs, ctrl) {
-                scope.$watch(function() {
-                    return (ctrl.$pristine && angular.isUndefined(ctrl.$modelValue)) || scope.match === ctrl.$modelValue;
-                }, function(currentValue) {
-                    ctrl.$setValidity('match', currentValue);
-                });
-            }
-        };
+App.directive('match', function() {
+    return {
+        require: 'ngModel',
+        restrict: 'A',
+        scope: {
+            match: '='
+        },
+        link: function(scope, elem, attrs, ctrl) {
+            scope.$watch(function() {
+                return (ctrl.$pristine && angular.isUndefined(ctrl.$modelValue)) || scope.match === ctrl.$modelValue;
+            }, function(currentValue) {
+                ctrl.$setValidity('match', currentValue);
+            });
+        }
+    };
 });
 
 
 
-App.directive('onFinishRender', function ($timeout) {
-  return {
-    restrict: 'A',
-    link: function (scope, element, attr) {
-      if (scope.$last === true) {
-          console.log('I found the last element');
-          scope.$evalAsync(attr.onFinishRender);
-      }
+App.directive('onFinishRender', ['$timeout',
+    function($timeout) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                if (scope.$last === true) {
+                    console.log('I found the last element');
+                    scope.$evalAsync(attr.onFinishRender);
+                }
+            }
+        }
     }
-  }
-});
+]);
 
-
-// App.directive('targetBlank', function() {
-//     return {
-//         restrict: 'A',
-//         link: function(scope, element, attrs) {
-//             scope.$watch(attrs.targetBlank, function(){
-//                 element.find('a').attr('target', '_blank');
-//             });
-//         }
-//     };
-// });
-
-App.directive('userNameInput', function(){
-        return {
-            require: 'ngModel',
-            restrict: 'A',
-            scope: {
-                ngModel: '='
-            },
-            controller: function($scope) {
-                $scope.$watch('ngModel', function() {
-                    if ($scope.ngModel){
-                        var i = 0;
-                       while(true){
-                            if (i >= $scope.ngModel.length){
-                                break;
-                            }
-                            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._".indexOf($scope.ngModel[i]) == -1 && $scope.ngModel.length > 0){
-                                $scope.ngModel = spliceSlice($scope.ngModel, i, 1);
-                                if (i > 0){ i--;} continue;
-                            }
-                            i++;
+App.directive('userNameInput', function() {
+    return {
+        require: 'ngModel',
+        restrict: 'A',
+        scope: {
+            ngModel: '='
+        },
+        controller: function($scope) {
+            $scope.$watch('ngModel', function() {
+                if ($scope.ngModel) {
+                    var i = 0;
+                    while (true) {
+                        if (i >= $scope.ngModel.length) {
+                            break;
                         }
+                        if ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._".indexOf($scope.ngModel[i]) == -1 && $scope.ngModel.length > 0) {
+                            $scope.ngModel = spliceSlice($scope.ngModel, i, 1);
+                            if (i > 0) {
+                                i--;
+                            }
+                            continue;
+                        }
+                        i++;
                     }
-                });
-            }
-        };
+                }
+            });
+        }
+    };
 });
 
-App.directive('removeHttp', function(){
+App.directive('removeHttp', function() {
     return {
         require: 'ngModel',
         restrict: 'A',
@@ -1234,57 +1501,63 @@ App.directive('removeHttp', function(){
         },
         controller: function($scope) {
             var index = 0;
-            $scope.$watch('ngModel', function(){
-                if ($scope.ngModel){
-                    if ($scope.ngModel.slice(0, 7).toLowerCase() == 'http://'){
+            $scope.$watch('ngModel', function() {
+                if ($scope.ngModel) {
+                    if ($scope.ngModel.slice(0, 7).toLowerCase() == 'http://') {
                         $scope.ngModel = $scope.ngModel.slice(7);
                     }
-                    if ($scope.ngModel.slice(0, 8).toLowerCase() == 'https://'){
+                    if ($scope.ngModel.slice(0, 8).toLowerCase() == 'https://') {
                         $scope.ngModel = $scope.ngModel.slice(8);
                     }
                 }
 
             })
-        }};
+        }
+    };
 });
 
 
 
-App.directive('fileChange', ['$parse', function($parse) {
+App.directive('fileChange', ['$parse',
+    function($parse) {
 
-    return {
-      restrict: 'A',
-      link: function ($scope, element, attrs) {
+        return {
+            restrict: 'A',
+            link: function($scope, element, attrs) {
 
-        // Get the function provided in the file-change attribute.
-        // Note the attribute has become an angular expression,
-        // which is what we are parsing. The provided handler is 
-        // wrapped up in an outer function (attrHandler) - we'll 
-        // call the provided event handler inside the handler()
-        // function below.
-        var attrHandler = $parse(attrs['fileChange']);
+                // Get the function provided in the file-change attribute.
+                // Note the attribute has become an angular expression,
+                // which is what we are parsing. The provided handler is 
+                // wrapped up in an outer function (attrHandler) - we'll 
+                // call the provided event handler inside the handler()
+                // function below.
+                var attrHandler = $parse(attrs['fileChange']);
 
-        // This is a wrapper handler which will be attached to the
-        // HTML change event.
-        var handler = function (e) {
+                // This is a wrapper handler which will be attached to the
+                // HTML change event.
+                var handler = function(e) {
 
-          $scope.$apply(function () {
+                    $scope.$apply(function() {
 
-            // Execute the provided handler in the directive's scope.
-            // The files variable will be available for consumption
-            // by the event handler.
-            attrHandler($scope, { $event: e, files: e.target.files });
-          });
+                        // Execute the provided handler in the directive's scope.
+                        // The files variable will be available for consumption
+                        // by the event handler.
+                        attrHandler($scope, {
+                            $event: e,
+                            files: e.target.files
+                        });
+                    });
+                };
+
+                // Attach the handler to the HTML change event 
+                element[0].addEventListener('change', handler, false);
+            }
         };
-
-        // Attach the handler to the HTML change event 
-        element[0].addEventListener('change', handler, false);
-      }
-    };
-  }]);
+    }
+]);
 
 
-App.directive('removeHashTag', function(){
+App.directive('removeHashTag', function() {
     return {
         require: 'ngModel',
         restrict: 'A',
@@ -1293,34 +1566,35 @@ App.directive('removeHashTag', function(){
         },
         controller: function($scope) {
             var index = 0;
-            $scope.$watch('ngModel', function(){
-                if ($scope.ngModel){
-                    if ($scope.ngModel.indexOf('#') > -1){
+            $scope.$watch('ngModel', function() {
+                if ($scope.ngModel) {
+                    if ($scope.ngModel.indexOf('#') > -1) {
                         $scope.ngModel = $scope.ngModel.splice($scope.ngModel.indexOf('#'), 1);
                     }
                 }
             })
-        }};
+        }
+    };
 });
 
 
-App.directive('search', function(){
-        return {
-            restrict: 'E',
-            scope: {
-                ngModel: '=',
-                change: '&?'
-            },
-            templateUrl:'views/templates/searchdirective.html',
-            controller: function($scope, $element, $attrs){
-                $scope.callFunction = function(){
-                    $scope.change(); 
-                }
+App.directive('search', function() {
+    return {
+        restrict: 'E',
+        scope: {
+            ngModel: '=',
+            change: '&?'
+        },
+        templateUrl: 'views/templates/searchdirective.html',
+        controller: function($scope, $element, $attrs) {
+            $scope.callFunction = function() {
+                $scope.change();
             }
-        };
+        }
+    };
 });
 
-App.directive('alumniYearPicker', function(){
+App.directive('alumniYearPicker', function() {
     return {
         restrict: 'E',
         scope: {
@@ -1331,21 +1605,24 @@ App.directive('alumniYearPicker', function(){
         },
         templateUrl: 'views/templates/alumniDirectoryPicker.html',
         controller: function($scope) {
-            $scope.$watch('alumni', function(){
-                if ($scope.alumni){
-                    if (!$scope.years){
+            $scope.$watch('alumni', function() {
+                if ($scope.alumni) {
+                    if (!$scope.years) {
                         $scope.years = [];
                     }
-                    for (var i = 0; i < $scope.alumni.length; i++){
-                        var item = {value:$scope.alumni[i].pledge_class_semester + ' '+ $scope.alumni[i].pledge_class_year, year:$scope.alumni[i].pledge_class_year, semester:$scope.alumni[i].pledge_class_semester};
-                        if ($scope.alumni[i].pledge_class_year && $scope.alumni[i].pledge_class_semester && !isAlreadyAdded(item)){
-                            if (!$scope.requireRegistration || ($scope.requireRegistration && $scope.alumni[i].user_name)){
+                    for (var i = 0; i < $scope.alumni.length; i++) {
+                        var item = {
+                            value: $scope.alumni[i].pledge_class_semester + ' ' + $scope.alumni[i].pledge_class_year,
+                            year: $scope.alumni[i].pledge_class_year,
+                            semester: $scope.alumni[i].pledge_class_semester
+                        };
+                        if ($scope.alumni[i].pledge_class_year && $scope.alumni[i].pledge_class_semester && !isAlreadyAdded(item)) {
+                            if (!$scope.requireRegistration || ($scope.requireRegistration && $scope.alumni[i].user_name)) {
                                 $scope.years.push(item);
-                                if (!$scope.selectedYear){
+                                if (!$scope.selectedYear) {
                                     $scope.selectedYear = item;
                                     $scope.highestYear = item;
-                                }
-                                else if (item.year > $scope.selectedYear.year){
+                                } else if (item.year > $scope.selectedYear.year) {
                                     $scope.selectedYear = item;
                                     $scope.highestYear = item;
                                 }
@@ -1353,31 +1630,31 @@ App.directive('alumniYearPicker', function(){
                         }
                     }
                     $scope.highestYear = $scope.years[0];
-                    for (var i = 0; i < $scope.years.length; i++){
-                        if ($scope.years[i].year > $scope.highestYear.year){
+                    for (var i = 0; i < $scope.years.length; i++) {
+                        if ($scope.years[i].year > $scope.highestYear.year) {
                             $scope.highestYear = $scope.years[i];
                         }
                     }
-                     $scope.selectedYear = $scope.highestYear;
-//                console.log('years', $scope.years);
-//                console.log('selectedYear',$scope.selectedYear);
+                    $scope.selectedYear = $scope.highestYear;
+                    //                console.log('years', $scope.years);
+                    //                console.log('selectedYear',$scope.selectedYear);
                 }
             });
-            $scope.$watch('search', function(){
-                if ($scope.search){
-                    if ($scope.search.length){
-                        $scope.selectedYear = undefined;}
-                    else{
+            $scope.$watch('search', function() {
+                if ($scope.search) {
+                    if ($scope.search.length) {
+                        $scope.selectedYear = undefined;
+                    } else {
                         $scope.selectedYear = $scope.highestYear;
                     }
-                }
-                else{
+                } else {
                     $scope.selectedYear = $scope.highestYear;
                 }
             })
-            function isAlreadyAdded(item){
-                for (var i = 0; i < $scope.years.length; i++){
-                    if (item.value == $scope.years[i].value){
+
+            function isAlreadyAdded(item) {
+                for (var i = 0; i < $scope.years.length; i++) {
+                    if (item.value == $scope.years[i].value) {
                         return true;
                     }
                 }
@@ -1387,158 +1664,143 @@ App.directive('alumniYearPicker', function(){
     };
 });
 
-App.directive('listThing', function(){
-        return {
-            require: 'ngModel',
-            restrict: 'E',
-            templateUrl: 'views/templates/olderYoungerTemplate.html',
-            transclude: true,
-            scope: {
-                ngModel: '=',
-                currentPage:'=?',
-                maxPageNumber:'=?',
-            },
-            controller: function($scope){
-        // check if it was defined.  If not - set a default
+App.directive('listThing', function() {
+    return {
+        require: 'ngModel',
+        restrict: 'E',
+        templateUrl: 'views/templates/olderYoungerTemplate.html',
+        transclude: true,
+        scope: {
+            ngModel: '=',
+            currentPage: '=?',
+            maxPageNumber: '=?',
+        },
+        controller: function($scope) {
+            // check if it was defined.  If not - set a default
             $scope.currentPage = $scope.currentPage || 0;
             $scope.maxPageNumber = $scope.maxPageNumber || 5;
-            }
-        };
+        }
+    };
 });
 
-App.directive('loadDirective', function(){
-  return {
-    scope: {
-        ngModel : '='
-    },
-    restrict: 'EA',
-    replace: 'true',
-    transclude: 'true',
-    templateUrl: 'views/templates/loadingTemplate.html',
-  }
+App.directive('loadDirective', function() {
+    return {
+        scope: {
+            ngModel: '='
+        },
+        restrict: 'EA',
+        replace: 'true',
+        transclude: 'true',
+        templateUrl: 'views/templates/loadingTemplate.html',
+    }
 });
 
 
-App.directive('timePicker', function($compile){
-  return {
-    scope: {
-        ngModel : '='
-    },
-    restrict: 'E',
-    replace: 'true',
-    template: '<div class="date"></div>',
-    link: function (scope, element, attrs) {
-        
-        var this_name = attrs.name;
-        var this_id = attrs.id;
-        
-        element.append('<md-input-container>'
-                        +'<label for="time_picker">Select Time</label>'
-                        +'<input type="text" name="time_picker" class="picker" id="'+this_id+'time" name="'+this_name+'time" ng-model="ngModel"/>'
-                        +'</md-input-container>'
-                        +'<script type="text/javascript">'
-                        +'$("#'+this_id+'time").datetimepicker({'
-                        +'pickDate: false,'
-                        +'icons: {'
-                        +'time: "fa fa-clock-o",'
-                        +'date: "fa fa-calendar",'
-                        +'up: "fa fa-arrow-up",'
-                        +'down: "fa fa-arrow-down"'
-                        +"}});"
-                        +'$("#'+this_id+'time").focusout(function(){'
-                        +'$(this).trigger("change");'
-                        +'});'
-                        +'</script>'
-                        );
-        $compile(element.contents())(scope)
-     }
-  }
+App.directive('timePicker', function($compile) {
+    return {
+        scope: {
+            ngModel: '='
+        },
+        restrict: 'E',
+        replace: 'true',
+        template: '<div class="date"></div>',
+        link: function(scope, element, attrs) {
+
+            var this_name = attrs.name;
+            var this_id = attrs.id;
+
+            element.append('<md-input-container>' + '<label for="time_picker">Select Time</label>' + '<input type="text" name="time_picker" class="picker" id="' + this_id + 'time" name="' + this_name + 'time" ng-model="ngModel"/>' + '</md-input-container>' + '<script type="text/javascript">' + '$("#' + this_id + 'time").datetimepicker({' + 'pickDate: false,' + 'icons: {' + 'time: "fa fa-clock-o",' + 'date: "fa fa-calendar",' + 'up: "fa fa-arrow-up",' + 'down: "fa fa-arrow-down"' + "}});" + '$("#' + this_id + 'time").focusout(function(){' + '$(this).trigger("change");' + '});' + '</script>');
+            $compile(element.contents())(scope)
+        }
+    }
 });
 
-App.directive('datePicker', function($compile){
-  return {
-    scope: {
-        ngModel : '='
-    },
-    restrict: 'E',
-    replace: 'true',
-    template: '<div class="date"></div>',
-    link: function (scope, element, attrs) {
-        
-        var this_name = attrs.name;
-        var this_id = attrs.id;
-        var this_future = attrs.id
-        element.append('<md-input-container>'
-                        +'<label for="date_picker">Select Date</label>'
-                        +'<input type="text" name="date_picker" class="picker" id="'+this_id+'date" name="'+this_name+'" ng-model="ngModel"/>'
-                        +'</md-input-container>'
-                        +'<script type="text/javascript">'
-                        +'$("#'+this_id+'date").datetimepicker({'
-                            +'pickTime: false,'
-                            //+ 'minDate: moment(),'
-                            +'icons: {time: "fa fa-clock-o", date: "fa fa-calendar", up: "fa fa-arrow-up", down: "fa fa-arrow-down"'
-                        +'}});'
-                        +'$("#'+this_id+'date").focusout(function(){'
-                        +'$(this).trigger("change");'
-                        +'});'
-                        +'</script>'
-                        );
-        $compile(element.contents())(scope)
-     }
-  }
+App.directive('datePicker', function($compile) {
+    return {
+        scope: {
+            ngModel: '='
+        },
+        restrict: 'E',
+        replace: 'true',
+        template: '<div class="date"></div>',
+        link: function(scope, element, attrs) {
+
+            var this_name = attrs.name;
+            var this_id = attrs.id;
+            var this_future = attrs.id
+            element.append('<md-input-container>' + '<label for="date_picker">Select Date</label>' + '<input type="text" name="date_picker" class="picker" id="' + this_id + 'date" name="' + this_name + '" ng-model="ngModel"/>' + '</md-input-container>' + '<script type="text/javascript">' + '$("#' + this_id + 'date").datetimepicker({' + 'pickTime: false,'
+                //+ 'minDate: moment(),'
+                + 'icons: {time: "fa fa-clock-o", date: "fa fa-calendar", up: "fa fa-arrow-up", down: "fa fa-arrow-down"' + '}});' + '$("#' + this_id + 'date").focusout(function(){' + '$(this).trigger("change");' + '});' + '</script>'
+            );
+            $compile(element.contents())(scope)
+        }
+    }
 });
 
 
 //credit: http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs
 App.directive('ngEnter', function() {
-        return function(scope, element, attrs) {
-            element.bind("keyup", function(event) {
-                if(event.which === 13) {
-                    scope.$apply(function(){
-                        scope.$eval(attrs.ngEnter, {'event': event});
+    return function(scope, element, attrs) {
+        element.bind("keyup", function(event) {
+            if (event.which === 13) {
+                scope.$apply(function() {
+                    scope.$eval(attrs.ngEnter, {
+                        'event': event
                     });
-                    event.preventDefault();
-                }
-            });
-        };
-    });
+                });
+                event.preventDefault();
+            }
+        });
+    };
+});
 
 App.directive('netePieChart', function() {
-    return{    
+    return {
         scope: {
-            ngModel : '=',
+            ngModel: '=',
             realData: '='
         },
         restrict: 'E',
         replace: 'true',
         template: '<div> </div>',
-        link: function (scope, element, attrs) {
-            scope.$watch('ngModel', function(){
-                if (scope.ngModel){
+        link: function(scope, element, attrs) {
+            scope.$watch('ngModel', function() {
+                if (scope.ngModel) {
                     scope.realData = {};
-                        var objectList = [];
-                        for (var i = 0; i < scope.ngModel.length; i++){
-                            objectList.push({c: [
-                                {v: scope.ngModel[i].name},
-                                {v: scope.ngModel[i].count},
-                            ]})
-                        }
+                    var objectList = [];
+                    for (var i = 0; i < scope.ngModel.length; i++) {
+                        objectList.push({
+                            c: [{
+                                v: scope.ngModel[i].name
+                            }, {
+                                v: scope.ngModel[i].count
+                            }, ]
+                        })
+                    }
 
-                        scope.realData.data = {"cols": [
-                            {id: "t", label: "Choice", type: "string"},
-                            {id: "s", label: "Count", type: "number"}
-                        ], "rows":objectList};
+                    scope.realData.data = {
+                        "cols": [{
+                            id: "t",
+                            label: "Choice",
+                            type: "string"
+                        }, {
+                            id: "s",
+                            label: "Count",
+                            type: "number"
+                        }],
+                        "rows": objectList
+                    };
 
-                        // $routeParams.chartType == BarChart or PieChart or ColumnChart...
-                        scope.realData.type = 'PieChart';
-                        scope.realData.options = {
-                            'title': ''
-                        }  
-                }   
+                    // $routeParams.chartType == BarChart or PieChart or ColumnChart...
+                    scope.realData.type = 'PieChart';
+                    scope.realData.options = {
+                        'title': ''
+                    }
+                }
             });
         }
     }
-    });
+});
 
 //App.directive('calendar', function($compile){
 //  return {
@@ -1579,203 +1841,225 @@ App.directive('netePieChart', function() {
 //  }
 //});
 
-           
-            
-App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags){
+
+
+App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags) {
     return {
-    restrict: 'E',
-    replace: 'true',
-    templateUrl: 'views/templates/selectingmembers.html',
-    scope:{
-        tags:"=",
-        localTags:"=?",
-        includeUsers:"=?",
-        clearUsers:"=?",
-    },
-    transclude: true,
-    link: function (scope, element, attrs) {
-        console.log('I am starting selectingmembers');
-        var tags;
-        var directory;
-        scope.usersList = [];
-        Directory.get();
-        if (!scope.localTags){
-            console.log('im getting local tags');
-            Tags.get();
-            scope.tags = Tags.tags;
-            scope.$on('tags:updated', function(){
+        restrict: 'E',
+        replace: 'true',
+        templateUrl: 'views/templates/selectingmembers.html',
+        scope: {
+            tags: "=",
+            localTags: "=?",
+            includeUsers: "=?",
+            clearUsers: "=?",
+        },
+        transclude: true,
+        link: function(scope, element, attrs) {
+            console.log('I am starting selectingmembers');
+            var tags;
+            var directory;
+            scope.usersList = [];
+            Directory.get();
+            if (!scope.localTags) {
+                console.log('im getting local tags');
+                Tags.get();
                 scope.tags = Tags.tags;
-                update();
-            });
-        }
-        scope.$on('$destroy', function(){
-            for (var i = 0; i < scope.tags.org_tags.length; i++){
-                if (scope.tags.org_tags[i].checked){
-                    scope.tags.org_tags[i].checked = false;
-                }
+                scope.$on('tags:updated', function() {
+                    scope.tags = Tags.tags;
+                    update();
+                });
             }
-            for (var i = 0; i < scope.tags.perms_tags.length; i++){
-                if (scope.tags.perms_tags[i].checked){
-                    scope.tags.perms_tags[i].checked = false;
+            scope.$on('$destroy', function() {
+                for (var i = 0; i < scope.tags.org_tags.length; i++) {
+                    if (scope.tags.org_tags[i].checked) {
+                        scope.tags.org_tags[i].checked = false;
+                    }
                 }
-            }
-        })
-        scope.openDialog = function(ev){
-            $mdDialog.show({
+                for (var i = 0; i < scope.tags.perms_tags.length; i++) {
+                    if (scope.tags.perms_tags[i].checked) {
+                        scope.tags.perms_tags[i].checked = false;
+                    }
+                }
+            })
+            scope.openDialog = function(ev) {
+                $mdDialog.show({
                     controller: ('ModalController', ['$scope', '$mdDialog', '$sce', ModalController]),
                     templateUrl: 'views/templates/tagsDialog.html',
                     targetEvent: ev
-            });
-        }
+                });
+            }
 
-        function ModalController($scope, $mdDialog, $sce){
-            $scope.tags = scope.tags;
-            $scope.inclueUsers = scope.includeUsers;
-            $scope.clearUsers = scope.clearUsers;
-            $scope.usersList = scope.usersList;
-            $scope.closeModal = function(){
-                $mdDialog.hide();
-            }
-        }
-        scope.directory = Directory.directory;
-        scope.$on('directory:updated', function(){
-            scope.directory = Directory.directory;
-            update();
-        });
-        update();
-        scope.selectTagFromTypeAhead = function(tag){
-            tag.checked = true;
-            scope.selectedTagName="";
-        }
-        function update(){
-            if (scope.tags && scope.tags.org_tags && scope.includeUsers && scope.directory){
-                scope.usersList = [];
-                console.log('scope.directory', scope.directory);
-                for (var i = 0; i < scope.directory.members.length; i++){
-                    scope.usersList.push({user: scope.directory.members[i], checked:false, name:scope.directory.members[i].first_name + ' ' + scope.directory.members[i].last_name });
+            function ModalController($scope, $mdDialog, $sce) {
+                $scope.tags = scope.tags;
+                $scope.inclueUsers = scope.includeUsers;
+                $scope.clearUsers = scope.clearUsers;
+                $scope.usersList = scope.usersList;
+                $scope.closeModal = function() {
+                    $mdDialog.hide();
                 }
-                scope.allTagsList = scope.tags.org_tags.concat(scope.tags.perms_tags.concat(scope.usersList));
             }
-            else if (scope.tags && scope.tags.org_tags){
-                scope.allTagsList = scope.tags.org_tags.concat(scope.tags.perms_tags);
+            scope.directory = Directory.directory;
+            scope.$on('directory:updated', function() {
+                scope.directory = Directory.directory;
+                update();
+            });
+            update();
+            scope.selectTagFromTypeAhead = function(tag) {
+                tag.checked = true;
+                scope.selectedTagName = "";
             }
-        }
-        // scope.$watch('ngModel', function(){
-        //     if (scope.ngModel && scope.ngModel.org_tags && scope.includeUsers && scope.directory){
-        //         scope.usersList = [];
-        //         console.log('scope.directory', scope.directory);
-        //         for (var i = 0; i < scope.directory.members.length; i++){
-        //             scope.usersList.push({user: scope.directory.members[i], checked:false, name:scope.directory.members[i].first_name + ' ' + scope.directory.members[i].last_name });
-        //         }
-        //         scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.usersList));
-        //     }
-        //     else if (scope.ngModel && scope.ngModel.org_tags){
-        //         scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags);
-        //     }
-        // });
-        scope.$watch('clearUsers', function(){
-            if (scope.clearUsers == true){
-                scope.clearUsers = false;
-                for (var i = 0; i < scope.usersList.length; i++){
-                    if (scope.usersList[i].checked){
-                        scope.usersList[i].checked = false;
+
+            function update() {
+                if (scope.tags && scope.tags.org_tags && scope.includeUsers && scope.directory) {
+                    scope.usersList = [];
+                    console.log('scope.directory', scope.directory);
+                    for (var i = 0; i < scope.directory.members.length; i++) {
+                        scope.usersList.push({
+                            user: scope.directory.members[i],
+                            checked: false,
+                            name: scope.directory.members[i].first_name + ' ' + scope.directory.members[i].last_name
+                        });
+                    }
+                    scope.allTagsList = scope.tags.org_tags.concat(scope.tags.perms_tags.concat(scope.usersList));
+                } else if (scope.tags && scope.tags.org_tags) {
+                    scope.allTagsList = scope.tags.org_tags.concat(scope.tags.perms_tags);
+                }
+            }
+            // scope.$watch('ngModel', function(){
+            //     if (scope.ngModel && scope.ngModel.org_tags && scope.includeUsers && scope.directory){
+            //         scope.usersList = [];
+            //         console.log('scope.directory', scope.directory);
+            //         for (var i = 0; i < scope.directory.members.length; i++){
+            //             scope.usersList.push({user: scope.directory.members[i], checked:false, name:scope.directory.members[i].first_name + ' ' + scope.directory.members[i].last_name });
+            //         }
+            //         scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.usersList));
+            //     }
+            //     else if (scope.ngModel && scope.ngModel.org_tags){
+            //         scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags);
+            //     }
+            // });
+            scope.$watch('clearUsers', function() {
+                if (scope.clearUsers == true) {
+                    scope.clearUsers = false;
+                    for (var i = 0; i < scope.usersList.length; i++) {
+                        if (scope.usersList[i].checked) {
+                            scope.usersList[i].checked = false;
+                        }
                     }
                 }
-            }
-        });
-     }
-  }
-});
-
-App.directive('neteTag', function($compile){
-    return{
-        restrict: 'E',
-        templateUrl: 'views/templates/tags/nete-tag.html',
-        link: function(scope, element, attrs){
-            $compile(element.contents())(scope)
-        }
-    }
-});
-
-App.directive('netetagCheck', function($compile){
-    return{
-        restrict: 'E',
-        templateUrl: 'views/templates/tags/nete-tag-check.html',
-        link: function(scope, element, attrs){
-            $compile(element.contents())(scope)
-        }
-    }
-});
-
-App.directive('netetagDelete', function($compile){
-    return{
-        restrict: 'E',
-        templateUrl: 'views/templates/tags/nete-tag-delete.html',
-        link: function(scope, element, attrs){
-            $compile(element.contents())(scope)
-        }
-    }
-});
-            
-App.directive('netememberCheck', function($compile){
-    return{
-        restrict: 'E',
-        scope:{ngModel:"="},
-        templateUrl: 'views/templates/tags/nete-member-check.html',
-        link: function(scope, element, attrs){
-//            $compile(element.contents())(scope)
-        }
-    }
-});
-
-App.directive('neteMember', function($compile){
-    return{
-        restrict: 'E',
-        scope:{ngModel:"="},
-        templateUrl: 'views/templates/tags/nete-member.html',
-        // link: function(scope, element, attrs){
-//            $compile(element.contents())(scope)
-        // }
-    }
-});
-
-App.directive('netetagAll', function($compile){
-    return{
-        restrict: 'E',
-        templateUrl: 'views/templates/tags/nete-tag-all.html',
-        link: function(scope, element, attrs){
-            $compile(element.contents())(scope)
-        }
-    }
-});
-
-App.directive('updateStatus', function($timeout){
-    return{
-        restrict: 'E',
-        scope:  { 
-            ngModel: "=",
-            fnCall: "&?" 
-                },
-        templateUrl: 'views/templates/update-status.html',
-        controller: function($scope, $element, $attrs){
-            $scope.$watch('ngModel', function(){
-                if ($scope.ngModel == 'done'){
-//                    console.log('its done');
-                    $timeout(function(){
-//                        console.log('I should be changing it now');
-                        $scope.ngModel = '';
-                    }, 2000)
-                }
             });
-            $scope.callFunction = function(){
-//                console.log('hi!!!!!');
-                $scope.fnCall();
-                
-            }
-//            $compile(element.contents())(scope)
         }
     }
 });
+
+App.directive('neteTag', ['$compile',
+    function($compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'views/templates/tags/nete-tag.html',
+            link: function(scope, element, attrs) {
+                $compile(element.contents())(scope)
+            }
+        }
+    }
+]);
+
+App.directive('netetagCheck', ['$compile',
+    function($compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'views/templates/tags/nete-tag-check.html',
+            link: function(scope, element, attrs) {
+                $compile(element.contents())(scope)
+            }
+        }
+    }
+]);
+
+App.directive('netetagDelete', ['$compile',
+    function($compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'views/templates/tags/nete-tag-delete.html',
+            link: function(scope, element, attrs) {
+                $compile(element.contents())(scope)
+            }
+        }
+    }
+]);
+
+App.directive('netememberCheck', ['$compile',
+    function($compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                ngModel: "="
+            },
+            templateUrl: 'views/templates/tags/nete-member-check.html',
+            link: function(scope, element, attrs) {
+                //            $compile(element.contents())(scope)
+            }
+        }
+    }
+]);
+
+App.directive('neteMember', ['$compile',
+    function($compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                ngModel: "="
+            },
+            templateUrl: 'views/templates/tags/nete-member.html',
+            // link: function(scope, element, attrs){
+            //            $compile(element.contents())(scope)
+            // }
+        }
+    }
+]);
+
+App.directive('netetagAll', ['$compile',
+    function($compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'views/templates/tags/nete-tag-all.html',
+            link: function(scope, element, attrs) {
+                $compile(element.contents())(scope)
+            }
+        }
+    }
+]);
+
+App.directive('updateStatus', ['$timeout',
+    function($timeout) {
+        return {
+            restrict: 'E',
+            scope: {
+                ngModel: "=",
+                fnCall: "&?"
+            },
+            templateUrl: 'views/templates/update-status.html',
+            controller: function($scope, $element, $attrs) {
+                $scope.$watch('ngModel', function() {
+                    if ($scope.ngModel == 'done') {
+                        //                    console.log('its done');
+                        $timeout(function() {
+                            //                        console.log('I should be changing it now');
+                            $scope.ngModel = '';
+                        }, 2000)
+                    }
+                });
+                $scope.callFunction = function() {
+                    //                console.log('hi!!!!!');
+                    $scope.fnCall();
+
+                }
+                //            $compile(element.contents())(scope)
+            }
+        }
+    }
+]);
 
 //            if (attrs.options == 'all'){
 //                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
@@ -1810,29 +2094,29 @@ App.directive('updateStatus', function($timeout){
 //                );
 //            }
 
-App.filter('multipleSearch', function(){ 
-    return function (objects, search) {
+App.filter('multipleSearch', function() {
+    return function(objects, search) {
         var searchValues = search;
-        if (!search || !objects){
+        if (!search || !objects) {
             return objects;
         }
         retList = [];
         var searchArray = search.split(" ");
-        for (var oPos = 0; oPos < objects.length; oPos++){
+        for (var oPos = 0; oPos < objects.length; oPos++) {
             var object = objects[oPos];
-            for(var sPos = 0; sPos< searchArray.length; sPos++){
+            for (var sPos = 0; sPos < searchArray.length; sPos++) {
                 var check = false;
                 var searchItem = searchArray[sPos];
-                for(var item in object){
-                    if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
+                for (var item in object) {
+                    if (object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1) {
                         check = true;
                         break;
                     }
                 }
-                if(!check){
+                if (!check) {
                     break;
                 }
-                if(sPos == searchArray.length-1 && check){
+                if (sPos == searchArray.length - 1 && check) {
                     retList.push(object);
                 }
             }
@@ -1843,26 +2127,26 @@ App.filter('multipleSearch', function(){
 
 App.filter('htmlToPlaintext', function() {
     return function(text) {
-      return String(text).replace(/<[^>]+>/gm, ' ').replace(/&nbsp;/gi,'');
+        return String(text).replace(/<[^>]+>/gm, ' ').replace(/&nbsp;/gi, '');
     }
-  });            
-            
-App.filter('nameSearch', function(){ 
-    return function (objects, search, max) {
-        if (!search || !objects){
+});
+
+App.filter('nameSearch', function() {
+    return function(objects, search, max) {
+        if (!search || !objects) {
             return objects;
         }
         retList = [];
-        if (objects){
-            for (var oPos = 0; oPos < objects.length; oPos++){
+        if (objects) {
+            for (var oPos = 0; oPos < objects.length; oPos++) {
                 var object = objects[oPos];
                 var check = false;
                 var name = object.first_name + ' ' + object.last_name;
-                if(name.toString().toLowerCase().indexOf(search.toLowerCase()) > -1){
+                if (name.toString().toLowerCase().indexOf(search.toLowerCase()) > -1) {
                     retList.push(object);
                 }
-                if (max){
-                    if (retList.length >= max){
+                if (max) {
+                    if (retList.length >= max) {
                         console.log('Im returning early');
                         return retList;
                     }
@@ -1873,16 +2157,16 @@ App.filter('nameSearch', function(){
     }
 });
 
-App.filter('linkGroup', function(){ 
-    return function (objects, group) {
-        if (!group || !objects){
+App.filter('linkGroup', function() {
+    return function(objects, group) {
+        if (!group || !objects) {
             return objects;
         }
         retList = [];
-        if (objects){
-            for (var oPos = 0; oPos < objects.length; oPos++){
+        if (objects) {
+            for (var oPos = 0; oPos < objects.length; oPos++) {
                 //console.log(objects[oPos]);
-                if(objects[oPos].group == group){
+                if (objects[oPos].group == group) {
                     retList.push(objects[oPos]);
                 }
             }
@@ -1890,31 +2174,30 @@ App.filter('linkGroup', function(){
         return retList;
     }
 });
-            
-App.filter('capitalizeFirst', function(){ 
-   return function (objects) {
-       if (objects){
-           return objects[0].toUpperCase() + objects.slice(1);
-       }
-       return retList;
-   }
+
+App.filter('capitalizeFirst', function() {
+    return function(objects) {
+        if (objects) {
+            return objects[0].toUpperCase() + objects.slice(1);
+        }
+        return retList;
+    }
 });
-            
-App.filter('yearSearch', function(){ 
-    return function (objects, search) {
-        if (!search){
+
+App.filter('yearSearch', function() {
+    return function(objects, search) {
+        if (!search) {
             return objects;
         }
         retList = [];
-        if (objects){
-            for (var oPos = 0; oPos < objects.length; oPos++){
+        if (objects) {
+            for (var oPos = 0; oPos < objects.length; oPos++) {
                 var object = objects[oPos];
-                if (object.grad_year){
-                    if(object.grad_year.toString().toLowerCase() == search.toString().toLowerCase()){
+                if (object.grad_year) {
+                    if (object.grad_year.toString().toLowerCase() == search.toString().toLowerCase()) {
                         retList.push(object);
                     }
-                }
-                else if (search.toString().toLowerCase() == 'unknown'){
+                } else if (search.toString().toLowerCase() == 'unknown') {
                     retList.push(object);
                 }
             }
@@ -1922,21 +2205,20 @@ App.filter('yearSearch', function(){
         return retList;
     }
 });
-            
-            
-App.filter('pledgeClassSearch', function(){ 
-    return function (objects, search) {
-        if (!search){
+
+
+App.filter('pledgeClassSearch', function() {
+    return function(objects, search) {
+        if (!search) {
             return objects;
         }
         retList = [];
-        if (objects){
-            for (var oPos = 0; oPos < objects.length; oPos++){
+        if (objects) {
+            for (var oPos = 0; oPos < objects.length; oPos++) {
                 var object = objects[oPos];
-                if (object.pledge_class_year == search.year && object.pledge_class_semester == search.semester){
-                    retList.push(object); 
-                }
-                else if (search.toString().toLowerCase() == 'unknown'){
+                if (object.pledge_class_year == search.year && object.pledge_class_semester == search.semester) {
+                    retList.push(object);
+                } else if (search.toString().toLowerCase() == 'unknown') {
                     retList.push(object);
                 }
             }
@@ -1944,13 +2226,13 @@ App.filter('pledgeClassSearch', function(){
         return retList;
     }
 });
-            
-App.filter('directoryFilter', function(){ 
-    return function (objects, perms) {
+
+App.filter('directoryFilter', function() {
+    return function(objects, perms) {
         var retList = []
-        if (objects){
-            for (var i = 0; i < objects.length; i++){
-                if (objects[i].user_name && objects[i].perms == perms){
+        if (objects) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objects[i].user_name && objects[i].perms == perms) {
                     retList.push(objects[i]);
                 }
             }
@@ -1959,22 +2241,20 @@ App.filter('directoryFilter', function(){
     }
 });
 
-App.filter('removePassedEvents', function(){ 
-    return function (objects, removePref) {
+App.filter('removePassedEvents', function() {
+    return function(objects, removePref) {
         var retList = [];
         var now = new Date();
-        if (!objects){
+        if (!objects) {
             return objects;
         }
-        for(var oPos = 0; oPos < objects.length; oPos++){
-            
-            if(moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) > 0 && removePref){
+        for (var oPos = 0; oPos < objects.length; oPos++) {
+
+            if (moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) > 0 && removePref) {
                 retList.push(objects[oPos]);
-            }
-            else if (moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) < 0 && removePref === false){
+            } else if (moment(objects[oPos].time_end).diff(momentUTCTime(undefined)) < 0 && removePref === false) {
                 retList.push(objects[oPos]);
-            }
-            else if (removePref === undefined){
+            } else if (removePref === undefined) {
                 retList.push(objects[oPos]);
             }
         }
@@ -1985,8 +2265,9 @@ App.filter('removePassedEvents', function(){
 App.filter('startFrom', function() {
     return function(input, start) {
         start = +start; //parse to int
-        if (input){
-        return input.slice(start);}
+        if (input) {
+            return input.slice(start);
+        }
         return input;
     }
 });
@@ -1995,76 +2276,74 @@ App.filter('startFrom', function() {
 App.filter('checkedFilter', function() {
     return function(input) {
         out = [];
-        if  (input){
-        for (var i = 0; i < input.length; i++){
-            if (input[i].checked){
-                out.push(input[i]);
+        if (input) {
+            for (var i = 0; i < input.length; i++) {
+                if (input[i].checked) {
+                    out.push(input[i]);
+                }
             }
         }
-    }
-    return out;
+        return out;
     }
 });
 
-App.filter('tagDirectorySearch', function(){
-    return function (objects, tags, additionalUsers) {
-            var tags_list = []
-        if (tags){
-            if (tags.org_tags){
-                for (var i = 0; i < tags.org_tags.length; i++){
-                    if (tags.org_tags[i].checked){
+App.filter('tagDirectorySearch', function() {
+    return function(objects, tags, additionalUsers) {
+        var tags_list = []
+        if (tags) {
+            if (tags.org_tags) {
+                for (var i = 0; i < tags.org_tags.length; i++) {
+                    if (tags.org_tags[i].checked) {
                         tags_list.push(tags.org_tags[i].name);
                     }
                 }
             }
-            if (tags.perms_tags){
-                for (var j = 0; j < tags.perms_tags.length; j++){
-                    if (tags.perms_tags[j].checked){
-                        if (tags.perms_tags[j].name == "everyone"){
+            if (tags.perms_tags) {
+                for (var j = 0; j < tags.perms_tags.length; j++) {
+                    if (tags.perms_tags[j].checked) {
+                        if (tags.perms_tags[j].name == "everyone") {
                             tags_list.push("member");
                             tags_list.push("leadership");
                             tags_list.push("council");
-                        }
-                        else if (tags.perms_tags[j].name == "Members"){
+                        } else if (tags.perms_tags[j].name == "Members") {
                             tags_list.push("member");
+                        } else {
+                            tags_list.push(tags.perms_tags[j].name)
                         }
-                        else{
-                        tags_list.push(tags.perms_tags[j].name)}
                     }
                 }
             }
         }
-            out_string = '';
-            for (var j = 0; j < tags_list.length; j++){
-                out_string += tags_list[j] + ' ';
-            }
+        out_string = '';
+        for (var j = 0; j < tags_list.length; j++) {
+            out_string += tags_list[j] + ' ';
+        }
         var search = out_string;
-//        if (!search){
-//            return null;
-//        }
+        //        if (!search){
+        //            return null;
+        //        }
         retList = [];
-        
+
         var searchArray = search.split(" ");
-        if (objects){
-            for (var oPos = 0; oPos < objects.length; oPos++){
+        if (objects) {
+            for (var oPos = 0; oPos < objects.length; oPos++) {
                 var object = objects[oPos];
-                for(var sPos = 0; sPos< searchArray.length; sPos++){
+                for (var sPos = 0; sPos < searchArray.length; sPos++) {
                     var check = false;
                     var searchItem = searchArray[sPos];
-                    if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
+                    if (object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1) {
                         retList.push(object);
                         break;
-                    }
-                    else if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
+                    } else if (object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1) {
                         retList.push(object);
                         break;
                     }
                 }
             }
         }
-        if (additionalUsers){
-            for (var uPos = 0; uPos < additionalUsers.length; uPos++){
-                if (additionalUsers[uPos].checked && retList.indexOf(additionalUsers[uPos].user) == -1){
+        if (additionalUsers) {
+            for (var uPos = 0; uPos < additionalUsers.length; uPos++) {
+                if (additionalUsers[uPos].checked && retList.indexOf(additionalUsers[uPos].user) == -1) {
                     retList.push(additionalUsers[uPos]);
                 }
             }
@@ -2073,34 +2352,36 @@ App.filter('tagDirectorySearch', function(){
     }
 });
 
-App.filter('eventTagDirectorySearch', function(){ 
-    return function (objects, tags) {
-        if (!tags){return null;}
+App.filter('eventTagDirectorySearch', function() {
+    return function(objects, tags) {
+        if (!tags) {
+            return null;
+        }
         var tags_list = tags.org_tags.concat(tags.perms_tags);
         out_string = '';
-        for (var j = 0; j < tags_list.length; j++){
+        for (var j = 0; j < tags_list.length; j++) {
             out_string += tags_list[j] + ' ';
         }
         var search = out_string;
-        if (!search){
+        if (!search) {
             return null;
         }
         retList = [];
         var searchArray = search.split(" ");
-        for (var oPos = 0; oPos < objects.length; oPos++){
+        for (var oPos = 0; oPos < objects.length; oPos++) {
             var object = objects[oPos];
-            for(var sPos = 0; sPos< searchArray.length; sPos++){
+            for (var sPos = 0; sPos < searchArray.length; sPos++) {
                 var check = false;
                 var searchItem = searchArray[sPos];
-                if (searchItem.toString().toLowerCase() == 'everyone'){
+                if (searchItem.toString().toLowerCase() == 'everyone') {
                     return objects;
                 }
-                
-                if(object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1){
+
+                if (object.tags.indexOf(searchItem.toString()) > -1 && retList.indexOf(object) == -1) {
                     retList.push(object);
                     break;
                 }
-                if(object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1){
+                if (object.perms.toLowerCase() == searchItem.toString().toLowerCase() && retList.indexOf(object) == -1) {
                     retList.push(object);
                     break;
                 }
@@ -2110,38 +2391,38 @@ App.filter('eventTagDirectorySearch', function(){
     }
 });
 
-App.filter('directorySearch', function(){ 
-    return function (in_objects, search) {
+App.filter('directorySearch', function() {
+    return function(in_objects, search) {
         var searchValues = search;
-        if (!search){
+        if (!search) {
             return in_objects;
         }
         var out_objects = [];
         console.log(in_objects.length);
-        for(var j = 0; j < in_objects.length; j++){
+        for (var j = 0; j < in_objects.length; j++) {
             var objects = in_objects[j].data;
             retList = [];
             var searchArray = search.split(" ");
-            for (var oPos = 0; oPos < objects.length; oPos++){
+            for (var oPos = 0; oPos < objects.length; oPos++) {
                 var object = objects[oPos];
-                for(var sPos = 0; sPos< searchArray.length; sPos++){
+                for (var sPos = 0; sPos < searchArray.length; sPos++) {
                     var check = false;
                     var searchItem = searchArray[sPos];
-                    for(var item in object){
-                        if(object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1){
+                    for (var item in object) {
+                        if (object[item] && object[item].toString().toLowerCase().indexOf(searchItem.toLowerCase()) > -1) {
                             check = true;
                             break;
                         }
                     }
-                    if(!check){
+                    if (!check) {
                         break;
                     }
-                    if(sPos == searchArray.length-1 && check){
+                    if (sPos == searchArray.length - 1 && check) {
                         retList.push(object);
                     }
                 }
             }
-            if (retList.length > 0){
+            if (retList.length > 0) {
                 in_objects[j].data = retList;
             }
         }
@@ -2149,56 +2430,55 @@ App.filter('directorySearch', function(){
     }
 });
 
-App.factory('getEvents', function($http, $rootScope, RESTService){
-    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
-        .success(function(data){
-            if (!RESTService.hasErrors(data)){
-                var events = JSON.parse(data.data);
-                $rootScope.events = events;
-            }
-            else{
-                console.log('ERROR: ',data);
-            }
-        })
-        .error(function(data) {
-            console.log('Error: ' , data);
-        });
-});
+// App.factory('getEvents', function($http, $rootScope, RESTService) {
+//     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
+//         .success(function(data) {
+//             if (!RESTService.hasErrors(data)) {
+//                 var events = JSON.parse(data.data);
+//                 $rootScope.events = events;
+//             } else {
+//                 console.log('ERROR: ', data);
+//             }
+//         })
+//         .error(function(data) {
+//             console.log('Error: ', data);
+//         });
+// });
 
-App.factory('registerOrganizationService', function(){
+App.factory('registerOrganizationService', function() {
     var data = undefined;
 
     return {
-        get: function () {
+        get: function() {
             return data;
         },
-        set: function (_data) {
+        set: function(_data) {
             data = _data;
         }
     };
 });
 
-App.factory('LoadScreen', function($rootScope){
-    return {
-        start: function () {
-            $rootScope.loading = true;
-            $('.mainLoadingScreen').show();
-            $('.nav').hide();
-        },
-        stop: function () {
-            $rootScope.loading = false;
-            $('.mainLoadingScreen').hide();
-            $('.nav').show();
-            $('.container').fadeIn();
-            $('body').show();
-            routeChange();
-            console.log('stopping load screen');
-        },
-        check: function(){
-            $rootScope.loading;
-        }
-    };
-});
+// App.factory('LoadScreen', function($rootScope) {
+//     return {
+//         stop: function() {
+//             $rootScope.loading = true;
+//             $('.mainLoadingScreen').show();
+//             $('.nav').hide();
+//         },
+//         start: function() {
+//             $rootScope.loading = false;
+//             $('.mainLoadingScreen').hide();
+//             $('.nav').show();
+//             $('.container').fadeIn();
+//             $('body').show();
+//             routeChange();
+//             console.log('stopping load screen');
+//         },
+//         check: function() {
+//             $rootScope.loading;
+//         }
+//     };
+// });
 
 // App.factory( 'Login', function($http, $q, $rootScope){
 //     var logged_in = false;
@@ -2224,317 +2504,3 @@ App.factory('LoadScreen', function($rootScope){
 //         }
 //     }
 // });
-
-
-
-App.factory( 'Load', function LoadRequests($http, $q){
-    //console.log('Starting the load factory');
-    var defer = $q.defer();
-    defer.resolve();
-        // if (!checkLogin()){
-        //     window.location.replace('#/login');
-        //     defer.resolve();
-        // }
-    // var organization = Organization.get();
-    // var notifications = Notifications.get();
-    // if (organization){
-    //     defer.resolve();
-    // }
-    // else{
-    //     $rootScope.$on('organization:updated', function(){
-    //         defer.resolve();
-    //     });
-    // }
-    // function executePosts() {
-    //       var deferred = $q.defer();
-    //         var neededCount = 0;
-    //       function checkIfDone() {
-    //           console.log('neededCount', neededCount);
-    //           if (neededCount <= 0){
-    //             console.log('Im done loading');
-    //             deferred.resolve();
-    //           }
-    //           else{
-    //           neededCount --;}
-    //       }
-
-    //     console.log('user_name', $.cookie(USER_NAME));
-    //     if ($.cookie(USER_NAME) != localStorageService.get('user_name')){
-    //         localStorage.clear();
-    //         localStorageService.set('user_name', $.cookie(USER_NAME));
-    //     }
-
-
-
-
-
-
-        // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
-        //     .success(function(data){
-        //         console.log('----------THIS-LOGIN-WORKS----------');
-        //         if (RESTService.hasErrors(data)){window.location.replace('/#/login'); deferred.resolve(); defer.resolve(); $rootScope.hasLoaded = true;};
-        //     });
-            
-//        if ($cacheFactory.info()){
-//            $rootScope.directory = JSON.parse($cacheFactory.get('directory'));
-//            return deferred.promise;
-//        }
-//            $rootScope.directory = localStorageService.get('directory');
-//            checkIfDone();
-//        $http.get(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/info/load2/'+$.cookie(USER_NAME)+'/'+$.cookie(TOKEN))
-//            .success(function(data){
-//                if(!RESTService.hasErrors(data)){
-//                    var load_data = JSON.parse(data.data);
-//                    $rootScope.perms = load_data.perms;
-////              directory
-//                    $rootScope.directory = load_data.directory;
-//                    for (var i = 0; i< $rootScope.directory.members.length; i++){
-//                        if($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-//                            $rootScope.me = $rootScope.directory.members[i];
-//                            break;
-//                        }
-//                    }
-//                    localStorageService.set('directory', $rootScope.directory);
-////              notifications
-//                    $rootScope.notifications = load_data.notifications.notifications;
-//                    localStorageService.set('notifications', $rootScope.notifications);
-//                    $rootScope.notification_lengths = {unread:load_data.notifications.new_notifications_length, read:load_data.notifications.notifications_length, hidden:load_data.notifications.hidden_notifications_length};
-//                    for (var i = 0; i < $rootScope.notifications.length; i++){
-//                            $rootScope.notifications[i].collapseOut = true; 
-//                    }
-//                    $rootScope.hidden_notifications = load_data.notifications.hidden_notifications;
-//                    $rootScope.updateNotificationBadge();
-////              events    
-//                    $rootScope.events = load_data.events;
-//                    localStorageService.set('events', $rootScope.events);
-//
-////                    $cacheFactory.put('events', JSON.stringify($rootScope.events));
-////              tags
-//                    $rootScope.tags = load_data.tags;
-//                    localStorageService.set('tags', $rootScope.tags);
-//
-////                    $cacheFactory.put('tags', JSON.stringify($rootScope.tags));
-////              organization
-//                    $rootScope.subscribed = true;
-//                    $rootScope.setColor(load_data.organization_data.color);
-//                    $rootScope.organization = load_data.organization_data;
-//                    $rootScope.polls = load_data.polls;
-//                    localStorageService.set('organization', $rootScope.organization);
-//                    localStorageService.set('polls', $rootScope.polls);
-//                    $rootScope.hasLoaded = true;
-//                    $('#body').show();
-//                    $('#mobileMenu').show();
-//                }
-//                checkIfDone();
-//            })
-//            .error(function(data) {
-//                console.log('Error: ' , data);
-//                checkIfDone();
-//            });
-//             $rootScope.directory = localStorageService.get('directory');
-//             if ($rootScope.directory){
-//                 $rootScope.perms = 'alumni';
-//                 for (var i = 0; i < $rootScope.directory.members.length; i++){
-//                     if ($rootScope.directory.members[i].user_name == $.cookie(USER_NAME)){
-//                         $rootScope.me = $rootScope.directory.members[i];
-//                         $rootScope.perms = $rootScope.me.perms;
-//                         break;
-//                     }
-//                 }
-//             }
-//             else{
-//                 neededCount++;
-//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', packageForSending(''))
-//                 .success(function(data){
-//                     if (!RESTService.hasErrors(data)){
-//                         $rootScope.directory = JSON.parse(data.data);
-//                         localStorageService.set('directory', $rootScope.directory);
-//                     }
-//                     checkIfDone();
-//                 })
-//                 .error(function(data) {
-//                     console.log('Error: ' , data);
-//                     checkIfDone();
-//                 });
-//             }
-//             var load_data = localStorageService.get('notifications');
-//             if (load_data){
-//                 try{
-//                     $rootScope.notifications = load_data.notifications;
-//                     $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
-//                     for (var i = 0; i < $rootScope.notifications.length; i++){
-//                             $rootScope.notifications[i].collapseOut = true; 
-//                     }
-//                     $rootScope.hidden_notifications = load_data.hidden_notifications;
-//                     $rootScope.updateNotificationBadge();
-//                     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
-//                     .success(function(data){
-//                         var load_data = JSON.parse(data.data);
-//                         localStorageService.set('notifications', load_data);
-//                         $rootScope.notifications = load_data.notifications;
-//                         $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
-//                         for (var i = 0; i < $rootScope.notifications.length; i++){
-//                                 $rootScope.notifications[i].collapseOut = true; 
-//                         }
-//                         $rootScope.hidden_notifications = load_data.hidden_notifications;
-//                         $rootScope.updateNotificationBadge();
-//                         })
-//                     .error(function(data) {
-//                             console.log('Error: ' , data);
-//                         });
-//                 }
-//                 catch(err){localStorageService.remove('notifications'); $rootScope.refreshPage();}
-//             }
-//             else {
-//                 neededCount++;
-//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', packageForSending(''))
-//                 .success(function(data){
-//                     var load_data = JSON.parse(data.data);
-//                     localStorageService.set('notifications', load_data);
-//                     $rootScope.notifications = load_data.notifications;
-//                     $rootScope.notification_lengths = {unread:load_data.new_notifications_length, read:load_data.notifications_length, hidden:load_data.hidden_notifications_length};
-//                     for (var i = 0; i < $rootScope.notifications.length; i++){
-//                             $rootScope.notifications[i].collapseOut = true; 
-//                     }
-//                     $rootScope.hidden_notifications = load_data.hidden_notifications;
-//                     $rootScope.updateNotificationBadge();
-//                     checkIfDone();
-//                     })
-//                 .error(function(data) {
-//                         console.log('Error: ' , data);
-//                         checkIfDone();
-//                     });  
-//             }
-// //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/get_organization_tags', packageForSending(''))
-// //                .success(function(data){
-// //                    if (!RESTService.hasErrors(data)){
-// //                        $rootScope.tags.organizationTags = JSON.parse(data.data).tags;
-// //                    }
-// //                });
-//             $rootScope.tags = localStorageService.get('tags');
-//             if (!$rootScope.tags){
-//                 neededCount++;
-//                 $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
-//                 .success(function(data){
-//                     if (!RESTService.hasErrors(data)){
-//                         var tag_data = JSON.parse(data.data);
-//                         $rootScope.tags = tag_data;
-//                         localStorageService.set('tags', $rootScope.tags);
-//                     }
-//                     else{
-//                         console.log("error: " , data.error)
-//                     }
-//                     checkIfDone();
-//                 })
-//                 .error(function(data) {
-//                     console.log('Error: ' , data);
-//                     checkIfDone();
-//                 });
-//             }
-            // $rootScope.organization = localStorageService.get('organization_data');
-            // if ($rootScope.organization){
-            //     try{
-            //         $rootScope.subscribed = true;
-            //         $rootScope.link_groups = $rootScope.organization.link_groups;
-            //         $rootScope.setColor($rootScope.organization.color);
-            //         $rootScope.organization = $rootScope.organization;
-            //         $rootScope.link_groups = $rootScope.organization.link_groups;
-            //         $rootScope.me = $rootScope.organization.me;
-            //         console.log('me', $rootScope.me);
-            //         $rootScope.perms = $rootScope.me.perms;
-
-            //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
-            //         .success(function(data){
-            //             $rootScope.setColor(JSON.parse(data.data).color);
-            //             $rootScope.organization = JSON.parse(data.data);
-            //             console.log('me', $rootScope.me);
-            //             $rootScope.me = $rootScope.organization.me;
-            //             $rootScope.link_groups = $rootScope.organization.link_groups;
-            //             $rootScope.perms = $rootScope.me.perms;
-            //             localStorageService.set('organization_data', $rootScope.organization);
-            //         });
-            //     }
-            //     catch(err){localStorageService.remove('organization_data'); $rootScope.refreshPage();}
-            // }
-            // else{
-            //     neededCount++;
-            //     $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', packageForSending(''))
-            //     .success(function(data){
-            //         $rootScope.subscribed = true;
-            //         $rootScope.setColor(JSON.parse(data.data).color);
-            //         $rootScope.organization = JSON.parse(data.data);
-            //         $rootScope.me = $rootScope.organization.me;
-            //         $rootScope.link_groups = $rootScope.organization.link_groups;
-            //         $rootScope.perms = $rootScope.me.perms;
-            //         localStorageService.set('organization_data', JSON.parse(data.data));
-            //         checkIfDone();
-            //     })
-            //     .error(function(data) {
-            //         checkIfDone();
-            //     });
-            // }
-        //     $rootScope.events = localStorageService.get('events');
-        //     if (!$rootScope.events){
-        //         neededCount++;
-        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
-        //             .success(function(data){
-        //                 if (!RESTService.hasErrors(data)){
-        //                     $rootScope.events = JSON.parse(data.data);
-        //                     localStorageService.set('events', $rootScope.events);
-        //                 }
-        //                 else{
-        //                     console.log('ERROR: ',data);
-        //                 }
-        //                 checkIfDone();
-        //             })
-        //             .error(function(data) {
-        //                 console.log('Error: ' , data);
-        //                 checkIfDone();
-        //             });
-        //     }
-        //     $rootScope.polls = localStorageService.get('polls');
-        //     if (!$rootScope.polls){
-        //         neededCount++;
-        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', packageForSending(''))
-        //             .success(function(data){
-        //                 if (!RESTService.hasErrors(data)){
-        //                     $rootScope.polls = JSON.parse(data.data);
-        //                     localStorageService.set('polls', $rootScope.polls);
-        //                     checkIfDone();
-        //                 }
-        //                 else{
-        //                     checkIfDone();
-        //                     console.log('ERR');
-        //                 }
-        //             })
-        //             .error(function(data) {
-        //                 checkIfDone();
-        //                 console.log('Error: ' , data);
-        //             });
-        //     }
-        //     $rootScope.links = localStorageService.get('links');
-        //     if (!$rootScope.links){
-        //         neededCount++;
-        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', packageForSending(''))
-        //         .success(function(data){
-        //             if (!RESTService.hasErrors(data)){
-        //                 $rootScope.links = JSON.parse(data.data);
-        //                 localStorageService.set('links', $rootScope.links);
-        //             }
-        //             checkIfDone();
-        //         })
-        //         .error(function(data) {
-        //             console.log('Error: ' , data);
-        //             checkIfDone();
-        //         });
-        //     }
-        // checkIfDone();
-        //return deferred.promise;
-        //}
-        //     executePosts().then(function() {
-        //         defer.resolve(); 
-        // });
-
-    return defer.promise;
-});
-

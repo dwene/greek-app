@@ -330,8 +330,7 @@ module.exports = function (grunt) {
             'files/*',
             'requests/*',
             'cloudstorage/*',
-            'lib/{,*/*/}*',
-            'scripts/vendor/profilepic.js'
+            'lib/**',
           ]
         }, {
           expand: true,

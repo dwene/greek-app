@@ -20,11 +20,11 @@ handlers:
   secure: always
 
 - url: /picup
-  script: main.app
+  script: lib/python27/main.app
   secure: always
 
 - url: /upload
-  script: main.app
+  script: lib/python27/main.app
   secure: always
 
 # - url: /
@@ -40,19 +40,19 @@ handlers:
   upload: media/robots.txt
 
 - url: /tasks/.*
-  script: main.app
+  script: lib/python27/main.app
   secure: always
 
 - url: /dailynotifications
-  script: main.app
+  script: lib/python27/main.app
   secure: always
 
 - url: /morningtasks
-  script: main.app
+  script: lib/python27/main.app
   secure: always
 
 - url: /_ah/spi/.*
-  script: controller.APPLICATION
+  script: lib/python27/controller.APPLICATION
   secure: always
 
 builtins:

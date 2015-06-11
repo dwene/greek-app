@@ -1,4 +1,4 @@
-App.controller('accountinfoController', function($scope, RESTService, $rootScope, $timeout, Load, Organization, AUTH_EVENTS, Session, Directory, $location){
+App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', '$timeout', 'Organization', 'AUTH_EVENTS', 'Session', 'Directory', '$location', function($scope, RESTService, $rootScope, $timeout, Organization, AUTH_EVENTS, Session, Directory, $location){
     routeChange();
     Organization.get();
     $scope.updatedInfo = false;
@@ -34,24 +34,6 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
     $scope.goToMe = function(){
             $location.path('app/directory/'+Session.user_name);
     }
-    
-    // RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_user_directory_info', '')
-    //     .success(function(data){
-    //         if (!RESTService.hasErrors(data))
-    //         {
-    //             $rootScope.me = JSON.parse(data.data);
-    //             $scope.userName = $rootScope.me.user_name;
-    //             $scope.pledgeClass = $rootScope.me.pledge_class;
-    //             $scope.item = $rootScope.me;
-    //         }
-    //         else
-    //         {
-    //             console.log('ERROR: ',data);
-    //         }
-    //     })
-    //     .error(function(data) {
-    //         console.log('Error: ' , data);
-    //     });
     
     $scope.checkAlumni = function(){
         return Session.perms != 'alumni';
@@ -111,10 +93,6 @@ App.controller('accountinfoController', function($scope, RESTService, $rootScope
             });
     }
     
-    // $scope.getUser = function(){
-    //     return Organization.me.user_name;
-    // }
-    // $scope.getToken = function(){
-    //     return $.cookie(TOKEN);
-    // }
-});
+}])
+
+
