@@ -49,15 +49,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
     $stateProvider
         .state('home', {
-<<<<<<< Updated upstream
-                url: '/', 
-				templateUrl : 'views/home.html'
-			})
-=======
             url: '/',
             templateUrl: 'views/home.html',
         })
->>>>>>> Stashed changes
         .state('login', {
             url: '/login',
             templateUrl: 'views/login.html',
@@ -108,7 +102,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'views/app.html',
             controller: 'appController',
         })
-<<<<<<< Updated upstream
+
             .state('app.home', {
                 url : '/home',
                 templateUrl : 'views/apphome.html',
@@ -371,266 +365,266 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.newPoll',{
-=======
-        .state('app.home', {
-            url: '/home',
-            templateUrl: 'views/apphome.html',
-            controller: 'appHomeController',
-        })
-        .state('app.managemembers', {
-            url: '/managemembers',
-            templateUrl: 'views/managemembers.html',
-            data: {
-                permissions: {
-                    only: [LEADERSHIP, COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.managemembers.manage', {
-            url: '/manage',
-            templateUrl: 'views/managingmembers.html',
-            controller: 'manageMembersController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.managemembers.add', {
-            url: '/add',
-            templateUrl: 'views/addingmembers.html',
-            controller: 'addMembersController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.managemembers.tag', {
-            url: '/tag',
-            templateUrl: 'views/taggingmembers.html',
-            controller: 'membertagsController',
-            data: {
-                permissions: {
-                    only: [COUNCIL, LEADERSHIP],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.managealumni', {
-            url: '/managealumni',
-            templateUrl: 'views/managealumni.html',
-        })
-        .state('app.managealumni.add', {
-            url: '/add',
-            templateUrl: 'views/addingalumni.html',
-            controller: 'addAlumniController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.managealumni.manage', {
-            url: '/manage',
-            templateUrl: 'views/managingalumni.html',
-            controller: 'managealumniController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.incorrectperson', {
-            url: '/incorrectperson',
-            templateUrl: 'views/incorrectperson.html',
-            controller: 'incorrectpersonController'
-        })
-        .state('app.accountinfo', {
-            url: '/accountinfo',
-            templateUrl: 'views/accountinfo.html',
-            controller: 'accountinfoController',
-            data: {
-                permissions: {
-                    only: [LOGGED_IN],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.uploadprofilepicture', {
-            url: '/uploadprofilepicture',
-            templateUrl: 'views/uploadprofilepicture.html',
-            controller: 'profilePictureController',
-            data: {
-                permissions: {
-                    only: [LOGGED_IN],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.directory', {
-            url: '/directory',
-            templateUrl: 'views/directory.html',
-            data: {
-                permissions: {
-                    only: [LOGGED_IN],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.directory.members', {
-            url: '/members',
-            templateUrl: 'views/memberdirectory.html',
-            controller: 'membersDirectoryController',
-            data: {
-                permissions: {
-                    only: [LOGGED_IN],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.directory.alumni', {
-            url: '/alumni',
-            templateUrl: 'views/alumnidirectory.html',
-            controller: 'alumniDirectoryController',
-            data: {
-                permissions: {
-                    only: [LOGGED_IN],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.memberprofile', {
-            url: '/directory/:id',
-            templateUrl: 'views/memberprofile.html',
-            controller: 'memberprofileController',
-            data: {
-                permissions: {
-                    only: [LOGGED_IN],
-                    redirectTo: 'home'
-                }
-            }
-        })
-    //#CHANGES there might be a better way to do this
-    .state('app.postNewKeyPictureLink', {
-        url: '/postNewKeyPictureLink',
-        templateUrl: 'views/loading.html',
-        controller: 'uploadImageController'
-    })
-        .state('app.changepassword', {
-            url: '/changepassword',
-            templateUrl: 'views/change_password.html',
-            controller: 'changePasswordController'
-        })
-        .state('app.messaging', {
-            url: '/messaging',
-            templateUrl: 'views/messaging.html',
-            controller: 'messagingController',
-            data: {
-                permissions: {
-                    only: [COUNCIL, LEADERSHIP],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.newevent', {
-            url: '/newevent',
-            templateUrl: 'views/newevent.html',
-            controller: 'newEventController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.events', {
-            url: '/events',
-            templateUrl: 'views/events.html',
-            controller: 'eventsController',
-            data: {
-                permissions: {
-                    only: [MEMBER],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.eventInfo', {
-            url: '/events/:tag',
-            templateUrl: 'views/eventinfo.html',
-            controller: 'eventInfoController',
-            data: {
-                permissions: {
-                    only: [MEMBER],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.editEvent', {
-            url: '/events/:tag/edit',
-            templateUrl: 'views/editevent.html',
-            controller: 'editEventsController',
-            data: {
-                permissions: {
-                    only: [LEADERSHIP],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.eventCheckin', {
-            url: '/events/:tag/checkin',
-            templateUrl: 'views/eventcheckin.html',
-            controller: 'eventCheckInController',
-            data: {
-                permissions: {
-                    only: [LEADERSHIP],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.eventCheckinReport', {
->>>>>>> Stashed changes
+            // .state('app.newPoll',{
+// =======
+//         .state('app.home', {
+//             url: '/home',
+//             templateUrl: 'views/apphome.html',
+//             controller: 'appHomeController',
+//         })
+//         .state('app.managemembers', {
+//             url: '/managemembers',
+//             templateUrl: 'views/managemembers.html',
+//             data: {
+//                 permissions: {
+//                     only: [LEADERSHIP, COUNCIL],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.managemembers.manage', {
+//             url: '/manage',
+//             templateUrl: 'views/managingmembers.html',
+//             controller: 'manageMembersController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.managemembers.add', {
+//             url: '/add',
+//             templateUrl: 'views/addingmembers.html',
+//             controller: 'addMembersController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.managemembers.tag', {
+//             url: '/tag',
+//             templateUrl: 'views/taggingmembers.html',
+//             controller: 'membertagsController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL, LEADERSHIP],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.managealumni', {
+//             url: '/managealumni',
+//             templateUrl: 'views/managealumni.html',
+//         })
+//         .state('app.managealumni.add', {
+//             url: '/add',
+//             templateUrl: 'views/addingalumni.html',
+//             controller: 'addAlumniController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.managealumni.manage', {
+//             url: '/manage',
+//             templateUrl: 'views/managingalumni.html',
+//             controller: 'managealumniController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.incorrectperson', {
+//             url: '/incorrectperson',
+//             templateUrl: 'views/incorrectperson.html',
+//             controller: 'incorrectpersonController'
+//         })
+//         .state('app.accountinfo', {
+//             url: '/accountinfo',
+//             templateUrl: 'views/accountinfo.html',
+//             controller: 'accountinfoController',
+//             data: {
+//                 permissions: {
+//                     only: [LOGGED_IN],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.uploadprofilepicture', {
+//             url: '/uploadprofilepicture',
+//             templateUrl: 'views/uploadprofilepicture.html',
+//             controller: 'profilePictureController',
+//             data: {
+//                 permissions: {
+//                     only: [LOGGED_IN],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.directory', {
+//             url: '/directory',
+//             templateUrl: 'views/directory.html',
+//             data: {
+//                 permissions: {
+//                     only: [LOGGED_IN],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.directory.members', {
+//             url: '/members',
+//             templateUrl: 'views/memberdirectory.html',
+//             controller: 'membersDirectoryController',
+//             data: {
+//                 permissions: {
+//                     only: [LOGGED_IN],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.directory.alumni', {
+//             url: '/alumni',
+//             templateUrl: 'views/alumnidirectory.html',
+//             controller: 'alumniDirectoryController',
+//             data: {
+//                 permissions: {
+//                     only: [LOGGED_IN],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.memberprofile', {
+//             url: '/directory/:id',
+//             templateUrl: 'views/memberprofile.html',
+//             controller: 'memberprofileController',
+//             data: {
+//                 permissions: {
+//                     only: [LOGGED_IN],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//     //#CHANGES there might be a better way to do this
+//     .state('app.postNewKeyPictureLink', {
+//         url: '/postNewKeyPictureLink',
+//         templateUrl: 'views/loading.html',
+//         controller: 'uploadImageController'
+//     })
+//         .state('app.changepassword', {
+//             url: '/changepassword',
+//             templateUrl: 'views/change_password.html',
+//             controller: 'changePasswordController'
+//         })
+//         .state('app.messaging', {
+//             url: '/messaging',
+//             templateUrl: 'views/messaging.html',
+//             controller: 'messagingController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL, LEADERSHIP],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.newevent', {
+//             url: '/newevent',
+//             templateUrl: 'views/newevent.html',
+//             controller: 'newEventController',
+//             data: {
+//                 permissions: {
+//                     only: [COUNCIL],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.events', {
+//             url: '/events',
+//             templateUrl: 'views/events.html',
+//             controller: 'eventsController',
+//             data: {
+//                 permissions: {
+//                     only: [MEMBER],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.eventInfo', {
+//             url: '/events/:tag',
+//             templateUrl: 'views/eventinfo.html',
+//             controller: 'eventInfoController',
+//             data: {
+//                 permissions: {
+//                     only: [MEMBER],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.editEvent', {
+//             url: '/events/:tag/edit',
+//             templateUrl: 'views/editevent.html',
+//             controller: 'editEventsController',
+//             data: {
+//                 permissions: {
+//                     only: [LEADERSHIP],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.eventCheckin', {
+//             url: '/events/:tag/checkin',
+//             templateUrl: 'views/eventcheckin.html',
+//             controller: 'eventCheckInController',
+//             data: {
+//                 permissions: {
+//                     only: [LEADERSHIP],
+//                     redirectTo: 'home'
+//                 }
+//             }
+//         })
+//         .state('app.eventCheckinReport', {
+// >>>>>>> Stashed changes
             //#TODO put this into each individual event :tag
-            url: '/events/:tag/report',
-            templateUrl: 'views/eventcheckinreport.html',
-            controller: 'eventCheckInReportController',
-            data: {
-                permissions: {
-                    only: [LEADERSHIP],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.admin', {
-            //#TODO put this into each individual event :tag
-            url: '/admin',
-            templateUrl: 'views/admin.html',
-            controller: 'adminController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
-        .state('app.organizationPictureUpload', {
-            //#TODO put this into each individual event :tag
-            url: '/uploadorganizationimage',
-            templateUrl: 'views/uploadOrganizationImage.html',
-            controller: 'organizationPictureController',
-            data: {
-                permissions: {
-                    only: [COUNCIL],
-                    redirectTo: 'home'
-                }
-            }
-        })
+        //     url: '/events/:tag/report',
+        //     templateUrl: 'views/eventcheckinreport.html',
+        //     controller: 'eventCheckInReportController',
+        //     data: {
+        //         permissions: {
+        //             only: [LEADERSHIP],
+        //             redirectTo: 'home'
+        //         }
+        //     }
+        // })
+        // .state('app.admin', {
+        //     //#TODO put this into each individual event :tag
+        //     url: '/admin',
+        //     templateUrl: 'views/admin.html',
+        //     controller: 'adminController',
+        //     data: {
+        //         permissions: {
+        //             only: [COUNCIL],
+        //             redirectTo: 'home'
+        //         }
+        //     }
+        // })
+        // .state('app.organizationPictureUpload', {
+        //     //#TODO put this into each individual event :tag
+        //     url: '/uploadorganizationimage',
+        //     templateUrl: 'views/uploadOrganizationImage.html',
+        //     controller: 'organizationPictureController',
+        //     data: {
+        //         permissions: {
+        //             only: [COUNCIL],
+        //             redirectTo: 'home'
+        //         }
+        //     }
+        // })
         .state('app.newPoll', {
             //#TODO put this into each individual event :tag
             url: '/newpoll',
