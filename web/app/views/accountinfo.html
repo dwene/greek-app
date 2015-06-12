@@ -6,16 +6,6 @@
             </div>
         </md-toolbar>
         <md-content class="md-padding">
-<!--
-            <md-subheader>
-               Email Preferences:
-            </md-subheader>
-             <md-radio-group ng-model="item.email_prefs">
-              <md-radio-button value="all" aria-label="all" ng-click="item.email_prefs = 'all'; updateEmailPrefs('all');">All</md-radio-button>
-              <md-radio-button value="daily" aria-label="daily" ng-click="item.email_prefs = 'daily'; updateEmailPrefs('daily');">Daily</md-radio-button>
-              <md-radio-button value="none" aria-label="none" ng-click="item.email_prefs = 'none'; updateEmailPrefs('none');">None</md-radio-button>
-            </md-radio-group>
--->
             <md-subheader>
                Change Password:
             </md-subheader>
@@ -84,22 +74,11 @@
         <p class="text-danger invalid-text">Please enter your birthday.</p>
     </div>
     <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted), required:!checkAlumni}">
-        <label for="grad_month" class="col-xs-7 col-sm-5">Graduation Month</label>
-        <div class="col-xs-7 col-sm-5">
-        <select id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni" style="width:100%;">
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">Septempber</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-        </select>
+        <label for="grad_month" class="col-xs-12">Graduation Month</label>
+        <div class="col-xs-12">
+        <md-select placeholder="select month" id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni">
+            <md-option ng-repeat="month in months" value="{{month.value}}">{{month.name}}</md-option>
+        </md-select>
         <p class="text-danger invalid-text">Please enter your graduation month.</p>
         </div>
     </div>
@@ -109,12 +88,12 @@
         <p class="text-danger invalid-text">Please enter your graduation year.</p>
     </md-input-container>    
     <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni}">
-        <label for="currentState" class="col-xs-7 col-sm-5">Pledge Semester</label>
-        <div class="col-xs-7 col-sm-5">
-            <select id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" style="width:100%;" required>
-                <option value="fall">Fall</option>
-                <option value="spring">Spring</option>
-            </select>
+        <label for="pledgeClassSemester" class="col-xs-12">Pledge Semester</label>
+        <div class="col-xs-12">
+            <md-select placeholder="select semester" id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" style="width:100%;" required>
+                <md-option value="fall">Fall</md-option>
+                <md-option value="spring">Spring</md-option>
+            </md-select>
             <p class="text-danger invalid-text">Please enter your graduation month.</p>
         </div>
     </div>
@@ -154,61 +133,11 @@
                 <p ng-show="(memberAccount.city.$invalid && !memberAccount.city.$pristine) || (memberAccount.city.$invalid && submitted)" class="help-block">Please enter your current city.</p>
             </md-input-container>
             <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
-                <label for="currentState" class="col-xs-12 col-sm-7">Current State</label>
-                <div class="col-xs-12 col-sm-5">
-                <select id="currentState" name="state" ng-model="item.state" ng-required="!checkAlumni">
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
-                </select>
+                <label for="currentState" class="col-xs-12">Current State</label>
+                <div class="col-xs-12">
+                <md-select placeholder="select state" id="currentState" name="state" ng-model="item.state">
+                    <md-option ng-repeat="state in states" value="{{state.value}}">{{state.name}}</md-option>
+                </md-select>
                 </div>
                 <script>
                     $('#currentState').focusout(function(){
@@ -234,61 +163,11 @@
                 <p class="text-danger invalid-text">Please enter your permanent city.</p>
             </md-input-container>
             <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)}">
-                <label for="perm_state" class="col-xs-12 col-sm-5">Permanent State</label>
-                <div class="col-xs-12 col-sm-7">
-                <select id="perm_state" name="perm_state" ng-model="item.perm_state">
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
-                </select>
+                <label for="perm_state" class="col-xs-12">Permanent State</label>
+                <div class="col-xs-12">
+                <md-select placeholder="select state" id="perm_state" name="perm_state" ng-model="item.perm_state">
+                    <md-option ng-repeat="state in states" value="{{state.value}}">{{state.name}}</md-option>
+                </md-select>
                 </div>
                 <script>
                     $('#perm_state').focusout(function(){
