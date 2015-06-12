@@ -36,7 +36,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         }
 
         $scope.goToNotification = function(notify){
-            console.log('Gong to notification link', notify.link)
+            console.log('Going to notification link', notify.link)
             $location.url(notify.link);
             $scope.toggleNotifications();
         }

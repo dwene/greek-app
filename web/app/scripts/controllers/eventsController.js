@@ -55,6 +55,7 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
             }
             $scope.eventsLoaded = true;
         }
+        
 
         $scope.getNameFromKey = function(key) {
             if ($scope.directory.members) {
@@ -68,20 +69,16 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
         }
         $scope.showDate = function(start, end) {
             var mStart = momentInTimezone(start);
-
-            if (mStart.diff(moment()) > 0) {
-                return mStart.calendar();
-            }
             var mEnd = momentInTimezone(end);
             if (mStart.diff(moment()) < 0 && mEnd.diff(moment()) > 0) {
                 return 'Happening Now';
             }
-            if (mEnd.diff(moment()) < 0) {
-                return 'Already Happened';
+            else {
+                return mStart.calendar();
             }
         }
-        $scope.showEvent = function(event) {
-            $location.path('app/events/' + event.key);
+        $scope.goToEvent = function(event) {
+            $location.path('app/events/' + event);
         }
         $scope.$watch('search', function() {
             if ($scope.current) {
@@ -93,5 +90,6 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
                 }
             }
         })
+        
     }
 ]);
