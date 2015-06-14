@@ -34,6 +34,12 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.hide = function(){
                 mdDialog.hide();
             }
+            scope.editChatter = function(){
+                scope.editing = true;
+            }
+            scope.saveChatter = function(){
+                scope.editing = false;
+            }
         }
     
     $scope.newChatter = function(){

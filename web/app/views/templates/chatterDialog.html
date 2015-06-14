@@ -1,11 +1,17 @@
 <md-dialog id="chatterDialog" md-theme="{{$root.color}}" flex="80">
 
       <md-toolbar class="md-primary md-padding">
-           <h3>{{chat.content}}</h3>
+           <h3 ng-show="!editing">{{chat.content}}</h3>
+           <md-input-container ng-show="editing">
+           <label for="content">Edit your chatter here:</label>
+            <textarea id="content" ng-model="chat.content" name="content"></textarea>
+            </md-input-container>
+            <md-button ng-show="editing" ng-click="saveChatter()">save</md-button>
            <div layout="row">
+               <p class="details"><em>{{chat.sender}}</em></p>
            <span flex></span>
             <md-button class="btn-touch" ng-click="makeImportant(chat)"><i class="fa fa-star-o"></i></md-button>
-            <md-button  class="btn-touch" ng-click="editChatter(chat)"><i class="fa fa-pencil-square-o"></i></md-button>
+            <md-button  class="btn-touch" ng-click="editChatter()"><i class="fa fa-pencil-square-o"></i></md-button>
             <md-button class="btn-touch" ng-click="deleteChatter(chat)"><i class="fa fa-trash"></i></md-button>
             </div>
       </md-toolbar>

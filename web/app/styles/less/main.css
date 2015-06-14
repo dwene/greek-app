@@ -915,6 +915,12 @@ md-toolbar.md-tall {
 #chatterDialog md-toolbar.md-padding {
   padding: 16px 16px 8px 16px !important;
 }
+#chatterDialog label {
+  color: white;
+}
+#chatterDialog textarea {
+  color: white;
+}
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
 }
