@@ -1,0 +1,29 @@
+<md-dialog md-theme="{{$root.color}}">
+<!-- <form id="helpMessage" name="helpMessage" ng-init="message={subject:'', content:''};" novalidate> -->
+  <md-content>
+      <md-toolbar class="md-primary md-padding">
+           <h3>{{chat.content}}</h3>
+      </md-toolbar>
+       <md-subheader class="md-sticky-no-effect">
+            
+        </md-subheader>
+            <md-divider class="no-margin-bottom"></md-divider>
+        <md-content class="md-padding no-padding-top no-padding-bottom">
+        <md-input-container>
+           <label for="content">Enter your comment here:</label>
+            <textarea id="content" ng-model="comment" name="content"></textarea>
+        </md-input-container>
+        </md-content>
+
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button class="md-primary" ng-disabled="!message.length" ng-click="addComment(comment)">
+        Comment
+    </md-button>
+    <md-button ng-click="hide()">
+        Close
+    </md-button>
+  </div>
+<!-- </form> -->
+</md-dialog>

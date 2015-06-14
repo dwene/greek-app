@@ -1,10 +1,13 @@
-<md-dialog md-theme="{{$root.color}}">
+<md-dialog aria-label="help dialog" md-theme="{{$root.color}}">
 <!-- <form id="helpMessage" name="helpMessage" ng-init="message={subject:'', content:''};" novalidate> -->
   <md-content>
-       <md-subheader class="md-sticky-no-effect">
-            Send us a message and we'll get right back to you.
-        </md-subheader>
-            <md-divider class="no-margin-bottom"></md-divider>
+       <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Send us a message and we'll get right back to you.</h2>
+           </div>
+      </md-toolbar>
+        
+<!--            <md-divider class="no-margin-bottom"></md-divider>-->
         <md-content class="md-padding no-padding-top no-padding-bottom">
         <md-input-container>
            <label for="content">Enter your message here:</label>
