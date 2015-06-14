@@ -9,14 +9,14 @@
         <md-content class="md-padding no-padding-top no-padding-bottom">
         <md-input-container>
            <label for="content">Enter your chatter here...</label>
-            <textarea id="content" ng-model="chat" name="content"></textarea>
+            <textarea id="content" ng-model="content" name="content"></textarea>
         </md-input-container>
         </md-content>
 
   </md-content>
   <div class="md-actions" layout="row">
     <span flex></span>
-    <md-button class="md-primary" ng-disabled="!chat.length" ng-click="addChatter(chat)">
+    <md-button class="md-primary" ng-disabled="!content.length" ng-click="addChatter(content)">
         Add Chatter
     </md-button>
     <md-button ng-click="hide()">

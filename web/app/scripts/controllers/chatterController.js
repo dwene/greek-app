@@ -1,13 +1,24 @@
-App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', 'localStorageService', 'Directory',
+App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', 'localStorageService', 'Directory', 'Chatter',
                                      
-function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory) {
+function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory, Chatter) {
     
     $scope.like = false;
     
-    $scope.chatters = [
-        {content:'Hey everybody, I was wondering what we were planning for the party tomorrow. Comment here if you want to help me plan! Hey everybody, I was wondering what we were planning for the party tomorrow. Comment here if you want to help me plan! Hey everybody, I was wondering what we were planning for the party tomorrow. Comment here if you want to help me plan!'},
-        {content:'testing'}
-    ];
+    Chatter.get();
+    
+    if (Chatter.chatter){
+        $scope.chatter = Chatter.data.chatter;
+        $scope.important_chatter = Chatter.data.important_chatter;
+    }
+    
+    $scope.$on('chatter:updated', function(){
+        $scope.chatter = Chatter.data.chatter;
+        $scope.important_chatter = Chatter.data.important_chatter;
+    });
+    
+    $scope.authorpic = function(author){
+        
+    }
     
     $scope.likeChatter = function(chat){
     if ($scope.like == false){
@@ -17,6 +28,8 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
         $scope.like = false;    
     }
     };
+    
+   
     
     $scope.makeImportant = function(chat){
         //somehow make this chat important
@@ -29,6 +42,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
         });
     }
     
+    
      function chatterDialogController(scope, mdDialog){
          scope.chat = $scope.chat;
             scope.hide = function(){
@@ -37,8 +51,30 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.editChatter = function(){
                 scope.editing = true;
             }
+            scope.cancelEditChatter = function(){
+                scope.editing = false;
+            }
             scope.saveChatter = function(){
                 scope.editing = false;
+                Chatter.edit(scope.chat.content);
+            }
+            scope.confirmDelete = false;
+            scope.showConfirmDelete = function(){
+                scope.confirmDelete = true;
+            };
+            scope.hideConfirmDelete = function(){
+                scope.confirmDelete = false;
+            };
+            scope.deleteChatter = function(){
+                console.log(scope.chat);
+                $mdDialog.hide();
+                scope.confirmDelete = false;
+                Chatter.delete(scope.chat.key, scope.chat.content);
+                for (var i = 0; i < $scope.chatter.length; i++){
+                    if ($scope.chatter[i].key == scope.chat.key){
+                        $scope.chatter.splice(i, 1);
+                    }
+                }
             }
         }
     
@@ -53,6 +89,11 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.hide = function(){
                 mdDialog.hide();
             }
+            scope.addChatter = function(content){
+                Chatter.create(content);
+                mdDialog.hide();
+            }
+
         }
     
 }

@@ -6,14 +6,22 @@
            <label for="content">Edit your chatter here:</label>
             <textarea id="content" ng-model="chat.content" name="content"></textarea>
             </md-input-container>
-            <md-button ng-show="editing" ng-click="saveChatter()">save</md-button>
            <div layout="row">
                <p class="details"><em>{{chat.sender}}</em></p>
            <span flex></span>
+            <md-button ng-show="editing" ng-click="saveChatter()">save edit</md-button>
+            <md-button ng-show="editing" ng-click="cancelEditChatter()">cancel</md-button>
             <md-button  class="btn-touch" ng-click="editChatter()"><i class="fa fa-pencil-square-o"></i></md-button>
             <md-button class="btn-touch" ng-click="makeImportant(chat)"><i class="fa fa-star-o"></i></md-button>
-            <md-button class="btn-touch" ng-click="deleteChatter(chat)"><i class="fa fa-trash"></i></md-button>
+            <md-button class="btn-touch" ng-click="showConfirmDelete()"><i class="fa fa-trash"></i></md-button>
             </div>
+      </md-toolbar>
+      <md-toolbar ng-show="confirmDelete" class="md-warn">
+          <div class="md-toolbar-tools">
+              <span flex></span>
+              <md-button ng-click="deleteChatter(chat)">Delete</md-button>
+              <md-button ng-click="hideConfirmDelete()">Cancel</md-button>
+          </div>
       </md-toolbar>
       
 <!--            <md-divider class="no-margin-bottom"></md-divider>-->
