@@ -1850,7 +1850,6 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
         },
         transclude: true,
         link: function(scope, element, attrs) {
-            console.log('I am starting selectingmembers');
             var tags;
             var directory;
             scope.usersList = [];
@@ -1864,6 +1863,8 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                     update();
                 });
             }
+            
+            
             scope.$on('$destroy', function() {
                 for (var i = 0; i < scope.tags.org_tags.length; i++) {
                     if (scope.tags.org_tags[i].checked) {
@@ -1884,6 +1885,8 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                 });
             }
 
+            
+            
             function ModalController($scope, $mdDialog, $sce) {
                 $scope.tags = scope.tags;
                 $scope.inclueUsers = scope.includeUsers;
@@ -1898,7 +1901,11 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                 scope.directory = Directory.directory;
                 update();
             });
+            
             update();
+            
+            
+            
             scope.selectTagFromTypeAhead = function(tag) {
                 tag.checked = true;
                 scope.selectedTagName = "";

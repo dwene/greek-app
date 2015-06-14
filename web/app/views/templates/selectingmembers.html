@@ -1,7 +1,18 @@
-
-
-
-<!--
+<md-chips ng-model="selectedMembers" md-autocomplete-snap md-require-match>
+      <md-autocomplete
+          md-items="member in members"
+          md-item-text="member.name"
+          placeholder="Select Members">
+        <span>{{member}}</span>
+      </md-autocomplete>
+      <md-chip-template>
+        <span>
+          <strong>{{$chip.first}} {{$chip.last}}</strong>
+        </span>
+      </md-chip-template>
+      
+      
+      <!--
 <section id="selectingTags">
 <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto;"></md-progress-circular>
     <div ng-show="directory">
@@ -49,3 +60,8 @@
 </div>
 </section>
 -->
+
+      
+</md-chips>
+
+

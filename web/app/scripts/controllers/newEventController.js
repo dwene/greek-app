@@ -1,5 +1,5 @@
-App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags',
-    function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags) {
+App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory',
+    function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory) {
         routeChange();
         $scope.event = {};
         $scope.event.tag = '';
@@ -11,6 +11,39 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
             $scope.available = false;
         });
 
+        var directory;
+        Directory.get();
+        $scope.directory = Directory.directory;
+        
+            $scope.querySearch = querySearch();
+            $scope.searchText = null;
+            $scope.selectedMembers = loadMembers();
+            
+            function querySearch(query) {
+              var results = query ? self.members.filter(createFilterFor(query)) : [];
+              return results;
+            }
+            /**
+             * Create filter function for a query string
+             */
+            function createFilterFor(query) {
+              var lowercaseQuery = angular.lowercase(query);
+              return function filterFn(mem) {
+                return (mem._lowerfirst.indexOf(lowercaseQuery) === 0) ||
+                    (mem._lowerlast.indexOf(lowercaseQuery) === 0);
+              };
+            }
+            function loadMembers() {
+                var members = $scope.directory.members;
+                return members.map(function (mem) {
+                    mem._lowerfirst = mem.first_name.toLowerCase();
+                    mem._lowerlast = mem.last_name.toLowerCase();
+                    return mem;
+                  });
+            };
+        
+        
+        
         $scope.addEvent = function(isValid, event) {
             if (isValid) {
                 event.tags = getCheckedTags($scope.tags);

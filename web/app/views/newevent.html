@@ -7,7 +7,22 @@
     </md-toolbar>
     <md-content class="md-padding no-padding-top">
     <br>
-    <selecting-users tags="tags"></selecting-users>
+    
+    <md-chips ng-model="selectedMembers" md-autocomplete-snap md-require-match>
+      <md-autocomplete
+          md-items="item in querySearch(searchText)"
+          placeholder="Select Members">
+        <span md-highlight-text="searchText">{{member.first_name}} {{member.last_name}}</span>
+      </md-autocomplete>
+      <md-chip-template>
+        <span>
+          <strong>{{$chip.first_name}} {{$chip.last_name}}</strong>
+        </span>
+      </md-chip-template>
+    </md-chips>
+    
+    
+<!--    <selecting-users tags="tags"></selecting-users>-->
     <form id="newEvent" name="newEvent" class="form-horizontal" role="form" novalidate>
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
