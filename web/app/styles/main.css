@@ -897,6 +897,20 @@ md-toolbar.md-tall {
 #yearSelect label {
   cursor: pointer;
 }
+#chatter md-list-item button {
+  padding: 8px 16px;
+}
+#chatter .md-list-item-text {
+  line-height: 24px;
+}
+#chatter .heart {
+  height: 50px;
+}
+#chatter .details {
+  color: #ccc;
+  font-size: 14px;
+  text-indent: 4px;
+}
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -935,7 +949,7 @@ md-toolbar.md-tall {
   line-height: 1.2;
 }
 #profile #info {
-  margin-top: 20px;
+  margin-top: 5px;
   display: block;
 }
 #profile #info #status {
@@ -961,7 +975,6 @@ md-toolbar.md-tall {
   margin: 0px;
 }
 #profile #info .border {
-  border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   padding: 20px 10px;
   margin-bottom: 10px;
