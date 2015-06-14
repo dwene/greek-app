@@ -3,7 +3,10 @@ App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$md
 function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory) {
     
     
-    var test=''
+    $scope.chatter = [
+        {content:'howdy'},
+        {content:'testing'}
+    ];
     
 }
                                      

@@ -20,7 +20,8 @@
             <md-content class="md-padding">
                 <md-list class="listItem">
                     <md-list-item ng-click="openChatter(chat)" ng-repeat="chat in chatters">
-                        <h3>{{chat.content}}</h3>
+<!--                       <img ng-src="{{chatter.face}}" class="md-avatar" alt="{{chatter.sentby}}" />-->
+                        <h3 class="md-list-item-text">{{chat.content}}</h3>
                     </md-list-item>
                 </md-list>
             </md-content>

@@ -241,7 +241,7 @@
         </md-toolbar>
         <md-content>
         <md-list class="itemList">
-            <md-list-item ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25" class="md-padding"  ng-click="goToNotification(notify)">
+            <md-list-item ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25" class="md-padding"  ng-click="goToNotification(notify)" aria-label="notification content">
                     <span ng-bind="notify.content"></span>
             </md-list-item>
         </md-list>
