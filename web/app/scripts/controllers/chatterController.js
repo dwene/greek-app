@@ -25,7 +25,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
         $scope.chat = chat;
         $mdDialog.show({
                     controller: ('chatterDialogController', ['$scope', '$mdDialog', chatterDialogController]),
-                    templateUrl: 'views/templates/chatterDialog.html'
+                    templateUrl: 'views/templates/chatterDialog.html',
         });
     }
     
@@ -39,7 +39,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
     $scope.newChatter = function(){
         $mdDialog.show({
                     controller: ('newChatterController', ['$scope', '$mdDialog', newChatterController]),
-                    templateUrl: 'views/templates/newChatterDialog.html'
+                    templateUrl: 'views/templates/newChatterDialog.html',
         });
     }
     

@@ -32,10 +32,10 @@
         <div class="form-group" ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
                 <textarea class="form-control" id="description" name="description" rows="6" ng-model="event.description" placeholder="Enter your event description here: We are going bowling! Yay!"></textarea>
                 <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
-        </div> 
+        </div>
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
             <label for="location">Location</label>
-            <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" placeholder=""></input>
+            <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"></input>
             <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
         </md-input-container> 
 <!--        <div class="alert alert-info" ng-show="event.location">{{event.address}}</div>-->

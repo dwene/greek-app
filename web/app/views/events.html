@@ -1,3 +1,9 @@
+<md-button class="fixed md-fab md-warn md-fab-bottom-right" ng-href="#/app/newevent" ng-show="$parent.$parent.checkPermissions('leadership')"><i class="fa fa-plus"></i>
+<md-tooltip md-direction="left">
+    Create Event
+</md-tooltip>
+</md-button>
+
 <div id="events" class="container" ng-init="current = {maxPageNumber: 5, currentPage: 0}; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded">
     <div class="row">
         <div class="col-xs-12 col-sm-6">
@@ -5,8 +11,6 @@
                 <md-toolbar>
                     <div class="md-toolbar-tools">
                         <h1>Events</h1>
-                        <div flex></div>
-                        <md-button ng-href="#/app/newevent" ng-show="$parent.$parent.checkPermissions('leadership')">Create New</md-button>
                     </div>
                 </md-toolbar>
                 <md-content class="md-padding" load-directive ng-model="eventsLoaded">

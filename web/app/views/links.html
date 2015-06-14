@@ -1,10 +1,15 @@
+<md-button class="md-fab md-warn fixed md-fab-bottom-right" ng-click="openNewLinkModal()" ng-show="$root.checkPermissions('leadership')"><i class="fa fa-plus"></i>
+<md-tooltip md-direction="left">
+    Add Link
+</md-tooltip>
+</md-button>
+
 <div id="links" class="container" load-directive ng-model="loading_finished">
     <div class="md-whiteframe-z1">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h1>Links</h1>
                 <div flex></div>
-                <md-button ng-click="openNewLinkModal()" ng-show="$root.checkPermissions('leadership')">Create New</md-button>
             </div>
         </md-toolbar>
         <md-content class="md-padding">
@@ -26,8 +31,8 @@
                                 <div layout="row" layout-align="space-between center" layout-margin>
                                     <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
                                     <div ng-show="$root.checkPermissions('leadership')">
-                                        <md-button class="btn-touch" ng-click="openEditLinkModal(link)"><i class="fa fa-edit fa-fw"></i></md-button>
-                                        <md-button class="btn-touch" ng-click="openDeleteLinkModal(link)"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                        <md-button class="btn-touch" ng-click="openEditLinkDialog(link)"><i class="fa fa-edit fa-fw"></i></md-button>
+                                        <md-button class="btn-touch" ng-click="openDeleteLinkDialog(link)"><i class="fa fa-trash-o fa-fw"></i></md-button>
                                     </div>
                                 </div>
                             </md-item>

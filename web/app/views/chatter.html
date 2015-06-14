@@ -1,5 +1,9 @@
-<md-button class="md-fab md-warn md-fab-bottom-right" ng-click="newChatter();"><i class="fa fa-plus"></i></md-button>
-<div class="container">
+<md-button class="md-fab md-warn fixed md-fab-bottom-right" ng-click="newChatter();"><i class="fa fa-plus"></i>
+<md-tooltip md-direction="left">
+    New Chatter
+</md-tooltip>
+</md-button>
+<div id="chatter" class="container">
    <div class="md-whiteframe-z1">
             <md-toolbar class="no-min-height">
             <md-tabs md-selected="data.selectedIndex" class="md-primary">
@@ -14,7 +18,7 @@
     <div class="tabpanel-container" ng-model="showChatter">
         <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
             <md-content class="md-padding">
-                <md-list class="listItem">
+                <md-list class="itemList">
                     <md-list-item ng-repeat="chat in chatters" ng-click="openChatter(chat)" >
 <!--                       <img ng-src="{{chatter.face}}" class="md-avatar" alt="{{chatter.sentby}}" />-->
                         <h3 class="md-list-item-text">{{chat.content}}</h3>
