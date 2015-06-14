@@ -911,13 +911,22 @@ md-toolbar.md-tall {
   font-size: 14px;
   text-indent: 4px;
 }
+#chatter .numberoflikes {
+  width: 100%;
+  position: absolute;
+  bottom: -2px;
+  left: 0px;
+  font-size: 10px;
+  color: #ccc;
+  text-align: center;
+}
 #chatterDialog md-toolbar.md-padding {
   padding: 16px 16px 8px 16px !important;
 }
-#chatterDialog label {
+#chatterDialog md-toolbar.md-padding label {
   color: white;
 }
-#chatterDialog textarea {
+#chatterDialog md-toolbar.md-padding textarea {
   color: white;
 }
 #profile md-toolbar #social {
