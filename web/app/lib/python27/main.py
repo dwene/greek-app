@@ -17,6 +17,8 @@
 
 # -*- coding: utf-8 -*-
 import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python27'))
 import urllib
 from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -35,6 +37,8 @@ import datetime
 import jinja2
 import webapp2
 import base64, re
+
+
 DOMAIN = 'https://app.netegreek.com'
 HTML_EMAIL_1 = """
 <div bgcolor="#d4d4d4"><div style="font-size:1px;display:none!important"></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td bgcolor="#d4d4d4" style="padding-top:10px"><table width="650" border="0" cellspacing="0" cellpadding="0" align="center"><tbody><tr><td width="650"><table width="650" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="650" bgcolor="#003663" valign="top" padding="" style=""><a href="https://app.netegreek.com" target="_blank"><img src="https://app.netegreek.com/images/NeteGreekLogoSmallWhite.png" width="149" height="40" style="margin-top:20px;margin-left:20px;height:40px;width:149px;" border="0"></a></td></tr><tr width="650"><td bgcolor="#003663" padding="10" style="padding:10px;"></td></tr><tr><table width="650" border="0" cellspacing="0" cellpadding="0"><tr><td width="50" bgcolor="#003663" halign="left"></td><td width="550" bgcolor="#003663" halign="center"><table width="550" bgcolor="#FFFFFF" border="0" halign="center"><tr><td width="550" border="0" style="border:none;"><div style="margin-top:20px;margin-bottom:20px;margin-left: 10px;margin-right:10px;">"""

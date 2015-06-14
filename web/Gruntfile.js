@@ -344,6 +344,17 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>'
         }]
       },
+      server:{
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.dist %>',
+          src: [
+            'lib/**'
+          ]
+        }]
+      },
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
@@ -426,6 +437,11 @@ module.exports = function (grunt) {
     'connect:test',
     'karma'
   ]);
+
+
+  grunt.registerTask('copyServer', [
+      'copy:server'
+  ])
 
   grunt.registerTask('build', [
     'clean:dist',

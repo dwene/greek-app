@@ -52,7 +52,7 @@ handlers:
   secure: always
 
 - url: /_ah/spi/.*
-  script: lib.python27.controller.APPLICATION
+  script: lib.python27.endpoints_controller.APPLICATION
   secure: always
 
 builtins:
