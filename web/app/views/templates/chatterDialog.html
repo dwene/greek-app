@@ -1,12 +1,12 @@
-<md-dialog md-theme="{{$root.color}}">
+<md-dialog id="chatterDialog" md-theme="{{$root.color}}" flex="80">
 
       <md-toolbar class="md-primary md-padding">
            <h3>{{chat.content}}</h3>
-           <br>
            <div layout="row">
            <span flex></span>
-            <md-button ng-click="makeImportant(chat)">Make Important</md-button>
-            <md-button class="md-warn" ng-click="deleteChatter(chat)">Delete</md-button>
+            <md-button class="btn-touch" ng-click="makeImportant(chat)"><i class="fa fa-star-o"></i></md-button>
+            <md-button  class="btn-touch" ng-click="editChatter(chat)"><i class="fa fa-pencil-square-o"></i></md-button>
+            <md-button class="btn-touch" ng-click="deleteChatter(chat)"><i class="fa fa-trash"></i></md-button>
             </div>
       </md-toolbar>
       

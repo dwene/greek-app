@@ -912,6 +912,9 @@ md-toolbar.md-tall {
   font-size: 14px;
   text-indent: 4px;
 }
+#chatterDialog md-toolbar.md-padding {
+  padding: 16px 16px 8px 16px !important;
+}
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
 }
