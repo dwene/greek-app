@@ -31,19 +31,18 @@
                 </h1>
             </div>
         </md-toolbar>
-        <md-list class="itemList hover">
-           <md-item ng-repeat="event in selectedDate.events" ng-if="selectedDate.events">
-               <md-item-content>
-                    <a class="md-tile-content" ng-href="#/app/events/{{event.key}}">
+        <md-list class="itemList">
+           <md-list-item ng-repeat="event in selectedDate.events" ng-click="doNothing()" ng-if="selectedDate.events">
+                    <a ng-href="#/app/events/{{event.key}}">
+                       <div class="md-list-item-text">
                         <h3 class="md-primary title">
                             {{event.title}}
                         </h3>
-                        <p class="notificationText">{{event.startTime|date: 'hh:mma'}}
-                        -
-                        {{event.endTime|date: 'hh:mma'}}</p>
-                    </a> 
-               </md-item-content>
-           </md-item>
+                        <p class="notificationText">{{event.startTime|date: 'hh:mma'}} - {{event.endTime|date: 'hh:mma'}}</p>
+                        </div>
+                    </a>
+
+           </md-list-item>
         </md-list>
         <md-item ng-show="!selectedDate.events">
             <md-content class="md-padding no-padding-top">
@@ -52,21 +51,6 @@
                 </h3>
             </md-content>
         </md-item>
-<!--
-        <div class="scrollable" style="height: 200px">
-            <table class="table table-bordered table-striped table-fixed">
-                <tr ng-repeat="event in selectedDate.events" ng-if="selectedDate.events"  ng-click="eventSelected(event)" class="calendar-point">
-                    <td ng-if="!event.allDay" class="monthview-eventdetail-timecolumn">{{event.startTime|date: 'hh:mma'}}
-                        -
-                        {{event.endTime|date: 'hh:mma'}}
-                    </td>
-                    <td ng-if="event.allDay" class="monthview-eventdetail-timecolumn">All day</td>
-                    <td class="event-detail">{{event.title}}</td>
-                </tr>
-                <tr ng-if="!selectedDate.events"><td class="no-event-label">No Events</td></tr>
-            </table>
-        </div>
--->
     </div>
     </div>
 </div>

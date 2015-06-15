@@ -2,21 +2,21 @@
 
       <md-toolbar class="md-primary md-padding">
            <h3 ng-show="!editing">{{chat.content}}</h3>
-           <md-input-container ng-show="editing">
-           <label for="content">Edit your chatter here:</label>
-            <textarea id="content" ng-model="chat.content" name="content"></textarea>
+           <md-input-container class="slideDown" ng-show="editing">
+           <label for="chattercontent">Edit your chatter here:</label>
+            <textarea id="chattercontent" ng-model="chat.content" name="content"></textarea>
             </md-input-container>
            <div layout="row">
                <p class="details"><em>{{chat.sender}}</em></p>
            <span flex></span>
-            <md-button ng-show="editing" ng-click="saveChatter()">save edit</md-button>
-            <md-button ng-show="editing" ng-click="cancelEditChatter()">cancel</md-button>
-            <md-button  class="btn-touch" ng-click="editChatter()"><i class="fa fa-pencil-square-o"></i></md-button>
-            <md-button class="btn-touch" ng-click="makeImportant(chat)"><i class="fa fa-star-o"></i></md-button>
-            <md-button class="btn-touch" ng-click="showConfirmDelete()"><i class="fa fa-trash"></i></md-button>
+            <md-button ng-show="editing" class="slideDown" ng-click="saveChatter()">save edit</md-button>
+            <md-button ng-show="editing" class="slideDown" ng-click="cancelEditChatter()">cancel</md-button>
+            <md-button ng-hide="editing" class="btn-touch" ng-click="editChatter()" aria-label="edit"><i class="fa fa-pencil-square-o"></i></md-button>
+            <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat)" aria-label="mark important"><i class="fa fa-star-o"></i></md-button>
+            <md-button ng-hide="editing" class="btn-touch" ng-click="showConfirmDelete()" aria-label="delete"><i class="fa fa-trash"></i></md-button>
             </div>
       </md-toolbar>
-      <md-toolbar ng-show="confirmDelete" class="md-warn">
+      <md-toolbar ng-show="confirmDelete" class="md-warn slideDown">
           <div class="md-toolbar-tools">
               <span flex></span>
               <md-button ng-click="deleteChatter(chat)">Delete</md-button>

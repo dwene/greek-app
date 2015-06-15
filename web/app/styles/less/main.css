@@ -1307,3 +1307,12 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
   -ms-animation: fadeOutUp .2s;
   animation: fadeOutUp .2s;
 }
+.slideDown {
+  z-index: 0;
+}
+.slideDown.ng-hide-remove {
+  -webkit-animation: slideInDown .2s;
+  -moz-animation: slideInDown .2s;
+  -ms-animation: slideInDown .2s;
+  animation: slideInDown .2s;
+}

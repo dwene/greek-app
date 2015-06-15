@@ -50,6 +50,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             }
             scope.editChatter = function(){
                 scope.editing = true;
+                document.getElementById('chattercontent').focus();
             }
             scope.cancelEditChatter = function(){
                 scope.editing = false;
