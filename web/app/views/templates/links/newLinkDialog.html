@@ -1,6 +1,6 @@
 <md-dialog md-theme="{{$root.color}}" style="min-width:60%;">
-  <md-content>
-       <md-subheader>
+    <md-content>
+        <md-subheader>
             New Link
         </md-subheader>
         <md-divider></md-divider>
@@ -12,28 +12,28 @@
             <label for="link">Link</label>
             <input type="text" name="link" ng-model="link" remove-http required>
         </md-input-container>
-        
+
         <br>
-        
+
         <div class="form-group">
-          <select class="form-control" id="newGroup" name="newGroup" ng-model="group" required>
-            <option value="" disabled selected>Select a Group</option>
-            <option ng-repeat="group in groups">{{group}}</option>
-            <option value="new_group_listing">Add New Group</option>
-          </select>
+            <select class="form-control" id="newGroup" name="newGroup" ng-model="group" required>
+                <option value="" disabled selected>Select a Group</option>
+                <option ng-repeat="group in groups">{{group}}</option>
+                <option value="new_group_listing">Add New Group</option>
+            </select>
         </div>
-        
+
         <md-input-container>
             <label for="new_group">New Group</label>
             <input type="text" name="new_group" ng-model="new_group" ng-required="temp_link.group === 'new_group_listing'">
         </md-input-container>
 
-  </md-content>
-  
-  <div class="md-actions" layout="row">
+    </md-content>
+
+    <div class="md-actions" layout="row">
         <md-button ng-click="createLink(title, link, group == 'new_group_listing' ? new_group : group)" ng-disabled="title='' || link='' || new_group=''">add</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
-  </div>
+    </div>
 </md-dialog>
 
 

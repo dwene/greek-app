@@ -1045,25 +1045,14 @@ md-toolbar.md-tall {
 #eventCheckin .face {
   margin-right: 5px;
 }
-#links .link-group md-toolbar {
-  min-height: 0px;
-  height: auto;
-  background: #E0E0E0 !important;
-  color: #616161;
+#links .linkgroup {
+  width: 100%;
+  margin-bottom: 15px;
 }
-#links .link-group md-toolbar .linkButtons {
-  margin-right: 0px;
-}
-#links .link-group md-toolbar .md-button {
-  color: #616161;
-}
-#links .link-group .md-toolbar-tools {
-  min-height: 0px;
-  height: 48px;
-}
-#links .link-group md-content {
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
+#links .linkgroup a {
+  display: block;
+  height: 100%;
+  width: 100%;
 }
 #surveyInfo md-content {
   padding: 45px 30px 30px 30px;

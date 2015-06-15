@@ -17,9 +17,11 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
             $scope.links = Links.links;
             $scope.loading_finished = true;
         });
+        
         var selectedGroup;
         var selectedLink;
         var groups;
+        
         $scope.openEditLinkDialog = function(link) {
             selectedLink = link;
             groups = $scope.groups;
