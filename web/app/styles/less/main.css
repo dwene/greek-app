@@ -453,6 +453,12 @@ md-backdrop.md-opaque {
 .md-dialog-container {
   z-index: 1042;
 }
+.md-select-menu-container {
+  z-index: 1043;
+}
+md-list md-list-item md-toolbar .md-button {
+  background-color: transparent !important;
+}
 .md-tile-content {
   overflow: hidden;
 }
@@ -1053,6 +1059,7 @@ md-toolbar.md-tall {
   display: block;
   height: 100%;
   width: 100%;
+  line-height: 18px;
 }
 #surveyInfo md-content {
   padding: 45px 30px 30px 30px;

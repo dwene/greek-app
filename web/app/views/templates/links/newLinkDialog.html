@@ -1,9 +1,9 @@
-<md-dialog md-theme="{{$root.color}}" style="min-width:60%;">
-    <md-content>
+<md-dialog md-theme="{{$root.color}}" flex="60">
         <md-subheader>
             New Link
         </md-subheader>
         <md-divider></md-divider>
+    <md-content class="md-padding no-padding-top">
         <md-input-container>
             <label for="title">Title</label>
             <input type="text" name="title" ng-model="title" required>
@@ -16,24 +16,26 @@
         <br>
 
         <div class="form-group">
-            <select class="form-control" id="newGroup" name="newGroup" ng-model="group" required>
-                <option value="" disabled selected>Select a Group</option>
-                <option ng-repeat="group in groups">{{group}}</option>
-                <option value="new_group_listing">Add New Group</option>
-            </select>
+            <md-select id="newGroup" name="newGroup" ng-model="group" placeholder="Select a Group" required>
+<!--                <md-option value="" disabled selected>Select a Group</md-option>-->
+                <md-option ng-repeat="group in groups">{{group}}</md-option>
+                <md-option value="new_group_listing">Add New Group</md-option>
+            </md-select>
         </div>
 
-        <md-input-container>
-            <label for="new_group">New Group</label>
+        <md-input-container ng-show="group == 'new_group_listing'">
+            <label for="new_group">New Group Name</label>
             <input type="text" name="new_group" ng-model="new_group" ng-required="temp_link.group === 'new_group_listing'">
         </md-input-container>
-
     </md-content>
-
+        
     <div class="md-actions" layout="row">
-        <md-button ng-click="createLink(title, link, group == 'new_group_listing' ? new_group : group)" ng-disabled="title='' || link='' || new_group=''">add</md-button>
+       <md-button ng-click="createLink(title, link, group == 'new_group_listing' ? new_group : group)" ng-disabled="!title || !link || !group">add</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
     </div>
+
+
+
 </md-dialog>
 
 

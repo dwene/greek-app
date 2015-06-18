@@ -22,11 +22,18 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
         var selectedLink;
         var groups;
         
+        $scope.showConfirmDelete = function(group){
+            selectedGroup = group;
+            console.log(group);
+//            $scope.selectedGroup.confirmDelete = true;
+            
+        }
+                
         $scope.openEditLinkDialog = function(link) {
             selectedLink = link;
             groups = $scope.groups;
             $mdDialog.show({
-                controller: ('DialogController' ['$scope', '$mdDialog', DialogController]),
+                controller: DialogController,
                 templateUrl: 'views/templates/links/editLinkDialog.html'
             });
         }
@@ -34,32 +41,29 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
             groups = $scope.groups;
             selectedLink = {};
             $mdDialog.show({
-                controller: ('DialogController' ['$scope', '$mdDialog', DialogController]),
-                templateUrl: 'views/templates/links/newLinkDialog.html'
+                controller: DialogController,
+                templateUrl: 'views/templates/links/newLinkDialog.html',
+                parent: angular.element(document.body)
             });
         }
         $scope.openDeleteLinkDialog = function(link) {
             selectedLink = link;
             $mdDialog.show({
-                controller: ('DialogController' ['$scope', '$mdDialog', DialogController]),
+                controller: DialogController,
                 templateUrl: 'views/templates/links/deleteLinkDialog.html'
             });
         }
-        $scope.openRenameGroupDialog = function(group) {
+        $scope.openEditGroupDialog = function(group) {
             selectedGroup = group;
             $mdDialog.show({
-                controller: ('DialogController' ['$scope', '$mdDialog', DialogController]),
-                templateUrl: 'views/templates/links/renameGroupDialog.html'
-            });
-        }
-        $scope.openDeleteGroupDialog = function(group) {
-            selectedGroup = group;
-            $mdDialog.show({
-                controller: ('DialogController' ['$scope', '$mdDialog', DialogController]),
-                templateUrl: 'views/templates/links/deleteGroupDialog.html'
+                controller: DialogController,
+                templateUrl: 'views/templates/links/editGroupDialog.html'
             });
         }
 
+        $scope.deleteGroup = function(group) {
+                deleteGroup(group);
+        }
 
 
         function DialogController($scope, $mdDialog) {
@@ -87,6 +91,9 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
             $scope.createLink = function(title, link, group) {
                 createLink(title, link, group);
                 $mdDialog.hide();
+            }
+            $scope.hello = function(){
+                console.log("hello");
             }
             $scope.deleteLink = function(link) {
                 deleteLink(link);
@@ -128,28 +135,31 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
             var to_send = {
                 group: group
             };
-            $scope.checkDeleteGroup = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', to_send)
-                .success(function(data) {
-                    if (!RESTService.hasErrors(data)) {
-                        $('#deleteGroupModal').modal('hide');
-                        $scope.checkDeleteGroup = "done";
-                        for (var i = 0; i < $scope.links.length; i++) {
-                            if ($scope.links[i].group == group) {
+            for (var i = 0; i < $scope.links.length; i++) {
+                            if ($scope.links[i].name == group.name) {
                                 $scope.links.splice(i, 1);
                                 i--;
                             }
-                            if ($scope.groups.indexOf(group) != -1) {
-                                $scope.groups.splice($scope.groups.indexOf(group), 1);
-                            }
-                        }
-                    } else {
-                        console.log('ERR');
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ', data);
-                });
+            }
+            
+            
+            $scope.checkDeleteGroup = "pending";
+//            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', to_send)
+//                .success(function(data) {
+//                    if (!RESTService.hasErrors(data)) {
+//                        for (var i = 0; i < $scope.links.length; i++) {
+//                            if ($scope.links[i].group == group) {
+//                                $scope.links.splice(i, 1);
+//                                i--;
+//                            }
+//                        }
+//                    } else {
+//                        console.log('ERR');
+//                    }
+//                })
+//                .error(function(data) {
+//                    console.log('Error: ', data);
+//                });
         }
 
         function createLink(title, link, group) {
@@ -247,7 +257,6 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $scope.checkRenameGroup = "done";
-                        $('#renameGroupModal').modal('hide');
                         for (var i = 0; i < $scope.links.length; i++) {
                             if ($scope.links[i].group == old_group) {
                                 $scope.links[i].group = group;

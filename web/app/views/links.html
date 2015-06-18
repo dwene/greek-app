@@ -13,22 +13,42 @@
         </md-toolbar>
         <md-content class="md-padding">
             <md-list>
-                <md-list-item layout="column" ng-repeat="group in groups track by group">
+                <md-list-item layout="column" ng-repeat="group in links">
                     <md-toolbar>
                         <div class="md-toolbar-tools">
-                            <h1>{{group}}</h1>
+                            <h1>{{group.name}}</h1>
                             <span flex></span>
                             <div ng-show="$root.checkPermissions('leadership')">
-                                <md-button class="btn-touch md-primary" ng-click="openRenameGroupModal(group)"><i class="fa fa-edit fa-fw"></i></md-button>
-                                <md-button class="btn-touch md-primary" ng-click="openDeleteGroupModal(group)"><i class="fa fa-trash-o fa-fw"></i></md-button>
-                                </div>
+                                <md-button class="btn-touch" ng-click="openEditGroupDialog(group)" aria-label="edit group"><i class="fa fa-edit fa-fw"></i></md-button>
+                                <md-button class="btn-touch" ng-click="group.confirmDelete = !group.confirmDelete" aria-label="delete group"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                            </div>
+                        </div>
+                    </md-toolbar>
+                    <md-toolbar ng-show="group.confirmDelete" class="md-warn slideDown">
+                        <div class="md-toolbar-tools">
+                            <span flex></span>
+                            <md-button ng-click="deleteGroup(group)">Delete</md-button>
+                            <md-button ng-click="group.confirmDelete = !group.confirmDelete">Cancel</md-button>
                         </div>
                     </md-toolbar>
                     <md-content class="linkgroup">
                         <md-list class="itemList">
-                            <md-list-item ng-click="doNothing()" ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
+                           <div ng-repeat="link in group.links">
+                            <md-list-item ng-click="doNothing()" >
                                 <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
+                                <div class="pull-right" ng-show="$root.checkPermissions('leadership')">
+                                <md-button class="btn-touch" ng-click="openEditLinkDialog(link)"><i class="fa fa-edit fa-fw"></i></md-button>
+                                <md-button class="btn-touch" ng-click="link.confirmDelete = !link.confirmDelete"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                </div>
                             </md-list-item>
+                            <md-toolbar ng-show="link.confirmDelete" class="md-warn slideDown">
+                                <div class="md-toolbar-tools">
+                                    <span flex></span>
+                                    <md-button ng-click="deleteLink(link)">Delete</md-button>
+                                    <md-button ng-click="link.confirmDelete = !link.confirmDelete">Cancel</md-button>
+                                </div>
+                            </md-toolbar>
+                            </div>
                         </md-list>
                     </md-content>
                 </md-list-item>

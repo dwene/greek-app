@@ -1,10 +1,11 @@
 <md-dialog id="editLink" md-theme="{{$root.color}}" style="min-width:60%;">
-  <md-content>
-       <md-subheader>
-            Edit Link
-        </md-subheader>
+       <md-toolbar>
+           <div class="md-toolbar-tools">
+            <h1>Edit Link</h1>
+           </div>
+        </md-toolbar>
         <md-divider></md-divider>
-        
+        <md-content class="md-padding no-padding-top">
         <md-input-container>
             <label for="title">Title</label>
             <input type="text" name="title" ng-model="temp_link.title" required>
@@ -32,13 +33,10 @@
 -->
 
      
-      <div class="form-group">
-          <label for="newGroup" class="col-sm-2 control-label"></label>
-          <select class="form-control" id="newGroup" name="newGroup" ng-model="temp_link.group" required>
-            <option ng-repeat="group in groups">{{group}}</option>
-            <option value="new_group_listing">Add New Group</option>
-          </select>
-      </div>
+          <md-select id="newGroup" name="newGroup" ng-model="temp_link.group" required>
+            <md-option ng-repeat="group in groups">{{group}}</md-option>
+            <md-option value="new_group_listing">Add New Group</md-option>
+          </md-select>
       
       <md-input-container ng-show="temp_link.group == 'new_group_listing'">
           <label for="new_group">New Group</label>
@@ -54,7 +52,7 @@
   </md-content>
   
   <div class="md-actions" layout="row">
-        <md-button ng-click="editLink(temp_link.title, temp_link.link, temp_link.group == 'new_group_listing' ? temp_link.new_group : temp_link.group, selectedLink)">edit</md-button>
+        <md-button ng-click="editLink(temp_link.title, temp_link.link, temp_link.group == 'new_group_listing' ? temp_link.new_group : temp_link.group, selectedLink)">save</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
   </div>
 </md-dialog>
