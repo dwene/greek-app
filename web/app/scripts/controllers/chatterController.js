@@ -6,7 +6,8 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
     
     Chatter.get();
     
-    if (Chatter.chatter){
+    if (Chatter.data){
+        console.log("chatter is", Chatter.data.chatter);
         $scope.chatter = Chatter.data.chatter;
         $scope.important_chatter = Chatter.data.important_chatter;
     }

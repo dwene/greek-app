@@ -15,7 +15,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 return;
             }
             chatter.hasLoaded = true;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/chatter/get', '')
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/get', '')
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         var load_data = JSON.parse(data.data);
@@ -34,7 +34,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         }
         
         chatter.create = function(content){
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/chatter/post', {content:content})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', {content:content})
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         
@@ -49,7 +49,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         
         //change this to delete post
         chatter.delete = function(key, content){
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/chatter/delete', {key:key})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/delete', {key:key})
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         
@@ -63,7 +63,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         }
         
         chatter.edit = function(key, content){
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/chatter/edit', {key:key, content:content})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/edit', {key:key, content:content})
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         

@@ -185,6 +185,10 @@ class Link(ndb.Model):
     group = ndb.StringProperty()
     organization = ndb.KeyProperty()
 
+#
+# class LinkGroup(ndb.Model):
+#
+
 class Chatter(ndb.Model):
     content = ndb.TextProperty()
     organization = ndb.KeyProperty()
