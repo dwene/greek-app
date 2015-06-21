@@ -5,7 +5,7 @@ App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$r
         $scope.loading = true;
         $scope.user_is_taken = false;
         $scope.waiting_for_response = false;
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', JSON.stringify({
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/new_user', JSON.stringify({
             token: $stateParams.key
         }))
             .success(function(data) {
@@ -51,7 +51,7 @@ App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$r
                     user_name: $scope.item.user_name.toLowerCase(),
                     password: $scope.item.password
                 }
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_credentials', {
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/register_credentials', {
                     data: JSON.stringify(to_send),
                     token: $stateParams.key
                 })

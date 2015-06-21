@@ -73,7 +73,7 @@
                 var data_tosend = {
                     users: $scope.adds
                 };
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_users', data_tosend)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/add_users', data_tosend)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             var users = JSON.parse(data.data);

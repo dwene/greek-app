@@ -36,7 +36,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
         }
 
         function update() {
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         console.log('I am updating the user check in stuff!');
@@ -79,7 +79,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
         var interval_variable;
 
         function getCheckInData() {
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $scope.users = JSON.parse(data.data);
@@ -133,7 +133,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                 member.attendance_data.time_in = momentUTCTime();
             }
             member.in_updating = 'pending';
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_in', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_in', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         member.in_updating = "done";
@@ -170,7 +170,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                 member.attendance_data.time_out = momentUTCTime();
             }
             member.out_updating = 'pending';
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_out', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_out', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         member.out_updating = 'done';

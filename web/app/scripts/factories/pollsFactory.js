@@ -6,7 +6,7 @@ App.factory('Polls', ['RESTService', '$rootScope', 'localStorageService', '$q', 
         item.get = function() {
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_polls', '')
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/get_polls', '')
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             item.polls = JSON.parse(data.data);

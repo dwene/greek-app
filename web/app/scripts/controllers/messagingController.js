@@ -37,7 +37,7 @@ App.controller('messagingController', ['$scope', 'RESTService', '$q', '$rootScop
         $scope.pageSize = 10;
         $scope.maxPageNumber = 5;
         $scope.recentLoaded = false;
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', '')
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/recently_sent', '')
             .success(function(data) {
                 $scope.recentLoaded = true;
                 if (!RESTService.hasErrors(data)) {
@@ -75,7 +75,7 @@ App.controller('messagingController', ['$scope', 'RESTService', '$q', '$rootScop
                 };
                 console.log("what Im sending in message", to_send);
                 $scope.updating = "pending"
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/send_message', to_send)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/send_message', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             $scope.updating = "done";
@@ -86,7 +86,7 @@ App.controller('messagingController', ['$scope', 'RESTService', '$q', '$rootScop
                             clearCheckedTags($scope.tags);
 
                             setTimeout(function() {
-                                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/recently_sent', '')
+                                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/recently_sent', '')
                                     .success(function(data) {
                                         if (!RESTService.hasErrors(data)) {
                                             $scope.sentMessages = JSON.parse(data.data);
@@ -116,7 +116,7 @@ App.controller('messagingController', ['$scope', 'RESTService', '$q', '$rootScop
             var to_send = {
                 message: message.key
             }
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/delete', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/delete', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         console.log('message removed');

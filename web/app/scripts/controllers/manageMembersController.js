@@ -207,7 +207,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
 
         function removeMember(user) {
             console.log('user to remove', user);
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', user)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/remove_user', user)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {} else {
                         console.log('ERROR: ', data);

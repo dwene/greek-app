@@ -10,7 +10,7 @@ App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', 
 
     $scope.changePassword = function(old_pass, new_pass) {
         var to_send = {password:new_pass, old_password: old_pass};
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password', to_send)
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/change_password', to_send)
         .success(function(data) {
             if(!checkResponseErrors(data)){
                 $scope.passwordChanged = true;

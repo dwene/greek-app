@@ -179,7 +179,7 @@ App.controller('membertagsController', ['$scope', 'RESTService', '$rootScope', '
         $scope.getOrganizationTags = function() {
             //initialize ng-model variables to contain selected things
             // $('#tag').val('');
-            // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', packageForSending(''))
+            // $http.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/get_tags', packageForSending(''))
             // .success(function(data){
             //     if (!checkResponseErrors(data)){
             //         var org_tags = JSON.parse(data.data).org_tags;

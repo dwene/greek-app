@@ -4,7 +4,7 @@ App.controller('changePasswordFromTokenController', ['$scope', '$http', '$rootSc
         $.removeCookie(USER_NAME);
         $.cookie(TOKEN, $stateParams.token);
         console.log('My token', $.cookie(TOKEN));
-        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/check_password_token', packageForSending(''))
+        $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/check_password_token', packageForSending(''))
             .success(function(data) {
                 if (!checkResponseErrors(data)) {
                     $scope.user = JSON.parse(data.data);
@@ -20,7 +20,7 @@ App.controller('changePasswordFromTokenController', ['$scope', '$http', '$rootSc
         $scope.changePassword = function(password, isValid) {
             if (isValid) {
                 $scope.changingPassword = 'pending';
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/change_password_from_token', packageForSending({
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/change_password_from_token', packageForSending({
                     password: password
                 }))
                     .success(function(data) {

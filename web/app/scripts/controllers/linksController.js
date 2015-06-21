@@ -113,7 +113,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
             var to_send = {
                 group: group
             };
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create_group', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/create_group', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         if ($scope.groups.indexOf(group) == -1) {
@@ -144,7 +144,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
             
             
             $scope.checkDeleteGroup = "pending";
-//            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete_group', to_send)
+//            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/delete_group', to_send)
 //                .success(function(data) {
 //                    if (!RESTService.hasErrors(data)) {
 //                        for (var i = 0; i < $scope.links.length; i++) {
@@ -169,7 +169,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 link: link
             };
             $scope.checkCreateLink = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/create', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/create', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $('#newLinkModal').modal('hide');
@@ -197,7 +197,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 key: link.key
             };
             $scope.checkDeleteLink = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/delete', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/delete', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $('#deleteLinkModal').modal('hide');
@@ -227,7 +227,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 group: group
             };
             $scope.checkEditLink = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/edit', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/edit', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $('#editLinkModal').modal('hide');
@@ -253,7 +253,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 group: group
             };
             $scope.checkRenameGroup = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/rename_group', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/rename_group', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $scope.checkRenameGroup = "done";

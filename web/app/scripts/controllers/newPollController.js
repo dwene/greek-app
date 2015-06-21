@@ -37,7 +37,7 @@ App.controller('newPollController', ['$scope', 'RESTService', '$rootScope', 'Tag
             //            to_send.time_start = momentUTCTime(poll.date_start + " " + poll.time_start).format('MM/DD/YYYY hh:mm a');
             //            to_send.time_end = momentUTCTime(poll.date_end + " " + poll.time_end).format('MM/DD/YYYY hh:mm a');
             if (isValid) {
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/create', to_send)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/create', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             $scope.working = 'done';

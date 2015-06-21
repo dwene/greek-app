@@ -43,7 +43,7 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
 
         function DialogController($scope, $mdDialog) {
             $scope.delete = function() {
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', $stateParams.tag)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/delete', $stateParams.tag)
                     .success(function(data) {
                         $scope.loading = true;
                         if (!RESTService.hasErrors(data)) {
@@ -61,7 +61,7 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
         }
         $scope.deleteEvent = function() {
             $('#deleteEventModal').modal('hide');
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/delete', $stateParams.tag)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/delete', $stateParams.tag)
                 .success(function(data) {
                     $scope.loading = true;
                     if (!RESTService.hasErrors(data)) {
@@ -187,7 +187,7 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
                 }
                 to_send.tags = getCheckedTags($scope.tags);
                 console.log(to_send.tags);
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/edit_event', to_send)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/edit_event', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             $scope.working = "done";

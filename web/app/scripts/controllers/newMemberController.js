@@ -3,7 +3,7 @@ App.controller('newmemberController', ['$scope', 'RESTService', '$stateParams', 
         $('.container').hide();
         logoutCookies();
         $.cookie(TOKEN, $stateParams.key);
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/new_user', '')
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/new_user', '')
             .success(function(data) {
                 if (!RESTService.hasErrors(data)) {
                     $scope.user = JSON.parse(data.data);

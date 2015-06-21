@@ -50,7 +50,7 @@ App.controller('addAlumniController', ['$scope', 'RESTService', '$rootScope', 'l
             var data_tosend = {
                 users: $scope.adds
             };
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/add_alumni', data_tosend)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/add_alumni', data_tosend)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $scope.updating = "done";

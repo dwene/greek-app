@@ -114,7 +114,7 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
         // function tryLoadEvent(count){
         //     LoadEvents();
         //     function LoadEvents(){
-        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', packageForSending(''))
+        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_events', packageForSending(''))
         //             .success(function(data){
         //                 if (!checkResponseErrors(data)){
         //                     var events = JSON.parse(data.data);
@@ -196,7 +196,7 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
                 to_send.rsvp = 'not_going';
             }
             to_send.key = $scope.event.key;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/rsvp', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/rsvp', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         if (rsvp) {

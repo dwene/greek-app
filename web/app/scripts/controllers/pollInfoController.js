@@ -67,7 +67,7 @@ App.controller('pollInfoController', ['$scope', 'RESTService', '$rootScope', '$s
         var to_send = {
             key: $stateParams.key
         };
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_poll_info', to_send)
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/get_poll_info', to_send)
             .success(function(data) {
                 if (!RESTService.hasErrors(data)) {
                     $scope.poll = JSON.parse(data.data);
@@ -92,7 +92,7 @@ App.controller('pollInfoController', ['$scope', 'RESTService', '$rootScope', '$s
             } else if (close === false) {
                 to_send.open = true;
             }
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/edit_poll', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/edit_poll', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         if (close) {
@@ -127,7 +127,7 @@ App.controller('pollInfoController', ['$scope', 'RESTService', '$rootScope', '$s
             var to_send = {
                 key: $stateParams.key
             };
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/delete', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/delete', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $location.path('app/polls');
@@ -142,7 +142,7 @@ App.controller('pollInfoController', ['$scope', 'RESTService', '$rootScope', '$s
 
         $scope.submitResponse = function() {
             var to_send = $scope.poll;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/answer_questions', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/answer_questions', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $location.path('app/polls/' + $stateParams.key + '/results');

@@ -21,7 +21,7 @@ App.controller('forgotPasswordController', ['$scope', 'RESTService', '$rootScope
                 };
             }
             console.log(to_send);
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/forgot_password', to_send)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/forgot_password', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         if (data.data == 'OK') {

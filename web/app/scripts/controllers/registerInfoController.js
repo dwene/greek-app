@@ -35,7 +35,7 @@ App.controller('registerinfoController', ['$scope', 'RESTService', 'registerOrga
                     user: item
                 }
                 //send the organization and user date from registration pages
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/register_organization', data_tosend)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/register_organization', data_tosend)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             var responseData = JSON.parse(data.data);

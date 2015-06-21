@@ -4,7 +4,7 @@ App.controller('registerUserController', ['$scope', 'RESTService', '$rootScope',
         $scope.data = {};
         $scope.findMe = function(email) {
             $scope.users_load = 'pending';
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/find_unregistered_users', {
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/find_unregistered_users', {
                 email: email
             })
                 .success(function(data) {
@@ -23,7 +23,7 @@ App.controller('registerUserController', ['$scope', 'RESTService', '$rootScope',
 
         $scope.resendEmail = function(key) {
             $scope.email_load = 'pending';
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/resend_registration_email', {
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/resend_registration_email', {
                 key: key
             })
                 .success(function(data) {

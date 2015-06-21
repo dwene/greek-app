@@ -49,7 +49,7 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
             if ($scope.directory == null || $scope.events == null) {
                 return;
             }
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', $stateParams.tag)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         $scope.users = JSON.parse(data.data);
@@ -100,7 +100,7 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
                 });
         }
         //            $scope.generateReport(){
-        //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_check_in_info', packageForSending($stateParams.tag))
+        //                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', packageForSending($stateParams.tag))
         //                .success(function(data){
         //                    if (!checkResponseErrors(data)){
         //                        users = JSON.parse(data.data);

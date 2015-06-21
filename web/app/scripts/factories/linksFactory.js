@@ -8,7 +8,7 @@ App.factory('Links', ['RESTService', '$rootScope', 'localStorageService', '$q', 
         item.get = function() {
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/link/get', '')
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/get', '')
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             item.links = JSON.parse(data.data);

@@ -6,7 +6,7 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
         authService.login = function(credentials) {
             $rootScope.passwordChanged = false;
             return RESTService
-                .post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/login', credentials)
+                .post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/login', credentials)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         var parsed_data = JSON.parse(data.data);
@@ -48,7 +48,7 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                     to_send.token = creds.TOKEN;
                     data = JSON.stringify('');
                 }
-                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/token_login', to_send)
+                $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/token_login', to_send)
                     .success(function(data) {
                         // console.log('cached login. am I authenticated?', authService.isAuthenticated());
                         // console.log('data', data);
@@ -80,7 +80,7 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                 token: token,
                 data: JSON.stringify('')
             };
-            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/token_login', to_send)
+            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/token_login', to_send)
                 .success(function(data) {
                     loginAttempted = true;
                     if (!authService.isAuthenticated()) {

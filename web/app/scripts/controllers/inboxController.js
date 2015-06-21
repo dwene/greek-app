@@ -130,7 +130,7 @@ angular.module('App').controller('inboxController', [ '$scope', 'RESTService', '
                 $scope.inbox.archived.push($scope.inbox.messages[i]);
                 $scope.inbox.messages.splice(i, 1);
                 $scope.inbox.lengths.archived++;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/archive', {'message': message.key})
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/archive', {'message': message.key})
                 Inbox.update($scope.inbox);
                 return;
             }
@@ -144,7 +144,7 @@ angular.module('App').controller('inboxController', [ '$scope', 'RESTService', '
                 $scope.inbox.archived.splice(i, 1);
                 $scope.inbox.lengths.archived--;
                 $scope.inbox.lengths.read++;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/unarchive', {'message': message.key});
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/unarchive', {'message': message.key});
                 Inbox.update($scope.inbox);
                 return;
             }

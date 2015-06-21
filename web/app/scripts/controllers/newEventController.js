@@ -63,7 +63,7 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
                     to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
                     to_send.reccuring = true;
                 }
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/create', to_send)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/create', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             $scope.working = 'done';
@@ -99,7 +99,7 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
                 $scope.unavailable = false;
                 $scope.available = false;
                 $scope.isEmpty = false;
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/check_tag_availability', tag)
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_tag_availability', tag)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             $scope.checkWorking = 'done';

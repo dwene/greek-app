@@ -93,7 +93,7 @@ App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope',
         function removeAlumni(alumnus) {
             $scope.selectedUser = {}
             $('#deleteAlumniModal').modal('hide');
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/remove_user', alumnus);
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/remove_user', alumnus);
             if ($scope.directory.alumni.indexOf(alumnus) > -1) {
                 $scope.directory.alumni.splice($scope.directory.alumni.indexOf(alumnus), 1);
             }

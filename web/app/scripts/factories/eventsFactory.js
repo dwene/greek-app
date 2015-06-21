@@ -7,7 +7,7 @@ App.factory('Events', ['RESTService', '$rootScope', 'localStorageService', '$q',
         item.get = function() {
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_events', '')
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             if (item.events != JSON.parse(data.data)) {

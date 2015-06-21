@@ -60,7 +60,7 @@ App.controller('pollResultsController', ['$scope', 'RESTService', '$rootScope', 
         var to_send = {
             key: $stateParams.key
         };
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/get_results', (to_send), {
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/get_results', (to_send), {
             cache: true
         })
             .success(function(data) {

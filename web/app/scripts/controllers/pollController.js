@@ -14,7 +14,7 @@ App.controller('pollController', ['$scope', '$rootScope', '$location', 'localSto
         //        $scope.checkForMorePolls = function(polls, pageNum, max){
         //            var len = polls.length;
         //            $scope.working = true;
-        //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/poll/more_polls', packageForSending(len))
+        //            $http.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/more_polls', packageForSending(len))
         //            .success(function(data){
         //                if (!checkResponseErrors(data))
         //                {

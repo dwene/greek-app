@@ -4,13 +4,13 @@ from protorpc import remote
 import datetime
 import logging
 
-chatter_api = endpoints.api(name='chatter', version='v1',
+chatter = endpoints.api(name='chatter', version='v1',
                             allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                             audiences=[ANDROID_AUDIENCE])
 
-@chatter_api.api_class(resource_name='chatter')
+@chatter.api_class(resource_name='chatter')
 class ChatterApi(remote.Service):
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/get', http_method='POST', name='chatter.get')
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='get', http_method='POST', name='chatter.get')
     def get_chatter(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
@@ -66,7 +66,7 @@ class ChatterApi(remote.Service):
         return OutgoingMessage(error='', data=json_dump({'chatter': chatter_dict,
                                                          'important_chatter': important_chatters_dict}))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/post',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='post',
                       http_method='POST', name='chatter.post')
     def post_chatter(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -83,7 +83,7 @@ class ChatterApi(remote.Service):
         chatter.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/delete',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='delete',
                       http_method='POST', name='chatter.delete')
     def delete_chatter(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -101,7 +101,7 @@ class ChatterApi(remote.Service):
         chatter_future.get_result()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/edit',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='edit',
                       http_method='POST', name='chatter.edit')
     def edit_chatter(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -115,7 +115,7 @@ class ChatterApi(remote.Service):
         chatter.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/flag_importance',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='flag_importance',
                       http_method='POST', name='chatter.importance')
     def change_important_flag(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -136,7 +136,7 @@ class ChatterApi(remote.Service):
         chatter.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/like',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='like',
                       http_method='POST', name='chatter.like')
     def change_important_flag(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -153,7 +153,7 @@ class ChatterApi(remote.Service):
             chatter.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/comment',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='comment',
                       http_method='POST', name='chatter.comment')
     def comment_chatter(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -174,7 +174,7 @@ class ChatterApi(remote.Service):
         chatter.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/comment/like',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
                       http_method='POST', name='chatter.like_comment')
     def like_comment(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -195,7 +195,7 @@ class ChatterApi(remote.Service):
         comment.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/comment/edit',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/edit',
                       http_method='POST', name='chatter.edit_comment')
     def edit_comment(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -211,7 +211,7 @@ class ChatterApi(remote.Service):
         comment.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='chatter/comment/delete',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/delete',
                       http_method='POST', name='chatter.delete_comment')
     def delete_comment(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -227,5 +227,3 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error='Incorrect Permissions', data='')
         comment.delete()
         return OutgoingMessage(error='', data='OK')
-
-CHATTER = endpoints.api_server([chatter_api])

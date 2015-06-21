@@ -59,7 +59,7 @@ App.controller('adminController', ['$scope', 'RESTService', '$rootScope',
 
         $scope.changeTheme = function(color) {
 
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/set_colors', {
                 color: $rootScope.color
             })
                 .success(function(data) {

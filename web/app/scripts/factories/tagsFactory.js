@@ -7,7 +7,7 @@ App.factory('Tags', ['RESTService', '$rootScope', 'localStorageService', '$q', '
         item.get = function() {
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/message/get_tags', '')
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/get_tags', '')
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             item.tags = JSON.parse(data.data);

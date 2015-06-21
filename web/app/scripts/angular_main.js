@@ -1,6 +1,6 @@
 //Final/static variables. These variables are used for cookies
- var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-//var ENDPOINTS_DOMAIN = 'http://localhost:9002';
+// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+var ENDPOINTS_DOMAIN = 'http://localhost:9002';
 //var ENDPOINTS_DOMAIN = '';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
@@ -964,7 +964,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         //  document.addEventListener("deviceready", function(){
         //     $cordovaPush.register(iosConfig).then(function(result) {
         //       console.log("result: " + result);
-        //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_iphone_token',result.deviceToken)
+        //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/set_iphone_token',result.deviceToken)
         //     }, function(err) {
         //         console.log('something went wrong', err);
         // });
@@ -990,7 +990,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
     $rootScope.changeTheme = function(color) {
         $rootScope.color = color;
 
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/auth/set_colors', {
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/set_colors', {
             color: $rootScope.color
         })
             .success(function(data) {
@@ -2432,7 +2432,7 @@ App.filter('directorySearch', function() {
 });
 
 // App.factory('getEvents', function($http, $rootScope, RESTService) {
-//     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/event/get_events', '')
+//     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_events', '')
 //         .success(function(data) {
 //             if (!RESTService.hasErrors(data)) {
 //                 var events = JSON.parse(data.data);
