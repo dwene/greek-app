@@ -48,15 +48,17 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.hide = function(){
                 mdDialog.hide();
             }
-            scope.editChatter = function(){
+            scope.editChatter = function(content){
                 scope.editing = true;
+                scope.content_temp = content;
                 document.getElementById('chattercontent').focus();
             }
             scope.cancelEditChatter = function(){
                 scope.editing = false;
             }
-            scope.saveChatter = function(){
+            scope.saveChatter = function(content_temp){
                 scope.editing = false;
+                scope.chat.content = content_temp
                 Chatter.edit(scope.chat.content);
             }
             scope.confirmDelete = false;

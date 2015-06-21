@@ -1,5 +1,5 @@
-App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory',
-    function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory) {
+App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog',
+    function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog) {
         routeChange();
         $scope.event = {};
         $scope.event.tag = '';
