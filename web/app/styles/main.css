@@ -470,6 +470,10 @@ md-tabs .md-active {
 .md-fab.fixed {
   position: fixed !important;
 }
+md-input-container.md-icon-float > label {
+  position: relative;
+  margin-left: 0px;
+}
 md-tabs md-ink-bar {
   color: rgba(0, 0, 0, 0.5) !important;
   background: rgba(0, 0, 0, 0.5) !important;
@@ -1168,8 +1172,8 @@ md-toolbar.md-tall {
 #adminPage button.md-gray-theme {
   background: #9e9e9e;
 }
-#newEvent .form-group {
-  margin: 0px;
+#newEvent md-radio-group md-radio-button {
+  display: inline-block;
 }
 #notifications md-item {
   font-size: 14px;
@@ -1199,6 +1203,24 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 }
 #tagOptions md-subheader {
   adding: 0px;
+}
+@media screen and (min-width: 750px) {
+  #selectingMembers md-list-item {
+    float: left;
+    width: 50%;
+  }
+}
+@media screen and (min-width: 1080px) {
+  #selectingMembers md-list-item {
+    float: left;
+    width: 33%;
+  }
+}
+@media screen and (min-width: 1380px) {
+  #selectingMembers md-list-item {
+    float: left;
+    width: 25%;
+  }
 }
 #selectingTags > .row {
   margin-top: 10px;

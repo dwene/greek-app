@@ -62,6 +62,7 @@ md-tabs .md-active{background-color: rgba(255,255,255,0.4);}
 .md-fab.fixed{position:fixed !important;}
 //.md-actions {padding:4px !important;
 //    .md-button{margin:0px !important;}}
+md-input-container.md-icon-float > label{position:relative; margin-left:0px;}
 md-tabs md-ink-bar{
 color:rgba(0,0,0,.5) !important;
 background:rgba(0,0,0,.5) !important;
@@ -402,7 +403,7 @@ md-toolbar.md-tall{
 }
 
 #newEvent{
-    .form-group{margin:0px;}
+    md-radio-group md-radio-button{display:inline-block;}
 }
 
 #notifications{
@@ -429,6 +430,19 @@ md-dialog{
     md-subheader{ adding:0px;}
 }
 
+@media screen and (min-width:750px){
+    #selectingMembers md-list-item{
+        float: left; width: 50%;
+    }
+}@media screen and (min-width:1080px){
+    #selectingMembers md-list-item{
+        float: left; width: 33%;
+    }
+}@media screen and (min-width:1380px){
+    #selectingMembers md-list-item{
+        float: left; width: 25%;
+    }
+}
 #selectingTags > .row{margin-top:10px;}
 #selectingTags{
     netetag-check{margin-bottom:2px;}

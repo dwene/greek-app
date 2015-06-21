@@ -4,8 +4,9 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
         $scope.event = {};
         $scope.event.tag = '';
         $scope.$watch('event.tag', function() {
-            if (!$scope.event)
+            if (!$scope.event){
                 $scope.unavailable = false;
+            }
             $scope.event.tag = $scope.event.tag.replace(/\s+/g, '');
             $scope.unavailable = false;
             $scope.available = false;
@@ -15,9 +16,30 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
         Directory.get();
         $scope.directory = Directory.directory;
         
-            $scope.querySearch = querySearch();
-            $scope.searchText = null;
-            $scope.selectedMembers = loadMembers();
+        $scope.querySearch = querySearch();
+        $scope.searchText = null;
+        var members = loadMembers();      
+        $scope.selectedRadio = "everyone";
+        var selectedMembers;
+        $scope.selectedMembers = members.checked;
+        
+        $scope.openSelectingMembersDialog = function(){
+            $mdDialog.show({
+                controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
+                templateUrl:'views/templates/selectingmembers.html'
+            })
+        }
+        
+        function selectingMembersDialogController($scope, $mdDialog){
+        
+            $scope.members = members;
+            
+            $scope.hide = function(){
+                $mdDialog.hide();
+            }
+        
+        }
+        
             
             function querySearch(query) {
               var results = query ? self.members.filter(createFilterFor(query)) : [];

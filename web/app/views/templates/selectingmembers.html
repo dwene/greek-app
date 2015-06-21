@@ -1,16 +1,34 @@
-<md-chips ng-model="selectedMembers" md-autocomplete-snap md-require-match>
-      <md-autocomplete
-          md-items="member in members"
-          md-item-text="member.name"
-          placeholder="Select Members">
-        <span>{{member}}</span>
-      </md-autocomplete>
-      <md-chip-template>
-        <span>
-          <strong>{{$chip.first}} {{$chip.last}}</strong>
-        </span>
-      </md-chip-template>
-      
+<md-dialog id="selectingMembers" md-theme="{{$root.color}}" flex="80">
+     
+    <md-toolbar class="md-primary">
+        <div class="md-toolbar-tools">
+            <h1>Select Members</h1>
+        </div>
+    </md-toolbar>
+    
+    <md-content class="md-padding no-padding-top">
+        
+        <search ng-model="search"></search>
+        
+        <md-list>
+            <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name'">
+                <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" />
+                <div class="md-list-item-text compact">
+                    <p>{{member.first_name}} {{member.last_name}}</p>
+                    <md-checkbox model="member.checked" class="md-secondary"></md-checkbox>
+                </div>
+            </md-list-item>
+        </md-list>
+
+    
+    </md-content>
+     
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <md-button class="md-primary" ng-click="hide()">
+            Done
+        </md-button>
+    </div>
       
       <!--
 <section id="selectingTags">
@@ -62,6 +80,7 @@
 -->
 
       
-</md-chips>
+</md-dialog>
+
 
 

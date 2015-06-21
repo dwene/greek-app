@@ -47,6 +47,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
                     templateUrl: 'views/templates/helpDialog.html'
             });
         }
+        
 
         function helpDialogController($scope, $mdDialog){
             $scope.message = '';
