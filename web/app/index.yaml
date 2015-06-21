@@ -104,3 +104,22 @@ indexes:
   - name: prof_pic
   - name: user_name
 
+- kind: Chatter
+  properties:
+  - name: organization
+  - name: timestamp
+    direction: desc
+
+- kind: Chatter
+  properties:
+  - name: important
+  - name: organization
+  - name: timestamp
+    direction: desc
+
+- kind: ChatterComment
+  properties:
+  - name: chatter
+  - name: timestamp
+    direction: desc
+

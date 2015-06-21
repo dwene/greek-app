@@ -4,9 +4,8 @@ import os
 if os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'python27')) not in sys.path:
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'python27')))
 import logging
-from chatter.chatter_api import chatter_api
+from apis import chatter_api
 from apiconfig import *
-import datetime
 import hashlib
 import uuid
 import braintree
@@ -14,14 +13,12 @@ import base64
 from protorpc import remote
 import json
 from ndbdatastore import *
-from dateutil.relativedelta import relativedelta
 import cloudstorage as gcs
 from google.appengine.api import mail
 from google.appengine.ext import blobstore
 from google.appengine.api import images
 from google.appengine.api import taskqueue
 from google.appengine.api import urlfetch
-import urllib
 import string
 import random
 # from apns import APNs, Frame, Payload
@@ -197,7 +194,8 @@ def add_message_to_users(msg, users):
         user.new_messages.insert(0, msg.key)
         future_list.append(user.put_async())
         if user.iphone_tokens:
-            future_list.append(PushTask(pending=True, content="New Message: " + msg.title, ios_tokens=user.iphone_tokens).put_async())
+            future_list.append(PushTask(pending=True, content="New Message: " + msg.title,
+                                        ios_tokens=user.iphone_tokens).put_async())
     for item in future_list:
         item.get_result()
     taskqueue.add(url='/tasks/sendemails')
@@ -386,305 +384,6 @@ def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
             return True
     return False
 
-# @endpoints.api(name='netegreek', version='v2', allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
-#                audiences=[ANDROID_AUDIENCE])
-# class RESTApi2(remote.Service):
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/send_message',
-#                       http_method='POST', name='message.send_message')
-#     def send_message(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-#             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-#         data = json.loads(request.data)
-#         user_list_future = list()
-#         user_list = list()
-#         if 'keys' in data:
-#             for key in data['keys']:
-#                 user_list_future.append(ndb.Key(urlsafe=key).get_async())
-#         for user in user_list_future:
-#             user_list.append(user.get_result())
-#         msg = Message()
-#         msg.content = data['content']
-#         msg.timestamp = datetime.datetime.now()
-#         msg.sender = request_user.key
-#         msg.user_name = request_user.user_name
-#         msg.sender_name = request_user.first_name + ' ' + request_user.last_name
-#         msg.title = data['title']
-#         msg.put()
-#         request_user.sent_messages.insert(0, notification.key)
-#         future = request_user.put_async()
-#         add_message_to_users(notification, user_list, True)
-#         future.get_result()
-#         return OutgoingMessage(error='', data='OK')
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/get',
-#                       http_method='POST', name='messages.get')
-#     def get_messages(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         message_count = 30
-#         if request_user.new_messages:
-#             new_messages_future = Message.query(Message.key.IN(
-#                 request_user.new_messages)).order(-Message.timestamp).fetch_async(40)
-#         if request_user.new_messages:
-#             if len(request_user.new_messages) >= 30:
-#                 message_count = 0
-#             else:
-#                 message_count = 30 - len(request_user.new_messages)
-#         if request_user.messages and message_count > 0:
-#             messages_future = Message.query(Message.key.IN(
-#                 request_user.messages)).order(-Message.timestamp).fetch_async(message_count)
-#         if request_user.archived_messages:
-#             archived_messages_future = Message.query(Message.key.IN(
-#                 request_user.archived_messages)).order(-Message.timestamp).fetch_async(30)
-#         out_messages = list()
-#         if request_user.new_messages:
-#             new_messages = new_messages_future.get_result()
-#             for msg in new_messages:
-#                 note = msg.to_dict()
-#                 note["new"] = True
-#                 note["key"] = msg.key.urlsafe()
-#                 out_messages.append(note)
-#         if request_user.messages and message_count > 0:
-#             messages = messages_future.get_result()
-#             for msg in messages:
-#                 note = msg.to_dict()
-#                 note["new"] = False
-#                 note["key"] = msg.key.urlsafe()
-#                 out_messages.append(note)
-#         out_archived_messages = list()
-#         if request_user.archived_messages:
-#             archived_messages = archived_messages_future.get_result()
-#             for msg in archived_messages:
-#                 note = msg.to_dict()
-#                 note["key"] = msg.key.urlsafe()
-#                 out_archived_messages.append(note)
-#         out = {'messages': out_messages,
-#                'archived_messages': out_archived_messages,
-#                'messages_length': len(request_user.messages),
-#                'archived_messages_length': len(request_user.archived_messages),
-#                'new_messages_length': len(request_user.new_messages)}
-#         return OutgoingMessage(error='', data=json_dump(out))
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/read',
-#                       http_method='POST', name='messages.seen')
-#     def mark_message_read(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         data = json.loads(request.data)
-#         key = ndb.Key(urlsafe=data["message"])
-#         if key in request_user.new_messages:
-#             request_user.new_messages.remove(key)
-#             request_user.messages.insert(0, key)
-#             request_user.put()
-#         return OutgoingMessage(error='', data='OK')
-
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_archived',
-#                       http_method='POST', name='messages.more_archived')
-#     def more_archived(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         data = json.loads(request.data)
-#         out_archived_messages = list()
-
-#         fetch_offset = data-2 if data-2 > 0 else data 
-#         archived_messages_future = Message.query(Message.key.IN(
-#             request_user.archived_messages)).order(-Message.timestamp).fetch_async(data + 40, offset=fetch_offset)
-#         archived_messages = archived_messages_future.get_result()
-#         for msg in archived_messages:
-#             note = msg.to_dict()
-#             note["key"] = msg.key.urlsafe()
-#             out_archived_messages.insert(0, note)
-#         return OutgoingMessage(error='', data=json_dump(out_archived_messages))
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/more_messages',
-#                       http_method='POST', name='messages.more_messages')
-#     def more_messages(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         data = json.loads(request.data)
-#         new_message_count = data.new_message_count
-#         read_message_count = data.read_message_count
-#         out_messages = list()
-#         msg_count = 40
-
-#         if request_user.new_messages:
-#             new_messages_to_get = len(request_user.new_messages) - data.new_message_count
-#             if new_messages_to_get > 0:
-#                 new_messages_fetch_count = new_messages_to_get if new_messages_to_get <=40 else 40
-#                 new_messages_future = Message.query(Message.key.IN(
-#                 request_user.new_messages)).order(-Message.timestamp).fetch_async(new_messages_fetch_count, offset=new_message_count)
-#                 if new_messages_fetch_count < 40:
-#                     msg_count = 40 - new_messages_fetch_count
-#             else:
-#                 msg_count = 0
-#         if request_user.messages and msg_count > 0:
-#             messages_future = Message.query(Message.key.IN(
-#                 request_user.messages)).order(-Message.timestamp).fetch_async(msg_count, offset=read_message_count)
-#         if request_user.new_messages and new_messages_to_get > 0:
-#             msgs = messages_future.get_result()
-#             for msg in msgs:
-#                 note = msg.to_dict()
-#                 note["key"] = msg.key.urlsafe()
-#                 out_messages.append(note)
-#         if request_user.new_messages and msg_count > 0:
-#             msgs = new_messages_future.get_result()
-#             for msg in msgs:
-#                 note = msg.to_dict()
-#                 note["key"] = msg.key.urlsafe()
-#                 note["new"] = True
-#                 out_messages.append(note)
-#         return OutgoingMessage(error='', data=json_dump(out_messages))
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/archive',
-#                       http_method='POST', name='messages.archive')
-#     def archive_messages(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         data = json.loads(request.data)
-#         key = ndb.Key(urlsafe=data["message"])
-#         if key in request_user.messages:
-#             request_user.messages.remove(key)
-#             request_user.archived_messages.insert(0, key)
-#             request_user.put()
-#             return OutgoingMessage(error='', data='OK')
-#         if key in request_user.new_messages:
-#             request_user.new_messages.remove(key)
-#             request_user.archived_messages.insert(0, key)
-#             request_user.put()
-#             return OutgoingMessage(error='', data='OK')
-#         return OutgoingMessage(error='', data='OK')
-
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/unarchive',
-#                       http_method='POST', name='message.unarchive')
-#     def unarchive_message(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         data = json.loads(request.data)
-#         key = ndb.Key(urlsafe=data["message"])
-#         if key in request_user.archived_messages:
-#             request_user.archived_messages.remove(key)
-#             request_user.messages.insert(0, key)
-#             request_user.put()
-#             return OutgoingMessage(error='', data='OK')
-#         return OutgoingMessage(error='NOTIFICATION_NOT_FOUND', data='')
-
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='message/delete',
-#                       http_method='POST', name='message.delete')
-#     def delete_message(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-#             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-#         data = json.loads(request.data)
-#         key = ndb.Key(urlsafe=data["message"])
-#         if key in request_user.sent_messages:
-#             futures = list()
-#             request_user.sent_messages.remove(key)
-#             futures.append(request_user.put_async())
-#             notified_users = User.query(User.messages == key).fetch_async()
-#             new_notified_users = User.query(User.new_messages == key).fetch_async()
-#             hidden_notified_users = User.query(User.archived_messages == key).fetch_async()
-#             users = notified_users.get_result()
-#             for user in users:
-#                 user.messages.remove(key)
-#                 futures.append(user.put_async())
-#             users_new = new_notified_users.get_result()
-#             for user in users_new:
-#                 user.new_messages.remove(key)
-#                 futures.append(user.put_async())
-#             users_hidden = hidden_notified_users.get_result()
-#             for user in users_hidden:
-#                 user.archived_messages.remove(key)
-#                 futures.append(user.put_async())
-#             futures.append(key.delete_async())
-#             for future in futures:
-#                 future.get_result()
-#         return OutgoingMessage(error='', data='OK')
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='messages/recently_sent',
-#                       http_method='POST', name='messages.recently_sent')
-#     def recently_sent_messages(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-#             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-#         if not request_user.sent_messages:
-#             return OutgoingMessage(error='', data=json_dump(''))
-#         sent_messages = Message.query(Message.key.IN(request_user.sent_messages)).order(
-#                                                                     -Message.timestamp).fetch(30)
-#         out_message = list()
-#         for msg in sent_messages:
-#             note = msg.to_dict()
-#             note["key"] = msg.key.urlsafe()
-#             out_message.append(note)
-#         return OutgoingMessage(error='', data=json_dump(out_message))
-
-
-
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
-#                       http_method='POST', name='notifications.get')
-#     def get_notifications(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         notification_count = 30
-#         if request_user.new_notifications:
-#             new_notification_future = Notification.query(Notification.key.IN(
-#                 request_user.new_notifications)).order(-Notification.timestamp).fetch_async(30)
-#         if request_user.new_notifications:
-#             if len(request_user.new_notifications) >= 30:
-#                 notification_count = 0
-#             else:
-#                 notification_count = 30 - len(request_user.new_notifications)
-#         if request_user.notifications and notification_count > 0:
-#             notifications_future = Notification.query(Notification.key.IN(
-#                 request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-#         out_notifications = list()
-#         if request_user.new_notifications:
-#             new_notifications = new_notification_future.get_result()
-#             for notify in new_notifications:
-#                 note = notify.to_dict()
-#                 note["new"] = True
-#                 note["key"] = notify.key.urlsafe()
-#                 out_notifications.append(note)
-#         if request_user.notifications and notification_count > 0:
-#             notifications = notifications_future.get_result()
-#             for notify in notifications:
-#                 note = notify.to_dict()
-#                 note["new"] = False
-#                 note["key"] = notify.key.urlsafe()
-#                 out_notifications.append(note)
-#         return OutgoingMessage(error='', data=json_dump(out_notifications))
-
-#     @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/read',
-#                       http_method='POST', name='notifications.read')
-#     def see_notification(self, request):
-#         request_user = get_user(request.user_name, request.token)
-#         if not request_user:
-#             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-#         data = json.loads(request.data)
-#         for key in request_user.new_notifications:
-#             request_user.new_notifications.remove(key)
-#             request_user.notifications.insert(0, key)
-#             request_user.put()
-#         return OutgoingMessage(error='', data='OK')
-
 api = endpoints.api(name='netegreek', version='v1',
                     allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                     audiences=[ANDROID_AUDIENCE])
@@ -692,252 +391,6 @@ api = endpoints.api(name='netegreek', version='v1',
 @api.api_class(resource_name='full_api')
 class RESTApi(remote.Service):
 
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test',
-    #                   http_method='POST', name='auth.braintree')
-    # def braintree(self, request):
-
-    #     result = braintree.Transaction.sale({
-    #         "amount": "100000.00",
-    #         "credit_card": {
-    #             "number": "4111111111111111",
-    #             "expiration_month": "05",
-    #             "expiration_year": "2020"
-    #         }
-    #     })
-    #     if result.is_success:
-    #         out = "success!: " + result.transaction.id
-    #     elif result.transaction:
-    #         out = "Error processing transaction:"
-    #         out += "  message: " + result.message
-    #         out += "  code:    " + result.transaction.processor_response_code
-    #         out += "  text:    " + result.transaction.processor_response_text
-    #     else:
-    #         out = "message: " + result.message
-    #         for error in result.errors.deep_errors:
-    #             out += "attribute: " + error.attribute
-    #             out += "  code: " + error.code
-    #             out += "  message: " + error.message
-    #     return OutgoingMessage(error='', data=json_dump(out))
-
-
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test_subscription',
-    #                   http_method='POST', name='auth.braintree_subscription')
-    # def braintree_subscription(self, request):
-    #     out = ''
-    #     out2 = ''
-    #     result = braintree.Customer.create({
-    #         "first_name": 'Derek',
-    #         "last_name": 'Wene',
-    #         "credit_card": {
-    #             "number": "4111111111111111",
-    #             "expiration_month": "05",
-    #             "expiration_year": "2020",
-    #             "cvv": '000'
-    #         }
-    #     })
-    #     if result.is_success:
-    #         customer = braintree.Customer.find(result.customer.id)
-    #         payment_method_token = customer.credit_cards[0].token
-    #         result2 = braintree.Subscription.create({
-    #         "payment_method_token": payment_method_token,
-    #         "plan_id": "normal_monthly_plan"
-    #         })
-    #         if result2.is_success:
-    #             return OutgoingMessage(error='', data='OK')
-    #     else:
-    #         out = "message: " + result.message
-    #         for error in result.errors.deep_errors:
-    #             out += "attribute: " + error.attribute
-    #             out += "  code: " + error.code
-    #             out += "  message: " + error.message
-    #     return OutgoingMessage(error='', data=json_dump([out, out2]))
-
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='braintree/test_update_subscription',
-    #                   http_method='POST', name='auth.test_update_subscription')
-    # def test_update_subscription(self, request):
-
-    #     #org = Organization.query(Organization.name == 'testorg123').get()
-    #     #subscription = braintree.Subscription.find(org.subscription_id)
-    #     result = braintree.Subscription.update('g23762', {
-    #         "price": "14.00"
-    #     })
-    #     if result.is_success:
-    #         return OutgoingMessage(error='', data='OK')
-    #     else:
-    #         return OutgoingMessage(error='Something wrong..', data='')
-
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/subscribe',
-    #                   http_method='POST', name='pay.subscribe')
-    # def subscribe(self, request):
-    #     request_user = get_user(request.user_name, request.token)
-    #     if not request_user:
-    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-    #     if request_user.perms != 'council':
-    #         return OutgoingMessage(error=INCORRECT_PERMS)
-    #     organization = request_user.organization.get()
-    #     data = json.loads(request.data)
-    #     if not organization.customer_id and not organization.subscription_id:
-    #         customer_result = braintree.Customer.create({
-    #             "first_name": data["first_name"],
-    #             "last_name": data["last_name"],
-    #             "credit_card": {
-    #                 "number": data["number"],
-    #                 "expiration_month": data["exp_month"],
-    #                 "expiration_year": data["exp_year"],
-    #                 "cvv": data["cvv"],
-    #                 "options": {
-    #                     "verify_card": True
-    #                 }
-    #             }
-    #         })
-    #         if not customer_result.is_success:
-    #             return OutgoingMessage(error='INVALID_CARD', data=customer_result.message)
-    #         organization.customer_id = customer_result.customer.id
-    #         organization.payment_token = customer_result.customer.credit_cards[0].token
-    #     elif not organization.subscription_id and len(data) > 0:
-    #         card_result = braintree.CreditCard.create({
-    #             "customer_id": organization.customer_id,
-    #             "number": data["number"],
-    #             "expiration_month": data["exp_month"],
-    #             "expiration_year": data["exp_year"],
-    #             "cvv": data["cvv"],
-    #             "options": {
-    #                 "verify_card": True
-    #             }
-    #         })
-    #         if card_result.is_success:
-    #             organization.payment_token = card_result.credit_card.token
-    #         else:
-    #             OutgoingMessage(error='CARD_ERROR', data=card_result.message)
-    #     if organization.trial_period:
-    #         subscription_result = braintree.Subscription.create({
-    #             "payment_method_token": organization.payment_token,
-    #             "plan_id": "normal_monthly_plan"
-    #         })
-    #     else:
-    #         user_count = len(User.query(User.organization == request_user.organization).fetch(projection=
-    #                                                                                           [User.first_name]))
-    #         if not organization.cancel_subscription:
-    #             subscription_result = braintree.Subscription.create({
-    #                 "payment_method_token": organization.payment_token,
-    #                 "plan_id": "normal_monthly_plan",
-    #                 "trial_period": False,
-    #                 "price": str(float(user_count) * float(organization.cost))
-    #             })
-    #         else:
-    #             subscription_result = braintree.Subscription.create({
-    #                 "payment_method_token": organization.payment_token,
-    #                 "plan_id": "normal_monthly_plan",
-    #                 "trial_period": False,
-    #                 "first_billing_date": organization.cancel_subscription,
-    #                 "price": str(float(user_count) * float(organization.cost))
-    #             })
-    #         if not subscription_result.is_success:
-    #             organization.put()
-    #         return OutgoingMessage(error='SUBSCRIPTION_ERROR', data=subscription_result.message)
-    #     organization.subscription_id = subscription_result.subscription.id
-    #     organization.subscribed = True
-    #     organization.trial_period = False
-    #     organization.cancel_subscription = None
-    #     organization.put()
-    #     return OutgoingMessage(error='', data='OK')
-
-
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/change_card_number',
-    #                   http_method='POST', name='pay.change_card_number')
-    # def change_card_number(self, request):
-    #     request_user = get_user(request.user_name, request.token)
-    #     if not request_user:
-    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-    #     if request_user.perms != 'council':
-    #         return OutgoingMessage(error=INCORRECT_PERMS)
-    #     organization = request_user.organization.get()
-    #     if not organization.customer_id:
-    #         return OutgoingMessage(error=NOT_SUBSCRIBED)
-
-    #     data = json.loads(request.data)
-    #     if not organization.customer_id and not organization.subscription_id:
-    #         card_result = braintree.CreditCard.create({
-    #             "customer_id": organization.customer_id,
-    #             "number": data["number"],
-    #             "expiration_month": data["exp_month"],
-    #             "expiration_year": data["exp_year"],
-    #             "cvv": data["cvv"],
-    #             "options": {
-    #                 "verify_card": True
-    #             }
-    #         })
-    #         if not card_result.is_success:
-    #             return OutgoingMessage(error='INVALID CARD', data=card_result.message)
-
-    #         subscription_result = braintree.Subscription.update(organization.subscription_id,{
-    #             "payment_method_token": card_result.credit_card.token,
-    #         })
-    #         if not subscription_result.is_success:
-    #             organization.put()
-    #             return OutgoingMessage(error='SUBSCRIPTION_ERROR', data=subscription_result.message)
-    #         organization.payment_token = card_result.credit_card.token
-    #         organization.subscription_id = subscription_result.subscription.id
-    #         organization.put()
-    #         return OutgoingMessage(error='', data='OK')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/subscription_info',
-                      http_method='POST', name='pay.subscription_info')
-    def subscription_info(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if request_user.perms != 'council':
-            return OutgoingMessage(error=INCORRECT_PERMS)
-        organization = request_user.organization.get()
-        message = dict()
-        if organization.subscription_id:
-            subscription = braintree.Subscription.find(organization.subscription_id)
-            message["paid_through_date"] = subscription.paid_through_date
-            message["subscription_price"] = str(subscription.price)
-            message["next_billing_date"] = subscription.next_billing_date
-        else:
-            message["no_subscription"] = True
-            message["premium_end"] = organization.cancel_subscription
-        if organization.payment_token:
-            credit_card = braintree.CreditCard.find(organization.payment_token)
-            card = dict()
-            card["masked_number"] = credit_card.masked_number
-            card["expiration"] = credit_card.expiration_date
-            card["cardholder_name"] = credit_card.cardholder_name
-            card["image_url"] = credit_card.image_url
-            message["credit_card"] = card
-        return OutgoingMessage(error='', data=json_dump(message))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/cancel_subscription',
-                      http_method='POST', name='pay.cancel_subscription')
-    def cancel_subscription(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if request_user.perms != 'council':
-            return OutgoingMessage(error=INCORRECT_PERMS)
-        organization = request_user.organization.get()
-        if not organization.customer_id:
-            return OutgoingMessage(error=NOT_SUBSCRIBED)
-        subscription = braintree.Subscription.find(organization.subscription_id)
-        if subscription:
-            organization.cancel_subscription = subscription.next_billing_date
-        result = braintree.Subscription.cancel(organization.subscription_id)
-        if result.is_success:
-            organization.subscription_id = ''
-            organization.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error='SUBSCRIPTION_CANCELLATION_FAIL', data='')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='pay/is_subscribed',
-                      http_method='POST', name='pay.is_subscribed')
-    def is_subscribed(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization = request_user.organization.get()
-        return OutgoingMessage(error='', data=json_dump(True))
 
     # USER REQUESTS
 
@@ -967,8 +420,11 @@ class RESTApi(remote.Service):
         content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
         content += '\nUser Name: ' + new_user.user_name
         send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content)
-        return OutgoingMessage(error='', data=json_dump({'token': new_user.current_token, 'perms': new_user.perms, 'me': new_user.to_dict(),
-                                                         'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
+        return OutgoingMessage(error='',
+                               data=json_dump({'token': new_user.current_token,
+                                    'perms': new_user.perms,
+                                    'me': new_user.to_dict(),
+                                    'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
         # except:
         #     return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
@@ -997,7 +453,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         return OutgoingMessage(error='', data='OK')
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/report_error',
                       http_method='POST', name='user.report_error')
     def report_error(self, request):
@@ -1013,7 +468,6 @@ class RESTApi(remote.Service):
         title = 'Report from ' + request_user.user_name
         send_email('NeteGreek <support@netegreek.com>', email, title, content)
         return OutgoingMessage(error='', data='OK')
-
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/find_unregistered_users',
                       http_method='POST', name='auth.find_unregistered_users')
@@ -3628,7 +3082,6 @@ class RESTApi(remote.Service):
 #         #               str(time_middle-time_start))
 #         return OutgoingMessage(error='', data=json_dump(out_data))
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='link/get',
                       http_method='POST', name='link.get')
     def get_links(self, request):
@@ -3636,12 +3089,19 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         links = Link.query(Link.organization == request_user.organization).fetch()
-        links_list = list()
-        for link in links:
-            temp = link.to_dict()
-            temp['key'] = link.key.urlsafe()
-            links_list.append(temp)
-        return OutgoingMessage(error='', data=json_dump(links_list))
+        organization = request_user.organization.get()
+        groups = list()
+        for group_name in organization.link_groups:
+            group = {'name': group_name, 'links': list()}
+            links_list = list()
+            for link in links:
+                if link.group == group_name:
+                    temp_link = link.to_dict()
+                    temp_link['key'] = link.key.urlsafe()
+                    links_list.append(temp_link)
+            group['links'] = links_list
+            groups.append(group)
+        return OutgoingMessage(error='', data=json_dump(groups))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='link/create',
                       http_method='POST', name='link.create')
@@ -3812,6 +3272,11 @@ class RESTApi(remote.Service):
         request_user.prof_pic = blobstore.BlobKey(blob_key)
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(images.get_serving_url(blob_key)))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/open_channel',
+                      http_method='POST', name='user.open_channel')
+    def open_channel(self, request):
+        return OutgoingMessage(error='', data="")
 
 
 APPLICATION = endpoints.api_server([api, chatter_api])

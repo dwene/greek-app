@@ -31,6 +31,7 @@ from google.appengine.api import mail
 from google.appengine.api import urlfetch
 from apns import APNs, Frame, Payload
 import json
+from google.appengine.api import channel
 import braintree
 import logging
 import datetime
@@ -315,9 +316,10 @@ class MorningTasks(webapp2.RequestHandler):
             key.delete()
 
 class SendEmails(webapp2.RequestHandler):
+    @staticmethod
+    @ndb.transactional
     def post(self):
         emails = EmailTask.query(EmailTask.pending == True).fetch()
-        apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
         futures = []
         for email in emails:
             body = email.content
@@ -329,6 +331,8 @@ class SendEmails(webapp2.RequestHandler):
             future.get_result()
 
 class SendPushNotifications(webapp2.RequestHandler):
+    @staticmethod
+    @ndb.transactional
     def post(self):
         tasks = PushTask.query(PushTask.pending == True).fetch()
         if tasks:
@@ -390,6 +394,13 @@ class SendDailyNotificationsEmails(webapp2.RequestHandler):
             #  """
 
 
+class ChannelHandler(webapp2.RequestHandler):
+    def post(self):
+        return
+
+
+
+
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
@@ -402,5 +413,6 @@ app = webapp2.WSGIApplication([
     ('/tasks/sendemails', SendEmails),
     ('/tasks/sendpushnotifications', SendPushNotifications),
     ('/dailynotifications', SendDailyNotificationsEmails),
-    ('/morningtasks', MorningTasks)
+    ('/morningtasks', MorningTasks),
+    ('/send', ChannelHandler)
 ], debug=True)
