@@ -18,7 +18,6 @@ App.controller('appController', function($scope, $interval, $rootScope, $timeout
         }
     }
     function updates(){
-        Inbox.update();
         Notifications.update();
     }
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){

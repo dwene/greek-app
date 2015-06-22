@@ -4,10 +4,9 @@ from protorpc import remote
 import datetime
 import logging
 
-links = endpoints.api(name='links', version='v1',
+links = endpoints.api(name='link', version='v1',
                       allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                       audiences=[ANDROID_AUDIENCE])
-
 
 @links.api_class(resource_name='links')
 class LinksApi(remote.Service):

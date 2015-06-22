@@ -27,9 +27,6 @@ handlers:
   script: lib.python27.main.app
   secure: always
 
-# - url: /
-#   script: main.app
-#   secure: always
 - url: /
   upload: index.html
   static_files: index.html
@@ -54,6 +51,13 @@ handlers:
 - url: /_ah/spi/.*
   script: lib.python27.endpoints_controller.APPLICATION
   secure: always
+
+- url: /_ah/channel/connected/
+  script: lib.python27.channels.Connected
+
+- url: /_ah/channel/disconnected/
+  script: lib.python27.channels.Disconnected
+
 
 builtins:
 - remote_api: on

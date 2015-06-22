@@ -28,16 +28,21 @@ class ChatterApi(remote.Service):
             local_chatter_dict["key"] = chatter.key
             chatter_dict.append(local_chatter_dict)
         important_chatters_dict = list()
+
         for chatter in important_chatters:
             local_chatter_dict = chatter.to_dict()
             local_chatter_dict["key"] = chatter.key
             important_chatters_dict.append(local_chatter_dict)
+
         for chatter in chatter_dict:
+            chatter["author_future"] = chatter["author"].get_async()
             chatter["comments_future"] = ChatterComment.query(ChatterComment.chatter == chatter['key']).order(
                 -ChatterComment.timestamp).fetch_async(20)
             if request_user.key in chatter["likes"]:
                 chatter["like"] = True
+
         for chatter in important_chatters_dict:
+            chatter["author_future"] = chatter["author"].get_async()
             chatter["comments_future"] = ChatterComment.query(ChatterComment.chatter == chatter['key']).order(
                 -ChatterComment.timestamp).fetch_async(20)
             if request_user.key in chatter["likes"]:
@@ -45,7 +50,12 @@ class ChatterApi(remote.Service):
 
         for chatter in chatter_dict:
             comments = chatter["comments_future"].get_result()
-            chatter["comments_future"] = None
+            author = chatter["author_future"].get_result()
+            chatter["author"] = {"first_name": author.first_name,
+                                 "last_name": author.last_name,
+                                 "prof_pic": images.get_serving_url(author.prof_pic, secure_url=True)}
+            del chatter["comments_future"]
+            del chatter["author_future"]
             chatter["comments"] = list()
             for comment in comments:
                 comment_dict = comment.to_dict()
@@ -55,14 +65,18 @@ class ChatterApi(remote.Service):
 
         for chatter in important_chatters_dict:
             comments = chatter["comments_future"].get_result()
-            chatter["comments_future"] = None
+            author = chatter["author"].get_result()
+            chatter["author"] = {"first_name": author.first_name,
+                                 "last_name": author.last_name,
+                                 "prof_pic": images.get_serving_url(author.prof_pic, secure_url=True)}
+            del chatter["author_future"]
+            del chatter["comments_future"]
             chatter["comments"] = list()
             for comment in comments:
                 comment_dict = comment.to_dict()
                 if request_user.key in comment.likes:
                     comment_dict["like"] = True
                 chatter["comments"].append(comment_dict)
-
         return OutgoingMessage(error='', data=json_dump({'chatter': chatter_dict,
                                                          'important_chatter': important_chatters_dict}))
 
@@ -91,7 +105,7 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
         if 'key' not in data:
-            return OutgoingMessage(error='Missing arguments in new Chatter.')
+            return OutgoingMessage(error='Missing arguments in deleting Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
         if not ((chatter.author is request_user.key) or is_admin(request_user)):
             return OutgoingMessage(error='Incorrect Permissions', data='')
@@ -109,7 +123,7 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
         if not all(k in data for k in ('content', 'key')):
-            return OutgoingMessage(error='Missing arguments in new Chatter.')
+            return OutgoingMessage(error='Missing arguments in editing Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
         chatter.content = data["content"]
         chatter.put()
@@ -123,7 +137,7 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
         if not all(k in data for k in ("importance", "key")):
-            return OutgoingMessage(error='Missing arguments in new Chatter.')
+            return OutgoingMessage(error='Missing arguments in flagging Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
         # if not type(chatter) is Chatter:
         #     return OutgoingMessage(error='Incorrect type of Key', data='')
@@ -138,19 +152,24 @@ class ChatterApi(remote.Service):
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='like',
                       http_method='POST', name='chatter.like')
-    def change_important_flag(self, request):
+    def like_chatter(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        if not all(k in data for k in ("importance", "key")):
+        if not all(k in data for k in ("like", "key")):
             return OutgoingMessage(error='Missing arguments in new Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
         if not type(chatter) is Chatter:
             return OutgoingMessage(error='Incorrect type of Key', data='')
-        if request_user.key not in chatter.likes:
-            chatter.likes.append(request_user.key)
-            chatter.put()
+        if data["like"] is True:
+            if request_user.key not in chatter.likes:
+                chatter.likes.append(request_user.key)
+                chatter.put()
+        if data["like"] is False:
+            if request_user.key in chatter.likes:
+                chatter.likes.remove(request_user.key)
+                chatter.put()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment',
@@ -186,10 +205,10 @@ class ChatterApi(remote.Service):
         comment = ndb.Key(urlsafe=data["key"]).get()
         if not type(comment) is ChatterComment:
             return OutgoingMessage(error='Incorrect type of Key', data='')
-        if data["like"]:
+        if data["like"] is True:
             if request_user.key not in comment.likes:
                 comment.likes.append(request_user.key)
-        else:
+        if data["like"] is False:
             if request_user.key in comment.likes:
                 comment.likes.remove(request_user.key)
         comment.put()

@@ -1,5 +1,5 @@
-App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Inbox', 'Session', 'Notifications', 'Directory',
-    function($scope, $interval, $rootScope, $timeout, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session, Notifications, Directory) {
+App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Inbox', 'Session', 'Notifications', 'Directory', 'Channels',
+    function($scope, $interval, $rootScope, $timeout, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session, Notifications, Directory, Channels) {
         var notification_update_interval;
         if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)) {
             notification_update_interval = $interval(function() {
@@ -28,6 +28,7 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
             Organization.get();
             Inbox.get();
             Notifications.get();
+            Channels.connect();
             if (!angular.isDefined(notification_update_interval)) {
                 notification_update_interval = $interval(function() {
                     updates()
