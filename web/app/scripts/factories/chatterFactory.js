@@ -31,14 +31,14 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 .error(function(data) {
                     console.log('Error: ', data);
                 });
-        }
+        };
         
         chatter.create = function(content){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', {content:content})
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         
-                    } else {
+                    }else {
                         console.log('Err', data);
                     }
                 })
@@ -47,7 +47,48 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 });
         }
         
-        //change this to delete post
+        chatter.like = function(key){
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/like', {key:key})
+            .success(function(data){
+                if (!RESTService.hasErrors(data)) {
+                        
+                    } else {
+                        console.log('Err', data);
+                    }
+            })
+            .error(function(data){
+                console.log('Error: ', data);
+            });
+        }
+        
+        chatter.comment = function(key, content){
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment', {key:key, content:content})
+            .success(function(data){
+                if (!RESTService.hasErrors(data)) {
+                        
+                    } else {
+                        console.log('Err', data);
+                    }
+            })
+            .error(function(data){
+                console.log('Error: ', data);
+            });
+        }
+        
+        chatter.makeImportant = function(key){
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/flag', {key:key})
+            .success(function(data){
+                if (!RESTService.hasErrors(data)) {
+                        
+                    } else {
+                        console.log('Err', data);
+                    }
+            })
+            .error(function(data){
+                console.log('Error: ', data);
+            });
+        }
+        
         chatter.delete = function(key, content){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/delete', {key:key})
             .success(function(data) {

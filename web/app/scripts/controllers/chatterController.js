@@ -1,10 +1,8 @@
 App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', 'localStorageService', 'Directory', 'Chatter',
-                                     
 function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory, Chatter) {
-    
-    $scope.like = false;
-    
+        
     Chatter.get();
+    console.log('chatterinfo', Chatter.get())
     
     if (Chatter.data){
         console.log("chatter is", Chatter.data.chatter);
@@ -21,16 +19,10 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
         
     }
     
-    $scope.likeChatter = function(chat){
-    if ($scope.like == false){
-        $scope.like = true;
-    }
-        else{
-        $scope.like = false;    
-    }
+    $scope.likeChatter = function(key){
+        Chatter.like(key);
     };
     
-   
     
     $scope.makeImportant = function(chat){
         //somehow make this chat important
@@ -46,7 +38,13 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
     
      function chatterDialogController(scope, mdDialog){
          scope.chat = $scope.chat;
+         var selectedComment;
             scope.hide = function(){
+                mdDialog.hide();
+            }
+            scope.commentonChatter = function(key, content){
+                Chatter.comment(key, content);
+                console.log('comment button pressed')
                 mdDialog.hide();
             }
             scope.editChatter = function(content){
@@ -60,7 +58,11 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.saveChatter = function(content_temp){
                 scope.editing = false;
                 scope.chat.content = content_temp
-                Chatter.edit(scope.chat.content);
+                Chatter.edit(scope.chat.key, scope.chat.content);
+            }
+            scope.makeImportant = function(key){
+                Chatter.makeImportant(key);
+                console.log('important button pushed')
             }
             scope.confirmDelete = false;
             scope.showConfirmDelete = function(){
@@ -80,6 +82,16 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
                     }
                 }
             }
+            
+            scope.editComment = function(comment){
+                selectedComment = comment;
+        
+                
+            }
+            scope.confirmDeleteComment = function(comment){
+                selectedComment = comment;
+            }
+            
         }
     
     $scope.newChatter = function(){

@@ -19,14 +19,14 @@
         <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
             <md-content class="md-padding">
                 <md-list class="itemList">
-                    <md-list-item ng-repeat="chat in chatter" ng-click="openChatter(chat)" layout="column">
-                       <img ng-src="{{authorpic}}" class="md-avatar" alt="{{chatter.sentby}}" />
+                    <md-list-item ng-repeat="chat in chatter" ng-click="openChatter(chat)">
+                       <img ng-src="{{chat.author.prof_pic}}" class="md-avatar" alt="{{chat.author.first_name}}" />
                        <div class="md-list-item-text">
                         <h3 >{{chat.content}}</h3>
-                        <p class="details">{{chat.author}} | {{chat.comments.length}} comments</p>
+                        <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} comments</p>
                         </div>
                         <span flex></span>
-                        <md-button md-no-ink class="btn-touch md-primary heart pull-right" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !like, 'fa-heart': like}"></i><span class="numberoflikes">{{chat.likes.length}}</span></md-button>
+                        <md-button md-no-ink class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat.key); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{chat.likes.length}}</span></md-button>
                     </md-list-item>
                 </md-list>
             </md-content>

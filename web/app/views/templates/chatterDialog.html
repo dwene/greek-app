@@ -12,8 +12,8 @@
             <md-button ng-show="editing" class="slideDown" ng-click="saveChatter(content_temp)">save</md-button>
             <md-button ng-show="editing" class="slideDown" ng-click="cancelEditChatter()">cancel</md-button>
             <md-button ng-hide="editing" class="btn-touch" ng-click="editChatter(chat.content)" aria-label="edit"><i class="fa fa-pencil-square-o"></i></md-button>
-            <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat)" aria-label="mark important"><i class="fa fa-star-o"></i></md-button>
             <md-button ng-hide="editing" class="btn-touch" ng-click="showConfirmDelete()" aria-label="delete"><i class="fa fa-trash"></i></md-button>
+            <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat.key)" aria-label="mark important"><i class="fa fa-star-o"></i></md-button>
             </div>
       </md-toolbar>
       <md-toolbar ng-show="confirmDelete" class="md-warn slideDown">
@@ -27,13 +27,30 @@
 <!--            <md-divider class="no-margin-bottom"></md-divider>-->
 
     <md-content class="md-padding">
-        <md-list>
-            <md-list-item ng-repeat="comment in chatter.comments">
-                {{chatter.comment}}
+        <md-list class="itemList">
+            <md-list-item ng-repeat="comment in chat.comments" layout="row">
+                <img ng-src="{{comment.author.prof_pic}}" class="md-avatar" alt="{{comment.author.first_name}}" />
+                <div class="md-list-item-text">
+                    <h3 >{{comment.content}}</h3>
+                    <p class="details">{{comment.author.first_name}} {{comment.author.last_name}}</p>
+                </div>
+                <span flex></span>
+                <md-button ng-hide="editing_comment" class="btn-touch md-primary" aria-label="edit comment" ng-click="editComment(comment)"><i class="fa fa-edit"></i></md-button>
+                <md-button ng-hide="editing_comment" class="btn-touch md-primary" aria-label="delete comment" ng-click="showConfirmDeleteComment(comment)"><i class="fa fa-trash"></i></md-button>
+                <md-button ng-hide="editing_comment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment.key); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{comment.likes.length}}</span></md-button>
             </md-list-item>
+            <md-toolbar ng-show="comment.confirmDelete" class="md-warn slideDown">
+              <div class="md-toolbar-tools">
+                  <span flex></span>
+                  <md-button ng-click="deleteComment(comment)">Delete</md-button>
+                  <md-button ng-click="hideConfirmDelete()">Cancel</md-button>
+              </div>
+          </md-toolbar>
         </md-list>
     </md-content>
-            
+           
+           
+        
         <md-content class="md-padding no-padding-top no-padding-bottom">
         <md-input-container>
            <label for="content">Enter your comment here:</label>
@@ -43,7 +60,7 @@
         
   <div class="md-actions" layout="row">
     <span flex></span>
-    <md-button class="md-primary" ng-disabled="!comment.length" ng-click="addComment(comment)">
+    <md-button class="md-primary" ng-disabled="!comment.length" ng-click="commentonChatter(chat.key, comment)">
         Comment
     </md-button>
     <md-button ng-click="hide()">

@@ -777,7 +777,6 @@ md-toolbar.md-tall {
   font-size: 12px;
 }
 .itemList md-list-item {
-  display: block;
   position: relative;
   overflow: hidden;
   -webkit-backface-visibility: hidden;
@@ -938,6 +937,29 @@ md-toolbar.md-tall {
 }
 #chatterDialog md-toolbar.md-padding textarea {
   color: white;
+}
+#chatterDialog md-list-item button {
+  padding: 8px 16px;
+}
+#chatterDialog .md-list-item-text {
+  line-height: 24px;
+}
+#chatterDialog .heart {
+  height: 50px;
+}
+#chatterDialog .details {
+  color: #ccc;
+  font-size: 14px;
+  text-indent: 4px;
+}
+#chatterDialog .numberoflikes {
+  width: 100%;
+  position: absolute;
+  bottom: -2px;
+  left: 0px;
+  font-size: 10px;
+  color: #ccc;
+  text-align: center;
 }
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
