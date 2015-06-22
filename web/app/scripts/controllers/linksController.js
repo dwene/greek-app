@@ -24,8 +24,6 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
         
         $scope.showConfirmDelete = function(group){
             selectedGroup = group;
-            console.log(group);
-//            $scope.selectedGroup.confirmDelete = true;
             
         }
                 

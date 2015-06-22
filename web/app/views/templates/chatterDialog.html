@@ -36,14 +36,14 @@
                 </div>
                 <span flex></span>
                 <md-button ng-hide="editing_comment" class="btn-touch md-primary" aria-label="edit comment" ng-click="editComment(comment)"><i class="fa fa-edit"></i></md-button>
-                <md-button ng-hide="editing_comment" class="btn-touch md-primary" aria-label="delete comment" ng-click="showConfirmDeleteComment(comment)"><i class="fa fa-trash"></i></md-button>
-                <md-button ng-hide="editing_comment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment.key); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{comment.likes.length}}</span></md-button>
+                <md-button ng-hide="editing_comment" class="btn-touch md-primary" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete"><i class="fa fa-trash"></i></md-button>
+                <md-button ng-hide="editing_comment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment.key);"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{comment.likes.length}}</span></md-button>
             </md-list-item>
             <md-toolbar ng-show="comment.confirmDelete" class="md-warn slideDown">
               <div class="md-toolbar-tools">
                   <span flex></span>
-                  <md-button ng-click="deleteComment(comment)">Delete</md-button>
-                  <md-button ng-click="hideConfirmDelete()">Cancel</md-button>
+                  <md-button ng-click="deleteComment(comment.key)">Delete</md-button>
+                  <md-button ng-click="comment.confirmDelete = !comment.confirmDelete">Cancel</md-button>
               </div>
           </md-toolbar>
         </md-list>
