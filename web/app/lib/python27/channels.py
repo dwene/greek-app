@@ -1,4 +1,3 @@
-__author__ = 'Derek'
 from apiconfig import *
 import webapp2
 from google.appengine.api import channel
@@ -27,4 +26,5 @@ class ChannelsApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         token = channel.create_channel(str(uuid.uuid4()))
+        request_user.channel_tokens.append(token)
         return OutgoingMessage(error='', data=json_dump(token))

@@ -755,5 +755,4 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(images.get_serving_url(blob_key)))
 
-
 APPLICATION = endpoints.api_server([api, chatter, links, polls, events, auth, channels])

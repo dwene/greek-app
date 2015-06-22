@@ -1,4 +1,3 @@
-__author__ = 'Derek'
 from apiconfig import *
 from protorpc import remote
 import datetime

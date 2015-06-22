@@ -5,8 +5,8 @@ import datetime
 import logging
 
 chatter = endpoints.api(name='chatter', version='v1',
-                            allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
-                            audiences=[ANDROID_AUDIENCE])
+                        allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
+                        audiences=[ANDROID_AUDIENCE])
 
 @chatter.api_class(resource_name='chatter')
 class ChatterApi(remote.Service):
