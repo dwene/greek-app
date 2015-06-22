@@ -64,13 +64,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
                 Chatter.makeImportant(key);
                 console.log('important button pushed')
             }
-            scope.confirmDelete = false;
-            scope.showConfirmDelete = function(){
-                scope.confirmDelete = true;
-            };
-            scope.hideConfirmDelete = function(){
-                scope.confirmDelete = false;
-            };
             scope.deleteChatter = function(){
                 console.log(scope.chat);
                 $mdDialog.hide();
@@ -82,11 +75,16 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
                     }
                 }
             }
-            
+            scope.saveComment = function(comment){
+                comment.content = comment.comment_temp;
+                comment.editingComment = false;
+            }
             scope.editComment = function(comment){
-                selectedComment = comment;
-        
-                
+                comment.comment_temp = comment.content;
+                comment.editingComment = true;
+            }
+            scope.cancelEditComment = function(comment){
+                comment.editingComment = false;
             }
             scope.confirmDeleteComment = function(comment){
                 selectedComment = comment;
