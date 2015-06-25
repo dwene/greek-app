@@ -63,6 +63,16 @@ md-tabs .md-active{background-color: rgba(255,255,255,0.4);}
 //.md-actions {padding:4px !important;
 //    .md-button{margin:0px !important;}}
 md-input-container.md-icon-float > label{position:relative; margin-left:0px;}
+md-tooltip{z-index:1045;}
+.md-avatar{min-width:40px;
+    width: 40px;
+    height: 40px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 16px;
+    border-radius: 50%;
+    box-sizing: content-box;
+}
 md-tabs md-ink-bar{
 color:rgba(0,0,0,.5) !important;
 background:rgba(0,0,0,.5) !important;
@@ -261,9 +271,12 @@ md-toolbar.md-tall{
     .heart{height:50px;}
     .details{color:#ccc; font-size:14px; text-indent:4px;}
     .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
+    .itemList h3{font-size:14px; line-height:16px;}
+    @media screen and (max-width:480px){.itemList h3{font-size:14px; line-height:16px;}}
 }
 
 #chatterDialog{
+    max-width:95%; max-height:95%;
     md-toolbar.md-padding{padding:16px 16px 8px 16px !important;
     label{color:white;}
     textarea{color:white;}
@@ -274,6 +287,12 @@ md-toolbar.md-tall{
         .heart{height:50px;}
         .details{color:#ccc; font-size:14px; text-indent:4px;}
         .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
+    #chatterComments .itemList md-list-item{padding:10px 0px;}
+    .commentOptions{min-width:144px;}
+    @media screen and (max-width:480px){h3.chatContent{font-size:14px; line-height:16px;}}
+}
+@media screen and (max-width:600px){
+    #chatterDialog{min-width:95%; min-height:95%;}
 }
 
 #profile{

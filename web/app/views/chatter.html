@@ -19,10 +19,10 @@
         <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
             <md-content class="md-padding">
                 <md-list class="itemList">
-                    <md-list-item ng-repeat="chat in chatter" ng-click="openChatter(chat)">
+                    <md-list-item ng-repeat="chat in chatter" ng-click="openChatter(chat)" layout="row" layout-sm="column">
                        <img ng-src="{{chat.author.prof_pic}}" class="md-avatar" alt="{{chat.author.first_name}}" />
                        <div class="md-list-item-text">
-                        <h3 >{{chat.content}}</h3>
+                           <h3>{{chat.content | limitTo: 140}} <span class="details" ng-show="chat.content.length > 140">...read more</span></h3>
                         <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} comments</p>
                         </div>
                         <span flex></span>

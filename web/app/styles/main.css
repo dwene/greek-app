@@ -44,6 +44,9 @@
 .theme-red .checkLabel.label-primary:hover {
   background: #ef9a9a;
 }
+md-toolbar.md-red-theme.md-warn {
+  background-color: #666666;
+}
 .theme-purple .theme-color {
   color: #9c27b0;
 }
@@ -135,6 +138,9 @@
 }
 .theme-orange .checkLabel.label-primary:hover {
   background: #ffab91;
+}
+md-toolbar.md-orange-theme.md-warn {
+  background-color: #666666;
 }
 .theme-brown .theme-color {
   color: #795548;
@@ -473,6 +479,19 @@ md-tabs .md-active {
 md-input-container.md-icon-float > label {
   position: relative;
   margin-left: 0px;
+}
+md-tooltip {
+  z-index: 1045;
+}
+.md-avatar {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-right: 16px;
+  border-radius: 50%;
+  box-sizing: content-box;
 }
 md-tabs md-ink-bar {
   color: rgba(0, 0, 0, 0.5) !important;
@@ -929,6 +948,20 @@ md-toolbar.md-tall {
   color: #ccc;
   text-align: center;
 }
+#chatter .itemList h3 {
+  font-size: 14px;
+  line-height: 16px;
+}
+@media screen and (max-width: 480px) {
+  #chatter .itemList h3 {
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+#chatterDialog {
+  max-width: 95%;
+  max-height: 95%;
+}
 #chatterDialog md-toolbar.md-padding {
   padding: 16px 16px 8px 16px !important;
 }
@@ -960,6 +993,24 @@ md-toolbar.md-tall {
   font-size: 10px;
   color: #ccc;
   text-align: center;
+}
+#chatterDialog #chatterComments .itemList md-list-item {
+  padding: 10px 0px;
+}
+#chatterDialog .commentOptions {
+  min-width: 144px;
+}
+@media screen and (max-width: 480px) {
+  #chatterDialog h3.chatContent {
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+@media screen and (max-width: 600px) {
+  #chatterDialog {
+    min-width: 95%;
+    min-height: 95%;
+  }
 }
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);

@@ -45,7 +45,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.commentonChatter = function(key, content){
                 Chatter.comment(key, content);
                 console.log('comment button pressed')
-                mdDialog.hide();
             }
             scope.editChatter = function(content){
                 scope.editing = true;
