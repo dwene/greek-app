@@ -66,10 +66,21 @@ class DateEncoder(json.JSONEncoder):
         elif hasattr(obj, 'isoformat'):
             return obj.isoformat()
         elif isinstance(obj, ndb.BlobKey):
-            return images.get_serving_url(obj, secure_url=True)
+            try:
+                image_url = images.get_serving_url(obj, secure_url=True)
+            except:
+                image_url = ""
+            return image_url
         else:
             return json.JSONEncoder.default(self, obj)
 
+
+def get_image_url(image):
+    try:
+        image_url = images.get_serving_url(image, secure_url=True)
+    except:
+        image_url = ""
+    return image_url
 
 
 def is_admin(user):
@@ -197,41 +208,16 @@ def test_directory():
     time6 = datetime.datetime.now()
     print time6 - time1
 
-
-
 def add_notification_to_users(notification, users):
     future_list = list()
-    # apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
-    # payload = Payload(alert=notification.content, sound="default", badge=1)
-    # frame = Frame()
-    # identifier = 1
-    # expiry = time.time()+3600
-    # priority = 10
-    # iphone_user = False
     for user in users:
-        # if not user.email_prefs:
-        #     logging.error(user)
-        # elif user.email_prefs == 'all':
-        #     body = notification.content
-        #     if notification.type =='event':
-        #         body = '\n\n To see this event please visit: ' + DOMAIN + notification.link
-        #     elif notification.type == 'poll':
-        #         body += '\n\n To see this poll please visit: ' + DOMAIN + notification.link
-        #     if not email_prefs == False:
-        #         future_list.append(EmailTask(type='notification', pending=True, email=user.email,
-        #                                     title=notification.title,
-        #                                     content=body).put_async())
         user.new_notifications.insert(0, notification.key)
         future_list.append(user.put_async())
-        if user.iphone_tokens:
-            future_list.append(PushTask(pending=True, content=notification.content, ios_tokens=user.iphone_tokens))
-            # for token in user.iphone_tokens:
-            #     # apns.gateway_server.send_notification(token, payload)
-
-            #     frame.add_item(token, payload, identifier, expiry, priority)
-            #     iphone_user = True
-    # if iphone_user:
-    #     apns.gateway_server.send_notification_multiple(frame)
+        if user.iphone_tokens or user.channel_tokens:
+            future_list.append(PushTask(pending=True,
+                                        content=notification.content,
+                                        ios_tokens=user.iphone_tokens,
+                                        channel_tokens=user.channel_tokens))
     for item in future_list:
         item.get_result()
     taskqueue.add(url='/tasks/sendpushnotifications')
@@ -249,7 +235,6 @@ def add_message_to_users(msg, users):
                                         ios_tokens=user.iphone_tokens).put_async())
     for item in future_list:
         item.get_result()
-    taskqueue.add(url='/tasks/sendemails')
     taskqueue.add(url='/tasks/sendpushnotifications')
     return
 

@@ -9,6 +9,41 @@ auth = endpoints.api(name='auth', version='v1',
 
 @auth.api_class(resource_name='auth')
 class AuthApi(remote.Service):
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='register_organization',
+                      http_method='POST', name='register_organization')
+    def register_organization(self, request):
+        # try:
+        clump = json.loads(request.data)
+        new_org = Organization(name=clump['organization']['name'],
+                               school=clump['organization']['school'],
+                               type=clump['organization']['type'])
+        new_org.put()
+        user = clump['user']
+        if username_available(user['user_name'].lower()):
+            new_user = User(user_name=user['user_name'].lower())
+        else:
+            return OutgoingMessage(error=USERNAME_TAKEN, data='')
+        new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
+        new_user.first_name = user['first_name']
+        new_user.last_name = user['last_name']
+        new_user.email = user['email']
+        new_user.organization = new_org.key
+        new_user.perms = 'council'
+        new_user.current_token = generate_token()
+        new_user.class_year = int(user['class_year'])
+        new_user.timestamp = datetime.datetime.now()
+        new_user.put()
+        content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
+        content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
+        content += '\nUser Name: ' + new_user.user_name
+        send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content)
+        return OutgoingMessage(error='',
+                               data=json_dump({'token': new_user.current_token,
+                                    'perms': new_user.perms,
+                                    'me': new_user.to_dict(),
+                                    'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='resend_registration_email',
                       http_method='POST', name='auth.resend_registration_email')
     def resend_registration_email(self, request):

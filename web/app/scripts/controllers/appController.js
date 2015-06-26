@@ -20,7 +20,7 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
         }
 
         function updates() {
-            Notifications.update();
+            //Notifications.update();
         }
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
             console.log('I got my login successfully! :)');

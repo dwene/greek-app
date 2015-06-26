@@ -1,7 +1,8 @@
 from apiconfig import *
 from protorpc import remote
 import datetime
-import logging
+from notifications import Notifications
+
 
 polls = endpoints.api(name='polls', version='v1',
                       allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
@@ -58,10 +59,10 @@ class PollsApi(remote.Service):
         send_email = True
         if 'send_email' in data:
             send_email = send_email['data']
-        add_notification_to_users(notification, users)
         for item in async_list:
             poll.questions.insert(0, item.get_result())
-        poll.put()
+        poll_key = poll.put()
+        Notifications.add_notification_to_users(notification, users, {'type': 'poll', 'key': poll_key})
         return OutgoingMessage(error='', data=json_dump({'key': poll.key.urlsafe()}))
 
     #TEST ENDPOINTS

@@ -178,16 +178,15 @@ class PushTask(ndb.Model):
     content = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
     ios_tokens = ndb.StringProperty(repeated=True)
+    channel_tokens = ndb.StringProperty(repeated=True)
+    data = ndb.StringProperty()
+    user = ndb.KeyProperty()
 
 class Link(ndb.Model):
     title = ndb.StringProperty()
     link = ndb.StringProperty()
     group = ndb.StringProperty()
     organization = ndb.KeyProperty()
-
-#
-# class LinkGroup(ndb.Model):
-#
 
 class Chatter(ndb.Model):
     content = ndb.TextProperty()

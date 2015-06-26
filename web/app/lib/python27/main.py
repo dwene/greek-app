@@ -38,6 +38,7 @@ import datetime
 import jinja2
 import webapp2
 import base64, re
+from notifications import Notifications
 
 
 DOMAIN = 'https://app.netegreek.com'
@@ -334,16 +335,13 @@ class SendPushNotifications(webapp2.RequestHandler):
     @staticmethod
     @ndb.transactional
     def post(self):
-        tasks = PushTask.query(PushTask.pending == True).fetch()
+        tasks = PushTask.query(PushTask.pending is True).fetch()
         if tasks:
-            apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
             futures = []
+            Notifications.send_ios_notifications(tasks)
+            Notifications.send_channel_notifications(tasks)
             for task in tasks:
-                payload = Payload(alert=task.content, sound="default", badge=1)
-                for token in task.ios_tokens:
-                    apns.gateway_server.send_notification(token, payload)
-                task.pending = False
-                futures.append(task.put_async())
+                task.pending = True
             for future in futures:
                 future.get_result()
 
@@ -393,12 +391,15 @@ class SendDailyNotificationsEmails(webapp2.RequestHandler):
             # </body></html>
             #  """
 
-
-class ChannelHandler(webapp2.RequestHandler):
+class Connected(webapp2.RequestHandler):
     def post(self):
+        logging.error(self.request.get('from'))
         return
 
-
+class Disconnected(webapp2.RequestHandler):
+    def post(self):
+        logging.error(self.request.get('from'))
+        return
 
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
@@ -414,5 +415,7 @@ app = webapp2.WSGIApplication([
     ('/tasks/sendpushnotifications', SendPushNotifications),
     ('/dailynotifications', SendDailyNotificationsEmails),
     ('/morningtasks', MorningTasks),
-    ('/send', ChannelHandler)
+    ('/send', ChannelHandler),
+    ('/_ah/channel/connected/', Connected),
+    ('/_ah/channel/disconnected/', Disconnected),
 ], debug=True)

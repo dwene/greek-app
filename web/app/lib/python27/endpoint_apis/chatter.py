@@ -53,7 +53,7 @@ class ChatterApi(remote.Service):
             author = chatter["author_future"].get_result()
             chatter["author"] = {"first_name": author.first_name,
                                  "last_name": author.last_name,
-                                 "prof_pic": images.get_serving_url(author.prof_pic, secure_url=True)}
+                                 "prof_pic": get_image_url(author.prof_pic)}
             del chatter["comments_future"]
             del chatter["author_future"]
             chatter["comments"] = list()
@@ -68,7 +68,7 @@ class ChatterApi(remote.Service):
             author = chatter["author"].get_result()
             chatter["author"] = {"first_name": author.first_name,
                                  "last_name": author.last_name,
-                                 "prof_pic": images.get_serving_url(author.prof_pic, secure_url=True)}
+                                 "prof_pic": get_image_url(author.prof_pic)}
             del chatter["author_future"]
             del chatter["comments_future"]
             chatter["comments"] = list()

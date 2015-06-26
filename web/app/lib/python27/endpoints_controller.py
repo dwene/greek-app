@@ -10,7 +10,6 @@ from endpoint_apis.events import events
 from endpoint_apis.auth import auth
 from channels import channels
 from apiconfig import *
-# from apns import APNs, Frame, Payload
 
 api = endpoints.api(name='netegreek', version='v1',
                     allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
@@ -18,40 +17,6 @@ api = endpoints.api(name='netegreek', version='v1',
 
 @api.api_class(resource_name='full_api')
 class RESTApi(remote.Service):
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='auth/register_organization',
-                      http_method='POST', name='auth.register_organization')
-    def register_organization(self, request):
-        # try:
-        clump = json.loads(request.data)
-        new_org = Organization(name=clump['organization']['name'], school=clump['organization']['school'], type=clump['organization']['type'])
-        new_org.put()
-        user = clump['user']
-        if username_available(user['user_name'].lower()):
-            new_user = User(user_name=user['user_name'].lower())
-        else:
-            return OutgoingMessage(error=USERNAME_TAKEN, data='')
-        new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
-        new_user.first_name = user['first_name']
-        new_user.last_name = user['last_name']
-        new_user.email = user['email']
-        new_user.organization = new_org.key
-        new_user.perms = 'council'
-        new_user.current_token = generate_token()
-        new_user.class_year = int(user['class_year'])
-        new_user.timestamp = datetime.datetime.now()
-        new_user.put()
-        content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
-        content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
-        content += '\nUser Name: ' + new_user.user_name
-        send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content)
-        return OutgoingMessage(error='',
-                               data=json_dump({'token': new_user.current_token,
-                                    'perms': new_user.perms,
-                                    'me': new_user.to_dict(),
-                                    'expires': new_user.timestamp+datetime.timedelta(days=EXPIRE_TIME)}))
-        # except:
-        #     return OutgoingMessage(error=INVALID_FORMAT + ": " + str(request.data))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='organization/info',
                       http_method='POST', name='auth.organization_info')
@@ -65,7 +30,7 @@ class RESTApi(remote.Service):
         out["color"] = organization.color
         out["link_groups"] = organization.link_groups
         try:
-            out["image"] = images.get_serving_url(organization.image, secure_url=True)
+            out["image"] = get_image_url(organization.image)
         except:
             out["image"] = ''
         return OutgoingMessage(error='', data=json_dump(out))
@@ -146,7 +111,7 @@ class RESTApi(remote.Service):
         else:
             user_dict["has_registered"] = False
         try:
-            user_dict["prof_pic"] = images.get_serving_url(request_user.prof_pic, secure_url=True)
+            user_dict["prof_pic"] = get_image_url(request_user.prof_pic)
         except:
             del user_dict["prof_pic"]
         return OutgoingMessage(error='', data=json_dump(user_dict))
@@ -253,6 +218,7 @@ class RESTApi(remote.Service):
                 cron.email = user.email
                 cron.put()
         return OutgoingMessage(error='', data='OK')
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_all_welcome_emails',
                       http_method='POST', name='user.resend_all_welcome_emails')
     def resend_all_welcome_emails(self, request):
@@ -352,7 +318,6 @@ class RESTApi(remote.Service):
         user.put()
         return OutgoingMessage(error='', data='OK')
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_upload_url',
                       http_method='POST', name='auth.get_upload_url')
     def get_upload_url(self, request):
@@ -374,7 +339,7 @@ class RESTApi(remote.Service):
             blobstore.BlobInfo.get(old_key).delete()
         user.prof_pic = blobstore.BlobKey(key)
         user.put()
-        return OutgoingMessage(error='', data=images.get_serving_url(user.prof_pic))
+        return OutgoingMessage(error='', data=get_image_url(user.prof_pic))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory_less',
                       http_method='POST', name='auth.directory_less')
@@ -468,9 +433,8 @@ class RESTApi(remote.Service):
         return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
         return OutgoingMessage(error='', data=return_data)
 
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/query_user',
-                  http_method='POST', name='auth.query_user')
+                      http_method='POST', name='auth.query_user')
     def query_for_user(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
@@ -501,10 +465,6 @@ class RESTApi(remote.Service):
         user_dict["key"] = user.key.urlsafe()
         return_data = json_dump(user_dict)
         return OutgoingMessage(error='', data=return_data)
-
-    #-------------------------
-    # TAGGING Endpoints
-    #-------------------------
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_organization_tag',
                       http_method='POST', name='user.add_organization_tag')
@@ -626,10 +586,6 @@ class RESTApi(remote.Service):
             user.put()
         return OutgoingMessage(error='', data='OK')
 
-    #-------------------------
-    # UPDATE STATUS ENDPOINT
-    #-------------------------
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_status',
                       http_method='POST', name='user.update_status')
     def update_status(self, request):
@@ -694,7 +650,7 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if (request_user.new_notifications):
+        if request_user.new_notifications:
             new_notifications = Notification.query(Notification.key.IN(
                 request_user.new_notifications)).order(-Notification.timestamp).fetch(15)
             out = list()
@@ -753,6 +709,6 @@ class RESTApi(remote.Service):
             blobstore.delete(request_user.prof_pic)
         request_user.prof_pic = blobstore.BlobKey(blob_key)
         request_user.put()
-        return OutgoingMessage(error='', data=json_dump(images.get_serving_url(blob_key)))
+        return OutgoingMessage(error='', data=json_dump(get_image_url(blob_key)))
 
 APPLICATION = endpoints.api_server([api, chatter, links, polls, events, auth, channels])

@@ -52,12 +52,13 @@ handlers:
   script: lib.python27.endpoints_controller.APPLICATION
   secure: always
 
-- url: /_ah/channel/connected/
-  script: lib.python27.channels.Connected
+- url: /_ah/channel/.*
+  script: lib.python27.main.app
+  secure: always
 
-- url: /_ah/channel/disconnected/
-  script: lib.python27.channels.Disconnected
 
+inbound_services:
+- channel_presence
 
 builtins:
 - remote_api: on

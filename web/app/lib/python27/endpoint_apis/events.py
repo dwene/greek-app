@@ -1,6 +1,7 @@
 from apiconfig import *
 from protorpc import remote
 import datetime
+from notifications import Notifications
 
 events = endpoints.api(name='event', version='v1',
                        allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
@@ -95,7 +96,7 @@ class EventsApi(remote.Service):
         notification.created_key = new_event_key
         notification.put()
         future_list.append(request_user.put_async())
-        add_notification_to_users(notification, users)
+        Notifications.add_notification_to_users(notification, users,  {'type': 'event', 'key': new_event_key})
         for item in future_list:
             item.get_result()
         return OutgoingMessage(error='', data=json_dump(new_event_key.urlsafe()))
@@ -237,12 +238,12 @@ class EventsApi(remote.Service):
                                         request_user.organization, False)
             notification = Notification()
             notification.type = 'event'
-            notification.content =  request_user.first_name + " " + request_user.last_name +" updated the event: " + event.title
+            notification.content = request_user.first_name + " " + request_user.last_name +" updated the event: " + event.title
             notification.sender = request_user.key
             notification.timestamp = datetime.datetime.now()
             notification.link = 'app/events/'+event.key.urlsafe()
             notification.put()
-            add_notification_to_users(notification, users)
+            Notifications.add_notification_to_users(notification, users, {'type': 'event', 'key': event.key})
             for item in futures:
                 item.get_result()
         return OutgoingMessage(error='', data='OK')
