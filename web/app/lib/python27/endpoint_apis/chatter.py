@@ -56,7 +56,7 @@ class ChatterApi(remote.Service):
                                  "prof_pic": get_image_url(author.prof_pic)}
             del chatter["comments_future"]
             del chatter["author_future"]
-            chatter["likes"] = chatter["likes"].length
+            chatter["likes"] = len(chatter["likes"])
             chatter["comments"] = list()
             for comment in comments:
                 comment_dict = comment.to_dict()
@@ -72,7 +72,7 @@ class ChatterApi(remote.Service):
                                  "prof_pic": get_image_url(author.prof_pic)}
             del chatter["author_future"]
             del chatter["comments_future"]
-            chatter["likes"] = chatter["likes"].length
+            chatter["likes"] = len(chatter["likes"])
             chatter["comments"] = list()
             for comment in comments:
                 comment_dict = comment.to_dict()
@@ -159,20 +159,19 @@ class ChatterApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        if not all(k in data for k in ("like", "key")):
+        logging.error(request.data)
+        if not "key" in data:
             return OutgoingMessage(error='Missing arguments in new Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
-        if not type(chatter) is Chatter:
-            return OutgoingMessage(error='Incorrect type of Key', data='')
-        if data["like"] is True:
-            if request_user.key not in chatter.likes:
-                chatter.likes.append(request_user.key)
-                chatter.put()
-        if data["like"] is False:
-            if request_user.key in chatter.likes:
-                chatter.likes.remove(request_user.key)
-                chatter.put()
-        return OutgoingMessage(error='', data=json_dump(not data["like"]))
+        if request_user.key not in chatter.likes:
+            chatter.likes.append(request_user.key)
+            chatter.put()
+            like = True
+        else:
+            chatter.likes.remove(request_user.key)
+            chatter.put()
+            like = False
+        return OutgoingMessage(error='', data=like)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment',
                       http_method='POST', name='chatter.comment')

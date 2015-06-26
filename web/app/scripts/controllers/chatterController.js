@@ -19,8 +19,8 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
         
     };
     
-    $scope.likeChatter = function(key){
-        Chatter.like(key);
+    $scope.likeChatter = function(chatter){
+        Chatter.like(chatter);
     };
     
     

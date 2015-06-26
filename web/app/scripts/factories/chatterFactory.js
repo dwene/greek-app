@@ -8,7 +8,20 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             chatter.data.chatter = load_data.chatter;
             chatter.data.important = load_data.important_chatter;
         }
-        
+        function updateChatter(chat){
+            for (var i = 0; i < chatter.data.chatter.length; i++){
+                if (chatter.data.chatter[i].key == chat.key){
+                    chatter.data.chatter[i] = chat;
+                    break;
+                }
+            }
+            for (var i = 0; i < chatter.data.important.length; i++){
+                if (chatter.data.important[i].key == chat.key){
+                    chatter.data.important[i] = chat;
+                    break;
+                }
+            }
+        }
         chatter.get = function() {
             //console.log('calling messages get');
             if (chatter.hasLoaded) {
@@ -34,7 +47,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         };
         
         chatter.create = function(content){
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', {content:content})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', JSON.stringify({content:content}))
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         
@@ -48,18 +61,18 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         };
         
         chatter.like = function(chat){
-
+            if (chat.like){
+                chat.like = false;
+                chat.likes --;
+            }
+            else{
+                chat.like = true;
+                chat.likes ++;
+            }
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/like', {key:chat.key})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                    if (JSON.parse(data.data) === false){
-                        chat.like = false;
-                        chat.likes --;
-                    }
-                    else{
-                        chat.like = true;
-                        chat.likes ++;
-                    }
+
                 } else {
                     console.log('Err', data);
                 }
