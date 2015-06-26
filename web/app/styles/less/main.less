@@ -269,10 +269,9 @@ md-toolbar.md-tall{
     md-list-item button{padding:8px 16px;}
     .md-list-item-text{line-height:24px;}
     .heart{height:50px;}
-    .details{color:#ccc; font-size:14px; text-indent:4px;}
+    .details{color:#ccc; font-size:14px;}
     .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
-    .itemList h3{font-size:14px; line-height:16px;}
-    @media screen and (max-width:480px){.itemList h3{font-size:14px; line-height:16px;}}
+    .itemList h3{font-size:14px; line-height:1.4;}
 }
 
 #chatterDialog{
@@ -285,11 +284,11 @@ md-toolbar.md-tall{
         md-list-item button{padding:8px 16px;}
         .md-list-item-text{line-height:24px;}
         .heart{height:50px;}
-        .details{color:#ccc; font-size:14px; text-indent:4px;}
+        .details{color:#ccc; font-size:14px;}
         .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
     #chatterComments .itemList md-list-item{padding:10px 0px;}
     .commentOptions{min-width:144px;}
-    @media screen and (max-width:480px){h3.chatContent{font-size:14px; line-height:16px;}}
+    h3.chatContent, #chatterComments h3{font-size:14px; line-height:1.4em;}
 }
 @media screen and (max-width:600px){
     #chatterDialog{min-width:95%; min-height:95%;}
@@ -549,4 +548,3 @@ md-dialog{
     -ms-animation: slideInDown .2s;
     animation: slideInDown .2s;
 }
-

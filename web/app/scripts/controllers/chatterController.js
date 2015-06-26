@@ -77,6 +77,8 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             scope.saveComment = function(comment){
                 comment.content = comment.comment_temp;
                 comment.editingComment = false;
+                Chatter.saveComment(comment.key, comment.content);
+
             }
             scope.editComment = function(comment){
                 comment.comment_temp = comment.content;

@@ -75,6 +75,20 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             });
         }
         
+        chatter.saveComment = function(key, content){
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/edit', {key:key, content:content})
+            .success(function(data){
+                if (!RESTService.hasErrors(data)) {
+                        
+                    } else {
+                        console.log('Err', data);
+                    }
+            })
+            .error(function(data){
+                console.log('Error: ', data);
+            });
+        }
+        
         chatter.makeImportant = function(key){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/flag', {key:key})
             .success(function(data){

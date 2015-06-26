@@ -937,7 +937,6 @@ md-toolbar.md-tall {
 #chatter .details {
   color: #ccc;
   font-size: 14px;
-  text-indent: 4px;
 }
 #chatter .numberoflikes {
   width: 100%;
@@ -950,13 +949,7 @@ md-toolbar.md-tall {
 }
 #chatter .itemList h3 {
   font-size: 14px;
-  line-height: 16px;
-}
-@media screen and (max-width: 480px) {
-  #chatter .itemList h3 {
-    font-size: 14px;
-    line-height: 16px;
-  }
+  line-height: 1.4;
 }
 #chatterDialog {
   max-width: 95%;
@@ -983,7 +976,6 @@ md-toolbar.md-tall {
 #chatterDialog .details {
   color: #ccc;
   font-size: 14px;
-  text-indent: 4px;
 }
 #chatterDialog .numberoflikes {
   width: 100%;
@@ -1000,11 +992,10 @@ md-toolbar.md-tall {
 #chatterDialog .commentOptions {
   min-width: 144px;
 }
-@media screen and (max-width: 480px) {
-  #chatterDialog h3.chatContent {
-    font-size: 14px;
-    line-height: 16px;
-  }
+#chatterDialog h3.chatContent,
+#chatterDialog #chatterComments h3 {
+  font-size: 14px;
+  line-height: 1.4em;
 }
 @media screen and (max-width: 600px) {
   #chatterDialog {
