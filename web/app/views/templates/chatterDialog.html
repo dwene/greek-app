@@ -51,7 +51,7 @@
                 <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
                 <div class="md-list-item-text">
                     <h3 >{{comment.content}}</h3>
-                    <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.timestamp}}</p>
+                    <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.timestamp | displayTime}}</p>
                 </div>
                 </div>
                 <span flex></span>
