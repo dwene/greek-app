@@ -459,6 +459,9 @@ md-backdrop.md-opaque {
 .md-dialog-container {
   z-index: 1042;
 }
+.md-avatar {
+  background-color: #ccc;
+}
 .md-select-menu-container {
   z-index: 1043;
 }

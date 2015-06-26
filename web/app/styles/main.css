@@ -458,6 +458,9 @@ md-backdrop.md-opaque {
 .md-dialog-container {
   z-index: 1042;
 }
+.md-avatar {
+  background-color: #ccc;
+}
 .md-select-menu-container {
   z-index: 1043;
 }
@@ -990,7 +993,7 @@ md-toolbar.md-tall {
   padding: 10px 0px;
 }
 #chatterDialog .commentOptions {
-  min-width: 144px;
+  min-width: 148px;
 }
 #chatterDialog h3.chatContent,
 #chatterDialog #chatterComments h3 {
