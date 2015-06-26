@@ -3,7 +3,7 @@
      <md-toolbar>
          <div class="md-toolbar-tools">
                <md-list-item style="width:100%;">
-                <img src="{{chat.author.prof_pic}}" alt="{{chat.author.first_name}}" class="md-avatar">
+                <img src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" alt="{{chat.author.first_name}}" class="md-avatar">
                 <h3>{{chat.author.first_name}} {{chat.author.last_name}}</h3>
                 <span flex></span>
                 <md-button md-no-ink class="btn-touch heart" aria-label="like chatter" ng-click="likeChatter(chat.key); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{chat.likes.length}}</span></md-button>
@@ -48,7 +48,7 @@
             </md-input-container>
             <md-list-item ng-hide="comment.editingComment" layout="row" layout-sm="column">
                <div layout="row" style="width:100%;">
-                <img ng-src="{{comment.author.prof_pic}}" class="md-avatar" alt="{{comment.author.first_name}}" />
+                <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
                 <div class="md-list-item-text">
                     <h3 >{{comment.content}}</h3>
                     <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.timestamp}}</p>
