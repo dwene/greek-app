@@ -17,7 +17,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
     
     $scope.authorpic = function(author){
         
-    }
+    };
     
     $scope.likeChatter = function(key){
         Chatter.like(key);
@@ -26,14 +26,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
     
     $scope.makeImportant = function(chat){
         //somehow make this chat important
-    }
+    };
+
     $scope.openChatter = function(chat){
         $scope.chat = chat;
         $mdDialog.show({
                     controller: ('chatterDialogController', ['$scope', '$mdDialog', chatterDialogController]),
                     templateUrl: 'views/templates/chatterDialog.html',
         });
-    }
+    };
     
     
      function chatterDialogController(scope, mdDialog){
@@ -41,28 +42,34 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          var selectedComment;
             scope.hide = function(){
                 mdDialog.hide();
-            }
+            };
+
             scope.commentonChatter = function(key, content){
                 Chatter.comment(key, content);
                 console.log('comment button pressed')
-            }
+            };
+
             scope.editChatter = function(content){
                 scope.editing = true;
                 scope.content_temp = content;
                 document.getElementById('chattercontent').focus();
-            }
+            };
+
             scope.cancelEditChatter = function(){
                 scope.editing = false;
-            }
+            };
+
             scope.saveChatter = function(content_temp){
                 scope.editing = false;
                 scope.chat.content = content_temp
                 Chatter.edit(scope.chat.key, scope.chat.content);
-            }
+            };
+
             scope.makeImportant = function(key){
                 Chatter.makeImportant(key);
                 console.log('important button pushed')
-            }
+            };
+
             scope.deleteChatter = function(){
                 console.log(scope.chat);
                 $mdDialog.hide();
@@ -73,20 +80,24 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
                         $scope.chatter.splice(i, 1);
                     }
                 }
-            }
+            };
+
             scope.saveComment = function(comment){
                 comment.content = comment.comment_temp;
                 comment.editingComment = false;
                 Chatter.saveComment(comment.key, comment.content);
 
-            }
+            };
+
             scope.editComment = function(comment){
                 comment.comment_temp = comment.content;
                 comment.editingComment = true;
-            }
+            };
+
             scope.cancelEditComment = function(comment){
                 comment.editingComment = false;
-            }
+            };
+
             scope.confirmDeleteComment = function(comment){
                 selectedComment = comment;
             }
@@ -98,16 +109,17 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
                     controller: ('newChatterController', ['$scope', '$mdDialog', newChatterController]),
                     templateUrl: 'views/templates/newChatterDialog.html',
         });
-    }
+    };
     
     function newChatterController(scope, mdDialog){
             scope.hide = function(){
                 mdDialog.hide();
-            }
+            };
+
             scope.addChatter = function(content){
                 Chatter.create(content);
                 mdDialog.hide();
-            }
+            };
 
         }
     
