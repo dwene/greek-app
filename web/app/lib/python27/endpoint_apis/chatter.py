@@ -56,6 +56,7 @@ class ChatterApi(remote.Service):
                                  "prof_pic": get_image_url(author.prof_pic)}
             del chatter["comments_future"]
             del chatter["author_future"]
+            chatter["likes"] = chatter["likes"].length
             chatter["comments"] = list()
             for comment in comments:
                 comment_dict = comment.to_dict()
@@ -71,6 +72,7 @@ class ChatterApi(remote.Service):
                                  "prof_pic": get_image_url(author.prof_pic)}
             del chatter["author_future"]
             del chatter["comments_future"]
+            chatter["likes"] = chatter["likes"].length
             chatter["comments"] = list()
             for comment in comments:
                 comment_dict = comment.to_dict()
@@ -170,7 +172,7 @@ class ChatterApi(remote.Service):
             if request_user.key in chatter.likes:
                 chatter.likes.remove(request_user.key)
                 chatter.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump(not data["like"]))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment',
                       http_method='POST', name='chatter.comment')

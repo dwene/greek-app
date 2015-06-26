@@ -2392,6 +2392,13 @@ App.filter('eventTagDirectorySearch', function() {
     }
 });
 
+
+App.filter('displayTime', function(){
+    return function(time){
+        return momentInTimezone(time).calendar();
+    }
+});
+
 App.filter('directorySearch', function() {
     return function(in_objects, search) {
         var searchValues = search;

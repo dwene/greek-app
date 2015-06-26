@@ -20,11 +20,13 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
             } else {
                 $scope.present = false;
             }
-        }
+        };
+
         $scope.$on('events:updated', function() {
             $scope.events = Events.events;
             getEvents();
-        })
+        });
+
         if (Directory.check()) {
             $scope.directoryLoaded = true;
         }
@@ -41,7 +43,8 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
             } else {
                 $scope.order = '-time_start';
             }
-        })
+        });
+
         //send the organization and user date from registration pages
         function getEvents() {
             $scope.eventSource = [];
@@ -66,7 +69,8 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
                 }
             }
             return 'Unknown';
-        }
+        };
+
         $scope.showDate = function(start, end) {
             var mStart = momentInTimezone(start);
             var mEnd = momentInTimezone(end);
@@ -76,10 +80,12 @@ App.controller('eventsController', ['$scope', 'RESTService', '$rootScope', '$loc
             else {
                 return mStart.calendar();
             }
-        }
+        };
+
         $scope.goToEvent = function(event) {
             $location.path('app/events/' + event);
-        }
+        };
+
         $scope.$watch('search', function() {
             if ($scope.current) {
                 $scope.current.currentPage = 0;
