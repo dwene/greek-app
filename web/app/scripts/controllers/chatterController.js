@@ -15,14 +15,9 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       $scope.important_chatter = Chatter.data.important_chatter;
    });
 
-   $scope.authorpic = function(author){
-
-   };
-
    $scope.likeChatter = function(key){
       Chatter.like(key);
    };
-
 
    $scope.makeImportant = function(chat){
       //somehow make this chat important
