@@ -71,8 +71,9 @@ class AuthApi(remote.Service):
             if dt.seconds/60/60 < 2:
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
-            user.put()
+            key = user.put()
             me = user.to_dict()
+            me['key'] = key
             del me["hash_pass"]
             del me["current_token"]
             del me["organization"]
@@ -95,7 +96,7 @@ class AuthApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         user = request_user.user_name
         token = request_user.current_token
-        me = request_user.to_dict()
+        me = ndb_to_dict(request_user)
         del me["hash_pass"]
         del me["current_token"]
         del me["organization"]

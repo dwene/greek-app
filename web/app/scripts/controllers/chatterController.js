@@ -26,15 +26,20 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
    $scope.openChatter = function(chat){
       $scope.chat = chat;
+      console.log('opening chatter', chat);
       $mdDialog.show({
-         controller: ('chatterDialogController', ['$scope', '$mdDialog', chatterDialogController]),
+         controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
          templateUrl: 'views/templates/chatterDialog.html',
       });
    };
 
 
-   function chatterDialogController(scope, mdDialog){
+   function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
+      Chatter.getComments(scope.chat);
+      $scope.$on('chatter:updated', function(){
+
+      })
       var selectedComment;
       scope.hide = function(){
          mdDialog.hide();

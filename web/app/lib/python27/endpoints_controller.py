@@ -3,7 +3,7 @@ import sys
 import os
 if os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'python27')) not in sys.path:
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'python27')))
-from endpoint_apis.chatter import chatter
+from endpoint_apis.chatter import chatter_api
 from endpoint_apis.links import links
 from endpoint_apis.polls import polls
 from endpoint_apis.events import events
@@ -711,4 +711,4 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(get_image_url(blob_key)))
 
-APPLICATION = endpoints.api_server([api, chatter, links, polls, events, auth, channels])
+APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels])

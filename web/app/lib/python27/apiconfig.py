@@ -101,6 +101,10 @@ def ndb_to_json(item):
     _dictionary["key"] = item.key
     return json_dump(_dictionary)
 
+def ndb_to_dict(item):
+    _dictionary = item.to_dict()
+    _dictionary["key"] = item.key
+    return (_dictionary)
 
 def check_if_info_set(key):
     return True

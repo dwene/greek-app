@@ -9,17 +9,23 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             chatter.data.important = load_data.important_chatter;
         }
         function updateChatter(chat){
+            var has_changed = false;
             for (var i = 0; i < chatter.data.chatter.length; i++){
                 if (chatter.data.chatter[i].key == chat.key){
                     chatter.data.chatter[i] = chat;
+                    has_changed = true;
                     break;
                 }
             }
             for (var i = 0; i < chatter.data.important.length; i++){
                 if (chatter.data.important[i].key == chat.key){
                     chatter.data.important[i] = chat;
+                    has_changed = true;
                     break;
                 }
+            }
+            if (has_changed) {
+                $rootScope.$broadcast('chatter:updated');
             }
         }
         chatter.get = function() {
@@ -46,6 +52,22 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 });
         };
         
+        chatter.getComments = function(chatter){
+             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comments/get', {key: chatter.key})
+                .success(function(data) {
+                    if (!RESTService.hasErrors(data)) {
+                        var load_data = JSON.parse(data.data);
+                        chatter.comments = load_data;
+                        updateChatter(chatter);
+                    } else {
+                        console.log('Err', data);
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ', data);
+                });
+        }
+
         chatter.create = function(content){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', JSON.stringify({content:content}))
             .success(function(data) {

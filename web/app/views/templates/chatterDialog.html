@@ -41,7 +41,7 @@
 
 
       <md-content id="chatterComments" class="md-padding no-padding-top">
-         <md-list class="itemList">
+         <md-list class="itemList" ng-hide="chat.comments === undefined">
             <div ng-repeat="comment in chat.comments">
                <md-input-container ng-show="comment.editingComment" class="slideDown no-margin-bottom">
                   <label for="commentcontent">Edit your comment here:</label>
@@ -78,6 +78,7 @@
                </md-toolbar>
             </div>
          </md-list>
+         <p ng-show="chat.comments === undefined">loading</p>
          <br>
          <md-input-container>
             <label for="content">Enter new comment here:</label>

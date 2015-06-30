@@ -4,11 +4,11 @@ from protorpc import remote
 import datetime
 import logging
 
-chatter = endpoints.api(name='chatter', version='v1',
-                        allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
-                        audiences=[ANDROID_AUDIENCE])
+chatter_api = endpoints.api(name='chatter', version='v1',
+                            allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
+                            audiences=[ANDROID_AUDIENCE])
 
-@chatter.api_class(resource_name='chatter')
+@chatter_api.api_class(resource_name='chatter')
 class ChatterApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get', http_method='POST', name='chatter.get')
     def get_chatter(self, request):
@@ -36,51 +36,69 @@ class ChatterApi(remote.Service):
 
         for chatter in chatter_dict:
             chatter["author_future"] = chatter["author"].get_async()
-            chatter["comments_future"] = ChatterComment.query(ChatterComment.chatter == chatter['key']).order(
-                -ChatterComment.timestamp).fetch_async(20)
             if request_user.key in chatter["likes"]:
                 chatter["like"] = True
 
         for chatter in important_chatters_dict:
             chatter["author_future"] = chatter["author"].get_async()
-            chatter["comments_future"] = ChatterComment.query(ChatterComment.chatter == chatter['key']).order(
-                -ChatterComment.timestamp).fetch_async(20)
+            chatter["likes"] = len(chatter["likes"])
             if request_user.key in chatter["likes"]:
                 chatter["like"] = True
 
         for chatter in chatter_dict:
-            comments = chatter["comments_future"].get_result()
+            chatter["comments_length"] = len(chatter["comments"])
+            chatter["likes"] = len(chatter["likes"])
             author = chatter["author_future"].get_result()
             chatter["author"] = {"first_name": author.first_name,
                                  "last_name": author.last_name,
-                                 "prof_pic": get_image_url(author.prof_pic)}
-            del chatter["comments_future"]
+                                 "prof_pic": get_image_url(author.prof_pic),
+                                 "key": chatter["author"]}
             del chatter["author_future"]
-            chatter["likes"] = len(chatter["likes"])
-            chatter["comments"] = list()
-            for comment in comments:
-                comment_dict = comment.to_dict()
-                if request_user.key in comment.likes:
-                    comment_dict["like"] = True
-                chatter["comments"].append(comment_dict)
+            del chatter["comments"]
 
         for chatter in important_chatters_dict:
-            comments = chatter["comments_future"].get_result()
-            author = chatter["author"].get_result()
+            chatter["comments_length"] = len(chatter["comments"])
+            author = chatter["author_future"].get_result()
             chatter["author"] = {"first_name": author.first_name,
                                  "last_name": author.last_name,
-                                 "prof_pic": get_image_url(author.prof_pic)}
+                                 "prof_pic": get_image_url(author.prof_pic),
+                                 "key": chatter["author"]}
             del chatter["author_future"]
-            del chatter["comments_future"]
-            chatter["likes"] = len(chatter["likes"])
-            chatter["comments"] = list()
-            for comment in comments:
-                comment_dict = comment.to_dict()
-                if request_user.key in comment.likes:
-                    comment_dict["like"] = True
-                chatter["comments"].append(comment_dict)
+            del chatter["comments"]
         return OutgoingMessage(error='', data=json_dump({'chatter': chatter_dict,
                                                          'important_chatter': important_chatters_dict}))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='comments/get',
+                      http_method='POST', name='chatter.get_comments')
+    def get_comments(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        if 'key' not in data:
+            return OutgoingMessage(error='Missing arguments in new Chatter.', data='')
+        chatter = ndb.Key(urlsafe=data['key']).get()
+        chatter_comments = ChatterComment.query(ChatterComment.chatter == chatter.key).order(
+                                                -ChatterComment.timestamp).fetch(20)
+        comments_dict = list()
+        for comment in chatter_comments:
+            comments_dict.append(ndb_to_dict(comment))
+        author_keys = list()
+        for comment in comments_dict:
+            comment['like'] = request_user.key in comment['likes']
+            comment['likes'] = len(comment['likes'])
+            if comment['author'] not in author_keys:
+                author_keys.append(comment['author'])
+        authors = ndb.get_multi(author_keys)
+        for comment in comments_dict:
+            for author in authors:
+                if author.key == comment['author']:
+                    comment['author'] = {"first_name": author.first_name,
+                                         "last_name": author.last_name,
+                                         "prof_pic": get_image_url(author.prof_pic),
+                                         "key": comment['author']}
+                    break
+        return OutgoingMessage(error='', data=json_dump(comments_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='post',
                       http_method='POST', name='chatter.post')
