@@ -161,7 +161,7 @@ class ChatterApi(remote.Service):
         data = json.loads(request.data)
         logging.error(request.data)
         if not "key" in data:
-            return OutgoingMessage(error='Missing arguments in new Chatter.')
+            return OutgoingMessage(error='Missing arguments in liking Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
         if request_user.key not in chatter.likes:
             chatter.likes.append(request_user.key)

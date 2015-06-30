@@ -11,20 +11,6 @@
          </div>
       </md-toolbar>
       <div class="md-padding no-padding-bottom">
-         <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="editChatter(chat.content)" aria-label="edit"><i class="fa fa-pencil-square-o"></i></md-button>
-         <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete"><i class="fa fa-trash"></i></md-button>
-         <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="makeImportant(chat.key)" aria-label="mark important"><i class="fa fa-star-o"></i>
-            <md-tooltip md-direction="right">
-               Make Important
-            </md-tooltip>
-         </md-button>
-         <md-toolbar ng-show="chatter.confirmDelete" class="md-warn slideDown">
-            <div class="md-toolbar-tools">
-               <span flex></span>
-               <md-button ng-click="deleteChatter(chat)">Delete</md-button>
-               <md-button ng-click="chatter.confirmDelete = !chatter.confirmDelete">Cancel</md-button>
-            </div>
-         </md-toolbar>
          <h3 class="chatContent" ng-show="!editing">{{chat.content}}</h3>
          <md-input-container class="slideDown" ng-show="editing">
             <label for="chattercontent">Edit your chatter here:</label>
@@ -35,14 +21,29 @@
             <md-button ng-show="editing" class="slideDown md-primary" ng-click="saveChatter(content_temp)">save</md-button>
             <md-button ng-show="editing" class="slideDown md-primary" ng-click="cancelEditChatter()">cancel</md-button>
          </div>
-         <br>
+         <div class="row text-center">
+            <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="editChatter(chat.content)" aria-label="edit"><i class="fa fa-pencil-square-o"></i></md-button>
+            <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete"><i class="fa fa-trash"></i></md-button>
+            <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="makeImportant(chat.key)" aria-label="mark important"><i class="fa fa-star-o"></i>
+               <md-tooltip md-direction="right">
+                  Make Important
+               </md-tooltip>
+            </md-button>
+         </div>
+            <md-toolbar ng-show="chatter.confirmDelete" class="md-warn slideDown">
+               <div class="md-toolbar-tools">
+                  <span flex></span>
+                  <md-button ng-click="deleteChatter(chat)">Delete</md-button>
+                  <md-button ng-click="chatter.confirmDelete = !chatter.confirmDelete">Cancel</md-button>
+               </div>
+            </md-toolbar>
       </div>
 
 
       <md-content id="chatterComments" class="md-padding no-padding-top">
          <md-list class="itemList">
             <div ng-repeat="comment in chat.comments">
-               <md-input-container ng-show="comment.editingComment" class="slideDown">
+               <md-input-container ng-show="comment.editingComment" class="slideDown no-margin-bottom">
                   <label for="commentcontent">Edit your comment here:</label>
                   <textarea id="commentcontent" ng-model="comment.comment_temp" name="content"></textarea>
                </md-input-container>
@@ -50,8 +51,8 @@
                   <div layout="row" style="width:100%;">
                      <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
                      <div class="md-list-item-text">
-                        <h3 >{{comment.content}}</h3>
                         <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.timestamp | displayTime}}</p>
+                        <h3 >{{comment.content}}</h3>
                      </div>
                   </div>
                   <span flex></span>
