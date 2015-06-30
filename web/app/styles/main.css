@@ -947,8 +947,8 @@ md-toolbar.md-tall {
 }
 #chatter .details {
   color: #ccc;
-  font-size: 10px;
-  line-height: 1.8em;
+  font-size: 12px;
+  margin: 0px 0px 4px 4px;
 }
 #chatter .numberoflikes {
   width: 100%;
@@ -987,7 +987,7 @@ md-toolbar.md-tall {
 }
 #chatterDialog .details {
   color: #ccc;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8em;
 }
 #chatterDialog .numberoflikes {
@@ -998,6 +998,10 @@ md-toolbar.md-tall {
   font-size: 10px;
   color: #ccc;
   text-align: center;
+}
+#chatterDialog #chatterContent .details {
+  text-align: right;
+  margin-right: 4px;
 }
 #chatterDialog #chatterComments .itemList md-list-item {
   padding: 10px 0px;

@@ -1,6 +1,8 @@
-App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', 'localStorageService', 'Directory', 'Chatter',
+App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', 'localStorageService', 'Directory', 'Chatter', 'Session',
 
-function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory, Chatter){
+function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory, Chatter, Session){
+
+   $scope.me = Session.me.key;
 
    Chatter.get();
    console.log('chatterinfo', Chatter.get());
@@ -37,12 +39,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
    function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
       Chatter.getComments(scope.chat);
-      $scope.$on('chatter:updated', function(){
-
-      })
       var selectedComment;
+      scope.me = Session.me.key;
+
       scope.hide = function(){
          mdDialog.hide();
+      };
+
+      scope.likeChatter = function(chatter){
+         Chatter.like(chatter);
       };
 
       scope.commentonChatter = function(key, content){
@@ -97,10 +102,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
       scope.cancelEditComment = function(comment){
          comment.editingComment = false;
-      };
-
-      scope.confirmDeleteComment = function(comment){
-         selectedComment = comment;
       };
 
    }

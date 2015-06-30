@@ -6,11 +6,25 @@
                <img src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" alt="{{chat.author.first_name}}" class="md-avatar">
                <h3>{{chat.author.first_name}} {{chat.author.last_name}}</h3>
                <span flex></span>
-               <md-button md-no-ink class="btn-touch heart" aria-label="like chatter" ng-click="likeChatter(chat.key); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{chat.likes.length}}</span></md-button>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="editChatter(chat.content)" aria-label="edit" ng-show="chat.author.key == me"><i class="fa fa-pencil-square-o"></i></md-button>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat.key)" aria-label="mark important"><i class="fa fa-star-o"></i>
+                  <md-tooltip md-direction="bottom">
+                     Make Important
+                  </md-tooltip>
+               </md-button>
+               <md-button md-no-ink class="btn-touch heart" aria-label="like chatter" ng-click="likeChatter(chat);" ng-hide="chat.author.key == me"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i></md-button>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete" ng-show="chat.author.key == me"><i class="fa fa-trash"></i></md-button>
             </md-list-item>
          </div>
       </md-toolbar>
-      <div class="md-padding no-padding-bottom">
+      <md-toolbar ng-show="chatter.confirmDelete" class="md-warn slideDown">
+         <div class="md-toolbar-tools">
+            <span flex></span>
+            <md-button ng-click="deleteChatter(chat)">Delete</md-button>
+            <md-button ng-click="chatter.confirmDelete = !chatter.confirmDelete">Cancel</md-button>
+         </div>
+      </md-toolbar>
+      <div id="chatterContent" class="md-padding no-padding-bottom">
          <h3 class="chatContent" ng-show="!editing">{{chat.content}}</h3>
          <md-input-container class="slideDown" ng-show="editing">
             <label for="chattercontent">Edit your chatter here:</label>
@@ -21,26 +35,11 @@
             <md-button ng-show="editing" class="slideDown md-primary" ng-click="saveChatter(content_temp)">save</md-button>
             <md-button ng-show="editing" class="slideDown md-primary" ng-click="cancelEditChatter()">cancel</md-button>
          </div>
-         <div class="row text-center">
-            <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="editChatter(chat.content)" aria-label="edit"><i class="fa fa-pencil-square-o"></i></md-button>
-            <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete"><i class="fa fa-trash"></i></md-button>
-            <md-button ng-hide="editing" class="btn-touch md-primary" ng-click="makeImportant(chat.key)" aria-label="mark important"><i class="fa fa-star-o"></i>
-               <md-tooltip md-direction="right">
-                  Make Important
-               </md-tooltip>
-            </md-button>
-         </div>
-            <md-toolbar ng-show="chatter.confirmDelete" class="md-warn slideDown">
-               <div class="md-toolbar-tools">
-                  <span flex></span>
-                  <md-button ng-click="deleteChatter(chat)">Delete</md-button>
-                  <md-button ng-click="chatter.confirmDelete = !chatter.confirmDelete">Cancel</md-button>
-               </div>
-            </md-toolbar>
+      <p class="details">{{chat.likes}} likes | {{chat.comments.length}} comments | {{chat.timestamp | displayTime}} </p>
       </div>
 
 
-      <md-content id="chatterComments" class="md-padding no-padding-top">
+      <div id="chatterComments" class="md-padding no-padding-top">
          <md-list class="itemList" ng-hide="chat.comments === undefined">
             <div ng-repeat="comment in chat.comments">
                <md-input-container ng-show="comment.editingComment" class="slideDown no-margin-bottom">
@@ -57,9 +56,9 @@
                   </div>
                   <span flex></span>
                   <div class="commentOptions">
-                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary" aria-label="edit comment" ng-click="editComment(comment)"><i class="fa fa-edit"></i></md-button>
-                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete"><i class="fa fa-trash"></i></md-button>
-                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment.key);"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{comment.likes.length}}</span></md-button>
+                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary" aria-label="edit comment" ng-click="editComment(comment)" ng-show="comment.author.key == me"><i class="fa fa-edit"></i></md-button>
+                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete" ng-show="comment.author.key == me"><i class="fa fa-trash"></i></md-button>
+                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment.key);"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes.length}}</span></md-button>
                   </div>
                </md-list-item>
                <md-toolbar ng-show="comment.editingComment" class="md-primary slideDown">
@@ -84,8 +83,7 @@
             <label for="content">Enter new comment here:</label>
             <textarea id="content" ng-model="comment" name="content"></textarea>
          </md-input-container>
-      </md-content>
-
+      </div>
 
    </md-content>
    <div class="md-actions" layout="row">
