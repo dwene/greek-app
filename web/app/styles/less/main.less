@@ -206,6 +206,11 @@ md-toolbar.md-tall{
     md-list-item:not(:last-child){border-bottom:1px solid #ccc;}
     md-list-item.md-padding{padding:8px;}
 }
+.chatterList{
+   .listItem{position:relative; overflow:hidden; -webkit-backface-visibility: hidden;}
+   .listItem:not(:last-child){border-bottom:1px solid #ccc;}
+   .listItem.md-padding{padding:8px;}
+}
 
 
 
@@ -268,11 +273,10 @@ md-toolbar.md-tall{
 
 #chatter{
     md-list-item button{padding:8px 16px;}
-    .md-list-item-text{line-height:24px;}
     .heart{height:50px;}
-    .details{color:#ccc; font-size:14px;}
+    .details{color:#ccc; font-size:10px; line-height:1.8em;}
     .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
-    .itemList h3{font-size:14px; line-height:1.4;}
+    .chatterList h3{font-size:14px; line-height:1.4em;}
 }
 
 #chatterDialog{
@@ -285,7 +289,7 @@ md-toolbar.md-tall{
         md-list-item button{padding:8px 16px;}
         .md-list-item-text{line-height:24px;}
         .heart{height:50px;}
-        .details{color:#ccc; font-size:14px;}
+        .details{color:#ccc; font-size:10px; line-height:1.8em;}
         .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
     #chatterComments .itemList md-list-item{padding:10px 0px;}
     .commentOptions{min-width:148px;}

@@ -809,6 +809,17 @@ md-toolbar.md-tall {
 .itemList md-list-item.md-padding {
   padding: 8px;
 }
+.chatterList .listItem {
+  position: relative;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.chatterList .listItem:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+.chatterList .listItem.md-padding {
+  padding: 8px;
+}
 .message .isNew {
   display: none;
 }
@@ -931,15 +942,13 @@ md-toolbar.md-tall {
 #chatter md-list-item button {
   padding: 8px 16px;
 }
-#chatter .md-list-item-text {
-  line-height: 24px;
-}
 #chatter .heart {
   height: 50px;
 }
 #chatter .details {
   color: #ccc;
-  font-size: 14px;
+  font-size: 10px;
+  line-height: 1.8em;
 }
 #chatter .numberoflikes {
   width: 100%;
@@ -950,9 +959,9 @@ md-toolbar.md-tall {
   color: #ccc;
   text-align: center;
 }
-#chatter .itemList h3 {
+#chatter .chatterList h3 {
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.4em;
 }
 #chatterDialog {
   max-width: 95%;
@@ -978,7 +987,8 @@ md-toolbar.md-tall {
 }
 #chatterDialog .details {
   color: #ccc;
-  font-size: 14px;
+  font-size: 10px;
+  line-height: 1.8em;
 }
 #chatterDialog .numberoflikes {
   width: 100%;
