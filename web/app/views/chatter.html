@@ -26,7 +26,7 @@
                         <h3>{{chat.content | limitTo: 140}} <span class="details" ng-show="chat.content.length > 140">...read more</span></h3>
                      </div>
                      <span flex></span>
-                     <md-button class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !liked, 'fa-heart': liked}"></i><span class="numberoflikes">{{chat.likes.length}}</span></md-button>
+                     <md-button class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i><span class="numberoflikes">{{chat.likes}}</span></md-button>
                   </md-list-item>
                   <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} comments | {{chat.timestamp | displayTime}}</p>
                   </div>

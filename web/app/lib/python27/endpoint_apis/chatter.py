@@ -171,7 +171,7 @@ class ChatterApi(remote.Service):
             chatter.likes.remove(request_user.key)
             chatter.put()
             like = False
-        return OutgoingMessage(error='', data=like)
+        return OutgoingMessage(error='', data=json_dump(like))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment',
                       http_method='POST', name='chatter.comment')
