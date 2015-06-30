@@ -1,41 +1,42 @@
 <md-button class="md-fab md-warn fixed md-fab-bottom-right" ng-click="newChatter();"><i class="fa fa-plus"></i>
-<md-tooltip md-direction="left">
-    New Chatter
-</md-tooltip>
+   <md-tooltip md-direction="left">
+      New Chatter
+   </md-tooltip>
 </md-button>
 <div id="chatter" class="container">
    <div class="md-whiteframe-z1">
-            <md-toolbar class="no-min-height">
-            <md-tabs md-selected="data.selectedIndex" class="md-primary">
-              <md-tab id="chatterTab" aria-controls="chatterTab-content">
-                Chatter
-              </md-tab>
-              <md-tab id="importantTab" aria-controls="importantTab-content">
-                Important
-              </md-tab>
-            </md-tabs>  
-            </md-toolbar>
-    <div class="tabpanel-container" ng-model="showChatter">
-        <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
+      <md-toolbar class="no-min-height">
+         <md-tabs md-selected="data.selectedIndex" class="md-primary">
+            <md-tab id="chatterTab" aria-controls="chatterTab-content">
+               Chatter
+            </md-tab>
+            <md-tab id="importantTab" aria-controls="importantTab-content">
+               Important
+            </md-tab>
+         </md-tabs>
+      </md-toolbar>
+      <div class="tabpanel-container" ng-model="showChatter">
+         <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
             <md-content class="md-padding">
-                <md-list class="itemList">
-                    <md-list-item ng-repeat="chat in chatter" ng-click="openChatter(chat)" layout="row" layout-sm="column">
-                       <img ng-src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{chat.author.first_name}}" />
-                       <div class="md-list-item-text">
-                           <h3>{{chat.content | limitTo: 140}} <span class="details" ng-show="chat.content.length > 140">...read more</span></h3>
+               <md-list class="itemList">
+                  <md-list-item ng-repeat="chat in chatter" ng-click="openChatter(chat)" layout="row" layout-sm="column">
+                     <img ng-src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{chat.author.first_name}}" />
+                     <div class="md-list-item-text">
+                        <h3>{{chat.content | limitTo: 140}} <span class="details" ng-show="chat.content.length > 140">...read more</span></h3>
                         <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} comments | {{chat.timestamp | displayTime}}</p>
                         </div>
                         <span flex></span>
-                        <md-button md-no-ink class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i><span class="numberoflikes">{{chat.likes}}</span></md-button>
+                        <md-button class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i><span class="numberoflikes">{{chat.likes}}</span></md-button>
                     </md-list-item>
                 </md-list>
+
             </md-content>
-        </div>
-        <div role="tabpanel" id="importantTab-content" aria-labelledby="importantTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
+         </div>
+         <div role="tabpanel" id="importantTab-content" aria-labelledby="importantTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
             <md-content class="md-padding">
-                
+
             </md-content>
-        </div>
-    </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
