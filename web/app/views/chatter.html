@@ -28,7 +28,7 @@
                      <span flex></span>
                      <md-button class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i><span class="numberoflikes">{{chat.likes}}</span></md-button>
                   </md-list-item>
-                  <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments_length}} comments | {{chat.timestamp | displayTime}}</p>
+                  <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} comments | {{chat.timestamp | displayTime}}</p>
                   </div>
                </md-list>
             </md-content>

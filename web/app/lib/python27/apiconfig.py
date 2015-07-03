@@ -85,7 +85,7 @@ def get_image_url(image):
 
 def is_admin(user):
     try:
-        if user.perms is COUNCIL or user.perms is LEADERSHIP:
+        if user.perms == COUNCIL or user.perms == LEADERSHIP:
             return True
         return False
     except TypeError:

@@ -5,17 +5,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
    $scope.me = Session.me.key;
 
    Chatter.get();
-   console.log('chatterinfo', Chatter.get());
-
    if (Chatter.data){
       console.log("chatter is", Chatter.data.chatter);
-      $scope.chatter = Chatter.data.chatter;
-      $scope.important_chatter = Chatter.data.important_chatter;
+      $scope.chatter = Chatter.data.feed;
+      $scope.important_chatter = Chatter.data.important;
    }
 
    $scope.$on('chatter:updated', function(){
-      $scope.chatter = Chatter.data.chatter;
-      $scope.important_chatter = Chatter.data.important_chatter;
+      $scope.chatter = Chatter.data.feed;
+      $scope.important_chatter = Chatter.data.important;
    });
 
    $scope.likeChatter = function(chatter){
@@ -35,7 +33,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       });
    };
 
-
    function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
       Chatter.getComments(scope.chat);
@@ -50,9 +47,9 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          Chatter.like(chatter);
       };
 
-      scope.commentonChatter = function(key, content){
-         Chatter.comment(key, content);
-         console.log('comment button pressed');
+      scope.commentOnChatter = function(chatter, content){
+         Chatter.comment(chatter, content);
+         scope.comment = "";
       };
 
       scope.editChatter = function(content){
@@ -80,7 +77,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          console.log(scope.chat);
          $mdDialog.hide();
          scope.confirmDelete = false;
-         Chatter.delete(scope.chat.key, scope.chat.content);
+         Chatter.delete(scope.chat, scope.chat.content);
          for (var i = 0; i < $scope.chatter.length; i++){
             if ($scope.chatter[i].key == scope.chat.key){
                $scope.chatter.splice(i, 1);
@@ -88,11 +85,19 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          }
       };
 
+      scope.deleteComment = function(comment){
+         Chatter.deleteComment(comment);
+         for (var i = 0; i < scope.chat.comments.length; i++){
+            if (comment.key == scope.chat.comments[i].key){
+               scope.chat.comments.splice(i, 1);
+            }
+         }
+      }
+
       scope.saveComment = function(comment){
          comment.content = comment.comment_temp;
          comment.editingComment = false;
          Chatter.saveComment(comment.key, comment.content);
-
       };
 
       scope.editComment = function(comment){
@@ -103,6 +108,10 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.cancelEditComment = function(comment){
          comment.editingComment = false;
       };
+
+      scope.likeComment = function(comment){
+         Chatter.likeComment(comment);
+      }
 
    }
 
@@ -122,7 +131,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          Chatter.create(content);
          mdDialog.hide();
       };
-
    }
 }
 ]);

@@ -58,7 +58,7 @@
                   <div class="commentOptions">
                      <md-button ng-hide="comment.editingComment" class="btn-touch md-primary" aria-label="edit comment" ng-click="editComment(comment)" ng-show="comment.author.key == me"><i class="fa fa-edit"></i></md-button>
                      <md-button ng-hide="comment.editingComment" class="btn-touch md-primary" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete" ng-show="comment.author.key == me"><i class="fa fa-trash"></i></md-button>
-                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment.key);"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes.length}}</span></md-button>
+                     <md-button ng-hide="comment.editingComment" class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment);"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
                   </div>
                </md-list-item>
                <md-toolbar ng-show="comment.editingComment" class="md-primary slideDown">
@@ -71,7 +71,7 @@
                <md-toolbar ng-show="comment.confirmDelete" class="md-warn slideDown">
                   <div class="md-toolbar-tools">
                      <span flex></span>
-                     <md-button ng-click="deleteComment(comment.key)">Delete</md-button>
+                     <md-button ng-click="deleteComment(comment)">Delete</md-button>
                      <md-button ng-click="comment.confirmDelete = !comment.confirmDelete">Cancel</md-button>
                   </div>
                </md-toolbar>
@@ -88,7 +88,7 @@
    </md-content>
    <div class="md-actions" layout="row">
       <span flex></span>
-      <md-button class="md-primary" ng-disabled="!comment.length" ng-click="commentonChatter(chat.key, comment)">
+      <md-button class="md-primary" ng-disabled="!comment.length" ng-click="commentOnChatter(chat, comment)">
          Comment
       </md-button>
       <md-button ng-click="hide()">
