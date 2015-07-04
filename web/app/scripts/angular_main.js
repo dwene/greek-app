@@ -42,6 +42,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/")
         .when("/", "/app/home")
         .when("/app", "/app/home")
+        .when("/app/chatter", "/app/home")
         .when("/app/managemembers", "/app/managemembers/manage")
         .when("/app/managealumni", "/app/managealumni/manage")
         .when("/app/directory", "/app/directory/members")
@@ -105,14 +106,14 @@ App.config(function($stateProvider, $urlRouterProvider) {
 
             .state('app.home', {
                 url : '/home',
-                templateUrl : 'views/apphome.html',
-                controller : 'appHomeController',
-            })
-            .state('app.chatter', {
-                url:'/chatter',
                 templateUrl : 'views/chatter.html',
-                controller : 'chatterController'
+                controller : 'chatterController',
             })
+            // .state('app.chatter', {
+            //     url:'/chatter',
+            //     templateUrl : 'views/chatter.html',
+            //     controller : 'chatterController'
+            // })
             .state('app.managemembers', {
                     url : '/managemembers',
                     templateUrl : 'views/managemembers.html',

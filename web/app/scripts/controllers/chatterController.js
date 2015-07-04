@@ -36,7 +36,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
    function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
       Chatter.getComments(scope.chat);
-      var selectedComment;
+      console.log(scope.chat);
       scope.me = Session.me.key;
 
       scope.hide = function(){
@@ -74,7 +74,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       };
 
       scope.deleteChatter = function(){
-         console.log(scope.chat);
          $mdDialog.hide();
          scope.confirmDelete = false;
          Chatter.delete(scope.chat, scope.chat.content);
@@ -112,6 +111,16 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.likeComment = function(comment){
          Chatter.likeComment(comment);
       }
+      scope.deleteComment = function(comment){
+         comment.confirmDelete = false;
+         console.log(comment);
+         Chatter.deleteComment(comment.key);
+         for (var i = 0; i < scope.chat.comments.length; i++){
+            if (scope.chat.comments[i].key == scope.chat.comments.key){
+               scome.chat.comments.splice(i, 1);
+            }
+         }
+      };
 
    }
 
