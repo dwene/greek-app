@@ -2,19 +2,47 @@ App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$md
 
 function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory, Chatter, Session){
 
-   $scope.me = Session.me.key;
-
+   $scope.me = Session.me;
    Chatter.get();
+   Chatter.getImportant();
+
+   $scope.loadImportant = function(){
+      Chatter.getImportant();
+   }
+   $scope.currentFeed = $scope.chatter;
+   $scope.$watch('data.selectedIndex', function(){
+      defineFeed();
+   });
+
+   function defineFeed(){
+      if ($scope.data){
+         if ($scope.data.selectedIndex  == 0){
+            $scope.currentFeed = $scope.chatter;
+         }
+         else{
+            $scope.currentFeed = $scope.important_chatter;
+         }
+      }
+      else{
+         $scope.currentFeed = $scope.chatter;
+      }
+      console.log("currentFeed", $scope.currentFeed);
+   }
+
    if (Chatter.data){
       console.log("chatter is", Chatter.data.chatter);
       $scope.chatter = Chatter.data.feed;
       $scope.important_chatter = Chatter.data.important;
+      defineFeed();
    }
 
    $scope.$on('chatter:updated', function(){
       $scope.chatter = Chatter.data.feed;
       $scope.important_chatter = Chatter.data.important;
+      defineFeed();
    });
+
+   defineFeed();
 
    $scope.likeChatter = function(chatter){
       Chatter.like(chatter);
@@ -37,7 +65,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.chat = $scope.chat;
       Chatter.getComments(scope.chat);
       console.log(scope.chat);
-      scope.me = Session.me.key;
+      scope.me = Session.me;
 
       scope.hide = function(){
          mdDialog.hide();
@@ -65,7 +93,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.saveChatter = function(content_temp){
          scope.editing = false;
          scope.chat.content = content_temp;
-         Chatter.edit(scope.chat.key, scope.chat.content);
+         Chatter.edit(scope.chat, scope.chat.content);
       };
 
       scope.makeImportant = function(key){
@@ -96,7 +124,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.saveComment = function(comment){
          comment.content = comment.comment_temp;
          comment.editingComment = false;
-         Chatter.saveComment(comment.key, comment.content);
+         Chatter.saveComment(comment, comment.content);
       };
 
       scope.editComment = function(comment){
@@ -121,7 +149,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
             }
          }
       };
-
    }
 
    $scope.newChatter = function(){
@@ -137,7 +164,11 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       };
 
       scope.addChatter = function(content){
-         Chatter.create(content);
+         if ($scope.data.selectedIndex == 1){
+            Chatter.create(content, true);
+         } else{
+            Chatter.create(content, false);
+         }
          mdDialog.hide();
       };
    }

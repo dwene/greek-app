@@ -453,7 +453,7 @@ module.exports = function (grunt) {
     // 'concat:dist',
     'ngAnnotate',
     'copy:dist',
-    'cdnify',
+    // 'cdnify',
     'cssmin',
     'uglify',
     'filerev',

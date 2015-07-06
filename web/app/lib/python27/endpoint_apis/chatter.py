@@ -3,6 +3,7 @@ from apiconfig import *
 from protorpc import remote
 import datetime
 import logging
+from pushfactory import PushFactory
 
 chatter_api = endpoints.api(name='chatter', version='v1',
                             allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
@@ -21,7 +22,7 @@ class ChatterApi(remote.Service):
             starts_with = data["offset"]
         if "important" in data and data["important"] is True:
             chatters_future = Chatter.query(Chatter.organization == request_user.organization,
-                                            Chatter.important is True).order(
+                                            Chatter.important == True).order(
                                             -Chatter.timestamp).fetch_async(20, offset=starts_with)
         else:
             chatters_future = Chatter.query(Chatter.organization == request_user.organization)\
@@ -90,10 +91,11 @@ class ChatterApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        if 'content' not in data:
+        if not all(k in data for k in ('content', 'important')):
             return OutgoingMessage(error='Missing arguments in new Chatter.', data='')
         chatter = Chatter()
         chatter.content = data['content']
+        chatter.important = data['important']
         chatter.author = request_user.key
         chatter.timestamp = datetime.datetime.now()
         chatter.organization = request_user.organization
@@ -106,6 +108,7 @@ class ChatterApi(remote.Service):
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
+        PushFactory.channel_send("New Chatter!", [request_user], "Chatter")
         return OutgoingMessage(error='', data=json_dump(chat))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='delete',
@@ -142,10 +145,11 @@ class ChatterApi(remote.Service):
         if not (chatter.author == request_user.key):
             return OutgoingMessage(error='Incorrect Permissions', data='')
         chatter.content = data["content"]
+        chatter.edited = datetime.datetime.now()
         chatter.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='flag_importance',
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='important',
                       http_method='POST', name='chatter.importance')
     def change_important_flag(self, request):
         request_user = get_user(request.user_name, request.token)
@@ -164,7 +168,7 @@ class ChatterApi(remote.Service):
         else:
             chatter.important = False
         chatter.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump(chatter.important))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='like',
                       http_method='POST', name='chatter.like')
@@ -213,6 +217,7 @@ class ChatterApi(remote.Service):
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
+
         return OutgoingMessage(error='', data=json_dump(comm))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
@@ -222,19 +227,17 @@ class ChatterApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        if not all(k in data for k in ("like", "key")):
+        if "key" not in data:
             return OutgoingMessage(error='Missing arguments in new Chatter.')
         comment = ndb.Key(urlsafe=data["key"]).get()
         if not str(type(comment)).startswith("ChatterComment"):
             return OutgoingMessage(error='Incorrect type of Key', data='')
-        if data["like"] is True:
-            if request_user.key not in comment.likes:
-                comment.likes.append(request_user.key)
-        if data["like"] is False:
-            if request_user.key in comment.likes:
-                comment.likes.remove(request_user.key)
+        if request_user.key in comment.likes:
+            comment.likes.remove(request_user.key)
+        else:
+            comment.likes.append(request_user.key)
         comment.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump(request_user.key in comment.likes))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/edit',
                       http_method='POST', name='chatter.edit_comment')
@@ -251,8 +254,9 @@ class ChatterApi(remote.Service):
         if not (comment.author == request_user.key):
             return OutgoingMessage(error='Incorrect Permissions', data='')
         comment.content = data["content"]
+        comment.edited = datetime.datetime.now()
         comment.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=ndb_to_json(comment))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/delete',
                       http_method='POST', name='chatter.delete_comment')

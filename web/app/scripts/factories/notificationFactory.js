@@ -64,6 +64,11 @@ App.factory('Notifications', ['RESTService', '$rootScope', 'localStorageService'
                     console.log('Error: ', data);
                 });
         }
+        item.add = function(notify){
+            item.notifs.push(notify);
+            localStorageService.set('notifications', item.notifs);
+            $rootScope.$broadcast('notifications:updated');
+        }
         item.get = function() {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
                 .success(function(data) {

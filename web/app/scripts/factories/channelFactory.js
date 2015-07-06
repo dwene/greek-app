@@ -1,5 +1,5 @@
 angular.module('App')
-     .factory('Channels', function($rootScope, RESTService){
+     .factory('Channels', function($rootScope, RESTService, ChannelMessageHandler){
         var item = {};
         item.connect = function() {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/channels/v1/get_token', '')
@@ -9,6 +9,7 @@ angular.module('App')
                         var socket = new SocketHandler(JSON.parse(data.data));
                         socket.onMessage(function (data) {
                             console.log("I just got a new message!", data);
+                            ChannelMessageHandler.handle(data);
                         });
                     } else {
                         console.log('Channels get token Get Error: ', data);
@@ -21,6 +22,23 @@ angular.module('App')
         return item;
      });
 
+angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notifications){
+    var self = {};
+    self.handle = function(msg){
+        // var msg = JSON.parse(jsonMessage);
+        if (message.type == 'notification'){
+            Notifications.add(msg.content);
+        }
+        else if(message.type === 'Chatter'){
+            console.log('I see there is a new chatter!');
+            Chatter.update(msg.content)
+        }
+        else if(message.type === 'ChatterComment'){
+            Chatter.updateComment(msg.content)
+        }
+    }
+    return self;
+});
 
 var SocketHandler = function(tokenID) {
     this.messageCallback = function () {

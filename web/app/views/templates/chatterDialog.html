@@ -6,14 +6,14 @@
                <img src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" alt="{{chat.author.first_name}}" class="md-avatar">
                <h3>{{chat.author.first_name}} {{chat.author.last_name}}</h3>
                <span flex></span>
-               <md-button ng-hide="editing" class="btn-touch" ng-click="editChatter(chat.content)" aria-label="edit" ng-show="chat.author.key == me"><i class="fa fa-pencil-square-o"></i></md-button>
-               <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat.key)" aria-label="mark important"><i class="fa fa-star-o"></i>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="editChatter(chat.content)" aria-label="edit" ng-show="chat.author.key == me.key"><i class="fa fa-pencil-square-o"></i></md-button>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !chat.important, 'fa-star': chat.important}"></i>
                   <md-tooltip md-direction="bottom">
                      Make Important
                   </md-tooltip>
                </md-button>
-               <md-button md-no-ink class="btn-touch heart" aria-label="like chatter" ng-click="likeChatter(chat);" ng-hide="chat.author.key == me"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i></md-button>
-               <md-button ng-hide="editing" class="btn-touch" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete" ng-show="chat.author.key == me"><i class="fa fa-trash"></i></md-button>
+               <md-button md-no-ink class="btn-touch heart" aria-label="like chatter" ng-click="likeChatter(chat);" ng-hide="chat.author.key == me.key"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i></md-button>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete" ng-show="chat.author.key == me.key"><i class="fa fa-trash"></i></md-button>
             </md-list-item>
          </div>
       </md-toolbar>
@@ -35,7 +35,7 @@
             <md-button ng-show="editing" class="slideDown md-primary" ng-click="saveChatter(content_temp)">save</md-button>
             <md-button ng-show="editing" class="slideDown md-primary" ng-click="cancelEditChatter()">cancel</md-button>
          </div>
-      <p class="details">{{chat.likes}} likes | {{chat.comments.length}} comments | {{chat.timestamp | displayTime}} </p>
+      <p class="details">{{chat.likes}} likes | {{chat.comments.length}} comments | {{chat.edited? "Edited":""}} {{(chat.edited? chat.edited:chat.timestamp) | displayTime}} </p>
       </div>
 
 
@@ -46,20 +46,23 @@
                   <label for="commentcontent">Edit your comment here:</label>
                   <textarea id="commentcontent" ng-model="comment.comment_temp" name="content"></textarea>
                </md-input-container>
-               <md-list-item ng-hide="comment.editingComment" layout="row" layout-sm="column">
-                  <div layout="row" style="width:100%;">
-                     <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
-                     <div class="md-list-item-text">
-                        <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.timestamp | displayTime}}</p>
-                        <h3 >{{comment.content}}</h3>
+               <md-list-item ng-hide="comment.timestamp">
+                  <md-progress-circular md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+               </md-list-item>
+               <md-list-item ng-hide="comment.editingComment || !comment.timestamp" layout="row" layout-sm="column">
+                     <div layout="row" style="width:100%;">
+                        <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
+                        <div class="md-list-item-text">
+                           <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.edited? "Edited":""}} {{(comment.edited?comment.edited:comment.timestamp) | displayTime}}</p>
+                           <h3 >{{comment.content}}</h3>
+                        </div>
                      </div>
-                  </div>
-                  <span flex></span>
-                  <div class="commentOptions">
-                     <md-button class="btn-touch md-primary heart pull-right" aria-label="like comment" ng-click="likeComment(comment);" ng-hide="comment.author.key == me || comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
-                     <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete" ng-show="(comment.author.key == me) && !comment.editingComment"><i class="fa fa-trash"></i></md-button>
-                     <md-button class="btn-touch md-primary pull-right" aria-label="edit comment" ng-click="editComment(comment)" ng-show="(comment.author.key == me) && !comment.editingComment"><i class="fa fa-edit"></i></md-button>
-                  </div>
+                     <span flex></span>
+                     <div class="commentOptions">
+                        <md-button class="btn-touch md-primary heart pull-right" aria-label="like comment" ng-click="likeComment(comment);" ng-hide="comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
+                        <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete" ng-show="(comment.author.key == me.key) && !comment.editingComment"><i class="fa fa-trash"></i></md-button>
+                        <md-button class="btn-touch md-primary pull-right" aria-label="edit comment" ng-click="editComment(comment)" ng-show="(comment.author.key == me.key) && !comment.editingComment"><i class="fa fa-edit"></i></md-button>
+                     </div>
                </md-list-item>
                <md-toolbar ng-show="comment.editingComment" class="md-primary slideDown">
                   <div class="md-toolbar-tools">

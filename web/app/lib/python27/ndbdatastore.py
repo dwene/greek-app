@@ -173,6 +173,7 @@ class EmailTask(ndb.Model):
     title = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
 
+
 class PushTask(ndb.Model):
     pending = ndb.BooleanProperty()
     content = ndb.StringProperty()
@@ -182,11 +183,13 @@ class PushTask(ndb.Model):
     data = ndb.StringProperty()
     user = ndb.KeyProperty()
 
+
 class Link(ndb.Model):
     title = ndb.StringProperty()
     link = ndb.StringProperty()
     group = ndb.StringProperty()
     organization = ndb.KeyProperty()
+
 
 class Chatter(ndb.Model):
     content = ndb.TextProperty()
@@ -195,7 +198,9 @@ class Chatter(ndb.Model):
     comments = ndb.KeyProperty(repeated=True)
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
     likes = ndb.KeyProperty(repeated=True)
-    important = ndb.BooleanProperty()
+    important = ndb.BooleanProperty(default=False)
+    edited = ndb.DateTimeProperty()
+
 
 class ChatterComment(ndb.Model):
     organization = ndb.KeyProperty()
@@ -204,3 +209,4 @@ class ChatterComment(ndb.Model):
     author = ndb.KeyProperty()
     timestamp = ndb.DateTimeProperty()
     likes = ndb.KeyProperty(repeated=True)
+    edited = ndb.DateTimeProperty()

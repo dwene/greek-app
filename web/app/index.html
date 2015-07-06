@@ -33,6 +33,7 @@
     <!--[if lt IE 9]>
         <script src="scripts/vendor/html5-3.6-respond-1.1.0.min.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>    
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- bower:js -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -85,7 +86,6 @@
 <!--     <script type="text/javascript" src="https://greek-app.appspot.com/_ah/channel/jsapi"></script>
 
  -->
-    <script type="text/javascript" src="http://localhost:9002/_ah/channel/jsapi"></script>    
     <script type="text/javascript" src="scripts/vendor/ngAutocomplete.js"></script>
     <script type="text/javascript" src="scripts/vendor/ng-google-chart.js"></script>
     <script type="text/javascript" src="scripts/vendor/angular-local-storage.js"></script>
@@ -147,8 +147,12 @@
     <script type="text/javascript" src="scripts/factories/SessionService.js"></script>
     <script type="text/javascript" src="scripts/factories/httpFactory.js"></script>
     <script type="text/javascript" src="scripts/factories/notificationFactory.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/unminified.js -->
     <script type="text/javascript" src="scripts/factories/channelFactory.js"></script>
     <!-- endbuild -->
+
 
 </head>
 <body ng-app="App" ng-controller="indexController as main" md-theme="{{$root.color}}" class="theme-{{$root.color}}" ng-cloak>

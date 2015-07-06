@@ -32,12 +32,13 @@ from google.appengine.api import urlfetch
 from apns import APNs, Frame, Payload
 import json
 from google.appengine.api import channel
-import braintree
+# import braintree
 import logging
 import datetime
 import jinja2
 import webapp2
 import base64, re
+from apiconfig import json_dump
 from notifications import Notifications
 
 
@@ -119,97 +120,97 @@ def check_birthdays():
     return
 
 
-def check_subscriptions():
-    organizations = Organization.query().fetch()
-    for organization in organizations:
-        if organization.subscribed:
-            if organization.cancel_subscription:
-                if organization.cancel_subscription >= datetime.date.today():
-                    organization.subscribed = False
-                users = User.query(User.organization == organization.key).fetch()
-                for user in users:
-                    email = EmailTask()
-                    email.title = 'Subscription Canceled'
-                    email.content = """
-                    This is a notice that you are no longer a premium member with NeteGreek.
-
-                    If you would like to renew your premium membership with us please signup again at app.netegreek.com.
-
-                    -NeteGreek Team
-                    """
-                    email.email = user.email
-                    email.pending = True
-                    email.type = 'cancellation_notice'
-                    email.put()
-            elif organization.subscription_id:
-                subscription = braintree.Subscription.find(organization.subscription_id)
-                if subscription.days_past_due == 2 and not subscription.canceled and organization.subscribed:
-                    users = User.query(User.organization == organization.key).fetch()
-                    for user in users:
-                        email = EmailTask()
-                        email.title = 'Payments Missed'
-                        email.content = """
-                        This is a notice that your organization is now 2+ days late on payment.\n\n
-
-                        Please check to see if you have been billed for this month and contact us at support@netegreek.com
-                        if you believe you are receiving this in error. If not, please ensure that you have enough funds
-                        in the card's account to process this or change the card given on the subscription page.
-                        We will try to draw funds again tomorrow.\n\n
-
-                        Thanks!\n\n
-
-                        -NeteGreek Team
-                        """
-                        email.email = user.email
-                        email.pending = True
-                        email.type = 'late_payment_notice'
-                        email.put()
-                elif subscription.days_past_due >= 3 and not subscription.canceled and organization.subscribed:
-                    retry_result = braintree.Subscription.retry_charge(
-                        organization.subscription_id
-                    )
-                    if not retry_result.is_success:
-                        braintree.Subscription.cancel(organization.subscription_id)
-                        organization.subscription_id = None
-                        organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
-                        users = User.query(User.organization == organization.key).fetch()
-                        for user in users:
-                            email = EmailTask()
-                            email.title = 'Payments Missed'
-                            email.content = """
-                            This is a notice that your organization is now 4+ days late on payment.\n\n
-
-                            We have canceled your subscription and your premium access will be removed within 2 days
-                            unless your organization re-subscribes.\n\n
-
-                            -NeteGreek Team
-                            """
-                            email.email = user.email
-                            email.pending = True
-                            email.type = 'late_payment_notice2'
-                            email.put()
-                    elif subscription.days_past_due >= 4 and not subscription.canceled and organization.subscribed:
-                        braintree.Subscription.cancel(organization.subscription_id)
-                        organization.subscription_id = None
-                        organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
-                        users = User.query(User.organization == organization.key).fetch()
-                        for user in users:
-                            email = EmailTask()
-                            email.title = 'Payments Missed'
-                            email.content = """
-                            This is a notice that your organization is now 4+ days late on payment.\n\n
-
-                            We have canceled your subscription and your premium access will be removed within 2 days
-                            unless your organization re-subscribes.\n\n
-
-                            -NeteGreek Team
-                            """
-                            email.email = user.email
-                            email.pending = True
-                            email.type = 'late_payment_notice2'
-                            email.put()
-        organization.put()
-    return
+# def check_subscriptions():
+#     organizations = Organization.query().fetch()
+#     for organization in organizations:
+#         if organization.subscribed:
+#             if organization.cancel_subscription:
+#                 if organization.cancel_subscription >= datetime.date.today():
+#                     organization.subscribed = False
+#                 users = User.query(User.organization == organization.key).fetch()
+#                 for user in users:
+#                     email = EmailTask()
+#                     email.title = 'Subscription Canceled'
+#                     email.content = """
+#                     This is a notice that you are no longer a premium member with NeteGreek.
+#
+#                     If you would like to renew your premium membership with us please signup again at app.netegreek.com.
+#
+#                     -NeteGreek Team
+#                     """
+#                     email.email = user.email
+#                     email.pending = True
+#                     email.type = 'cancellation_notice'
+#                     email.put()
+#             elif organization.subscription_id:
+#                 subscription = braintree.Subscription.find(organization.subscription_id)
+#                 if subscription.days_past_due == 2 and not subscription.canceled and organization.subscribed:
+#                     users = User.query(User.organization == organization.key).fetch()
+#                     for user in users:
+#                         email = EmailTask()
+#                         email.title = 'Payments Missed'
+#                         email.content = """
+#                         This is a notice that your organization is now 2+ days late on payment.\n\n
+#
+#                         Please check to see if you have been billed for this month and contact us at support@netegreek.com
+#                         if you believe you are receiving this in error. If not, please ensure that you have enough funds
+#                         in the card's account to process this or change the card given on the subscription page.
+#                         We will try to draw funds again tomorrow.\n\n
+#
+#                         Thanks!\n\n
+#
+#                         -NeteGreek Team
+#                         """
+#                         email.email = user.email
+#                         email.pending = True
+#                         email.type = 'late_payment_notice'
+#                         email.put()
+#                 elif subscription.days_past_due >= 3 and not subscription.canceled and organization.subscribed:
+#                     retry_result = braintree.Subscription.retry_charge(
+#                         organization.subscription_id
+#                     )
+#                     if not retry_result.is_success:
+#                         braintree.Subscription.cancel(organization.subscription_id)
+#                         organization.subscription_id = None
+#                         organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
+#                         users = User.query(User.organization == organization.key).fetch()
+#                         for user in users:
+#                             email = EmailTask()
+#                             email.title = 'Payments Missed'
+#                             email.content = """
+#                             This is a notice that your organization is now 4+ days late on payment.\n\n
+#
+#                             We have canceled your subscription and your premium access will be removed within 2 days
+#                             unless your organization re-subscribes.\n\n
+#
+#                             -NeteGreek Team
+#                             """
+#                             email.email = user.email
+#                             email.pending = True
+#                             email.type = 'late_payment_notice2'
+#                             email.put()
+#                     elif subscription.days_past_due >= 4 and not subscription.canceled and organization.subscribed:
+#                         braintree.Subscription.cancel(organization.subscription_id)
+#                         organization.subscription_id = None
+#                         organization.cancel_subscription = datetime.date.today() + datetime.timedelta(days=2)
+#                         users = User.query(User.organization == organization.key).fetch()
+#                         for user in users:
+#                             email = EmailTask()
+#                             email.title = 'Payments Missed'
+#                             email.content = """
+#                             This is a notice that your organization is now 4+ days late on payment.\n\n
+#
+#                             We have canceled your subscription and your premium access will be removed within 2 days
+#                             unless your organization re-subscribes.\n\n
+#
+#                             -NeteGreek Team
+#                             """
+#                             email.email = user.email
+#                             email.pending = True
+#                             email.type = 'late_payment_notice2'
+#                             email.put()
+#         organization.put()
+#     return
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -239,7 +240,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         user_name = self.request.get('user_name')
         token = self.request.get('token')
         upload_type = self.request.get('type')
-        # logging.error('This is my type:' + upload_type)
         user = get_user(user_name, token)
         if not user:
             self.redirect(DOMAIN + '/#/login')
@@ -310,7 +310,7 @@ class MorningTasks(webapp2.RequestHandler):
         if 'X-Appengine-Cron' not in self.request.headers:
             return
         check_birthdays()
-        check_subscriptions()
+        # check_subscriptions()
         old_cron_email_tasks = EmailTask.query(EmailTask.timestamp > datetime.datetime.now() +
                                                datetime.timedelta(days=20)).fetch(keys_only=True)
         for key in old_cron_email_tasks:
@@ -391,15 +391,31 @@ class SendDailyNotificationsEmails(webapp2.RequestHandler):
             # </body></html>
             #  """
 
+
 class Connected(webapp2.RequestHandler):
     def post(self):
-        logging.error(self.request.get('from'))
         return
+
 
 class Disconnected(webapp2.RequestHandler):
     def post(self):
         logging.error(self.request.get('from'))
+        token = self.request.get('from')
+        user = User.query(User.channel_tokens == token).get()
+        user.channel_tokens.remove(token)
+        user.put()
         return
+
+
+class SendChannel(webapp2.RedirectHandler):
+    def post(self):
+        incoming = self.request.get('data')
+        job = json.loads(incoming)
+        tokens = job['tokens']
+        job['tokens'] = None
+        packet = json_dump(job)
+        for token in tokens:
+            channel.send_message(token, packet)
 
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
@@ -415,7 +431,8 @@ app = webapp2.WSGIApplication([
     ('/tasks/sendpushnotifications', SendPushNotifications),
     ('/dailynotifications', SendDailyNotificationsEmails),
     ('/morningtasks', MorningTasks),
-    ('/send', ChannelHandler),
     ('/_ah/channel/connected/', Connected),
     ('/_ah/channel/disconnected/', Disconnected),
+    ('/tasks/channels/send/', SendChannel),
+
 ], debug=True)
