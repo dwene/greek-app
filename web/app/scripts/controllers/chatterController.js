@@ -8,7 +8,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
    $scope.loadImportant = function(){
       Chatter.getImportant();
-   }
+   };
    $scope.currentFeed = $scope.chatter;
    $scope.$watch('data.selectedIndex', function(){
       defineFeed();
@@ -16,7 +16,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
    function defineFeed(){
       if ($scope.data){
-         if ($scope.data.selectedIndex  == 0){
+         if ($scope.data.selectedIndex === 0){
             $scope.currentFeed = $scope.chatter;
          }
          else{
@@ -46,10 +46,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
    $scope.likeChatter = function(chatter){
       Chatter.like(chatter);
-   };
-
-   $scope.makeImportant = function(chat){
-      //somehow make this chat important
    };
 
    $scope.openChatter = function(chat){
@@ -98,7 +94,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
       scope.makeImportant = function(key){
          Chatter.makeImportant(key);
-         console.log('important button pushed');
       };
 
       scope.deleteChatter = function(){
@@ -119,7 +114,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
                scope.chat.comments.splice(i, 1);
             }
          }
-      }
+      };
 
       scope.saveComment = function(comment){
          comment.content = comment.comment_temp;
@@ -138,7 +133,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
       scope.likeComment = function(comment){
          Chatter.likeComment(comment);
-      }
+      };
       scope.deleteComment = function(comment){
          comment.confirmDelete = false;
          console.log(comment);
