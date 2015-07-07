@@ -140,6 +140,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 chat.like = true;
                 chat.likes ++;
             }
+            chat.following = true;
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/like', {key:chat.key})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
@@ -168,6 +169,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
                         chat.comments.push(JSON.parse(data.data))
+                        chat.following = true;
                     } else {
                         console.log('Err', data);
                     }
@@ -299,6 +301,36 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     console.log('Error: ', data);
                 });
         };
+
+        chatter.mute = function(chat){
+            if (chat.mute){
+                chat.mute = false;
+            }
+            else{
+                chat.mute = true;
+            }
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/mute', {key:chat.key})
+            .success(function(data){
+                if (!RESTService.hasErrors(data)) {
+                        for (var i = 0; i < chatter.data.feed.length; i++){
+                           if (chat.key == chatter.data.feed[i].key){
+                                chatter.data.feed[i] = chat;
+                            }
+                        }
+                        for (var i = 0; i < chatter.data.important.length; i++){
+                            if (chat.key == chatter.data.important[i].key){
+                                chatter.data.important[i] = chat;
+                            }
+                        }
+
+                } else {
+                    console.log('Err', data);
+                }
+            })
+            .error(function(data){
+                console.log('Error: ', data);
+            });
+        }
         return chatter;
     }
 ]);

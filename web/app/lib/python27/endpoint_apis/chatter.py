@@ -33,20 +33,19 @@ class ChatterApi(remote.Service):
             local_chatter_dict = chatter.to_dict()
             local_chatter_dict["key"] = chatter.key
             chatter_dict.append(local_chatter_dict)
-
         for chatter in chatter_dict:
             chatter["author_future"] = chatter["author"].get_async()
-            if request_user.key in chatter["likes"]:
-                chatter["like"] = True
-
-        for chatter in chatter_dict:
+            chatter["like"] = request_user.key in chatter["likes"]
             chatter["likes"] = len(chatter["likes"])
+            chatter["mute"] = request_user.key in chatter['muted']
+            chatter["following"] = request_user.key in chatter['following']
             author = chatter["author_future"].get_result()
             chatter["author"] = {"first_name": author.first_name,
                                  "last_name": author.last_name,
                                  "prof_pic": get_image_url(author.prof_pic),
                                  "key": chatter["author"]}
             del chatter["author_future"]
+            del chatter["muted"]
         return OutgoingMessage(error='', data=json_dump(chatter_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comments/get',
@@ -99,8 +98,11 @@ class ChatterApi(remote.Service):
         chatter.author = request_user.key
         chatter.timestamp = datetime.datetime.now()
         chatter.organization = request_user.organization
+        chatter.following = [request_user.key]
         chatter.put()
         chat = ndb_to_dict(chatter)
+        chat['following'] = True
+        chat['mute'] = False
         chat['comments'] = list()
         chat['like'] = False
         chat['likes'] = 0
@@ -108,6 +110,7 @@ class ChatterApi(remote.Service):
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
+        del chat['muted']
         PushFactory.channel_send("New Chatter!", [request_user], "Chatter")
         return OutgoingMessage(error='', data=json_dump(chat))
 
@@ -183,6 +186,7 @@ class ChatterApi(remote.Service):
         chatter = ndb.Key(urlsafe=data["key"]).get()
         if request_user.key not in chatter.likes:
             chatter.likes.append(request_user.key)
+            chatter.following = list(set(chatter.following + chatter.likes))
             chatter.put()
             like = True
         else:
@@ -209,6 +213,8 @@ class ChatterApi(remote.Service):
         comment.content = data["content"]
         comment.chatter = chatter.key
         chatter.comments.append(comment.put())
+        if request_user.key not in chatter.following:
+            chatter.following.append(request_user.key)
         chatter.put()
         comm = ndb_to_dict(comment)
         comm['like'] = False
@@ -217,7 +223,6 @@ class ChatterApi(remote.Service):
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
-
         return OutgoingMessage(error='', data=json_dump(comm))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
@@ -281,4 +286,21 @@ class ChatterApi(remote.Service):
         futures.append(comment.key.delete_async())
         for future in futures:
             future.get_result()
+        return OutgoingMessage(error='', data='OK')
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='mute',
+                      http_method='POST', name='chatter.mute')
+    def mute_chatter(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        if not "key" in data:
+            return OutgoingMessage(error='Missing arguments in new Chatter.')
+        chatter = ndb.Key(urlsafe=data['key']).get()
+        if request_user.key in chatter.following:
+            chatter.following.remove(request_user.key)
+        else:
+            chatter.following.append(request_user.key)
+        chatter.put()
         return OutgoingMessage(error='', data='OK')

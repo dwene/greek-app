@@ -128,6 +128,7 @@ class Organization(ndb.Model):
     image = ndb.BlobKeyProperty()
     link_groups = ndb.StringProperty(repeated=True)
 
+
 class Poll(ndb.Model):
     questions = ndb.KeyProperty(repeated=True)
     results_org_tags = ndb.StringProperty(repeated=True)  # people who get the results of this poll
@@ -181,25 +182,27 @@ class PushTask(ndb.Model):
     ios_tokens = ndb.StringProperty(repeated=True)
     channel_tokens = ndb.StringProperty(repeated=True)
     data = ndb.StringProperty()
-    user = ndb.KeyProperty()
+    user = ndb.KeyProperty(kind=User)
 
 
 class Link(ndb.Model):
     title = ndb.StringProperty()
     link = ndb.StringProperty()
     group = ndb.StringProperty()
-    organization = ndb.KeyProperty()
+    organization = ndb.KeyProperty(kind=Organization)
 
 
 class Chatter(ndb.Model):
     content = ndb.TextProperty()
-    organization = ndb.KeyProperty()
-    author = ndb.KeyProperty()
-    comments = ndb.KeyProperty(repeated=True)
+    organization = ndb.KeyProperty(kind=Organization)
+    author = ndb.KeyProperty(kind=User)
+    comments = ndb.KeyProperty(repeated=True, kind=ChatterComment)
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
-    likes = ndb.KeyProperty(repeated=True)
+    likes = ndb.KeyProperty(repeated=True, kind=User)
     important = ndb.BooleanProperty(default=False)
     edited = ndb.DateTimeProperty()
+    muted = ndb.KeyProperty(repeated=True, kind=User)
+    following = ndb.KeyProperty(repeated=True, kind=User)
 
 
 class ChatterComment(ndb.Model):
