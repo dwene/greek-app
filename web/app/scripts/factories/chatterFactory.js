@@ -1,10 +1,11 @@
 App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q', '$mdToast',
     function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
-        
+
         var chatter = {};
         chatter.hasLoaded = false;
         chatter.data = {};
         var meta = {feedLoaded: false, importantLoaded: false};
+        var i;
 
         var load_data = localStorageService.get('chatter');
         if (load_data) {
@@ -21,7 +22,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     break;
                 }
             }
-            for (var i = 0; i < chatter.data.important.length; i++){
+            for (i = 0; i < chatter.data.important.length; i++){
                 if (chatter.data.important[i].key == chat.key){
                     chatter.data.important[i] = chat;
                     has_changed = true;
@@ -52,7 +53,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             if (has_changed) {
                 $rootScope.$broadcast('chatter:updated');
             }
-        };
+        }
 
         chatter.get = function() {
             if (meta.feedLoaded) {
@@ -149,7 +150,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                                 chatter.data.feed[i] = chat;
                             }
                         }
-                        for (var i = 0; i < chatter.data.important.length; i++){
+                        for (i = 0; i < chatter.data.important.length; i++){
                             if (chat.key == chatter.data.important[i].key){
                                 chatter.data.important[i] = chat;
                             }
@@ -163,12 +164,12 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 console.log('Error: ', data);
             });
         };
-        
+
         chatter.comment = function(chat, content){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/post', {key:chat.key, content:content})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                        chat.comments.push(JSON.parse(data.data))
+                        chat.comments.push(JSON.parse(data.data));
                         chat.following = true;
                     } else {
                         console.log('Err', data);
@@ -178,7 +179,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 console.log('Error: ', data);
             });
         };
-        
+
         chatter.saveComment = function(comment, content){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/edit', {key:comment.key, content:content})
             .success(function(data){
@@ -253,7 +254,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 console.log('Error: ', data);
             });
         };
-        
+
         chatter.delete = function(chat){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/delete', {key:chat.key})
             .success(function(data) {
@@ -263,7 +264,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                                 chatter.data.feed.splice(i, 1);
                             }
                         }
-                        for (var i = 0; i < chatter.data.important.length; i++){
+                        for (i = 0; i < chatter.data.important.length; i++){
                             if (chat.key == chatter.data.important[i].key){
                                 chatter.data.important.splice(i, 1);
                             }
@@ -276,7 +277,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     console.log('Error: ', data);
                 });
         };
-        
+
         chatter.edit = function(chat, content){
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/edit', {key:chat.key, content:content})
             .success(function(data) {
@@ -317,7 +318,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                                 chatter.data.feed[i] = chat;
                             }
                         }
-                        for (var i = 0; i < chatter.data.important.length; i++){
+                        for (i = 0; i < chatter.data.important.length; i++){
                             if (chat.key == chatter.data.important[i].key){
                                 chatter.data.important[i] = chat;
                             }
@@ -330,7 +331,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             .error(function(data){
                 console.log('Error: ', data);
             });
-        }
+        };
         return chatter;
     }
 ]);

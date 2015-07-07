@@ -122,6 +122,20 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          }
       };
 
+      scope.followChatter = function(chat){
+         Chatter.mute(chat);
+         if (chat.following === false && chat.mute === false){
+            chat.following = true;
+         }
+         else{
+            chat.mute = false;
+         }
+      };
+      scope.unfollowChatter = function(chat){
+         Chatter.mute(chat);
+         chat.mute = true;
+      };
+
       scope.saveComment = function(comment){
          comment.content = comment.comment_temp;
          comment.editingComment = false;

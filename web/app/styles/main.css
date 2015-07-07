@@ -496,6 +496,9 @@ md-input-container.md-icon-float > label {
 md-list-item .md-no-style {
   padding: 0px;
 }
+md-dialog .md-actions {
+  padding-left: 0px;
+}
 md-tooltip {
   z-index: 1045;
 }
@@ -1008,6 +1011,9 @@ md-toolbar.md-tall {
 }
 #chatterDialog #confirmImportant .md-toolbar-tools .md-button {
   width: 48px;
+}
+#chatterDialog .followButton {
+  font-size: 12px;
 }
 #chatterDialog md-list-item button {
   padding: 8px 16px;
