@@ -196,7 +196,7 @@ class Chatter(ndb.Model):
     content = ndb.TextProperty()
     organization = ndb.KeyProperty(kind=Organization)
     author = ndb.KeyProperty(kind=User)
-    comments = ndb.KeyProperty(repeated=True, kind=ChatterComment)
+    comments = ndb.KeyProperty(repeated=True)
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
     likes = ndb.KeyProperty(repeated=True, kind=User)
     important = ndb.BooleanProperty(default=False)
