@@ -51,6 +51,10 @@ input.form-control{height:34px !important;}
 html{background:#ececec;}
 body{padding-top:84px; padding-bottom:40px; backface-visibility: hidden; -webkit-backface-visibility: hidden; height:auto; min-height:100%; background:#ececec;}
 .container{max-width:750px;}
+@media (max-width:600px){
+   .container{padding-left:0px; padding-right:0px;}
+   md-dialog{min-width:90%; max-width:90%;}
+}
 a:hover{text-decoration:none;}
 md-backdrop.md-opaque{z-index:1040 !important; background:rgba(0, 0, 0, .2) !important;}
 .md-dialog-container{z-index:1042;}
@@ -61,9 +65,8 @@ md-list md-list-item md-toolbar .md-button{background-color:transparent !importa
 md-list li{list-style:none;}
 md-tabs .md-active{background-color: rgba(255,255,255,0.4);}
 .md-fab.fixed{position:fixed !important;}
-//.md-actions {padding:4px !important;
-//    .md-button{margin:0px !important;}}
 md-input-container.md-icon-float > label{position:relative; margin-left:0px;}
+md-list-item .md-no-style{padding:0px;}
 md-tooltip{z-index:1045;}
 .md-avatar{min-width:40px;
     width: 40px;
@@ -272,7 +275,7 @@ md-toolbar.md-tall{
 
 
 #chatter{
-    md-list-item button{padding:8px 16px;}
+    md-list-item button{padding:8px 4px;}
     .heart{height:50px;}
     .details{color:#ccc; font-size:12px; margin:0px 0px 4px 4px;}
     .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
@@ -288,12 +291,12 @@ md-toolbar.md-tall{
 
         md-list-item button{padding:8px 16px;}
         .md-list-item-text{line-height:24px;}
-        .heart{height:50px;}
+        .heart{height:50px;  position:relative; top:-4px;}
         .details{color:#ccc; font-size:12px; line-height:1.8em;}
         .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
    #chatterContent .details{text-align:right; margin-right:4px;}
     #chatterComments .itemList md-list-item{padding:10px 0px;}
-    .commentOptions{min-width:148px;}
+    @media (min-width:600px){.commentOptions{min-width:148px;}}
     h3.chatContent, #chatterComments h3{font-size:14px; line-height:1.4em;}
 }
 @media screen and (max-width:600px){
@@ -309,7 +312,7 @@ md-toolbar.md-tall{
         h5{font-size:18px; line-height:24px;}
             .face{display:block; width:120px; height:120px; border-radius:80px;}
         .name{margin-left:15px;}
-        .edit-profile{position:absolute; bottom:6px; right:80px; font-size:15px;}
+        .edit-profile{position:absolute; right:8px; bottom:8px; font-size:15px;}
     }
      #tags{
             span:not(:last-child):after{content:', ';}
@@ -366,9 +369,11 @@ md-toolbar.md-tall{
 }
 
 #links{
-    .linkgroup{width:100%; margin-bottom:15px;
-        a{display:block; height:100%; width:100%; line-height:18px;}
-        }
+    .groupTitle .md-toolbar-tools{padding-right:0px;}
+    .groupButtons{width:96px;}
+       .link > button{
+         a{display:block; width:100%; height:100%; padding:10px 0px 10px 15px; line-height:1.2em;}
+      }
     }
 
 #surveyInfo{
@@ -504,11 +509,6 @@ md-dialog{
     #byPerson h3{margin:8px 0px;}
     .responses{padding:10px;}
 }
-
-#bottomSheet{
-    md-item a{display:block;}
-}
-
 
 /*ng-animation code*/
 .fadingIn.ng-enter, .fadingIn.ng-hide-remove{

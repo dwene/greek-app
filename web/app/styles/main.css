@@ -448,6 +448,16 @@ body {
 .container {
   max-width: 750px;
 }
+@media (max-width: 600px) {
+  .container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  md-dialog {
+    min-width: 90%;
+    max-width: 90%;
+  }
+}
 a:hover {
   text-decoration: none;
 }
@@ -482,6 +492,9 @@ md-tabs .md-active {
 md-input-container.md-icon-float > label {
   position: relative;
   margin-left: 0px;
+}
+md-list-item .md-no-style {
+  padding: 0px;
 }
 md-tooltip {
   z-index: 1045;
@@ -940,7 +953,7 @@ md-toolbar.md-tall {
   cursor: pointer;
 }
 #chatter md-list-item button {
-  padding: 8px 16px;
+  padding: 8px 4px;
 }
 #chatter .heart {
   height: 50px;
@@ -984,6 +997,8 @@ md-toolbar.md-tall {
 }
 #chatterDialog .heart {
   height: 50px;
+  position: relative;
+  top: -4px;
 }
 #chatterDialog .details {
   color: #ccc;
@@ -1006,8 +1021,10 @@ md-toolbar.md-tall {
 #chatterDialog #chatterComments .itemList md-list-item {
   padding: 10px 0px;
 }
-#chatterDialog .commentOptions {
-  min-width: 148px;
+@media (min-width: 600px) {
+  #chatterDialog .commentOptions {
+    min-width: 148px;
+  }
 }
 #chatterDialog h3.chatContent,
 #chatterDialog #chatterComments h3 {
@@ -1047,8 +1064,8 @@ md-toolbar.md-tall {
 }
 #profile md-toolbar .edit-profile {
   position: absolute;
-  bottom: 6px;
-  right: 80px;
+  right: 8px;
+  bottom: 8px;
   font-size: 15px;
 }
 #profile #tags span:not(:last-child):after {
@@ -1135,15 +1152,18 @@ md-toolbar.md-tall {
 #eventCheckin .face {
   margin-right: 5px;
 }
-#links .linkgroup {
-  width: 100%;
-  margin-bottom: 15px;
+#links .groupTitle .md-toolbar-tools {
+  padding-right: 0px;
 }
-#links .linkgroup a {
+#links .groupButtons {
+  width: 96px;
+}
+#links .link > button a {
   display: block;
-  height: 100%;
   width: 100%;
-  line-height: 18px;
+  height: 100%;
+  padding: 10px 0px 10px 15px;
+  line-height: 1.2em;
 }
 #surveyInfo md-content {
   padding: 45px 30px 30px 30px;
@@ -1369,9 +1389,6 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 }
 #surveyResults .responses {
   padding: 10px;
-}
-#bottomSheet md-item a {
-  display: block;
 }
 /*ng-animation code*/
 .fadingIn.ng-enter,

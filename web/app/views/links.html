@@ -14,11 +14,11 @@
         <md-content class="md-padding">
             <md-list>
                 <md-list-item layout="column" ng-repeat="group in links">
-                    <md-toolbar>
+                    <md-toolbar class="groupTitle">
                         <div class="md-toolbar-tools">
                             <h1>{{group.name}}</h1>
                             <span flex></span>
-                            <div ng-show="$root.checkPermissions('leadership')">
+                            <div class="groupButtons" ng-show="$root.checkPermissions('leadership')">
                                 <md-button class="btn-touch" ng-click="openEditGroupDialog(group)" aria-label="edit group"><i class="fa fa-edit fa-fw"></i></md-button>
                                 <md-button class="btn-touch" ng-click="group.confirmDelete = !group.confirmDelete" aria-label="delete group"><i class="fa fa-trash-o fa-fw"></i></md-button>
                             </div>
@@ -34,7 +34,7 @@
                     <md-content class="linkgroup">
                         <md-list class="itemList">
                            <div ng-repeat="link in group.links">
-                            <md-list-item ng-click="doNothing()" >
+                            <md-list-item class="link" ng-click="doNothing()" >
                                 <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
                                 <div class="pull-right" ng-show="$root.checkPermissions('leadership')">
                                 <md-button class="btn-touch" ng-click="openEditLinkDialog(link)"><i class="fa fa-edit fa-fw"></i></md-button>

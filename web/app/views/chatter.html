@@ -11,13 +11,13 @@
                Chatter
             </md-tab>
             <md-tab id="importantTab" aria-controls="importantTab-content">
-               Important
+               <i class="fa fa-star"></i> Important
             </md-tab>
          </md-tabs>
       </md-toolbar>
       <div class="tabpanel-container" ng-model="showChatter">
          <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3">
-            <md-content class="md-padding">
+            <md-content class="md-padding no-padding-top">
                <md-list class="chatterList">
                   <div class="listItem" ng-repeat="chat in currentFeed | orderBy:'-timestamp'">
                   <md-list-item ng-click="openChatter(chat)">
@@ -34,7 +34,7 @@
             </md-content>
          </div>
          <div role="tabpanel" id="importantTab-content" aria-labelledby="importantTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
-            <md-content class="md-padding">
+            <md-content class="md-padding no-padding-top">
 
             </md-content>
          </div>

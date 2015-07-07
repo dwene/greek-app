@@ -1,8 +1,6 @@
 //Final/static variables. These variables are used for cookies
 // var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
- var ENDPOINTS_DOMAIN = 'http://localhost:9002';
- //hi
-//var ENDPOINTS_DOMAIN = '';
+var ENDPOINTS_DOMAIN = 'http://localhost:9002';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -12,10 +10,11 @@ var LEADERSHIP = 'leadership';
 var COUNCIL = 'council';
 var LOGGED_IN = 'logged_in';
 var PERMS_LIST = [ALUMNI, MEMBER, LEADERSHIP, COUNCIL];
+var i;
 
 String.prototype.replaceAll = function(str1, str2, ignore) {
     return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof(str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
-}
+};
 
 //initialize app
 var App = angular.module('App', ['ui.router', 'ngAnimate', 'ngTouch', 'mgcrea.ngStrap', 'mgcrea.ngStrap.modal', 'mgcrea.ngStrap.aside', 'ui.rCalendar', 'imageupload', 'ngAutocomplete', 'aj.crop', 'googlechart', 'angulartics', 'angulartics.google.analytics', 'infinite-scroll', 'LocalStorageModule', 'colorpicker.module', 'wysiwyg.module', 'ngSanitize', 'ngMaterial'], function($compileProvider) {
@@ -209,7 +208,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             only: [LOGGED_IN],
                             redirectTo: 'home'
                         }
-                    } 
+                    }
                 })
             .state('app.directory', {
                     url : '/directory',
@@ -230,7 +229,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             only: [LOGGED_IN],
                             redirectTo: 'home'
                         }
-                    }  
+                    }
                 })
                 .state('app.directory.alumni', {
                     url : '/alumni',
@@ -241,7 +240,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             only: [LOGGED_IN],
                             redirectTo: 'home'
                         }
-                    } 
+                    }
                 })
             .state('app.memberprofile', {
                     url : '/directory/:id',
@@ -252,7 +251,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             only: [LOGGED_IN],
                             redirectTo: 'home'
                         }
-                    }  
+                    }
                 })
             //#CHANGES there might be a better way to do this
             .state('app.postNewKeyPictureLink', {
@@ -354,7 +353,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                             redirectTo: 'home'
                         }
                     }
-                })            
+                })
             .state('app.organizationPictureUpload',{
                 //#TODO put this into each individual event :tag
                     url : '/uploadorganizationimage',
@@ -685,7 +684,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
                     redirectTo: 'home'
                 }
             }
-        })
+        });
 });
 
 App.config(function($mdThemingProvider) {
@@ -856,7 +855,6 @@ App.config(function($mdThemingProvider) {
 
 //Set up run commands for the app
 App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Inbox) {
-    // FastClick.attach(document.body);
 
 
     // Permission
@@ -887,7 +885,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
     //     } else {
     //         return false;
     //     }
-    // });  
+    // });
     $rootScope.$on('$stateChangeStart', function(event, next) {
         if (!next.data) {
             console.log("I am going somewhere with no data", next);
@@ -914,7 +912,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
 
     $rootScope.$on('$locationChangeStart', function(event) {
         $('.modal-backdrop').remove();
-        $('.bootstrap-datetimepicker-widget').hide()
+        $('.bootstrap-datetimepicker-widget').hide();
         window.scrollTo(0, 0);
     });
 
@@ -988,7 +986,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         $('body').attr('md-theme', $rootScope.color);
         $('body').attr('class', 'theme-' + $rootScope.color);
         console.log('I changed dat color');
-    })
+    });
     $rootScope.changeTheme = function(color) {
         $rootScope.color = color;
 
@@ -1004,7 +1002,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
                 console.log('Error: ' + JSON.stringify(data));
             });
 
-    }
+    };
     $rootScope.checkPermissions = function(perms) {
         if (!AuthService.isAuthenticated()) {
             return false;
@@ -1014,7 +1012,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
             }
             return true;
         }
-    }
+    };
     if (Organization.organization) {
         if (Organization.organization.color) {
             $rootScope.color = Organization.organization.color;
@@ -1044,20 +1042,20 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
     // $rootScope.hasLoaded = false;
     $rootScope.setColor = function(color) {
         $mdThemingProvider.theme('default').primaryPalette(color);
-    }
+    };
     $rootScope.routeChange = function() {
         $('.modal-backdrop').remove();
-        $('.bootstrap-datetimepicker-widget').hide()
+        $('.bootstrap-datetimepicker-widget').hide();
         window.scrollTo(0, 0);
-    }
+    };
     //         $rootScope.updateNotifications = function(){
     //             $('.fa-refresh').addClass('fa-spin');
     //             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
     //             .success(function(data){
-    //             if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){    
+    //             if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){
 
     //                 $timeout(function(){
-    //                     for (var i = 0; i < $rootScope.notifications.length; i++){
+    //                     for (i = 0; i < $rootScope.notifications.length; i++){
     //                         $rootScope.notifications[i].collapseOut = false;
     //                     }
     //                 })
@@ -1067,9 +1065,9 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
     // //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
     // //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
     // //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
-    //                     for (var i = 0; i < $rootScope.notifications.length; i++){
-    //                         $rootScope.notifications[i].collapseOut = true; 
-    // //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),  
+    //                     for (i = 0; i < $rootScope.notifications.length; i++){
+    //                         $rootScope.notifications[i].collapseOut = true;
+    // //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),
     // //                            function(all,text,char){
     // //                                return text + "&shy;" + char;
     // //                            });
@@ -1092,10 +1090,10 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
 
     $rootScope.refreshPage = function() {
         window.location.reload();
-    }
+    };
     $rootScope.doNothing = function() {
         return false;
-    }
+    };
     $rootScope.requirePermissions = function(perms) {
         // if ($rootScope.perms){
         //     if (!$rootScope.checkPermissions(perms)){
@@ -1105,58 +1103,58 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         //         else{
         //             window.location.assign("/#/app/home");
         //         }
-        //     } 
+        //     }
         // }
         // else{
         //     window.location.assign('/#/login');
         // }
-    }
+    };
 
     $rootScope.checkAlumni = function() {
         if ($rootScope.perms == ALUMNI) {
             return true;
         }
         return false;
-    }
+    };
 
     $rootScope.checkLogin = function() {
         return checkLogin();
-    }
+    };
 
-    $rootScope.logout = function() {}
+    $rootScope.logout = function() {};
 
     $rootScope.updateNotificationBadge = function() {
         var count = 0;
         if ($rootScope.notifications) {
-            for (var i = 0; i < $rootScope.notifications.length; i++) {
+            for (i = 0; i < $rootScope.notifications.length; i++) {
                 if ($rootScope.notifications[i].new) {
                     count++;
                 }
             }
             $rootScope.notification_count = count;
         }
-    }
+    };
 
     $rootScope.getNameFromKey = function(key) {
         if ($rootScope.directory.members) {
-            for (var i = 0; i < $rootScope.directory.members.length; i++) {
+            for (i = 0; i < $rootScope.directory.members.length; i++) {
                 if ($rootScope.directory.members[i].key == key) {
                     return $rootScope.directory.members[i].first_name + ' ' + $rootScope.directory.members[i].last_name;
                 }
             }
         }
         return 'Unknown';
-    }
+    };
     $rootScope.getUserFromKey = function(key) {
         if ($rootScope.directory.members) {
-            for (var i = 0; i < $rootScope.directory.members.length; i++) {
+            for (i = 0; i < $rootScope.directory.members.length; i++) {
                 if ($rootScope.directory.members[i].key == key) {
                     return $rootScope.directory.members[i];
                 }
             }
         }
         return undefined;
-    }
+    };
     $rootScope.showNav = true;
 });
 
@@ -1248,7 +1246,7 @@ function packageForSending(send_data) {
 function checkResponseErrors(received_data) {
     response = received_data;
     if (response) {
-        if (response.error == '') {
+        if (response.error === '') {
             return false;
         } else {
             console.log('ERROR: ', response.error);
@@ -1270,19 +1268,19 @@ function checkCacheRefresh(timestamp) {
 //    var org_tag_list = [];
 //    var tags = {};
 //    if (tag_data.org_tags){
-//        for(var i = 0; i < tag_data.org_tags.length; i++){
+//        for(i = 0; i < tag_data.org_tags.length; i++){
 //            org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
 //        }
 //    }
 //    var perms_tag_list = [];
 //    if (tag_data.perms_tags){
-//        for (var i = 0; i < tag_data.perms_tags.length; i++){
+//        for (i = 0; i < tag_data.perms_tags.length; i++){
 //            perms_tag_list.push({name: tag_data.perms_tags[i].name, checked: false})
 //        }
 //    }
 //    var event_tag_list = [];
 //    if (tag_data.event_tags){
-//        for (var i = 0; i < tag_data.event_tags.length; i++){
+//        for (i = 0; i < tag_data.event_tags.length; i++){
 //            event_tag_list.push({name: tag_data.event_tags[i].name, checked: false})
 //        }
 //    }
@@ -1293,11 +1291,11 @@ function checkCacheRefresh(timestamp) {
 //}
 //This should be called at the beginning of any controller that uses the checkbox tags
 function clearCheckedTags(tags) {
-    for (var i = 0; i < tags.org_tags.length; i++)
+    for (i = 0; i < tags.org_tags.length; i++)
         tags.org_tags[i].checked = false;
-    for (var i = 0; i < tags.perms_tags.length; i++)
+    for (i = 0; i < tags.perms_tags.length; i++)
         tags.perms_tags[i].checked = false;
-    for (var i = 0; i < tags.event_tags.length; i++)
+    for (i = 0; i < tags.event_tags.length; i++)
         tags.event_tags[i].checked = false;
     return tags;
 }
@@ -1307,15 +1305,15 @@ function getCheckedTags(tags) {
     var org_tags = [];
     var perms_tags = [];
     var event_tags = [];
-    for (var i = 0; i < tags.org_tags.length; i++) {
+    for (i = 0; i < tags.org_tags.length; i++) {
         if (tags.org_tags[i].checked)
             org_tags.push(tags.org_tags[i].name);
     }
-    for (var i = 0; i < tags.event_tags.length; i++) {
+    for (i = 0; i < tags.event_tags.length; i++) {
         if (tags.event_tags[i].checked)
             event_tags.push(tags.event_tags[i].name);
     }
-    for (var i = 0; i < tags.perms_tags.length; i++) {
+    for (i = 0; i < tags.perms_tags.length; i++) {
         if (tags.perms_tags[i].checked) {
             perms_tags.push(tags.perms_tags[i].name.toLowerCase());
         }
@@ -1336,7 +1334,7 @@ function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 // Source: http://www.bennadel.com/blog/1504-Ask-Ben-Parsing-CSV-Strings-With-Javascript-Exec-Regular-Expression-Command.htm
@@ -1362,7 +1360,7 @@ function CSVReader(strData, strDelimiter) {
     var arrMatches = null;
     // Keep looping over the regular expression matches
     // until we can no longer find a match.
-    while (arrMatches = objPattern.exec(strData)) {
+    while (arrMatches == objPattern.exec(strData)) {
         // Get the delimiter that was found.
         var strMatchedDelimiter = arrMatches[1];
         // Check to see if the given delimiter has a length
@@ -1397,11 +1395,11 @@ function CSVReader(strData, strDelimiter) {
 function CSV2ARRAY(csv) {
     var array = CSVReader(csv);
     var objArray = [];
-    for (var i = 1; i < array.length; i++) {
+    for (i = 1; i < array.length; i++) {
         objArray[i - 1] = {};
         for (var k = 0; k < array[0].length && k < array[i].length; k++) {
             var key = array[0][k];
-            objArray[i - 1][key] = array[i][k]
+            objArray[i - 1][key] = array[i][k];
         }
     }
 
@@ -1454,7 +1452,7 @@ App.directive('onFinishRender', ['$timeout',
                     scope.$evalAsync(attr.onFinishRender);
                 }
             }
-        }
+        };
     }
 ]);
 
@@ -1468,7 +1466,7 @@ App.directive('userNameInput', function() {
         controller: function($scope) {
             $scope.$watch('ngModel', function() {
                 if ($scope.ngModel) {
-                    var i = 0;
+                    i = 0;
                     while (true) {
                         if (i >= $scope.ngModel.length) {
                             break;
@@ -1507,7 +1505,7 @@ App.directive('removeHttp', function() {
                     }
                 }
 
-            })
+            });
         }
     };
 });
@@ -1523,8 +1521,8 @@ App.directive('fileChange', ['$parse',
 
                 // Get the function provided in the file-change attribute.
                 // Note the attribute has become an angular expression,
-                // which is what we are parsing. The provided handler is 
-                // wrapped up in an outer function (attrHandler) - we'll 
+                // which is what we are parsing. The provided handler is
+                // wrapped up in an outer function (attrHandler) - we'll
                 // call the provided event handler inside the handler()
                 // function below.
                 var attrHandler = $parse(attrs['fileChange']);
@@ -1545,7 +1543,7 @@ App.directive('fileChange', ['$parse',
                     });
                 };
 
-                // Attach the handler to the HTML change event 
+                // Attach the handler to the HTML change event
                 element[0].addEventListener('change', handler, false);
             }
         };
@@ -1568,7 +1566,7 @@ App.directive('removeHashTag', function() {
                         $scope.ngModel = $scope.ngModel.splice($scope.ngModel.indexOf('#'), 1);
                     }
                 }
-            })
+            });
         }
     };
 });
@@ -1585,7 +1583,7 @@ App.directive('search', function() {
         controller: function($scope, $element, $attrs) {
             $scope.callFunction = function() {
                 $scope.change();
-            }
+            };
         }
     };
 });
@@ -1606,7 +1604,7 @@ App.directive('alumniYearPicker', function() {
                     if (!$scope.years) {
                         $scope.years = [];
                     }
-                    for (var i = 0; i < $scope.alumni.length; i++) {
+                    for (i = 0; i < $scope.alumni.length; i++) {
                         var item = {
                             value: $scope.alumni[i].pledge_class_semester + ' ' + $scope.alumni[i].pledge_class_year,
                             year: $scope.alumni[i].pledge_class_year,
@@ -1626,7 +1624,7 @@ App.directive('alumniYearPicker', function() {
                         }
                     }
                     $scope.highestYear = $scope.years[0];
-                    for (var i = 0; i < $scope.years.length; i++) {
+                    for (i = 0; i < $scope.years.length; i++) {
                         if ($scope.years[i].year > $scope.highestYear.year) {
                             $scope.highestYear = $scope.years[i];
                         }
@@ -1646,10 +1644,10 @@ App.directive('alumniYearPicker', function() {
                 } else {
                     $scope.selectedYear = $scope.highestYear;
                 }
-            })
+            });
 
             function isAlreadyAdded(item) {
-                for (var i = 0; i < $scope.years.length; i++) {
+                for (i = 0; i < $scope.years.length; i++) {
                     if (item.value == $scope.years[i].value) {
                         return true;
                     }
@@ -1688,7 +1686,7 @@ App.directive('loadDirective', function() {
         replace: 'true',
         transclude: 'true',
         templateUrl: 'views/templates/loadingTemplate.html',
-    }
+    };
 });
 
 
@@ -1706,9 +1704,9 @@ App.directive('timePicker', function($compile) {
             var this_id = attrs.id;
 
             element.append('<md-input-container>' + '<label for="time_picker">Select Time</label>' + '<input type="text" name="time_picker" class="picker" id="' + this_id + 'time" name="' + this_name + 'time" ng-model="ngModel"/>' + '</md-input-container>' + '<script type="text/javascript">' + '$("#' + this_id + 'time").datetimepicker({' + 'pickDate: false,' + 'icons: {' + 'time: "fa fa-clock-o",' + 'date: "fa fa-calendar",' + 'up: "fa fa-arrow-up",' + 'down: "fa fa-arrow-down"' + "}});" + '$("#' + this_id + 'time").focusout(function(){' + '$(this).trigger("change");' + '});' + '</script>');
-            $compile(element.contents())(scope)
+            $compile(element.contents())(scope);
         }
-    }
+    };
 });
 
 App.directive('datePicker', function($compile) {
@@ -1723,14 +1721,14 @@ App.directive('datePicker', function($compile) {
 
             var this_name = attrs.name;
             var this_id = attrs.id;
-            var this_future = attrs.id
-            element.append('<md-input-container>' + '<label for="date_picker">Select Date</label>' + '<input type="text" name="date_picker" class="picker" id="' + this_id + 'date" name="' + this_name + '" ng-model="ngModel"/>' + '</md-input-container>' + '<script type="text/javascript">' + '$("#' + this_id + 'date").datetimepicker({' + 'pickTime: false,'
+            var this_future = attrs.id;
+            element.append('<md-input-container>' + '<label for="date_picker">Select Date</label>' + '<input type="text" name="date_picker" class="picker" id="' + this_id + 'date" name="' + this_name + '" ng-model="ngModel"/>' + '</md-input-container>' + '<script type="text/javascript">' + '$("#' + this_id + 'date").datetimepicker({' + 'pickTime: false,' +
                 //+ 'minDate: moment(),'
-                + 'icons: {time: "fa fa-clock-o", date: "fa fa-calendar", up: "fa fa-arrow-up", down: "fa fa-arrow-down"' + '}});' + '$("#' + this_id + 'date").focusout(function(){' + '$(this).trigger("change");' + '});' + '</script>'
+                 'icons: {time: "fa fa-clock-o", date: "fa fa-calendar", up: "fa fa-arrow-up", down: "fa fa-arrow-down"' + '}});' + '$("#' + this_id + 'date").focusout(function(){' + '$(this).trigger("change");' + '});' + '</script>'
             );
-            $compile(element.contents())(scope)
+            $compile(element.contents())(scope);
         }
-    }
+    };
 });
 
 
@@ -1764,14 +1762,14 @@ App.directive('netePieChart', function() {
                 if (scope.ngModel) {
                     scope.realData = {};
                     var objectList = [];
-                    for (var i = 0; i < scope.ngModel.length; i++) {
+                    for (i = 0; i < scope.ngModel.length; i++) {
                         objectList.push({
                             c: [{
                                 v: scope.ngModel[i].name
                             }, {
                                 v: scope.ngModel[i].count
                             }, ]
-                        })
+                        });
                     }
 
                     scope.realData.data = {
@@ -1791,11 +1789,11 @@ App.directive('netePieChart', function() {
                     scope.realData.type = 'PieChart';
                     scope.realData.options = {
                         'title': ''
-                    }
+                    };
                 }
             });
         }
-    }
+    };
 });
 
 //App.directive('calendar', function($compile){
@@ -1807,9 +1805,9 @@ App.directive('netePieChart', function() {
 //    replace: 'true',
 //    template: '<div class="date"></div>',
 //    link: function (scope, element, attrs) {
-//        
+//
 //        var this_name = attrs.name;
-//        
+//
 //        element.append('<div class="input-group">'
 //                        +'<input type="text" class="form-control" id="'+this_name+'" name="'+this_name+'" ng-model="ngModel" required/>'
 //                        +'<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>'
@@ -1828,7 +1826,7 @@ App.directive('netePieChart', function() {
 //                        +'$(".bootstrap-datetimepicker-widget").addClass("calendarpage");'
 //                        +'$("#'+this_name+'").data("DateTimePicker").hide = function () {};'
 //                        +'$("#'+this_name+'").data("DateTimePicker").show();'
-//                       
+//
 //
 //                        +'</script>'
 //                        );
@@ -1865,30 +1863,30 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                     update();
                 });
             }
-            
-            
+
+
             scope.$on('$destroy', function() {
-                for (var i = 0; i < scope.tags.org_tags.length; i++) {
+                for (i = 0; i < scope.tags.org_tags.length; i++) {
                     if (scope.tags.org_tags[i].checked) {
                         scope.tags.org_tags[i].checked = false;
                     }
                 }
-                for (var i = 0; i < scope.tags.perms_tags.length; i++) {
+                for (i = 0; i < scope.tags.perms_tags.length; i++) {
                     if (scope.tags.perms_tags[i].checked) {
                         scope.tags.perms_tags[i].checked = false;
                     }
                 }
-            })
+            });
             scope.openDialog = function(ev) {
                 $mdDialog.show({
                     controller: ('ModalController', ['$scope', '$mdDialog', '$sce', ModalController]),
                     templateUrl: 'views/templates/tagsDialog.html',
                     targetEvent: ev
                 });
-            }
+            };
 
-            
-            
+
+
             function ModalController($scope, $mdDialog, $sce) {
                 $scope.tags = scope.tags;
                 $scope.inclueUsers = scope.includeUsers;
@@ -1896,28 +1894,28 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                 $scope.usersList = scope.usersList;
                 $scope.closeModal = function() {
                     $mdDialog.hide();
-                }
+                };
             }
             scope.directory = Directory.directory;
             scope.$on('directory:updated', function() {
                 scope.directory = Directory.directory;
                 update();
             });
-            
+
             update();
-            
-            
-            
+
+
+
             scope.selectTagFromTypeAhead = function(tag) {
                 tag.checked = true;
                 scope.selectedTagName = "";
-            }
+            };
 
             function update() {
                 if (scope.tags && scope.tags.org_tags && scope.includeUsers && scope.directory) {
                     scope.usersList = [];
                     console.log('scope.directory', scope.directory);
-                    for (var i = 0; i < scope.directory.members.length; i++) {
+                    for (i = 0; i < scope.directory.members.length; i++) {
                         scope.usersList.push({
                             user: scope.directory.members[i],
                             checked: false,
@@ -1933,7 +1931,7 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
             //     if (scope.ngModel && scope.ngModel.org_tags && scope.includeUsers && scope.directory){
             //         scope.usersList = [];
             //         console.log('scope.directory', scope.directory);
-            //         for (var i = 0; i < scope.directory.members.length; i++){
+            //         for (i = 0; i < scope.directory.members.length; i++){
             //             scope.usersList.push({user: scope.directory.members[i], checked:false, name:scope.directory.members[i].first_name + ' ' + scope.directory.members[i].last_name });
             //         }
             //         scope.allTagsList = scope.ngModel.org_tags.concat(scope.ngModel.perms_tags.concat(scope.usersList));
@@ -1943,9 +1941,9 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
             //     }
             // });
             scope.$watch('clearUsers', function() {
-                if (scope.clearUsers == true) {
+                if (scope.clearUsers === true) {
                     scope.clearUsers = false;
-                    for (var i = 0; i < scope.usersList.length; i++) {
+                    for (i = 0; i < scope.usersList.length; i++) {
                         if (scope.usersList[i].checked) {
                             scope.usersList[i].checked = false;
                         }
@@ -1953,7 +1951,7 @@ App.directive('selectingUsers', function($rootScope, $mdDialog, Directory, Tags)
                 }
             });
         }
-    }
+    };
 });
 
 App.directive('neteTag', ['$compile',
@@ -1962,9 +1960,9 @@ App.directive('neteTag', ['$compile',
             restrict: 'E',
             templateUrl: 'views/templates/tags/nete-tag.html',
             link: function(scope, element, attrs) {
-                $compile(element.contents())(scope)
+                $compile(element.contents())(scope);
             }
-        }
+        };
     }
 ]);
 
@@ -1974,9 +1972,9 @@ App.directive('netetagCheck', ['$compile',
             restrict: 'E',
             templateUrl: 'views/templates/tags/nete-tag-check.html',
             link: function(scope, element, attrs) {
-                $compile(element.contents())(scope)
+                $compile(element.contents())(scope);;
             }
-        }
+        };;
     }
 ]);
 
@@ -1986,9 +1984,9 @@ App.directive('netetagDelete', ['$compile',
             restrict: 'E',
             templateUrl: 'views/templates/tags/nete-tag-delete.html',
             link: function(scope, element, attrs) {
-                $compile(element.contents())(scope)
+                $compile(element.contents())(scope);
             }
-        }
+        };
     }
 ]);
 
@@ -2003,7 +2001,7 @@ App.directive('netememberCheck', ['$compile',
             link: function(scope, element, attrs) {
                 //            $compile(element.contents())(scope)
             }
-        }
+        };
     }
 ]);
 
@@ -2018,7 +2016,7 @@ App.directive('neteMember', ['$compile',
             // link: function(scope, element, attrs){
             //            $compile(element.contents())(scope)
             // }
-        }
+        };
     }
 ]);
 
@@ -2028,9 +2026,9 @@ App.directive('netetagAll', ['$compile',
             restrict: 'E',
             templateUrl: 'views/templates/tags/nete-tag-all.html',
             link: function(scope, element, attrs) {
-                $compile(element.contents())(scope)
+                $compile(element.contents())(scope);
             }
-        }
+        };
     }
 ]);
 
@@ -2050,17 +2048,17 @@ App.directive('updateStatus', ['$timeout',
                         $timeout(function() {
                             //                        console.log('I should be changing it now');
                             $scope.ngModel = '';
-                        }, 2000)
+                        }, 2000);
                     }
                 });
                 $scope.callFunction = function() {
                     //                console.log('hi!!!!!');
                     $scope.fnCall();
 
-                }
+                };
                 //            $compile(element.contents())(scope)
             }
-        }
+        };
     }
 ]);
 
@@ -2087,7 +2085,7 @@ App.directive('updateStatus', ['$timeout',
 //                element.append(  '<span class="label label-default userLabel">'
 //                                +'<li>#{{ tag }}</li>'
 //                                +'</span>'
-//                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [user.key])"><i class="fa fa-times"></i></div>'  
+//                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [user.key])"><i class="fa fa-times"></i></div>'
 //                );
 //            }
 //            else{
@@ -2125,13 +2123,13 @@ App.filter('multipleSearch', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('htmlToPlaintext', function() {
     return function(text) {
         return String(text).replace(/<[^>]+>/gm, ' ').replace(/&nbsp;/gi, '');
-    }
+    };
 });
 
 App.filter('nameSearch', function() {
@@ -2157,7 +2155,7 @@ App.filter('nameSearch', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('linkGroup', function() {
@@ -2175,7 +2173,7 @@ App.filter('linkGroup', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('capitalizeFirst', function() {
@@ -2184,7 +2182,7 @@ App.filter('capitalizeFirst', function() {
             return objects[0].toUpperCase() + objects.slice(1);
         }
         return retList;
-    }
+    };
 });
 
 App.filter('yearSearch', function() {
@@ -2206,7 +2204,7 @@ App.filter('yearSearch', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 
@@ -2227,21 +2225,21 @@ App.filter('pledgeClassSearch', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('directoryFilter', function() {
     return function(objects, perms) {
-        var retList = []
+        var retList = [];
         if (objects) {
-            for (var i = 0; i < objects.length; i++) {
+            for (i = 0; i < objects.length; i++) {
                 if (objects[i].user_name && objects[i].perms == perms) {
                     retList.push(objects[i]);
                 }
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('removePassedEvents', function() {
@@ -2262,7 +2260,7 @@ App.filter('removePassedEvents', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('startFrom', function() {
@@ -2272,7 +2270,7 @@ App.filter('startFrom', function() {
             return input.slice(start);
         }
         return input;
-    }
+    };
 });
 
 
@@ -2280,22 +2278,22 @@ App.filter('checkedFilter', function() {
     return function(input) {
         out = [];
         if (input) {
-            for (var i = 0; i < input.length; i++) {
+            for (i = 0; i < input.length; i++) {
                 if (input[i].checked) {
                     out.push(input[i]);
                 }
             }
         }
         return out;
-    }
+    };
 });
 
 App.filter('tagDirectorySearch', function() {
     return function(objects, tags, additionalUsers) {
-        var tags_list = []
+        var tags_list = [];
         if (tags) {
             if (tags.org_tags) {
-                for (var i = 0; i < tags.org_tags.length; i++) {
+                for (i = 0; i < tags.org_tags.length; i++) {
                     if (tags.org_tags[i].checked) {
                         tags_list.push(tags.org_tags[i].name);
                     }
@@ -2311,15 +2309,15 @@ App.filter('tagDirectorySearch', function() {
                         } else if (tags.perms_tags[j].name == "Members") {
                             tags_list.push("member");
                         } else {
-                            tags_list.push(tags.perms_tags[j].name)
+                            tags_list.push(tags.perms_tags[j].name);
                         }
                     }
                 }
             }
         }
         out_string = '';
-        for (var j = 0; j < tags_list.length; j++) {
-            out_string += tags_list[j] + ' ';
+        for (i = 0; i < tags_list.length; i++) {
+            out_string += tags_list[i] + ' ';
         }
         var search = out_string;
         //        if (!search){
@@ -2352,7 +2350,7 @@ App.filter('tagDirectorySearch', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 App.filter('eventTagDirectorySearch', function() {
@@ -2391,14 +2389,14 @@ App.filter('eventTagDirectorySearch', function() {
             }
         }
         return retList;
-    }
+    };
 });
 
 
 App.filter('displayTime', function(){
     return function(time){
         return momentInTimezone(time).calendar();
-    }
+    };
 });
 
 App.filter('directorySearch', function() {
@@ -2437,7 +2435,7 @@ App.filter('directorySearch', function() {
             }
         }
         return in_objects;
-    }
+    };
 });
 
 // App.factory('getEvents', function($http, $rootScope, RESTService) {
@@ -2497,7 +2495,7 @@ App.factory('registerOrganizationService', function() {
 //             var defer = $q.defer();
 //             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
 //                 .success(function(data){
-//                     if (!RESTService.hasErrors(data)){logged_in = true;} 
+//                     if (!RESTService.hasErrors(data)){logged_in = true;}
 //                         defer.resolve();
 //                         console.log("returned login result: ", data);
 //                  })
