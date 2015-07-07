@@ -280,14 +280,32 @@ md-toolbar.md-tall{
     .details{color:#ccc; font-size:12px; margin:0px 0px 4px 4px;}
     .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
     .chatterList h3{font-size:14px; line-height:1.4em;}
+
+   //  .chatterList .details .fa-star{position:absolute; left:0px; top:7px;}
+}
+@media (max-width:600px){
+   #chatterTitle{
+      .md-toolbar-tools{padding:0px 4px 0px 8px;
+         img{margin-right:8px;}
+      }
+         .md-toolbar-tools h3{font-size:14px;}
+      }
+   #confirmImportant{
+      .md-toolbar-tools{padding:0px 8px;}
+   }
 }
 
 #chatterDialog{
     max-width:95%; max-height:95%;
+    .md-toolbar-tools .description{font-size:14px;}
+
     md-toolbar.md-padding{padding:16px 16px 8px 16px !important;
     label{color:white;}
     textarea{color:white;}
     }
+    #confirmImportant{
+      .md-toolbar-tools .md-button{width:48px;}
+   }
 
         md-list-item button{padding:8px 16px;}
         .md-list-item-text{line-height:24px;}

@@ -1,27 +1,35 @@
 <md-dialog id="chatterDialog" md-theme="{{$root.color}}" flex-gt-sm="80">
    <md-content>
-      <md-toolbar>
+      <md-toolbar id="chatterTitle">
          <div class="md-toolbar-tools">
             <md-list-item style="width:100%;">
                <img src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" alt="{{chat.author.first_name}}" class="md-avatar">
                <h3>{{chat.author.first_name}} {{chat.author.last_name}}</h3>
                <span flex></span>
                <md-button ng-hide="editing" class="btn-touch" ng-click="editChatter(chat.content)" aria-label="edit" ng-show="chat.author.key == me.key"><i class="fa fa-pencil-square-o"></i></md-button>
-               <md-button ng-hide="editing" class="btn-touch" ng-click="makeImportant(chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !chat.important, 'fa-star': chat.important}"></i>
-                  <md-tooltip md-direction="bottom">
+               <md-button ng-hide="editing" class="btn-touch" ng-click="showconfirmImportant(chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !chat.important, 'fa-star': chat.important}"></i>
+                  <md-tooltip md-direction="left">
                      Make Important
                   </md-tooltip>
                </md-button>
-               <md-button md-no-ink class="btn-touch" aria-label="like chatter" ng-click="likeChatter(chat);" ng-hide="chat.author.key == me.key"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i></md-button>
-               <md-button ng-hide="editing" class="btn-touch" ng-click="chatter.confirmDelete = !chatter.confirmDelete" aria-label="delete" ng-show="chat.author.key == me.key"><i class="fa fa-trash"></i></md-button>
+               <md-button class="btn-touch" aria-label="like chatter" ng-click="likeChatter(chat);" ng-hide="chat.author.key == me.key"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i></md-button>
+               <md-button ng-hide="editing" class="btn-touch" ng-click="confirmDelete = !confirmDelete" aria-label="delete" ng-show="chat.author.key == me.key"><i class="fa fa-trash"></i></md-button>
             </md-list-item>
          </div>
       </md-toolbar>
-      <md-toolbar ng-show="chatter.confirmDelete" class="md-warn slideDown">
+      <md-toolbar id="confirmImportant" ng-show="confirmImportant" class="slideDown">
+         <div class="md-toolbar-tools">
+            <span class="description">Notify all members?</span>
+            <span flex></span>
+            <md-button ng-click="makeImportant(chat); confirmImportant = !confirmImportant">Yes</md-button>
+            <md-button ng-click="confirmImportant = !confirmImportant">No</md-button>
+         </div>
+      </md-toolbar>
+      <md-toolbar ng-show="confirmDelete" class="md-warn slideDown">
          <div class="md-toolbar-tools">
             <span flex></span>
             <md-button ng-click="deleteChatter(chat)">Delete</md-button>
-            <md-button ng-click="chatter.confirmDelete = !chatter.confirmDelete">Cancel</md-button>
+            <md-button ng-click="confirmDelete = !confirmDelete">Cancel</md-button>
          </div>
       </md-toolbar>
       <div id="chatterContent" class="md-padding no-padding-bottom">

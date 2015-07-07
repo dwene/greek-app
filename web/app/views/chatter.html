@@ -28,15 +28,13 @@
                      <span flex></span>
                      <md-button class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i><span class="numberoflikes">{{chat.likes}}</span></md-button>
                   </md-list-item>
-                  <p class="details">{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} comments | {{chat.edited? "Edited":""}} {{(chat.edited? chat.edited:chat.timestamp) | displayTime}}</p>
+                  <p class="details"><span ng-show="chat.important"><i class="fa fa-star theme-color"></i> | </span>{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} <i class="fa fa-comments"></i> | {{chat.edited? "Edited":""}} {{(chat.edited? chat.edited:chat.timestamp) | displayTime}}</p>
                   </div>
                </md-list>
             </md-content>
          </div>
          <div role="tabpanel" id="importantTab-content" aria-labelledby="importantTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
-            <md-content class="md-padding no-padding-top">
 
-            </md-content>
          </div>
       </div>
    </div>

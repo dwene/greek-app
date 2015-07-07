@@ -59,6 +59,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
    function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
+
       Chatter.getComments(scope.chat);
       console.log(scope.chat);
       scope.me = Session.me;
@@ -92,8 +93,13 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          Chatter.edit(scope.chat, scope.chat.content);
       };
 
-      scope.makeImportant = function(key){
-         Chatter.makeImportant(key);
+      scope.makeImportant = function(chat){
+         Chatter.makeImportant(chat);
+      };
+
+      scope.showconfirmImportant = function(chat){
+         if(chat.important === false){scope.confirmImportant = !scope.confirmImportant;}
+         else{Chatter.makeImportant(chat);}
       };
 
       scope.deleteChatter = function(){
