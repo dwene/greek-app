@@ -3,10 +3,10 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         routeChange();
         Directory.get();
         $scope.startsWith = 0;
-        var selectedUser = undefined;
+        var selectedUser;
         $scope.change = function() {
             $scope.startsWith = 0;
-        }
+        };
         $scope.directory = Directory.directory;
         $scope.memberslength = 20;
         $scope.getMembers = function() {
@@ -48,7 +48,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.openChangeEmailModal = function(user, ev) {
             selectedUser = user;
             $mdDialog.show({
-                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
+                controller: 'dialogController',
                 templateUrl: 'views/templates/members/changeEmailDialog.html',
                 targetEvent: ev
             });

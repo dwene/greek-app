@@ -93,13 +93,13 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          Chatter.edit(scope.chat, scope.chat.content);
       };
 
-      scope.makeImportant = function(chat){
-         Chatter.makeImportant(chat);
+      scope.makeImportant = function(chat, notify){
+         Chatter.makeImportant(chat, notify);
       };
 
       scope.showconfirmImportant = function(chat){
          if(chat.important === false){scope.confirmImportant = !scope.confirmImportant;}
-         else{Chatter.makeImportant(chat);}
+         else{Chatter.makeImportant(chat, false);}
       };
 
       scope.deleteChatter = function(){

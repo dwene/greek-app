@@ -21,8 +21,8 @@
          <div class="md-toolbar-tools">
             <span class="description">Notify all members?</span>
             <span flex></span>
-            <md-button ng-click="makeImportant(chat); confirmImportant = !confirmImportant">Yes</md-button>
-            <md-button ng-click="confirmImportant = !confirmImportant">No</md-button>
+            <md-button ng-click="makeImportant(chat, true); confirmImportant = !confirmImportant">Yes</md-button>
+            <md-button ng-click="makeImportant(chat, false); confirmImportant = !confirmImportant">No</md-button>
          </div>
       </md-toolbar>
       <md-toolbar ng-show="confirmDelete" class="md-warn slideDown">
@@ -96,8 +96,8 @@
 
    </md-content>
    <div class="md-actions" layout="row">
-      <md-button class="followButton" ng-show="chat.following && !chat.mute" ng-click="unfollowChatter(chat)"><i class="fa fa-bell-slash-o"></i> unfollow</md-button>
-      <md-button class="followButton" ng-show="!chat.following || chat.mute" ng-click="followChatter(chat)"><i class="fa fa-bell"></i> follow</md-button>
+      <md-button class="followButton" ng-show="chat.following" ng-click="unfollowChatter(chat)"><i class="fa fa-bell-slash-o"></i> unfollow</md-button>
+      <md-button class="followButton" ng-show="!chat.following" ng-click="followChatter(chat)"><i class="fa fa-bell"></i> follow</md-button>
       <span flex></span>
       <md-button class="md-primary" ng-disabled="!comment.length" ng-click="commentOnChatter(chat, comment)">
          Comment

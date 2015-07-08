@@ -15,7 +15,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
 
         function updateChatters(chatters){
             var has_changed = false;
-            for (var i = 0; i < chatter.data.feed.length; i++){
+            for (i = 0; i < chatter.data.feed.length; i++){
                 if (chatter.data.feed[i].key == chat.key){
                     chatter.data.feed[i] = chat;
                     has_changed = true;
@@ -36,14 +36,14 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
 
         function updateChatter(chat){
             var has_changed = false;
-            for (var i = 0; i < chatter.data.feed.length; i++){
+            for (i = 0; i < chatter.data.feed.length; i++){
                 if (chatter.data.feed[i].key == chat.key){
                     chatter.data.feed[i] = chat;
                     has_changed = true;
                     break;
                 }
             }
-            for (var j = 0; j < chatter.data.important.length; j++){
+            for (i = 0; i < chatter.data.important.length; i++){
                 if (chatter.data.important[j].key == chat.key){
                     chatter.data.important[j] = chat;
                     has_changed = true;
@@ -145,7 +145,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/like', {key:chat.key})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                        for (var i = 0; i < chatter.data.feed.length; i++){
+                        for (i = 0; i < chatter.data.feed.length; i++){
                            if (chat.key == chatter.data.feed[i].key){
                                 chatter.data.feed[i] = chat;
                             }
@@ -230,15 +230,15 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
            });
         };
 
-        chatter.makeImportant = function(chat){
+        chatter.makeImportant = function(chat, notify){
             chat.important = !chat.important;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/important', {key:chat.key})
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/important', {key:chat.key, notify:notify})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
                     if (chat.important){
                         chatter.data.important.push(chat);
                     }else{
-                        for (var i = 0; i < chatter.data.important.length; i++){
+                        for (i = 0; i < chatter.data.important.length; i++){
                             if (chatter.data.important[i].key == chat.key){
                                 chatter.data.important.splice(i, 1);
                                 break;
@@ -259,7 +259,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/delete', {key:chat.key})
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        for (var i = 0; i < chatter.data.feed.length; i++){
+                        for (i = 0; i < chatter.data.feed.length; i++){
                             if (chat.key == chatter.data.feed[i].key){
                                 chatter.data.feed.splice(i, 1);
                             }
@@ -284,12 +284,12 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     if (!RESTService.hasErrors(data)) {
                         var load_data = JSON.parse(data.data);
                         chat.edited = load_data.edited;
-                        for (var i = 0; i < chatter.data.feed.length; i++){
+                        for (i = 0; i < chatter.data.feed.length; i++){
                             if (chat.key == chatter.data.feed[i].key){
                                 chatter.data.feed[i] = content;
                             }
                         }
-                        for (var i = 0; i < chatter.data.important.length; i++){
+                        for (i = 0; i < chatter.data.important.length; i++){
                             if (chat.key == chatter.data.important[i].key){
                                 chatter.data.important[i].content = content;
                             }
@@ -313,7 +313,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/mute', {key:chat.key})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                        for (var i = 0; i < chatter.data.feed.length; i++){
+                        for (i = 0; i < chatter.data.feed.length; i++){
                            if (chat.key == chatter.data.feed[i].key){
                                 chatter.data.feed[i] = chat;
                             }
