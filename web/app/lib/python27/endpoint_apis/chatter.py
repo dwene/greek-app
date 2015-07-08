@@ -37,8 +37,7 @@ class ChatterApi(remote.Service):
             chatter["author_future"] = chatter["author"].get_async()
             chatter["like"] = request_user.key in chatter["likes"]
             chatter["likes"] = len(chatter["likes"])
-            chatter["mute"] = request_user.key in chatter['muted']
-            chatter["following"] = request_user.key in chatter['following']
+            chatter["following"] = request_user.key in chatter['following'] and request_user not in chatter['muted']
             author = chatter["author_future"].get_result()
             chatter["author"] = {"first_name": author.first_name,
                                  "last_name": author.last_name,
@@ -102,7 +101,6 @@ class ChatterApi(remote.Service):
         chatter.put()
         chat = ndb_to_dict(chatter)
         chat['following'] = True
-        chat['mute'] = False
         chat['comments'] = list()
         chat['like'] = False
         chat['likes'] = 0
@@ -298,9 +296,15 @@ class ChatterApi(remote.Service):
         if not "key" in data:
             return OutgoingMessage(error='Missing arguments in new Chatter.')
         chatter = ndb.Key(urlsafe=data['key']).get()
-        if request_user.key in chatter.following:
-            chatter.following.remove(request_user.key)
-        else:
+        following = False
+        if request_user.key in chatter.following and request_user.key in chatter.muted:
+            chatter.muted.remove(request_user.key)
+            following = True
+        elif request_user.key in chatter.following and request_user.key not in chatter.muted:
+            chatter.muted.append(request_user.key)
+            following = False
+        elif request_user.key not in chatter.following:
             chatter.following.append(request_user.key)
+            following = True
         chatter.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump({'following': following}))

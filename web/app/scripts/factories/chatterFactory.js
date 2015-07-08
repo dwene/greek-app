@@ -304,11 +304,11 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         };
 
         chatter.mute = function(chat){
-            if (chat.mute){
-                chat.mute = false;
+            if (chat.following){
+                chat.following = false;
             }
             else{
-                chat.mute = true;
+                chat.following = true;
             }
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/mute', {key:chat.key})
             .success(function(data){
@@ -323,7 +323,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                                 chatter.data.important[i] = chat;
                             }
                         }
-
                 } else {
                     console.log('Err', data);
                 }
