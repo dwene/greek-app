@@ -9,6 +9,7 @@ chatter_api = endpoints.api(name='chatter', version='v1',
                             allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                             audiences=[ANDROID_AUDIENCE])
 
+
 @chatter_api.api_class(resource_name='chatter')
 class ChatterApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get', http_method='POST', name='chatter.get')
@@ -23,9 +24,9 @@ class ChatterApi(remote.Service):
         if "important" in data and data["important"] is True:
             chatters_future = Chatter.query(Chatter.organization == request_user.organization,
                                             Chatter.important == True).order(
-                                            -Chatter.timestamp).fetch_async(20, offset=starts_with)
+                -Chatter.timestamp).fetch_async(20, offset=starts_with)
         else:
-            chatters_future = Chatter.query(Chatter.organization == request_user.organization)\
+            chatters_future = Chatter.query(Chatter.organization == request_user.organization) \
                 .order(-Chatter.timestamp).fetch_async(20, offset=starts_with)
         chatters = chatters_future.get_result()
         chatter_dict = list()
@@ -61,7 +62,7 @@ class ChatterApi(remote.Service):
             starts_with = data['offset']
         chatter = ndb.Key(urlsafe=data['key']).get()
         chatter_comments = ChatterComment.query(ChatterComment.chatter == chatter.key).order(
-                           -ChatterComment.timestamp).fetch(20, offset=starts_with)
+            -ChatterComment.timestamp).fetch(20, offset=starts_with)
         comments_dict = list()
         for comment in chatter_comments:
             comments_dict.append(ndb_to_dict(comment))
@@ -157,7 +158,7 @@ class ChatterApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        if not "key" in data:
+        if not all(k in data for k in ("notify", "key")):
             return OutgoingMessage(error='Missing arguments in flagging Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
         if not str(type(chatter)).startswith("Chatter"):
