@@ -48,7 +48,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.openChangeEmailModal = function(user, ev) {
             selectedUser = user;
             $mdDialog.show({
-                controller: 'dialogController',
+                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
                 templateUrl: 'views/templates/members/changeEmailDialog.html',
                 targetEvent: ev
             });
@@ -61,7 +61,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
                 templateUrl: 'views/templates/members/convertMembersDialog.html',
                 targetEvent: ev
             });
-        }
+        };
 
         function dialogController($scope, $mdDialog) {
             $scope.selectedUser = selectedUser;

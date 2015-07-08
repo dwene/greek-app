@@ -44,8 +44,8 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 }
             }
             for (i = 0; i < chatter.data.important.length; i++){
-                if (chatter.data.important[j].key == chat.key){
-                    chatter.data.important[j] = chat;
+                if (chatter.data.important[i].key == chat.key){
+                    chatter.data.important[i] = chat;
                     has_changed = true;
                     break;
                 }
