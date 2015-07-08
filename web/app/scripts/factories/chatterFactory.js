@@ -15,14 +15,14 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
 
         function updateChatters(chatters){
             var has_changed = false;
-            for (i = 0; i < chatter.data.feed.length; i++){
+            for (var i = 0; i < chatter.data.feed.length; i++){
                 if (chatter.data.feed[i].key == chat.key){
                     chatter.data.feed[i] = chat;
                     has_changed = true;
                     break;
                 }
             }
-            for (i = 0; i < chatter.data.important.length; i++){
+            for (var i = 0; i < chatter.data.important.length; i++){
                 if (chatter.data.important[i].key == chat.key){
                     chatter.data.important[i] = chat;
                     has_changed = true;
@@ -141,10 +141,11 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 chat.like = true;
                 chat.likes ++;
             }
-            chat.following = true;
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/like', {key:chat.key})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
+                    var loaded = JSON.load(data.data);
+                    chat.following = loaded.following;
                         for (i = 0; i < chatter.data.feed.length; i++){
                            if (chat.key == chatter.data.feed[i].key){
                                 chatter.data.feed[i] = chat;
@@ -169,8 +170,9 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/post', {key:chat.key, content:content})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                        chat.comments.push(JSON.parse(data.data));
-                        chat.following = true;
+                        var loaded = JSON.load(data.data);
+                        chat.comments.push(loaded.comment);
+                        chat.following = loaded.following;
                     } else {
                         console.log('Err', data);
                     }

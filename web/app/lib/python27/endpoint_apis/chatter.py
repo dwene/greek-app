@@ -192,7 +192,8 @@ class ChatterApi(remote.Service):
             chatter.likes.remove(request_user.key)
             chatter.put()
             like = False
-        return OutgoingMessage(error='', data=json_dump(like))
+        following = request_user.key in chatter.following and request_user.key not in chatter.muted
+        return OutgoingMessage(error='', data=json_dump({'like': like, 'following': following}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/post',
                       http_method='POST', name='chatter.comment')
@@ -222,7 +223,8 @@ class ChatterApi(remote.Service):
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
-        return OutgoingMessage(error='', data=json_dump(comm))
+        following = request_user.key in chatter.following and request_user.key not in chatter.muted
+        return OutgoingMessage(error='', data=json_dump({'comment': comm, 'following':following}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
                       http_method='POST', name='chatter.like_comment')
