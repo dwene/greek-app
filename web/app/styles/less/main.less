@@ -209,7 +209,9 @@ md-toolbar.md-tall{
     md-list-item{position:relative; overflow:hidden; -webkit-backface-visibility: hidden;}
     md-list-item:not(:last-child){border-bottom:1px solid #ccc;}
     md-list-item.md-padding{padding:8px;}
+
 }
+
 .chatterList{
    .listItem{position:relative; overflow:hidden; -webkit-backface-visibility: hidden;}
    .listItem:not(:last-child){border-bottom:1px solid #ccc;}
@@ -233,32 +235,6 @@ md-toolbar.md-tall{
 #login{
     md-content{padding:10px 30px;}
     #buttons{margin-top:10px;}
-}
-
-#appHome{
-
-    #upcomingEvents{
-        a{height:100%; width:100%; padding:8px;}
-    }
-
-    #notifications{backface-visibility: hidden; -webkit-backface-visibility: hidden; margin-bottom:10px;
-       md-toolbar{
-         .messageCount{position:absolute; top:8px; left:10px; text-align:center; width:80px; font-size:12px; font-weight:bold;}
-        #arrows{width:80px;}
-        #messageArrows, #archivedArrows{width:85px;}
-        .left, .right{
-            position:relative; top:10px; margin:0px; display:inline-block;
-        }
-       }
-    md-toolbar > *{margin:0px;}
-    }
-    .notificationText{width: 100%; height:18px; line-height:18px; overflow: hidden; display: block;}
-
-    .message.new{
-        h3{font-weight:bolder;}
-       .isNew{display:block; position:absolute; height:100%; width:2px; background:black; top:0px; left:0px;}
-    }
-    #archived{backface-visibility: hidden; -webkit-backface-visibility: hidden;}
 }
 
 #directory{
@@ -373,6 +349,10 @@ md-toolbar.md-tall{
     #eventList{
         md-toolbar{height:auto; min-height:0px;}
     }
+    .md-list-item-text{
+      h3{font-weight:bold; line-height:1.2em; margin-bottom:4px;}
+      p{color:#ccc; line-height:1.2em;}
+   }
 }
 
 #eventInfo{
@@ -392,6 +372,7 @@ md-toolbar.md-tall{
 #links{
     .groupTitle .md-toolbar-tools{padding-right:0px;}
     .groupButtons{width:96px;}
+    md-content{width:100%;}
        .link > button{
          a{display:block; width:100%; height:100%; padding:10px 0px 10px 15px; line-height:1.2em;}
       }

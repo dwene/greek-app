@@ -4,6 +4,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         Directory.get();
         $scope.startsWith = 0;
         var selectedUser;
+        var i;
         $scope.change = function() {
             $scope.startsWith = 0;
         };
@@ -12,7 +13,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.getMembers = function() {
             var directory = Directory.directory;
             $scope.end = Math.floor(directory.members.length / 10);
-            for (var i = 0; i < directory.members.length; i++) {
+            for (i = 0; i < directory.members.length; i++) {
                 directory.members[i].name = directory.members[i].first_name + " " + directory.members[i].last_name;
             }
             $scope.directory = directory;
@@ -28,7 +29,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.openDeleteMemberModal = function(user, ev) {
             selectedUser = user;
             $mdDialog.show({
-                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
+                controller: dialogController,
                 templateUrl: 'views/templates/members/deleteMemberDialog.html',
                 targetEvent: ev
             });
@@ -48,7 +49,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.openChangeEmailModal = function(user, ev) {
             selectedUser = user;
             $mdDialog.show({
-                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
+                controller: dialogController,
                 templateUrl: 'views/templates/members/changeEmailDialog.html',
                 targetEvent: ev
             });
@@ -57,7 +58,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.openConvertMembersModal = function(user, ev) {
             selectedUser = $scope.directory.members;
             $mdDialog.show({
-                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
+                controller: dialogController,
                 templateUrl: 'views/templates/members/convertMembersDialog.html',
                 targetEvent: ev
             });
@@ -68,26 +69,26 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
             $scope.removeMember = function(user) {
                 removeMember(user);
                 $mdDialog.hide();
-            }
+            };
             $scope.convertMember = function(user) {
                 convertMemberToAlumni(user);
                 $mdDialog.hide();
-            }
+            };
             $scope.closeDialog = function() {
                 $mdDialog.hide();
-            }
+            };
             $scope.resendWelcomeEmail = function(user) {
                 resendWelcomeEmail(user);
                 $mdDialog.hide();
-            }
+            };
             $scope.convertMembers = function() {
                 convertMembersToAlumni();
                 $mdDialog.hide();
-            }
+            };
             $scope.changeEmail = function(user, new_email) {
                 changeUserEmail(user, new_email);
                 $mdDialog.hide();
-            }
+            };
         }
 
         $scope.loadMoreMembers = function() {
@@ -113,7 +114,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
                 .error(function(data) {
                     member.updating = 'broken';
                 });
-        };
+        }
 
         $scope.resendAllWelcomeEmails = function() {
             $scope.resendWorking = 'pending';
@@ -174,12 +175,12 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
                 .error(function(data) {
                     console.log('Error: ', data);
                 });
-        };
+        }
 
         function convertMembersToAlumni() {
             keys = [];
             $('#convertMemberModal').modal('hide');
-            for (var i = 0; i < $scope.directory.members.length; i++) {
+            for (i = 0; i < $scope.directory.members.length; i++) {
                 if ($scope.directory.members[i].checked) {
                     $scope.directory.members[i].checked = false;
                     keys.push($scope.directory.members[i].key);
@@ -203,7 +204,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
                     console.log('Error: ', data);
                 });
             Directory.set($scope.directory);
-        };
+        }
 
         function removeMember(user) {
             console.log('user to remove', user);
@@ -216,13 +217,13 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
                 .error(function(data) {
                     console.log('Error: ', data);
                 });
-            for (var i = 0; i < $scope.directory.members.length; i++) {
+            for (i = 0; i < $scope.directory.members.length; i++) {
                 if ($scope.directory.members[i].key == user.key) {
                     $scope.directory.members.splice(i, 1);
                     Directory.set($scope.directory);
                     break;
                 }
             }
-        };
+        }
     }
 ]);

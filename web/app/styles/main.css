@@ -873,65 +873,6 @@ md-toolbar.md-tall {
 #login #buttons {
   margin-top: 10px;
 }
-#appHome #upcomingEvents a {
-  height: 100%;
-  width: 100%;
-  padding: 8px;
-}
-#appHome #notifications {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  margin-bottom: 10px;
-}
-#appHome #notifications md-toolbar .messageCount {
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  text-align: center;
-  width: 80px;
-  font-size: 12px;
-  font-weight: bold;
-}
-#appHome #notifications md-toolbar #arrows {
-  width: 80px;
-}
-#appHome #notifications md-toolbar #messageArrows,
-#appHome #notifications md-toolbar #archivedArrows {
-  width: 85px;
-}
-#appHome #notifications md-toolbar .left,
-#appHome #notifications md-toolbar .right {
-  position: relative;
-  top: 10px;
-  margin: 0px;
-  display: inline-block;
-}
-#appHome #notifications md-toolbar > * {
-  margin: 0px;
-}
-#appHome .notificationText {
-  width: 100%;
-  height: 18px;
-  line-height: 18px;
-  overflow: hidden;
-  display: block;
-}
-#appHome .message.new h3 {
-  font-weight: bolder;
-}
-#appHome .message.new .isNew {
-  display: block;
-  position: absolute;
-  height: 100%;
-  width: 2px;
-  background: black;
-  top: 0px;
-  left: 0px;
-}
-#appHome #archived {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
 #directory .md-padding {
   padding-top: 0px;
 }
@@ -1159,6 +1100,15 @@ md-toolbar.md-tall {
   height: auto;
   min-height: 0px;
 }
+#events .md-list-item-text h3 {
+  font-weight: bold;
+  line-height: 1.2em;
+  margin-bottom: 4px;
+}
+#events .md-list-item-text p {
+  color: #ccc;
+  line-height: 1.2em;
+}
 #eventInfo md-toolbar #date {
   text-align: center;
   font-size: 28px;
@@ -1183,6 +1133,9 @@ md-toolbar.md-tall {
 }
 #links .groupButtons {
   width: 96px;
+}
+#links md-content {
+  width: 100%;
 }
 #links .link > button a {
   display: block;

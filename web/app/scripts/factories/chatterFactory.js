@@ -222,7 +222,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/delete', {key:comment.key})
            .success(function(data){
                if (!RESTService.hasErrors(data)) {
-
                    } else {
                        console.log('Err', data);
                    }

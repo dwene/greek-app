@@ -5,6 +5,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
    $scope.me = Session.me;
    Chatter.get();
    Chatter.getImportant();
+   var i;
 
    $scope.loadImportant = function(){
       Chatter.getImportant();
@@ -59,9 +60,8 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
 
    function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
-
       Chatter.getComments(scope.chat);
-      console.log(scope.chat);
+      console.log('chat', scope.chat);
       scope.me = Session.me;
 
       scope.hide = function(){
@@ -106,18 +106,9 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
          $mdDialog.hide();
          scope.confirmDelete = false;
          Chatter.delete(scope.chat, scope.chat.content);
-         for (var i = 0; i < $scope.chatter.length; i++){
+         for (i = 0; i < $scope.chatter.length; i++){
             if ($scope.chatter[i].key == scope.chat.key){
                $scope.chatter.splice(i, 1);
-            }
-         }
-      };
-
-      scope.deleteComment = function(comment){
-         Chatter.deleteComment(comment);
-         for (var i = 0; i < scope.chat.comments.length; i++){
-            if (comment.key == scope.chat.comments[i].key){
-               scope.chat.comments.splice(i, 1);
             }
          }
       };
@@ -154,15 +145,17 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.likeComment = function(comment){
          Chatter.likeComment(comment);
       };
+
       scope.deleteComment = function(comment){
          comment.confirmDelete = false;
-         console.log(comment);
-         Chatter.deleteComment(comment.key);
-         for (var i = 0; i < scope.chat.comments.length; i++){
+         console.log('comment', comment);
+         for (i = 0; i < scope.chat.comments.length; i++) {
             if (scope.chat.comments[i].key == scope.chat.comments.key){
-               scome.chat.comments.splice(i, 1);
+               scope.chat.comments.splice(i, 1);
+               console.log('this should be splicing at', i);
             }
          }
+         Chatter.deleteComment(comment);
       };
    }
 

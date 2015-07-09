@@ -1,18 +1,17 @@
 <md-dialog md-theme="{{$root.color}}">
-  <md-content>
-       <md-subheader>
-            Change email from {{selectedUser.email}}?
-        </md-subheader>
-		<md-divider></md-divider>
-        <md-input-container>
-            <label for="email">Change Email</label>
-            <input type="email" name="email" ng-model="email">
-        </md-input-container>
-  </md-content>
-  
-  <div class="md-actions" layout="row">
+   <md-toolbar>
+      <div class="md-toolbar-tools">
+         <h3>Change email from {{selectedUser.email}}?</h3>
+      </div>
+   </md-toolbar>
+   <md-content class="md-padding">
+      <md-input-container>
+         <label for="email">Change Email</label>
+         <input type="email" name="email" ng-model="email">
+      </md-input-container>
+   </md-content>
+   <div class="md-actions" layout="row">
       <md-button ng-click="changeEmail(selectedUser, email)" ng-disabled="!email" class="md-primary">change</md-button>
-      <md-button ng-click="closeDialog(selectedUser)">cancel</md-button>
-        
-  </div>
+      <md-button ng-click="closeDialog()">cancel</md-button>
+   </div>
 </md-dialog>
