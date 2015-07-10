@@ -27,7 +27,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       else{
          $scope.currentFeed = $scope.chatter;
       }
-      console.log("currentFeed", $scope.currentFeed);
    }
 
    if (Chatter.data){

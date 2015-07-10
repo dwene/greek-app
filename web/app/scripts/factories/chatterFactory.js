@@ -144,7 +144,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/like', {key:chat.key})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                    var loaded = JSON.load(data.data);
+                    var loaded = JSON.parse(data.data);
                     chat.following = loaded.following;
                         for (i = 0; i < chatter.data.feed.length; i++){
                            if (chat.key == chatter.data.feed[i].key){
@@ -170,7 +170,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/post', {key:chat.key, content:content})
             .success(function(data){
                 if (!RESTService.hasErrors(data)) {
-                        var loaded = JSON.load(data.data);
+                        var loaded = JSON.parse(data.data);
                         chat.comments.push(loaded.comment);
                         chat.following = loaded.following;
                     } else {

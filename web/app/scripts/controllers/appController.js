@@ -28,11 +28,6 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
             Inbox.get();
             Notifications.get();
             Channels.connect();
-            if (!angular.isDefined(notification_update_interval)) {
-                notification_update_interval = $interval(function() {
-                    updates()
-                }, 10000);
-            }
             $scope.authenticated = true;
         });
         $scope.$on('organization:updated', function() {

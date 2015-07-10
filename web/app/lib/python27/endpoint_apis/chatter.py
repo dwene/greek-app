@@ -60,8 +60,8 @@ class ChatterApi(remote.Service):
         starts_with = 0
         if 'offset' in data:
             starts_with = data['offset']
-        chatter = ndb.Key(urlsafe=data['key']).get()
-        chatter_comments = ChatterComment.query(ChatterComment.chatter == chatter.key).order(
+        chatter_key = ndb.Key(urlsafe=data['key'])
+        chatter_comments = ChatterComment.query(ChatterComment.chatter == chatter_key).order(
             -ChatterComment.timestamp).fetch(20, offset=starts_with)
         comments_dict = list()
         for comment in chatter_comments:
@@ -72,6 +72,9 @@ class ChatterApi(remote.Service):
             comment['likes'] = len(comment['likes'])
             if comment['author'] not in author_keys:
                 author_keys.append(comment['author'])
+        logging.info('author keys')
+        logging.info(author_keys)
+        User.query(User.key.IN(author_keys)).fetch(projection=[User.first_name, User.last_name, User.prof_pic])
         authors = ndb.get_multi(author_keys)
         for comment in comments_dict:
             for author in authors:
@@ -110,7 +113,6 @@ class ChatterApi(remote.Service):
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
         del chat['muted']
-        PushFactory.channel_send("New Chatter!", [request_user], "Chatter")
         return OutgoingMessage(error='', data=json_dump(chat))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='delete',
@@ -215,7 +217,7 @@ class ChatterApi(remote.Service):
         chatter.comments.append(comment.put())
         if request_user.key not in chatter.following:
             chatter.following.append(request_user.key)
-        chatter.put()
+        chatter_future = chatter.put_async()
         comm = ndb_to_dict(comment)
         comm['like'] = False
         comm['likes'] = 0
@@ -223,8 +225,18 @@ class ChatterApi(remote.Service):
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
+        notification = dict()
+
+        notification['content'] = request_user.first_name + " " + request_user.last_name + \
+                                    " just commented on a chatter you are following!"
+        notification['sender'] = request_user.key
+        notification['type'] = "CHATTERCOMMENT"
+        notification['sender_key'] = chatter.key
+        follower_keys = list((set(chatter.following) - set(chatter.muted)))
+        PushFactory.send_notification_with_keys(notification, follower_keys)
         following = request_user.key in chatter.following and request_user.key not in chatter.muted
-        return OutgoingMessage(error='', data=json_dump({'comment': comm, 'following':following}))
+        chatter_future.get_result()
+        return OutgoingMessage(error='', data=json_dump({'comment': comm, 'following': following}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
                       http_method='POST', name='chatter.like_comment')

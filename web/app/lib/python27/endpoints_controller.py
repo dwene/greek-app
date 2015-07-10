@@ -9,6 +9,7 @@ from endpoint_apis.polls import polls
 from endpoint_apis.events import events
 from endpoint_apis.auth import auth
 from channels import channels
+from notifications import notifications_api
 from apiconfig import *
 
 api = endpoints.api(name='netegreek', version='v1',
@@ -597,71 +598,6 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data='OK')
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/get',
-                      http_method='POST', name='notifications.get')
-    def get_notifications(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        notification_count = 30
-        if request_user.new_notifications:
-            new_notification_future = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch_async(30)
-        if request_user.new_notifications:
-            if len(request_user.new_notifications) >= 30:
-                notification_count = 0
-            else:
-                notification_count = 30 - len(request_user.new_notifications)
-        if request_user.notifications and notification_count > 0:
-            notifications_future = Notification.query(Notification.key.IN(
-                request_user.notifications)).order(-Notification.timestamp).fetch_async(notification_count)
-        out_notifications = list()
-        if request_user.new_notifications:
-            new_notifications = new_notification_future.get_result()
-            for notify in new_notifications:
-                note = notify.to_dict()
-                note["new"] = True
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        if request_user.notifications and notification_count > 0:
-            notifications = notifications_future.get_result()
-            for notify in notifications:
-                note = notify.to_dict()
-                note["new"] = False
-                note["key"] = notify.key.urlsafe()
-                out_notifications.append(note)
-        return OutgoingMessage(error='', data=json_dump(out_notifications))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/read',
-                      http_method='POST', name='notifications.read')
-    def read_notification(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        for key in request_user.new_notifications:
-            request_user.new_notifications.remove(key)
-            request_user.notifications.insert(0, key)
-        request_user.put()
-        return OutgoingMessage(error='', data='OK')    
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='notifications/update',
-                      http_method='POST', name='notifications.update')
-    def update_notifications(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if request_user.new_notifications:
-            new_notifications = Notification.query(Notification.key.IN(
-                request_user.new_notifications)).order(-Notification.timestamp).fetch(15)
-            out = list()
-            for notify in new_notifications:
-                add = notify.to_dict()
-                add["new"] = True
-                add["key"] = notify.key.urlsafe()
-                out.append(add)
-            return OutgoingMessage(error='', data=json_dump(out))
-        return OutgoingMessage(error='', data=json_dump(list()))
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/set_iphone_token',
                       http_method='POST', name='user.set_iphone_token')
     def set_iphone_token(self, request):
@@ -711,4 +647,4 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(get_image_url(blob_key)))
 
-APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels])
+APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api])

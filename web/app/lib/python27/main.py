@@ -20,7 +20,6 @@ import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python27'))
 import urllib
-from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from google.appengine.api import taskqueue
@@ -345,6 +344,7 @@ class SendPushNotifications(webapp2.RequestHandler):
             for future in futures:
                 future.get_result()
 
+
 class SendDailyNotificationsEmails(webapp2.RequestHandler):
     def get(self):
         users = User.query(User.email_prefs == 'daily').fetch()
@@ -418,12 +418,63 @@ class SendChannel(webapp2.RedirectHandler):
             channel.send_message(token, packet)
 
 
+class SendNotification(webapp2.RedirectHandler):
+    def post(self):
+        packaged = self.request.get('data')
+        unpackaged = json.loads(packaged)
+        users = unpackaged['users']
+        notification = unpackaged['notification']
+        packet = json_dump({'type': 'notification', 'data': notification})
+        for user in users:
+            for token in user['channel_tokens']:
+                channel.send_message(token, packet)
+        apn = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+        payload = Payload(alert=notification['content'], sound="default", badge=1)
+        for user in users:
+            for token in user['ios_tokens']:
+                apn.gateway_server.send_notification(token, payload)
+        return
+
+
+class SendNotificationByKey(webapp2.RedirectHandler):
+    def post(self):
+        packaged = self.request.get('data')
+        unpackaged = json.loads(packaged)
+        notification_item = unpackaged['notification']
+        notification = Notification()
+        notification.type = notification_item['type']
+        notification.content = notification_item['content']
+        notification.sender = ndb.Key(urlsafe=notification_item['sender'])
+        notification.sender_key = ndb.Key(urlsafe=notification_item['sender_key'])
+        notification_key = notification.put()
+        notification_out = notification.to_dict()
+        notification_out['key'] = notification.key
+        packet = json_dump({'type': 'notification', 'data': notification.to_dict()})
+        ios_tokens = list()
+        user_keys = list()
+        for user in unpackaged['users']:
+            user_keys.append(ndb.Key(urlsafe=user))
+        users = ndb.get_multi(user_keys)
+        for user in users:
+            user.new_notifications.insert(0, notification_key)
+            for token in user.iphone_tokens:
+                ios_tokens.append(token)
+            for token in user.channel_tokens:
+                channel.send_message(token, packet)
+        apn = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+        payload = Payload(alert=notification.content, sound="default", badge=1)
+        for token in ios_tokens:
+            apn.gateway_server.send_notification(token, payload)
+        ndb.put_multi(users)
+
+
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
         self.send_blob(blob_info)
-    
+
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/upload', UploadHandler),
@@ -434,5 +485,8 @@ app = webapp2.WSGIApplication([
     ('/_ah/channel/connected/', Connected),
     ('/_ah/channel/disconnected/', Disconnected),
     ('/tasks/channels/send/', SendChannel),
+    ('/tasks/channels/send_notification/', SendNotification),
+    ('/tasks/channels/sendnotificationbykey/', SendNotificationByKey),
+
 
 ], debug=True)
