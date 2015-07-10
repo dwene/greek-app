@@ -102,7 +102,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       };
 
       scope.deleteChatter = function(){
-         $mdDialog.hide();
+         mdDialog.hide();
          scope.confirmDelete = false;
          Chatter.delete(scope.chat, scope.chat.content);
          for (i = 0; i < $scope.chatter.length; i++){
@@ -148,13 +148,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       scope.deleteComment = function(comment){
          comment.confirmDelete = false;
          console.log('comment', comment);
-         for (i = 0; i < scope.chat.comments.length; i++) {
-            if (scope.chat.comments[i].key == scope.chat.comments.key){
-               scope.chat.comments.splice(i, 1);
-               console.log('this should be splicing at', i);
-            }
-         }
-         Chatter.deleteComment(comment);
+         Chatter.deleteComment(comment, scope.chat);
       };
    }
 

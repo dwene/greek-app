@@ -218,7 +218,27 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
            });
         };
 
-        chatter.deleteComment = function(comment){
+        chatter.deleteComment = function(comment, chat){
+            for (var i = 0; i < this.data.feed.length; i++){
+                if (this.data.feed[i].key == chat.key){
+                    var this_chatter = this.data.feed[i];
+                    for (var j = 0; j < this_chatter.comments.length; j++){
+                        if (comment.key == this_chatter.comments[j].key){
+                            this_chatter.comments.splice(j, 1);
+                        }
+                    }
+                }
+            }
+            for (var i = 0; i < this.data.important.length; i++){
+                    if (this.data.important[i].key == chat.key){
+                        var this_chatter = this.data.important[i];
+                        for (var j = 0; j < this_chatter.comments.length; j++){
+                            if (comment.key == this_chatter.comments[j].key){
+                                this_chatter.comments.splice(j, 1);
+                            }
+                        }
+                    }
+            }
            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/delete', {key:comment.key})
            .success(function(data){
                if (!RESTService.hasErrors(data)) {
