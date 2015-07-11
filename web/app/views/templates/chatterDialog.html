@@ -96,8 +96,8 @@
 
    </md-content>
    <div class="md-actions" layout="row">
-      <md-button class="followButton" ng-show="chat.following" ng-click="unfollowChatter(chat)"><i class="fa fa-bell-slash-o"></i> unfollow</md-button>
-      <md-button class="followButton" ng-show="!chat.following" ng-click="followChatter(chat)"><i class="fa fa-bell"></i> follow</md-button>
+      <md-button class="followButton" ng-show="chat.following" ng-click="unfollowChatter(chat)" tabindex="-1"><i class="fa fa-bell-slash-o"></i> unfollow</md-button>
+      <md-button class="followButton" ng-show="!chat.following" ng-click="followChatter(chat)" tabindex="-1"><i class="fa fa-bell"></i> follow</md-button>
       <span flex></span>
       <md-button class="md-primary" ng-disabled="!comment.length" ng-click="commentOnChatter(chat, comment)">
          Comment
