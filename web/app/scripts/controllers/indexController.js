@@ -13,7 +13,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
             $scope.email = Session.me.email;
             $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        })
+        });
         $rootScope.$on('me:updated', function(){
             $scope.me = Session.me;
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
@@ -28,26 +28,33 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             if (url){
                 $timeout(function(){$location.url(url);}, 500);
             }
-            
-        }
+
+        };
         $scope.toggleNotifications = function(){
             Notifications.readAll();
             $mdSidenav('notifications').toggle();
-        }
+        };
 
         $scope.goToNotification = function(notify){
-            console.log('Going to notification link', notify.link)
+           console.log(notify);
+           if (notify.type == 'CHATTERCOMMENT'){
+             $location.url('app/chatter');
+             $scope.toggleNotifications();
+          }
+           if(notify.link){
+            console.log('Going to notification link', notify.link);
             $location.url(notify.link);
             $scope.toggleNotifications();
-        }
-        
+            }
+        };
+
         $scope.showHelpdialog = function(){
             $mdDialog.show({
                     controller: ('helpDialogController', ['$scope', '$mdDialog', helpDialogController]),
                     templateUrl: 'views/templates/helpDialog.html'
             });
-        }
-        
+        };
+
 
         function helpDialogController($scope, $mdDialog){
             $scope.message = '';
@@ -57,17 +64,17 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
                 .error(function(){console.log('error');});
                 $scope.message = '';
                 $mdDialog.hide();
-            }
+            };
             $scope.hide = function(){
                 $mdDialog.hide();
-            }
+            };
         }
         $scope.checkPermissions = function(perms){
             if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)){
                 return false;
             }
-            return true;   
-        }
+            return true;
+        };
         // $scope.logout = function(){
         //     $scope.$emit(AUTH_EVENTS.logoutSuccess);
         //     console.log('Im logging out');

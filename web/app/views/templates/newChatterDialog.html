@@ -1,27 +1,33 @@
 <md-dialog md-theme="{{$root.color}}" flex="66" flex-sm="80">
-<!-- <form id="helpMessage" name="helpMessage" ng-init="message={subject:'', content:''};" novalidate> -->
-  <md-content>
+   <md-content>
       <md-toolbar>
-          <div class="md-toolbar-tools">
-           <h3>Add New Chatter</h3>
-           </div>
+         <div class="md-toolbar-tools">
+            <h3>Add New Chatter</h3>
+         </div>
       </md-toolbar>
-        <md-content class="md-padding no-padding-top no-padding-bottom">
-        <md-input-container>
-           <label for="content">Enter your chatter here...</label>
+      <md-content class="md-padding no-padding-top no-padding-bottom">
+         <md-input-container>
+            <label for="content">Enter your chatter here...</label>
             <textarea id="content" ng-model="content" name="content"></textarea>
-        </md-input-container>
-        </md-content>
+         </md-input-container>
+         <br>
+         <md-checkbox class="md-primary" ng-show="me.perms == 'leadership' || me.perms == 'council'" ng-model="important" aria-label="make important">
+            Important
+         </md-checkbox>
 
-  </md-content>
-  <div class="md-actions" layout="row">
-    <span flex></span>
-    <md-button class="md-primary" ng-disabled="!content.length" ng-click="addChatter(content)">
-        Add Chatter
-    </md-button>
-    <md-button ng-click="hide()">
-        Cancel
-    </md-button>
-  </div>
-<!-- </form> -->
+         <md-switch class="md-primary" ng-show="important === true" ng-model="sendNotifications" aria-label="send notifications">
+            Send out notification?
+         </md-switch>
+      </md-content>
+
+   </md-content>
+   <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button class="md-primary" ng-disabled="!content.length" ng-click="addChatter(content, important, sendNotifications)">
+         Add Chatter
+      </md-button>
+      <md-button ng-click="hide()">
+         Cancel
+      </md-button>
+   </div>
 </md-dialog>

@@ -62,6 +62,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       Chatter.getComments(scope.chat);
       console.log('chat', scope.chat);
       scope.me = Session.me;
+         console.log('me.perms', scope.me.perms);
 
       scope.hide = function(){
          mdDialog.hide();
@@ -160,16 +161,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
    };
 
    function newChatterController(scope, mdDialog){
+
+      scope.me = Session.me;
+
       scope.hide = function(){
          mdDialog.hide();
       };
 
-      scope.addChatter = function(content){
-         if ($scope.data.selectedIndex == 1){
-            Chatter.create(content, true);
-         } else{
-            Chatter.create(content, false);
-         }
+      scope.addChatter = function(content, important, sendNotifications){
+         Chatter.create(content, important, sendNotifications);
          mdDialog.hide();
       };
    }

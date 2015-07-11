@@ -5,7 +5,10 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         chatter.hasLoaded = false;
         chatter.data = {};
         var meta = {feedLoaded: false, importantLoaded: false};
+
+        //for loops
         var i;
+        var j;
 
         var load_data = localStorageService.get('chatter');
         if (load_data) {
@@ -15,15 +18,15 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
 
         function getChattersByKey(key){
             var chatters = [];
-            for (var i = 0; i < chatter.data.feed.length; i++){
+            for (i = 0; i < chatter.data.feed.length; i++){
                 if (chatter.data.feed[i].key == key){
-                    chatters.push(chatter.data.feed[i])
+                    chatters.push(chatter.data.feed[i]);
                     break;
                 }
             }
-            for (var i = 0; i < chatter.data.important.length; i++){
+            for (i = 0; i < chatter.data.important.length; i++){
                 if (chatter.data.important[i].key == key){
-                    chatters.push(chatter.data.important[i])
+                    chatters.push(chatter.data.important[i]);
                     break;
                 }
             }
@@ -110,8 +113,8 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 });
         };
 
-        chatter.create = function(content, important){
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', {content:content, important:important})
+        chatter.create = function(content, important, notify){
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', {content:content, important:important, notify:notify})
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         var newChat = JSON.parse(data.data);
@@ -218,17 +221,17 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             for (var i = 0; i < this.data.feed.length; i++){
                 if (this.data.feed[i].key == chat.key){
                     var this_chatter = this.data.feed[i];
-                    for (var j = 0; j < this_chatter.comments.length; j++){
+                    for (j = 0; j < this_chatter.comments.length; j++){
                         if (comment.key == this_chatter.comments[j].key){
                             this_chatter.comments.splice(j, 1);
                         }
                     }
                 }
             }
-            for (var i = 0; i < this.data.important.length; i++){
+            for (i = 0; i < this.data.important.length; i++){
                     if (this.data.important[i].key == chat.key){
                         var this_chatter = this.data.important[i];
-                        for (var j = 0; j < this_chatter.comments.length; j++){
+                        for (j = 0; j < this_chatter.comments.length; j++){
                             if (comment.key == this_chatter.comments[j].key){
                                 this_chatter.comments.splice(j, 1);
                             }

@@ -19,6 +19,7 @@
          <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3">
             <md-content class="md-padding no-padding-top">
                <md-list class="chatterList">
+                  <div class="md-padding" layout="row" layout-align="center center" ng-hide="currentFeed.length"><md-progress-circular class="md-primary" md-mode="indeterminate"></md-progress-circular></div>
                   <div class="listItem" ng-repeat="chat in currentFeed | orderBy:'-timestamp'">
                   <md-list-item ng-click="openChatter(chat)">
                      <img ng-src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{chat.author.first_name}}" />
