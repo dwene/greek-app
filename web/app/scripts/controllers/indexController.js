@@ -38,7 +38,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         $scope.goToNotification = function(notify){
            console.log(notify);
            if (notify.type == 'CHATTERCOMMENT'){
-             $location.url('app/chatter');
+             $location.url('app/home/'+notify.key+'');
              $scope.toggleNotifications();
           }
            if(notify.link){

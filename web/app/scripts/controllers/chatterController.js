@@ -3,13 +3,16 @@ App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$md
 function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, localStorageService, Directory, Chatter, Session){
 
    $scope.me = Session.me;
-   Chatter.get();
-   Chatter.getImportant();
+
    var i;
 
-   if ($stateParams.token){
-      console.log('I have a token', $stateParams.token);
+   Chatter.get();
+   Chatter.getImportant();
+
+   if ($stateParams.token && Chatter.data.feed){
+      openChatterByKey($stateParams.token);
    }
+
 
    $scope.loadImportant = function(){
       Chatter.getImportant();
@@ -44,6 +47,9 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    $scope.$on('chatter:updated', function(){
       $scope.chatter = Chatter.data.feed;
       defineFeed();
+      if ($stateParams.token && $scope.chatter){
+         openChatterByKey($stateParams.token);
+      }
    });
 
    $scope.$on('importantChatter:updated', function()){
@@ -57,21 +63,24 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       Chatter.like(chatter);
    };
 
-   $scope.openChatterByKey = function(key){
+
+   function openChatterByKey(key){
+      console.log('data', $scope.chatter);
       for (i = 0; i < $scope.chatter.length; i++){
-         if($scope.chatter.data.chatter[i].key == key){
-            $scope.chat = $scope.chatter.data.chatter[i];
+         if($scope.chatter[i].key == key){
+            console.log('scope.chat', $scope.chat);
+            $scope.chat = $scope.chatter[i];
          }
       }
       $mdDialog.show({
          controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
          templateUrl: 'views/templates/chatterDialog.html',
       });
-   };
+   }
 
    $scope.openChatter = function(chat){
       $scope.chat = chat;
-      console.log('opening chatter', chat);
+      console.log('diolog',$mdDialog);
       $mdDialog.show({
          controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
          templateUrl: 'views/templates/chatterDialog.html',
@@ -83,7 +92,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       Chatter.getComments(scope.chat);
       console.log('chat', scope.chat);
       scope.me = Session.me;
-         console.log('me.perms', scope.me.perms);
+      console.log('me.perms', scope.me.perms);
 
       scope.hide = function(){
          mdDialog.hide();
