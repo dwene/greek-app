@@ -52,10 +52,10 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       }
    });
 
-   $scope.$on('importantChatter:updated', function()){
+   $scope.$on('importantChatter:updated', function(){
       $scope.important_chatter = Chatter.data.important;
       defineFeed();
-   }
+   });
 
    defineFeed();
 
