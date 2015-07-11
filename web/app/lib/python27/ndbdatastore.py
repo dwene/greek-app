@@ -64,7 +64,7 @@ class User(ndb.Model):
     # mobile app stuff
     android_tokens = ndb.StringProperty(repeated=True)
     iphone_tokens = ndb.StringProperty(repeated=True)
-    channel_tokens = ndb.StringProperty(repeated=True)
+    channel_tokens = ndb.JsonProperty(default=[])
 
 
 class Notification(ndb.Model):

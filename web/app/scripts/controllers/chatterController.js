@@ -1,15 +1,20 @@
-App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', 'localStorageService', 'Directory', 'Chatter', 'Session',
+App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', '$stateParams', 'localStorageService', 'Directory', 'Chatter', 'Session',
 
-function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageService, Directory, Chatter, Session){
+function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, localStorageService, Directory, Chatter, Session){
 
    $scope.me = Session.me;
    Chatter.get();
    Chatter.getImportant();
    var i;
 
+   if ($stateParams.token){
+      console.log('I have a token', $stateParams.token);
+   }
+
    $scope.loadImportant = function(){
       Chatter.getImportant();
    };
+
    $scope.currentFeed = $scope.chatter;
    $scope.$watch('data.selectedIndex', function(){
       defineFeed();

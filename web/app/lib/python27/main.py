@@ -449,7 +449,8 @@ class SendNotificationByKey(webapp2.RedirectHandler):
         notification_key = notification.put()
         notification_out = notification.to_dict()
         notification_out['key'] = notification.key
-        packet = json_dump({'type': 'notification', 'data': notification.to_dict()})
+        notification_out['new'] = True
+        packet = json_dump({'type': 'notification', 'data': notification_out})
         ios_tokens = list()
         user_keys = list()
         for user in unpackaged['users']:
@@ -482,9 +483,6 @@ class PushUpdate(webapp2.RedirectHandler):
         for user in users:
             for token in user.channel_tokens:
                 channel.send_message(token, packet)
-
-
-
 
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):

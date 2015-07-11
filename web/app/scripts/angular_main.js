@@ -109,6 +109,11 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'views/chatter.html',
                 controller : 'chatterController',
             })
+            .state('app.hometoken', {
+                url : '/home/:token',
+                templateUrl : 'views/chatter.html',
+                controller : 'chatterController',
+            })
             // .state('app.chatter', {
             //     url:'/chatter',
             //     templateUrl : 'views/chatter.html',

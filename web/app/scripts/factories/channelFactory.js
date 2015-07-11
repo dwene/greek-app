@@ -26,7 +26,7 @@ angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notific
     self.handle = function(message){
         console.log("Recieving new Channel Message", message);
         if (message.type === 'notification'){
-            Notifications.add(message.content);
+            Notifications.add(message.data);
         }
         else if(message.type === 'update'){
             var data = message.data;

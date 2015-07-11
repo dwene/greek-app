@@ -25,7 +25,6 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
             console.log('I got my login successfully! :)');
             Organization.get();
-            Inbox.get();
             Notifications.get();
             Channels.connect();
             $scope.authenticated = true;

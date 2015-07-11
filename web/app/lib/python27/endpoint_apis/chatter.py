@@ -16,7 +16,6 @@ COMMENT = "CHATTERCOMMENT"
 def list_followers(chatter):
     return list(set(chatter.following) - set(chatter.muted))
 
-
 @chatter_api.api_class(resource_name='chatter')
 class ChatterApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get', http_method='POST', name='chatter.get')
@@ -79,18 +78,17 @@ class ChatterApi(remote.Service):
             comment['likes'] = len(comment['likes'])
             if comment['author'] not in author_keys:
                 author_keys.append(comment['author'])
-        logging.info('author keys')
-        logging.info(author_keys)
-        User.query(User.key.IN(author_keys)).fetch(projection=[User.first_name, User.last_name, User.prof_pic])
-        authors = ndb.get_multi(author_keys)
-        for comment in comments_dict:
-            for author in authors:
-                if author.key == comment['author']:
-                    comment['author'] = {"first_name": author.first_name,
-                                         "last_name": author.last_name,
-                                         "prof_pic": get_image_url(author.prof_pic),
-                                         "key": comment['author']}
-                    break
+        if author_keys:
+            User.query(User.key.IN(author_keys)).fetch(projection=[User.first_name, User.last_name, User.prof_pic])
+            authors = ndb.get_multi(author_keys)
+            for comment in comments_dict:
+                for author in authors:
+                    if author.key == comment['author']:
+                        comment['author'] = {"first_name": author.first_name,
+                                             "last_name": author.last_name,
+                                             "prof_pic": get_image_url(author.prof_pic),
+                                             "key": comment['author']}
+                        break
         return OutgoingMessage(error='', data=json_dump(comments_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='post',
@@ -188,7 +186,6 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not all(k in data for k in ("notify", "key")):
             return OutgoingMessage(error='Missing arguments in flagging Chatter.')
@@ -197,17 +194,17 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error='Incorrect type of Key', data='')
         if not is_admin(request_user):
             return OutgoingMessage(error='Incorrect Permissions', data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
+
         if chatter.important is False:
             chatter.important = True
             if data['notify'] is True:
-                user_keys = User.query(User.organization == request_user.organization,
-                                       User.perms != 'alumni').fetch(keys_only=True)
                 notification = dict()
                 notification['content'] = request_user.first_name + " " + request_user.last_name + \
                                           " just posted an important chatter."
                 notification['sender'] = request_user.key
                 notification['type'] = "CHATTERCOMMENT"
-                PushFactory.send_notification_with_keys(notification, user_keys)
+                PushFactory.send_notification_with_keys(notification, push_keys)
         else:
             chatter.important = False
         chatter.put()
@@ -292,6 +289,7 @@ class ChatterApi(remote.Service):
         update.type = CHATTER
         update.data = {'type': "NEWCOMMENT", 'length': len(chatter.comments)}
         PushFactory.push_update(update, push_keys)
+        chatter_future.get_result()
         return OutgoingMessage(error='', data=json_dump({'comment': comm, 'following': following}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
