@@ -9,11 +9,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    Chatter.get();
    Chatter.getImportant();
 
-   if ($stateParams.token && Chatter.data.feed){
-      openChatterByKey($stateParams.token);
-   }
-
-
    $scope.loadImportant = function(){
       Chatter.getImportant();
    };
@@ -42,11 +37,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       $scope.chatter = Chatter.data.feed;
       $scope.important_chatter = Chatter.data.important;
       defineFeed();
+      if ($stateParams.token && $scope.chatter){
+         openChatterByKey($stateParams.token);
+      }
    }
 
    $scope.$on('chatter:updated', function(){
       $scope.chatter = Chatter.data.feed;
       defineFeed();
+      console.log('chatter is being updated');
       if ($stateParams.token && $scope.chatter){
          openChatterByKey($stateParams.token);
       }
@@ -65,17 +64,18 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
 
    function openChatterByKey(key){
-      console.log('data', $scope.chatter);
       for (i = 0; i < $scope.chatter.length; i++){
+         console.log('keys', $scope.chatter[i].key, key);
          if($scope.chatter[i].key == key){
             console.log('scope.chat', $scope.chat);
             $scope.chat = $scope.chatter[i];
+            $mdDialog.show({
+               controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
+               templateUrl: 'views/templates/chatterDialog.html',
+            });
+            break;
          }
       }
-      $mdDialog.show({
-         controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
-         templateUrl: 'views/templates/chatterDialog.html',
-      });
    }
 
    $scope.openChatter = function(chat){
