@@ -55,6 +55,7 @@ class IncomingMessage(messages.Message):
     token = messages.StringField(2)
     data = messages.StringField(3)
 
+
 class OutgoingMessage(messages.Message):
     error = messages.StringField(1)
     data = messages.StringField(2)

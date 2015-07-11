@@ -407,33 +407,33 @@ class Disconnected(webapp2.RequestHandler):
         return
 
 
-class SendChannel(webapp2.RedirectHandler):
-    def post(self):
-        incoming = self.request.get('data')
-        job = json.loads(incoming)
-        tokens = job['tokens']
-        job['tokens'] = None
-        packet = json_dump(job)
-        for token in tokens:
-            channel.send_message(token, packet)
-
-
-class SendNotification(webapp2.RedirectHandler):
-    def post(self):
-        packaged = self.request.get('data')
-        unpackaged = json.loads(packaged)
-        users = unpackaged['users']
-        notification = unpackaged['notification']
-        packet = json_dump({'type': 'notification', 'data': notification})
-        for user in users:
-            for token in user['channel_tokens']:
-                channel.send_message(token, packet)
-        apn = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
-        payload = Payload(alert=notification['content'], sound="default", badge=1)
-        for user in users:
-            for token in user['ios_tokens']:
-                apn.gateway_server.send_notification(token, payload)
-        return
+# class SendChannel(webapp2.RedirectHandler):
+#     def post(self):
+#         incoming = self.request.get('data')
+#         job = json.loads(incoming)
+#         tokens = job['tokens']
+#         job['tokens'] = None
+#         packet = json_dump(job)
+#         for token in tokens:
+#             channel.send_message(token, packet)
+#
+#
+# class SendNotification(webapp2.RedirectHandler):
+#     def post(self):
+#         packaged = self.request.get('data')
+#         unpackaged = json.loads(packaged)
+#         users = unpackaged['users']
+#         notification = unpackaged['notification']
+#         packet = json_dump({'type': 'notification', 'data': notification})
+#         for user in users:
+#             for token in user['channel_tokens']:
+#                 channel.send_message(token, packet)
+#         apn = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+#         payload = Payload(alert=notification['content'], sound="default", badge=1)
+#         for user in users:
+#             for token in user['ios_tokens']:
+#                 apn.gateway_server.send_notification(token, payload)
+#         return
 
 
 class SendNotificationByKey(webapp2.RedirectHandler):
@@ -463,9 +463,28 @@ class SendNotificationByKey(webapp2.RedirectHandler):
                 channel.send_message(token, packet)
         apn = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
         payload = Payload(alert=notification.content, sound="default", badge=1)
+        logging.info("These are the iphone tokens about to be notified")
+        logging.info(ios_tokens)
         for token in ios_tokens:
             apn.gateway_server.send_notification(token, payload)
         ndb.put_multi(users)
+
+
+class PushUpdate(webapp2.RedirectHandler):
+    def post(self):
+        packaged = self.request.get('data')
+        unpackaged = json.loads(packaged)
+        packet = json_dump({'type': 'update', 'data': unpackaged['data']})
+        user_keys = list()
+        for user in unpackaged['users']:
+            user_keys.append(ndb.Key(urlsafe=user))
+        users = ndb.get_multi(user_keys)
+        for user in users:
+            for token in user.channel_tokens:
+                channel.send_message(token, packet)
+
+
+
 
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
@@ -484,9 +503,8 @@ app = webapp2.WSGIApplication([
     ('/morningtasks', MorningTasks),
     ('/_ah/channel/connected/', Connected),
     ('/_ah/channel/disconnected/', Disconnected),
-    ('/tasks/channels/send/', SendChannel),
-    ('/tasks/channels/send_notification/', SendNotification),
     ('/tasks/channels/sendnotificationbykey/', SendNotificationByKey),
+    ('/tasks/channels/pushupdate/', PushUpdate),
 
 
 ], debug=True)

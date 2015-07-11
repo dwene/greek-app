@@ -8,7 +8,6 @@ angular.module('App')
                         console.log("I got the token", data.data);
                         var socket = new SocketHandler(JSON.parse(data.data));
                         socket.onMessage(function (data) {
-                            console.log("I just got a new message!", data);
                             ChannelMessageHandler.handle(data);
                         });
                     } else {
@@ -24,17 +23,18 @@ angular.module('App')
 
 angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notifications){
     var self = {};
-    self.handle = function(msg){
-        // var msg = JSON.parse(jsonMessage);
-        if (message.type == 'notification'){
-            Notifications.add(msg.content);
+    self.handle = function(message){
+        console.log("Recieving new Channel Message", message);
+        if (message.type === 'notification'){
+            Notifications.add(message.content);
         }
-        else if(message.type === 'Chatter'){
-            console.log('I see there is a new chatter!');
-            Chatter.update(msg.content)
-        }
-        else if(message.type === 'ChatterComment'){
-            Chatter.updateComment(msg.content)
+        else if(message.type === 'update'){
+            var data = message.data;
+            if (data.type === "Chatter"){
+                if (data.data.type == "LIKE"){
+                    Chatter.updateLikes(data);
+                }
+            }
         }
     }
     return self;

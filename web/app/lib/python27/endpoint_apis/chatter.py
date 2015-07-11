@@ -3,11 +3,18 @@ from apiconfig import *
 from protorpc import remote
 import datetime
 import logging
-from pushfactory import PushFactory
+from pushfactory import PushFactory, LiveUpdate
 
 chatter_api = endpoints.api(name='chatter', version='v1',
                             allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                             audiences=[ANDROID_AUDIENCE])
+
+CHATTER = "CHATTER"
+COMMENT = "CHATTERCOMMENT"
+
+
+def list_followers(chatter):
+    return list(set(chatter.following) - set(chatter.muted))
 
 
 @chatter_api.api_class(resource_name='chatter')
@@ -92,6 +99,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not all(k in data for k in ('content', 'important')):
             return OutgoingMessage(error='Missing arguments in new Chatter.', data='')
@@ -102,7 +110,11 @@ class ChatterApi(remote.Service):
         chatter.timestamp = datetime.datetime.now()
         chatter.organization = request_user.organization
         chatter.following = [request_user.key]
-        chatter.put()
+        chatter_future = chatter.put_async()
+        update = LiveUpdate()
+        update.type = "Chatter"
+
+        chatter_future.get_result()
         chat = ndb_to_dict(chatter)
         chat['following'] = True
         chat['comments'] = list()
@@ -113,6 +125,11 @@ class ChatterApi(remote.Service):
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
         del chat['muted']
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = chatter.key
+        update.data = {'type': 'NEWCHATTER'}
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data=json_dump(chat))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='delete',
@@ -122,6 +139,7 @@ class ChatterApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         if 'key' not in data:
             return OutgoingMessage(error='Missing arguments in deleting Chatter.')
         chatter = ndb.Key(urlsafe=data["key"]).get()
@@ -132,6 +150,11 @@ class ChatterApi(remote.Service):
         for item in comments_future:
             item.get_result()
         chatter_future.get_result()
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = chatter.key
+        update.data = {'type': 'DELETECHATTER'}
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='edit',
@@ -140,6 +163,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not all(k in data for k in ('content', 'key')):
             return OutgoingMessage(error='Missing arguments in editing Chatter.')
@@ -151,6 +175,11 @@ class ChatterApi(remote.Service):
         chatter.content = data["content"]
         chatter.edited = datetime.datetime.now()
         chatter.put()
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = chatter.key
+        update.data = {'type': 'EDITCHATTER'}
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='important',
@@ -159,6 +188,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not all(k in data for k in ("notify", "key")):
             return OutgoingMessage(error='Missing arguments in flagging Chatter.')
@@ -169,9 +199,23 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error='Incorrect Permissions', data='')
         if chatter.important is False:
             chatter.important = True
+            if data['notify'] is True:
+                user_keys = User.query(User.organization == request_user.organization,
+                                       User.perms != 'alumni').fetch(keys_only=True)
+                notification = dict()
+                notification['content'] = request_user.first_name + " " + request_user.last_name + \
+                                          " just posted an important chatter."
+                notification['sender'] = request_user.key
+                notification['type'] = "CHATTERCOMMENT"
+                PushFactory.send_notification_with_keys(notification, user_keys)
         else:
             chatter.important = False
         chatter.put()
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = chatter.key
+        update.data = {'type': "IMPORTANT", "important": chatter.important}
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data=json_dump(chatter.important))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='like',
@@ -180,6 +224,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         logging.error(request.data)
         if not "key" in data:
@@ -194,7 +239,12 @@ class ChatterApi(remote.Service):
             chatter.likes.remove(request_user.key)
             chatter.put()
             like = False
-        following = request_user.key in chatter.following and request_user.key not in chatter.muted
+        following = request_user.key in list_followers(chatter)
+        update = LiveUpdate()
+        update.type = 'Chatter'
+        update.key = chatter.key
+        update.data = {'type': 'LIKE', 'likes': len(chatter.likes)}
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data=json_dump({'like': like, 'following': following}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/post',
@@ -203,6 +253,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not all(k in data for k in ("content", "key")):
             return OutgoingMessage(error='Missing arguments in new Chatter.')
@@ -235,7 +286,12 @@ class ChatterApi(remote.Service):
         follower_keys = list((set(chatter.following) - set(chatter.muted)))
         PushFactory.send_notification_with_keys(notification, follower_keys)
         following = request_user.key in chatter.following and request_user.key not in chatter.muted
-        chatter_future.get_result()
+
+        update = LiveUpdate()
+        update.key = chatter.key
+        update.type = CHATTER
+        update.data = {'type': "NEWCOMMENT", 'length': len(chatter.comments)}
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data=json_dump({'comment': comm, 'following': following}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/like',
@@ -244,6 +300,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if "key" not in data:
             return OutgoingMessage(error='Missing arguments in new Chatter.')
@@ -254,7 +311,13 @@ class ChatterApi(remote.Service):
             comment.likes.remove(request_user.key)
         else:
             comment.likes.append(request_user.key)
-        comment.put()
+        comment_future = comment.put_async()
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = comment.chatter
+        update.data = {'type': "LIKECOMMENT", 'key': comment.key, 'likes': len(comment.likes)}
+        PushFactory.push_update(update, push_keys)
+        comment_future.get_result()
         return OutgoingMessage(error='', data=json_dump(request_user.key in comment.likes))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/edit',
@@ -263,6 +326,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not all(k in data for k in ("content", "key")):
             return OutgoingMessage(error='Missing arguments in new Chatter.')
@@ -273,7 +337,13 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error='Incorrect Permissions', data='')
         comment.content = data["content"]
         comment.edited = datetime.datetime.now()
-        comment.put()
+        future = comment.put_async()
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = comment.chatter
+        update.data = {'type': 'EDITCOMMENT', 'key': comment.key, 'content': comment.content}
+        PushFactory.push_update(update, push_keys)
+        future.get_result()
         return OutgoingMessage(error='', data=ndb_to_json(comment))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comment/delete',
@@ -282,6 +352,7 @@ class ChatterApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
         if not "key" in data:
             return OutgoingMessage(error='Missing arguments in new Chatter.')
@@ -297,6 +368,11 @@ class ChatterApi(remote.Service):
         futures = list()
         futures.append(chat.put_async())
         futures.append(comment.key.delete_async())
+        update = LiveUpdate()
+        update.type = CHATTER
+        update.key = chat.key
+        update.data = {'type': "DELETECOMMENT", 'key': comment.key}
+        PushFactory.push_update(update, push_keys)
         for future in futures:
             future.get_result()
         return OutgoingMessage(error='', data='OK')

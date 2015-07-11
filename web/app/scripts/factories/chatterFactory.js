@@ -13,25 +13,21 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             chatter.data.important = load_data.important_chatter;
         }
 
-        function updateChatters(chatters){
-            var has_changed = false;
+        function getChattersByKey(key){
+            var chatters = [];
             for (var i = 0; i < chatter.data.feed.length; i++){
-                if (chatter.data.feed[i].key == chat.key){
-                    chatter.data.feed[i] = chat;
-                    has_changed = true;
+                if (chatter.data.feed[i].key == key){
+                    chatters.push(chatter.data.feed[i])
                     break;
                 }
             }
             for (var i = 0; i < chatter.data.important.length; i++){
-                if (chatter.data.important[i].key == chat.key){
-                    chatter.data.important[i] = chat;
-                    has_changed = true;
+                if (chatter.data.important[i].key == key){
+                    chatters.push(chatter.data.important[i])
                     break;
                 }
             }
-            if (has_changed) {
-                $rootScope.$broadcast('chatter:updated');
-            }
+            return chatters;
         }
 
         function updateChatter(chat){
@@ -352,6 +348,16 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                 console.log('Error: ', data);
             });
         };
+
+        chatter.updateLikes = function(data){
+            console.log('I made it to updateLikes');
+            var key = data.key;
+            var chatters = getChattersByKey(key);
+            for(var i = 0; i < chatters.length; i++){
+                chatters[i].likes = data.data.likes;
+            }
+        };
+
         return chatter;
     }
 ]);

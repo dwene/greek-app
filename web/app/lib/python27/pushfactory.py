@@ -31,6 +31,11 @@ class PushFactory:
         return
 
     @staticmethod
+    def push_update(data, user_keys):
+        out = {'data': data.to_dict(), 'users': user_keys}
+        taskqueue.add(url="/tasks/channels/pushupdate/", params={'data': json_dump(out)})
+
+    @staticmethod
     def send_notification_with_keys(notification, keys):
         data = {'notification': notification, 'users': keys}
         taskqueue.add(url="/tasks/channels/sendnotificationbykey/", params={'data': json_dump(data)})
@@ -77,3 +82,16 @@ class PushFactory:
                 tokens = list()
         c_buffer['tokens'] = tokens
         taskqueue.add("/tasks/ios/send", json_dump(c_buffer))
+
+
+class LiveUpdate:
+
+    type = None
+    key = None
+    data = None
+
+    def __init__(self):
+        return
+
+    def to_dict(self):
+        return {'type': self.type, 'key': self.key, 'data': self.data}
