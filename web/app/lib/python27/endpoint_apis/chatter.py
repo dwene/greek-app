@@ -126,7 +126,7 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.type = CHATTER
         update.key = chatter.key
-        update.data = {'type': 'NEWCHATTER'}
+        update.data = {'type': 'NEWCHATTER', 'chatter': chat}
         PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data=json_dump(chat))
 

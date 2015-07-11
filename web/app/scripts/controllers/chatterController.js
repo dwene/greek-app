@@ -34,7 +34,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       }
    }
 
-   if (Chatter.data){
+   if (Chatter.data) {
       console.log("chatter is", Chatter.data.chatter);
       $scope.chatter = Chatter.data.feed;
       $scope.important_chatter = Chatter.data.important;
@@ -43,9 +43,13 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
    $scope.$on('chatter:updated', function(){
       $scope.chatter = Chatter.data.feed;
-      $scope.important_chatter = Chatter.data.important;
       defineFeed();
    });
+
+   $scope.$on('importantChatter:updated', function()){
+      $scope.important_chatter = Chatter.data.important;
+      defineFeed();
+   }
 
    defineFeed();
 

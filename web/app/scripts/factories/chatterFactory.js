@@ -49,9 +49,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     break;
                 }
             }
-            if (has_changed) {
-                $rootScope.$broadcast('chatter:updated');
-            }
         }
 
         chatter.get = function() {
@@ -86,7 +83,7 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     if (!RESTService.hasErrors(data)) {
                         var load_data = JSON.parse(data.data);
                         chatter.data.important = load_data;
-                        $rootScope.$broadcast('chatter:updated');
+                        $rootScope.$broadcast('importantChatter:updated');
                         console.log('Chatter has been updated', load_data);
                     } else {
                         console.log('Err', data);
@@ -265,7 +262,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                             }
                         }
                     }
-                    $rootScope.$broadcast('chatter:updated');
                 } else {
                     console.log('Err', data);
                 }
@@ -358,6 +354,14 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             var chatters = getChattersByKey(key);
             for(var i = 0; i < chatters.length; i++){
                 chatters[i].likes = data.data.likes;
+            }
+        };
+
+        chatter.updateNewChatter = function(chat){
+            console.log('im adding a new chatter');
+            this.data.feed.push(chat);
+            if (chat.important){
+                this.data.important.push(chat);
             }
         };
 

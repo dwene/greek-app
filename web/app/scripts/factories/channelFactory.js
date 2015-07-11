@@ -34,6 +34,9 @@ angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notific
                 if (data.data.type == "LIKE"){
                     Chatter.updateLikes(data);
                 }
+                if (data.data.type === "NEWCHATTER"){
+                    Chatter.updateNewChatter(data.chatter);
+                }
             }
         }
     }
