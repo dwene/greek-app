@@ -48,6 +48,18 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, localStorageServi
       Chatter.like(chatter);
    };
 
+   $scope.openChatterByKey = function(key){
+      for (i = 0; i < $scope.chatter.length; i++){
+         if($scope.chatter.data.chatter[i].key == key){
+            $scope.chat = $scope.chatter.data.chatter[i];
+         }
+      }
+      $mdDialog.show({
+         controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
+         templateUrl: 'views/templates/chatterDialog.html',
+      });
+   };
+
    $scope.openChatter = function(chat){
       $scope.chat = chat;
       console.log('opening chatter', chat);
