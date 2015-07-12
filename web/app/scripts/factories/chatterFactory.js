@@ -115,6 +115,9 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
             .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
                         var newChat = JSON.parse(data.data);
+                        if (getChattersByKey(newChat.key).length > 0){
+                            return;
+                        }
                         if (important){
                             chatter.data.important.push(newChat);
                         }
@@ -359,9 +362,11 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
 
         chatter.updateNewChatter = function(chat){
             console.log('im adding a new chatter');
-            this.data.feed.push(chat);
-            if (chat.important){
-                this.data.important.push(chat);
+            if (getChattersByKey(chat.key).length === 0){
+                this.data.feed.push(chat);
+                if (chat.important){
+                    this.data.important.push(chat);
+                }
             }
         };
 

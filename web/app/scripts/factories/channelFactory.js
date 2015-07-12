@@ -30,12 +30,12 @@ angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notific
         }
         else if(message.type === 'update'){
             var data = message.data;
-            if (data.type === "Chatter"){
+            if (data.type === "CHATTER"){
                 if (data.data.type == "LIKE"){
                     Chatter.updateLikes(data);
                 }
                 if (data.data.type === "NEWCHATTER"){
-                    Chatter.updateNewChatter(data.chatter);
+                    Chatter.updateNewChatter(data.data.chatter);
                 }
             }
         }

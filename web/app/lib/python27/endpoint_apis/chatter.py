@@ -238,7 +238,7 @@ class ChatterApi(remote.Service):
             like = False
         following = request_user.key in list_followers(chatter)
         update = LiveUpdate()
-        update.type = 'Chatter'
+        update.type = CHATTER
         update.key = chatter.key
         update.data = {'type': 'LIKE', 'likes': len(chatter.likes)}
         PushFactory.push_update(update, push_keys)
@@ -279,7 +279,7 @@ class ChatterApi(remote.Service):
                                     " just commented on a chatter you are following!"
         notification['sender'] = request_user.key
         notification['type'] = "CHATTERCOMMENT"
-        notification['sender_key'] = chatter.key
+        notification['type_key'] = chatter.key
         follower_keys = list((set(chatter.following) - set(chatter.muted)))
         PushFactory.send_notification_with_keys(notification, follower_keys)
         following = request_user.key in chatter.following and request_user.key not in chatter.muted

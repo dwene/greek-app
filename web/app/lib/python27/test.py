@@ -15,6 +15,23 @@ def test_push():
     apns.gateway_server.send_notification(token_hex, payload)
 
 
+def removeNotifications():
+    print "Starting Remove Notifications"
+    all_users = User.query().fetch()
+    print "All users fetched"
+    futures = list()
+    i = 0
+    print "All Users List Length: " + str(len(all_users))
+    for user in all_users:
+        user.notifications = []
+        user.new_notifications = []
+        user.hidden_notifications = []
+        i += 1
+        user.put()
+        print "Users put: " + str(i)
+    print "Removed all instanced of notifications. Terminating."
+
+
 def show_notifications():
     users = User.query().fetch()
     none_count = 0

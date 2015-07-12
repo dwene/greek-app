@@ -72,7 +72,7 @@ class Notification(ndb.Model):
     content = ndb.TextProperty()
     sender = ndb.KeyProperty()
     timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())
-    sender_key = ndb.KeyProperty()
+    type_key = ndb.KeyProperty()
 
 
 class Message(ndb.Model):

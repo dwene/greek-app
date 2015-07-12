@@ -445,7 +445,7 @@ class SendNotificationByKey(webapp2.RedirectHandler):
         notification.type = notification_item['type']
         notification.content = notification_item['content']
         notification.sender = ndb.Key(urlsafe=notification_item['sender'])
-        notification.sender_key = ndb.Key(urlsafe=notification_item['sender_key'])
+        notification.type_key = ndb.Key(urlsafe=notification_item['type_key'])
         notification_key = notification.put()
         notification_out = notification.to_dict()
         notification_out['key'] = notification.key

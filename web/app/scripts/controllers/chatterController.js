@@ -191,14 +191,19 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    };
 
    function newChatterController(scope, mdDialog){
-
       scope.me = Session.me;
-
       scope.hide = function(){
          mdDialog.hide();
       };
 
       scope.addChatter = function(content, important, sendNotifications){
+         if (!important){
+            important = false;
+            sendNotifications = false;
+         }
+         if (!sendNotifications){
+            sendNotifications = false;
+         }
          Chatter.create(content, important, sendNotifications);
          mdDialog.hide();
       };

@@ -104,7 +104,7 @@ class Notifications:
     #     taskqueue.add(url='/tasks/sendpushnotifications')
     #     return
 
-    @staticmethod
+    # @staticmethod
     # def send_ios_notifications(pushes):
     #     apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
     #     for push in pushes:
