@@ -676,7 +676,7 @@ md-progress-circular.small {
 }
 .required label:after {
   content: '*';
-  color: red;
+  color: #f44336;
 }
 /*Striped Lists*/
 .striped [layout-margin] {
@@ -744,13 +744,28 @@ nav .navbar-brand:before {
 nav a.navbar-brand:focus {
   outline: none;
 }
+nav #notificationButton {
+  overflow: visible;
+}
 nav .notification_count {
   margin: 0px;
-  font-size: 12px;
+  position: relative;
 }
-nav .notification_count strong {
-  color: black;
-  font-size: 8px;
+nav .notification_count i {
+  font-size: 1.2em;
+  position: relative;
+  top: 2px;
+}
+nav .notification_count div {
+  color: white;
+  background: #f44336;
+  position: absolute;
+  top: -8px;
+  left: 18px;
+  padding: 2px 4px;
+  font-size: .7em;
+  line-height: 1em;
+  border-radius: 10px;
 }
 #menu md-toolbar.md-tall {
   min-height: 0px;
