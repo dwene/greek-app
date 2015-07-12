@@ -1,7 +1,5 @@
 //Final/static variables. These variables are used for cookies
-// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-var ENDPOINTS_DOMAIN = 'http://localhost:9002';
-var USER_NAME = 'USER_NAME';
+var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
 var ALUMNI = 'alumni';

@@ -766,6 +766,8 @@ nav .notification_count div {
   font-size: .7em;
   line-height: 1em;
   border-radius: 10px;
+  text-shadow: .08em .08em 0px black;
+  text-rendering: optimizeLegibility;
 }
 #menu md-toolbar.md-tall {
   min-height: 0px;
