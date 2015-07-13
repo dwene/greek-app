@@ -1,35 +1,35 @@
 <md-dialog id="selectingMembers" md-theme="{{$root.color}}" flex="80">
-     
+
     <md-toolbar class="md-primary">
         <div class="md-toolbar-tools">
             <h1>Select Members</h1>
         </div>
     </md-toolbar>
-    
+
     <md-content class="md-padding no-padding-top">
-        
+
         <search ng-model="search"></search>
-        
+
         <md-list>
             <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search">
                 <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                 <div class="md-list-item-text compact">
                     <p>{{member.first_name}} {{member.last_name}}</p>
-                    <md-checkbox model="member.checked" class="md-secondary"></md-checkbox>
+                    <md-checkbox model="member.checked" class="md-secondary md-primary"></md-checkbox>
                 </div>
             </md-list-item>
         </md-list>
 
-    
+
     </md-content>
-     
+
     <div class="md-actions" layout="row">
         <span flex></span>
         <md-button class="md-primary" ng-click="hide()">
             Done
         </md-button>
     </div>
-      
+
       <!--
 <section id="selectingTags">
 <md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto;"></md-progress-circular>
@@ -41,7 +41,7 @@
                     <input type="text" name="enter_tag" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
                 </md-input-container>
                 <md-button id="seeall" ng-click="openDialog($event)">see all</md-button>
-            </form>        
+            </form>
             <div class="col-sm-6">
                 <div id="recentTags">
                     <md-subheader>Recent Tags</md-subheader>
@@ -51,10 +51,10 @@
                 </div>
             </div>
             </div>
-    
+
 
     <ul id="messagingTags">
-        <md-subheader> 
+        <md-subheader>
             <span ng-hide=" ! (orgTagCheck.length || permsTagCheck.length)">Tags Selected</span>
         </md-subheader>
             <div class="btn-group" ng-show="tags.org_tags" ng-repeat="tag in orgTagCheck = (tags.org_tags | checkedFilter)">
@@ -62,7 +62,7 @@
             </div>
             <div class="btn-group" ng-show="tags.perms_tags" ng-repeat="tag in permsTagCheck = (tags.perms_tags | checkedFilter)">
                     <netetag-check></netetag-check>
-            </div>    
+            </div>
     </ul>
     <ul id="selectedList">
         <md-subheader>
@@ -79,8 +79,5 @@
 </section>
 -->
 
-      
+
 </md-dialog>
-
-
-

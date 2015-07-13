@@ -9,12 +9,12 @@
     <br>
     <md-subheader>Who is invited?</md-subheader>
     <md-radio-group ng-model="selectedRadio">
-      <md-radio-button value="everyone" >Everyone</md-radio-button>
-      <md-radio-button value="leaders">Leaders</md-radio-button>
-      <md-radio-button value="exec">Exec</md-radio-button>
-      <md-radio-button value="selectMembers" ng-click="openSelectingMembersDialog()">{{selectedMembers.length}} Members Selected</md-radio-button>
+      <md-radio-button class="md-primary" value="everyone" >Everyone</md-radio-button>
+      <md-radio-button class="md-primary" value="leaders">Leaders</md-radio-button>
+      <md-radio-button class="md-primary" value="exec">Exec</md-radio-button>
+      <md-radio-button class="md-primary" value="selectMembers" ng-click="openSelectingMembersDialog()">{{selectedMembers.length}} Members Selected</md-radio-button>
     </md-radio-group>
-        
+
 <!--
     <md-chips ng-model="selectedMembers" md-autocomplete-snap md-require-match>
       <md-autocomplete
@@ -29,15 +29,15 @@
       </md-chip-template>
     </md-chips>
 -->
-    
-    
+
+
 <!--    <selecting-users tags="tags"></selecting-users>-->
     <form id="newEvent" name="newEvent" class="form-horizontal" role="form" novalidate>
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
             <input name="title" ng-model="event.title" required></input>
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
-        </md-input-container>    
+        </md-input-container>
         <md-input-container ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
                 <textarea id="description" name="description" rows="6" ng-model="event.description" placeholder="Enter your event description here:"></textarea>
                 <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
@@ -46,7 +46,7 @@
 <!--            <label for="location">Location</label>-->
             <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="event location"></input>
             <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
-        </md-input-container> 
+        </md-input-container>
 <!--        <div class="alert alert-info" ng-show="event.location">{{event.address}}</div>-->
         <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
             <label for="date_start" class="col-xs-12 col-sm-2 control-label">Start</label>
@@ -57,7 +57,7 @@
                 <time-picker id="timestartPicker" name="time_start" ng-model="event.time_start"></time-picker>
             </div>
             <p ng-show="((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))" class="help-block">Please enter start date and time.</p>
-        </div>   
+        </div>
         <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))}">
             <label for="date_end" class="col-xs-12 col-sm-2 control-label">End</label>
             <div class="col-xs-6 col-sm-5">
@@ -69,18 +69,18 @@
             <p ng-show="((newEvent.date_end.$invalid && !newEvent.date_end.$pristine) || (newEvent.date_end.$invalid && submitted)) || ((newEvent.time_end.$invalid && !newEvent.time_end.$pristine) || (newEvent.time_end.$invalid && submitted))" class="help-block">Please enter end date and time.</p>
         </div>
         <div class="alert alert-danger" ng-show="time_broken">Please make sure start time is before end time.</div>
-        <md-checkbox ng-model="event.recurring" aria-label="recurring event">
+        <md-checkbox class="md-primary" ng-model="event.recurring" aria-label="recurring event">
             Is this event recurring?
         </md-checkbox>
-        
+
         <div class="form-group" ng-show="event.recurring">
             <div class="col-xs-12 col-sm-3">
-                <md-checkbox ng-disabled="!event.recurring || monthly" ng-model="weekly" aria-label="recurring weekly">
+                <md-checkbox class="md-primary" ng-disabled="!event.recurring || monthly" ng-model="weekly" aria-label="recurring weekly">
                     Weekly
                 </md-checkbox>
-                <md-checkbox ng-disabled="!event.recurring || weekly" ng-model="monthly" aria-label="recurring monthly">
+                <md-checkbox class="md-primary" ng-disabled="!event.recurring || weekly" ng-model="monthly" aria-label="recurring monthly">
                     Monthly
-                </md-checkbox> 
+                </md-checkbox>
             </div>
             <div class="col-xs-12 col-sm-2" style="margin-top:15px;">
                <label for="untilDate">Recurrs Until:</label>
@@ -90,15 +90,15 @@
             </div>
             <div class="col-xs-12 col-sm-2"></div>
         </div>
-        
+
         <br>
         </form>
         <md-button ng-click="addEvent(newEvent.$valid, event)" ng-enter="$root.doNothing()" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
 
 
-    
 
-</div>   
+
+</div>
 </md-content>
 </div>
 </div>

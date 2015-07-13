@@ -33,7 +33,7 @@
     <!--[if lt IE 9]>
         <script src="scripts/vendor/html5-3.6-respond-1.1.0.min.js"></script>
     <![endif]-->
-    <script type="text/javascript" src="/_ah/channel/jsapi"></script>    
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- bower:js -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -160,7 +160,7 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 <div ng-controller="navigationController as navigation">
-   
+
     <header>
         <md-toolbar class="navbar-fixed-top md-whiteframe-z1" md-theme-watch>
             <nav class="container" layout="row" layout-align="center center" flex>
@@ -168,11 +168,11 @@
                     <a class="navbar-brand" ng-hide="$parent.session.user_name"></a>
                     <md-button aria-label="home button" class="navbar-brand btn-touch" id="homeButton" ng-click="navigation.homeButton()" ng-show="$parent.session.user_name"></md-button>
                 </div>
-                <md-button class="btn-touch" ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
-                    <span class="fa-stack notification_count">
-                        <i class="fa fa-bell fa-stack-2x"></i>
-                        <strong class="fa-stack-1x fa-stack-text fa-inverse" ng-bind="notification_count">0</strong>
-                    </span>
+                <md-button id="notificationButton" class="btn-touch" ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
+                    <div class="notification_count">
+                        <i class="fa fa-bell"></i>
+                        <div ng-show="notification_count > 0" ng-bind="notification_count">0</div>
+                    </div>
                 </md-button>
                 <div flex></div>
                 <md-button class="btn-touch" ng-show="$parent.session.user_name" ng-click="showHelpdialog()" aria-label="Help Dialog">
@@ -218,7 +218,7 @@
                             <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary" md-theme-watch><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
 <!--                            <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>-->
                             <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
-                            <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li> 
+                            <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li>
 <!--                            <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>-->
                         </ul>
                     </md-content>
@@ -238,7 +238,7 @@
 
         </div>
     </md-sidenav>
-    
+
     <md-sidenav id="notifications" class="md-sidenav-left md-whiteframe-z3" md-component-id="notifications">
         <md-toolbar md-theme-watch>
             <div class="md-toolbar-tools">
@@ -257,7 +257,7 @@
         </md-list>
         </md-content>
     </md-sidenav>
-    
+
 </div>
 
 <div ui-view autoscroll="true" id="mainSection"></div>
@@ -275,9 +275,9 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-  
+
 </body>
-   
+
 <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -289,4 +289,3 @@
 <!-- <script src="cordova.js"></script> -->
 <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>-->
 </html>
-
