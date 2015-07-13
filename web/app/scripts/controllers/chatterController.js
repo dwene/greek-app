@@ -197,6 +197,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       };
 
       scope.addChatter = function(content, important, sendNotifications){
+         console.log('Create chatter function', content, important, sendNotifications);
          if (!important){
             important = false;
             sendNotifications = false;

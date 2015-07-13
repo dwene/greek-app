@@ -27,8 +27,18 @@ def removeNotifications():
         user.new_notifications = []
         user.hidden_notifications = []
         i += 1
-        user.put()
-        print "Users put: " + str(i)
+        try:
+            user.put()
+            print "Users put: " + str(i)
+        except:
+            print "It didnt work..."
+            try:
+                print user.key.urlsafe()
+                print user.first_name
+                print user.last_name
+                print user.organization.urlsafe()
+            except:
+                "Couldnt print all the properties.."
     print "Removed all instanced of notifications. Terminating."
 
 
@@ -40,21 +50,21 @@ def show_notifications():
             temp = item.get()
             if not temp:
                 print "I got none"
-                none_count = none_count+1
+                none_count += 1
                 user.new_notifications.remove(item)
             print temp
         for item in user.notifications:
             temp = item.get()
             if not temp:
                 print "I got none"
-                none_count = none_count+1
+                none_count += 1
                 user.notifications.remove(item)
             print temp
         for item in user.hidden_notifications:
             temp = item.get()
             if not temp:
                 print "I got none"
-                none_count = none_count+1
+                none_count += 1
                 user.hidden_notifications.remove(item)
             print temp    
         user.put()
@@ -64,8 +74,21 @@ def deleteMyPicture():
     derek.prof_pic = None
     derek.put()
 
+
+def fixJake():
+    jake = ndb.Key(urlsafe="agtzfmdyZWVrLWFwcHIRCxIEVXNlchiAgICAluq8CAw").get()
+    jake.channel_tokens = []
+    jake.notifications = []
+    jake.new_notifications = []
+    jake.hidden_notifications = []
+    jake.put()
+
+
+
+
 def updateNotifications():
     notifications = Notification.query().fetch()
+
     users = User.query().fetch()
     count = 0
     for notify in notifications:
@@ -100,19 +123,19 @@ def updateNotifications():
         future.get_result()
 
 
-def deleteNotifications():
-    notifications = Notification.query().fetch()
-    users = User.query().fetch()
-    futures = list()
-    for notify in notifications:
-        futures.append(notify.key.delete_async())
-    for user in users:
-        user.notifications = []
-        user.hidden_notifications = []
-        user.new_notifications = []
-        futures.append(user.put_async())
-    for future in futures:
-        future.get_result()
+# def deleteNotifications():
+#     notifications = Notification.query().fetch()
+#     users = User.query().fetch()
+#     futures = list()
+#     for notify in notifications:
+#         futures.append(notify.key.delete_async())
+#     for user in users:
+#         user.notifications = []
+#         user.hidden_notifications = []
+#         user.new_notifications = []
+#         futures.append(user.put_async())
+#     for future in futures:
+#         future.get_result()
 
 def deleteSentNotifications():
     users = User.query().fetch()
