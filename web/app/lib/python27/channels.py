@@ -15,7 +15,10 @@ class ChannelsApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         user_token = str(uuid.uuid4()) + request_user.user_name
         channel_token = channel.create_channel(user_token)
-        request_user.channel_tokens.insert(0, user_token)
-        request_user.channel_tokens = request_user.channel_tokens[0:7]
-        request_user.put()
+        logging.info('Here are the channel tokens for this user')
+        logging.info(json_dump(request_user.channel_tokens))
+        if user_token not in request_user.channel_tokens:
+            request_user.channel_tokens.insert(0, user_token)
+            request_user.channel_tokens = request_user.channel_tokens[0:7]
+            request_user.put()
         return OutgoingMessage(error='', data=json_dump(channel_token))

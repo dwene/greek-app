@@ -50,6 +50,8 @@ class ChatterApi(remote.Service):
                                  "last_name": author.last_name,
                                  "prof_pic": get_image_url(author.prof_pic),
                                  "key": chatter["author"]}
+            chatter['comments_count'] = len(chatter['comments'])
+            chatter['comments'] = list()
             del chatter["author_future"]
             del chatter["muted"]
         return OutgoingMessage(error='', data=json_dump(chatter_dict))
@@ -57,7 +59,9 @@ class ChatterApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comments/get',
                       http_method='POST', name='chatter.get_comments')
     def get_comments(self, request):
+        time_start = datetime.datetime.now()
         request_user = get_user(request.user_name, request.token)
+        time_user = datetime.datetime.now()
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
@@ -69,6 +73,7 @@ class ChatterApi(remote.Service):
         chatter_key = ndb.Key(urlsafe=data['key'])
         chatter_comments = ChatterComment.query(ChatterComment.chatter == chatter_key).order(
             -ChatterComment.timestamp).fetch(20, offset=starts_with)
+        time_comments = datetime.datetime.now()
         comments_dict = list()
         for comment in chatter_comments:
             comments_dict.append(ndb_to_dict(comment))
@@ -80,6 +85,7 @@ class ChatterApi(remote.Service):
                 author_keys.append(comment['author'])
         if author_keys:
             User.query(User.key.IN(author_keys)).fetch(projection=[User.first_name, User.last_name, User.prof_pic])
+            time_authors = datetime.datetime.now()
             authors = ndb.get_multi(author_keys)
             for comment in comments_dict:
                 for author in authors:
@@ -89,6 +95,12 @@ class ChatterApi(remote.Service):
                                              "prof_pic": get_image_url(author.prof_pic),
                                              "key": comment['author']}
                         break
+            logging.info("Times for loading chattercomments:")
+            logging.info("Load User: " + str(time_user - time_start))
+            logging.info("Fetch ChatterComments: " + str(time_comments-time_user))
+            logging.info("Fetch Authors: " + str(time_authors - time_comments))
+            logging.info("Total Time: " + str(datetime.datetime.now() - time_start))
+
         return OutgoingMessage(error='', data=json_dump(comments_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='post',
@@ -112,16 +124,26 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.type = "Chatter"
 
-        chatter_future.get_result()
+        chatter_key = chatter_future.get_result()
         chat = ndb_to_dict(chatter)
         chat['following'] = True
         chat['comments'] = list()
         chat['like'] = False
         chat['likes'] = 0
+        chat['comments_count'] = len(chatter.comments)
+        chat['comments'] = list()
         chat['author'] = {"first_name": request_user.first_name,
                           "last_name": request_user.last_name,
                           "prof_pic": get_image_url(request_user.prof_pic),
                           "key": request_user.key}
+        if data['important'] is True and data['notify'] is True:
+            notification = dict()
+            notification['content'] = request_user.first_name + " " + request_user.last_name + \
+                                      " just posted an important chatter."
+            notification['sender'] = request_user.key
+            notification['type'] = "CHATTERCOMMENT"
+            notification['type_key'] = chatter_key
+            PushFactory.send_notification_with_keys(notification, push_keys)
         del chat['muted']
         update = LiveUpdate()
         update.type = CHATTER
@@ -176,7 +198,7 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.type = CHATTER
         update.key = chatter.key
-        update.data = {'type': 'EDITCHATTER'}
+        update.data = {'type': 'EDITCHATTER', 'content': chatter.content, 'edited': chatter.edited}
         PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data='OK')
 
@@ -287,7 +309,7 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.key = chatter.key
         update.type = CHATTER
-        update.data = {'type': "NEWCOMMENT", 'length': len(chatter.comments)}
+        update.data = {'type': "NEWCOMMENT", 'comments_count': len(chatter.comments), 'comment': comm}
         PushFactory.push_update(update, push_keys)
         chatter_future.get_result()
         return OutgoingMessage(error='', data=json_dump({'comment': comm, 'following': following}))
@@ -313,7 +335,7 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.type = CHATTER
         update.key = comment.chatter
-        update.data = {'type': "LIKECOMMENT", 'key': comment.key, 'likes': len(comment.likes)}
+        update.data = {'type': "LIKECOMMENT", 'comment_key': comment.key, 'likes': len(comment.likes)}
         PushFactory.push_update(update, push_keys)
         comment_future.get_result()
         return OutgoingMessage(error='', data=json_dump(request_user.key in comment.likes))
@@ -339,7 +361,7 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.type = CHATTER
         update.key = comment.chatter
-        update.data = {'type': 'EDITCOMMENT', 'key': comment.key, 'content': comment.content}
+        update.data = {'type': 'EDITCOMMENT', 'key': comment.key, 'comment': comment.content, 'edited': comment.edited}
         PushFactory.push_update(update, push_keys)
         future.get_result()
         return OutgoingMessage(error='', data=ndb_to_json(comment))
@@ -369,7 +391,7 @@ class ChatterApi(remote.Service):
         update = LiveUpdate()
         update.type = CHATTER
         update.key = chat.key
-        update.data = {'type': "DELETECOMMENT", 'key': comment.key}
+        update.data = {'type': "DELETECOMMENT", 'key': comment.key, 'comments_count': len(chat.comments)}
         PushFactory.push_update(update, push_keys)
         for future in futures:
             future.get_result()
