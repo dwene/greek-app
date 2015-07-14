@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>NeteGreek</title>
     <meta name="description" content="Our mission is to make the life of Greek brothers and sisters easier so they can focus on being leaders and giving back more to society. We are college students and Greek Life leaders who know what it's like to need a better way.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi, user-scalable=no, minimal-ui"  />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <!-- build:css(.tmp) styles/main.css -->
     <!-- bower:css -->
@@ -171,7 +171,7 @@
                 <md-button id="notificationButton" class="btn-touch" ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
                     <div class="notification_count">
                         <i class="fa fa-bell"></i>
-                        <div ng-show="notification_count > 0" ng-bind="notification_count">0</div>
+                        <div class="bounceIn" ng-show="notification_count > 0" ng-bind="notification_count">0</div>
                     </div>
                 </md-button>
                 <div flex></div>
