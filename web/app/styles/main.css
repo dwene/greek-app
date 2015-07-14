@@ -1438,3 +1438,9 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
   -ms-animation: slideInDown .2s;
   animation: slideInDown .2s;
 }
+.bounceIn.ng-enter {
+  -webkit-animation: bounceIn .5s;
+  -moz-animation: bounceIn .5s;
+  -ms-animation: bounceIn .5s;
+  animation: bounceIn .5s;
+}

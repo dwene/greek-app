@@ -171,7 +171,7 @@
                 <md-button id="notificationButton" class="btn-touch" ng-show="$parent.session.user_name" aria-label="notification count" ng-click="toggleNotifications()">
                     <div class="notification_count">
                         <i class="fa fa-bell"></i>
-                        <div ng-show="notification_count > 0" ng-bind="notification_count">0</div>
+                        <div class="bounceIn" ng-show="notification_count > 0" ng-bind="notification_count">0</div>
                     </div>
                 </md-button>
                 <div flex></div>

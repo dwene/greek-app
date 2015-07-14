@@ -15,32 +15,81 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
         var directory;
         Directory.get();
         $scope.directory = Directory.directory;
-        
+
         $scope.querySearch = querySearch();
         $scope.searchText = null;
-        var members = loadMembers();      
-        $scope.selectedRadio = "everyone";
-        var selectedMembers;
-        $scope.selectedMembers = members.checked;
-        
-        $scope.openSelectingMembersDialog = function(){
+
+        var members = loadMembers();
+        var i;
+        $scope.selectedMembers = [];
+        $scope.selectInvited = "everyone";
+        for (i=0; i < members.length; i++){
+           members[i].checked = true;
+        }
+        //initialize selected members as everyone
+        getSelectedMembers();
+        function getSelectedMembers(){
+         $scope.selectedMembers = [];
+           for (i=0; i < members.length; i++){
+             if( members[i].checked === true ){
+                $scope.selectedMembers.push(members[i]);
+             }
+             else{
+                //do nothing
+             }
+          }
+        }
+
+        $scope.selectEveryone = function(){
+           for (i=0; i < members.length; i++){
+             members[i].checked = true;
+          }
+          getSelectedMembers();
+        };
+
+        $scope.selectLeaders = function(){
+           for (i=0; i < members.length; i++){
+             if ( members[i].perms == 'leader' ) {
+                members[i].checked = true;
+             }
+             else{
+                members[i].checked = false;
+             }
+          }
+          getSelectedMembers();
+        };
+
+        $scope.selectCouncil = function(){
+           for (i=0; i < members.length; i++){
+             if ( members[i].perms == 'council' ) {
+                members[i].checked = true;
+             }
+             else{
+                members[i].checked = false;
+             }
+          }
+          getSelectedMembers();
+        };
+
+        $scope.selectMembers = function(){
+
             $mdDialog.show({
                 controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
                 templateUrl:'views/templates/selectingmembers.html'
-            })
+            });
+        };
+
+        function selectingMembersDialogController(scope, mdDialog){
+
+            scope.members = members;
+
+            scope.hide = function(){
+                mdDialog.hide();
+            };
+
         }
-        
-        function selectingMembersDialogController($scope, $mdDialog){
-        
-            $scope.members = members;
-            
-            $scope.hide = function(){
-                $mdDialog.hide();
-            }
-        
-        }
-        
-            
+
+
             function querySearch(query) {
               var results = query ? self.members.filter(createFilterFor(query)) : [];
               return results;
@@ -62,10 +111,10 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
                     mem._lowerlast = mem.last_name.toLowerCase();
                     return mem;
                   });
-            };
-        
-        
-        
+            }
+
+
+
         $scope.addEvent = function(isValid, event) {
             if (isValid) {
                 event.tags = getCheckedTags($scope.tags);
@@ -110,11 +159,11 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
             } else {
                 $scope.submitted = true;
             }
-        }
+        };
 
         $scope.checkTagAvailability = function(tag) {
 
-            if (tag == "") {
+            if (tag === "") {
                 $scope.isEmpty = true;
             } else {
                 $scope.checkWorking = 'pending';
@@ -138,7 +187,7 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
                         console.log('Error: ', data);
                     });
             }
-        }
+        };
 
 
         var date_difference = 0;
@@ -148,7 +197,7 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
                     console.log('Now I am doing this...');
                     $scope.event.date_end = moment($scope.event.date_start).add(date_difference).format('MM/DD/YYYY');
                     $timeout(function() {
-                        $('.picker').trigger('change')
+                        $('.picker').trigger('change');
                     });
                 }
             }
@@ -180,7 +229,7 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
                     }
                 }
                 $timeout(function() {
-                    $('.picker').trigger('change')
+                    $('.picker').trigger('change');
                 }, 200);
             }
         });
