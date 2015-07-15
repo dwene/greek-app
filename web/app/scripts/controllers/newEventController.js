@@ -68,10 +68,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
          return list.indexOf(item) > -1;
       };
 
-      scope.whataremembers = function(){
-         console.log('dialog members', scope.members);
-      };
-
       scope.hide = function(){
          mdDialog.hide();
       };
