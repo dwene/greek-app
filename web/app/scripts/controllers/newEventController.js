@@ -21,7 +21,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
 
    var members = loadMembers();
    var i;
-   $scope.selectedMembers = [];
    $scope.selectInvited = "everyone";
    for (i=0; i < members.length; i++){
       members[i].checked = true;
@@ -40,36 +39,7 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
       }
    }
 
-   $scope.selectEveryone = function(){
-      for (i=0; i < members.length; i++){
-         members[i].checked = true;
-      }
-      getSelectedMembers();
-   };
 
-   $scope.selectLeaders = function(){
-      for (i=0; i < members.length; i++){
-         if ( members[i].perms == 'leader' ) {
-            members[i].checked = true;
-         }
-         else{
-            members[i].checked = false;
-         }
-      }
-      getSelectedMembers();
-   };
-
-   $scope.selectCouncil = function(){
-      for (i=0; i < members.length; i++){
-         if ( members[i].perms == 'council' ) {
-            members[i].checked = true;
-         }
-         else{
-            members[i].checked = false;
-         }
-      }
-      getSelectedMembers();
-   };
 
    $scope.selectMembers = function(){
 
