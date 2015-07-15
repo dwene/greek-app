@@ -15,7 +15,7 @@
                 <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                 <div class="md-list-item-text compact">
                     <p>{{member.first_name}} {{member.last_name}}</p>
-                    <md-checkbox ng-checked="checkifChecked(member)" class="md-secondary md-primary"></md-checkbox>
+                    <md-checkbox ng-checked="syncChecked(member, selectedMembers)" ng-click="toggle(member, selectedMembers)" class="md-secondary md-primary"></md-checkbox>
                 </div>
             </md-list-item>
         </md-list>

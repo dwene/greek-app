@@ -20,6 +20,7 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
    $scope.searchText = null;
 
    var members = loadMembers();
+   var tempSelected;
    var i;
    $scope.selectInvited = "everyone";
    for (i=0; i < members.length; i++){
@@ -52,12 +53,19 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
    function selectingMembersDialogController(scope, mdDialog){
 
       scope.members = members;
+      if(tempSelected){
+         scope.selectedMembers = tempSelected;
+      }
+      else scope.selectedMembers = $scope.selectedMembers;
 
-      scope.checkifChecked = function(member){
-         if(member.checked === true){
-            return true;
-         }
-         else{return false;}
+      scope.toggle = function(item, list){
+         var idx = list.indexOf(item);
+         if (idx > -1) list.splice(idx, 1);
+         else list.push(item);
+         tempSelected = $scope.selectedMembers;
+      };
+      scope.syncChecked = function(item, list){
+         return list.indexOf(item) > -1;
       };
 
       scope.whataremembers = function(){
