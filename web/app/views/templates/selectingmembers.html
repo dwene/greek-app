@@ -1,5 +1,4 @@
 <md-dialog id="selectingMembers" md-theme="{{$root.color}}" flex="80">
-
     <md-toolbar class="md-primary">
         <div class="md-toolbar-tools">
             <h1>Select Members</h1>
@@ -10,11 +9,11 @@
         <div class="md-padding no-padding-top">
           <search ng-model="search"></search>
           <md-list>
-              <md-list-item class="md-2-line contact-item" md-virtual-repeat="member in members | orderBy : 'last_name' | nameSearch:search">
+              <md-list-item class="md-2-line contact-item" md-virtual-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member, selectedMembers)">
                   <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                   <div class="md-list-item-text compact">
                       <p>{{member.first_name}} {{member.last_name}}</p>
-                      <md-checkbox ng-checked="syncChecked(member, selectedMembers)" ng-click="toggle(member, selectedMembers)" class="md-secondary md-primary"></md-checkbox>
+                      <md-checkbox ng-checked="syncChecked(member, selectedMembers)" class="md-secondary md-primary"></md-checkbox>
                   </div>
               </md-list-item>
           </md-list>
@@ -27,55 +26,4 @@
             Done
         </md-button>
     </div>
-
-      <!--
-<section id="selectingTags">
-<md-progress-circular md-mode="indeterminate" ng-hide="directory" style="margin:20px auto;"></md-progress-circular>
-    <div ng-show="directory">
-          <div class="row">
-           <form class="col-sm-6" id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);">
-                <md-input-container>
-                    <label for="enter_tag">Enter Tag</label>
-                    <input type="text" name="enter_tag" ng-model="selectedTagName" ng-options="tag.name for tag in allTagsList" ng-enter="selectTagFromTypeAhead(selectedTagName);" bs-typeahead>
-                </md-input-container>
-                <md-button id="seeall" ng-click="openDialog($event)">see all</md-button>
-            </form>
-            <div class="col-sm-6">
-                <div id="recentTags">
-                    <md-subheader>Recent Tags</md-subheader>
-                    <div id="theTags">
-                            <netetag-check ng-repeat="tag in tags.org_tags | orderBy:'name'" ng-show="tag.recent"></netetag-check>
-                    </div>
-                </div>
-            </div>
-            </div>
-
-
-    <ul id="messagingTags">
-        <md-subheader>
-            <span ng-hide=" ! (orgTagCheck.length || permsTagCheck.length)">Tags Selected</span>
-        </md-subheader>
-            <div class="btn-group" ng-show="tags.org_tags" ng-repeat="tag in orgTagCheck = (tags.org_tags | checkedFilter)">
-                <netetag-check></netetag-check>
-            </div>
-            <div class="btn-group" ng-show="tags.perms_tags" ng-repeat="tag in permsTagCheck = (tags.perms_tags | checkedFilter)">
-                    <netetag-check></netetag-check>
-            </div>
-    </ul>
-    <ul id="selectedList">
-        <md-subheader>
-            <span ng-show="$parent.selectedMembers.length">Members Selected {{$parent.selectedMembers.length}} </span>
-            <span ng-hide="$parent.selectedMembers.length">No members are selected.</span>
-        </md-subheader>
-        <div id="selectedMembers">
-        <netemember-check ng-repeat="tag in $parent.selectedMembers = ( directory.members | tagDirectorySearch:tags:usersList) | orderBy: 'last_name'" ng-model="tag" ng-show="tag.checked"></netemember-check>
-        <span class="messagePerson label label-primary"  ng-repeat="member in $parent.selectedMembers | orderBy: 'last_name'" ng-show="member.first_name">{{member.first_name}} {{member.last_name}}</span>
-        </div>
-    </ul>
-
-</div>
-</section>
--->
-
-
 </md-dialog>
