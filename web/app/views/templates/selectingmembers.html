@@ -5,11 +5,11 @@
         </div>
     </md-toolbar>
 
-      <md-virtual-repeat-container id="memberContainer">
+      <md-content id="memberContainer">
         <div class="md-padding no-padding-top">
           <search ng-model="search"></search>
           <md-list>
-              <md-list-item class="md-2-line contact-item" md-virtual-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member, selectedMembers)">
+              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member, selectedMembers)">
                   <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                   <div class="md-list-item-text compact">
                       <p>{{member.first_name}} {{member.last_name}}</p>
@@ -18,7 +18,7 @@
               </md-list-item>
           </md-list>
         </div>
-      </md-virtual-repeat-container>
+      </md-content>
 
     <div class="md-actions" layout="row">
         <span flex></span>

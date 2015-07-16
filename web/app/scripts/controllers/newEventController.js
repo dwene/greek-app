@@ -1,5 +1,5 @@
-App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog',
-function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog) {
+App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', '$window',
+function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, $window) {
   routeChange();
   $scope.event = {};
   $scope.event.tag = '';
@@ -50,6 +50,27 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
   function selectingMembersDialogController(scope, mdDialog){
     //set list of members
     scope.members = members;
+
+    var listItem =  $('.contact-item');
+    console.log(listItem);
+
+      scope.$watch(function(){
+         return $window.innerWidth;
+      }, function(value) {
+         if(value > 1380){
+           listItem.attr('md-item-size', '14.25');
+         }
+         else if(value > 1080){
+           listItem.attr('md-item-size', '19');
+         }
+         else if(value > 750){
+           listItem.attr('md-item-size', '28.5');
+         }
+         else{
+           listItem.attr('md-item-size', '57');
+         }
+     });
+
     //load corrected checked members
     if(tempSelected){
       scope.selectedMembers = tempSelected;

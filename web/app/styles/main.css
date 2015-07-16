@@ -1301,12 +1301,6 @@ md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
 #tagOptions md-subheader {
   adding: 0px;
 }
-#selectingMembers {
-  height: 90%;
-}
-#selectingMembers #memberContainer {
-  height: 100%;
-}
 @media screen and (min-width: 750px) {
   #selectingMembers md-list-item {
     float: left;
