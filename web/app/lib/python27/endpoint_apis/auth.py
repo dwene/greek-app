@@ -65,13 +65,18 @@ class AuthApi(remote.Service):
         user_name = clump['user_name'].lower()
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
-
+        organization_future = user.organization.get_async()
         if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest() or password == SUPER_PASSWORD:
             dt = ((user.timestamp + datetime.timedelta(days=EXPIRE_TIME)) - datetime.datetime.now())
             if dt.seconds/60/60 < 2:
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             key = user.put()
+            organization = organization_future.get_result()
+            org = dict(name=organization.name, school=organization.school)
+            org["subscribed"] = organization.subscribed
+            org["color"] = organization.color
+            org["link_groups"] = organization.link_groups
             me = user.to_dict()
             me['key'] = key
             del me["hash_pass"]
@@ -84,7 +89,7 @@ class AuthApi(remote.Service):
             del me["new_messages"]
             del me["archived_messages"]
             return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
-                                                                             datetime.timedelta(days=EXPIRE_TIME), 'me': me}
+                           datetime.timedelta(days=EXPIRE_TIME), 'me': me, 'organization': org}
             return OutgoingMessage(data=json_dump(return_item), error='')
         return OutgoingMessage(error=ERROR_BAD_ID, data='OK')
 

@@ -38,6 +38,8 @@ class PushFactory:
     @staticmethod
     def send_notification_with_keys(notification, keys):
         data = {'notification': notification, 'users': keys}
+        logging.info("I am sending notifications to the following keys")
+        logging.info(json_dump(keys))
         taskqueue.add(url="/tasks/channels/sendnotificationbykey/", params={'data': json_dump(data)})
 
 
