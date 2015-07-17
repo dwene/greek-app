@@ -1,8 +1,17 @@
 App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', '$window',
 function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, $window) {
   routeChange();
+  var directory;
+  Directory.get();
+  $scope.directory = Directory.directory;
   $scope.event = {};
   $scope.event.tag = '';
+  $scope.selectInvited = "everyone";
+  var members = loadMembers();
+  var tempSelected;
+  var i;
+  var membersLength = members.length;
+
   $scope.$watch('event.tag', function() {
     if (!$scope.event){
       $scope.unavailable = false;
@@ -12,22 +21,47 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
     $scope.available = false;
   });
 
-  var directory;
-  Directory.get();
-  $scope.directory = Directory.directory;
-
   $scope.querySearch = querySearch();
   $scope.searchText = null;
 
-  var members = loadMembers();
-  var tempSelected;
-  var i;
-  $scope.selectInvited = "everyone";
-  for (i=0; i < members.length; i++){
-    members[i].checked = true;
-  }
-  //initialize selected members as everyone
-  getSelectedMembers();
+  $scope.$watch('selectInvited', function(){
+    if($scope.selectInvited === 'everyone'){
+      for (i=0; i < membersLength; i++){
+        members[i].checked = true;
+      }
+      getSelectedMembers();
+      console.log('selected members', $scope.selectedMembers.length);
+    }
+    if($scope.selectInvited === 'leaders'){
+      for (i=0; i < membersLength; i++){
+        if(members[i].perms === 'leadership' || members[i].perms === 'council'){
+          members[i].checked = true;
+        }
+        else{
+          //do nothing
+        }
+      }
+      getSelectedMembers()
+      console.log('selected members', $scope.selectedMembers.length);
+    }
+    if($scope.selectInvited === 'exec'){
+      for (i=0; i < membersLength; i++){
+        if(members[i].perms === 'council'){
+          members[i].checked = true;
+        }
+        else{
+          //do nothing
+        }
+      }
+      getSelectedMembers()
+      console.log('selected members', $scope.selectedMembers.length);
+    }
+    if($scope.selectInvited === 'members'){
+      $scope.selectedMembers = tempSelected;
+    }
+  });
+
+
   function getSelectedMembers(){
     $scope.selectedMembers = [];
     for (i=0; i < members.length; i++){
