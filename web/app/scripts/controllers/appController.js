@@ -1,11 +1,11 @@
-App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Inbox', 'Session', 'Notifications', 'Directory', 'Channels',
-    function($scope, $interval, $rootScope, $timeout, localStorageService, AuthService, AUTH_EVENTS, Organization, Inbox, Session, Notifications, Directory, Channels) {
+App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Directory', 'Channels',
+    function($scope, $interval, $rootScope, $timeout, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Channels) {
         var notification_update_interval;
-        if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)) {
-            notification_update_interval = $interval(function() {
-                updates()
-            }, 10000);
-        }
+        // if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)) {
+        //     notification_update_interval = $interval(function() {
+        //         updates();
+        //     }, 10000);
+        // }
         AuthService.cachedLogin();
         $scope.authenticated = AuthService.isAuthenticated();
         $scope.checkPermissions = function(perms) {
@@ -19,12 +19,10 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
             }
         }
 
-        function updates() {
-            //Notifications.update();
-        }
+        // function updates() {
+        // }
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
             console.log('I got my login successfully! :)');
-            Organization.get();
             Notifications.get();
             Channels.connect();
             $scope.authenticated = true;
@@ -38,7 +36,6 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
                     $scope.authenticated = AuthService.isAuthenticated();
                 });
             }
-
         })
         $rootScope.$on(AUTH_EVENTS.logoutSuccess, function() {
             $scope.authenticated = false;

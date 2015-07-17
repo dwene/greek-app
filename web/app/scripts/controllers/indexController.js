@@ -1,4 +1,4 @@
-App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Inbox, Session, Notifications) {
+App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Session, Notifications) {
         $scope.notifications = Notifications.notifs;
         $scope.item = Organization.me;
         $scope.perms = Session.perms;

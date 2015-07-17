@@ -7,7 +7,6 @@ App.factory('Organization', ['$rootScope', 'RESTService', 'localStorageService',
         }
         item.cacheTimestamp = undefined;
         item.get = function() {
-            console.log('I am thinking about getting organization stuff');
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/organization/info', '')
@@ -23,6 +22,12 @@ App.factory('Organization', ['$rootScope', 'RESTService', 'localStorageService',
                         }
                     });
             }
+        }
+
+        item.set = function(org) {
+            item.organization = org;
+            $rootScope.color = org.color;
+            $scope.$broadcast('organization:updated');
         }
         item.destroy = function() {
             item.cacheTimestamp = undefined;

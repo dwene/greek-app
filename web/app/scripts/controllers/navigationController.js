@@ -1,5 +1,5 @@
-App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$location', 'Inbox', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS',
-    function($scope, $http, $rootScope, $mdSidenav, $location, Inbox, Session, Organization, Notifications, AUTH_EVENTS) {
+App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$location', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS',
+    function($scope, $http, $rootScope, $mdSidenav, $location, Session, Organization, Notifications, AUTH_EVENTS) {
         $scope.goToMe = function() {
             $mdSidenav('sidenav').toggle();
             $location.path('app/directory/' + Session.user_name);

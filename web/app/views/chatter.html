@@ -19,7 +19,7 @@
          <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3">
             <md-content class="md-padding no-padding-top">
                <md-list class="chatterList">
-                  <div class="md-padding" layout="row" layout-align="center center" ng-hide="currentFeed.length"><md-progress-circular class="md-primary" md-mode="indeterminate"></md-progress-circular></div>
+                  <div class="md-padding" layout="row" layout-align="center center" ng-show="currentFeed === undefined"><md-progress-circular class="md-primary" md-mode="indeterminate"></md-progress-circular></div>
                   <div class="listItem" ng-repeat="chat in currentFeed | orderBy:'-timestamp'">
                   <md-list-item ng-click="openChatter(chat)">
                      <img ng-src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{chat.author.first_name}}" />
@@ -29,7 +29,7 @@
                      <span flex></span>
                      <md-button class="btn-touch md-primary heart" aria-label="like chatter" ng-click="likeChatter(chat); $event.stopPropagation();"><i class="fa" ng-class="{'fa-heart-o': !chat.like, 'fa-heart': chat.like}"></i><span class="numberoflikes">{{chat.likes}}</span></md-button>
                   </md-list-item>
-                  <p class="details"><span ng-show="chat.important"><i class="fa fa-star theme-color"></i> | </span>{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments.length}} <i class="fa fa-comments"></i> | {{chat.edited? "Edited":""}} {{(chat.edited? chat.edited:chat.timestamp) | displayTime}}</p>
+                  <p class="details"><span ng-show="chat.important"><i class="fa fa-star theme-color"></i> | </span>{{chat.author.first_name}} {{chat.author.last_name}} | {{chat.comments_count}} <i class="fa fa-comments"></i> | {{chat.edited? "Edited":""}} {{(chat.edited? chat.edited:chat.timestamp) | displayTime}}</p>
                   </div>
                </md-list>
             </md-content>

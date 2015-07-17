@@ -1,7 +1,6 @@
 App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTService', 'localStorageService', 'Links', 'Organization',
     function($scope, $rootScope, $mdDialog, RESTService, localStorageService, Links, Organization) {
         routeChange();
-        Organization.get();
         if (Organization.organization) {
             $scope.groups = Organization.organization.link_groups;
         }
@@ -23,8 +22,7 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
         var groups;
         
         $scope.showConfirmDelete = function(group){
-            selectedGroup = group;
-            
+            selectedGroup = group; 
         }
                 
         $scope.openEditLinkDialog = function(link) {

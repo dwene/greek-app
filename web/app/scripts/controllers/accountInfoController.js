@@ -1,6 +1,5 @@
 App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', '$timeout', 'Organization', 'AUTH_EVENTS', 'Session', 'Directory', '$location', function($scope, RESTService, $rootScope, $timeout, Organization, AUTH_EVENTS, Session, Directory, $location){
     routeChange();
-    Organization.get();
     $scope.updatedInfo = false;
     $scope.item = Session.me;
     $scope.checkAlumni = Session.perms == 'alumni';

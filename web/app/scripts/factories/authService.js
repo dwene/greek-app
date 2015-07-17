@@ -1,5 +1,5 @@
-App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService', '$rootScope', 'AUTH_EVENTS', 'localStorageService', 'Inbox', 'Directory', 'Events', 'Tags', 'Polls', 'Links', 'Organization',
-    function($http, Session, $location, $q, RESTService, $rootScope, AUTH_EVENTS, localStorageService, Inbox, Directory, Events, Tags, Polls, Links, Organization) {
+App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService', '$rootScope', 'AUTH_EVENTS', 'localStorageService', 'Directory', 'Events', 'Tags', 'Polls', 'Links', 'Organization', 'Chatter',
+    function($http, Session, $location, $q, RESTService, $rootScope, AUTH_EVENTS, localStorageService, Directory, Events, Tags, Polls, Links, Organization, Chatter) {
         var authService = {};
         var loginAttempted = false;
 
@@ -17,13 +17,14 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                         };
                         localStorageService.set('credentials', creds);
                         Session.create(credentials.user_name, parsed_data.token, parsed_data.me);
-                        Inbox.destroy();
                         Directory.destroy();
                         Events.destroy();
                         Tags.destroy();
                         Polls.destroy();
                         Links.destroy();
                         Organization.destroy();
+                        Chatter.destroy();
+                        Organization.set(parsed_data.organization);
                         $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                         return credentials.user_name;
                     }
@@ -56,7 +57,10 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                         if (!authService.isAuthenticated()) {
                             if (!RESTService.hasErrors(data)) {
                                 console.log('CACHED LOGIN SUCCESS');
-                                Session.create(to_send.user_name, to_send.token, JSON.parse(data.data).me);
+                                var parsed_data = JSON.parse(data.data);
+                                Session.create(to_send.user_name, to_send.token, parsed_data.me);
+                                console.log("about to hit organization.send");
+                                Organization.set(parsed_data.organization);
                             } else {
                                 console.log('cached login failed.');
                                 $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);

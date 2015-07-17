@@ -33,7 +33,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    }
 
    if (Chatter.data) {
-      console.log("chatter is", Chatter.data.chatter);
       $scope.chatter = Chatter.data.feed;
       $scope.important_chatter = Chatter.data.important;
       defineFeed();
@@ -45,7 +44,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    $scope.$on('chatter:updated', function(){
       $scope.chatter = Chatter.data.feed;
       defineFeed();
-      console.log('chatter is being updated');
       if ($stateParams.token && $scope.chatter){
          openChatterByKey($stateParams.token);
       }
@@ -65,9 +63,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
    function openChatterByKey(key){
       for (i = 0; i < $scope.chatter.length; i++){
-         console.log('keys', $scope.chatter[i].key, key);
          if($scope.chatter[i].key == key){
-            console.log('scope.chat', $scope.chat);
             $scope.chat = $scope.chatter[i];
             $mdDialog.show({
                controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
@@ -80,7 +76,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
    $scope.openChatter = function(chat){
       $scope.chat = chat;
-      console.log('diolog',$mdDialog);
       $mdDialog.show({
          controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
          templateUrl: 'views/templates/chatterDialog.html',
@@ -90,9 +85,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    function chatterDialogController(scope, mdDialog, Chatter){
       scope.chat = $scope.chat;
       Chatter.getComments(scope.chat);
-      console.log('chat', scope.chat);
       scope.me = Session.me;
-      console.log('me.perms', scope.me.perms);
 
       scope.hide = function(){
          mdDialog.hide();
@@ -197,7 +190,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       };
 
       scope.addChatter = function(content, important, sendNotifications){
-         console.log('Create chatter function', content, important, sendNotifications);
          if (!important){
             important = false;
             sendNotifications = false;

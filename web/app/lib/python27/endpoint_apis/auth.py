@@ -97,6 +97,11 @@ class AuthApi(remote.Service):
                       http_method='POST', name='auth.token_login')
     def token_login(self, request):
         request_user = get_user(request.user_name, request.token)
+        organization = request_user.organization.get()
+        org = dict(name=organization.name, school=organization.school)
+        org["subscribed"] = organization.subscribed
+        org["color"] = organization.color
+        org["link_groups"] = organization.link_groups
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         user = request_user.user_name
@@ -111,7 +116,7 @@ class AuthApi(remote.Service):
         del me["messages"]
         del me["new_messages"]
         del me["archived_messages"]
-        to_send = json_dump({'user_name':user, 'token': token, 'me': me})
+        to_send = json_dump({'user_name':user, 'token': token, 'me': me, 'organization': org})
         return OutgoingMessage(error='', data=to_send)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='add_users',

@@ -1,6 +1,6 @@
 //Final/static variables. These variables are used for cookies
-var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-// var ENDPOINTS_DOMAIN = 'http://localhost:9002';
+// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+var ENDPOINTS_DOMAIN = 'http://localhost:9002';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -114,11 +114,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl : 'views/chatter.html',
                 controller : 'chatterController',
             })
-            // .state('app.chatter', {
-            //     url:'/chatter',
-            //     templateUrl : 'views/chatter.html',
-            //     controller : 'chatterController'
-            // })
             .state('app.managemembers', {
                     url : '/managemembers',
                     templateUrl : 'views/managemembers.html',
@@ -371,266 +366,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            // .state('app.newPoll',{
-// =======
-//         .state('app.home', {
-//             url: '/home',
-//             templateUrl: 'views/apphome.html',
-//             controller: 'appHomeController',
-//         })
-//         .state('app.managemembers', {
-//             url: '/managemembers',
-//             templateUrl: 'views/managemembers.html',
-//             data: {
-//                 permissions: {
-//                     only: [LEADERSHIP, COUNCIL],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.managemembers.manage', {
-//             url: '/manage',
-//             templateUrl: 'views/managingmembers.html',
-//             controller: 'manageMembersController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.managemembers.add', {
-//             url: '/add',
-//             templateUrl: 'views/addingmembers.html',
-//             controller: 'addMembersController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.managemembers.tag', {
-//             url: '/tag',
-//             templateUrl: 'views/taggingmembers.html',
-//             controller: 'membertagsController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL, LEADERSHIP],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.managealumni', {
-//             url: '/managealumni',
-//             templateUrl: 'views/managealumni.html',
-//         })
-//         .state('app.managealumni.add', {
-//             url: '/add',
-//             templateUrl: 'views/addingalumni.html',
-//             controller: 'addAlumniController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.managealumni.manage', {
-//             url: '/manage',
-//             templateUrl: 'views/managingalumni.html',
-//             controller: 'managealumniController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.incorrectperson', {
-//             url: '/incorrectperson',
-//             templateUrl: 'views/incorrectperson.html',
-//             controller: 'incorrectpersonController'
-//         })
-//         .state('app.accountinfo', {
-//             url: '/accountinfo',
-//             templateUrl: 'views/accountinfo.html',
-//             controller: 'accountinfoController',
-//             data: {
-//                 permissions: {
-//                     only: [LOGGED_IN],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.uploadprofilepicture', {
-//             url: '/uploadprofilepicture',
-//             templateUrl: 'views/uploadprofilepicture.html',
-//             controller: 'profilePictureController',
-//             data: {
-//                 permissions: {
-//                     only: [LOGGED_IN],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.directory', {
-//             url: '/directory',
-//             templateUrl: 'views/directory.html',
-//             data: {
-//                 permissions: {
-//                     only: [LOGGED_IN],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.directory.members', {
-//             url: '/members',
-//             templateUrl: 'views/memberdirectory.html',
-//             controller: 'membersDirectoryController',
-//             data: {
-//                 permissions: {
-//                     only: [LOGGED_IN],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.directory.alumni', {
-//             url: '/alumni',
-//             templateUrl: 'views/alumnidirectory.html',
-//             controller: 'alumniDirectoryController',
-//             data: {
-//                 permissions: {
-//                     only: [LOGGED_IN],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.memberprofile', {
-//             url: '/directory/:id',
-//             templateUrl: 'views/memberprofile.html',
-//             controller: 'memberprofileController',
-//             data: {
-//                 permissions: {
-//                     only: [LOGGED_IN],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//     //#CHANGES there might be a better way to do this
-//     .state('app.postNewKeyPictureLink', {
-//         url: '/postNewKeyPictureLink',
-//         templateUrl: 'views/loading.html',
-//         controller: 'uploadImageController'
-//     })
-//         .state('app.changepassword', {
-//             url: '/changepassword',
-//             templateUrl: 'views/change_password.html',
-//             controller: 'changePasswordController'
-//         })
-//         .state('app.messaging', {
-//             url: '/messaging',
-//             templateUrl: 'views/messaging.html',
-//             controller: 'messagingController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL, LEADERSHIP],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.newevent', {
-//             url: '/newevent',
-//             templateUrl: 'views/newevent.html',
-//             controller: 'newEventController',
-//             data: {
-//                 permissions: {
-//                     only: [COUNCIL],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.events', {
-//             url: '/events',
-//             templateUrl: 'views/events.html',
-//             controller: 'eventsController',
-//             data: {
-//                 permissions: {
-//                     only: [MEMBER],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.eventInfo', {
-//             url: '/events/:tag',
-//             templateUrl: 'views/eventinfo.html',
-//             controller: 'eventInfoController',
-//             data: {
-//                 permissions: {
-//                     only: [MEMBER],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.editEvent', {
-//             url: '/events/:tag/edit',
-//             templateUrl: 'views/editevent.html',
-//             controller: 'editEventsController',
-//             data: {
-//                 permissions: {
-//                     only: [LEADERSHIP],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.eventCheckin', {
-//             url: '/events/:tag/checkin',
-//             templateUrl: 'views/eventcheckin.html',
-//             controller: 'eventCheckInController',
-//             data: {
-//                 permissions: {
-//                     only: [LEADERSHIP],
-//                     redirectTo: 'home'
-//                 }
-//             }
-//         })
-//         .state('app.eventCheckinReport', {
-// >>>>>>> Stashed changes
-            //#TODO put this into each individual event :tag
-        //     url: '/events/:tag/report',
-        //     templateUrl: 'views/eventcheckinreport.html',
-        //     controller: 'eventCheckInReportController',
-        //     data: {
-        //         permissions: {
-        //             only: [LEADERSHIP],
-        //             redirectTo: 'home'
-        //         }
-        //     }
-        // })
-        // .state('app.admin', {
-        //     //#TODO put this into each individual event :tag
-        //     url: '/admin',
-        //     templateUrl: 'views/admin.html',
-        //     controller: 'adminController',
-        //     data: {
-        //         permissions: {
-        //             only: [COUNCIL],
-        //             redirectTo: 'home'
-        //         }
-        //     }
-        // })
-        // .state('app.organizationPictureUpload', {
-        //     //#TODO put this into each individual event :tag
-        //     url: '/uploadorganizationimage',
-        //     templateUrl: 'views/uploadOrganizationImage.html',
-        //     controller: 'organizationPictureController',
-        //     data: {
-        //         permissions: {
-        //             only: [COUNCIL],
-        //             redirectTo: 'home'
-        //         }
-        //     }
-        // })
         .state('app.newPoll', {
             //#TODO put this into each individual event :tag
             url: '/newpoll',
@@ -859,7 +594,7 @@ App.config(function($mdThemingProvider) {
 });
 
 //Set up run commands for the app
-App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Inbox) {
+App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Chatter) {
 
 
     // Permission
@@ -936,13 +671,13 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         console.log('Im logging out');
         AuthService.destroy();
         Session.destroy();
-        Inbox.destroy();
         Directory.destroy();
         Events.destroy();
         Tags.destroy();
         Polls.destroy();
         Links.destroy();
         Organization.destroy();
+        Chatter.destroy();
         localStorageService.clearAll();
         $.removeCookie('FORM_INFO_EMPTY');
         $rootScope.directory = {};
@@ -2067,39 +1802,6 @@ App.directive('updateStatus', ['$timeout',
     }
 ]);
 
-//            if (attrs.options == 'all'){
-//                element.append(  '<label class="label label-default checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-//                                +'<i class="fa fa-square-o checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-//                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{ tag.name }}</li>'
-//                                +'</label>'
-//                                +'<div data-toggle="dropdown" class="badge dropdown-toggle"><i class="fa fa-sort-desc"></i></div>'
-//                                +'<ul class="dropdown-menu" role="menu">'
-//                                +'<li><a ng-click="openRenameTagModal(tag)">Rename Tag</a></li>'
-//                                +'<li><a ng-click="openDeleteTagModal(tag)">Delete Tag</a></li>'
-//                                +'</ul>'
-//                );
-//            }
-//            else if(attrs.options == 'check'){
-//                element.append(  '<label class="label checkLabel" ng-class="{\'label-primary\': tag.checked, \'label-default\': !tag.checked}">'
-//                                +'<i class="fa checkStatus" ng-class="{\'fa-check-square-o\': tag.checked, \'fa-square-o\': !tag.checked}"></i>'
-//                                +'<input type="checkbox" ng-model="tag.checked"> <li>#{{tag.name}}</li>'
-//                                +'</label>'
-//                );
-//            }
-//            else if(attrs.options == 'delete'){
-//                element.append(  '<span class="label label-default userLabel">'
-//                                +'<li>#{{ tag }}</li>'
-//                                +'</span>'
-//                                +'<div class="badge" ng-click="removeTagsFromUsers([tag], [user.key])"><i class="fa fa-times"></i></div>'
-//                );
-//            }
-//            else{
-//                element.append(  '<label class="label label-primary">'
-//                                +'<li>#{{ tag.name }}</li>'
-//                                +'</label>'
-//                );
-//            }
-
 App.filter('multipleSearch', function() {
     return function(objects, search) {
         var searchValues = search;
@@ -2443,20 +2145,6 @@ App.filter('directorySearch', function() {
     };
 });
 
-// App.factory('getEvents', function($http, $rootScope, RESTService) {
-//     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_events', '')
-//         .success(function(data) {
-//             if (!RESTService.hasErrors(data)) {
-//                 var events = JSON.parse(data.data);
-//                 $rootScope.events = events;
-//             } else {
-//                 console.log('ERROR: ', data);
-//             }
-//         })
-//         .error(function(data) {
-//             console.log('Error: ', data);
-//         });
-// });
 
 App.factory('registerOrganizationService', function() {
     var data = undefined;
@@ -2471,49 +2159,3 @@ App.factory('registerOrganizationService', function() {
     };
 });
 
-// App.factory('LoadScreen', function($rootScope) {
-//     return {
-//         stop: function() {
-//             $rootScope.loading = true;
-//             $('.mainLoadingScreen').show();
-//             $('.nav').hide();
-//         },
-//         start: function() {
-//             $rootScope.loading = false;
-//             $('.mainLoadingScreen').hide();
-//             $('.nav').show();
-//             $('.container').fadeIn();
-//             $('body').show();
-//             routeChange();
-//             console.log('stopping load screen');
-//         },
-//         check: function() {
-//             $rootScope.loading;
-//         }
-//     };
-// });
-
-// App.factory( 'Login', function($http, $q, $rootScope){
-//     var logged_in = false;
-//     return{
-//         check: function(){
-//             var defer = $q.defer();
-//             $http.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/check_login', packageForSending(''))
-//                 .success(function(data){
-//                     if (!RESTService.hasErrors(data)){logged_in = true;}
-//                         defer.resolve();
-//                         console.log("returned login result: ", data);
-//                  })
-//                 .error(function(data){
-//                     defer.resolve();
-//                 });
-//             return defer.promise;
-//         },
-//         set: function(val){
-//             logged_in = val;
-//         },
-//         get: function(){
-//             return logged_in;
-//         }
-//     }
-// });

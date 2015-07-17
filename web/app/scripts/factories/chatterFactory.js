@@ -63,7 +63,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                         chatter.data.feed = load_data;
                         $rootScope.$broadcast('chatter:updated');
                         meta.feedLoaded = true;
-                        console.log('Chatter has been updated', load_data);
                     } else {
                         console.log('Err', data);
                     }
@@ -72,6 +71,13 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                     console.log('Error: ', data);
                 });
         };
+
+        chatter.destroy = function(){
+            chatter.data = {};
+            localStorageService.remove('chatter');
+            chatter.hasLoaded = false;
+            meta = {feedLoaded: false, importantLoaded: false};
+        }
 
         chatter.getImportant = function() {
             if (meta.importantLoaded) {
@@ -84,7 +90,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
                         var load_data = JSON.parse(data.data);
                         chatter.data.important = load_data;
                         $rootScope.$broadcast('importantChatter:updated');
-                        console.log('Chatter has been updated', load_data);
                     } else {
                         console.log('Err', data);
                     }
@@ -352,7 +357,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         };
 
         chatter.updateLikes = function(data){
-            console.log('I made it to updateLikes');
             var key = data.key;
             var chatters = getChattersByKey(key);
             for(var i = 0; i < chatters.length; i++){
@@ -361,7 +365,6 @@ App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q'
         };
 
         chatter.updateNewChatter = function(chat){
-            console.log('im adding a new chatter');
             if (getChattersByKey(chat.key).length === 0){
                 this.data.feed.push(chat);
                 if (chat.important){

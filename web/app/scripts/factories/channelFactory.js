@@ -62,7 +62,6 @@ var SocketHandler = function(tokenID) {
     var context = this;
     this.socketCreationCallback = function (channelID) {
         var fn = window["goog.appengine.Channel"];
-        console.log("is this a function?", fn);
         var channel = new goog.appengine.Channel(channelID);
         context.channelId = channelID;
         var socket = channel.open();
