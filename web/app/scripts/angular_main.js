@@ -1328,6 +1328,17 @@ App.directive('search', function() {
     };
 });
 
+App.directive('selectingMembers', function(){
+  return{
+    restrict: 'E',
+    scope:{
+      ngModel: '='
+    },
+    controller: 'selectingMembersController',
+    templateUrl: 'views/templates/selectingmembers.html '
+  }
+});
+
 App.directive('alumniYearPicker', function() {
     return {
         restrict: 'E',

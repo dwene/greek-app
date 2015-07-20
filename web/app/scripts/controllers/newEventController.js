@@ -2,98 +2,98 @@ App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$t
 function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, $window) {
 
    routeChange();
-   Directory.get();
+  //  Directory.get();
 
-   $scope.directory = Directory.directory;
+  //  $scope.directory = Directory.directory;
    $scope.event = {};
    $scope.event.tag = '';
-   $scope.selectInvited = "everyone";
+  //  $scope.selectMembers = "everyone";
 
    $scope.querySearch = querySearch();
    $scope.searchText = null;
 
-   var directory,
-   members = loadMembers(),
-   userSelectedMembers = [],
-   i,
-   membersLength = members.length;
+  //  var directory,
+  //  members = loadMembers(),
+  //  userSelectedMembers = [],
+  //  i,
+  //  membersLength = members.length;
 
-   $scope.$watch('selectInvited', function(){
-      if($scope.selectInvited === 'everyone'){
-         for (i=0; i < membersLength; i++){
-            members[i].checked = true;
-         }
-         getSelectedMembers();
-      }
-      if($scope.selectInvited === 'leaders'){
-         for (i=0; i < membersLength; i++){
-            if(members[i].perms === 'leadership' || members[i].perms === 'council'){
-               members[i].checked = true;
-            }
-            else{
-               members[i].checked = false;
-            }
-         }
-         getSelectedMembers();
-      }
-      if($scope.selectInvited === 'exec'){
-         for (i=0; i < membersLength; i++){
-            if(members[i].perms === 'council'){
-               members[i].checked = true;
-            }
-            else{
-               members[i].checked = false;
-            }
-         }
-         getSelectedMembers();
-      }
-      if($scope.selectInvited === 'members'){
-            $scope.selectedMembers = userSelectedMembers;
-      }
-   });
+  //  $scope.$watch('selectMembersRadio', function(){
+  //     if($scope.selectMembersRadio === 'everyone'){
+  //        for (i=0; i < membersLength; i++){
+  //           members[i].checked = true;
+  //        }
+  //        getSelectedMembers();
+  //     }
+  //     if($scope.selectMembersRadio === 'leaders'){
+  //        for (i=0; i < membersLength; i++){
+  //           if(members[i].perms === 'leadership' || members[i].perms === 'council'){
+  //              members[i].checked = true;
+  //           }
+  //           else{
+  //              members[i].checked = false;
+  //           }
+  //        }
+  //        getSelectedMembers();
+  //     }
+  //     if($scope.selectMembersRadio === 'exec'){
+  //        for (i=0; i < membersLength; i++){
+  //           if(members[i].perms === 'council'){
+  //              members[i].checked = true;
+  //           }
+  //           else{
+  //              members[i].checked = false;
+  //           }
+  //        }
+  //        getSelectedMembers();
+  //     }
+  //     if($scope.selectMembersRadio === 'members'){
+  //           $scope.selectedMembers = userSelectedMembers;
+  //     }
+  //  });
 
-   $scope.selectMembers = function(){
-      $mdDialog.show({
-         controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
-         templateUrl:'views/templates/selectingmembers.html'
-      });
-   };
+  //  $scope.selectingMembers = function(){
+  //     $mdDialog.show({
+  //        controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
+  //        templateUrl:'views/templates/selectingmembers.html'
+  //     });
+  //  };
 
-   function getSelectedMembers(){
-      $scope.selectedMembers = [];
-      for (i=0; i < members.length; i++){
-         if( members[i].checked === true ){
-            $scope.selectedMembers.push(members[i]);
-         }
-         else{
-            //do nothing
-         }
-      }
-   }
+  //  function getSelectedMembers(){
+  //     $scope.selectedMembers = [];
+  //     for (i=0; i < members.length; i++){
+  //        if( members[i].checked === true ){
+  //           $scope.selectedMembers.push(members[i]);
+  //        }
+  //        else{
+  //           //do nothing
+  //        }
+  //     }
+  //  }
 
-   function selectingMembersDialogController(scope, mdDialog){
-      //set list of members
-      scope.members = members;
-      //load corrected checked members
-         $scope.selectedMembers = userSelectedMembers;
-
-      // console.log('selecting members when dialog is opened', $scope.selectedmembers);
-
-      //toggle check member to invite
-      scope.toggle = function(item){
-         var idx = userSelectedMembers.indexOf(item);
-         if (idx > -1) {userSelectedMembers.splice(idx, 1);}
-         else {userSelectedMembers.push(item);}
-         userSelectedMembers = $scope.selectedMembers;
-      };
-      //check to see what should be checked
-      scope.syncChecked = function(item){
-         return userSelectedMembers.indexOf(item) > -1;
-      };
-      scope.hide = function(){
-         mdDialog.hide();
-      };
-   }
+  //  function selectingMembersDialogController(scope, mdDialog){
+  //     //set list of members
+  //     scope.members = members;
+  //     //load corrected checked members
+  //        $scope.selectedMembers = userSelectedMembers;
+   //
+  //     // console.log('selecting members when dialog is opened', $scope.selectedmembers);
+   //
+  //     //toggle check member to invite
+  //     scope.toggle = function(item){
+  //        var idx = userSelectedMembers.indexOf(item);
+  //        if (idx > -1) {userSelectedMembers.splice(idx, 1);}
+  //        else {userSelectedMembers.push(item);}
+  //        userSelectedMembers = $scope.selectedMembers;
+  //     };
+  //     //check to see what should be checked
+  //     scope.syncChecked = function(item){
+  //        return userSelectedMembers.indexOf(item) > -1;
+  //     };
+  //     scope.hide = function(){
+  //        mdDialog.hide();
+  //     };
+  //  }
 
    function querySearch(query) {
       var results = query ? self.members.filter(createFilterFor(query)) : [];
@@ -109,14 +109,14 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
       };
    }
 
-   function loadMembers() {
-      var members = $scope.directory.members;
-      return members.map(function (mem) {
-         mem._lowerfirst = mem.first_name.toLowerCase();
-         mem._lowerlast = mem.last_name.toLowerCase();
-         return mem;
-      });
-   }
+  //  function loadMembers() {
+  //     var members = $scope.directory.members;
+  //     return members.map(function (mem) {
+  //        mem._lowerfirst = mem.first_name.toLowerCase();
+  //        mem._lowerlast = mem.last_name.toLowerCase();
+  //        return mem;
+  //     });
+  //  }
 
    $scope.addEvent = function(isValid, event) {
       if (isValid) {
