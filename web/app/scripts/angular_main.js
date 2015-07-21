@@ -1332,11 +1332,11 @@ App.directive('selectingMembers', function(){
   return{
     restrict: 'E',
     scope:{
-      ngModel: '='
+      dataSelected: '='
     },
     controller: 'selectingMembersController',
-    templateUrl: 'views/templates/selectingmembers.html '
-  }
+    templateUrl: 'views/templates/selectingmembers.html'
+   };
 });
 
 App.directive('alumniYearPicker', function() {

@@ -1,36 +1,6 @@
-<md-radio-group>
+<md-radio-group ng-model="selectMembersRadio">
    <md-radio-button class="md-primary" value="everyone" ng-click="selectEveryone()">Everyone</md-radio-button>
    <md-radio-button class="md-primary" value="leaders" ng-click="selectLeaders()">Leaders</md-radio-button>
    <md-radio-button class="md-primary" value="exec" ng-click="selectCouncil()">Exec</md-radio-button>
    <md-radio-button class="md-primary" value="members" ng-click="selectingMembers()">{{selectedMembers.length}} Members Selected</md-radio-button>
-
-<!-- <md-dialog id="selectingMembers" md-theme="{{$root.color}}" flex="80">
-    <md-toolbar class="md-primary">
-        <div class="md-toolbar-tools">
-            <h1>Select Members</h1>
-        </div>
-    </md-toolbar>
-
-      <md-content id="memberContainer">
-        <div class="md-padding no-padding-top">
-          <search ng-model="search"></search>
-          <md-list>
-              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member)">
-                  <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
-                  <div class="md-list-item-text compact">
-                      <p>{{member.first_name}} {{member.last_name}}</p>
-                      <md-checkbox ng-checked="syncChecked(member)" class="md-secondary md-primary"></md-checkbox>
-                  </div>
-              </md-list-item>
-          </md-list>
-        </div>
-      </md-content>
-
-    <div class="md-actions" layout="row">
-        <span flex></span>
-        <md-button class="md-primary" ng-click="hide()">
-            Done
-        </md-button>
-    </div>
-</md-dialog> -->
 </md-radio-group>

@@ -1,12 +1,12 @@
-App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', '$window',
-function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, $window) {
+App.controller('selectingMembersController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog',
+function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog) {
 
   Directory.get();
   $scope.directory = Directory.directory;
-  $scope.selectMembers = "everyone";
+  $scope.selectMembersRadio = "everyone";
 
   var directory,
-  members = loadMembers(),
+  members = $scope.directory.members,
   userSelectedMembers = [],
   membersLength = members.length,
   i;
@@ -48,7 +48,7 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
   $scope.selectingMembers = function(){
     $mdDialog.show({
       controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
-      templateUrl:'views/templates/selectingmembers.html'
+      templateUrl:'views/templates/selectingMembersDialog.html'
     });
   };
 
@@ -87,5 +87,9 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
       mdDialog.hide();
     };
   }
+
+  $timeout(function () {
+     console.log($scope.dataSelected);
+  }, 1000);
 
 }]);
