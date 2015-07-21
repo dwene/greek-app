@@ -40,8 +40,6 @@ App.directive('alumniYearPicker', function() {
                         }
                     }
                     $scope.selectedYear = $scope.highestYear;
-                    //                console.log('years', $scope.years);
-                    //                console.log('selectedYear',$scope.selectedYear);
                 }
             });
             $scope.$watch('search', function() {

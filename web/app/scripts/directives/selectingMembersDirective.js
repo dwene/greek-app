@@ -76,9 +76,6 @@ function() {
         scope.members = members;
         //load corrected checked members
         $scope.selectedMembers = userSelectedMembers;
-
-        // console.log('selecting members when dialog is opened', $scope.selectedmembers);
-
         //toggle check member to invite
         scope.toggle = function(item){
           var idx = userSelectedMembers.indexOf(item);

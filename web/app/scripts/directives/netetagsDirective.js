@@ -43,7 +43,6 @@ App.directive('netememberCheck', ['$compile',
             },
             templateUrl: 'views/templates/tags/nete-member-check.html',
             link: function(scope, element, attrs) {
-                //            $compile(element.contents())(scope)
             }
         };
     }
@@ -57,9 +56,6 @@ App.directive('neteMember', ['$compile',
                 ngModel: "="
             },
             templateUrl: 'views/templates/tags/nete-member.html',
-            // link: function(scope, element, attrs){
-            //            $compile(element.contents())(scope)
-            // }
         };
     }
 ]);
