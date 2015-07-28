@@ -13,7 +13,7 @@
                   <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                   <div class="md-list-item-text compact">
                       <p>{{member.first_name}} {{member.last_name}}</p>
-                      <md-checkbox md-no-ink ng-checked="syncChecked(member)" class="md-secondary md-primary" ng-click="toggle(member);"></md-checkbox>
+                      <md-checkbox md-no-ink ng-checked="syncChecked(member)" class="md-secondary md-primary" ng-click="toggle(member);" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
                   </div>
               </md-list-item>
           </md-list>

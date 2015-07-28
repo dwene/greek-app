@@ -4,7 +4,7 @@ function() {
     restrict: 'E',
     templateUrl: 'views/templates/selectingmembers.html',
     scope:{
-      dataSelected: '='
+      selectedMembers: '=ngModel'
     },
     controller: ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog', function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog){
 
