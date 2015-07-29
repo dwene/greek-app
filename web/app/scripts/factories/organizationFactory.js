@@ -27,7 +27,7 @@ App.factory('Organization', ['$rootScope', 'RESTService', 'localStorageService',
         item.set = function(org) {
             item.organization = org;
             $rootScope.color = org.color;
-            $scope.$broadcast('organization:updated');
+            $rootScope.$broadcast('organization:updated');
         }
         item.destroy = function() {
             item.cacheTimestamp = undefined;

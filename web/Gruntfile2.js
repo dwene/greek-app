@@ -19,6 +19,7 @@ module.exports = function (grunt) {
   var appConfig = {
     app:'app',
     dist: 'www',
+    stage: 'stage'
   };
     
 
@@ -143,6 +144,16 @@ module.exports = function (grunt) {
           ]
         }]
       },
+      stage: {
+        files: [{
+          dot: true,
+          src: [
+            '.tmp',
+            '<%= yeoman.stage %>/{,*/}*',
+            '!<%= yeoman.stage %>/.git*'
+          ]
+        }]
+      },
       server: '.tmp'
     },
 
@@ -158,6 +169,14 @@ module.exports = function (grunt) {
           src: '{,*/}*.css',
           dest: '.tmp/styles/'
         }]
+      },
+      stage: {
+        files: [{
+          expand: true,
+          cwd: '.tmp/styles/',
+          src: '{,*/}*.css',
+          dest: '.tmp/styles/'
+        }]
       }
     },
 
@@ -167,9 +186,6 @@ module.exports = function (grunt) {
         src: ['<%= yeoman.app %>/index.html'],
         //ignorePath:  /\.\.\//
       },
-      mobile: {
-        src:['<%= yeoman.mobile %>/index.html'],
-      }
     },
 
     // Renames files for browser caching purposes
@@ -180,6 +196,13 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/styles/{,*/}*.css',
           '<%= yeoman.dist %>/styles/fonts/*'
         ]
+      },
+      stage: {
+        src: [
+          '<%= yeoman.stage %>/scripts/{,*/}*.js',
+          '<%= yeoman.stage %>/styles/{,*/}*.css',
+          '<%= yeoman.stage %>/styles/fonts/*'
+        ]
       }
     },
 
@@ -187,16 +210,33 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-        html: '<%= yeoman.app %>/index.html',
-        options: {
-          dest: '<%= yeoman.dist %>',
-          flow: {
-            html: {
-              steps: {
-                js: ['concat'],
-                css: ['cssmin']
-              },
-              post: {}
+        dist: {
+          html: '<%= yeoman.app %>/index.html',
+          options: {
+            dest: '<%= yeoman.dist %>',
+            flow: {
+              html: {
+                steps: {
+                  js: ['concat'],
+                  css: ['cssmin']
+                },
+                post: {}
+              }
+            }
+          }
+        },
+        stage: {
+          html: '<%= yeoman.app %>/index.html',
+          options: {
+            dest: '<%= yeoman.stage %>',
+            flow: {
+              html: {
+                steps: {
+                  js: ['concat'],
+                  css: ['cssmin']
+                },
+                post: {}
+              }
             }
           }
         }
@@ -204,10 +244,19 @@ module.exports = function (grunt) {
 
     // Performs rewrites based on filerev and the useminPrepare configuration
     usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-      options: {
-        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
+      dist:{
+        html: ['<%= yeoman.dist %>/{,*/}*.html'],
+        css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+        options: {
+          assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
+        }
+      },
+      stage: {
+        html: ['<%= yeoman.stage %>/{,*/}*.html'],
+        css: ['<%= yeoman.stage %>/styles/{,*/}*.css'],
+        options: {
+          assetsDirs: ['<%= yeoman.stage %>','<%= yeoman.stage %>/images']
+        }
       }
     },
 
@@ -231,19 +280,16 @@ module.exports = function (grunt) {
             '<%= yeoman.dist %>/scripts/scripts.js', 
           ]
         }
+      },
+      stage: {
+        files: {
+          '<%= yeoman.stage %>/scripts/scripts.js': [
+            '<%= yeoman.stage %>/scripts/scripts.js', 
+          ]
+        }
       }
     },
-    // concat: {
-    //   angular: {
-    //     src: ['<%= yeoman.app %>/scripts/angular_main.js', '<%= yeoman.app %>/scripts/controllers/*.js', '<%= yeoman.app %>/scripts/factories/*.js','<%= yeoman.app %>/scripts/vendor/*.js' ],
-    //     dest: '<%= yeoman.dist %>/scripts/scripts.js',
-    //   },
-    //   dist: {
-    //     src: ['<%= yeoman.app %>/scripts/vendor/*.js', '<%= yeoman.app %>/scripts/netegreek.js'],
-    //     dest: '<%= yeoman.dist %>/scripts/scripts.js',
-    //   }
-    // },
-
+    
     imagemin: {
       dist: {
         files: [{
@@ -251,6 +297,14 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>/images',
           src: '{,*/}*.{png,jpg,jpeg,gif}',
           dest: '<%= yeoman.dist %>/images'
+        }]
+      },
+      stage: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/images',
+          src: '{,*/}*.{png,jpg,jpeg,gif}',
+          dest: '<%= yeoman.stage %>/images'
         }]
       }
     },
@@ -262,6 +316,14 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>/images',
           src: '{,*/}*.svg',
           dest: '<%= yeoman.dist %>/images'
+        }]
+      },
+      stage: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/images',
+          src: '{,*/}*.svg',
+          dest: '<%= yeoman.stage %>/images'
         }]
       }
     },
@@ -281,6 +343,21 @@ module.exports = function (grunt) {
           src: ['*.html', 'views/{,*/}*.html', 'views/templates/{,*/}*.html'],
           dest: '<%= yeoman.dist %>'
         }]
+      },
+      stage: {
+        options: {
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          collapseBooleanAttributes: false,
+          removeCommentsFromCDATA: true,
+          removeOptionalTags: false
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.stage %>',
+          src: ['*.html', 'views/{,*/}*.html', 'views/templates/{,*/}*.html'],
+          dest: '<%= yeoman.stage %>'
+        }]
       }
     },
 
@@ -294,6 +371,14 @@ module.exports = function (grunt) {
           src: ['*.js'],
           dest: '<%= yeoman.dist %>/scripts'
         }]
+      },
+      stage: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.stage %>/scripts',
+          src: ['*.js'],
+          dest: '<%= yeoman.stage %>/scripts'
+        }]
       }
     },
 
@@ -301,6 +386,9 @@ module.exports = function (grunt) {
     cdnify: {
       dist: {
         html: ['<%= yeoman.dist %>/index.html']
+      },
+      stage: {
+        html: ['<%= yeoman.stage %>/index.html']
       }
     },
 
@@ -343,12 +431,49 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>'
         }]
       },
+      stage: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.stage %>',
+          src: [
+            '*.{ico,png,txt,py,yaml}',
+            '.htaccess',
+            '*.html',
+            'views/{,*/}*.html',
+            'views/templates/{,*/}*.html',
+            'images/{,*/}*.{webp}',
+            'fonts/*',
+            'braintree/{,*/}*',
+            'braintree/util/{,*/}*',
+            'dateutil/{,*/}*',
+            'certs/*',
+            'email/*',
+            'email_footers/*',
+            'files/*',
+            'requests/*',
+            'cloudstorage/*',
+            'lib/**',
+          ]
+        }, {
+          expand: true,
+          cwd: '.tmp/images',
+          dest: '<%= yeoman.stage %>/images',
+          src: ['generated/*']
+        }, {
+          expand: true,
+          cwd: 'bower_components/bootstrap/dist',
+          src: 'fonts/*',
+          dest: '<%= yeoman.stage %>'
+        }]
+      },
       server:{
         files: [{
           expand: true,
           dot: true,
           cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
+          dest: '<%= yeoman.stage %>',
           src: [
             'lib/**'
           ]
@@ -372,8 +497,13 @@ module.exports = function (grunt) {
       ],
       dist: [
         'copy:styles',
-        'imagemin',
-        'svgmin'
+        'imagemin:dist',
+        'svgmin:dist'
+      ],
+      stage: [
+        'copy:styles',
+        'imagemin:stage',
+        'svgmin:stage'
       ]
     },
     less: {
@@ -445,17 +575,35 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
-    'useminPrepare',
+    'useminPrepare:dist',
     'concurrent:dist',
-    'autoprefixer',
+    'autoprefixer:dist',
+    // 'concat',
+    // 'ngAnnotate',
+    // 'copy:dist',
+    // 'cssmin',
+    // 'filerev',
+    // 'usemin',
+    // 'htmlmin'
+  ]);
+
+  grunt.registerTask('stage', [
+    'clean:stage',
+    'wiredep',
+    'useminPrepare:stage',
+    'concurrent:stage',
+    'autoprefixer:stage',
     'concat',
+    // 'concat:dist',
     'ngAnnotate',
-    'copy:dist',
+    'copy:stage',
+    // 'cdnify',
     'cssmin',
+    // 'uglify',
     'filerev',
     'usemin',
     'htmlmin'
-  ]);
+    ])
 
   grunt.registerTask('default', [
 //    'newer:jshint',

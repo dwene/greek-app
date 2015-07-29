@@ -1,7 +1,7 @@
 App.factory('Links', ['RESTService', '$rootScope', 'localStorageService', '$q', '$timeout',
     function(RESTService, $rootScope, localStorageService, $q, $timeout) {
         var item = {};
-        item.links = localStorageService.get('links');
+        item.groups = localStorageService.get('links');
         item.cacheTimestamp = undefined;
 
 
@@ -11,9 +11,10 @@ App.factory('Links', ['RESTService', '$rootScope', 'localStorageService', '$q', 
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/get', '')
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
-                            item.links = JSON.parse(data.data);
-                            localStorageService.set('links', item.links);
+                            item.groups = JSON.parse(data.data);
+                            localStorageService.set('links', item.groups);
                             $rootScope.$broadcast('links:updated');
+                            console.log(item.groups);
                         }
                     })
                     .error(function(data) {
@@ -24,12 +25,12 @@ App.factory('Links', ['RESTService', '$rootScope', 'localStorageService', '$q', 
 
         item.destroy = function() {
             item.cacheTimestamp = undefined;
-            item.links = undefined;
+            item.groups = undefined;
             localStorageService.remove('links');
         }
 
         item.check = function() {
-            if (item.links == null) {
+            if (item.groups == null) {
                 item.get();
                 return false;
             }

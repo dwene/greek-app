@@ -13,7 +13,7 @@
         </md-toolbar>
         <md-content class="md-padding">
             <md-list>
-                <md-list-item layout="column" ng-repeat="group in links">
+                <md-list-item layout="column" ng-repeat="group in linkGroups">
                     <md-toolbar class="groupTitle">
                         <div class="md-toolbar-tools">
                             <h1>{{group.name}}</h1>
@@ -37,14 +37,14 @@
                             <md-list-item class="link" ng-click="doNothing()" >
                                 <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
                                 <div class="pull-right" ng-show="$root.checkPermissions('leadership')">
-                                <md-button class="btn-touch" ng-click="openEditLinkDialog(link)"><i class="fa fa-edit fa-fw"></i></md-button>
+                                <md-button class="btn-touch" ng-click="openEditLinkDialog(link, group)"><i class="fa fa-edit fa-fw"></i></md-button>
                                 <md-button class="btn-touch" ng-click="link.confirmDelete = !link.confirmDelete"><i class="fa fa-trash-o fa-fw"></i></md-button>
                                 </div>
                             </md-list-item>
                             <md-toolbar ng-show="link.confirmDelete" class="md-warn slideDown">
                                 <div class="md-toolbar-tools">
                                     <span flex></span>
-                                    <md-button ng-click="deleteLink(link)">Delete</md-button>
+                                    <md-button ng-click="deleteLink(link, group)">Delete</md-button>
                                     <md-button ng-click="link.confirmDelete = !link.confirmDelete">Cancel</md-button>
                                 </div>
                             </md-toolbar>
