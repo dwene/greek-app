@@ -62,10 +62,11 @@
                            <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.edited? "Edited":""}} {{(comment.edited?comment.edited:comment.timestamp) | displayTime}}</p>
                            <h3>{{comment.content}}</h3>
                         </div>
+                        <span flex></span>
+                        <md-button class="btn-touch md-primary heart" aria-label="like comment" ng-click="likeComment(comment);" ng-hide="comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
                      </div>
                      <span flex></span>
                      <div class="commentOptions">
-                        <md-button class="btn-touch md-primary heart pull-right" aria-label="like comment" ng-click="likeComment(comment);" ng-hide="comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
                         <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete" ng-show="(comment.author.key == me.key) && !comment.editingComment"><i class="fa fa-trash"></i></md-button>
                         <md-button class="btn-touch md-primary pull-right" aria-label="edit comment" ng-click="editComment(comment)" ng-show="(comment.author.key == me.key) && !comment.editingComment"><i class="fa fa-edit"></i></md-button>
                      </div>
