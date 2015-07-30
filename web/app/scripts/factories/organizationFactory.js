@@ -22,25 +22,24 @@ App.factory('Organization', ['$rootScope', 'RESTService', 'localStorageService',
                         }
                     });
             }
-        }
+        };
 
         item.set = function(org) {
             item.organization = org;
             $rootScope.color = org.color;
-            $scope.$broadcast('organization:updated');
-        }
+        };
         item.destroy = function() {
             item.cacheTimestamp = undefined;
             item.organization = undefined;
             localStorageService.remove('organization_data');
-        }
+        };
         item.check = function() {
-            if (item.organization == null) {
+            if (!item.organization) {
                 item.get();
                 return false;
             }
             return true;
-        }
+        };
         return item;
     }
 ]);
