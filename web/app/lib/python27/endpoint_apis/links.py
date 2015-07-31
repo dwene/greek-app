@@ -12,7 +12,7 @@ links = endpoints.api(name='link', version='v1',
 @ndb.synctasklet
 def get_links_by_organization(organization):
     groups = yield LinkGroup.query(LinkGroup.organization == organization).fetch_async()
-    key_list = list()
+    key_list = []
     for group in groups:
         for link in group.links:
             key_list.append(link)
@@ -30,9 +30,9 @@ class LinksApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         (groups, links) = get_links_by_organization(request_user.organization)
         group_dict = dict()
-        out = list()
+        out = []
         for group in groups:
-            group_dict[group.key.urlsafe()] = list()
+            group_dict[group.key.urlsafe()] = []
         for link in links:
             group_dict[link.group.urlsafe()].append(link.to_dict())
         for group in groups:
@@ -90,8 +90,18 @@ class LinksApi(remote.Service):
         if not 'link' in data:
             OutgoingMessage(error='Missing Key', data='')
         link = ndb.Key(urlsafe=data['link']['key']).get()
-        futures = list()
-        if not link.group.urlsafe() is data['link']['group']:
+        futures = []
+        link.title = data['link']['title']
+        link.link = data['link']['link']
+        if data['newGroup'] is True:
+            group = LinkGroup()
+            group.name = data['group']
+            group.organization = request_user.organization
+            group.links = [ndb.Key(urlsafe=data['link']['key'])]
+            link.group = group.put()
+            out = group.to_dict()
+            out['links'] = [link.to_dict()]
+        elif not link.group.urlsafe() is data['link']['group']:
             old_group = link.group.get()
             new_group = ndb.Key(urlsafe=data['link']['group']).get()
             if link.key in old_group.links:
@@ -100,10 +110,9 @@ class LinksApi(remote.Service):
                 new_group.links.append(link.key)
             link.group = new_group.key
             ndb.put_multi([new_group, old_group])
-        link.title = data['link']['title']
-        link.link = data['link']['link']
+            out = 'OK'
         link.put()
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='delete',
                       http_method='POST', name='delete')
@@ -116,7 +125,12 @@ class LinksApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         if not 'key' in data:
             return OutgoingMessage(error='Missing key', data='')
-        ndb.Key(urlsafe=data['key']).delete()
+        link = ndb.Key(urlsafe=data['key']).get()
+        group = link.group.get()
+        group.links.remove(link.key)
+        futures = [link.key.delete_async(), group.put_async()]
+        for future in futures:
+            future.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='create_group',
@@ -146,7 +160,7 @@ class LinksApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        if not all('key', 'name') in data:
+        if not all(k in data for k in ('name', 'key')):
             return OutgoingMessage(error='Missing Data', data='')
         group = ndb.Key(urlsafe=data['key']).get()
         group.name = data['name']

@@ -27,7 +27,7 @@
   </md-content>
   
   <div class="md-actions" layout="row">
-        <md-button ng-click="editLink(tempLink, group === 'new_group_listing' ? newGroup: group)">save</md-button>
+        <md-button ng-click="editLink(tempLink, group === 'new_group_listing' ? newGroup:group, group === 'new_group_listing' ? true:false)">save</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
   </div>
 </md-dialog>
