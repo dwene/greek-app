@@ -666,7 +666,6 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
             $location.path('login');
         }
     });
-
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function() {
         console.log('Im logging out');
         AuthService.destroy();
@@ -753,15 +752,16 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
             return true;
         }
     };
-    if (Organization.organization) {
-        if (Organization.organization.color) {
-            $rootScope.color = Organization.organization.color;
+        console.log('changing color');
+        if (Organization.organization) {
+            if (Organization.organization.color) {
+                $rootScope.color = Organization.organization.color;
+            } else {
+                $rootScope.color = 'cyan';
+            }
         } else {
-            $rootScope.color = 'default';
+            $rootScope.color = 'cyan';
         }
-    } else {
-        $rootScope.color = 'default';
-    }
     // $rootScope.$on('organization:updated', function(){
     //     console.log('I changed');
     //     $rootScope.color = Organization.organization.color;
