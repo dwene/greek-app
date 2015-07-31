@@ -7,7 +7,31 @@ from apns import APNs, Frame, Payload
 import time
 apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
 
-
+def UpdateSchema():
+    orgs = [ndb.Key(Organization, 5746664899870720).get()]
+    for org in orgs:
+        links = Link.query(Link.organization == org.key).fetch()
+        link_groups = LinkGroup.query(LinkGroup.organization == org.key).fetch()
+        group_dict = {}
+        for group in org.link_groups:
+            for lg in link_groups:
+                if lg.name == group:
+                    group_dict[group] = lg
+                    break
+            new_group = LinkGroup()
+            new_group.name = group
+            new_group.links = []
+            new_group.organization = org.key
+            new_group.put()
+            group_dict[group] = new_group
+        for link in links:
+            if isinstance(link.group, ''.__class__):
+                link.group = group_dict[link.group].key
+                group_dict[link.group].links.append(link.key)
+                link.put()
+        for key, value in group_dict.iteritems():
+            value.put()
+    return
 
 def test_push():
     token_hex = '8812b1c4bc78bc74e27a5e7c4128697aaafdf5f617c92fbfa3a2afc1c705f850'
