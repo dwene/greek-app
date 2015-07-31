@@ -18,7 +18,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app:'app',
-    dist: 'www',
+    dist: 'stage',
   };
     
 
@@ -354,6 +354,20 @@ module.exports = function (grunt) {
           ]
         }]
       },
+      stage_yaml:{
+        files:[{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.dist %>',
+          src: [
+            'app_stage.yaml'
+          ],
+          rename: function(dest, src){
+            return dest + src.replace('_stage','');
+          }
+        }]
+      },
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
@@ -451,6 +465,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
+    'copy:stage_yaml',
     'cssmin',
     'filerev',
     'usemin',

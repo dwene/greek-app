@@ -1,19 +1,14 @@
 App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTService', 'localStorageService', 'Links', 'Organization',
     function($scope, $rootScope, $mdDialog, RESTService, localStorageService, Links, Organization) {
         routeChange();
-        if (Organization.organization) {
-            $scope.groups = Organization.organization.link_groups;
-        }
-        $scope.$on('organization:updated', function() {
-            $scope.groups = Organization.organization.link_groups;
-        });
         Links.get();
-        $scope.links = Links.links;
-        if ($scope.links) {
+        $scope.linkGroups = Links.groups;
+        if ($scope.linkGroups) {
             $scope.loading_finished = true;
         }
         $scope.$on('links:updated', function() {
-            $scope.links = Links.links;
+            console.log('$scope.links',Links.groups);
+            $scope.linkGroups = Links.groups;
             $scope.loading_finished = true;
         });
         
@@ -21,20 +16,21 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
         var selectedLink;
         var groups;
         
+
         $scope.showConfirmDelete = function(group){
-            selectedGroup = group; 
-        }
-                
-        $scope.openEditLinkDialog = function(link) {
+            selectedGroup = group;
+        }     
+        $scope.openEditLinkDialog = function(link, group) {
             selectedLink = link;
-            groups = $scope.groups;
+            selectedGroup = group;
+            groups = $scope.linkGroups;
             $mdDialog.show({
                 controller: DialogController,
                 templateUrl: 'views/templates/links/editLinkDialog.html'
             });
         }
         $scope.openNewLinkDialog = function() {
-            groups = $scope.groups;
+            groups = $scope.linkGroups;
             selectedLink = {};
             $mdDialog.show({
                 controller: DialogController,
@@ -61,17 +57,19 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 deleteGroup(group);
         }
 
+        $scope.deleteLink = function(link, group){
+            deleteLink(link);
+        }
+
 
         function DialogController($scope, $mdDialog) {
+
+            $scope.group = selectedGroup;
+            $scope.link = selectedLink;
             $scope.groups = groups;
-            $scope.selectedGroup = selectedGroup;
-            $scope.selectedLink = selectedLink;
-            if (selectedLink) {
-                $scope.temp_link = {
-                    link: selectedLink.link,
-                    title: selectedLink.title,
-                    group: selectedLink.group
-                };
+            if (selectedLink && selectedGroup) {
+                $scope.tempLink = JSON.parse(JSON.stringify(selectedLink));
+                $scope.tempGroup = JSON.parse(JSON.stringify(selectedGroup));
             }
             $scope.closeDialog = function() {
                 $mdDialog.hide();
@@ -80,105 +78,89 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 deleteGroup(group);
                 $mdDialog.hide();
             }
-            $scope.renameGroup = function(old_group, group) {
-                renameGroup(old_group, group);
+            $scope.renameGroup = function(name) {
+                renameGroup(selectedGroup, name);
                 $mdDialog.hide();
             }
-            $scope.createLink = function(title, link, group) {
-                createLink(title, link, group);
+            $scope.createLink = function(title, link, group, newGroup) {
+                createLink(title, link, group, newGroup);
                 $mdDialog.hide();
             }
-            $scope.hello = function(){
-                console.log("hello");
-            }
-            $scope.deleteLink = function(link) {
-                deleteLink(link);
+            $scope.deleteLink = function(link, group) {
+                console.log('group deleting link from', group)
+                deleteLink(link, group);
                 $mdDialog.hide();
             }
-            $scope.editLink = function(title, link, group, current_link) {
-                editLink(title, link, group, current_link);
+            $scope.editLink = function(link, group, newGroup) {
+                editLink(link, group, newGroup);
                 $mdDialog.hide();
             }
-            $scope.createGroup = function(group) {
-                createGroup(group);
-                $mdDialog.hide();
-            }
+            // $scope.createGroup = function(group) {
+            //     createGroup(group);
+            //     $mdDialog.hide();
+            // }
         }
 
-        function createGroup(group) {
-            var to_send = {
-                group: group
-            };
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/create_group', to_send)
+        // function createGroup(group) {
+        //     var to_send = {
+        //         group: group
+        //     };
+        //     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/create_group', to_send)
+        //         .success(function(data) {
+        //             if (!RESTService.hasErrors(data)) {
+        //                 var parsed = JSON.parse(data.data);
+        //                 $scope.linkGroups.push(parsed.group);
+        //             } else {
+        //                 console.log('ERR');
+        //             }
+        //         })
+        //         .error(function(data) {
+        //             console.log('Error: ', data);
+        //         });
+        // }
+
+        function deleteGroup(group) {
+            for (i = 0; i < $scope.linkGroups.length; i++){
+                if (group.key === $scope.linkGroups[i].key){
+                    $scope.linkGroups.splice(i, 1);    
+                }
+            }
+
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/delete_group', {group: group})
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        if ($scope.groups.indexOf(group) == -1) {
-                            $scope.groups.push(group);
-                            $scope.checkCreateGroup = "done";
-                        }
                     } else {
                         console.log('ERR');
-                        $scope.checkCreateGroup = "broken";
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ', data);
-                    $scope.checkCreateGroup = "broken";
                 });
         }
 
-        function deleteGroup(group) {
-            var to_send = {
-                group: group
-            };
-            for (var i = 0; i < $scope.links.length; i++) {
-                            if ($scope.links[i].name == group.name) {
-                                $scope.links.splice(i, 1);
-                                i--;
-                            }
-            }
-            
-            
-            $scope.checkDeleteGroup = "pending";
-//            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/delete_group', to_send)
-//                .success(function(data) {
-//                    if (!RESTService.hasErrors(data)) {
-//                        for (var i = 0; i < $scope.links.length; i++) {
-//                            if ($scope.links[i].group == group) {
-//                                $scope.links.splice(i, 1);
-//                                i--;
-//                            }
-//                        }
-//                    } else {
-//                        console.log('ERR');
-//                    }
-//                })
-//                .error(function(data) {
-//                    console.log('Error: ', data);
-//                });
-        }
-
-        function createLink(title, link, group) {
+        function createLink(title, url, group, newGroup) {
+            var link = {title: title, link: url}
             var to_send = {
                 group: group,
-                title: title,
-                link: link
+                link: link,
+                newGroup: newGroup
             };
-            $scope.checkCreateLink = "pending";
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/create', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $('#newLinkModal').modal('hide');
-                        $scope.checkCreateLink = "done";
-                        if ($scope.groups.indexOf(group) == -1) {
-                            $scope.groups.push(group);
+                        var parsed = JSON.parse(data.data);
+                        console.log('returned link to group', parsed);
+                        if (parsed.newGroup){
+                            $scope.linkGroups.push(parsed.group);
                         }
-                        $scope.links.push({
-                            title: title,
-                            link: link,
-                            group: group,
-                            key: JSON.parse(data.data)
-                        });
+                        else{
+                            for (i = 0; i < $scope.linkGroups.length; i++){
+                                if ($scope.linkGroups[i].key === parsed.link.group){
+                                    $scope.linkGroups[i].links.push(parsed.link);
+                                }
+                            }
+                        }
+                        console.log('linkGroups', $scope.linkGroups);   
                     } else {
                         console.log('ERR');
                     }
@@ -188,54 +170,13 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 });
         }
 
-        function deleteLink(link) {
-            var to_send = {
-                key: link.key
-            };
-            $scope.checkDeleteLink = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/delete', to_send)
+        function deleteLink(link, group) {
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/delete', {'key': link.key})
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $('#deleteLinkModal').modal('hide');
-                        $scope.checkDeleteLink = "done";
-                        for (var i = 0; i < $scope.links.length; i++) {
-                            if ($scope.links[i].key == link.key) {
-                                $scope.links.splice(i, 1);
-                                break;
-                            }
-                        }
+                        group.links.splice(group.links.indexOf(link), 1);
                     } else {
-                        console.log('ERR', data.error);
-                        $scope.checkDeleteLink = "broken";
-                    }
-                })
-                .error(function(data) {
-                    $scope.checkDeleteLink = "broken";
-                    console.log('Error: ', data);
-                });
-        }
-
-        function editLink(title, link, group, current_link) {
-            var to_send = {
-                key: current_link.key,
-                link: link,
-                title: title,
-                group: group
-            };
-            $scope.checkEditLink = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/edit', to_send)
-                .success(function(data) {
-                    if (!RESTService.hasErrors(data)) {
-                        $('#editLinkModal').modal('hide');
-                        $scope.checkEditLink = "done";
-                        current_link.title = title;
-                        current_link.group = group;
-                        current_link.link = link;
-                        if ($scope.groups.indexOf(group) == -1) {
-                            $scope.groups.push(group);
-                        }
-                    } else {
-                        console.log('ERR', data.error);
+                        console.log('ERR');
                     }
                 })
                 .error(function(data) {
@@ -243,36 +184,48 @@ App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTSer
                 });
         }
 
-        function renameGroup(old_group, group) {
-            var to_send = {
-                old_group: old_group,
-                group: group
-            };
-            $scope.checkRenameGroup = "pending";
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/rename_group', to_send)
-                .success(function(data) {
-                    if (!RESTService.hasErrors(data)) {
-                        $scope.checkRenameGroup = "done";
-                        for (var i = 0; i < $scope.links.length; i++) {
-                            if ($scope.links[i].group == old_group) {
-                                $scope.links[i].group = group;
+        function editLink(link, group, newGroup) {
+            if (newGroup === false){
+                link.group = group.key;
+            }
+            console.log('group', group);
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/edit', {link: link, group: group, newGroup: newGroup})
+                    .success(function(data) {
+                        if (!RESTService.hasErrors(data)) {
+                            selectedLink.title = link.title;
+                            selectedLink.link = link.link;
+                            if (group !== selectedGroup) {
+                                selectedGroup.links.splice(selectedGroup.links.indexOf(selectedLink), 1);
+                                if (newGroup) {
+                                    var parsedGroup = JSON.parse(data.data);
+                                    $scope.linkGroups.push(parsedGroup);
+                                }
+                                else {
+                                    selectedLink.group = group.key;
+                                    group.links.push(selectedLink);
+                                }
                             }
-                        }
-                        if ($scope.groups.indexOf(old_group) != -1) {
-                            $scope.groups[$scope.groups.indexOf(old_group)] = group;
-                            console.log("I found the old group and am changing it");
                         } else {
-                            $scope.groups.push(group);
+                            console.log('ERR');
                         }
+                    })
+                    .error(function(data) {
+                        console.log('Error: ', data);
+                    });
+        }
+
+        function renameGroup(group, name) {
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/link/v1/rename_group', {key:group.key, name:name})
+                .success(function(data) {
+                    if (!RESTService.hasErrors(data)) {
+                        group.name = name;
 
                     } else {
                         console.log('ERR');
-                        $scope.checkRenameGroup = "broken";
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ', data);
-                    $scope.checkRenameGroup = "broken";
                 });
         }
     }

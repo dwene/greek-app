@@ -7,6 +7,11 @@ HTML_EMAIL_1 = """
 HTML_EMAIL_2 = """
 <a href="https://app.netegreek.com"><img src="https://app.netegreek.com/images/ctabutton.png" width="550" height="50"></a></div></td></tr></table></td><td width="50" bgcolor="#003663"></td></tr></table></tr><tr><td width="650" height="50" bgcolor="#003663"></td></tr></tbody></table><table width="650" cellpadding="0" cellspacing="0" border="0" bgcolor="#d4d4d4" align="center"><tbody><tr><td><table align="center" style="width:100%;max-width:650px;text-align:left;padding-top:15px"><tbody><tr><td colspan="2" style="text-align:center;width:100%"><p style="color:#818181;font-size:12px;padding-top:10px;line-height:25px;font-family:arial;font-color:white;text-align:center"> If you believe you are receiving this email in error please email <a href="mailto:support@netegreek.com" style="">support@netegreek.com</a></p><p style="color:#818181;font-color:white;font-size:12px;padding-top:10px;line-height:25px;font-family:arial;text-align:center"> NeteGreek, LLC. </p></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div>"""
 
+class ModelUtils(object):
+    def to_dict(self):
+        result = super(ModelUtils,self).to_dict()
+        result['key'] = self.key.urlsafe() #get the key as a string
+        return result
 
 class User(ndb.Model):
     # login stuff
@@ -184,10 +189,16 @@ class PushTask(ndb.Model):
     user = ndb.KeyProperty(kind=User)
 
 
-class Link(ndb.Model):
+class Link(ModelUtils, ndb.Model):
     title = ndb.StringProperty()
     link = ndb.StringProperty()
-    group = ndb.StringProperty()
+    group = ndb.KeyProperty()
+    organization = ndb.KeyProperty(kind=Organization)
+
+
+class LinkGroup(ModelUtils, ndb.Model):
+    name = ndb.StringProperty()
+    links = ndb.KeyProperty(repeated=True, kind=Link)
     organization = ndb.KeyProperty(kind=Organization)
 
 
