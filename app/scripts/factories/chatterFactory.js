@@ -306,11 +306,12 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/edit', {key:chat.key, content:content})
     .success(function(data) {
       if (!RESTService.hasErrors(data)) {
+        debugger;
         var load_data = JSON.parse(data.data);
         chat.edited = load_data.edited;
         for (i = 0; i < chatter.data.feed.length; i++){
           if (chat.key == chatter.data.feed[i].key){
-            chatter.data.feed[i] = content;
+            chatter.data.feed[i].content = content;
           }
         }
         for (i = 0; i < chatter.data.important.length; i++){

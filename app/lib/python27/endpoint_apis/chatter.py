@@ -200,7 +200,7 @@ class ChatterApi(remote.Service):
         update.key = chatter.key
         update.data = {'type': 'EDITCHATTER', 'content': chatter.content, 'edited': chatter.edited}
         PushFactory.push_update(update, push_keys)
-        return OutgoingMessage(error='', data='OK')
+        return OutgoingMessage(error='', data=json_dump({'edited': chatter.edited}))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='important',
                       http_method='POST', name='chatter.importance')
