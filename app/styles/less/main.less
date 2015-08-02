@@ -274,7 +274,6 @@ netetag-all .label{padding:.4em 28px .4em 1.5em; line-height:14px}
    #chatterDialog{
       max-width:95%; max-height:95%;
       .md-toolbar-tools .description{font-size:14px;}
-
       md-toolbar.md-padding{padding:16px 16px 8px 16px !important;
          label{color:white;}
          textarea{color:white;}
@@ -285,18 +284,20 @@ netetag-all .label{padding:.4em 28px .4em 1.5em; line-height:14px}
 
       .followButton{font-size:10px;}
 
-      md-list-item button{padding:8px 16px;}
+      md-list-item button{padding:8px 16px; height:50px;}
       .md-list-item-text{line-height:24px;}
-      .heart{height:50px;  position:relative; top:-4px;}
       .details{color:#ccc; font-size:12px; line-height:1.8em;}
       .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
       #chatterContent .details{text-align:right; margin-right:4px;}
       #chatterComments .itemList md-list-item{padding:10px 0px;}
-      @media (min-width:600px){.commentOptions{min-width:148px;}}
+      @media (min-width:600px){.commentOptions{min-width:92px; position:relative; top:-3px;}}
       h3.chatContent, #chatterComments h3{font-size:14px; line-height:1.4em;}
    }
    @media screen and (max-width:600px){
-      #chatterDialog{min-width:95%; min-height:95%;}
+      #chatterDialog{min-width:95%; min-height:95%;
+        #chatterComments .itemList md-list-item{padding-bottom:0px;}
+        .commentOptions button{height:auto;}
+      }
    }
 
    #profile{
