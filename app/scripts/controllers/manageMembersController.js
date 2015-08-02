@@ -100,42 +100,33 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         };
 
         function resendWelcomeEmail(member) {
-            member.updating = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', {
                 key: member.key
             })
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        member.updating = 'done';
                     } else {
-                        member.updating = 'broken';
                     }
                 })
                 .error(function(data) {
-                    member.updating = 'broken';
                 });
         }
 
         $scope.resendAllWelcomeEmails = function() {
-            $scope.resendWorking = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_all_welcome_emails', '')
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $scope.resendWorking = 'done';
                     } else {
-                        $scope.resendWorking = 'broken';
                         console.log('ERROR', data.error);
                     }
                 })
                 .error(function(data) {
-                    $scope.resendWorking = 'broken';
                     console.log('ERROR', data.error);
                 });
         };
 
         $scope.updatePerms = function(member, option) {
             var key = member.key;
-            member.updating = 'pending';
             var to_send = {
                 key: key,
                 perms: option
@@ -143,15 +134,12 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/manage_perms', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        member.updating = 'done';
                         member.perms = option;
                         Directory.set($scope.directory);
                     } else {
-                        member.updating = 'broken';
                     }
                 })
                 .error(function(data) {
-                    member.updating = 'broken';
                 });
         };
 
@@ -195,7 +183,6 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/convert_to_alumni', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        console.log('success');
                     } else {
                         console.log('ERROR: ', data);
                     }
@@ -207,7 +194,6 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         }
 
         function removeMember(user) {
-            console.log('user to remove', user);
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/remove_user', user)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {} else {

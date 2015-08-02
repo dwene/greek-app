@@ -3,7 +3,6 @@ App.controller('changePasswordFromTokenController', ['$scope', '$http', '$rootSc
         routeChange();
         $.removeCookie(USER_NAME);
         $.cookie(TOKEN, $stateParams.token);
-        console.log('My token', $.cookie(TOKEN));
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/check_password_token', packageForSending(''))
             .success(function(data) {
                 if (!checkResponseErrors(data)) {
@@ -28,19 +27,16 @@ App.controller('changePasswordFromTokenController', ['$scope', '$http', '$rootSc
                             $scope.passwordChanged = true;
                             $scope.changeFailed = false;
                             $scope.user_name = data.data;
-                            $scope.changingPassword = 'done';
                         } else {
                             console.log('Error: ', data);
                             $scope.changeFailed = true;
                             $scope.passwordChanged = false;
-                            $scope.changingPassword = 'broken';
                         }
                     })
                     .error(function(data) {
                         console.log('Error: ', data);
                         $scope.changeFailed = true;
                         $scope.passwordChanged = false;
-                        $scope.changingPassword = 'broken';
                     });
             } else {
                 $scope.changingPassword = '';

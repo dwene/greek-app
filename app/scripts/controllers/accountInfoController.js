@@ -42,13 +42,10 @@ App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', 
     $scope.updateAccount = function(isValid){
         console.log(isValid);
         if(isValid){
-            console.log($scope.item);
-            $scope.working = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', $scope.item)
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
-                    $scope.working = 'done';
                     $scope.updatedInfo = true;
                     Directory.updateMe($scope.item);
                 }
@@ -59,7 +56,6 @@ App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', 
                 
             })
             .error(function(data) {
-                $scope.working = 'broken';
                 console.log('Error: ' , data);
             });
         }
@@ -71,24 +67,19 @@ App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', 
     }
     $scope.updateEmailPrefs = function(option){
         var to_send = {email_prefs: option}
-        $scope.emailPrefUpdating = "pending";
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', to_send)
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
-                    $scope.emailPrefUpdating = "done";
                     Session.me.email_prefs = option;
                 }
                 else
                 {
                     console.log('ERROR: ',data);
-                    $scope.emailPrefUpdating = "broken";
                 }
             })
             .error(function(data) {
                 console.log('Error: ' , data);
-                console.log('I should be broken');
-                $scope.emailPrefUpdating = "broken";
             });
     }
     

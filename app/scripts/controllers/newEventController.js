@@ -47,19 +47,16 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
          RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/create', to_send)
          .success(function(data) {
             if (!RESTService.hasErrors(data)) {
-               $scope.working = 'done';
                JSON.parse(data.data);
                $timeout(function() {
                   $location.url('app/events/' + JSON.parse(data.data));
                }, 500);
             } else {
-               $scope.working = 'broken';
                console.log('ERROR: ', data);
             }
             $scope.loading = false;
          })
          .error(function(data) {
-            $scope.working = 'broken';
             console.log('Error: ', data);
             $scope.loading = false;
          });
@@ -75,24 +72,20 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
       if (tag === "") {
          $scope.isEmpty = true;
       } else {
-         $scope.checkWorking = 'pending';
          $scope.unavailable = false;
          $scope.available = false;
          $scope.isEmpty = false;
          RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_tag_availability', tag)
          .success(function(data) {
             if (!RESTService.hasErrors(data)) {
-               $scope.checkWorking = 'done';
                $scope.available = true;
                $scope.unavailable = false;
             } else {
-               $scope.checkWorking = 'broken';
                $scope.unavailable = true;
                $scope.available = false;
             }
          })
          .error(function(data) {
-            $scope.checkWorking = 'broken';
             console.log('Error: ', data);
          });
       }

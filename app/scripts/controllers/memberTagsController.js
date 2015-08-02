@@ -231,13 +231,11 @@ App.controller('membertagsController', ['$scope', 'RESTService', '$rootScope', '
                 }
                 i++;
             }
-            $scope.addTagLoading = 'loading';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/add_organization_tag', {
                 tag: real_tag
             })
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $scope.addTagLoading = 'done';
                         if ($scope.tags.org_tags.indexOf({
                             name: real_tag
                         }) == -1) {

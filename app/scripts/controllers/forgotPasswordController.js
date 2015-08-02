@@ -3,7 +3,6 @@ App.controller('forgotPasswordController', ['$scope', 'RESTService', '$rootScope
         routeChange();
         $scope.sentEmail = false;
         $scope.reset = function(input) {
-            $scope.gettingnewPassword = 'pending';
 
             function validEmail(v) {
                 var r = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
@@ -26,15 +25,12 @@ App.controller('forgotPasswordController', ['$scope', 'RESTService', '$rootScope
                     if (!RESTService.hasErrors(data)) {
                         if (data.data == 'OK') {
                             $scope.sentEmail = true;
-                            $scope.gettingnewPassword = 'done';
                         } else {
                             $scope.returned_choices = JSON.parse(data.data);
                             $scope.showList = true;
                         }
-                        $scope.gettingnewPassword = 'done';
                     } else {
                         $scope.emailFailed = true;
-                        $scope.gettingnewPassword = 'broken';
                     }
                 })
                 .error(function(data) {

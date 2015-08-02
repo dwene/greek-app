@@ -50,19 +50,15 @@ App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope',
         }
 
         function resendWelcomeEmail(member) {
-            member.updating = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', {
                 key: member.key
             })
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        member.updating = 'done';
                     } else {
-                        member.updating = 'broken';
                     }
                 })
                 .error(function(data) {
-                    member.updating = 'broken';
                 });
         }
 

@@ -74,11 +74,9 @@ App.controller('messagingController', ['$scope', 'RESTService', '$q', '$rootScop
                     keys: selectedKeys
                 };
                 console.log("what Im sending in message", to_send);
-                $scope.updating = "pending"
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/message/v1/send_message', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
-                            $scope.updating = "done";
                             $scope.title = '';
                             $scope.content = '';
                             $scope.messagingForm.$setPristine();
@@ -97,12 +95,10 @@ App.controller('messagingController', ['$scope', 'RESTService', '$q', '$rootScop
                             }, 2000);
                             console.log('message sent');
                         } else {
-                            $scope.updating = "broken";
                             console.log("error: ", data.error)
                         }
                     })
                     .error(function(data) {
-                        $scope.updating = "broken";
                         console.log('Error: ', data);
                     });
 

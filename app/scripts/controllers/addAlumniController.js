@@ -46,22 +46,18 @@ App.controller('addAlumniController', ['$scope', 'RESTService', '$rootScope', 'l
         }
 
         $scope.submitAlumni = function() {
-            $scope.updating = "pending";
             var data_tosend = {
                 users: $scope.adds
             };
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/add_alumni', data_tosend)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $scope.updating = "done";
                         $scope.adds = [];
                     } else {
-                        $scope.updating = "broken";
                         console.log('ERROR: ', data);
                     }
                 })
                 .error(function(data) {
-                    $scope.updating = "broken";
                     console.log('Error: ', data);
                 });
         }

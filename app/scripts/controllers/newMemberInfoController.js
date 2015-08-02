@@ -45,7 +45,6 @@ App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$r
 
         $scope.createAccount = function(isValid) {
             if (isValid) {
-                $scope.working = 'pending';
                 $scope.waiting_for_response = true;
                 var to_send = {
                     user_name: $scope.item.user_name.toLowerCase(),
@@ -61,7 +60,6 @@ App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$r
                             Session.create(to_send.user_name, ret_data.token, ret_data.me);
                             $location.path("app/accountinfo");
                         } else {
-                            $scope.working = 'broken';
                             if (data.error == "INVALID_USERNAME") {
                                 $scope.unavailable = true;
                                 $scope.available = false;
@@ -70,7 +68,6 @@ App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$r
                         }
                     })
                     .error(function(data) {
-                        $scope.working = 'broken';
                         console.log('Error: ', data);
                     });
                 //now logged in

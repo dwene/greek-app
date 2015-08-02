@@ -59,7 +59,6 @@
             }
 
             function onPageLoad() {
-                console.log('page is loading');
                 if (Directory.check()) {
                     $scope.getMembers();
                 } else {
@@ -69,7 +68,6 @@
             onPageLoad();
 
             $scope.submitMembers = function() {
-                $scope.updating = "pending";
                 var data_tosend = {
                     users: $scope.adds
                 };
@@ -77,18 +75,15 @@
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
                             var users = JSON.parse(data.data);
-                            console.log('Here are the new users!', users);
                             $scope.directory.members = $scope.directory.members.concat(users);
                             $scope.adds = [];
                             Directory.set($scope.directory);
 
                         } else {
-                            $scope.updating = "broken";
                             console.log('ERROR: ', data);
                         }
                     })
                     .error(function(data) {
-                        $scope.updating = "broken";
                         console.log('Error: ', data);
                     });
 

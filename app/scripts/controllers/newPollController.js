@@ -30,7 +30,6 @@ App.controller('newPollController', ['$scope', 'RESTService', '$rootScope', 'Tag
             question.choices.splice(idx, 1);
         }
         $scope.createPoll = function(isValid) {
-            $scope.working = 'pending';
             var poll = $scope.poll;
             poll.tags = getCheckedTags($scope.tags);
             var to_send = JSON.parse(JSON.stringify(poll));
@@ -40,15 +39,12 @@ App.controller('newPollController', ['$scope', 'RESTService', '$rootScope', 'Tag
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/poll/v1/create', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
-                            $scope.working = 'done';
                             window.location.assign('#/app/polls/' + JSON.parse(data.data).key);
                         } else {
-                            $scope.working = 'broken';
                             console.log('ERR');
                         }
                     })
                     .error(function(data) {
-                        $scope.working = 'broken';
                         console.log('Error: ', data);
                     });
             }

@@ -114,11 +114,9 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
         $scope.checkIn = function(member, checkStatus, clear) { //#TODO: fix controller so we can check in more than once
             member.timestamp_moment = moment();
             if (checkStatus && member.attendance_data && member.attendance_data.time_in) {
-                $('#checkInModal').modal();
                 $scope.selectedUser = member;
                 return;
             }
-            $('#checkInModal').modal('hide');
             var to_send = {
                 event_key: $stateParams.tag,
                 user_key: member.key
@@ -132,30 +130,24 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
             } else {
                 member.attendance_data.time_in = momentUTCTime();
             }
-            member.in_updating = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_in', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        member.in_updating = "done";
                         member.timestamp_moment = moment();
                     } else {
-                        member.in_updating = "broken";
                         console.log('ERROR: ', data);
                     }
                 })
                 .error(function(data) {
-                    member.in_updating = "broken";
                     console.log('Error: ', data);
                 });
         }
         $scope.checkOut = function(member, checkStatus, clear) {
             member.timestamp_moment = moment();
             if (checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in) {
-                $('#checkOutModal').modal();
                 $scope.selectedUser = member;
                 return;
             }
-            $('#checkOutModal').modal('hide');
             var to_send = {
                 event_key: $stateParams.tag,
                 user_key: member.key
@@ -169,20 +161,16 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
             } else {
                 member.attendance_data.time_out = momentUTCTime();
             }
-            member.out_updating = 'pending';
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_out', to_send)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        member.out_updating = 'done';
                         member.timestamp_moment = moment();
                     } else {
                         console.log('ERROR: ', data);
-                        member.out_updating = 'broken';
                     }
                 })
                 .error(function(data) {
                     console.log('Error: ', data);
-                    member.out_updating = 'broken';
                 });
         }
         $scope.formatDate = function(date) {

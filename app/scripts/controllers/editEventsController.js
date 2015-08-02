@@ -190,15 +190,12 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/edit_event', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
-                            $scope.working = "done";
                             $location.url('app/events');
                         } else {
-                            $scope.working = "broken";
                             console.log('ERROR: ', data);
                         }
                     })
                     .error(function(data) {
-                        $scope.working = "broken";
                         console.log('Error: ', data);
                     });
             }
