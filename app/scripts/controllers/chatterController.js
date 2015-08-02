@@ -62,12 +62,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
 
    function openChatterByKey(key){
+     var chat;
       for (i = 0; i < $scope.chatter.length; i++){
          if($scope.chatter[i].key == key){
-            $scope.chat = $scope.chatter[i];
+           chat = $scope.chatter[i];
             $mdDialog.show({
-               controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
+               controller: 'chatterDialogController as CD',
                templateUrl: 'views/templates/chatterDialog.html',
+               locals: {chat: chat},
+               bindToController: true
             });
             break;
          }
