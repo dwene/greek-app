@@ -100,6 +100,7 @@
 <script type="text/javascript" src="scripts/controllers/addMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/appController.js"></script>
 <script type="text/javascript" src="scripts/controllers/appHomeController.js"></script>
+<script type="text/javascript" src="scripts/controllers/chatterDialogController.js"></script>
 <script type="text/javascript" src="scripts/controllers/chatterController.js"></script>
 <script type="text/javascript" src="scripts/controllers/changePasswordController.js"></script>
 <script type="text/javascript" src="scripts/controllers/changePasswordFromTokenController.js"></script>
@@ -268,20 +269,6 @@
   </div>
   
   <div ui-view autoscroll="true" id="mainSection"></div>
-  
-  <div class="modal fade" id="errorModal" ng-click="$root.refreshPage()">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" ng-click="$root.refreshPage()" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">An error occurred, please check your internet connection. Click OK below to refresh the page.</h4>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="$root.refreshPage()">OK</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
   
 </body>
 

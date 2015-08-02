@@ -1,4 +1,5 @@
-App.controller('indexController', function($scope, RESTService, $rootScope, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Session, Notifications) {
+App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSidenav', '$mdDialog', '$location', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Chatter',
+  function($scope, RESTService, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Session, Notifications, Chatter) {
         $scope.notifications = Notifications.notifs;
         $scope.item = Organization.me;
         $scope.perms = Session.perms;
@@ -14,7 +15,7 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
             $scope.email = Session.me.email;
             $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
         });
-        $rootScope.$on('me:updated', function(){
+        $scope.$on('me:updated', function(){
             $scope.me = Session.me;
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
             $scope.email = Session.me.email;
@@ -97,4 +98,5 @@ App.controller('indexController', function($scope, RESTService, $rootScope, $tim
         //         $location.path('login');
         //     }
         // }
-	});
+	}
+]);

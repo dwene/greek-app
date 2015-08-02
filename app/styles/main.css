@@ -978,14 +978,10 @@ md-toolbar.md-tall {
 }
 #chatterDialog md-list-item button {
   padding: 8px 16px;
+  height: 50px;
 }
 #chatterDialog .md-list-item-text {
   line-height: 24px;
-}
-#chatterDialog .heart {
-  height: 50px;
-  position: relative;
-  top: -4px;
 }
 #chatterDialog .details {
   color: #ccc;
@@ -1010,7 +1006,9 @@ md-toolbar.md-tall {
 }
 @media (min-width: 600px) {
   #chatterDialog .commentOptions {
-    min-width: 148px;
+    min-width: 92px;
+    position: relative;
+    top: -3px;
   }
 }
 #chatterDialog h3.chatContent,
@@ -1022,6 +1020,12 @@ md-toolbar.md-tall {
   #chatterDialog {
     min-width: 95%;
     min-height: 95%;
+  }
+  #chatterDialog #chatterComments .itemList md-list-item {
+    padding-bottom: 0px;
+  }
+  #chatterDialog .commentOptions button {
+    height: auto;
   }
 }
 #profile md-toolbar #social {

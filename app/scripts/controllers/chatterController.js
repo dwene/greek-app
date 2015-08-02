@@ -62,12 +62,15 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
 
    function openChatterByKey(key){
+     var chat;
       for (i = 0; i < $scope.chatter.length; i++){
          if($scope.chatter[i].key == key){
-            $scope.chat = $scope.chatter[i];
+           chat = $scope.chatter[i];
             $mdDialog.show({
-               controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
+               controller: 'chatterDialogController as CD',
                templateUrl: 'views/templates/chatterDialog.html',
+               locals: {chat: chat},
+               bindToController: true
             });
             break;
          }
@@ -75,106 +78,13 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    }
 
    $scope.openChatter = function(chat){
-      $scope.chat = chat;
       $mdDialog.show({
-         controller: ('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', chatterDialogController]),
+         controller: 'chatterDialogController as CD',
          templateUrl: 'views/templates/chatterDialog.html',
+         locals: {chat: chat},
+         bindToController: true
       });
    };
-
-   function chatterDialogController(scope, mdDialog, Chatter){
-      scope.chat = $scope.chat;
-      Chatter.getComments(scope.chat);
-      scope.me = Session.me;
-
-      scope.hide = function(){
-         mdDialog.hide();
-      };
-
-      scope.likeChatter = function(chatter){
-         Chatter.like(chatter);
-      };
-
-      scope.commentOnChatter = function(chatter, content){
-         Chatter.comment(chatter, content);
-         scope.comment = "";
-      };
-
-      scope.editChatter = function(content){
-         scope.editing = true;
-         scope.content_temp = content;
-         document.getElementById('chattercontent').focus();
-      };
-
-      scope.cancelEditChatter = function(){
-         scope.editing = false;
-      };
-
-      scope.saveChatter = function(content_temp){
-         scope.editing = false;
-         scope.chat.content = content_temp;
-         Chatter.edit(scope.chat, scope.chat.content);
-      };
-
-      scope.makeImportant = function(chat, notify){
-         Chatter.makeImportant(chat, notify);
-      };
-
-      scope.showconfirmImportant = function(chat){
-         if(chat.important === false){scope.confirmImportant = !scope.confirmImportant;}
-         else{Chatter.makeImportant(chat, false);}
-      };
-
-      scope.deleteChatter = function(){
-         mdDialog.hide();
-         scope.confirmDelete = false;
-         Chatter.delete(scope.chat, scope.chat.content);
-         for (i = 0; i < $scope.chatter.length; i++){
-            if ($scope.chatter[i].key == scope.chat.key){
-               $scope.chatter.splice(i, 1);
-            }
-         }
-      };
-
-      scope.followChatter = function(chat){
-         Chatter.mute(chat);
-         if (chat.following === false && chat.mute === false){
-            chat.following = true;
-         }
-         else{
-            chat.mute = false;
-         }
-      };
-      scope.unfollowChatter = function(chat){
-         Chatter.mute(chat);
-         chat.mute = true;
-      };
-
-      scope.saveComment = function(comment){
-         comment.content = comment.comment_temp;
-         comment.editingComment = false;
-         Chatter.saveComment(comment, comment.content);
-      };
-
-      scope.editComment = function(comment){
-         comment.comment_temp = comment.content;
-         comment.editingComment = true;
-      };
-
-      scope.cancelEditComment = function(comment){
-         comment.editingComment = false;
-      };
-
-      scope.likeComment = function(comment){
-         Chatter.likeComment(comment);
-      };
-
-      scope.deleteComment = function(comment){
-         comment.confirmDelete = false;
-         console.log('comment', comment);
-         Chatter.deleteComment(comment, scope.chat);
-      };
-   }
 
    $scope.newChatter = function(){
       $mdDialog.show({
