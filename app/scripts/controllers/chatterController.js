@@ -78,7 +78,6 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    }
 
    $scope.openChatter = function(chat){
-     console.log(chat);
       $mdDialog.show({
          controller: 'chatterDialogController as CD',
          templateUrl: 'views/templates/chatterDialog.html',
