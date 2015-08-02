@@ -1,9 +1,9 @@
-App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', '$stateParams', 'localStorageService', 'Directory', 'Chatter', 'Session',
+App.controller('chatterController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', '$timeout', '$stateParams', 'localStorageService', 'Directory', 'Chatter', 'Session', 'USER_ROLES',
 
-function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, localStorageService, Directory, Chatter, Session){
+function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, localStorageService, Directory, Chatter, Session, USER_ROLES){
 
    $scope.me = Session.me;
-
+   $scope.admin = Session.perms === USER_ROLES.council || Session.perms === USER_ROLES.leadership;
    var i;
 
    Chatter.get();

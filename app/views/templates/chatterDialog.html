@@ -12,7 +12,7 @@
           </md-tooltip>
         </md-button>
         <md-button class="btn-touch" aria-label="like chatter" ng-click="CD.likeChatter(CD.chat);" ng-hide="CD.chat.author.key == me.key"><i class="fa" ng-class="{'fa-heart-o': !CD.chat.like, 'fa-heart': CD.chat.like}"></i></md-button>
-        <md-button ng-hide="editing" class="btn-touch" ng-click="CD.confirmDelete = !CD.confirmDelete" aria-label="delete" ng-show="CD.chat.author.key == CD.me.key"><i class="fa fa-trash"></i></md-button>
+        <md-button ng-hide="editing" class="btn-touch" ng-click="CD.confirmDelete = !CD.confirmDelete" aria-label="delete" ng-show="CD.chat.author.key == CD.me.key || CD.admin"><i class="fa fa-trash"></i></md-button>
       </div>
     </md-toolbar>
     <md-toolbar id="confirmImportant" ng-show="CD.confirmImportant" class="slideDown">
@@ -63,7 +63,7 @@
               <span flex></span>
               <md-button class="btn-touch md-primary heart" aria-label="like comment" ng-click="CD.likeComment(comment);" ng-hide="comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
             </div>
-            <div class="commentOptions" ng-show="(comment.author.key == CD.me.key) && !comment.editingComment">
+            <div class="commentOptions" ng-show="(comment.author.key == CD.me.key || CD.admin) && !comment.editingComment">
               <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete"><i class="fa fa-trash"></i></md-button>
               <md-button class="btn-touch md-primary pull-right" aria-label="edit comment" ng-click="CD.editComment(comment)"><i class="fa fa-edit"></i></md-button>
             </div>

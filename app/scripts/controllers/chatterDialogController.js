@@ -1,9 +1,9 @@
-App.controller('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', 'Session',
+App.controller('chatterDialogController', ['$scope', '$mdDialog', 'Chatter', 'Session', 'USER_ROLES',
 
-function($scope, $mdDialog, Chatter, Session){
+function($scope, $mdDialog, Chatter, Session, USER_ROLES){
     
   var vm = this;
-    
+  vm.admin = Session.perms === USER_ROLES.council || Session.perms === USER_ROLES.leadership;
   Chatter.getComments(vm.chat);
   vm.me = Session.me;
   
