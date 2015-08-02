@@ -370,3 +370,27 @@ class AuthApi(remote.Service):
         user.current_token = generate_token()
         user.put()
         return OutgoingMessage(error='', data=user.user_name)
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='find_unregistered_users',
+                      http_method='POST', name='find_unregistered_users')
+    def find_unregistered_users(self, request):
+        clump = json.loads(request.data)
+        users = User.query(User.email == clump['email']).fetch()
+        user_list = list()
+        org_list = list()
+        for user in users:
+            if not user.user_name:
+                user_list.append({'first_name': user.first_name, 'last_name': user.last_name,
+                                  'email': user.email, 'organization': user.organization, 'key': user.key})
+                if user.organization not in org_list:
+                    org_list.append(user.organization)
+        if len(org_list) > 0:
+            orgs = ndb.get_multi(org_list)
+            for user in user_list:
+                for org in orgs:
+                    if user['organization'] == org.key:
+                        user['org_name'] = org.name
+                        user['school'] = org.school
+                        break
+        return OutgoingMessage(error='', data=json_dump(user_list))

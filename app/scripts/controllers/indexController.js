@@ -37,15 +37,14 @@ App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSide
         };
 
         $scope.goToNotification = function(notify){
-           console.log(notify);
-           if (notify.type == 'CHATTERCOMMENT'){
-             $location.url('app/home/'+notify.type_key+'');
-             $scope.toggleNotifications();
-          }
-           if(notify.link){
-            console.log('Going to notification link', notify.link);
-            $location.url(notify.link);
-            $scope.toggleNotifications();
+            if (notify.type == 'CHATTERCOMMENT'){
+                $scope.toggleNotifications();
+                $timeout(function(){Chatter.openChatterByKey(notify.type_key)}, 100);
+            }
+            if(notify.link){
+                console.log('Going to notification link', notify.link);
+                $location.url(notify.link);
+                $scope.toggleNotifications();
             }
         };
 
@@ -55,8 +54,6 @@ App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSide
                     templateUrl: 'views/templates/helpDialog.html'
             });
         };
-
-
         function helpDialogController($scope, $mdDialog){
             $scope.message = '';
             $scope.sendHelpMessage = function(){
@@ -76,27 +73,5 @@ App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSide
             }
             return true;
         };
-        // $scope.logout = function(){
-        //     $scope.$emit(AUTH_EVENTS.logoutSuccess);
-        //     console.log('Im logging out');
-        //     $.removeCookie(USER_NAME);
-        //     $.removeCookie(TOKEN);
-        //     $.removeCookie(PERMS);
-        //     Session.destroy();
-        //     console.log('Am I authenticated after destroying session?', AuthService.isAuthenticated());
-        //     $.removeCookie('FORM_INFO_EMPTY');
-        //     $rootScope.directory = {};
-        //     $rootScope.me = undefined;
-        //     $rootScope.polls = undefined;
-        //     $rootScope.perms = undefined;
-        //     $rootScope.events = undefined;
-        //     $rootScope.notifications = undefined;
-        //     $rootScope.hidden_notifications = undefined;
-        //     $rootScope.updateNotificationBadge();
-        //     console.log('location', $location.path());
-        //     if ($location.path() != 'login'){
-        //         $location.path('login');
-        //     }
-        // }
 	}
 ]);

@@ -78,12 +78,7 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
    }
 
    $scope.openChatter = function(chat){
-      $mdDialog.show({
-         controller: 'chatterDialogController as CD',
-         templateUrl: 'views/templates/chatterDialog.html',
-         locals: {chat: chat},
-         bindToController: true
-      });
+      Chatter.openChatter(chat);
    };
 
    $scope.newChatter = function(){

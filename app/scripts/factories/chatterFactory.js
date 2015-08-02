@@ -1,5 +1,5 @@
-App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q', '$mdToast',
-function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
+App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q', '$mdToast', '$mdDialog',
+function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) {
   
   var chatter = {};
   chatter.hasLoaded = false;
@@ -100,12 +100,15 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
   };
   
   chatter.getComments = function(chatter){
+    var deferred = $q.defer();
+
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comments/get', {key: chatter.key})
     .success(function(data) {
       if (!RESTService.hasErrors(data)) {
         var load_data = JSON.parse(data.data);
         chatter.comments = load_data;
         updateChatter(chatter);
+        deferred.resolve();
       } else {
         console.log('Err', data);
       }
@@ -113,6 +116,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
     .error(function(data) {
       console.log('Error: ', data);
     });
+    return deferred.promise;
   };
   
   chatter.create = function(content, important, notify){
@@ -372,6 +376,35 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
       }
     }
   };
+
+  chatter.openChatter = function(chat){
+    if (chat.comments.length){
+      console.log('chatterComments', chat.comments)
+      $mdDialog.show({
+        controller: 'chatterDialogController as CD',
+        templateUrl: 'views/templates/chatterDialog.html',
+        locals: {chat: chat},
+        bindToController: true
+      });
+    }
+    else{
+      this.getComments(chat).then(function(){
+        $mdDialog.show({
+          controller: 'chatterDialogController as CD',
+          templateUrl: 'views/templates/chatterDialog.html',
+          locals: {chat: chat},
+          bindToController: true
+        });
+      })
+    }
+  }
+
+  chatter.openChatterByKey = function(chatter_key){
+    var chatters = getChattersByKey(chatter_key);
+    if (chatters.length){
+      return this.openChatter(chatters[0]);
+    }
+  }
   
   return chatter;
 }
