@@ -5,7 +5,53 @@ import datetime
 from google.appengine.ext import ndb
 from apns import APNs, Frame, Payload
 import time
+import hashlib
 apns = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
+
+def changePasswords():
+    users = User.query().fetch()
+    for user in users:
+        if user.hash_pass:
+            print "Changing hash_pass for " + user.user_name
+            user.hash_pass = hashlib.sha224(user.hash_pass + user.user_name).hexdigest()
+            user.put()
+
+def moveLinks():
+    org = ndb.Key(Organization, 5733679603122176).get()
+    links = Link.query(Link.organization == org.key).fetch()
+    for link in links:
+        ln = link.to_dict()
+        print str(ln)
+    return
+
+def create_linkgroups():
+    org = ndb.Key(Organization, 5733679603122176).get()
+    hash = dict()
+    hash['Panhellenic'] = ndb.get_multi([ndb.Key(Link, 4916071710588928), ndb.Key(Link, 5117441587806208)])
+    hash['Administrative'] = ndb.get_multi([ndb.Key(Link, 5103040226918400), ndb.Key(Link, 5188137487695872),
+                                            ndb.Key(Link, 5715233054130176), ndb.Key(Link, 6269278466605056)])
+    hash['Education'] = ndb.get_multi([ndb.Key(Link, 5134152701575168), ndb.Key(Link, 5629998891270144),
+                                            ndb.Key(Link, 5722070642065408), ndb.Key(Link, 6260052608417792)])
+    hash['Public Relations'] = ndb.get_multi([ndb.Key(Link, 5140064254296064), ndb.Key(Link, 5688959128567808)])
+    hash['Membership'] = ndb.get_multi([ndb.Key(Link, 5724479581847552), ndb.Key(Link, 5760043521671168)])
+    hash['President'] = ndb.get_multi([ndb.Key(Link, 5663773708779520)])
+
+    for name in ['Panhellenic', 'Administrative', 'Education', 'Public Relations', 'Membership', 'President']:
+        gr = LinkGroup()
+        gr.organization = org.key
+        gr.name = name
+        gr.links = []
+        gr_key = gr.put()
+        link_keys = list()
+        print name + ": "
+        for link in hash[name]:
+            print link.title
+            link.group = gr_key
+            link_keys.append(link.key)
+            link.put()
+        gr.links = link_keys
+        gr.put()
+
 
 def UpdateSchema():
     orgs = [ndb.Key(Organization, 5746664899870720).get()]
@@ -25,11 +71,13 @@ def UpdateSchema():
             new_group.put()
             group_dict[group] = new_group
         for link in links:
+            print str(link.to_dict())
             if isinstance(link.group, ''.__class__):
                 link.group = group_dict[link.group].key
                 group_dict[link.group].links.append(link.key)
                 link.put()
         for key, value in group_dict.iteritems():
+            print "putting linkgroup"
             value.put()
     return
 
@@ -106,9 +154,6 @@ def fixJake():
     jake.new_notifications = []
     jake.hidden_notifications = []
     jake.put()
-
-
-
 
 def updateNotifications():
     notifications = Notification.query().fetch()
