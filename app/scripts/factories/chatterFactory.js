@@ -310,7 +310,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast) {
         chat.edited = load_data.edited;
         for (i = 0; i < chatter.data.feed.length; i++){
           if (chat.key == chatter.data.feed[i].key){
-            chatter.data.feed[i] = content;
+            chatter.data.feed[i].content = content;
           }
         }
         for (i = 0; i < chatter.data.important.length; i++){

@@ -21,6 +21,7 @@ from google.appengine.api import urlfetch
 import string
 import random
 import logging
+import hashlib
 
 __author__ = 'Derek'
 WEB_CLIENT_ID = 'greek-app'
@@ -29,7 +30,7 @@ IOS_CLIENT_ID = 'replace this with your iOS client ID'
 ANDROID_AUDIENCE = WEB_CLIENT_ID
 
 # "Password Salt"
-SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
+OLD_SALT = 'Mary had a little lamb, whose fleece was white as snow and everywhere that mary went the lamb was sure to go'
 # error codes for returning errors
 ERROR_BAD_ID = 'BAD_LOGIN'
 BAD_FIRST_TOKEN = 'BAD_FIRST_TOKEN'
@@ -340,7 +341,7 @@ def username_available(user_name):
 
 
 def generate_token():
-    return str(uuid.uuid4())
+    return ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(128))
 
 
 def get_key_from_token(token):

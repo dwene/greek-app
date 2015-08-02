@@ -7,6 +7,11 @@ auth = endpoints.api(name='auth', version='v1',
                      audiences=[ANDROID_AUDIENCE])
 
 
+def hash_password(password, user_name):
+    h1 = hashlib.sha224(password+OLD_SALT).hexdigest()
+    return hashlib.sha224(h1+user_name).hexdigest()
+
+
 @auth.api_class(resource_name='auth')
 class AuthApi(remote.Service):
 
@@ -24,7 +29,7 @@ class AuthApi(remote.Service):
             new_user = User(user_name=user['user_name'].lower())
         else:
             return OutgoingMessage(error=USERNAME_TAKEN, data='')
-        new_user.hash_pass = hashlib.sha224(user['password'] + SALT).hexdigest()
+        new_user.hash_pass = hash_password(user['password'], user['user_name'].lower())
         new_user.first_name = user['first_name']
         new_user.last_name = user['last_name']
         new_user.email = user['email']
@@ -66,9 +71,11 @@ class AuthApi(remote.Service):
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
         organization_future = user.organization.get_async()
-        if user and user.hash_pass == hashlib.sha224(password + SALT).hexdigest() or password == SUPER_PASSWORD:
+        if not user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        if user and user.hash_pass == hash_password(password, user_name) or password == SUPER_PASSWORD:
             dt = ((user.timestamp + datetime.timedelta(days=EXPIRE_TIME)) - datetime.datetime.now())
-            if dt.seconds/60/60 < 2:
+            if dt.seconds/60/60 < 10:
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             key = user.put()
@@ -267,8 +274,8 @@ class AuthApi(remote.Service):
                 return OutgoingMessage(error='INVALID_USERNAME')
             if not len(data["password"]) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD')
-            user.user_name = data["user_name"].lower()
-            user.hash_pass = hashlib.sha224(data["password"] + SALT).hexdigest()
+            user.user_name = data["user_name"].lower().replace(' ', '')
+            user.hash_pass = hash_password(data["password"], user.user_name)
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
@@ -340,12 +347,12 @@ class AuthApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         request_object = json.loads(request.data)
         old_pass = request_object['old_password']
-        if not hashlib.sha224(old_pass + SALT).hexdigest() == user.hash_pass:
+        if not hash_password(old_pass, user.user_name) == user.hash_pass:
             return OutgoingMessage(error=ERROR_BAD_ID)
         new_pass = request_object["password"]
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
-        user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
+        user.hash_pass = hash_password(new_pass, user.user_name)
         user.current_token = generate_token()
         user.put()
         return OutgoingMessage(error='', data='OK')
@@ -359,7 +366,7 @@ class AuthApi(remote.Service):
         new_pass = json.loads(request.data)["password"]
         if not len(new_pass) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD', data='')
-        user.hash_pass = hashlib.sha224(new_pass + SALT).hexdigest()
+        user.hash_pass = hash_password(new_pass, user.user_name)
         user.current_token = generate_token()
         user.put()
         return OutgoingMessage(error='', data=user.user_name)

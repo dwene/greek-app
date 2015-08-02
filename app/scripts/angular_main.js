@@ -1,6 +1,6 @@
 //Final/static variables. These variables are used for cookies
-var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-// var ENDPOINTS_DOMAIN = 'http://localhost:9002';
+// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -724,7 +724,6 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
     $rootScope.$watch('color', function() {
         $('body').attr('md-theme', $rootScope.color);
         $('body').attr('class', 'theme-' + $rootScope.color);
-        console.log('I changed dat color');
     });
     $rootScope.changeTheme = function(color) {
         $rootScope.color = color;
@@ -762,24 +761,9 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         } else {
             $rootScope.color = 'cyan';
         }
-    // $rootScope.$on('organization:updated', function(){
-    //     console.log('I changed');
-    //     $rootScope.color = Organization.organization.color;
-    // })
+
     $rootScope.$state = $state;
-    // $rootScope.color = 'color1';
-    // $rootScope.perms = 'alumni';
-    // $('body').addClass('dark');
-    // $('body').removeClass('light');
-    // $rootScope.$stateParams = $stateParams;
-    // $rootScope.directory = {};
-    // $rootScope.users = $rootScope.directory;
-    // $rootScope.notification_count = "0";
-    // $rootScope.tags = {};
-    // $rootScope.updatingNotifications = false;
-    // $rootScope.allTags = [];
     $rootScope.defaultProfilePicture = 'images/defaultprofile.png';
-    // $rootScope.hasLoaded = false;
     $rootScope.setColor = function(color) {
         $mdThemingProvider.theme('default').primaryPalette(color);
     };
@@ -788,45 +772,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         $('.bootstrap-datetimepicker-widget').hide();
         window.scrollTo(0, 0);
     };
-    //         $rootScope.updateNotifications = function(){
-    //             $('.fa-refresh').addClass('fa-spin');
-    //             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/notifications/get', '')
-    //             .success(function(data){
-    //             if ($rootScope.notification_lengths.unread + $rootScope.notification_lengths.read + $rootScope.notification_lengths.hidden != (JSON.parse(data.data).new_notifications_length + JSON.parse(data.data).hidden_notifications_length + JSON.parse(data.data).notifications_length)){
-
-    //                 $timeout(function(){
-    //                     for (i = 0; i < $rootScope.notifications.length; i++){
-    //                         $rootScope.notifications[i].collapseOut = false;
-    //                     }
-    //                 })
-    //                 $timeout(function(){
-    //                     $rootScope.notifications = JSON.parse(data.data).notifications;
-    //                     $rootScope.notification_lengths = {unread:JSON.parse(data.data).new_notifications_length, read:JSON.parse(data.data).notifications_length, hidden: JSON.parse(data.data).hidden_notifications_length};
-    // //                    $rootScope.notifications_length = JSON.parse(data.data).notifications_length;
-    // //                    $rootScope.new_notifications_length = JSON.parse(data.data).new_notifications_length;
-    // //                    $rootScope.hidden_notifications_length = JSON.parse(data.data).hidden_notifications_length;
-    //                     for (i = 0; i < $rootScope.notifications.length; i++){
-    //                         $rootScope.notifications[i].collapseOut = true;
-    // //                        $rootScope.notifications[i].content = $rootScope.notifications[i].content.replace(RegExp("(\\w{" + 5 + "})(\\w)", "g"),
-    // //                            function(all,text,char){
-    // //                                return text + "&shy;" + char;
-    // //                            });
-
-    //                     }
-    //                 })
-    //                 $timeout(function(){
-    //                     $rootScope.updateNotificationBadge();
-    //                 })
-    //             }
-    //                 $timeout(function(){
-    //                     $('.fa-refresh').removeClass('fa-spin')
-    //                 });
-    //             })
-
-    //             .error(function(data) {
-    //                 console.log('Error: ' , data);
-    //             });
-    //         }
+ 
 
     $rootScope.refreshPage = function() {
         window.location.reload();
@@ -965,13 +911,6 @@ function logoutCookies() {
     $.removeCookie('FORM_INFO_EMPTY');
 }
 
-//function checkAlumni(){
-//    if ($.cookie(PERMS) == ALUMNI){
-//        return true;
-//    }
-//    return false;
-//}
-
 //use packageForSending(send_data) when $http.post in order to attach data to user
 function packageForSending(send_data) {
     var output = {
@@ -1003,32 +942,7 @@ function checkCacheRefresh(timestamp) {
     }
     return false;
 }
-//This function is used to arrange the tag data so that we can use checkboxes with it
-//function arrangeTagData(tag_data){
-//    var org_tag_list = [];
-//    var tags = {};
-//    if (tag_data.org_tags){
-//        for(i = 0; i < tag_data.org_tags.length; i++){
-//            org_tag_list.push({name: tag_data.org_tags[i].name, checked: false})
-//        }
-//    }
-//    var perms_tag_list = [];
-//    if (tag_data.perms_tags){
-//        for (i = 0; i < tag_data.perms_tags.length; i++){
-//            perms_tag_list.push({name: tag_data.perms_tags[i].name, checked: false})
-//        }
-//    }
-//    var event_tag_list = [];
-//    if (tag_data.event_tags){
-//        for (i = 0; i < tag_data.event_tags.length; i++){
-//            event_tag_list.push({name: tag_data.event_tags[i].name, checked: false})
-//        }
-//    }
-//    tags.organizationTags = org_tag_list;
-//    tags.permsTags = perms_tag_list;
-//    tags.eventTags = event_tag_list;
-//    return tags;
-//}
+
 //This should be called at the beginning of any controller that uses the checkbox tags
 function clearCheckedTags(tags) {
     for (i = 0; i < tags.org_tags.length; i++)
@@ -1388,9 +1302,6 @@ App.filter('tagDirectorySearch', function() {
             out_string += tags_list[i] + ' ';
         }
         var search = out_string;
-        //        if (!search){
-        //            return null;
-        //        }
         retList = [];
 
         var searchArray = search.split(" ");
