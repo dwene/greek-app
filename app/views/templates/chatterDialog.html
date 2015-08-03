@@ -64,7 +64,7 @@
               <md-button class="btn-touch md-primary heart" aria-label="like comment" ng-click="CD.likeComment(comment);" ng-hide="comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
             </div>
             <div class="commentOptions" ng-show="(comment.author.key == CD.me.key || CD.admin) && !comment.editingComment">
-              <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete"><i class="fa fa-trash"></i></md-button>
+              <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete" ng-hide="CD.admin && (comment.author.key != CD.me.key)"><i class="fa fa-trash"></i></md-button>
               <md-button class="btn-touch md-primary pull-right" aria-label="edit comment" ng-click="CD.editComment(comment)"><i class="fa fa-edit"></i></md-button>
             </div>
           </md-list-item>
