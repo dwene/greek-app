@@ -893,6 +893,12 @@ md-toolbar.md-tall {
 #login #buttons {
   margin-top: 10px;
 }
+#forgotPassword th {
+  font-size: 14px;
+}
+#forgotPassword td {
+  vertical-align: middle;
+}
 #directory .md-padding {
   padding-top: 0px;
 }
