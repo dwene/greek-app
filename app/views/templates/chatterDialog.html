@@ -5,14 +5,16 @@
         <img src="{{CD.chat.author.prof_pic || 'images/defaultprofile.png'}}" alt="{{CD.chat.author.first_name}}" class="md-avatar">
         <h3>{{CD.chat.author.first_name}} {{CD.chat.author.last_name}}</h3>
         <span flex></span>
-        <md-button ng-hide="CD.editing" class="btn-touch" ng-click="CD.editChatter(CD.chat.content)" aria-label="edit" ng-show="CD.chat.author.key == CD.me.key"><i class="fa fa-pencil-square-o"></i></md-button>
-        <md-button ng-hide="CD.editing" class="btn-touch" ng-click="CD.showconfirmImportant(CD.chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !CD.chat.important, 'fa-star': CD.chat.important}"></i>
-          <md-tooltip md-direction="left">
-            Make Important
-          </md-tooltip>
-        </md-button>
-        <md-button class="btn-touch" aria-label="like chatter" ng-click="CD.likeChatter(CD.chat);" ng-hide="CD.chat.author.key == me.key"><i class="fa" ng-class="{'fa-heart-o': !CD.chat.like, 'fa-heart': CD.chat.like}"></i></md-button>
-        <md-button ng-hide="editing" class="btn-touch" ng-click="CD.confirmDelete = !CD.confirmDelete" aria-label="delete" ng-show="CD.chat.author.key == CD.me.key || CD.admin"><i class="fa fa-trash"></i></md-button>
+        <div id="chatterOptions" ng-hide="CD.editing">
+          <md-button class="btn-touch" ng-click="CD.showconfirmImportant(CD.chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !CD.chat.important, 'fa-star': CD.chat.important}"></i>
+            <md-tooltip md-direction="left">
+              Make Important
+            </md-tooltip>
+          </md-button>
+          <md-button class="btn-touch" ng-click="CD.editChatter(CD.chat.content)" aria-label="edit" ng-show="CD.chat.author.key == CD.me.key"><i class="fa fa-pencil-square-o"></i></md-button>
+          <md-button class="btn-touch" aria-label="like chatter" ng-click="CD.likeChatter(CD.chat);" ng-hide="CD.chat.author.key == CD.me.key"><i class="fa" ng-class="{'fa-heart-o': !CD.chat.like, 'fa-heart': CD.chat.like}"></i></md-button>
+          <md-button class="btn-touch" ng-click="CD.confirmDelete = !CD.confirmDelete" aria-label="delete" ng-show="CD.chat.author.key == CD.me.key || CD.admin"><i class="fa fa-trash"></i></md-button>
+        </div>
       </div>
     </md-toolbar>
     <md-toolbar id="confirmImportant" ng-show="CD.confirmImportant" class="slideDown">
