@@ -34,7 +34,8 @@ class LinksApi(remote.Service):
         for group in groups:
             group_dict[group.key.urlsafe()] = []
         for link in links:
-            group_dict[link.group.urlsafe()].append(link.to_dict())
+            if isinstance(group_dict[link.group.urlsafe()], [].__class__):
+                group_dict[link.group.urlsafe()].append(link.to_dict())
         for group in groups:
             gr = group.to_dict()
             gr['links'] = group_dict[group.key.urlsafe()]
@@ -179,10 +180,8 @@ class LinksApi(remote.Service):
         if not 'key' in data:
              return OutgoingMessage(error='Missing Data', data='')
         group = ndb.Key(urlsafe=data['key']).get()
-        f1 = ndb.delete_multi_async(group.links)
-        f2 = group.key.delete_async()
-        f1.get_result()
-        f2.get_result()
+        ndb.delete_multi(group.links)
+        group.key.delete()
         return OutgoingMessage(error='', data='OK')
 
 

@@ -23,6 +23,11 @@ App.factory('Links', ['RESTService', '$rootScope', 'localStorageService', '$q', 
             }
         }
 
+        item.set = function(groups){
+            item.groups = groups;
+            $rootScope.$broadcast('links:updated');
+        }
+
         item.destroy = function() {
             item.cacheTimestamp = undefined;
             item.groups = undefined;
