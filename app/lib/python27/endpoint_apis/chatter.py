@@ -143,6 +143,8 @@ class ChatterApi(remote.Service):
             notification['sender'] = request_user.key
             notification['type'] = "CHATTERCOMMENT"
             notification['type_key'] = chatter_key
+            if request_user.key in push_keys:
+                push_keys.remove(request_user.key)
             PushFactory.send_notification_with_keys(notification, push_keys)
         del chat['muted']
         update = LiveUpdate()
@@ -226,6 +228,9 @@ class ChatterApi(remote.Service):
                                           " just posted an important chatter."
                 notification['sender'] = request_user.key
                 notification['type'] = "CHATTERCOMMENT"
+
+                if request_user.key in push_keys:
+                    push_keys.remove(request_user.key)
                 PushFactory.send_notification_with_keys(notification, push_keys)
         else:
             chatter.important = False
@@ -303,7 +308,8 @@ class ChatterApi(remote.Service):
         notification['type'] = "CHATTERCOMMENT"
         notification['type_key'] = chatter.key
         follower_keys = list((set(chatter.following) - set(chatter.muted)))
-        logging.info(follower_keys)
+        if request_user.key in follower_keys:
+            follower_keys.remove(request_user.key)
         PushFactory.send_notification_with_keys(notification, follower_keys)
         following = request_user.key in chatter.following and request_user.key not in chatter.muted
 
