@@ -36,7 +36,7 @@
       <h3 class="chatContent" ng-show="!CD.editing">{{CD.chat.content}}</h3>
       <md-input-container class="slideDown" ng-show="CD.editing">
         <label for="chattercontent">Edit your chatter here:</label>
-        <textarea id="chattercontent" ng-model="CD.content_temp" name="content"></textarea>
+        <textarea id="chattercontent" nete-focus="CD.editing" ng-model="CD.content_temp" name="content"></textarea>
       </md-input-container>
       <div layout="row">
         <span flex></span>
@@ -50,7 +50,7 @@
         <div ng-repeat="comment in CD.chat.comments | orderBy:'timestamp'">
           <md-input-container ng-show="comment.editingComment" class="slideDown no-margin-bottom">
             <label for="commentcontent">Edit your comment here:</label>
-            <textarea id="commentcontent" ng-model="comment.comment_temp" name="content"></textarea>
+            <textarea id="commentcontent" nete-focus="comment.editingComment" ng-model="comment.comment_temp" name="content"></textarea>
           </md-input-container>
           <md-list-item ng-hide="comment.timestamp">
             <md-progress-circular md-mode="indeterminate" md-diameter="25"></md-progress-circular>

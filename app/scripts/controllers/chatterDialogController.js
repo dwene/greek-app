@@ -23,7 +23,6 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
   vm.editChatter = function(content){
     vm.editing = true;
     vm.content_temp = content;
-    document.getElementById('chattercontent').focus();
   };
   
   vm.cancelEditChatter = function(){
