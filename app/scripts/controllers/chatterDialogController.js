@@ -65,6 +65,12 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
       chat.mute = false;
     }
   };
+
+  vm.loadMoreComments = function(chat){
+    console.log('loadMoreComments');
+    Chatter.loadMoreComments(chat);
+  };
+
   vm.unfollowChatter = function(chat){
     Chatter.mute(chat);
     chat.mute = true;

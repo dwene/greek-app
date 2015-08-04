@@ -36,6 +36,7 @@
         <label for="chattercontent">Edit your chatter here:</label>
         <textarea id="chattercontent" ng-model="CD.content_temp" name="content"></textarea>
       </md-input-container>
+      <md-button ng-disabled="!CD.chat.comments_meta.more" ng-click="CD.loadMoreComments(CD.chat)">Load More</md-button>
       <div layout="row">
         <span flex></span>
         <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.saveChatter(CD.content_temp)">save</md-button>

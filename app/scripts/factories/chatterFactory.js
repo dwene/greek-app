@@ -61,6 +61,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       if (!RESTService.hasErrors(data)) {
         var load_data = JSON.parse(data.data);
         chatter.data.feed = load_data;
+        console.log('feed chatters', chatter.data.feed);
         $rootScope.$broadcast('chatter:updated');
         meta.feedLoaded = true;
       } else {
@@ -99,15 +100,18 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
     });
   };
   
-  chatter.getComments = function(chatter){
+  chatter.getComments = function(chat){
     var deferred = $q.defer();
 
-    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comments/get', {key: chatter.key})
+    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comments/get', {key: chat.key})
     .success(function(data) {
       if (!RESTService.hasErrors(data)) {
         var load_data = JSON.parse(data.data);
-        chatter.comments = load_data;
-        updateChatter(chatter);
+        chat.comments = load_data.comments;
+        chat.comments_meta.more = load_data.more;
+        chat.comments_meta.cursor = load_data.cursor;
+        console.log('chatter with comments', chat);
+        updateChatter(chat);
         deferred.resolve();
       } else {
         console.log('Err', data);
@@ -204,6 +208,23 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
+
+  chatter.loadMoreComments = function(chatter){
+    RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comments/get', {key: chatter.key, cursor: chatter.comments_meta.cursor})
+    .success(function(data){
+      if (!RESTService.hasErrors(data)) {
+        load_data = JSON.parse(data.data);
+        chatter.comments = chatter.comments.concat(load_data.comments);
+        chatter.comments_meta.more = load_data.comments.more;
+        chatter.comments_meta.cursor = load_data.cursor;
+      } else {
+        console.log('Err', data);
+      }
+    })
+    .error(function(data){
+      console.log('Error: ', data);
+    });
+  }
   
   chatter.likeComment = function(comment){
     if (comment.like){
@@ -379,7 +400,6 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
 
   chatter.openChatter = function(chat){
     if (chat.comments.length){
-      console.log('chatterComments', chat.comments)
       $mdDialog.show({
         controller: 'chatterDialogController as CD',
         templateUrl: 'views/templates/chatterDialog.html',
