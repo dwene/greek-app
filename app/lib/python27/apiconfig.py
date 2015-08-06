@@ -18,6 +18,7 @@ from google.appengine.ext import blobstore
 from google.appengine.api import images
 from google.appengine.api import taskqueue
 from google.appengine.api import urlfetch
+from google.appengine.datastore.datastore_query import Cursor
 import string
 import random
 import logging
@@ -64,6 +65,8 @@ class OutgoingMessage(messages.Message):
 class DateEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, ndb.Key):
+            return obj.urlsafe()
+        elif isinstance(obj, Cursor):
             return obj.urlsafe()
         elif hasattr(obj, 'isoformat'):
             return obj.isoformat()

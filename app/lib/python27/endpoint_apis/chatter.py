@@ -4,7 +4,6 @@ from protorpc import remote
 import datetime
 import logging
 from pushfactory import PushFactory, LiveUpdate
-
 chatter_api = endpoints.api(name='chatter', version='v1',
                             allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                             audiences=[ANDROID_AUDIENCE])
@@ -24,17 +23,16 @@ class ChatterApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        starts_with = 0
-        if "offset" in data:
-            starts_with = data["offset"]
+        cursor = None
+        if 'cursor' in data:
+            cursor = Cursor(urlsafe=data['cursor'])
         if "important" in data and data["important"] is True:
-            chatters_future = Chatter.query(Chatter.organization == request_user.organization,
+            chatters, next_cursor, has_more = Chatter.query(Chatter.organization == request_user.organization,
                                             Chatter.important == True).order(
-                -Chatter.timestamp).fetch_async(20, offset=starts_with)
+                -Chatter.timestamp).fetch_page(25, start_cursor=cursor)
         else:
-            chatters_future = Chatter.query(Chatter.organization == request_user.organization) \
-                .order(-Chatter.timestamp).fetch_async(20, offset=starts_with)
-        chatters = chatters_future.get_result()
+            chatters, next_cursor, has_more = Chatter.query(Chatter.organization == request_user.organization) \
+                .order(-Chatter.timestamp).fetch_page(25, start_cursor=cursor)
         chatter_dict = list()
         for chatter in chatters:
             local_chatter_dict = chatter.to_dict()
@@ -50,8 +48,14 @@ class ChatterApi(remote.Service):
                                  "last_name": author.last_name,
                                  "prof_pic": get_image_url(author.prof_pic),
                                  "key": chatter["author"]}
-            chatter['comments_count'] = len(chatter['comments'])
+            comments_meta = dict()
+            comments_meta['length'] = len(chatter['comments'])
+            comments_meta['cursor'] = None
+            comments_meta['more'] = None
+            chatter['comments_meta'] = comments_meta
             chatter['comments'] = list()
+            chatter['cursor'] = next_cursor
+            chatter['more'] = has_more
             del chatter["author_future"]
             del chatter["muted"]
         return OutgoingMessage(error='', data=json_dump(chatter_dict))
@@ -59,35 +63,31 @@ class ChatterApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comments/get',
                       http_method='POST', name='chatter.get_comments')
     def get_comments(self, request):
-        time_start = datetime.datetime.now()
         request_user = get_user(request.user_name, request.token)
-        time_user = datetime.datetime.now()
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
+        cursor = None
+        if 'cursor' in data:
+            cursor = Cursor(urlsafe=data['cursor'])
         if 'key' not in data:
             return OutgoingMessage(error='Missing arguments in new Chatter.', data='')
-        starts_with = 0
-        if 'offset' in data:
-            starts_with = data['offset']
         chatter_key = ndb.Key(urlsafe=data['key'])
-        chatter_comments = ChatterComment.query(ChatterComment.chatter == chatter_key).order(
-            -ChatterComment.timestamp).fetch(20, offset=starts_with)
-        time_comments = datetime.datetime.now()
-        comments_dict = list()
+        chatter_comments, next_cursor, more_comments = ChatterComment.query(ChatterComment.chatter == chatter_key).order(
+            -ChatterComment.timestamp).fetch_page(20, start_cursor=cursor)
+        comments_list = list()
         for comment in chatter_comments:
-            comments_dict.append(ndb_to_dict(comment))
+            comments_list.append(ndb_to_dict(comment))
         author_keys = list()
-        for comment in comments_dict:
+        for comment in comments_list:
             comment['like'] = request_user.key in comment['likes']
             comment['likes'] = len(comment['likes'])
             if comment['author'] not in author_keys:
                 author_keys.append(comment['author'])
         if author_keys:
             User.query(User.key.IN(author_keys)).fetch(projection=[User.first_name, User.last_name, User.prof_pic])
-            time_authors = datetime.datetime.now()
             authors = ndb.get_multi(author_keys)
-            for comment in comments_dict:
+            for comment in comments_list:
                 for author in authors:
                     if author.key == comment['author']:
                         comment['author'] = {"first_name": author.first_name,
@@ -95,12 +95,10 @@ class ChatterApi(remote.Service):
                                              "prof_pic": get_image_url(author.prof_pic),
                                              "key": comment['author']}
                         break
-            logging.info("Times for loading chattercomments:")
-            logging.info("Load User: " + str(time_user - time_start))
-            logging.info("Fetch ChatterComments: " + str(time_comments-time_user))
-            logging.info("Fetch Authors: " + str(time_authors - time_comments))
-            logging.info("Total Time: " + str(datetime.datetime.now() - time_start))
-
+        comments_dict = dict()
+        comments_dict['comments'] = comments_list
+        comments_dict['cursor'] = next_cursor
+        comments_dict['more'] = more_comments
         return OutgoingMessage(error='', data=json_dump(comments_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='post',
