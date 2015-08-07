@@ -4,12 +4,12 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
 
    $scope.me = Session.me;
    $scope.admin = Session.perms === USER_ROLES.council || Session.perms === USER_ROLES.leadership;
+   var meta = {}
    var i;
-
    Chatter.get();
    Chatter.getImportant();
 
-   $scope.loadImportant = function(){
+   $scope.loadImportant = function() {
       Chatter.getImportant();
    };
 
@@ -18,39 +18,54 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
       defineFeed();
    });
 
+   if (Chatter.data){
+      setFeed();
+      setImportant();
+      defineFeed();
+   }
+
+   $scope.loadMoreChatters = function() {
+      Chatter.loadMoreChatters($scope.meta);
+   }
+
    function defineFeed(){
       if ($scope.data){
          if ($scope.data.selectedIndex === 0){
             $scope.currentFeed = $scope.chatter;
+            $scope.meta = meta.feed;
          }
          else{
             $scope.currentFeed = $scope.important_chatter;
+            $scope.meta = meta.important;
          }
       }
       else{
          $scope.currentFeed = $scope.chatter;
+         $scope.meta = meta.feed;
       }
-   }
+   };
 
-   if (Chatter.data) {
-      $scope.chatter = Chatter.data.feed;
-      $scope.important_chatter = Chatter.data.important;
-      defineFeed();
-      if ($stateParams.token && $scope.chatter){
-         openChatterByKey($stateParams.token);
+   function setFeed(){
+      if (Chatter.data.feed){
+         $scope.chatter = Chatter.data.feed.chatters;
+         meta.feed = {more: Chatter.data.feed.more, cursor: Chatter.data.feed.cursor, important:false, loading:false};
       }
-   }
+   };
+
+   function setImportant(){
+      if (Chatter.data.important){
+         $scope.important_chatter = Chatter.data.important.chatters;
+         meta.important = {more: Chatter.data.important.more, cursor: Chatter.data.important.cursor, important:true, loading:false};
+      }
+   };
 
    $scope.$on('chatter:updated', function(){
-      $scope.chatter = Chatter.data.feed;
+      setFeed();
       defineFeed();
-      if ($stateParams.token && $scope.chatter){
-         openChatterByKey($stateParams.token);
-      }
    });
 
    $scope.$on('importantChatter:updated', function(){
-      $scope.important_chatter = Chatter.data.important;
+      setImportant();
       defineFeed();
    });
 

@@ -4,7 +4,6 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
     
   var vm = this;
   vm.admin = Session.perms === USER_ROLES.council || Session.perms === USER_ROLES.leadership;
-  Chatter.getComments(vm.chat);
   vm.me = Session.me;
   
   vm.hide = function(){
@@ -47,7 +46,7 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
   vm.deleteChatter = function(){
     $mdDialog.hide();
     vm.confirmDelete = false;
-    Chatter.delete(scope.chat, vm.chat.content);
+    Chatter.delete(vm.chat);
     for (i = 0; i < vm.chatter.length; i++){
       if (vm.chatter[i].key == vm.chat.key){
         vm.chatter.splice(i, 1);
