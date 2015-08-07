@@ -15,6 +15,19 @@ COMMENT = "CHATTERCOMMENT"
 def list_followers(chatter):
     return list(set(chatter.following) - set(chatter.muted))
 
+
+def format_author(author):
+    if author is None:
+        return {"first_name": 'Deleted',
+                 "last_name": 'User',
+                 "prof_pic": '',
+                 "key": ''}
+    return {"first_name": author.first_name,
+             "last_name": author.last_name,
+             "prof_pic": get_image_url(author.prof_pic),
+             "key": author.key}
+
+
 @chatter_api.api_class(resource_name='chatter')
 class ChatterApi(remote.Service):
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get', http_method='POST', name='chatter.get')
@@ -26,38 +39,63 @@ class ChatterApi(remote.Service):
         cursor = None
         if 'cursor' in data:
             cursor = Cursor(urlsafe=data['cursor'])
-        if "important" in data and data["important"] is True:
+        if 'important' in data and data["important"] is True:
             chatters, next_cursor, has_more = Chatter.query(Chatter.organization == request_user.organization,
                                             Chatter.important == True).order(
-                -Chatter.timestamp).fetch_page(25, start_cursor=cursor)
+                -Chatter.timestamp).fetch_page(15, start_cursor=cursor)
         else:
             chatters, next_cursor, has_more = Chatter.query(Chatter.organization == request_user.organization) \
-                .order(-Chatter.timestamp).fetch_page(25, start_cursor=cursor)
-        chatter_dict = list()
+                .order(-Chatter.timestamp).fetch_page(15, start_cursor=cursor)
+        chatter_dict = {}
+        chatter_list = list()
         for chatter in chatters:
             local_chatter_dict = chatter.to_dict()
             local_chatter_dict["key"] = chatter.key
-            chatter_dict.append(local_chatter_dict)
-        for chatter in chatter_dict:
+            chatter_list.append(local_chatter_dict)
+        for chatter in chatter_list:
             chatter["author_future"] = chatter["author"].get_async()
             chatter["like"] = request_user.key in chatter["likes"]
             chatter["likes"] = len(chatter["likes"])
             chatter["following"] = request_user.key in chatter['following'] and request_user not in chatter['muted']
             author = chatter["author_future"].get_result()
-            chatter["author"] = {"first_name": author.first_name,
-                                 "last_name": author.last_name,
-                                 "prof_pic": get_image_url(author.prof_pic),
-                                 "key": chatter["author"]}
+            chatter["author"] = format_author(author)
             comments_meta = dict()
             comments_meta['length'] = len(chatter['comments'])
             comments_meta['cursor'] = None
             comments_meta['more'] = None
             chatter['comments_meta'] = comments_meta
             chatter['comments'] = list()
-            chatter['cursor'] = next_cursor
-            chatter['more'] = has_more
             del chatter["author_future"]
             del chatter["muted"]
+        chatter_dict['cursor'] = next_cursor
+        chatter_dict['more'] = has_more
+        chatter_dict['chatters'] = chatter_list
+        return OutgoingMessage(error='', data=json_dump(chatter_dict))
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='getByKey',
+                      http_method='POST', name='chatter.get_by_key')
+    def get_by_key(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        chatter = ndb.Key(urlsafe=data['key']).get()
+        if chatter is None:
+            return OutgoingMessage(error='', data=json_dump(False))
+        chatter_dict = chatter.to_dict()
+        author = chatter_dict['author'].get()
+        chatter_dict['author'] = format_author(author)
+        chatter_dict["like"] = request_user.key in chatter_dict["likes"]
+        chatter_dict["likes"] = len(chatter_dict["likes"])
+        chatter_dict["following"] = request_user.key in chatter_dict['following'] and \
+                                    request_user.key not in chatter_dict['muted']
+        comments_meta = dict()
+        comments_meta['length'] = len(chatter_dict['comments'])
+        comments_meta['cursor'] = None
+        comments_meta['more'] = None
+        chatter_dict['comments_meta'] = comments_meta
+        chatter_dict['comments'] = list()
+        del chatter_dict["muted"]
         return OutgoingMessage(error='', data=json_dump(chatter_dict))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='comments/get',
@@ -90,10 +128,7 @@ class ChatterApi(remote.Service):
             for comment in comments_list:
                 for author in authors:
                     if author.key == comment['author']:
-                        comment['author'] = {"first_name": author.first_name,
-                                             "last_name": author.last_name,
-                                             "prof_pic": get_image_url(author.prof_pic),
-                                             "key": comment['author']}
+                        comment['author'] = format_author(author)
                         break
         comments_dict = dict()
         comments_dict['comments'] = comments_list

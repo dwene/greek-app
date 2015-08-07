@@ -202,7 +202,7 @@ class LinkGroup(ModelUtils, ndb.Model):
     organization = ndb.KeyProperty(kind=Organization)
 
 
-class Chatter(ndb.Model):
+class Chatter(ModelUtils, ndb.Model):
     content = ndb.TextProperty()
     organization = ndb.KeyProperty(kind=Organization)
     author = ndb.KeyProperty(kind=User)
