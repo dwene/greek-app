@@ -50,7 +50,6 @@ class ChatterApi(remote.Service):
         chatter_list = list()
         for chatter in chatters:
             local_chatter_dict = chatter.to_dict()
-            local_chatter_dict['key'] = chatter.key
             chatter_list.append(local_chatter_dict)
         for chatter in chatter_list:
             chatter['author_future'] = chatter['author'].get_async()

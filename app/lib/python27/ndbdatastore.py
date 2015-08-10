@@ -215,7 +215,7 @@ class Chatter(ModelUtils, ndb.Model):
     following = ndb.KeyProperty(repeated=True, kind=User)
 
 
-class ChatterComment(ndb.Model):
+class ChatterComment(ModelUtils, ndb.Model):
     organization = ndb.KeyProperty()
     chatter = ndb.KeyProperty()
     content = ndb.TextProperty()
