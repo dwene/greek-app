@@ -38,7 +38,6 @@
         <label for="chattercontent">Edit your chatter here:</label>
         <textarea id="chattercontent" nete-focus="CD.editing" ng-model="CD.content_temp" name="content"></textarea>
       </md-input-container>
-      <md-button ng-disabled="!CD.chat.comments_meta.more" ng-click="CD.loadMoreComments(CD.chat)">Load More</md-button>
       <div layout="row">
         <span flex></span>
         <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.saveChatter(CD.content_temp)">save</md-button>
@@ -47,8 +46,17 @@
     </div>
     
     <div id="chatterComments" class="md-padding no-padding-top">
+      <div id="commentInput" layout="row">
+        <md-input-container flex>
+          <label for="content">Enter new comment here:</label>
+          <textarea id="content" ng-model="CD.comment" name="content" ng-enter="CD.commentOnChatter(CD.chat, CD.comment)"></textarea>
+        </md-input-container>
+        <md-button class="md-primary" ng-disabled="!CD.comment.length" ng-click="CD.commentOnChatter(CD.chat, CD.comment)">
+          <md-icon md-font-icon="fa-comment" class="fa"></md-icon>
+        </md-button>
+      </div>
       <md-list class="itemList">
-        <div ng-repeat="comment in CD.chat.comments | orderBy:'timestamp'">
+        <div ng-repeat="comment in CD.chat.comments | orderBy:'-timestamp' | limitTo:CD.limit">
           <md-input-container ng-show="comment.editingComment" class="slideDown no-margin-bottom">
             <label for="commentcontent">Edit your comment here:</label>
             <textarea id="commentcontent" nete-focus="comment.editingComment" ng-model="comment.comment_temp" name="content"></textarea>
@@ -87,23 +95,16 @@
             </div>
           </md-toolbar>
         </div>
+        <div class="text-center"><md-button ng-hide="!CD.chat.comments_meta.more" ng-click="CD.loadMoreComments(CD.chat)">Load More Comments</md-button></div>
       </md-list>
       <div ng-show="CD.chat.comments === undefined"><md-progress-circular class="md-primary" style="margin:auto;" md-mode="indeterminate"></md-progress-circular></div>
-      <br>
-      <md-input-container>
-        <label for="content">Enter new comment here:</label>
-        <textarea id="content" ng-model="CD.comment" name="content"></textarea>
-      </md-input-container>
     </div>
-    
+
   </md-content>
   <div class="md-actions" layout="row">
     <md-button class="followButton" ng-show="CD.chat.following" ng-click="CD.unfollowChatter(CD.chat)" tabindex="-1"><i class="fa fa-bell-slash-o"></i> unfollow</md-button>
     <md-button class="followButton" ng-show="!CD.chat.following" ng-click="CD.followChatter(CD.chat)" tabindex="-1"><i class="fa fa-bell"></i> follow</md-button>
     <span flex></span>
-    <md-button class="md-primary" ng-disabled="!CD.comment.length" ng-click="CD.commentOnChatter(CD.chat, CD.comment)">
-      Comment
-    </md-button>
     <md-button ng-click="CD.hide()">
       Close
     </md-button>
