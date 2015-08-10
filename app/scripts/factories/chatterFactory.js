@@ -16,8 +16,10 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       if (!RESTService.hasErrors(data)) {
         var load_data = JSON.parse(data.data);
         if (load_data !== false){
-          chatter.data.feed.chatters.push(load_data);
-          $rootScope.$broadcast('chatter:updated');
+          if (meta.feedLoaded){
+            chatter.data.feed.chatters.push(load_data);
+            $rootScope.$broadcast('chatter:updated');
+          }
           if (open){
             chatter.openChatter(load_data);
           }
@@ -38,16 +40,18 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
 
   function getChattersByKey(key){
     var chatters = [];
-    for (i = 0; i < chatter.data.feed.length; i++){
-      if (chatter.data.feed[i].key == key){
-        chatters.push(chatter.data.feed[i]);
-        break;
+    if (chatter.data.feed){
+      for (i = 0; i < chatter.data.feed.length; i++){
+        if (chatter.data.feed[i].key == key){
+          chatters.push(chatter.data.feed[i]);
+          break;
+        }
       }
-    }
-    for (i = 0; i < chatter.data.important.chatters.length; i++){
-      if (chatter.data.important.chatters[i].key == key){
-        chatters.push(chatter.data.important.chatters[i]);
-        break;
+      for (i = 0; i < chatter.data.important.chatters.length; i++){
+        if (chatter.data.important.chatters[i].key == key){
+          chatters.push(chatter.data.important.chatters[i]);
+          break;
+        }
       }
     }
     return chatters;
@@ -55,26 +59,33 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
   
   function updateChatter(chat){
     var has_changed = false;
-    for (i = 0; i < chatter.data.feed.chatters.length; i++){
-      if (chatter.data.feed.chatters[i].key == chat.key){
-        chatter.data.feed.chatters[i] = chat;
-        has_changed = true;
-        break;
+    
+    if (meta.feedLoaded){
+      for (i = 0; i < chatter.data.feed.chatters.length; i++){
+        if (chatter.data.feed.chatters[i].key == chat.key){
+          chatter.data.feed.chatters[i] = chat;
+          has_changed = true;
+          break;
+        }
+      }
+      if (has_changed){
+        $rootScope.$broadcast('chatter:updated');
       }
     }
-    if (has_changed){
-      $rootScope.$broadcast('chatter:updated');
-    }
+
     has_changed = false;
-    for (i = 0; i < chatter.data.important.chatters.length; i++){
-      if (chatter.data.important.chatters[i].key == chat.key){
-        chatter.data.important.chatters[i] = chat;
-        has_changed = true;
-        break;
+
+    if (meta.importantLoaded){
+      for (i = 0; i < chatter.data.important.chatters.length; i++){
+        if (chatter.data.important.chatters[i].key == chat.key){
+          chatter.data.important.chatters[i] = chat;
+          has_changed = true;
+          break;
+        }
       }
-    }
-    if (has_changed){
-      $rootScope.$broadcast('importantChatter:updated');
+      if (has_changed){
+        $rootScope.$broadcast('importantChatter:updated');
+      }
     }
   }
   
@@ -483,7 +494,6 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       return this.openChatter(chats[0]);
     }
     else{
-      console.log('couldnt find chatter');
       loadChatterByKey(chatter_key, true);
     }
   };
