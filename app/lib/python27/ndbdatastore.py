@@ -7,13 +7,32 @@ HTML_EMAIL_1 = """
 HTML_EMAIL_2 = """
 <a href="https://app.netegreek.com"><img src="https://app.netegreek.com/images/ctabutton.png" width="550" height="50"></a></div></td></tr></table></td><td width="50" bgcolor="#003663"></td></tr></table></tr><tr><td width="650" height="50" bgcolor="#003663"></td></tr></tbody></table><table width="650" cellpadding="0" cellspacing="0" border="0" bgcolor="#d4d4d4" align="center"><tbody><tr><td><table align="center" style="width:100%;max-width:650px;text-align:left;padding-top:15px"><tbody><tr><td colspan="2" style="text-align:center;width:100%"><p style="color:#818181;font-size:12px;padding-top:10px;line-height:25px;font-family:arial;font-color:white;text-align:center"> If you believe you are receiving this email in error please email <a href="mailto:support@netegreek.com" style="">support@netegreek.com</a></p><p style="color:#818181;font-color:white;font-size:12px;padding-top:10px;line-height:25px;font-family:arial;text-align:center"> NeteGreek, LLC. </p></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div>"""
 
+
 class ModelUtils(object):
     def to_dict(self):
-        result = super(ModelUtils,self).to_dict()
+        result = super(ModelUtils, self).to_dict()
         result['key'] = self.key.urlsafe() #get the key as a string
         return result
 
-class User(ndb.Model):
+
+class UserUtils(ModelUtils, object):
+    def to_dict(self):
+        result = super(ModelUtils, self).to_dict()
+        for item in ['hash_pass', 'current_token', 'timestamp', 'notifications', 'new_notifications']:
+            if item in result:
+                del result[item]
+        return result
+
+
+class Organization(ModelUtils, ndb.Model):
+    name = ndb.StringProperty()
+    school = ndb.StringProperty()
+    type = ndb.StringProperty()
+    color = ndb.StringProperty(default='cyan')
+    calendars = ndb.KeyProperty(repeated=True)
+
+
+class User(UserUtils, ndb.Model):
     # login stuff
     user_name = ndb.StringProperty()
     hash_pass = ndb.StringProperty()
@@ -31,7 +50,7 @@ class User(ndb.Model):
     grad_month = ndb.IntegerProperty()
     grad_year = ndb.IntegerProperty()
     pledge_class_semester = ndb.StringProperty(default='Fall')
-    pledge_class_year = ndb.IntegerProperty(default=2014)
+    pledge_class_year = ndb.IntegerProperty(default=2015)
     # address stuff
     address = ndb.StringProperty()
     city = ndb.StringProperty()
@@ -51,7 +70,6 @@ class User(ndb.Model):
     website = ndb.StringProperty()
     # netegreek info
     organization = ndb.KeyProperty()
-    tags = ndb.StringProperty(repeated=True)
     perms = ndb.StringProperty()
     prof_pic = ndb.BlobKeyProperty()
     status = ndb.StringProperty()
@@ -63,7 +81,6 @@ class User(ndb.Model):
     new_messages = ndb.KeyProperty(repeated=True)
     archived_messages = ndb.KeyProperty(repeated=True)
     sent_messages = ndb.KeyProperty(repeated=True)
-    events = ndb.KeyProperty(repeated=True)
     recently_used_tags = ndb.StringProperty(repeated=True)
     email_prefs = ndb.StringProperty(default='all')
     # mobile app stuff
@@ -88,7 +105,15 @@ class Message(ndb.Model):
     timestamp = ndb.DateTimeProperty()
 
 
+class Calendar(ndb.Model):
+    organization = ndb.KeyProperty()
+    name = ndb.StringProperty()
+    color = ndb.StringProperty()
+    users = ndb.KeyProperty(repeated=True)
+
+
 class Event(ndb.Model):
+    calendar = ndb.KeyProperty(kind=Calendar)
     title = ndb.StringProperty()
     description = ndb.TextProperty()
     time_start = ndb.DateTimeProperty()
@@ -97,15 +122,12 @@ class Event(ndb.Model):
     creator = ndb.KeyProperty()
     location = ndb.StringProperty()
     address = ndb.StringProperty()
-    tag = ndb.StringProperty()
     going = ndb.KeyProperty(repeated=True)
-    org_tags = ndb.StringProperty(repeated=True)
-    perms_tags = ndb.StringProperty(repeated=True)
     not_going = ndb.KeyProperty(repeated=True)
-    images = ndb.BlobKeyProperty(repeated=True)
     organization = ndb.KeyProperty()
     attendance_data = ndb.KeyProperty(repeated=True)
     parent_event = ndb.KeyProperty()
+    invites = ndb.KeyProperty(repeated=True, kind=User)
 
 
 class AttendanceData(ndb.Model):
@@ -116,21 +138,10 @@ class AttendanceData(ndb.Model):
     note = ndb.StringProperty()
 
 
-class Organization(ndb.Model):
-    name = ndb.StringProperty()
-    school = ndb.StringProperty()
-    type = ndb.StringProperty()
-    tags = ndb.StringProperty(repeated=True)
-    subscribed = ndb.BooleanProperty(default=False)
+class PaymentInformation(ndb.Model):
     subscription_id = ndb.StringProperty()
     customer_id = ndb.StringProperty()
     payment_token = ndb.StringProperty()
-    cancel_subscription = ndb.DateProperty()
-    trial_period = ndb.BooleanProperty(default=True)
-    cost = ndb.FloatProperty(default=1.0)
-    color = ndb.StringProperty(default='cyan')
-    image = ndb.BlobKeyProperty()
-    link_groups = ndb.StringProperty(repeated=True)
 
 
 class Poll(ndb.Model):
