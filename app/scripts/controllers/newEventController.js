@@ -5,7 +5,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
 
    GoogleMaps.then(
       function(){
-         console.log('maps is loaded');
          $scope.mapsLoaded = true;
       }
    );
