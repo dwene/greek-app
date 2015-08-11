@@ -284,7 +284,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       if (!RESTService.hasErrors(data)) {
         load_data = JSON.parse(data.data);
         chatter.comments = chatter.comments.concat(load_data.comments);
-        chatter.comments_meta.more = load_data.comments.more;
+        chatter.comments_meta.more = load_data.more;
         chatter.comments_meta.cursor = load_data.cursor;
       } else {
         console.log('Err', data);
