@@ -68,7 +68,6 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
 
   vm.loadMoreComments = function(chat){
     vm.limit = "Infinity";
-    console.log(chat.comments_meta.more)
     Chatter.loadMoreComments(chat);
   };
 
@@ -98,7 +97,6 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
   
   vm.deleteComment = function(comment){
     comment.confirmDelete = false;
-    console.log('comment', comment);
     Chatter.deleteComment(comment, vm.chat);
   };
 }
