@@ -164,6 +164,11 @@ class ChatterApi(remote.Service):
         chat['likes'] = 0
         chat['comments_count'] = len(chatter.comments)
         chat['comments'] = list()
+        comments_dict = dict()
+        comments_dict['length'] = 0
+        comments_dict['cursor'] = None
+        comments_dict['more'] = None
+        chat['comments_meta'] = comments_dict
         chat['author'] = {'first_name': request_user.first_name,
                           'last_name': request_user.last_name,
                           'prof_pic': get_image_url(request_user.prof_pic),
