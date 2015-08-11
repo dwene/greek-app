@@ -64,12 +64,11 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
     }
   };
 
-  vm.limit = 5;
+  vm.limit = 7;
 
   vm.loadMoreComments = function(chat){
-    if (chat.comments_meta.length > 20){
-      vm.limit = "Infinity";
-    }
+    vm.limit = "Infinity";
+    console.log(chat.comments_meta.more)
     Chatter.loadMoreComments(chat);
   };
 
