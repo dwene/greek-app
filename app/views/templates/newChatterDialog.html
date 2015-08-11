@@ -11,13 +11,14 @@
             <textarea id="content" ng-model="content" name="content"></textarea>
          </md-input-container>
          <br>
-         <md-checkbox class="md-primary" ng-show="me.perms == 'leadership' || me.perms == 'council'" ng-model="important" aria-label="make important">
-            Important
-         </md-checkbox>
-
-         <md-switch class="md-primary" ng-show="important === true" ng-model="sendNotifications" aria-label="send notifications">
-            Send out notification?
-         </md-switch>
+         <div layout="row">
+            <md-checkbox class="md-primary" ng-show="me.perms == 'leadership' || me.perms == 'council'" ng-model="important" aria-label="make important">
+               Important
+            </md-checkbox>
+            <md-switch class="md-primary" ng-show="important === true" ng-model="sendNotifications" aria-label="send notifications">
+               Send out notification?
+            </md-switch>
+         </div>
       </md-content>
 
    </md-content>

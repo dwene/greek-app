@@ -508,6 +508,9 @@ md-dialog .md-actions {
 md-tooltip {
   z-index: 1045;
 }
+md-switch {
+  margin: 8px;
+}
 .md-avatar {
   min-width: 40px;
   width: 40px;
