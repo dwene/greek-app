@@ -107,41 +107,6 @@ class EventsApi(remote.Service):
         PushFactory.send_notification_with_keys(notification, push_keys)
         return OutgoingMessage(error='', data=json_dump(new_event_key.urlsafe()))
 
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='check_tag_availability',
-                      http_method='POST', name='event.check_tag_availability')
-    def check_tag_availability(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        tag = json.loads(request.data)
-        if not check_availability_of_tag(tag, request_user.organization):
-            return OutgoingMessage(error=TAG_INVALID, data='')
-        return OutgoingMessage(error='', data='OK')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='rsvp',
-                      http_method='POST', name='event.rsvp')
-    def rsvp_event(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        event_data = json.loads(request.data)
-        event = ndb.Key(urlsafe=event_data['key']).get()
-        if event_data['rsvp'] == 'going':
-            if request_user.key in event.not_going:
-                event.not_going.remove(request_user.key)
-            if request_user.key not in event.going:
-                event.going.append(request_user.key)
-            event.put()
-        elif event_data['rsvp'] == 'not_going':
-            if request_user.key in event.going:
-                event.going.remove(request_user.key)
-            if request_user.key not in event.not_going:
-                event.not_going.append(request_user.key)
-            event.put()
-        return OutgoingMessage(error='', data='OK')
-
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get_events',
                       http_method='POST', name='event.get_events')
     def get_events(self, request):
@@ -153,11 +118,11 @@ class EventsApi(remote.Service):
         start_month = this_month - relativedelta(months=2)
         end_month = this_month + relativedelta(months=4)
         calendars = Calendar.query(Calendar.organization == request_user.organization,
-                                   Calendar.users == request_user.key)
+                                   Calendar.users == request_user.key).fetch(keys_only=True)
         events = Event.query(ndb.OR(Event.calendar.IN(calendars),
                                     Event.invites == request_user.key),
                              Event.time_start > start_month, Event.time_start < end_month).\
-            fetch(projection=[Event.time_start, Event.time_end, Event.title, Event.key])
+            fetch(projection=[Event.time_start, Event.time_end, Event.title])
         out_events = list()
         for event in events:
             dict_event = event.to_dict()
