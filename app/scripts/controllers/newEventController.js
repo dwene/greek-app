@@ -1,7 +1,13 @@
-App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog',
-function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog) {
+App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', 'GoogleMaps',
+function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, GoogleMaps) {
 
    routeChange();
+
+   GoogleMaps.then(
+      function(){
+         $scope.mapsLoaded = true;
+      }
+   );
 
    $scope.selectedMembers = 1;
 

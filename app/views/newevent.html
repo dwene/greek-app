@@ -1,4 +1,5 @@
-<div id="newEvent" class="container">
+<md-progress-circular md-mode="indeterminate" ng-if="!mapsLoaded" style="margin:20px auto;"></md-progress-circular>
+<div id="newEvent" class="container" ng-if="mapsLoaded">
    <div class="md-whiteframe-z1">
       <md-toolbar>
          <div class="md-toolbar-tools">
