@@ -24,14 +24,7 @@ App.directive('ngEnter', function() {
         });
         element.bind("keyup", function(event) {
             if (event.keyCode in map) {
-                map[event.keyCode] = true;
-                console.log(map)
-                if (map[16]) {
-                    map = {
-                        13: false,
-                        16: false
-                    }
-                }
+                map[event.keyCode] = false;
             }
         });
     }
