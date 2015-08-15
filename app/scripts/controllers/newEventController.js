@@ -1,16 +1,12 @@
 App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', 'GoogleMaps', 'Events',
 function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, GoogleMaps, Events) {
-
-   GoogleMaps.then(
-      function(){
-         debugger;
-         $scope.mapsLoaded = true;
-      }
-   );
-   // Events.getCalendars().then(function(){
-   //    $scope.calendars = Events.calendars;
-   //    $scope.calendarsLoaded = true;
-   // });
+   $scope.mapsLoaded = true;
+   // GoogleMaps.then(
+   //    function(){
+   //       console.log('Maps loaded in new event controller');
+         
+   //    }
+   // );
 
    $scope.event = {};
    $scope.event.tag = '';

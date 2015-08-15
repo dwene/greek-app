@@ -298,8 +298,28 @@ class EventsApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        calendars = Calendar.query(Calendar.organization == request_user.organization).fetch()
+        calendars = Calendar.query(Calendar.organization == request_user.organization,
+                                   Calendar.name.IN(['everyone', 'leadership', 'council'])).fetch()
+        user_keys = set()
+        for calendar in calendars:
+            user_keys = user_keys | set(calendar.users)
+        user_keys = list(user_keys)
+        users = User.query(User.key.IN(user_keys)).fetch(projection=[User.first_name, User.last_name, User.prof_pic])
+        user_dict = dict()
+        for user in users:
+            user_dict[user.key] = user
         calendar_list = []
         for calendar in calendars:
-            calendar_list.append(calendar.to_dict())
+            cal = calendar.to_dict()
+            users = []
+            for user in calendar.users:
+                if user_dict[user] is not None:
+                    users.append(user_dict[user].to_dict())
+            cal['users'] = users
+            calendar_list.append(cal)
+        none_cal = dict()
+        none_cal['key'] = None
+        none_cal['users'] = list()
+        none_cal['name'] = 'none'
+        calendar_list.append(none_cal)
         return OutgoingMessage(error='', data=json_dump(calendar_list))

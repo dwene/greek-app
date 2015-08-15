@@ -19,13 +19,13 @@ def list_followers(chatter):
 def format_author(author):
     if author is None:
         return {'first_name': 'Deleted',
-                 'last_name': 'User',
-                 'prof_pic': '',
-                 'key': ''}
+                'last_name': 'User',
+                'prof_pic': '',
+                'key': ''}
     return {'first_name': author.first_name,
-             'last_name': author.last_name,
-             'prof_pic': get_image_url(author.prof_pic),
-             'key': author.key}
+            'last_name': author.last_name,
+            'prof_pic': get_image_url(author.prof_pic),
+            'key': author.key}
 
 
 @chatter_api.api_class(resource_name='chatter')

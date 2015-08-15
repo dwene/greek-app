@@ -1,6 +1,4 @@
 <md-radio-group ng-model="selectMembersRadio">
-   <md-radio-button class="md-primary" value="everyone" ng-click="selectEveryone()">Everyone</md-radio-button>
-   <md-radio-button class="md-primary" value="leaders" ng-click="selectLeaders()">Leaders</md-radio-button>
-   <md-radio-button class="md-primary" value="exec" ng-click="selectCouncil()">Exec</md-radio-button>
+   <md-radio-button class="md-primary" ng-repeat="cal in calendars" value="{{cal}}">{{cal.name}}</md-radio-button>
    <md-radio-button class="md-primary" value="members" ng-click="selectingMembers()">{{selectedMembers.length}} Members Selected</md-radio-button>
 </md-radio-group>
