@@ -39,18 +39,18 @@ class EventsApi(remote.Service):
             if cal_key in organization.calendars:
                 new_event.calendar = cal_key
         new_event_key = new_event.put()
-        invites = []
-        if 'invites' in event_data:
+        individuals = []
+        if 'individuals' in event_data:
             invite_keys = []
-            for invite in event_data['invites']:
-                invite_key = ndb.Key(urlsafe=invite)
+            for individual in event_data['individuals']:
+                invite_key = ndb.Key(urlsafe=individual)
                 if invite_key.kind() is User:
                     invite_keys.append(invite_key)
-            invites = ndb.get_multi(invite_keys)
-            for invite in invites:
+            individuals = ndb.get_multi(invite_keys)
+            for invite in individuals:
                 if invite.organization is not organization.key:
-                    invites.remove(invite)
-        new_event.invites = invites
+                    individuals.remove(invite)
+        new_event.invites = individuals
         future_list = list()
         recurring = False
         if 'recurring' in event_data and event_data['recurring'] is True:
@@ -120,7 +120,8 @@ class EventsApi(remote.Service):
         calendars = Calendar.query(Calendar.organization == request_user.organization,
                                    Calendar.users == request_user.key).fetch(keys_only=True)
         events = Event.query(ndb.OR(Event.calendar.IN(calendars),
-                                    Event.invites == request_user.key),
+                                    Event.invites == request_user.key,
+                                    Event.creator == request_user.key),
                              Event.time_start > start_month, Event.time_start < end_month).\
             fetch(projection=[Event.time_start, Event.time_end, Event.title])
         out_events = list()
@@ -321,5 +322,5 @@ class EventsApi(remote.Service):
         none_cal['key'] = None
         none_cal['users'] = list()
         none_cal['name'] = 'none'
-        calendar_list.append(none_cal)
+        calendar_list.insert(0, none_cal)
         return OutgoingMessage(error='', data=json_dump(calendar_list))

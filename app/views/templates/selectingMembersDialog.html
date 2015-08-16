@@ -9,11 +9,11 @@
         <div class="md-padding no-padding-top">
           <search ng-model="search"></search>
           <md-list>
-              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member)">
+              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-disabled="member.disabled" ng-click="toggle(member)">
                   <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                   <div class="md-list-item-text compact">
                       <p>{{member.first_name}} {{member.last_name}}</p>
-                      <md-checkbox md-no-ink ng-checked="syncChecked(member)" class="md-secondary md-primary" ng-click="toggle(member);" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
+                      <md-checkbox md-no-ink ng-model="member.checked" ng-disabled="member.disabled" class="md-secondary md-primary" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
                   </div>
               </md-list-item>
           </md-list>
@@ -22,8 +22,11 @@
 
     <div class="md-actions" layout="row">
         <span flex></span>
-        <md-button class="md-primary" ng-click="hide()">
-            Done
+        <md-button class="md-secondary" ng-click="hide()">
+            Cancel
+        </md-button>
+        <md-button class="md-primary" ng-click="save()">
+            Save
         </md-button>
     </div>
 </md-dialog>

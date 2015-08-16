@@ -112,7 +112,7 @@ class Calendar(ndb.Model):
     users = ndb.KeyProperty(repeated=True)
 
 
-class Event(ndb.Model):
+class Event(ModelUtils, ndb.Model):
     calendar = ndb.KeyProperty(kind=Calendar)
     title = ndb.StringProperty()
     description = ndb.TextProperty()

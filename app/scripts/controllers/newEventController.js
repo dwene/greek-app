@@ -1,12 +1,10 @@
 App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', 'GoogleMaps', 'Events',
 function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, GoogleMaps, Events) {
-   $scope.mapsLoaded = true;
-   // GoogleMaps.then(
-   //    function(){
-   //       console.log('Maps loaded in new event controller');
-         
-   //    }
-   // );
+   GoogleMaps.then(
+      function(){
+         $scope.mapsLoaded = true;
+      }
+   );
 
    $scope.event = {};
    $scope.event.tag = '';
@@ -31,6 +29,15 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
    $scope.addEvent = function(isValid, event) {
       if (isValid) {
          var to_send = JSON.parse(JSON.stringify(event));
+         if ($scope.individuals){
+            to_send.individuals = [];
+            for (i = 0; i < $scope.individuals.length; i++){
+               to_send.individuals.push($scope.individuals[i].key);
+            }
+         }
+         if ($scope.calendar){
+            to_send.calendar = $scope.calendar.key;
+         }
          to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
          to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
          if (moment(to_send.time_end).diff(moment(to_send.time_start)) < 0) {
