@@ -96,13 +96,39 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        user = ndb.Key(urlsafe=request_object["key"]).get()
+
+        @ndb.tasklet
+        def calendars_and_user(user_key, organization):
+            calendars_fetch = Calendar.query(Calendar.organization == organization).fetch_async()
+            user_fetch = user_key.get_async()
+            usr, cal = yield user_fetch, calendars_fetch
+            raise ndb.Return((cal, usr))
+
+        calendars, user = calendars_and_user(ndb.Key(urlsafe=request_object["key"]), request_user.organization)
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
         if request_object["perms"] not in ["leadership", "council", "member"]:
             return OutgoingMessage(error=INVALID_FORMAT, data='')
         user.perms = request_object["perms"]
+        calendar_list = ["council", "leadership", "everyone", "public"]
+        if user.perms is "council":
+            None
+        elif user.perms is "leadership":
+            calendar_list = calendar_list[1:3]
+        elif user.perms is "member":
+            calendar_list = calendar_list[2:3]
+        elif user.perms is "alumni":
+            calendar_list = [calendar_list[3]]
+        futures = list()
+        for cal in calendars:
+            if cal.name in calendar_list and user.key not in cal.users:
+                cal.users.append(user.key)
+            elif cal.name not in calendar_list and user.key in cal.users:
+                cal.users.remove(user.key)
+            futures.append(cal.put_async())
         user.put()
+        for future in futures:
+            future.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/users_emails',
@@ -135,6 +161,7 @@ class RESTApi(remote.Service):
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             user.perms = 'alumni'
+
             user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -220,7 +247,6 @@ class RESTApi(remote.Service):
     def update_user_directory_info(self, request):
         user = User.query(User.user_name == request.user_name).get()
         user_data = json.loads(request.data)
-        logging.error(user_data)
         for key, value in user_data.iteritems():
             if not value and value != "":
                 continue
@@ -407,7 +433,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         img_data = data["img"]
         crop_data = json.loads(data["crop"])
-        logging.error(data["crop"])
         blob_key = set_profile_picture(request_user.user_name+'_'+id_generator(), img_data, crop_data)
         if request_user.prof_pic:
             blobstore.delete(request_user.prof_pic)

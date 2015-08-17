@@ -222,7 +222,6 @@ class AuthApi(remote.Service):
         user_to_remove = ndb.Key(urlsafe=user_info["key"]).get()
         if user_to_remove:
             # removal_email(user_to_remove)
-            logging.error('Removing user:' + user_info["key"])
             user_to_remove.key.delete()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error=INVALID_USERNAME, data='')

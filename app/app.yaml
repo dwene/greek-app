@@ -27,6 +27,10 @@ handlers:
   script: lib.python27.main.app
   secure: always
 
+- url: /goldendataset
+  script: lib.python27.developer.app
+  secure: always
+
 - url: /
   upload: index.html
   static_files: index.html

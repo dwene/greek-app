@@ -18,17 +18,16 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python27'))
+if os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'python27')) not in sys.path:
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'python27')))
 import urllib
-from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
-from google.appengine.api import taskqueue
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import images, files
 from ndbdatastore import *
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
-from apns import APNs, Frame, Payload
+from apns import APNs, Payload
 import json
 from google.appengine.api import channel
 # import braintree
@@ -36,7 +35,6 @@ import logging
 import datetime
 import jinja2
 import webapp2
-import base64, re
 from apiconfig import json_dump
 from notifications import Notifications
 
@@ -399,7 +397,6 @@ class Connected(webapp2.RequestHandler):
 
 class Disconnected(webapp2.RequestHandler):
     def post(self):
-        logging.error(self.request.get('from'))
         token = self.request.get('from')
         user = User.query(User.channel_tokens == token).get()
         user.channel_tokens.remove(token)
@@ -491,7 +488,6 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         blob_info = blobstore.BlobInfo.get(resource)
         self.send_blob(blob_info)
 
-
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/upload', UploadHandler),
@@ -502,7 +498,7 @@ app = webapp2.WSGIApplication([
     ('/_ah/channel/connected/', Connected),
     ('/_ah/channel/disconnected/', Disconnected),
     ('/tasks/channels/sendnotificationbykey/', SendNotificationByKey),
-    ('/tasks/channels/pushupdate/', PushUpdate),
+    ('/tasks/channels/pushupdate/', PushUpdate)
 
 
 ], debug=True)

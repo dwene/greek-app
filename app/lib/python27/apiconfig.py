@@ -148,7 +148,6 @@ def set_profile_picture(filename, data, crop_data):
     real_filename = '/greek-app.appspot.com/prof_pic/'+filename
     blobstore_filename = '/gs' + real_filename
     img = images.Image(image_data=image)
-    logging.error(crop_data)
     left = float(crop_data['x'])/float(crop_data['bx'])
     right = float(crop_data['x2'])/float(crop_data['bx'])
     top = float(crop_data['y'])/float(crop_data['by'])
@@ -303,6 +302,7 @@ def check_form_status(user):
         if user.address and user.state and user.dob and user.city and user.major:
             return True
         return False
+
 
 def username_available(user_name):
     if User.query(User.user_name == user_name.lower()).get():

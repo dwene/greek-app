@@ -287,7 +287,6 @@ class ChatterApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         push_keys = User.query(User.organization == request_user.organization).fetch(keys_only=True)
         data = json.loads(request.data)
-        logging.error(request.data)
         if not 'key' in data:
             return OutgoingMessage(error='Missing arguments in liking Chatter.')
         chatter = ndb.Key(urlsafe=data['key']).get()
@@ -423,8 +422,6 @@ class ChatterApi(remote.Service):
         comment = ndb.Key(urlsafe=data['key']).get()
         if not str(type(comment)).startswith('ChatterComment<'):
             return OutgoingMessage(error='Incorrect type of Key', data='')
-        logging.error(comment.author == request_user.key)
-        logging.error(is_admin(request_user))
         if not ((comment.author == request_user.key) or is_admin(request_user)):
             return OutgoingMessage(error='Incorrect Permissions', data='')
         chat = comment.chatter.get()
