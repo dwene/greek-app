@@ -279,6 +279,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
   };
 
   chatter.loadMoreComments = function(chatter){
+    var def = $q.defer();
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comments/get', {key: chatter.key, cursor: chatter.comments_meta.cursor})
     .success(function(data){
       if (!RESTService.hasErrors(data)) {
@@ -286,13 +287,17 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
         chatter.comments = chatter.comments.concat(load_data.comments);
         chatter.comments_meta.more = load_data.more;
         chatter.comments_meta.cursor = load_data.cursor;
+        def.resolve();
       } else {
         console.log('Err', data);
+        def.reject('Failed to load comments');
       }
     })
     .error(function(data){
       console.log('Error: ', data);
+      def.reject('Failed to load comments');
     });
+    return def.promise;
   }
   
   chatter.likeComment = function(comment){

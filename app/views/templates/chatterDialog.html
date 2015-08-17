@@ -61,9 +61,6 @@
             <label for="commentcontent">Edit your comment here:</label>
             <textarea id="commentcontent" nete-focus="comment.editingComment" ng-model="comment.comment_temp" name="content"></textarea>
           </md-input-container>
-          <md-list-item ng-hide="comment.timestamp">
-            <md-progress-circular md-mode="indeterminate" md-diameter="25"></md-progress-circular>
-          </md-list-item>
           <md-list-item ng-hide="comment.editingComment || !comment.timestamp" layout="row" layout-sm="column">
             <div layout="row" style="width:100%;">
               <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
@@ -96,9 +93,12 @@
           </md-toolbar>
         </div>
         <br>
-        <div class="text-center"><md-button ng-hide="!CD.chat.comments_meta.more" ng-click="CD.loadMoreComments(CD.chat)">Load More</md-button></div>
+        <div class="text-center">
+          <md-button ng-hide="!CD.chat.comments_meta.more || CD.moreCommentsLoading" ng-click="CD.loadMoreComments(CD.chat)">Load More</md-button>
+          <md-progress-circular class="md-primary" style="margin:auto;" md-mode="indeterminate" ng-show="CD.moreCommentsLoading" md-diameter="25"></md-progress-circular>
+        </div>
       </md-list>
-      <div ng-show="CD.chat.comments === undefined"><md-progress-circular class="md-primary" style="margin:auto;" md-mode="indeterminate"></md-progress-circular></div>
+      <md-progress-circular class="md-primary" style="margin:auto;" md-mode="indeterminate" ng-show="CD.chat.comments === undefined"></md-progress-circular>
     </div>
 
   </md-content>

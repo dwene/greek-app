@@ -68,7 +68,10 @@ function($scope, $mdDialog, Chatter, Session, USER_ROLES){
 
   vm.loadMoreComments = function(chat){
     vm.limit = "Infinity";
-    Chatter.loadMoreComments(chat);
+    vm.moreCommentsLoading = true;
+    Chatter.loadMoreComments(chat).then(function(){
+      vm.moreCommentsLoading = false;
+    });
   };
 
   vm.unfollowChatter = function(chat){
