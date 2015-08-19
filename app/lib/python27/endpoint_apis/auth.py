@@ -80,21 +80,8 @@ class AuthApi(remote.Service):
             user.timestamp = datetime.datetime.now()
             key = user.put()
             organization = organization_future.get_result()
-            org = dict(name=organization.name, school=organization.school)
-            org["subscribed"] = organization.subscribed
-            org["color"] = organization.color
-            org["link_groups"] = organization.link_groups
+            org = organization.to_dict()
             me = user.to_dict()
-            me['key'] = key
-            del me["hash_pass"]
-            del me["current_token"]
-            del me["organization"]
-            del me["timestamp"]
-            del me["notifications"]
-            del me["new_notifications"]
-            del me["messages"]
-            del me["new_messages"]
-            del me["archived_messages"]
             return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
                            datetime.timedelta(days=EXPIRE_TIME), 'me': me, 'organization': org}
             return OutgoingMessage(data=json_dump(return_item), error='')
@@ -104,25 +91,13 @@ class AuthApi(remote.Service):
                       http_method='POST', name='auth.token_login')
     def token_login(self, request):
         request_user = get_user(request.user_name, request.token)
-        organization = request_user.organization.get()
-        org = dict(name=organization.name, school=organization.school)
-        org["subscribed"] = organization.subscribed
-        org["color"] = organization.color
-        org["link_groups"] = organization.link_groups
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        organization = request_user.organization.get()
+        org = organization.to_dict()
         user = request_user.user_name
         token = request_user.current_token
-        me = ndb_to_dict(request_user)
-        del me["hash_pass"]
-        del me["current_token"]
-        del me["organization"]
-        del me["timestamp"]
-        del me["notifications"]
-        del me["new_notifications"]
-        del me["messages"]
-        del me["new_messages"]
-        del me["archived_messages"]
+        me = request_user.to_dict()
         to_send = json_dump({'user_name':user, 'token': token, 'me': me, 'organization': org})
         return OutgoingMessage(error='', data=to_send)
 
@@ -247,7 +222,6 @@ class AuthApi(remote.Service):
         user_to_remove = ndb.Key(urlsafe=user_info["key"]).get()
         if user_to_remove:
             # removal_email(user_to_remove)
-            logging.error('Removing user:' + user_info["key"])
             user_to_remove.key.delete()
             return OutgoingMessage(error='', data='OK')
         return OutgoingMessage(error=INVALID_USERNAME, data='')

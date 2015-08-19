@@ -148,7 +148,6 @@ def set_profile_picture(filename, data, crop_data):
     real_filename = '/greek-app.appspot.com/prof_pic/'+filename
     blobstore_filename = '/gs' + real_filename
     img = images.Image(image_data=image)
-    logging.error(crop_data)
     left = float(crop_data['x'])/float(crop_data['bx'])
     right = float(crop_data['x2'])/float(crop_data['bx'])
     top = float(crop_data['y'])/float(crop_data['by'])
@@ -222,36 +221,6 @@ def test_directory():
     return_data = json_dump({'members': user_list, 'alumni': alumni_list})
     time6 = datetime.datetime.now()
     print time6 - time1
-
-def add_notification_to_users(notification, users):
-    future_list = list()
-    for user in users:
-        user.new_notifications.insert(0, notification.key)
-        future_list.append(user.put_async())
-        if user.iphone_tokens or user.channel_tokens:
-            future_list.append(PushTask(pending=True,
-                                        content=notification.content,
-                                        ios_tokens=user.iphone_tokens,
-                                        channel_tokens=user.channel_tokens))
-    for item in future_list:
-        item.get_result()
-    taskqueue.add(url='/tasks/sendpushnotifications')
-    return
-
-def add_message_to_users(msg, users):
-    future_list = list()
-    iphone_user = False
-    for user in users:
-        future_list.append(EmailTask(pending=True, email=user.email,title=msg.title,content=msg.content).put_async())
-        user.new_messages.insert(0, msg.key)
-        future_list.append(user.put_async())
-        if user.iphone_tokens:
-            future_list.append(PushTask(pending=True, content="New Message: " + msg.title,
-                                        ios_tokens=user.iphone_tokens).put_async())
-    for item in future_list:
-        item.get_result()
-    taskqueue.add(url='/tasks/sendpushnotifications')
-    return
 
 
 def alumni_signup_email(user, organization_key, token):
@@ -333,6 +302,7 @@ def check_form_status(user):
         if user.address and user.state and user.dob and user.city and user.major:
             return True
         return False
+
 
 def username_available(user_name):
     if User.query(User.user_name == user_name.lower()).get():

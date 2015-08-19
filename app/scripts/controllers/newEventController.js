@@ -1,15 +1,10 @@
-App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', 'GoogleMaps',
-function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, GoogleMaps) {
-
-   routeChange();
-
+App.controller('newEventController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Tags', 'Directory', '$mdDialog', 'GoogleMaps', 'Events',
+function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Tags, Directory, $mdDialog, GoogleMaps, Events) {
    GoogleMaps.then(
       function(){
          $scope.mapsLoaded = true;
       }
    );
-
-   $scope.selectedMembers = 1;
 
    $scope.event = {};
    $scope.event.tag = '';
@@ -33,8 +28,16 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
 
    $scope.addEvent = function(isValid, event) {
       if (isValid) {
-         event.tags = getCheckedTags($scope.tags);
          var to_send = JSON.parse(JSON.stringify(event));
+         if ($scope.individuals){
+            to_send.individuals = [];
+            for (i = 0; i < $scope.individuals.length; i++){
+               to_send.individuals.push($scope.individuals[i].key);
+            }
+         }
+         if ($scope.calendar){
+            to_send.calendar = $scope.calendar.key;
+         }
          to_send.time_start = momentUTCTime(event.date_start + " " + event.time_start).format('MM/DD/YYYY hh:mm a');
          to_send.time_end = momentUTCTime(event.date_end + " " + event.time_end).format('MM/DD/YYYY hh:mm a');
          if (moment(to_send.time_end).diff(moment(to_send.time_start)) < 0) {
@@ -42,13 +45,9 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
             return;
          }
          if ($scope.event.recurring) {
-            if ($scope.weekly) {
-               to_send.recurring_type = "weekly";
-            } else if ($scope.monthly) {
-               to_send.recurring_type = "monthly";
-            }
+            to_send.recurring_type = "weekly";
             to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
-            to_send.reccuring = true;
+            to_send.recurring = true;
          }
          RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/create', to_send)
          .success(function(data) {
@@ -71,29 +70,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
          $scope.available = false;
       } else {
          $scope.submitted = true;
-      }
-   };
-
-   $scope.checkTagAvailability = function(tag) {
-      if (tag === "") {
-         $scope.isEmpty = true;
-      } else {
-         $scope.unavailable = false;
-         $scope.available = false;
-         $scope.isEmpty = false;
-         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/check_tag_availability', tag)
-         .success(function(data) {
-            if (!RESTService.hasErrors(data)) {
-               $scope.available = true;
-               $scope.unavailable = false;
-            } else {
-               $scope.unavailable = true;
-               $scope.available = false;
-            }
-         })
-         .error(function(data) {
-            console.log('Error: ', data);
-         });
       }
    };
 

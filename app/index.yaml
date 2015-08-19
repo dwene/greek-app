@@ -31,10 +31,31 @@ indexes:
 
 - kind: Event
   properties:
+  - name: calendar
+  - name: time_start
+  - name: time_end
+  - name: title
+
+- kind: Event
+  properties:
+  - name: creator
+  - name: time_start
+  - name: time_end
+  - name: title
+
+- kind: Event
+  properties:
   - name: going
   - name: organization
   - name: time_start
     direction: desc
+
+- kind: Event
+  properties:
+  - name: invites
+  - name: time_start
+  - name: time_end
+  - name: title
 
 - kind: Event
   properties:

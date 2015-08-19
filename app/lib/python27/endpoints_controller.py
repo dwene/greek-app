@@ -75,13 +75,6 @@ class RESTApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         user_dict = request_user.to_dict()
-        del user_dict["hash_pass"]
-        del user_dict["current_token"]
-        del user_dict["organization"]
-        del user_dict["timestamp"]
-        del user_dict["notifications"]
-        del user_dict["new_notifications"]
-        del user_dict["events"]
         if user_dict["dob"]:
             user_dict["dob"] = request_user.dob.strftime("%m/%d/%Y")
         if not user_dict["user_name"]:
@@ -103,13 +96,39 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
-        user = ndb.Key(urlsafe=request_object["key"]).get()
+
+        @ndb.tasklet
+        def calendars_and_user(user_key, organization):
+            calendars_fetch = Calendar.query(Calendar.organization == organization).fetch_async()
+            user_fetch = user_key.get_async()
+            usr, cal = yield user_fetch, calendars_fetch
+            raise ndb.Return((cal, usr))
+
+        calendars, user = calendars_and_user(ndb.Key(urlsafe=request_object["key"]), request_user.organization)
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
         if request_object["perms"] not in ["leadership", "council", "member"]:
             return OutgoingMessage(error=INVALID_FORMAT, data='')
         user.perms = request_object["perms"]
+        calendar_list = ["council", "leadership", "everyone", "public"]
+        if user.perms is "council":
+            None
+        elif user.perms is "leadership":
+            calendar_list = calendar_list[1:3]
+        elif user.perms is "member":
+            calendar_list = calendar_list[2:3]
+        elif user.perms is "alumni":
+            calendar_list = [calendar_list[3]]
+        futures = list()
+        for cal in calendars:
+            if cal.name in calendar_list and user.key not in cal.users:
+                cal.users.append(user.key)
+            elif cal.name not in calendar_list and user.key in cal.users:
+                cal.users.remove(user.key)
+            futures.append(cal.put_async())
         user.put()
+        for future in futures:
+            future.get_result()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/users_emails',
@@ -142,6 +161,7 @@ class RESTApi(remote.Service):
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             user.perms = 'alumni'
+
             user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -227,7 +247,6 @@ class RESTApi(remote.Service):
     def update_user_directory_info(self, request):
         user = User.query(User.user_name == request.user_name).get()
         user_data = json.loads(request.data)
-        logging.error(user_data)
         for key, value in user_data.iteritems():
             if not value and value != "":
                 continue
@@ -325,39 +344,25 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.tags, User.email, User.phone])
+        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.email, User.phone])
         event_list_future = Event.query(Event.organization == request_user.organization,
                                         ).fetch_async(projection=[Event.going, Event.tag])
         organization_users = organization_users_future.get_result()
         event_list = event_list_future.get_result()
         user_list = list()
         me = request_user.to_dict()
-        del me["hash_pass"]
-        del me["current_token"]
-        del me["organization"]
-        del me["timestamp"]
-        del me["notifications"]
-        del me["new_notifications"]
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
             event_tags = list()
             for event in event_list:
                 if user.key in event.going:
                     event_tags.append(event.tag)
             user_dict["event_tags"] = event_tags
-            user_dict["key"] = user.key.urlsafe()
             if user.dob:
                 user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
             else:
                 del user_dict["dob"]
-            user_dict["key"] = user.key.urlsafe()
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
             else:
@@ -371,209 +376,21 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async()
-        event_list_future = Event.query(Event.organization == request_user.organization,
-                                        ).fetch_async(projection=[Event.going, Event.tag])
-        organization_users = organization_users_future.get_result()
-        event_list = event_list_future.get_result()
+        organization_users = User.query(User.organization == request_user.organization).fetch()
         user_list = list()
-        me = request_user.to_dict()
-        del me["hash_pass"]
-        del me["current_token"]
-        del me["organization"]
-        del me["timestamp"]
-        del me["notifications"]
-        del me["new_notifications"]
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            event_tags = list()
-            for event in event_list:
-                if user.key in event.going:
-                    event_tags.append(event.tag)
-            user_dict["event_tags"] = event_tags
-            user_dict["key"] = user.key.urlsafe()
             if user.dob:
                 user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
             else:
                 del user_dict["dob"]
-            user_dict["key"] = user.key.urlsafe()
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
             else:
                 user_list.append(user_dict)
-        return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
+        return_data = json_dump({'members': user_list, 'alumni': alumni_list})
         return OutgoingMessage(error='', data=return_data)
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/query_user',
-                      http_method='POST', name='auth.query_user')
-    def query_for_user(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        json.loads(request.data);
-        user_future = User.query(User.organization == request_user.organization, User.user_name == request["user_name"]).get_async()
-        event_list_future = Event.query(Event.organization == request_user.organization,
-                                        ).fetch_async(projection=[Event.going, Event.tag])
-        user = user_future.get_result()
-        event_list = event_list_future.get_result()
-        user_dict = user.to_dict()
-        del user_dict["hash_pass"]
-        del user_dict["current_token"]
-        del user_dict["organization"]
-        del user_dict["timestamp"]
-        del user_dict["notifications"]
-        del user_dict["new_notifications"]
-        event_tags = list()
-        for event in event_list:
-            if user.key in event.going:
-                event_tags.append(event.tag)
-        user_dict["event_tags"] = event_tags
-        user_dict["key"] = user.key.urlsafe()
-        if user.dob:
-            user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
-        else:
-            del user_dict["dob"]
-        user_dict["key"] = user.key.urlsafe()
-        return_data = json_dump(user_dict)
-        return OutgoingMessage(error='', data=return_data)
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_organization_tag',
-                      http_method='POST', name='user.add_organization_tag')
-    def add_organization_tag(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
-        if not check_availability_of_tag(request_object["tag"], request_user.organization):
-            return OutgoingMessage(error=TAG_INVALID, data='')
-        organization = request_user.organization.get()
-        organization.tags.append(request_object["tag"].lower())
-        request_user.recently_used_tags.insert(0, request_object["tag"].lower())
-        if len(request_user.recently_used_tags) > 5:
-            request_user.recently_used_tags = request_user.recently_used_tags[:5]
-        org_put = organization.put_async()
-        user_put = request_user.put_async()
-        org_put.get_result()
-        user_put.get_result()
-        return OutgoingMessage(error='', data='OK')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_organization_tag',
-                      http_method='POST', name='user.remove_organization_tag')
-    def remove_organization_tag(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
-        organization = request_user.organization.get()
-        if not organization:
-            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        if request_object["tag"] in organization.tags:
-            organization.tags.remove(request_object['tag'].lower())
-            organization.put()
-            users = User.query(ndb.AND(User.tags == request_object["tag"],
-                               User.organization == request_user.organization)).fetch()
-            for user in users:
-                user.tags.remove(request_object['tag'])
-                user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error=INVALID_FORMAT, data='')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/rename_organization_tag',
-                      http_method='POST', name='user.rename_organization_tag')
-    def rename_organization_tag(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
-        organization = request_user.organization.get()
-        if not organization:
-            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        if request_object["old_tag"].lower() in organization.tags:
-            organization.tags.remove(request_object['old_tag'].lower())
-            organization.tags.append(request_object['new_tag'].lower())
-            organization.put()
-            users = User.query(ndb.AND(User.tags == request_object["old_tag"],
-                               User.organization == request_user.organization)).fetch()
-            for user in users:
-                user.tags.remove(request_object['old_tag'])
-                user.tags.append(request_object['new_tag'])
-                user.put()
-            return OutgoingMessage(error='', data='OK')
-        return OutgoingMessage(error=INVALID_FORMAT, data='')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/get_organization_tags',
-                      http_method='POST', name='user.get_organization_tags')
-    def get_organization_tags(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization = request_user.organization.get()
-        if not organization:
-            return OutgoingMessage(error='ORGANIZATION_NOT_FOUND', data='')
-        return OutgoingMessage(error='', data=json_dump({'tags': organization.tags}))
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/add_users_tags',
-                      http_method='POST', name='user.add_users_tags')
-    def add_users_tags(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
-        organization = request_user.organization.get()
-        for key in request_object["keys"]:
-            user = ndb.Key(urlsafe=key).get()
-            if not user:
-                return OutgoingMessage(error=INVALID_USERNAME, data='')
-            for tag in request_object["tags"]:
-                if tag not in user.tags and tag in organization.tags:
-                    user.tags.append(tag)
-            user.put()
-        return OutgoingMessage(error='', data='OK')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/remove_users_tags',
-                      http_method='POST', name='user.remove_users_tag')
-    def remove_users_tag(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-            return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        request_object = json.loads(request.data)
-        for key in request_object["keys"]:
-            user = ndb.Key(urlsafe=key).get()
-            if not user:
-                return OutgoingMessage(error=INVALID_USERNAME, data='')
-            for tag in request_object["tags"]:
-                if tag in user.tags:
-                    user.tags.remove(tag)
-            user.put()
-        return OutgoingMessage(error='', data='OK')
-
-    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_status',
-                      http_method='POST', name='user.update_status')
-    def update_status(self, request):
-        request_user = get_user(request.user_name, request.token)
-        if not request_user:
-            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        request_object = json.loads(request.data)
-        request_user.status = request_object['status']
-        request_user.put()
-        return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/set_iphone_token',
                       http_method='POST', name='user.set_iphone_token')
@@ -616,7 +433,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         img_data = data["img"]
         crop_data = json.loads(data["crop"])
-        logging.error(data["crop"])
         blob_key = set_profile_picture(request_user.user_name+'_'+id_generator(), img_data, crop_data)
         if request_user.prof_pic:
             blobstore.delete(request_user.prof_pic)

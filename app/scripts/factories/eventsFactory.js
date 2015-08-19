@@ -1,9 +1,30 @@
 App.factory('Events', ['RESTService', '$rootScope', 'localStorageService', '$q', '$timeout',
     function(RESTService, $rootScope, localStorageService, $q, $timeout) {
         var item = {};
+        item.calendars = [];
         item.events = localStorageService.get('events');
         item.cacheTimestamp = undefined;
 
+        item.getCalendars = function(){
+            var deferred = $q.defer();
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/calendars', '')
+                .success(function(data) {
+                    if (!RESTService.hasErrors(data)) {
+                        if (item.events != JSON.parse(data.data)) {
+                            item.calendars = JSON.parse(data.data);
+                        }
+                        deferred.resolve();
+                    } else {
+                        console.log('ERROR: ', data);
+                        deferred.reject();
+                    }
+                })
+                .error(function(data) {
+                    console.log('Error: ', data);
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
         item.get = function() {
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();

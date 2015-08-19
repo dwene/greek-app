@@ -4,90 +4,118 @@ function() {
     restrict: 'E',
     templateUrl: 'views/templates/selectingmembers.html',
     scope:{
-      selectedMembers: '=ngModel'
+      selectedCalendar: '=selectedCalendar',
+      individuals : '=selectedIndividuals'
     },
-    controller: ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog', function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog){
+    controller: ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog', 'Events','$interval',
+     function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog, Events, $interval){
 
       Directory.get();
+      $scope.$on('directory:updated', function() {
+        $scope.directory = Directory.directory;
+      });
       $scope.directory = Directory.directory;
-      $scope.selectMembersRadio = "everyone";
-
+      $scope.individuals = [];
       var directory,
       members = $scope.directory.members,
       userSelectedMembers = [],
-      membersLength = members.length,
       i;
 
-      $scope.$watch('selectMembersRadio', function(){
-        if($scope.selectMembersRadio === 'everyone'){
-          for (i=0; i < membersLength; i++){
-            members[i].checked = true;
-          }
-          getSelectedMembers();
-        }
-        if($scope.selectMembersRadio === 'leaders'){
-          for (i=0; i < membersLength; i++){
-            if(members[i].perms === 'leadership' || members[i].perms === 'council'){
-              members[i].checked = true;
-            }
-            else{
-              members[i].checked = false;
-            }
-          }
-          getSelectedMembers();
-        }
-        if($scope.selectMembersRadio === 'exec'){
-          for (i=0; i < membersLength; i++){
-            if(members[i].perms === 'council'){
-              members[i].checked = true;
-            }
-            else{
-              members[i].checked = false;
-            }
-          }
-          getSelectedMembers();
-        }
-        if($scope.selectMembersRadio === 'members'){
-          $scope.selectedMembers = userSelectedMembers;
+      Events.getCalendars().then(function(){
+        $scope.calendars = Events.calendars;
+        $scope.selectedCalendar = $scope.calendars[0];
+      });
+
+      $scope.$watch('selectedCalendar', function(){
+        console.log($scope.selectedCalendar);
+        if ($scope.calendars && $scope.directory){
+          evaluateSelectedMembers();
         }
       });
 
-      $scope.selectingMembers = function(){
+
+      function evaluateSelectedMembers(){
+        var individualMembers = $scope.individuals;
+        var calendarMembers = $scope.selectedCalendar.users;
+        $scope.selectedMembers = mergeMembers(individualMembers, calendarMembers);
+      }
+
+      function mergeMembers(a, b) {
+        usersDictionary = {}
+        for (i = 0; i < a.length; i++){
+          usersDictionary[a[i].key] = a[i];
+        }
+        for (i = 0; i < b.length; i++){
+          usersDictionary[b[i].key] = b[i];
+        }
+        var mergedMembers = [];
+        for (user in usersDictionary){
+          mergedMembers.push(usersDictionary[user]);
+        }
+        return mergedMembers;
+      };
+
+      $scope.selectIndividuals = function(){
         $mdDialog.show({
           controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
           templateUrl:'views/templates/selectingMembersDialog.html'
         });
       };
 
-      function getSelectedMembers(){
-        $scope.selectedMembers = [];
-        for (i=0; i < members.length; i++){
-          if( members[i].checked === true ){
-            $scope.selectedMembers.push(members[i]);
-          }
-          else{
-            //do nothing
+      function selectingMembersDialogController(scope, mdDialog){
+        usersDictionary = {};
+        //Start with all members
+        for (i = 0; i < $scope.directory.members.length; i++){
+          usersDictionary[$scope.directory.members[i].key] = $scope.directory.members[i];
+        }
+        //Remove users that are selected by the calendar.
+        for (i = 0; i < $scope.selectedCalendar.users.length; i++){
+          if (usersDictionary[$scope.selectedCalendar.users[i].key]){
+            usersDictionary[$scope.selectedCalendar.users[i].key].disabled = true;
+            usersDictionary[$scope.selectedCalendar.users[i].key].checked = true;
           }
         }
-      }
+        //Check members that should be checked.
+        for (i = 0; i < $scope.selectedMembers.length; i++){
+          if (usersDictionary[$scope.selectedMembers[i].key]){
+            usersDictionary[$scope.selectedMembers[i].key].checked = true;
+          }
+        }
+        //convert back to a list.
+        scope.members = [];
+        for (user in usersDictionary){
+          scope.members.push(usersDictionary[user]);
+        }
 
-      function selectingMembersDialogController(scope, mdDialog){
-        //set list of members
-        scope.members = members;
-        //load corrected checked members
-        $scope.selectedMembers = userSelectedMembers;
-        //toggle check member to invite
-        scope.toggle = function(item){
-          var idx = userSelectedMembers.indexOf(item);
-          if (idx > -1) {userSelectedMembers.splice(idx, 1);}
-          else {userSelectedMembers.push(item);}
-          userSelectedMembers = $scope.selectedMembers;
+        scope.toggle = function(user){
+          console.log('toggle');
+          if (user.checked){
+            user.checked = false;
+          }
+          else{
+            user.checked = true;
+          }
+        }
+        //Saves changes
+        scope.save = function() {
+          var individuals = [];
+          for (i = 0; i < scope.members.length; i++){
+            if (!scope.members[i].disabled && scope.members[i].checked){
+              individuals.push(scope.members[i]);
+            }
+            scope.members[i].checked = undefined;
+            scope.members[i].disabled = undefined;
+          }
+          $scope.individuals = individuals;
+          evaluateSelectedMembers();
+          mdDialog.hide();
         };
-        //check to see what should be checked
-        scope.syncChecked = function(item){
-          return userSelectedMembers.indexOf(item) > -1;
-        };
-        scope.hide = function(){
+
+        scope.hide = function() {
+          for (i = 0; i < scope.members.length; i++){
+            scope.members[i].checked = undefined;
+            scope.members[i].disabled = undefined;
+          }
           mdDialog.hide();
         };
       }

@@ -10,7 +10,7 @@
          <br>
          <md-subheader>Who is invited?</md-subheader>
 
-         <selecting-members ng-model="selectedMembers"></selecting-members>
+         <selecting-members selected-calendar="calendar" selected-individuals="individuals"></selecting-members>
 
          <form id="newEvent" name="newEvent" class="form-horizontal" role="form" novalidate>
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
@@ -72,7 +72,7 @@
             </div>
             <br>
          </form>
-         <md-button ng-click="addEvent(newEvent.$valid, event)" ng-enter="$root.doNothing()" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Submit</md-button>
+         <md-button ng-click="addEvent(newEvent.$valid, event)" ng-enter="$root.doNothing()" class="pull-right" ng-disabled="!newEvent.$valid">Submit</md-button>
       </div>
    </md-content>
 </div>
