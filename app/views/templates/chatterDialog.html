@@ -51,7 +51,7 @@
           <label for="content">Enter new comment here:</label>
           <textarea id="content" ng-model="CD.comment" name="content" ng-enter="CD.commentOnChatter(CD.chat, CD.comment)"></textarea>
         </md-input-container>
-        <md-button class="md-primary" ng-disabled="!CD.comment.length" ng-click="CD.commentOnChatter(CD.chat, CD.comment)">
+        <md-button class="md-primary md-icon-button" ng-disabled="!CD.comment.length" ng-click="CD.commentOnChatter(CD.chat, CD.comment)">
           <md-icon md-font-icon="fa-comment" class="fa"></md-icon>
         </md-button>
       </div>
