@@ -21,8 +21,15 @@
       <div class="md-toolbar-tools">
         <span class="description">Notify all members?</span>
         <span flex></span>
-        <md-button ng-click="CD.makeImportant(CD.chat, true); CD.confirmImportant = !CD.confirmImportant">Yes</md-button>
-        <md-button ng-click="CD.makeImportant(CD.chat, false); CD.confirmImportant = !CD.confirmImportant">No</md-button>
+        <md-button ng-click="CD.makeImportant(CD.chat, true); CD.confirmImportant = !CD.confirmImportant">
+          <i class="fa fa-check"></i>
+        </md-button>
+        <md-button ng-click="CD.makeImportant(CD.chat, false); CD.confirmImportant = !CD.confirmImportant">
+          <i class="fa fa-times"></i>
+        </md-button>
+        <md-button ng-click="CD.confirmImportant = !CD.confirmImportant">
+          cancel
+        </md-button>
       </div>
     </md-toolbar>
     <md-toolbar ng-show="CD.confirmDelete" class="md-warn slideDown">
