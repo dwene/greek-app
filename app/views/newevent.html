@@ -23,11 +23,9 @@
                <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
             </md-input-container>
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
-               <!--            <label for="location">Location</label>-->
                <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="event location"></input>
                <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
             </md-input-container>
-            <!--        <div class="alert alert-info" ng-show="event.location">{{event.address}}</div>-->
             <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
                <label for="date_start" class="col-xs-12 col-sm-2 control-label">Start</label>
                <div class="col-xs-6 col-sm-5">

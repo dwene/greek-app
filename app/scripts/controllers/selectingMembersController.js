@@ -1,10 +1,7 @@
 App.controller('selectingMembersController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog', 'Events',
 function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog, Events) {
-  console.log('howdy');
-  debugger;
   Events.getCalendars().then(function(){
     $scope.calendars = Events.calendars;
-    console.log('calendars', $scope.calendars);
     evaluateSelectedCalendar();
   });
   $scope.directory = Directory.directory;
@@ -14,6 +11,8 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
   userSelectedMembers = [],
   membersLength = members.length,
   i;
+
+  console.log('calendars', $scope.calendars);
 
   function evaluateSelectedCalendar(){
 

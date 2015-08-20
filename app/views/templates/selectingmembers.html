@@ -1,9 +1,7 @@
 <div ng-show="directory && calendars">
 	<md-radio-group ng-model="selectedCalendar">
 	   <md-radio-button ng-repeat="cal in calendars" class="md-primary" ng-value="cal">{{cal.name | capitalizeFirst}}</md-radio-button>
+     <md-radio-button ng-click="showSelectCustomDialog()" class="md-primary">Custom</md-radio-button>
+     <md-button ng-click="showInvitedMembersDialog()">{{selectedMembers.length}} Selected</md-button>
 	</md-radio-group>
-	<md-buttton ng-click="selectIndividuals()">ClickMe</md-buttton>
-	<div ng-repeat="member in selectedMembers">
-		{{member.first_name}} {{member.last_name}}
-	</div>
 </div>

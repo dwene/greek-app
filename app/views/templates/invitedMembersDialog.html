@@ -1,7 +1,7 @@
-<md-dialog id="selectingMembers" md-theme="{{$root.color}}" flex="80">
+<md-dialog id="invitedMembers" md-theme="{{$root.color}}" flex="80">
     <md-toolbar class="md-primary">
         <div class="md-toolbar-tools">
-            <h1>Select Members</h1>
+            <h1>Invited Members</h1>
         </div>
     </md-toolbar>
 
@@ -13,7 +13,6 @@
                   <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                   <div class="md-list-item-text compact">
                       <p>{{member.first_name}} {{member.last_name}}</p>
-                      <md-checkbox md-no-ink ng-model="member.checked" ng-disabled="member.disabled" class="md-secondary md-primary" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
                   </div>
               </md-list-item>
           </md-list>
@@ -22,11 +21,8 @@
 
     <div class="md-actions" layout="row">
         <span flex></span>
-        <md-button class="md-primary" ng-click="save()">
-            Save
-        </md-button>
         <md-button class="md-secondary" ng-click="hide()">
-            Cancel
+            close
         </md-button>
     </div>
 </md-dialog>
