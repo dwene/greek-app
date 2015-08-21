@@ -50,7 +50,6 @@ function() {
       }
 
       function mergeMembers(a, b) {
-        console.log('a', a, 'b', b);
         usersDictionary = {}
         for (i = 0; i < a.length; i++){
           usersDictionary[a[i].key] = a[i];
@@ -106,7 +105,9 @@ function() {
         //Check members that should be checked.
         for (i = 0; i < $scope.selectedMembers.length; i++){
           if (usersDictionary[$scope.selectedMembers[i].key]){
-            usersDictionary[$scope.selectedMembers[i].key].checked = true;
+            if (!usersDictionary[$scope.selectedMembers[i].key].disabled){
+              usersDictionary[$scope.selectedMembers[i].key].checked = true;
+            }
           }
         }
         //convert back to a list.
@@ -125,6 +126,9 @@ function() {
         scope.$watch('selectedCalendar.calendar', function(){
           scope.members = evaluateCalendarMembers();
         });
+        scope.selectCalendar = function(cal){
+          scope.selectedCalendar.calendar = cal;
+        }
         scope.toggle = function(user){
           if (user.checked){
             user.checked = false;
@@ -142,6 +146,9 @@ function() {
             }
             scope.members[i].checked = undefined;
             scope.members[i].disabled = undefined;
+          }
+          if (customUsers.length == 0){
+            $scope.selectedCalendar = $scope.customCalendar.calendar;
           }
           $scope.customCalendar.users = customUsers;
           $scope.custom = customUsers;
