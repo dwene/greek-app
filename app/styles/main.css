@@ -985,12 +985,17 @@ md-toolbar.md-tall {
 #chatterDialog md-toolbar.md-padding textarea {
   color: white;
 }
+@media (max-width: 380px) {
+  #chatterDialog #chatterOptions {
+    width: 168px;
+  }
+}
 #chatterDialog #chatterComments #commentInput .md-button md-icon[md-font-icon] {
   font-size: 1.2em;
   line-height: 1.2em;
 }
-#chatterDialog #confirmImportant .md-toolbar-tools .md-button {
-  width: 48px;
+#chatterDialog #confirmImportant .md-toolbar-tools .md-button i {
+  width: 30px;
 }
 #chatterDialog .followButton {
   font-size: 10px;

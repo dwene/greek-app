@@ -285,13 +285,19 @@ a:focus{text-decoration: none;}
          label{color:white;}
          textarea{color:white;}
       }
+      
+      @media (max-width: 380px){
+         #chatterOptions{
+            width:168px;
+         }
+      }
 
       #chatterComments #commentInput .md-button{
          md-icon[md-font-icon]{font-size:1.2em; line-height:1.2em;}
       }
 
       #confirmImportant{
-         .md-toolbar-tools .md-button{width:48px;}
+         .md-toolbar-tools .md-button i{width:30px;}
       }
 
       .followButton{font-size:10px;}
