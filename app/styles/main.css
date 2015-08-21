@@ -687,6 +687,9 @@ md-progress-circular.small {
   content: '*';
   color: #f44336;
 }
+.break-newline {
+  white-space: pre-wrap;
+}
 /*Striped Lists*/
 .striped [layout-margin] {
   margin: 0px;
@@ -981,9 +984,6 @@ md-toolbar.md-tall {
 }
 #chatterDialog md-toolbar.md-padding textarea {
   color: white;
-}
-#chatterDialog #chatterComments #commentInput .md-button {
-  max-height: 40px;
 }
 #chatterDialog #chatterComments #commentInput .md-button md-icon[md-font-icon] {
   font-size: 1.2em;
