@@ -687,6 +687,9 @@ md-progress-circular.small {
   content: '*';
   color: #f44336;
 }
+.break-newline {
+  white-space: pre-wrap;
+}
 /*Striped Lists*/
 .striped [layout-margin] {
   margin: 0px;

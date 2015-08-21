@@ -33,7 +33,7 @@
       </div>
     </md-toolbar>
     <div id="chatterContent" class="md-padding no-padding-bottom">
-      <h3 class="chatContent" ng-show="!CD.editing">{{CD.chat.content}}</h3>
+      <h3 class="break-newline chatContent" ng-show="!CD.editing">{{CD.chat.content}}</h3>
       <md-input-container class="slideDown" ng-show="CD.editing">
         <label for="chattercontent">Edit your chatter here:</label>
         <textarea id="chattercontent" nete-focus="CD.editing" ng-model="CD.content_temp" name="content"></textarea>
@@ -66,7 +66,7 @@
               <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
               <div class="md-list-item-text">
                 <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.edited? "Edited":""}} {{(comment.edited?comment.edited:comment.timestamp) | displayTime}}</p>
-                <h3>{{comment.content}}</h3>
+                <h3 class="break-newline">{{comment.content}}</h3>
               </div>
               <span flex></span>
               <md-button class="btn-touch md-primary heart" aria-label="like comment" ng-click="CD.likeComment(comment);" ng-hide="comment.editingComment"><i class="fa" ng-class="{'fa-heart-o': !comment.like, 'fa-heart': comment.like}"></i><span class="numberoflikes">{{comment.likes}}</span></md-button>
