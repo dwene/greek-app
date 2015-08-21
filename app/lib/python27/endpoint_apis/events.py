@@ -318,9 +318,4 @@ class EventsApi(remote.Service):
                     users.append(user_dict[user].to_dict())
             cal['users'] = users
             calendar_list.append(cal)
-        none_cal = dict()
-        none_cal['key'] = None
-        none_cal['users'] = list()
-        none_cal['name'] = 'none'
-        calendar_list.insert(0, none_cal)
         return OutgoingMessage(error='', data=json_dump(calendar_list))

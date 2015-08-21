@@ -4,8 +4,8 @@ function() {
     restrict: 'E',
     templateUrl: 'views/templates/selectingmembers.html',
     scope:{
-      selectedCalendar: '=selectedCalendar',
-      custom : '=selectedcustom'
+      selectedCalendar: '=calendar',
+      selectedIndividuals : '=custom'
     },
     controller: ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog', 'Events','$interval',
      function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog, Events, $interval){
@@ -15,32 +15,42 @@ function() {
         $scope.directory = Directory.directory;
       });
       $scope.directory = Directory.directory;
-      $scope.custom = [];
       var directory,
-      members = $scope.directory.members,
       userSelectedMembers = [],
       i;
 
+      $scope.noneCalendar = {users:[], name:'none'};
+      $scope.customCalendar = {users:[], name:'Custom', calendar:$scope.noneCalendar};
+
       Events.getCalendars().then(function(){
         $scope.calendars = Events.calendars;
-        $scope.selectedCalendar = $scope.calendars[0];
+        // $scope.selectedCalendar = $scope.calendars[0];
       });
 
       $scope.$watch('selectedCalendar', function(){
-        console.log($scope.selectedCalendar);
-        if ($scope.calendars && $scope.directory){
           evaluateSelectedMembers();
-        }
+          if ($scope.selectedCalendar !== $scope.customCalendar){
+            $scope.custom = [];
+            $scope.calendar = $scope.selectedCalendar;
+          }
       });
 
-
       function evaluateSelectedMembers(){
-        var customMembers = $scope.custom;
-        var calendarMembers = $scope.selectedCalendar.users;
-        $scope.selectedMembers = mergeMembers(customMembers, calendarMembers);
+        if ($scope.selectedCalendar === $scope.customCalendar) {
+          var customMembers = $scope.customCalendar.users;
+          var calendarMembers = $scope.customCalendar.calendar.users;
+          $scope.selectedMembers = mergeMembers(customMembers, calendarMembers);
+        }
+        else if ($scope.selectedCalendar){
+          $scope.selectedMembers = $scope.selectedCalendar.users;
+        }
+        else{
+          $scope.selectedMembers = [];
+        }
       }
 
       function mergeMembers(a, b) {
+        console.log('a', a, 'b', b);
         usersDictionary = {}
         for (i = 0; i < a.length; i++){
           usersDictionary[a[i].key] = a[i];
@@ -57,35 +67,14 @@ function() {
 
       $scope.showInvitedMembersDialog = function(){
         $mdDialog.show({
-          controller:('invitedMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
+          controller:('invitedMembersDialogController', ['$scope', '$mdDialog', invitedMembersDialogController]),
           templateUrl:'views/templates/invitedMembersDialog.html'
         });
       };
 
       function invitedMembersDialogController(scope, mdDialog){
-        usersDictionary = {};
-        //Start with all members
-        for (i = 0; i < $scope.directory.members.length; i++){
-          usersDictionary[$scope.directory.members[i].key] = $scope.directory.members[i];
-        }
-        //Remove users that are selected by the calendar.
-        for (i = 0; i < $scope.selectedCalendar.users.length; i++){
-          if (usersDictionary[$scope.selectedCalendar.users[i].key]){
-            usersDictionary[$scope.selectedCalendar.users[i].key].disabled = true;
-            usersDictionary[$scope.selectedCalendar.users[i].key].checked = true;
-          }
-        }
-        //Check members that should be checked.
-        for (i = 0; i < $scope.selectedMembers.length; i++){
-          if (usersDictionary[$scope.selectedMembers[i].key]){
-            usersDictionary[$scope.selectedMembers[i].key].checked = true;
-          }
-        }
+        scope.members = $scope.selectedMembers;
         //convert back to a list.
-        scope.members = [];
-        for (user in usersDictionary){
-          scope.members.push(usersDictionary[user]);
-        }
 
         scope.hide = function(){
           mdDialog.hide();
@@ -99,17 +88,19 @@ function() {
         });
       };
 
-      function selectingMembersDialogController(scope, mdDialog){
+      function evaluateCalendarMembers(){
         usersDictionary = {};
+
+        //get hand picked members
         //Start with all members
-        for (i = 0; i < $scope.directory.members.length; i++){
+        for (i = 0; i < $scope.directory.members.length; i++) {
+          $scope.directory.members[i].disabled = undefined;
           usersDictionary[$scope.directory.members[i].key] = $scope.directory.members[i];
         }
         //Remove users that are selected by the calendar.
-        for (i = 0; i < $scope.selectedCalendar.users.length; i++){
-          if (usersDictionary[$scope.selectedCalendar.users[i].key]){
-            usersDictionary[$scope.selectedCalendar.users[i].key].disabled = true;
-            usersDictionary[$scope.selectedCalendar.users[i].key].checked = true;
+        for (i = 0; i < $scope.customCalendar.calendar.users.length; i++){
+          if (usersDictionary[$scope.customCalendar.calendar.users[i].key]){
+            usersDictionary[$scope.customCalendar.calendar.users[i].key].disabled = true;
           }
         }
         //Check members that should be checked.
@@ -119,13 +110,22 @@ function() {
           }
         }
         //convert back to a list.
-        scope.members = [];
+        var scopeMembers = [];
         for (user in usersDictionary){
-          scope.members.push(usersDictionary[user]);
+          scopeMembers.push(usersDictionary[user]);
         }
+        return scopeMembers;
+      }
 
+      function selectingMembersDialogController(scope, mdDialog){
+        scope.calendars = $scope.calendars;
+        scope.noneCalendar = $scope.noneCalendar;
+        scope.selectedCalendar = $scope.customCalendar;
+        scope.members = evaluateCalendarMembers();
+        scope.$watch('selectedCalendar.calendar', function(){
+          scope.members = evaluateCalendarMembers();
+        });
         scope.toggle = function(user){
-          console.log('toggle');
           if (user.checked){
             user.checked = false;
           }
@@ -135,24 +135,18 @@ function() {
         }
         //Saves changes
         scope.save = function() {
-          var custom = [];
+          var customUsers = [];
           for (i = 0; i < scope.members.length; i++){
             if (!scope.members[i].disabled && scope.members[i].checked){
-              custom.push(scope.members[i]);
+              customUsers.push(scope.members[i]);
             }
             scope.members[i].checked = undefined;
             scope.members[i].disabled = undefined;
           }
-          $scope.custom = custom;
+          $scope.customCalendar.users = customUsers;
+          $scope.custom = customUsers;
+          $scope.calendar = $scope.customCalendar.calendar;
           evaluateSelectedMembers();
-          mdDialog.hide();
-        };
-
-        scope.hide = function() {
-          for (i = 0; i < scope.members.length; i++){
-            scope.members[i].checked = undefined;
-            scope.members[i].disabled = undefined;
-          }
           mdDialog.hide();
         };
       }

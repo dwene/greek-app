@@ -9,7 +9,7 @@
         <div class="md-padding no-padding-top">
           <search ng-model="search"></search>
           <md-list>
-              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member)">
+              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search">
                   <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
                   <div class="md-list-item-text compact">
                       <p>{{member.first_name}} {{member.last_name}}</p>
