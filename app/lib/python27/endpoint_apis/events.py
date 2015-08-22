@@ -121,6 +121,19 @@ class EventsApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         return OutgoingMessage(error='', data=json_dump(event.to_dict()))
 
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='getEventInfo',
+                      http_method='POST', name='event.get_event_info_by_key')
+    def get_event_info_by_key(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        event = Event.query(Event.key == ndb.Key(urlsafe=data['key'])).get()
+        if event.organization is request_user.organization:
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        return OutgoingMessage(error='', data=json_dump(event.to_dict()))
+
+
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get_events',
                       http_method='POST', name='event.get_events')
     def get_events(self, request):

@@ -1,12 +1,21 @@
-App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$q', '$mdBottomSheet', '$mdDialog', '$location', 'Events', 'Directory', 'Session',
-    function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, $mdDialog, $location, Events, Directory, Session) {
-        Events.get();
-        Directory.get();
-        $scope.going = false;
-        $scope.not_going = false;
-        $scope.loading = true;
-        var refreshed = false;
+App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$q', '$mdBottomSheet', '$mdDialog', '$timeout', '$location', 'Events', 'Directory', 'Session',
+    function($scope, RESTService, $stateParams, $rootScope, $q, $mdBottomSheet, $mdDialog, $timeout, $location, Events, Directory, Session) {
+        var vm = this;
         $scope.eventNotFound = false;
+        $scope.loading = true;
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/getEvent', {key: $stateParams.tag})
+            .success(function(data) {
+                if(!RESTService.hasErrors(data)) {
+                    vm.event = JSON.parse(data.data);
+                    setEventInfo(vm.event);
+                }
+                else{
+                    console.log('error', data);
+                }
+            })
+            .error(function(data){
+                console.log('error', data);
+            });
         $scope.goToReport = function() {
             $location.url("app/events/" + $stateParams.tag + "/report");
         }
@@ -95,75 +104,7 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
             }
             return " ";
         }
-        $scope.events = Events.events;
-        $scope.directory = Directory.directory;
-        if (Directory.check()) {
-            getEventAndSetInfo($scope.events);
-        }
-        $scope.$on('directory:updated', function() {
-            $scope.directory = Directory.directory;
-            getEventAndSetInfo($scope.events);
-        });
-        if (Events.check()) {
-            getEventAndSetInfo($scope.events);
-        }
-        $scope.$on('events:updated', function() {
-            $scope.events = Events.events;
-            getEventAndSetInfo($scope.events);
-        });
-        // function tryLoadEvent(count){
-        //     LoadEvents();
-        //     function LoadEvents(){
-        //         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_events', packageForSending(''))
-        //             .success(function(data){
-        //                 if (!checkResponseErrors(data)){
-        //                     var events = JSON.parse(data.data);
-        //                     $scope.events = events;
-        //                     getEventAndSetInfo(events, count);
-        //                 }
-        //                 else{
-        //                     console.log('ERROR: ',data);
-        //                 }
-        //             })
-        //             .error(function(data) {
-        //                 console.log('Error: ' , data);
-        //                 tryLoadEvent(count+1);
-        //             });
-        //     }
-        // }   
-        function getEventAndSetInfo(events) {
-            if ($scope.directory == null || $scope.events == null) {
-                return;
-            }
-
-            function getUsersFromKey(key) {
-                for (var i = 0; i < $scope.directory.members.length; i++) {
-                    if ($scope.directory.members[i].key == key) {
-                        return $scope.directory.members[i];
-                    }
-                }
-                return null;
-            }
-            var event = undefined;
-            for (var i = 0; i < events.length; i++) {
-                if (events[i].key == $stateParams.tag) {
-                    event = events[i];
-                    break;
-                }
-            }
-            if (event === undefined) {
-                if (!refreshed) {
-                    Events.refresh();
-                    refreshed = true;
-                    console.log('refreshing events');
-                    return;
-                } else {
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
-                    return;
-                }
-            }
-            $scope.creator = getUsersFromKey(event.creator);
+        function setEventInfo(event){
             $scope.event = event;
             if ($scope.event.address) {
                 $scope.address_html = $scope.event.address.split(' ').join('+');
@@ -175,44 +116,9 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
             $scope.time_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY hh:mm A');
             $scope.loading = false;
             $scope.eventNotFound = false;
-
-            setTimeout(function() {
-                $('.container').trigger('resize');
-                console.log('resizing')
-            }, 800);
         }
         $scope.editEvent = function() {
             $location.path('#/app/events/' + $stateParams.tag + '/edit');
-        }
-        $scope.rsvp = function(rsvp) {
-            console.log($scope.event.key);
-            var to_send = {
-                key: $scope.event.key
-            };
-            console.log("what is going on");
-            if (rsvp) {
-                to_send.rsvp = 'going';
-            } else {
-                to_send.rsvp = 'not_going';
-            }
-            to_send.key = $scope.event.key;
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/rsvp', to_send)
-                .success(function(data) {
-                    if (!RESTService.hasErrors(data)) {
-                        if (rsvp) {
-                            $scope.going = true;
-                            $scope.not_going = false;
-                        } else {
-                            $scope.going = false;
-                            $scope.not_going = true;
-                        }
-                    } else {
-                        console.log('ERROR: ', data);
-                    }
-                })
-                .error(function(data) {
-                    console.log('Error: ', data);
-                });
         }
         $scope.formatDate = function(date) {
             return moment(date).format('h:mma dddd, MMMM Do');
