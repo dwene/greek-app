@@ -4,29 +4,64 @@ function() {
     restrict: 'E',
     templateUrl: 'views/templates/selectingmembers.html',
     scope:{
-      selectedCalendar: '=calendar',
-      selectedIndividuals : '=custom'
+      selectedCalendar: '=',
+      selectedIndividuals: '=custom',
+      inputCalendar: '=?'
     },
     controller: ['$scope', 'RESTService', '$rootScope', '$timeout', '$location', 'localStorageService', 'Directory', '$mdDialog', 'Events','$interval',
-     function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog, Events, $interval){
-
-      Directory.get();
-      $scope.$on('directory:updated', function() {
-        $scope.directory = Directory.directory;
-      });
+      function($scope, RESTService, $rootScope, $timeout, $location, localStorageService, Directory, $mdDialog, Events, $interval){
       $scope.directory = Directory.directory;
       var directory,
       userSelectedMembers = [],
-      i;
-
+      i,
+      j;
       $scope.noneCalendar = {users:[], name:'none'};
       $scope.customCalendar = {users:[], name:'Custom', calendar:$scope.noneCalendar};
 
       Events.getCalendars().then(function(){
         $scope.calendars = Events.calendars;
-        // $scope.selectedCalendar = $scope.calendars[0];
+        setupInputCalendar();
       });
-
+      $scope.$watch('inputCalendar', function(){
+        setupInputCalendar();
+      })
+      function setupInputCalendar(){
+        if ($scope.directory && $scope.calendars && $scope.inputCalendar){
+          var calendar, 
+          users = [];
+          for (i = 0; i < $scope.calendars.length; i++){
+            if ($scope.calendars[i].key === $scope.inputCalendar.calendar) {
+              calendar = $scope.calendars[i];
+            }
+          }
+          if ($scope.inputCalendar.users){
+            for (i = 0; i < $scope.inputCalendar.users; i++){
+              for (j = 0 ; j < $scope.directory.length; j++){
+                if ($scope.inputCalendar.users[i] === $scope.directory[i].key){
+                  users.push($scope.directory[i]);
+                }
+              }
+            }
+          }
+          if (users.length > 0){
+            $scope.customCalendar.calendar = calendar;
+            $scope.customCalendar.users = users;
+            $scope.selectedCalendar = $scope.customCalendar;
+            $scope.calendar = calendar;
+            $scope.custom = users;
+          }
+          else{
+            $scope.custom = [];
+            $scope.selectedCalendar = calendar;
+            $scope.calendar = calendar;
+          }
+        }
+      }
+      Directory.get();
+      $scope.$on('directory:updated', function() {
+        $scope.directory = Directory.directory;
+        setupInputCalendar();
+      });
       $scope.$watch('selectedCalendar', function(){
           evaluateSelectedMembers();
           if ($scope.selectedCalendar !== $scope.customCalendar){

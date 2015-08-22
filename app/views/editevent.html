@@ -9,11 +9,11 @@
     </md-toolbar>
     <md-content class="md-padding no-padding-top">
     <br>
-    <selecting-users tags="tags" local-tags="true"></selecting-users>
+    <selecting-members selected-calendar="calendar" selected-individuals="individuals" input-calendar="inputCalendar"></selecting-members>
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
-            <input name="title" ng-model="event.title"></input>
+            <input name="title" ng-model="event.title"/>
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
         </md-input-container>    
         <div class="form-group" ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
@@ -22,10 +22,9 @@
         </div> 
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
             <label for="location">Location</label>
-            <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"></input>
+            <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"/>
             <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
         </md-input-container> 
-<!--        <div class="alert alert-info" ng-show="event.location">{{event.address}}</div>-->
         <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
             <label for="date_start" class="col-xs-12 col-sm-2 control-label">Start</label>
             <div class="col-xs-6 col-sm-5">
@@ -74,8 +73,6 @@
         <md-button id="deleteEventButton" type="button" ng-click="openDeleteEventModal()" class="md-warn">Delete Event</md-button>
         <md-button type="submit" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Save</md-button>
     </form>
-    
- 
 </md-content>
 </div>
 </div>

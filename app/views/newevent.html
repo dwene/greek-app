@@ -1,5 +1,5 @@
-<md-progress-circular md-mode="indeterminate" ng-if="!mapsLoaded" style="margin:20px auto;"></md-progress-circular>
-<div id="newEvent" class="container" ng-if="mapsLoaded">
+<md-progress-circular md-mode="indeterminate" ng-show="!mapsLoaded" style="margin:20px auto;"></md-progress-circular>
+<div id="newEvent" class="container" ng-show="mapsLoaded">
    <div class="md-whiteframe-z1">
       <md-toolbar>
          <div class="md-toolbar-tools">
@@ -15,7 +15,7 @@
          <form id="newEvent" name="newEvent" class="form-horizontal" role="form" novalidate>
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
                <label for="title">Event Name</label>
-               <input name="title" ng-model="event.title" required></input>
+               <input name="title" ng-model="event.title" required/>
                <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
             </md-input-container>
             <md-input-container ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
@@ -23,7 +23,7 @@
                <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
             </md-input-container>
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
-               <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="event location"></input>
+               <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="event location"/>
                <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
             </md-input-container>
             <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">

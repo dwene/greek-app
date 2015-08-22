@@ -8,7 +8,9 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
 
    $scope.event = {};
    $scope.event.tag = '';
-
+   $scope.$watch('calendar', function(){
+      console.log('calendar changed', $scope.calendar);
+   })
    $scope.querySearch = querySearch();
    $scope.searchText = null;
 
@@ -35,6 +37,7 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
                to_send.individuals.push($scope.individuals[i].key);
             }
          }
+         console.log($scope.calendar);
          if ($scope.calendar){
             to_send.calendar = $scope.calendar.key;
          }
@@ -49,6 +52,7 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
             to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
             to_send.recurring = true;
          }
+         console.log('to_send', to_send);
          RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/create', to_send)
          .success(function(data) {
             if (!RESTService.hasErrors(data)) {
