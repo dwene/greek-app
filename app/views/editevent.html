@@ -9,7 +9,7 @@
     </md-toolbar>
     <md-content class="md-padding no-padding-top">
     <br>
-    <selecting-members selected-calendar="calendar" selected-individuals="individuals" input-calendar="inputCalendar"></selecting-members>
+    <selecting-members selected-calendar="calendar" selected-individuals="individuals" input-calendar="vm.inputCalendar"></selecting-members>
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
@@ -17,7 +17,7 @@
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
         </md-input-container>    
         <div class="form-group" ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
-            <textarea class="form-control" id="description" rows="6" name="description" ng-model="event.description" placeholder="Enter your event description here: We are going bowling! Yay!"></textarea>
+            <textarea class="form-control" id="description" rows="6" name="description" ng-model="vm.event.description" placeholder="Enter your event description here: We are going bowling! Yay!"></textarea>
             <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
         </div> 
         <md-input-container ng-if="mapsLoaded" class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
@@ -70,25 +70,8 @@
         
         <br>
         <md-button id="deleteEventButton" type="button" ng-click="openDeleteEventModal()" class="md-warn">Delete Event</md-button>
-        <md-button type="submit" class="pull-right" ng-disabled="!selectedMembers.length || !newEvent.$valid ||( working && working != 'broken')">Save</md-button>
+        <md-button type="submit" class="pull-right" ng-disabled="!newEvent.$valid">Save</md-button>
     </form>
 </md-content>
 </div>
 </div>
-
-
-<div class="modal fade" id="deleteEventModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Delete this event?</h4>
-        <button type="button" class="btn btn-primary" ng-click="deleteEvent()">Delete</button>
-      </div>
-<!--
-      <div class="modal-footer">
-      </div>
--->
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

@@ -131,6 +131,15 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
                 if (moment(to_send.time_end).diff(moment(to_send.time_start)) < 0) {
                     return;
                 }
+                if ($scope.calendar){
+                    to_send.calendar = $scope.calendar.key;
+                }
+                to_send.invites = [];
+                if ($scope.individuals){
+                    for (i = 0; i < $scope.individuals.length; i++){
+                        to_send.invites.push($scope.individuals[i].key);
+                    }
+                }
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/edit_event', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {

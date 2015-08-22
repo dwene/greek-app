@@ -154,49 +154,39 @@ class EventsApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_data = json.loads(request.data)
         event = ndb.Key(urlsafe=request_data['key']).get()
-        if event.organization != request_user.organization or event.kind() is not Event:
+        if event.organization != request_user.organization or event is None:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        change = False
         for key, value in request_data.iteritems():
             if key == 'time_start':
                 if not event.time_start == datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p'):
                     event.time_start = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
-                    change = True
             elif key == 'time_end':
                 if not event.time_end == datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p'):
                     event.time_end = datetime.datetime.strptime(value, '%m/%d/%Y %I:%M %p')
-                    change = True
             elif key == 'title':
                 if not event.title == value:
                     event.title = value
-                    change = True
             elif key == 'description':
                 if not event.description == value:
                     event.description = value
-                    change = True
             elif key == 'location':
                 if not event.location == value:
                     event.location = value
-                    change = True
             elif key == 'address':
                 if not event.address == value:
                     event.address = value
-                    change = True
-        futures = list()
-        futures.append(event.put_async())
-        if change:
-            users = get_users_from_tags({'org_tags': event.org_tags, 'perms_tags': event.perms_tags},
-                                        request_user.organization, False)
-            notification = Notification()
-            notification.type = 'event'
-            notification.content = request_user.first_name + ' ' + request_user.last_name +' updated the event: ' + event.title
-            notification.sender = request_user.key
-            notification.timestamp = datetime.datetime.now()
-            notification.link = 'app/events/'+event.key.urlsafe()
-            notification.put()
-            Notifications.add_notification_to_users(notification, users, {'type': 'event', 'key': event.key})
-            for item in futures:
-                item.get_result()
+            elif key == 'calendar':
+                cal = ndb.Key(urlsafe=value)
+                if not event.calendar is cal:
+                    event.calendar = cal
+            elif key == 'invites':
+                invitations = list()
+                for invite in value:
+                    inv = ndb.Key(urlsafe=invite)
+                    if inv is not None:
+                        invitations.append(inv)
+                event.invites = invitations
+        event.put()
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get_check_in_info',
