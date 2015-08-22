@@ -1,5 +1,4 @@
-<md-progress-circular md-mode="indeterminate" ng-show="!mapsLoaded" style="margin:20px auto;"></md-progress-circular>
-<div id="newEvent" class="container" ng-show="mapsLoaded">
+<div id="newEvent" class="container">
    <div class="md-whiteframe-z1">
       <md-toolbar>
          <div class="md-toolbar-tools">
@@ -22,7 +21,8 @@
                <textarea id="description" name="description" rows="6" ng-model="event.description" placeholder="Enter your event description here:"></textarea>
                <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
             </md-input-container>
-            <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
+
+            <md-input-container ng-if="mapsLoaded" class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
                <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="event location"/>
                <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
             </md-input-container>

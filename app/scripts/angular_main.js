@@ -311,7 +311,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.editEvent',{
                     url : '/events/:tag/edit',
                     templateUrl : 'views/editevent.html',
-                    controller : 'editEventsController',
+                    controller : 'editEventsController as vm',
                     data: {
                         permissions: {
                             only: [LEADERSHIP],

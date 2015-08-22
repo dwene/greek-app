@@ -52,6 +52,7 @@
   <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="../bower_components/angular-permission/dist/angular-permission.js"></script>
   <script src="../bower_components/ngCordova/dist/ng-cordova.js"></script>
+
   <!-- endbower -->
   <script src="scripts/vendor/angular-ui.js"></script>
   <script src="scripts/vendor/jquery.cookie.js"></script>
@@ -90,7 +91,6 @@
 <script type="text/javascript" src="scripts/vendor/ng-google-chart.js"></script>
 <script type="text/javascript" src="scripts/vendor/angular-local-storage.js"></script>
 <script type="text/javascript" src="scripts/vendor/jsapi.js"></script>
-<script type="text/javascript" src="scripts/nete_greek_logo.js"></script>
 <script type="text/javascript" src="scripts/vendor/angulartics.js"></script>
 <script type="text/javascript" src="scripts/vendor/angulartics-ga.js"></script>
 <script type="text/javascript" src="scripts/controllers/accountInfoController.js"></script>
@@ -118,7 +118,6 @@
 <script type="text/javascript" src="scripts/controllers/manageMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/memberProfileController.js"></script>
 <script type="text/javascript" src="scripts/controllers/memberDirectoryController.js"></script>
-<script type="text/javascript" src="scripts/controllers/memberTagsController.js"></script>
 <script type="text/javascript" src="scripts/controllers/messagingController.js"></script>
 <script type="text/javascript" src="scripts/controllers/navigationController.js"></script>
 <script type="text/javascript" src="scripts/controllers/newEventController.js"></script>
@@ -133,7 +132,6 @@
 <script type="text/javascript" src="scripts/controllers/registerController.js"></script>
 <script type="text/javascript" src="scripts/controllers/registerInfoController.js"></script>
 <script type="text/javascript" src="scripts/controllers/registerUserController.js"></script>
-<script type="text/javascript" src="scripts/controllers/selectingMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/uploadImageController.js"></script>
 <script type="text/javascript" src="scripts/controllers/pollController.js"></script>
 <script type="text/javascript" src="scripts/controllers/messageDialogController.js"></script>
@@ -217,7 +215,7 @@
           </div>
         </md-toolbar>
         <md-content>
-          <md-tabs md-selected="menu.selectedIndex" class="md-primary" md-stretch-tabs="always" md-swipe-content="true" md-theme-watch>
+          <md-tabs md-selected="menu.selectedIndex" class="md-primary" md-stretch-tabs="always" md-center-tabs="true" md-swipe-content="true" md-theme-watch>
             <md-tab id="menuTab" aria-controls="menuTab-content">
               Menu
             </md-tab>

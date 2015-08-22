@@ -1,19 +1,26 @@
-App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$q', '$timeout', '$location', '$mdDialog', 'Directory', 'Events',
-    function($scope, RESTService, $stateParams, $rootScope, $q, $timeout, $location, $mdDialog, Directory, Events) {
+App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$q', '$timeout', '$location', '$mdDialog', 'Directory', 'Events', 'GoogleMaps',
+    function($scope, RESTService, $stateParams, $rootScope, $q, $timeout, $location, $mdDialog, Directory, Events, GoogleMaps) {
         $scope.loading = true;
+        var vm = this;
+        GoogleMaps.then(
+          function(){
+            $scope.mapsLoaded = true;
+          }
+        );
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/getEvent', {key: $stateParams.tag})
-                    .success(function(data) {
-                        if(!RESTService.hasErrors(data)) {
-                            setEventInfo(JSON.parse(data.data));
-                        }
-                        else{
-                            console.log('error', data);
-                        }
-                        
-                    })
-                    .error(function(data){
-                        console.log('error', data);
-                    });
+            .success(function(data) {
+                if(!RESTService.hasErrors(data)) {
+
+                    vm.event = JSON.parse(data.data);
+                    setEventInfo(vm.event);
+                }
+                else{
+                    console.log('error', data);
+                }
+            })
+            .error(function(data){
+                console.log('error', data);
+            });
         //prevent form from submitting on enter
         $('#newEvent').bind("keyup keypress", function(e) {
             var code = e.keyCode || e.which;
@@ -105,13 +112,11 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
 
         function setEventInfo(event) {
             $scope.event = event;
-            console.log('event', $scope.event);
-            $scope.inputCalendar = {users: $scope.event.invites, calendar: $scope.event.calendar};
-            console.log('$scope.inputCalendar', $scope.inputCalendar);
-            $scope.time_start = momentInTimezone($scope.event.time_start).format('h:mm A');
-            $scope.date_start = momentInTimezone($scope.event.time_start).format('MM/DD/YYYY');
-            $scope.time_end = momentInTimezone($scope.event.time_end).format('h:mm A');
-            $scope.date_end = momentInTimezone($scope.event.time_end).format('MM/DD/YYYY');
+            vm.inputCalendar = {users: vm.event.invites, calendar: vm.event.calendar};
+            $scope.time_start = momentInTimezone(vm.event.time_start).format('h:mm A');
+            $scope.date_start = momentInTimezone(vm.event.time_start).format('MM/DD/YYYY');
+            $scope.time_end = momentInTimezone(vm.event.time_end).format('h:mm A');
+            $scope.date_end = momentInTimezone(vm.event.time_end).format('MM/DD/YYYY');
             $scope.loading = false;
             $timeout(function() {
                 $('.picker').trigger('change')
@@ -124,11 +129,8 @@ App.controller('editEventsController', ['$scope', 'RESTService', '$stateParams',
                 to_send.time_start = momentUTCTime($scope.date_start + " " + $scope.time_start).format('MM/DD/YYYY hh:mm a');
                 to_send.time_end = momentUTCTime($scope.date_end + " " + $scope.time_end).format('MM/DD/YYYY hh:mm a');
                 if (moment(to_send.time_end).diff(moment(to_send.time_start)) < 0) {
-                    $scope.time_broken = true;
                     return;
                 }
-                to_send.tags = getCheckedTags($scope.tags);
-                console.log(to_send.tags);
                 RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/edit_event', to_send)
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {

@@ -37,7 +37,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
                to_send.individuals.push($scope.individuals[i].key);
             }
          }
-         console.log($scope.calendar);
          if ($scope.calendar){
             to_send.calendar = $scope.calendar.key;
          }

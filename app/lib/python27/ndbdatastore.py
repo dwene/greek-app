@@ -105,7 +105,7 @@ class Message(ndb.Model):
     timestamp = ndb.DateTimeProperty()
 
 
-class Calendar(ndb.Model):
+class Calendar(ModelUtils, ndb.Model):
     organization = ndb.KeyProperty()
     name = ndb.StringProperty()
     color = ndb.StringProperty()

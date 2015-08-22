@@ -13,16 +13,15 @@
     <form id="newEvent" name="newEvent" ng-submit="submitEdits(newEvent.$valid)" class="form-horizontal" role="form" novalidate>
         <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)}">
             <label for="title">Event Name</label>
-            <input name="title" ng-model="event.title"/>
+            <input name="title" ng-model="vm.event.title"/>
             <p ng-show="(newEvent.title.$invalid && !newEvent.title.$pristine) || (newEvent.title.$invalid && submitted)" class="help-block">Please enter a title.</p>
         </md-input-container>    
         <div class="form-group" ng-class="{ 'md-input-invalid' : (newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)}">
             <textarea class="form-control" id="description" rows="6" name="description" ng-model="event.description" placeholder="Enter your event description here: We are going bowling! Yay!"></textarea>
             <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
         </div> 
-        <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
-            <label for="location">Location</label>
-            <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location"/>
+        <md-input-container ng-if="mapsLoaded" class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
+            <input name="location" ng-autocomplete options="options" address="vm.event.address" details="details" ng-model="vm.event.location"/>
             <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
         </md-input-container> 
         <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">
@@ -76,8 +75,6 @@
 </md-content>
 </div>
 </div>
-
-
 
 
 <div class="modal fade" id="deleteEventModal">
