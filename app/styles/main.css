@@ -586,11 +586,6 @@ md-sidenav {
 md-sidenav md-toolbar .md-header {
   background-color: rgba(0, 0, 0, 0) !important;
 }
-#notifications .md-button {
-  font-size: 14px;
-  line-height: 14px;
-  padding: 0px 8px;
-}
 md-divider {
   margin-bottom: 20px;
 }
@@ -1317,8 +1312,18 @@ md-toolbar.md-tall {
 #newEvent md-radio-group md-radio-button {
   display: inline-block;
 }
-#notifications md-item {
-  font-size: 14px;
+#notifications md-list-item {
+  font-size: 12px;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+#notifications md-list-item .md-button {
+  padding: 10px;
+  font-size: 12px;
+  line-height: 15px;
+}
+#notifications md-list-item .md-button .md-list-item-inner {
+  min-height: 0;
 }
 md-dialog .md-subheader {
   font-size: 18px;
