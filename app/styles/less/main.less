@@ -210,7 +210,10 @@ a:focus{text-decoration: none;}
     .itemList{
         md-list-item{position:relative; overflow:hidden; -webkit-backface-visibility: hidden;}
         md-list-item:not(:last-child){border-bottom:1px solid #ccc;}
-        md-list-item.md-padding{padding:8px;}
+        md-list-item.md-padding{
+            padding: 0;
+            .md-button{padding:8px;}
+        }
 
     }
 
@@ -349,8 +352,10 @@ a:focus{text-decoration: none;}
 
     #events{
         #calendar{
-            .calendar-header{padding-top:2px; margin-bottom:10px;}
-            md-content{padding-bottom:0px;}
+            > md-content{padding-top:8px;}
+            .calendar-header{padding:0;}
+            .nav-left{left:8px;}
+            .nav-right{right:8px;}
             #monthView{
                 md-toolbar{min-height:48px;
                     .md-toolbar-tools{height:48px; min-height:0px;
@@ -363,11 +368,12 @@ a:focus{text-decoration: none;}
             md-toolbar{height:auto; min-height:0px;}
         }
         .md-list-item-text{
-            h3{font-weight:bold; line-height:1.2em; margin-bottom:4px;
+            width:100%;
+            h3{line-height:1.2em; margin-bottom:4px;
                 word-wrap: break-word;
                 word-break: break-word;
             }
-            p{color:#ccc; line-height:1.2em;}
+            p{color:#575757; line-height:1.2em; font-size:14px; text-align:right;}
         }
     }
 

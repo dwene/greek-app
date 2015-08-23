@@ -856,6 +856,9 @@ md-toolbar.md-tall {
   border-bottom: 1px solid #ccc;
 }
 .itemList md-list-item.md-padding {
+  padding: 0;
+}
+.itemList md-list-item.md-padding .md-button {
   padding: 8px;
 }
 .chatterList .listItem {
@@ -1125,12 +1128,17 @@ md-toolbar.md-tall {
 #messaging md-toolbar {
   min-height: 0px;
 }
-#events #calendar .calendar-header {
-  padding-top: 2px;
-  margin-bottom: 10px;
+#events #calendar > md-content {
+  padding-top: 8px;
 }
-#events #calendar md-content {
-  padding-bottom: 0px;
+#events #calendar .calendar-header {
+  padding: 0;
+}
+#events #calendar .nav-left {
+  left: 8px;
+}
+#events #calendar .nav-right {
+  right: 8px;
 }
 #events #calendar #monthView md-toolbar {
   min-height: 48px;
@@ -1147,16 +1155,20 @@ md-toolbar.md-tall {
   height: auto;
   min-height: 0px;
 }
+#events .md-list-item-text {
+  width: 100%;
+}
 #events .md-list-item-text h3 {
-  font-weight: bold;
   line-height: 1.2em;
   margin-bottom: 4px;
   word-wrap: break-word;
   word-break: break-word;
 }
 #events .md-list-item-text p {
-  color: #ccc;
+  color: #575757;
   line-height: 1.2em;
+  font-size: 14px;
+  text-align: right;
 }
 #eventInfo md-toolbar {
   padding: 8px 16px 8px 70px;
