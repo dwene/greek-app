@@ -31,45 +31,43 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
             });
         }
 
-        function eventOptionsCtrl($scope, $mdBottomSheet, $mdDialog) {
-            $scope.items = [{
-                name: 'CHECKINS',
-                icon: 'fa-sign-in'
-            }, {
-                name: 'REPORT',
-                icon: 'fa-bar-chart'
-            }, {
-                name: 'EDIT',
-                icon: 'fa-edit'
-            }, {
-                name: 'SAVE',
-                icon: 'fa-floppy-o'
-            }];
-            $scope.itemClick = function(item) {
-                switch (item.name) {
-                    case 'CHECKINS':
-                        $location.url("app/events/" + $stateParams.tag + "/checkin");
-                        break;
-                    case 'REPORT':
-                        $location.url("app/events/" + $stateParams.tag + "/report");
-                        break;
-                    case 'EDIT':
-                        $location.url('app/events/' + $stateParams.tag + '/edit');
-                        break;
-                    case 'SAVE':
-                        saveEvent();
-                        break;
-                }
-                $mdDialog.hide();
-            }
-            $scope.closeDialog = function() {
-                $mdDialog.hide();
-            }
-        };
+        // function eventOptionsCtrl($scope, $mdBottomSheet, $mdDialog) {
+        //     $scope.items = [{
+        //         name: 'CHECKINS',
+        //         icon: 'fa-sign-in'
+        //     }, {
+        //         name: 'REPORT',
+        //         icon: 'fa-bar-chart'
+        //     }, {
+        //         name: 'EDIT',
+        //         icon: 'fa-edit'
+        //     }, {
+        //         name: 'SAVE',
+        //         icon: 'fa-floppy-o'
+        //     }];
+        //     $scope.itemClick = function(item) {
+        //         switch (item.name) {
+        //             case 'CHECKINS':
+        //                 $location.url("app/events/" + $stateParams.tag + "/checkin");
+        //                 break;
+        //             case 'REPORT':
+        //                 $location.url("app/events/" + $stateParams.tag + "/report");
+        //                 break;
+        //             case 'EDIT':
+        //                 $location.url('app/events/' + $stateParams.tag + '/edit');
+        //                 break;
+        //             case 'SAVE':
+        //                 saveEvent();
+        //                 break;
+        //         }
+        //         $mdDialog.hide();
+        //     }
+        //     $scope.closeDialog = function() {
+        //         $mdDialog.hide();
+        //     }
+        // };
 
-
-
-        function saveEvent() {
+        $scope.saveEvent = function() {
             /*BEGIN:VCALENDAR
                 VERSION:2.0
                 BEGIN:VEVENT

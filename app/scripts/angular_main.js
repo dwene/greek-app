@@ -1163,7 +1163,7 @@ App.filter('capitalizeFirst', function() {
         if (objects) {
             return objects[0].toUpperCase() + objects.slice(1);
         }
-        return retList;
+        return objects;
     };
 });
 
