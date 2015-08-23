@@ -1,5 +1,6 @@
 <div ng-show="eventInfo.eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
 <md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>
+
 <div ng-hide="eventInfo.eventNotFound || loading" id="eventInfo" class="container">
     <div class="md-whiteframe-z1">
         <md-toolbar layout="row" layout-align="center center">
@@ -29,25 +30,22 @@
                     </md-menu-content>
                 </md-menu>
             </div>
-            <md-button id="back" class="md-fab lower md-warn md-hue-3" aria-label="back" ng-click="back()">
+            <md-button id="back" class="md-fab lower md-warn md-hue-3" aria-label="back" ng-click="eventInfo.back()">
                 <i class="fa fa-arrow-left"></i>
             </md-button>
         </md-toolbar>
 
         <md-content class="md-padding">
-
             <div ng-show="eventInfo.event.time_start || eventInfo.event.time_end" id="time">
                 <md-subheader>When?</md-subheader>
                 <p>{{eventInfo.formatDate(time_start)}} &mdash; {{eventInfo.formatDate(time_end)}}</p>
             </div>
-
             <div ng-show="eventInfo.event.location" id="location">
                 <md-subheader>Where?</md-subheader>
                 <a ng-href="https://www.google.com/maps/place/{{eventInfo.address_html}}" target="_blank">
                     <p>{{eventInfo.event.location}}</p>
                 </a>
             </div>
-
             <div ng-show="eventInfo.event.description" id="description">
                 <md-subheader>What?</md-subheader>
                 <p class="preText">{{eventInfo.event.description}}</p>
@@ -55,5 +53,4 @@
         </md-content>
 
     </div>
-
 </div>
