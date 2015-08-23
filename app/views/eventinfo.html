@@ -1,18 +1,29 @@
-<div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
+<div ng-show="eventInfo.eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>
 <md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>
-<div ng-hide="eventNotFound || loading" id="eventInfo" class="container">
+<div ng-hide="eventInfo.eventNotFound || loading" id="eventInfo" class="container">
     <div class="md-whiteframe-z1">
         <md-toolbar layout="row" layout-align="center center">
             <div class="md-toolbar-tools">
                 <i class="fa fa-calendar"></i>
-                <h1>{{event.title}}</h1>
+                <h1>{{eventInfo.event.title}}</h1>
                 <div flex></div>
-                <md-menu>
-                    <md-button class="btn-touch" aria-label="Open menu options menu" md-menu-origin><i class="fa fa-ellipsis-h"></i></md-button>
-                    <md-menu-content width="3">
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="btn-touch" aria-label="open menu" md-menu-origin ng-click="eventInfo.openMenu($mdOpenMenu, $event)"><i class="fa fa-ellipsis-h"></i></md-button>
+                    <md-menu-content width="4">
                         <md-menu-item>
-                          <md-button ng-click="saveEvent()">
-                            Save
+                            <md-button ng-click="eventInfo.editEvent()"  md-menu-align-target>
+                              <div layout="row">
+                                  <p flex>Edit</p>
+                                  <md-icon class="fa fa-pencil-square-o"></md-icon>
+                              </div>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                          <md-button ng-click="eventInfo.saveEvent()">
+                            <div layout="row">
+                                <p flex>Save</p>
+                                <md-icon class="fa fa-floppy-o"></md-icon>
+                            </div>
                           </md-button>
                         </md-menu-item>
                     </md-menu-content>
@@ -25,21 +36,21 @@
 
         <md-content class="md-padding">
 
-            <div ng-show="event.time_start || event.time_end" id="time">
+            <div ng-show="eventInfo.event.time_start || eventInfo.event.time_end" id="time">
                 <md-subheader>When?</md-subheader>
-                <p>{{formatDate(time_start)}} &mdash; {{formatDate(time_end)}}</p>
+                <p>{{eventInfo.formatDate(time_start)}} &mdash; {{eventInfo.formatDate(time_end)}}</p>
             </div>
 
-            <div ng-show="event.location" id="location">
+            <div ng-show="eventInfo.event.location" id="location">
                 <md-subheader>Where?</md-subheader>
-                <a ng-href="https://www.google.com/maps/place/{{address_html}}" target="_blank">
-                    <p>{{event.location}}</p>
+                <a ng-href="https://www.google.com/maps/place/{{eventInfo.address_html}}" target="_blank">
+                    <p>{{eventInfo.event.location}}</p>
                 </a>
             </div>
 
-            <div id="description">
+            <div ng-show="eventInfo.event.description" id="description">
                 <md-subheader>What?</md-subheader>
-                <p class="preText">{{event.description}}</p>
+                <p class="preText">{{eventInfo.event.description}}</p>
             </div>
         </md-content>
 

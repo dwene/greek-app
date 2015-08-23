@@ -474,6 +474,15 @@ md-backdrop.md-opaque {
 .md-dialog-container {
   z-index: 1042;
 }
+.md-open-menu-container button {
+  padding-right: 7px;
+  text-transform: uppercase;
+}
+.md-open-menu-container .fa {
+  margin: 0;
+  line-height: 36px;
+  font-size: 20px;
+}
 .md-avatar {
   background-color: #ccc;
 }
@@ -1167,6 +1176,7 @@ md-toolbar.md-tall {
 }
 #eventInfo md-toolbar .fa-calendar {
   margin-right: 10px;
+  font-size: 24px;
 }
 #eventInfo md-content {
   padding: 45px 30px 30px 30px;

@@ -300,7 +300,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .state('app.eventInfo', {
                     url : '/events/:tag',
                     templateUrl : 'views/eventinfo.html',
-                    controller : 'eventInfoController',
+                    controller : 'eventInfoController as eventInfo',
                     data: {
                         permissions: {
                             only: [MEMBER],
@@ -772,7 +772,7 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         $('.bootstrap-datetimepicker-widget').hide();
         window.scrollTo(0, 0);
     };
- 
+
 
     $rootScope.refreshPage = function() {
         window.location.reload();
