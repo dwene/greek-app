@@ -1152,12 +1152,21 @@ md-toolbar.md-tall {
   color: #ccc;
   line-height: 1.2em;
 }
-#eventInfo md-toolbar #date {
-  text-align: center;
-  font-size: 28px;
+#eventInfo md-toolbar {
+  padding: 8px 16px 8px 70px;
+}
+#eventInfo md-toolbar .md-toolbar-tools {
+  position: relative;
+  height: auto;
+  max-height: none;
+  padding-right: 0px;
+}
+#eventInfo md-toolbar .md-toolbar-tools h1 {
+  word-wrap: break-word;
+  width: 70%;
 }
 #eventInfo md-toolbar .fa-calendar {
-  margin-right: 5px;
+  margin-right: 10px;
 }
 #eventInfo md-content {
   padding: 45px 30px 30px 30px;

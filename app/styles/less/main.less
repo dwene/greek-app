@@ -237,7 +237,7 @@ a:focus{text-decoration: none;}
       md-content{padding:10px 30px;}
       #buttons{margin-top:10px;}
    }
-   
+
    #forgotPassword{
      th{font-size:14px;}
      td{vertical-align: middle;}
@@ -369,8 +369,18 @@ a:focus{text-decoration: none;}
 
    #eventInfo{
       md-toolbar{
-         #date{text-align:center; font-size:28px;}
-         .fa-calendar{margin-right:5px;}
+          padding: 8px 16px 8px 70px;
+        .md-toolbar-tools{
+            position:relative;
+            height: auto;
+            max-height: none;
+            padding-right:0px;
+            h1{
+                word-wrap: break-word;
+                width: 70%;
+            }
+        }
+        .fa-calendar{margin-right: 10px;}
       }
       md-content{padding:45px 30px 30px 30px;}
    }
