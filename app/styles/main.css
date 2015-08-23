@@ -1151,6 +1151,8 @@ md-toolbar.md-tall {
   font-weight: bold;
   line-height: 1.2em;
   margin-bottom: 4px;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 #events .md-list-item-text p {
   color: #ccc;
