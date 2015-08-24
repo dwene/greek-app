@@ -934,6 +934,10 @@ md-toolbar.md-tall {
 #chatter md-list-item button {
   padding: 8px 4px;
 }
+#chatter md-list-item button h3 {
+  word-wrap: break-word;
+  word-break: break-word;
+}
 #chatter .heart {
   height: 50px;
 }
@@ -989,6 +993,10 @@ md-toolbar.md-tall {
   #chatterDialog #chatterOptions {
     width: 168px;
   }
+}
+#chatterDialog #chatterContent > h3 {
+  word-wrap: break-word;
+  word-break: break-word;
 }
 #chatterDialog #chatterComments #commentInput .md-button md-icon[md-font-icon] {
   font-size: 1.2em;

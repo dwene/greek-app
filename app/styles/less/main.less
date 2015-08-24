@@ -237,7 +237,7 @@ a:focus{text-decoration: none;}
       md-content{padding:10px 30px;}
       #buttons{margin-top:10px;}
    }
-   
+
    #forgotPassword{
      th{font-size:14px;}
      td{vertical-align: middle;}
@@ -258,7 +258,12 @@ a:focus{text-decoration: none;}
 
 
    #chatter{
-      md-list-item button{padding:8px 4px;}
+      md-list-item button{padding:8px 4px;
+          h3{
+              word-wrap: break-word;
+              word-break: break-word;
+          }
+      }
       .heart{height:50px;}
       .details{color:#ccc; font-size:12px; margin:0px 0px 4px 4px;}
       .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
@@ -285,11 +290,16 @@ a:focus{text-decoration: none;}
          label{color:white;}
          textarea{color:white;}
       }
-      
+
       @media (max-width: 380px){
          #chatterOptions{
             width:168px;
          }
+      }
+
+      #chatterContent > h3{
+              word-wrap: break-word;
+              word-break: break-word;
       }
 
       #chatterComments #commentInput .md-button{
