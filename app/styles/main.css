@@ -1071,6 +1071,8 @@ md-toolbar.md-tall {
 }
 #profile md-toolbar h2 {
   font-weight: bold;
+  word-break: break-word;
+  word-wrap: break-word;
 }
 #profile md-toolbar h5 {
   font-size: 18px;
