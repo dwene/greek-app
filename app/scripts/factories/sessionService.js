@@ -5,6 +5,9 @@ App.service('Session', ['$rootScope', 'AUTH_EVENTS',
             this.token = token;
             this.me = me;
             this.perms = this.me.perms;
+            this.council = this.me.perms === "council";
+            this.leadership = this.me.perms === "council" || this.me.perms === "leadership"
+            this.member = this.me.perms === "council" || this.me.perms === "leadership" || this.me.perms === "member"
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         };
         this.destroy = function() {

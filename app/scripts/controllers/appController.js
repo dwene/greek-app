@@ -1,28 +1,10 @@
-App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Directory', 'Channels',
-    function($scope, $interval, $rootScope, $timeout, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Channels) {
+App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', '$location', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Directory', 'Channels',
+    function($scope, $interval, $rootScope, $timeout, $location, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Channels) {
         var notification_update_interval;
-        // if (AuthService.isAuthenticated() && !angular.isDefined(notification_update_interval)) {
-        //     notification_update_interval = $interval(function() {
-        //         updates();
-        //     }, 10000);
-        // }
         AuthService.cachedLogin();
         $scope.authenticated = AuthService.isAuthenticated();
-        $scope.checkPermissions = function(perms) {
-            if (!$scope.authenticated) {
-                return false;
-            } else {
-                if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)) {
-                    return false;
-                }
-                return true;
-            }
-        }
 
-        // function updates() {
-        // }
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
-            console.log('I got my login successfully! :)');
             Notifications.get();
             Channels.connect();
             $scope.authenticated = true;
@@ -39,13 +21,12 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
         })
         $rootScope.$on(AUTH_EVENTS.logoutSuccess, function() {
             $scope.authenticated = false;
-            console.log('I am logging out and canceling interval :(');
+            console.log('logging out');
             if (angular.isDefined(notification_update_interval)) {
                 $interval.cancel(notification_update_interval);
             }
         });
         $scope.$on('$destroy', function() {
-            console.log('I am getting destroyed :(');
             if (angular.isDefined(notification_update_interval)) {
                 $interval.cancel(notification_update_interval);
             }

@@ -99,6 +99,7 @@
 <script type="text/javascript" src="scripts/controllers/addMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/appController.js"></script>
 <script type="text/javascript" src="scripts/controllers/appHomeController.js"></script>
+<script type="text/javascript" src="scripts/controllers/calendarController.js"></script>
 <script type="text/javascript" src="scripts/controllers/chatterDialogController.js"></script>
 <script type="text/javascript" src="scripts/controllers/chatterController.js"></script>
 <script type="text/javascript" src="scripts/controllers/changePasswordController.js"></script>
@@ -228,7 +229,7 @@
                 <li ng-click="toggleSidenav('app/chatter')"><md-button class="md-primary" md-theme-watch><i class="fa fa-comments-o fa-fw"></i> Chatter</md-button></li>
                 <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary" md-theme-watch><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
                 <!--                            <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>-->
-                <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
+                <li ng-click="toggleSidenav('app/events/calendar')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
                 <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li>
                 <!--                            <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>-->
               </ul>

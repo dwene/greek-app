@@ -1,5 +1,5 @@
-App.controller('alumniDirectoryController', ['$scope', '$rootScope', 'RESTService', 'Directory',
-    function($scope, $rootScope, RESTService, Directory) {
+App.controller('alumniDirectoryController', ['$scope', '$location', '$rootScope', 'RESTService', 'Directory',
+    function($scope, $location, $rootScope, RESTService, Directory) {
         $scope.years = [];
         $scope.selected_year = 0;
         if (Directory.check()) {
@@ -33,7 +33,7 @@ App.controller('alumniDirectoryController', ['$scope', '$rootScope', 'RESTServic
             }
         }
         $scope.showIndividual = function(member) {
-            window.location.assign("#/app/directory/" + member.user_name);
+            $location.path("app/directory/" + member.user_name);
         }
 
         //click the buttons to search for that button text

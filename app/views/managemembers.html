@@ -3,7 +3,7 @@
 
 <md-toolbar class="no-min-height">
     <md-tabs>
-            <md-tab id="managemembersTab" ng-show="$parent.perms == 'council'" ui-sref=".manage">
+            <md-tab id="managemembersTab" ng-show="session.council" ui-sref=".manage">
                 Manage
             </md-tab>
 <!--
@@ -11,7 +11,7 @@
                 Tag
             </md-tab>
 -->
-            <md-tab id="addmembersTab" ng-show="$parent.perms == 'council'" ui-sref=".add">
+            <md-tab id="addmembersTab" ng-show="session.council" ui-sref=".add">
                 Add
             </md-tab>
     </md-tabs>  

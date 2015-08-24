@@ -106,7 +106,7 @@
                     <input name="major" ng-model="item.major"/>
                     <p class="text-danger invalid-text">Please enter your field of study.</p>
                     </md-input-container>
-                    <md-input-container ng-show="$parent.checkPermissions('leadership')" class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
+                    <md-input-container ng-show="session.leadership" class="md-default-theme" ng-class="{ 'md-input-invalid' : (memberAccount.position.$invalid && !memberAccount.position.$pristine) || (memberAccount.position.$invalid && submitted)}">
                     <label for="position">Leadership Position</label>
                     <input name="position" ng-model="item.position"/>
                     <p class="text-danger invalid-text">Please enter a leadership position.</p>

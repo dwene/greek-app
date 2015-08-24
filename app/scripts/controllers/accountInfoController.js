@@ -1,5 +1,5 @@
-App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', '$timeout', 'Organization', 'AUTH_EVENTS', 'Session', 'Directory', '$location', function($scope, RESTService, $rootScope, $timeout, Organization, AUTH_EVENTS, Session, Directory, $location){
-    routeChange();
+App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', '$timeout', 'Organization', 'AUTH_EVENTS', 'Session', 'Directory', '$location', function( $scope, RESTService, $rootScope, $timeout, Organization, AUTH_EVENTS, Session, Directory, $location){
+    $scope.session = Session;
     $scope.updatedInfo = false;
     $scope.item = Session.me;
     $scope.checkAlumni = Session.perms == 'alumni';

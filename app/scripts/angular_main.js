@@ -46,7 +46,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .when("/app/managemembers", "/app/managemembers/manage")
         .when("/app/managealumni", "/app/managealumni/manage")
         .when("/app/directory", "/app/directory/members")
-        .when("/changepasswordfromtoken", "/changepasswordfromtoken/1");
+        .when("/changepasswordfromtoken", "/changepasswordfromtoken/1")
+        .when("/app/events", "/app/events/calendar");
 
     $stateProvider
         .state('home', {
@@ -103,7 +104,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'views/app.html',
             controller: 'appController',
         })
-
             .state('app.home', {
                 url : '/home',
                 templateUrl : 'views/chatter.html',
@@ -275,17 +275,6 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.newevent', {
-                    url : '/newevent',
-                    templateUrl : 'views/newevent.html',
-                    controller : 'newEventController',
-                    data: {
-                        permissions: {
-                            only: [COUNCIL],
-                            redirectTo: 'home'
-                        }
-                    }
-                })
             .state('app.events', {
                     url : '/events',
                     templateUrl : 'views/events.html',
@@ -297,8 +286,30 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.eventInfo', {
-                    url : '/events/:tag',
+            .state('app.events.newevent', {
+                    url : '/events/newevent',
+                    templateUrl : 'views/newevent.html',
+                    controller : 'newEventController',
+                    data: {
+                        permissions: {
+                            only: [LEADERSHIP],
+                            redirectTo: 'home'
+                        }
+                    }
+                })
+            .state('app.events.calendar', {
+                    url : '/calendar',
+                    templateUrl : 'views/calendar.html',
+                    controller : 'calendarController',
+                    data: {
+                        permissions: {
+                            only: [MEMBER],
+                            redirectTo: 'home'
+                        }
+                    }
+                })
+            .state('app.events.eventInfo', {
+                    url : '/:tag',
                     templateUrl : 'views/eventinfo.html',
                     controller : 'eventInfoController as eventInfo',
                     data: {
@@ -308,8 +319,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.editEvent',{
-                    url : '/events/:tag/edit',
+            .state('app.events.editEvent',{
+                    url : '/:tag/edit',
                     templateUrl : 'views/editevent.html',
                     controller : 'editEventsController as vm',
                     data: {
@@ -319,8 +330,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.eventCheckin',{
-                    url : '/events/:tag/checkin',
+            .state('app.events.eventCheckin',{
+                    url : '/:tag/checkin',
                     templateUrl : 'views/eventcheckin.html',
                     controller : 'eventCheckInController',
                     data: {
@@ -330,9 +341,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.eventCheckinReport',{
+            .state('app.events.eventCheckinReport',{
                 //#TODO put this into each individual event :tag
-                    url : '/events/:tag/report',
+                    url : '/:tag/report',
                     templateUrl : 'views/eventcheckinreport.html',
                     controller : 'eventCheckInReportController',
                     data: {
@@ -595,37 +606,6 @@ App.config(function($mdThemingProvider) {
 
 //Set up run commands for the app
 App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Chatter) {
-
-
-    // Permission
-    // .defineRole(COUNCIL, function($stateParams){
-    //     if (Auth.get() === COUNCIL){
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // })
-    // .defineRole(LEADERSHIP, function($stateParams){
-    //     if (Auth.get() == COUNCIL || Auth.get() == LEADERSHIP){
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // })
-    // .defineRole(MEMBER, function($stateParams){
-    //     if (Auth.get() == COUNCIL || Auth.get() == LEADERSHIP || Auth.get() == MEMBER){
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // })
-    // .defineRole(ALUMNI, function($stateParams){
-    //     if (Auth.get() == ALUMNI || Auth.get() ==  COUNCIL || Auth.get() == LEADERSHIP || Auth.get() == MEMBER){
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // });
     $rootScope.$on('$stateChangeStart', function(event, next) {
         if (!next.data) {
             console.log("I am going somewhere with no data", next);
@@ -700,15 +680,6 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
     };
 
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
-        //  document.addEventListener("deviceready", function(){
-        //     $cordovaPush.register(iosConfig).then(function(result) {
-        //       console.log("result: " + result);
-        //       RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/set_iphone_token',result.deviceToken)
-        //     }, function(err) {
-        //         console.log('something went wrong', err);
-        // });
-        // });
-
         if ($state.data) {
             var authorizedRoles = $state.data.permissions.only;
             if (!AuthService.isAuthorized(authorizedRoles)) {
@@ -751,7 +722,6 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
             return true;
         }
     };
-        console.log('changing color');
         if (Organization.organization) {
             if (Organization.organization.color) {
                 $rootScope.color = Organization.organization.color;
@@ -771,29 +741,6 @@ App.run(function($rootScope, $state, $stateParams, $q, $timeout, $state, $locati
         $('.modal-backdrop').remove();
         $('.bootstrap-datetimepicker-widget').hide();
         window.scrollTo(0, 0);
-    };
-
-
-    $rootScope.refreshPage = function() {
-        window.location.reload();
-    };
-    $rootScope.doNothing = function() {
-        return false;
-    };
-    $rootScope.requirePermissions = function(perms) {
-        // if ($rootScope.perms){
-        //     if (!$rootScope.checkPermissions(perms)){
-        //         if ($rootScope.checkAlumni()){
-        //             window.location.assign('#/app/directory/members');
-        //         }
-        //         else{
-        //             window.location.assign("/#/app/home");
-        //         }
-        //     }
-        // }
-        // else{
-        //     window.location.assign('/#/login');
-        // }
     };
 
     $rootScope.checkAlumni = function() {
@@ -851,58 +798,6 @@ function routeChange() {
     $('.bootstrap-datetimepicker-widget').hide();
     window.scrollTo(0, 0);
 }
-
-//checks to see if user is logged in or not
-function checkLogin() {
-    // if($.cookie(USER_NAME) != undefined){
-    //     return true;
-    // }
-    // else
-    //     return false;
-    return true;
-}
-
-function requireLeadership() {
-    //     if (!checkPermissions('leadership')){
-    //         if ($rootScope.checkAlumni()){
-    //             window.location.assign('#/app/directory/members');
-    //         }
-    //         else{
-    //             window.location.assign("/#/app");
-    //         }
-    //     }
-}
-
-function requireCouncil() {
-    // if (!checkPermissions('council')){
-    //     if ($rootScope.checkAlumni()){
-    //         window.location.assign('#/app/directory/members');
-    //     }
-    //     else{
-    //         window.location.assign("/#/app");
-    //     }
-    // }
-}
-
-function requireMember() {
-    // if (!checkPermissions('member')){
-    //     if ($rootScope.checkAlumni()){
-    //         window.location.assign('#/app/directory/members');
-    //     }
-    //     else{
-    //         window.location.assign("/#/app");
-    //     }
-    // }
-}
-
-//clears all checked labels
-
-//function checkPermissions(perms){
-//    if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf($rootScope.perms)){
-//        return false;
-//    }
-//    return true;
-//}
 
 function logoutCookies() {
     $.removeCookie(USER_NAME);

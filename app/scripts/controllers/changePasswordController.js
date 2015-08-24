@@ -12,7 +12,6 @@ App.controller('changePasswordController', ['$scope', '$http', '$rootScope',
                     if (!RESTService.hasErrors(data)) {
                         $scope.passwordChanged = true;
                         $scope.changeFailed = false;
-                        $rootScope.logout();
                         window.location.assign('#/app/login');
                     } else {
                         console.log('Error: ', data);

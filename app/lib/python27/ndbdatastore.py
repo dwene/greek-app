@@ -32,6 +32,7 @@ class Organization(ModelUtils, ndb.Model):
     calendars = ndb.KeyProperty(repeated=True)
 
 
+
 class User(UserUtils, ndb.Model):
     # login stuff
     user_name = ndb.StringProperty()
@@ -139,9 +140,17 @@ class AttendanceData(ndb.Model):
 
 
 class PaymentInformation(ndb.Model):
+    organization = ndb.KeyProperty(kind=Organization)
     subscription_id = ndb.StringProperty()
     customer_id = ndb.StringProperty()
     payment_token = ndb.StringProperty()
+
+
+class Feature(ndb.Model):
+    organization = ndb.KeyProperty(kind=Organization)
+    name = ndb.StringProperty()
+    expires = ndb.DateTimeProperty()
+
 
 
 class Poll(ndb.Model):
