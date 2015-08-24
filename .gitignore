@@ -11,3 +11,4 @@ platforms
 www
 .idea
 stage
+app/styles/less/*.css

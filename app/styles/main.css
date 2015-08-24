@@ -687,6 +687,9 @@ md-progress-circular.small {
   content: '*';
   color: #f44336;
 }
+.break-newline {
+  white-space: pre-wrap;
+}
 /*Striped Lists*/
 .striped [layout-margin] {
   margin: 0px;
@@ -931,6 +934,10 @@ md-toolbar.md-tall {
 #chatter md-list-item button {
   padding: 8px 4px;
 }
+#chatter md-list-item button h3 {
+  word-wrap: break-word;
+  word-break: break-word;
+}
 #chatter .heart {
   height: 50px;
 }
@@ -982,12 +989,21 @@ md-toolbar.md-tall {
 #chatterDialog md-toolbar.md-padding textarea {
   color: white;
 }
+@media (max-width: 380px) {
+  #chatterDialog #chatterOptions {
+    width: 168px;
+  }
+}
+#chatterDialog #chatterContent > h3 {
+  word-wrap: break-word;
+  word-break: break-word;
+}
 #chatterDialog #chatterComments #commentInput .md-button md-icon[md-font-icon] {
   font-size: 1.2em;
   line-height: 1.2em;
 }
-#chatterDialog #confirmImportant .md-toolbar-tools .md-button {
-  width: 48px;
+#chatterDialog #confirmImportant .md-toolbar-tools .md-button i {
+  width: 30px;
 }
 #chatterDialog .followButton {
   font-size: 10px;
