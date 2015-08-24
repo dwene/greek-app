@@ -1170,25 +1170,22 @@ md-toolbar.md-tall {
   font-size: 14px;
   text-align: right;
 }
-#eventInfo md-toolbar {
-  padding: 8px 16px 8px 70px;
-}
 #eventInfo md-toolbar .md-toolbar-tools {
   position: relative;
   height: auto;
   max-height: none;
-  padding-right: 0px;
 }
 #eventInfo md-toolbar .md-toolbar-tools h1 {
+  margin-left: 5px;
   word-wrap: break-word;
-  width: 70%;
+}
+#eventInfo md-toolbar .fa-chevron-left {
+  position: relative;
+  top: -2px;
+  left: -2px;
 }
 #eventInfo md-toolbar .fa-calendar {
-  margin-right: 10px;
   font-size: 24px;
-}
-#eventInfo md-content {
-  padding: 45px 30px 30px 30px;
 }
 #eventCheckin md-toolbar {
   padding-bottom: 25px;

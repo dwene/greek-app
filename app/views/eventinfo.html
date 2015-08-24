@@ -5,7 +5,7 @@
     <div class="md-whiteframe-z1">
         <md-toolbar layout="row" layout-align="center center">
             <div class="md-toolbar-tools">
-                <i class="fa fa-calendar"></i>
+                <md-button class="btn-touch" ng-click="eventInfo.back()"><i class="fa fa-chevron-left"></i> <i class="fa fa-calendar"></i></md-button>
                 <h1>{{eventInfo.event.title}}</h1>
                 <div flex></div>
                 <md-menu md-position-mode="target-right target">
@@ -30,9 +30,6 @@
                     </md-menu-content>
                 </md-menu>
             </div>
-            <md-button id="back" class="md-fab lower md-warn md-hue-3" aria-label="back" ng-click="eventInfo.back()">
-                <i class="fa fa-arrow-left"></i>
-            </md-button>
         </md-toolbar>
 
         <md-content class="md-padding">
