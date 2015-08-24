@@ -78,7 +78,7 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
             vm.eventNotFound = false;
         }
         vm.editEvent = function() {
-            $location.path('#/app/events/' + $stateParams.tag + '/edit');
+            $location.path('app/events/' + $stateParams.tag + '/edit');
         };
         vm.formatDate = function(date) {
             return moment(date).format('h:mma dddd, MMMM Do');
