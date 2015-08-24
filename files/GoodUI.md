@@ -26,7 +26,7 @@
 7. Try recommending instead of showing equal choices
 [link](https://www.goodui.org/#7)
 > N/a
-
+atom
 8. Try undos instead of prompting for confirmation.
 [link](https://www.goodui.org/#8)
 > I think there are a few places we could do this.
