@@ -2,6 +2,6 @@
 	<md-radio-group ng-model="selectedCalendar">
 	   <md-radio-button ng-repeat="cal in calendars" class="md-primary" ng-value="cal">{{cal.name | capitalizeFirst}}</md-radio-button>
      <md-radio-button ng-click="showSelectCustomDialog()" class="md-primary" ng-value="customCalendar">Custom</md-radio-button>
-     <md-button ng-click="showInvitedMembersDialog()">{{selectedMembers.length}} Selected</md-button>
+     <md-button ng-click="showInvitedMembersDialog()" ng-disabled="selectedMembers.length === 0">{{selectedMembers.length}} Invited</md-button>
 	</md-radio-group>
 </div>
