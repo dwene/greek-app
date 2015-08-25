@@ -286,8 +286,8 @@ App.config(function($stateProvider, $urlRouterProvider) {
                         }
                     }
                 })
-            .state('app.events.newevent', {
-                    url : '/events/newevent',
+            .state('app.newevent', {
+                    url : '/newevent',
                     templateUrl : 'views/newevent.html',
                     controller : 'newEventController',
                     data: {
