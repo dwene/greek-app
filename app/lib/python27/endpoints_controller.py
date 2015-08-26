@@ -8,6 +8,7 @@ from endpoint_apis.links import links
 from endpoint_apis.polls import polls
 from endpoint_apis.events import events
 from endpoint_apis.auth import auth
+from endpoint_apis.admin import admin_api
 from channels import channels
 from notifications import notifications_api
 from apiconfig import *
@@ -441,4 +442,5 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(get_image_url(blob_key)))
 
-APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api])
+APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api,
+                                    admin_api])

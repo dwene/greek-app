@@ -10,7 +10,6 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
             $scope.authenticated = true;
         });
         $scope.$on('organization:updated', function() {
-            console.log('Organization just updated');
             if ($rootScope.color != Organization.organization.color) {
                 $scope.authenticated = false;
                 $rootScope.color = Organization.organization.color;
