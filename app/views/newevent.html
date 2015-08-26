@@ -6,7 +6,7 @@
             </div>
         </md-toolbar>
         <md-content class="md-padding no-padding-top">
-
+            <br>
             <selecting-members selected-calendar="calendar" selected-individuals="individuals"></selecting-members>
 
             <form id="newEvent" name="newEvent" class="form-horizontal" role="form" novalidate>
@@ -48,8 +48,8 @@
 
             <p id="recurring">Occurs
             <md-checkbox class="md-primary" ng-disabled="monthly" ng-model="weekly" aria-label="recurring weekly">Weekly</md-checkbox>
-            <md-checkbox class="md-primary" ng-disabled="weekly" ng-model="monthly" aria-label="recurring monthly">Monthly</md-checkbox> until:<br>
-            <date-picker style="postion:relative" ng-show="weekly || monthly" id="untilDate" name="untilDate" ng-model="event.until" ng-required="weekly || monthly"></date-picker>
+            <md-checkbox class="md-primary" ng-disabled="weekly" ng-model="monthly" aria-label="recurring monthly">Monthly</md-checkbox><br>
+                <div id="until" ng-show="weekly || monthly"><span>Until </span><date-picker style="postion:relative" id="untilDate" name="untilDate" ng-model="event.until" ng-required="weekly || monthly"></date-picker></div>
             </p>
 
 <!--             <md-checkbox class="md-primary" ng-model="event.recurring" aria-label="recurring event">
