@@ -11,7 +11,6 @@ App.controller('adminController', ['$scope', 'RESTService', '$rootScope',
                         }
                     }
                     $scope.features = features;
-                    console.log('features', $scope.features);
                 } else {
                     console.log('ERROR: ', data);
                 }

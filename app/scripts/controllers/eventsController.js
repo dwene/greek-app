@@ -11,6 +11,5 @@ App.controller('eventsController', ['$scope', 'Organization',
 	    	}
     	}
     	evaluatePermitted();
-    	
     }
 ])
