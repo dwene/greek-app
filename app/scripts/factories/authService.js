@@ -59,7 +59,6 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                                 console.log('CACHED LOGIN SUCCESS');
                                 var parsed_data = JSON.parse(data.data);
                                 Session.create(to_send.user_name, to_send.token, parsed_data.me);
-                                console.log("about to hit organization.send");
                                 Organization.set(parsed_data.organization);
                             } else {
                                 console.log('cached login failed.');

@@ -1137,6 +1137,20 @@ md-toolbar.md-tall {
 #newEvent md-radio-group md-radio-button {
   display: inline-block;
 }
+#newEvent #showInvited {
+  margin-top: 10px;
+}
+#newEvent #recurring md-checkbox {
+  display: inline-block;
+}
+#newEvent #until span {
+  position: relative;
+  top: 26px;
+  margin-right: 5px;
+}
+#newEvent #until #untilDate {
+  display: inline-block;
+}
 #notifications md-list-item {
   font-size: 12px;
   word-break: break-word;

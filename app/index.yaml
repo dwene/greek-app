@@ -132,3 +132,12 @@ indexes:
   - name: perms
   - name: prof_pic
   - name: user_name
+
+- kind: User
+  properties:
+  - name: organization
+  - name: perms
+  - name: first_name
+  - name: last_name
+  - name: prof_pic
+  - name: user_name

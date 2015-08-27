@@ -7,7 +7,7 @@ App.factory('Directory', ['RESTService', '$rootScope', 'localStorageService', '$
         item.get = function() {
             if (checkCacheRefresh(item.cacheTimestamp)) {
                 item.cacheTimestamp = moment();
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory', '')
+                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/directory_less', '')
                     .success(function(data) {
                         if (!checkResponseErrors(data)) {
                             item.directory = JSON.parse(data.data);
@@ -32,34 +32,6 @@ App.factory('Directory', ['RESTService', '$rootScope', 'localStorageService', '$
             item.directory = undefined;
             localStorageService.remove('directory');
         }
-        item.updateMyStatus = function(status) {
-            if (item.directory) {
-                console.log('I see the directory in update My status');
-                for (var i = 0; i < item.directory.members.length; i++) {
-                    if (item.directory.members[i].user_name == Session.user_name) {
-                        item.directory.members[i].status = status;
-                        console.log('I just set my status');
-                        return;
-                    }
-                }
-            }
-        }
-        item.updateMe = function(me) {
-            if (item.directory) {
-                for (var i = 0; i < item.directory.members.length; i++) {
-                    if (item.directory.members[i].user_name == Session.user_name) {
-                        item.directory.members[i] = me;
-                        break;
-                    }
-                }
-            } else {
-                item.get();
-            }
-            Session.me = me;
-            console.log('Im broadcasting', me.prof_pic);
-            $rootScope.$broadcast('me:updated');
-        }
-
         item.check = function() {
             if (item.directory == null) {
                 item.get();

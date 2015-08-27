@@ -4,7 +4,7 @@
                 <form id="tagtypeahead" name="tagtypeahead" ng-submit="checkTag(selectedTagName);" flex>
                 <md-input-container class="md-default-theme">
                     <label for="tag_name">Enter Tag</label>
-                    <input id="tag_name" name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead></input>
+                    <input id="tag_name" name="tag_name" ng-model="selectedTagName" ng-options="tag.name for tag in tags.org_tags" ng-enter="checkTag(selectedTagName);" bs-typeahead/>
                 </md-input-container>
                 </form>
 -->
@@ -36,6 +36,7 @@
                 </md-item>
             </md-list>
         </div>
+      </div>
                     
 <div class="modal fade" id="addTagModal">
   <div class="modal-dialog">

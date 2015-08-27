@@ -1,6 +1,6 @@
-App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 'RESTService', 'localStorageService', 'Directory',
-    function($scope, $mdDialog, $rootScope, RESTService, localStorageService, Directory) {
-        routeChange();
+App.controller('manageMembersController', ['Session', '$scope', '$mdDialog', '$rootScope', 'RESTService', 'localStorageService', 'Directory',
+    function(Session, $scope, $mdDialog, $rootScope, RESTService, localStorageService, Directory) {
+
         Directory.get();
         $scope.startsWith = 0;
         var selectedUser;
@@ -8,6 +8,7 @@ App.controller('manageMembersController', ['$scope', '$mdDialog', '$rootScope', 
         $scope.change = function() {
             $scope.startsWith = 0;
         };
+        $scope.session = Session;
         $scope.directory = Directory.directory;
         $scope.memberslength = 20;
         $scope.getMembers = function() {

@@ -105,7 +105,7 @@ class Message(ndb.Model):
     timestamp = ndb.DateTimeProperty()
 
 
-class Calendar(ndb.Model):
+class Calendar(ModelUtils, ndb.Model):
     organization = ndb.KeyProperty()
     name = ndb.StringProperty()
     color = ndb.StringProperty()
@@ -139,9 +139,17 @@ class AttendanceData(ndb.Model):
 
 
 class PaymentInformation(ndb.Model):
+    organization = ndb.KeyProperty(kind=Organization)
     subscription_id = ndb.StringProperty()
     customer_id = ndb.StringProperty()
     payment_token = ndb.StringProperty()
+
+
+class Feature(ndb.Model):
+    organization = ndb.KeyProperty(kind=Organization)
+    name = ndb.StringProperty()
+    expires = ndb.DateTimeProperty()
+
 
 
 class Poll(ndb.Model):
@@ -234,3 +242,9 @@ class ChatterComment(ModelUtils, ndb.Model):
     timestamp = ndb.DateTimeProperty()
     likes = ndb.KeyProperty(repeated=True)
     edited = ndb.DateTimeProperty()
+
+
+class Update(ndb.Model):
+    users = ndb.KeyProperty(repeated=True, kind=User)
+    data = ndb.JsonProperty()
+    timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())

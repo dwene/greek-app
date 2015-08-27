@@ -8,6 +8,7 @@ from endpoint_apis.links import links
 from endpoint_apis.polls import polls
 from endpoint_apis.events import events
 from endpoint_apis.auth import auth
+from endpoint_apis.admin import admin_api
 from channels import channels
 from notifications import notifications_api
 from apiconfig import *
@@ -344,30 +345,31 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.email, User.phone])
-        event_list_future = Event.query(Event.organization == request_user.organization,
-                                        ).fetch_async(projection=[Event.going, Event.tag])
+        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.email])
         organization_users = organization_users_future.get_result()
-        event_list = event_list_future.get_result()
         user_list = list()
-        me = request_user.to_dict()
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
-            event_tags = list()
-            for event in event_list:
-                if user.key in event.going:
-                    event_tags.append(event.tag)
-            user_dict["event_tags"] = event_tags
-            if user.dob:
-                user_dict["dob"] = user.dob.strftime("%m/%d/%Y")
-            else:
-                del user_dict["dob"]
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
             else:
                 user_list.append(user_dict)
-        return_data = json_dump({'members': user_list, 'alumni': alumni_list, 'me': me})
+        return_data = json_dump({'members': user_list, 'alumni': alumni_list})
+        return OutgoingMessage(error='', data=return_data)
+
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_user',
+                      http_method='POST', name='user.get_by_user')
+    def get_user_by_username(self, request):
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        data = json.loads(request.data)
+        user = User.query(User.user_name == data['user']).get()
+        if user.organization is not request_user.organization:
+            return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        return_data = json_dump(user.to_dict())
         return OutgoingMessage(error='', data=return_data)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/directory',
@@ -440,4 +442,28 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(get_image_url(blob_key)))
 
-APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api])
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_updates',
+                      http_method='POST', name='user.get_updates')
+    def get_updates(self, request):
+        data = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        new_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        if 'timestamp' not in data:
+            return OutgoingMessage(error='', data=json_dump({'updates': [], 'timestamp': new_timestamp}))
+        timestamp = datetime.datetime.strptime(str(data['timestamp']), "%Y-%m-%dT%H:%M:%S")
+        if type(timestamp) is not datetime.datetime:
+            return OutgoingMessage(error='', data=json_dump({'updates': [], 'timestamp': new_timestamp}))
+        else:
+            updates = Update.query(Update.timestamp >= timestamp).fetch()
+            out_updates = []
+            for update in updates:
+                out_updates.append(update.data)
+            return OutgoingMessage(error='', data=json_dump({'updates': out_updates, 'timestamp': new_timestamp}))
+
+
+
+APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api,
+                                    admin_api])

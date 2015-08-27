@@ -33,7 +33,6 @@
   <!--[if lt IE 9]>
   <script src="scripts/vendor/html5-3.6-respond-1.1.0.min.js"></script>
   <![endif]-->
-  <script type="text/javascript" src="/_ah/channel/jsapi"></script>
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <!-- bower:js -->
   <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -90,7 +89,6 @@
 <script type="text/javascript" src="scripts/vendor/ng-google-chart.js"></script>
 <script type="text/javascript" src="scripts/vendor/angular-local-storage.js"></script>
 <script type="text/javascript" src="scripts/vendor/jsapi.js"></script>
-<script type="text/javascript" src="scripts/nete_greek_logo.js"></script>
 <script type="text/javascript" src="scripts/vendor/angulartics.js"></script>
 <script type="text/javascript" src="scripts/vendor/angulartics-ga.js"></script>
 <script type="text/javascript" src="scripts/controllers/accountInfoController.js"></script>
@@ -100,6 +98,7 @@
 <script type="text/javascript" src="scripts/controllers/addMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/appController.js"></script>
 <script type="text/javascript" src="scripts/controllers/appHomeController.js"></script>
+<script type="text/javascript" src="scripts/controllers/calendarController.js"></script>
 <script type="text/javascript" src="scripts/controllers/chatterDialogController.js"></script>
 <script type="text/javascript" src="scripts/controllers/chatterController.js"></script>
 <script type="text/javascript" src="scripts/controllers/changePasswordController.js"></script>
@@ -118,7 +117,6 @@
 <script type="text/javascript" src="scripts/controllers/manageMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/memberProfileController.js"></script>
 <script type="text/javascript" src="scripts/controllers/memberDirectoryController.js"></script>
-<script type="text/javascript" src="scripts/controllers/memberTagsController.js"></script>
 <script type="text/javascript" src="scripts/controllers/messagingController.js"></script>
 <script type="text/javascript" src="scripts/controllers/navigationController.js"></script>
 <script type="text/javascript" src="scripts/controllers/newEventController.js"></script>
@@ -133,7 +131,6 @@
 <script type="text/javascript" src="scripts/controllers/registerController.js"></script>
 <script type="text/javascript" src="scripts/controllers/registerInfoController.js"></script>
 <script type="text/javascript" src="scripts/controllers/registerUserController.js"></script>
-<script type="text/javascript" src="scripts/controllers/selectingMembersController.js"></script>
 <script type="text/javascript" src="scripts/controllers/uploadImageController.js"></script>
 <script type="text/javascript" src="scripts/controllers/pollController.js"></script>
 <script type="text/javascript" src="scripts/controllers/messageDialogController.js"></script>
@@ -149,6 +146,7 @@
 <script type="text/javascript" src="scripts/factories/SessionService.js"></script>
 <script type="text/javascript" src="scripts/factories/httpFactory.js"></script>
 <script type="text/javascript" src="scripts/factories/notificationFactory.js"></script>
+<script type="text/javascript" src="scripts/factories/updatesFactory.js"></script>
 <script type="text/javascript" src="scripts/directives/alumniYearPickerDirective.js"></script>
 <script type="text/javascript" src="scripts/directives/filechangeDirective.js"></script>
 <script type="text/javascript" src="scripts/directives/loadDirective.js"></script>
@@ -165,7 +163,6 @@
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/unminified.js -->
-<script type="text/javascript" src="scripts/factories/channelFactory.js"></script>
 <!-- endbuild -->
 
 
@@ -217,7 +214,7 @@
           </div>
         </md-toolbar>
         <md-content>
-          <md-tabs md-selected="menu.selectedIndex" class="md-primary" md-stretch-tabs="always" md-swipe-content="true" md-theme-watch>
+          <md-tabs md-selected="menu.selectedIndex" class="md-primary" md-stretch-tabs="always" md-center-tabs="true" md-swipe-content="true" md-theme-watch>
             <md-tab id="menuTab" aria-controls="menuTab-content">
               Menu
             </md-tab>
@@ -231,7 +228,7 @@
                 <li ng-click="toggleSidenav('app/chatter')"><md-button class="md-primary" md-theme-watch><i class="fa fa-comments-o fa-fw"></i> Chatter</md-button></li>
                 <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary" md-theme-watch><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
                 <!--                            <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>-->
-                <li ng-click="toggleSidenav('app/events')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
+                <li ng-click="toggleSidenav('app/events/calendar')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
                 <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li>
                 <!--                            <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>-->
               </ul>

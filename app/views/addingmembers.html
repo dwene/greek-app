@@ -31,7 +31,7 @@
     <div layout="row" layout-align="start center">
         <md-input-container class="md-default-theme">
             <label for="class_year">Class Year</label>
-            <input name="class_year" ng-model="input.pledge_class_year" ng-pattern="/[0-9]{4}/" required></input>
+            <input name="class_year" ng-model="input.pledge_class_year" ng-pattern="/[0-9]{4}/" required/>
         </md-input-container>
         <md-radio-group name="pledge_class_semester" ng-model="input.pledge_class_semester" required>
             <md-radio-button value="fall">Fall</md-radio-button>
@@ -160,6 +160,3 @@
     <button id="addMembersButton" ng-click="submitMembers()" class="btn btn-default">Submit Members</button><update-status ng-model="updating"></update-status>
     </ul>
 -->
-
-
-</div>

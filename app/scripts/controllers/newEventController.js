@@ -8,7 +8,9 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
 
    $scope.event = {};
    $scope.event.tag = '';
-
+   $scope.$watch('calendar', function(){
+      console.log('calendar changed', $scope.calendar);
+   })
    $scope.querySearch = querySearch();
    $scope.searchText = null;
 

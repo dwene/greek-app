@@ -11,8 +11,8 @@ def regenerate_data_set():
     user_key = create_creator(organization_key)
     chatter_key = create_chatter(organization_key, user_key)
     generate_calendars(organization_key)
-    create_event(user_key, organization_key)
     create_link(organization_key)
+    create_event(user_key, organization_key)
 
 
 def destroy_data_set():
@@ -90,7 +90,7 @@ def generate_calendars(org_key):
     organization.calendars.append(leadership.put())
     organization.calendars.append(council.put())
     organization.put()
-    sleep(0.15)
+    sleep(0.25)
 
 
 def create_chatter(org_key, user_key):
@@ -103,13 +103,14 @@ def create_chatter(org_key, user_key):
     chatter.timestamp = datetime.datetime.now()
     chatter.following = [user_key]
     key = chatter.put()
-    sleep(0.15)
+    sleep(0.25)
     return key
 
 
 def create_event(creator, organization):
     event = Event()
     event.address = "Death Star, Galaxy Far Far Away"
+    event.location = "Death Star, Galaxy Far Far Away"
     event.creator = creator
     event.description = "I'm becoming Darth Vader and swearing my allegience to the Empire!"
     event.title = "Anakin becomes Darth Vader"
@@ -118,7 +119,12 @@ def create_event(creator, organization):
     event.time_end = datetime.datetime.now() + relativedelta(days=5) + relativedelta(minutes=60)
     event.organization = organization
     event.put()
-    sleep(0.15)
+    feature = Feature()
+    feature.name = 'events'
+    feature.expires = datetime.datetime.now() + relativedelta(months=1)
+    feature.organization = organization
+    feature.put()
+    sleep(0.25)
 
 def create_link(organization_key):
     group = LinkGroup()
@@ -133,7 +139,7 @@ def create_link(organization_key):
     link.group = group.key
     group.links = [link.put()]
     group.put()
-    sleep(0.15)
+    sleep(0.25)
 
 
 

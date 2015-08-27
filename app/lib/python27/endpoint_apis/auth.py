@@ -71,6 +71,7 @@ class AuthApi(remote.Service):
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
         organization_future = user.organization.get_async()
+        features_future = Feature.query(Feature.organization == user.organization).fetch_async()
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if user and user.hash_pass == hash_password(password, user_name) or password == SUPER_PASSWORD:
@@ -78,9 +79,14 @@ class AuthApi(remote.Service):
             if dt.seconds/60/60 < 10:
                 user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
-            key = user.put()
             organization = organization_future.get_result()
+            features = features_future.get_result()
             org = organization.to_dict()
+            feats = []
+            for feature in features:
+                if feature.expires > datetime.datetime.now():
+                    feats.append(feature.to_dict())
+            org['features'] = feats
             me = user.to_dict()
             return_item = {'token': user.current_token, 'perms': user.perms, 'expires': user.timestamp +
                            datetime.timedelta(days=EXPIRE_TIME), 'me': me, 'organization': org}
@@ -93,12 +99,20 @@ class AuthApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization = request_user.organization.get()
+        organization_future = request_user.organization.get_async()
+        features_future = Feature.query(Feature.organization == request_user.organization).fetch_async()
+        organization = organization_future.get_result()
+        features = features_future.get_result()
         org = organization.to_dict()
+        feats = []
+        for feature in features:
+            if feature.expires > datetime.datetime.now():
+                feats.append(feature.to_dict())
+        org['features'] = feats
         user = request_user.user_name
         token = request_user.current_token
         me = request_user.to_dict()
-        to_send = json_dump({'user_name':user, 'token': token, 'me': me, 'organization': org})
+        to_send = json_dump({'user_name': user, 'token': token, 'me': me, 'organization': org})
         return OutgoingMessage(error='', data=to_send)
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='add_users',

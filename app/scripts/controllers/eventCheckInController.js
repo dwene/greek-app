@@ -1,37 +1,31 @@
 App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$stateParams', '$rootScope', '$timeout', '$location', '$interval',
     function($scope, RESTService, Events, $stateParams, $rootScope, $timeout, $location, $interval) {
-        Events.get();
-        $scope.events = Events.events;
-        if (Events.events) {
-            getEventAndSetInfo($scope.events);
-        }
-        $scope.$on('events:updated', function() {
-            $scope.events = Events.events;
-            getEventAndSetInfo($scope.events);
+        $scope.$on('checkin:new', function(event, data){
+            liveUpdate(data);
         });
+        var interval, i;
+        function liveUpdate(attendanceData){
+            debugger;
+            for (i = 0; i < $scope.users.length; i++){
+                if ($scope.users[i].key === attendanceData.user){
+                    var user = $scope.users[i];
 
-
-        function getEventAndSetInfo(events) {
-            var event = undefined;
-            for (var i = 0; i < events.length; i++) {
-                if (events[i].key == $stateParams.tag) {
-                    event = events[i];
-                    break;
-                }
-            }
-            if (event === undefined) {
-                if (!refreshed) {
-                    Events.refresh();
-                    refreshed = true;
-                    console.log('refreshing events');
-                    return;
-                } else {
-                    $scope.eventNotFound = true;
-                    $scope.loading = false;
+                    if (user.attendance_data) {
+                        if (user.attendance_data.in_updating || user.attendance_data.out_updating) {
+                            return;
+                        }
+                        else if (user.timestamp_moment) {
+                            if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 1) {
+                                return;
+                            }
+                        }
+                        
+                        $scope.$apply(function(){
+                            $scope.users[i].attendance_data = attendanceData;
+                        });
+                    }
                     return;
                 }
-            } else {
-                $scope.event = event;
             }
         }
 
@@ -39,8 +33,8 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        console.log('I am updating the user check in stuff!');
-                        var users = JSON.parse(data.data);
+                        var eventData = JSON.parse(data.data);
+                        var users = eventData.users;
                         var counter = 0;
                         if (users && $scope.users) {
                             for (var i = 0; i < $scope.users.length; i++) {
@@ -50,7 +44,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                                     if (user.attendance_data.in_updating || user.attendance_data.out_updating) {
                                         continue;
                                     }
-                                    if (user.timestamp_moment) {
+                                    else if (user.timestamp_moment) {
                                         if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 5) {
                                             continue;
                                         }
@@ -72,25 +66,19 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                 }
             }
         }
+
         $scope.change = function() {
             $scope.maxLength = 10;
         }
-        // });
-        var interval_variable;
 
         function getCheckInData() {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $scope.users = JSON.parse(data.data);
+                        var eventData = JSON.parse(data.data);
+                        $scope.users = eventData.users;
+                        $scope.title = eventData.event.title;
                         $scope.loading = false;
-                        if (!angular.isDefined(interval_variable)) {
-                            interval_variable = $interval(function() {
-                                update()
-                            }, 10000);
-                        }
-                        $interval()
-                        console.log('Im ending get check in data');
                     } else {
                         console.log('ERROR: ', data);
                         $scope.eventNotFound = true;
@@ -105,12 +93,11 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
         }
 
         $scope.$on('$destroy', function() {
-            if (angular.isDefined(interval_variable)) {
-                $interval.cancel(interval_variable);
+            if (angular.isDefined(interval)) {
+                $interval.cancel(interval);
             }
         });
 
-        $scope.eventTag = $stateParams.tag;
         $scope.checkIn = function(member, checkStatus, clear) { //#TODO: fix controller so we can check in more than once
             member.timestamp_moment = moment();
             if (checkStatus && member.attendance_data && member.attendance_data.time_in) {
@@ -142,6 +129,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                     console.log('Error: ', data);
                 });
         }
+
         $scope.checkOut = function(member, checkStatus, clear) {
             member.timestamp_moment = moment();
             if (checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in) {
@@ -173,11 +161,13 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                     console.log('Error: ', data);
                 });
         }
+
         $scope.formatDate = function(date) {
             return momentInTimezone(date).format('lll');
         }
+
         $scope.back = function() {
-            $location.path('app/events/' + $scope.event.key);
+            $location.path('app/events/' + $stateParams.tag);
         }
     }
 ]);

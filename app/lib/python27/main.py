@@ -30,7 +30,6 @@ from google.appengine.api import urlfetch
 from apns import APNs, Payload
 import json
 from google.appengine.api import channel
-# import braintree
 import logging
 import datetime
 import jinja2
@@ -397,10 +396,6 @@ class Connected(webapp2.RequestHandler):
 
 class Disconnected(webapp2.RequestHandler):
     def post(self):
-        token = self.request.get('from')
-        user = User.query(User.channel_tokens == token).get()
-        user.channel_tokens.remove(token)
-        user.put()
         return
 
 
@@ -452,17 +447,20 @@ class SendNotificationByKey(webapp2.RedirectHandler):
         user_keys = list()
         for user in unpackaged['users']:
             user_keys.append(ndb.Key(urlsafe=user))
+        update = Update()
+        update.data = packet
+        update.users = user_keys
+        update.timestamp = datetime.datetime.now()
+        update.put()
         users = ndb.get_multi(user_keys)
         for user in users:
             user.new_notifications.insert(0, notification_key)
             for token in user.iphone_tokens:
                 ios_tokens.append(token)
-            for token in user.channel_tokens:
-                channel.send_message(token, packet)
+            # for token in user.channel_tokens:
+            #     channel.send_message(token, packet)
         apn = APNs(use_sandbox=True, cert_file='certs/cert.pem', key_file='certs/key.pem')
         payload = Payload(alert=notification.content, sound="default", badge=1)
-        logging.info("These are the iphone tokens about to be notified")
-        logging.info(ios_tokens)
         for token in ios_tokens:
             apn.gateway_server.send_notification(token, payload)
         ndb.put_multi(users)
@@ -476,6 +474,10 @@ class PushUpdate(webapp2.RedirectHandler):
         user_keys = list()
         for user in unpackaged['users']:
             user_keys.append(ndb.Key(urlsafe=user))
+        update = Update()
+        update.timestamp = datetime.datetime.now()
+        update.users = user_keys
+        update.data = packet
         users = ndb.get_multi(user_keys)
         for user in users:
             for token in user.channel_tokens:

@@ -1,4 +1,3 @@
-
 <div id="registerOrganization" class="container">
 
    <div class="md-whiteframe-z1">
@@ -12,13 +11,13 @@
         
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : registerForm.org_name.$invalid && !registerForm.org_name.$pristine }">
                     <label for="org_name">Organization Name</label>
-                    <input name="org_name" ng-model="data.name" required></input>
+                    <input name="org_name" ng-model="data.name" required/>
 			         <p class="text-danger invalid-text">An organization name is required.</p>
             </md-input-container>
             
             <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : registerForm.school_name.$invalid && !registerForm.school_name.$pristine }">
                     <label for="school_name">School Name</label>
-                    <input name="school_name" ng-model="data.school" required></input>
+                    <input name="school_name" ng-model="data.school" required/>
                     <p class="text-danger invalid-text">Your school name is required.</p>
             </md-input-container>
             <div ng-class="{ 'md-input-invalid' : registerForm.org_type.$invalid && !registerForm.org_type.$pristine }">

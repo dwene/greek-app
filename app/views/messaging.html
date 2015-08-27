@@ -18,7 +18,7 @@
                 <form name="messagingForm" id="messagingForm" ng-submit="sendMessage(messagingForm.$valid  && selectedMembers.length ,tags, title, content)" novalidate>
                     <md-input-container class="md-default-theme" ng-class="{ 'md-input-invalid' : (messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)}">
                         <label for="title">Message Title</label>
-                        <input ng-model="title" name="title" autocomplete="off" required></input>
+                        <input ng-model="title" name="title" autocomplete="off" required/>
                         <p ng-show="(messagingForm.title.$invalid && !messagingForm.title.$pristine) || (messagingForm.title.$invalid && submitted)" class="help-block">Please enter a message title.</p>
                     </md-input-container>
                     <div class="form-group" ng-class="{ 'md-input-invalid' : (messagingForm.content.$invalid && !messagingForm.content.$pristine) || (messagingForm.content.$invalid && submitted)}">

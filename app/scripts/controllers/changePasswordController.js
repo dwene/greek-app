@@ -1,5 +1,5 @@
-App.controller('changePasswordController', ['$scope', '$http', '$rootScope',
-    function($scope, $http, $rootScope) {
+App.controller('changePasswordController', ['$scope', '$http', '$rootScope', '$location',
+    function($scope, $http, $rootScope, $location) {
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
         $scope.changePassword = function(password) {
@@ -12,8 +12,7 @@ App.controller('changePasswordController', ['$scope', '$http', '$rootScope',
                     if (!RESTService.hasErrors(data)) {
                         $scope.passwordChanged = true;
                         $scope.changeFailed = false;
-                        $rootScope.logout();
-                        window.location.assign('#/app/login');
+                        $location.assign('app/login');
                     } else {
                         console.log('Error: ', data);
                         $scope.changeFailed = true;

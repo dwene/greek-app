@@ -5,17 +5,11 @@ App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSid
             $location.path('app/directory/' + Session.user_name);
         };
         this.homeButton = function() {
-            if (this.checkPermissions(MEMBER)) {
+            if (Session.member) {
                 $location.path('app');
             } else {
                 $location.path('app/directory');
             }
-        };
-        this.checkPermissions = function(perms) {
-            if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)) {
-                return false;
-            }
-            return true;
         };
 
         $scope.$on('notifications:updated', function() {
