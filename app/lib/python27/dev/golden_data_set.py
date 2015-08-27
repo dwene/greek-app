@@ -110,6 +110,7 @@ def create_chatter(org_key, user_key):
 def create_event(creator, organization):
     event = Event()
     event.address = "Death Star, Galaxy Far Far Away"
+    event.location = "Death Star, Galaxy Far Far Away"
     event.creator = creator
     event.description = "I'm becoming Darth Vader and swearing my allegience to the Empire!"
     event.title = "Anakin becomes Darth Vader"
