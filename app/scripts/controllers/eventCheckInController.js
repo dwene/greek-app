@@ -1,33 +1,33 @@
 App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$stateParams', '$rootScope', '$timeout', '$location', '$interval',
     function($scope, RESTService, Events, $stateParams, $rootScope, $timeout, $location, $interval) {
         $scope.$on('checkin:new', function(event, data){
-            // liveUpdate(data);
+            liveUpdate(data);
         });
         var interval, i;
-        // function liveUpdate(attendanceData){
-        //     debugger;
-        //     for (i = 0; i < $scope.users.length; i++){
-        //         if ($scope.users[i].key === attendanceData.user){
-        //             var user = $scope.users[i];
+        function liveUpdate(attendanceData){
+            debugger;
+            for (i = 0; i < $scope.users.length; i++){
+                if ($scope.users[i].key === attendanceData.user){
+                    var user = $scope.users[i];
 
-        //             if (user.attendance_data) {
-        //                 if (user.attendance_data.in_updating || user.attendance_data.out_updating) {
-        //                     return;
-        //                 }
-        //                 else if (user.timestamp_moment) {
-        //                     if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 1) {
-        //                         return;
-        //                     }
-        //                 }
+                    if (user.attendance_data) {
+                        if (user.attendance_data.in_updating || user.attendance_data.out_updating) {
+                            return;
+                        }
+                        else if (user.timestamp_moment) {
+                            if (Math.abs(user.timestamp_moment.diff(moment(), 'seconds')) < 1) {
+                                return;
+                            }
+                        }
                         
-        //                 $scope.$apply(function(){
-        //                     $scope.users[i].attendance_data = attendanceData;
-        //                 });
-        //             }
-        //             return;
-        //         }
-        //     }
-        // }
+                        $scope.$apply(function(){
+                            $scope.users[i].attendance_data = attendanceData;
+                        });
+                    }
+                    return;
+                }
+            }
+        }
 
         function update() {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
@@ -79,11 +79,6 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                         $scope.users = eventData.users;
                         $scope.title = eventData.event.title;
                         $scope.loading = false;
-                        if (!angular.isDefined(interval)) {
-                            interval = $interval(function() {
-                                update();
-                            }, 1000 * 10); // 2 minutes
-                        }
                     } else {
                         console.log('ERROR: ', data);
                         $scope.eventNotFound = true;
