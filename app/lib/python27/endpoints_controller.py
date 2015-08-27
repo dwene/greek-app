@@ -442,5 +442,28 @@ class RESTApi(remote.Service):
         request_user.put()
         return OutgoingMessage(error='', data=json_dump(get_image_url(blob_key)))
 
+
+    @endpoints.method(IncomingMessage, OutgoingMessage, path='user/get_updates',
+                      http_method='POST', name='user.get_updates')
+    def get_updates(self, request):
+        data = json.loads(request.data)
+        request_user = get_user(request.user_name, request.token)
+        if not request_user:
+            return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        new_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        if 'timestamp' not in data:
+            return OutgoingMessage(error='', data=json_dump({'updates': [], 'timestamp': new_timestamp}))
+        timestamp = datetime.datetime.strptime(str(data['timestamp']), "%Y-%m-%dT%H:%M:%S")
+        if type(timestamp) is not datetime.datetime:
+            return OutgoingMessage(error='', data=json_dump({'updates': [], 'timestamp': new_timestamp}))
+        else:
+            updates = Update.query(Update.timestamp >= timestamp).fetch()
+            out_updates = []
+            for update in updates:
+                out_updates.append(update.data)
+            return OutgoingMessage(error='', data=json_dump({'updates': out_updates, 'timestamp': new_timestamp}))
+
+
+
 APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api,
                                     admin_api])

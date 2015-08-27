@@ -51,7 +51,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
             to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
             to_send.recurring = true;
          }
-         console.log('to_send', to_send);
          RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/create', to_send)
          .success(function(data) {
             if (!RESTService.hasErrors(data)) {

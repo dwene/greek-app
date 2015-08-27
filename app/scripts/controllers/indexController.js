@@ -39,10 +39,13 @@ App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSide
         $scope.goToNotification = function(notify){
             if (notify.type == 'CHATTERCOMMENT'){
                 $scope.toggleNotifications();
-                $timeout(function(){Chatter.openChatterByKey(notify.type_key)}, 100);
+                $timeout(function(){Chatter.openChatterByKey(notify.type_key)});
             }
-            if(notify.link){
-                console.log('Going to notification link', notify.link);
+            else if (notify.type === 'NEWEVENT'){
+                $scope.toggleNotifications();
+                $timeout(function(){$location.assign('app/events/' + notify.type_key)})
+            }
+            else if(notify.link){
                 $location.url(notify.link);
                 $scope.toggleNotifications();
             }
