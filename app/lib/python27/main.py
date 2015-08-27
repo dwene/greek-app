@@ -480,7 +480,6 @@ class PushUpdate(webapp2.RedirectHandler):
         update.users = user_keys
         update.data = packet
         users = ndb.get_multi(user_keys)
-        logging.error(len(users))
         for user in users:
             for token in user.channel_tokens:
                 channel.send_message(token, packet)

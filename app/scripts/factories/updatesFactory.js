@@ -8,7 +8,6 @@ angular.module('App')
         }
 
         item.get = function() {
-            console.log('getting updates', item.timestamp);
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_updates', {timestamp:item.timestamp})
                 .success(function (data) {
                     if (!checkResponseErrors(data)) {

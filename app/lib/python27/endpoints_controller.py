@@ -11,7 +11,6 @@ from endpoint_apis.auth import auth
 from channels import channels
 from notifications import notifications_api
 from apiconfig import *
-from dateutil import parser
 
 api = endpoints.api(name='netegreek', version='v1',
                     allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],

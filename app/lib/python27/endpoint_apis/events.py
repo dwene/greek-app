@@ -116,9 +116,7 @@ class EventsApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        logging.error(request.data)
         event = Event.query(Event.key == ndb.Key(urlsafe=data['key'])).get()
-        logging.error(json_dump(event.to_dict()))
         if event.organization is request_user.organization:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         return OutgoingMessage(error='', data=json_dump(event.to_dict()))
@@ -268,7 +266,6 @@ class EventsApi(remote.Service):
         update.key = att_data.key
         update.data = att_data.to_dict()
         push_keys = push_keys_future.get_result()
-        logging.error("Push Keys: " + str(len(push_keys)))
         PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data='OK')
 
