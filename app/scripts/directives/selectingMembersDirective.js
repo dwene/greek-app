@@ -27,7 +27,7 @@ function() {
       })
       function setupInputCalendar(){
         if ($scope.directory && $scope.calendars && $scope.inputCalendar){
-          var calendar, 
+          var calendar,
           users = [];
           for (i = 0; i < $scope.calendars.length; i++){
             if ($scope.calendars[i].key === $scope.inputCalendar.calendar) {
@@ -117,7 +117,7 @@ function() {
 
       $scope.showSelectCustomDialog = function(){
         $mdDialog.show({
-          controller:('selectingMembersDialogController', ['$scope', '$mdDialog', selectingMembersDialogController]),
+          controller:('selectingMembersDialogController as selectingMembersDialog', ['$scope', '$mdDialog', selectingMembersDialogController]),
           templateUrl:'views/templates/selectingMembersDialog.html'
         });
       };

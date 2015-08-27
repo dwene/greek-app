@@ -6,22 +6,36 @@
     </md-toolbar>
 
     <md-content id="memberContainer">
-        <div class="md-padding">
-            <search ng-model="search"></search>
-            <div layout="row" layout-align="space-around">
-                <md-button ng-repeat="cal in calendars" ng-class="{'md-primary': cal === selectedCalendar.calendar}" ng-click="selectCalendar(cal)">{{cal.name | capitalizeFirst}}</md-button>
-                <md-button ng-class="{'md-primary': noneCalendar === selectedCalendar.calendar}" ng-click="selectCalendar(noneCalendar)">None</md-button>
-            </div>
-            <md-list>
-                <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member)" ng-disabled="member.disabled">
-                    <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
-                    <div class="md-list-item-text compact">
-                        <p ng-class="{'selected':member.disabled || member.checked}">{{member.first_name}} {{member.last_name}}</p>
-                        <md-checkbox md-no-ink ng-model="member.checked" ng-disabled="member.disabled" class="md-secondary md-primary" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
-                    </div>
-                </md-list-item>
-            </md-list>
+
+    <md-contact-chips
+        ng-model="ctrl.contacts"
+        md-contacts="ctrl.querySearch($query)"
+        md-contact-name="name"
+        md-contact-image="image"
+        md-contact-email="email"
+        md-require-match
+        filter-selected="ctrl.filterSelected"
+        placeholder="To">
+    </md-contact-chips>
+    <md-list class="fixedRows">
+      <md-subheader class="md-no-sticky">Contacts</md-subheader>
+      <md-list-item class="md-2-line contact-item" ng-repeat="(index, contact) in ctrl.allContacts"
+          ng-if="ctrl.contacts.indexOf(contact) < 0">
+        <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" />
+        <div class="md-list-item-text compact">
+          <h3>{{contact.name}}</h3>
+          <p>{{contact.email}}</p>
         </div>
+      </md-list-item>
+      <md-list-item class="md-2-line contact-item selected" ng-repeat="(index, contact) in ctrl.contacts">
+        <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" />
+        <div class="md-list-item-text compact">
+          <h3>{{contact.name}}</h3>
+          <p>{{contact.email}}</p>
+        </div>
+      </md-list-item>
+
+
     </md-content>
 
     <div class="md-actions" layout="row">
