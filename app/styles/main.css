@@ -1171,9 +1171,6 @@ md-dialog .md-subheader {
 md-dialog .md-subheader[sticky-prev-state="next"]:not(.md-sticky-clone) {
   visibility: hidden;
 }
-#selectingMembers .selected {
-  color: blue;
-}
 #tagsDialog {
   min-height: 80%;
 }
