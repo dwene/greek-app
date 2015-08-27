@@ -118,6 +118,11 @@ def create_event(creator, organization):
     event.time_end = datetime.datetime.now() + relativedelta(days=5) + relativedelta(minutes=60)
     event.organization = organization
     event.put()
+    feature = Feature()
+    feature.name = 'events'
+    feature.expires = datetime.datetime.now() + relativedelta(months=1)
+    feature.organization = organization
+    feature.put()
     sleep(0.15)
 
 def create_link(organization_key):

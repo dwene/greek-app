@@ -1,15 +1,16 @@
 App.controller('adminController', ['$scope', 'RESTService', '$rootScope',
     function($scope, RESTService, $rootScope) {
-        routeChange();
-        //$rootScope.requirePermissions(COUNCIL);
-        //Load.then(function(){
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/subscription_info', '')
+
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/admin/v1/features_info', '')
             .success(function(data) {
                 if (!RESTService.hasErrors(data)) {
-                    $scope.subscription = JSON.parse(data.data);
-                    $scope.subscription_raw = data.data;
-                    $scope.loading = false;
-                    $scope.pay = {};
+                    var features = JSON.parse(data.data);
+                    for (var i = 0 ; i < features.length; i++){
+                        if (features[i].expires){
+                            features[i].expires = momentInTimezone(features[i].expires).calendar();
+                        }
+                    }
+                    $scope.features = features;
                 } else {
                     console.log('ERROR: ', data);
                 }
@@ -17,6 +18,7 @@ App.controller('adminController', ['$scope', 'RESTService', '$rootScope',
             .error(function(data) {
                 console.log('Error: ', data);
             });
+
         $scope.cancelSubscription = function() {
             $scope.loading = true;
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/pay/cancel_subscription', '')
