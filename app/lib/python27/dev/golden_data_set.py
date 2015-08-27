@@ -90,7 +90,7 @@ def generate_calendars(org_key):
     organization.calendars.append(leadership.put())
     organization.calendars.append(council.put())
     organization.put()
-    sleep(0.15)
+    sleep(0.25)
 
 
 def create_chatter(org_key, user_key):
@@ -103,7 +103,7 @@ def create_chatter(org_key, user_key):
     chatter.timestamp = datetime.datetime.now()
     chatter.following = [user_key]
     key = chatter.put()
-    sleep(0.15)
+    sleep(0.25)
     return key
 
 
@@ -124,7 +124,7 @@ def create_event(creator, organization):
     feature.expires = datetime.datetime.now() + relativedelta(months=1)
     feature.organization = organization
     feature.put()
-    sleep(0.15)
+    sleep(0.25)
 
 def create_link(organization_key):
     group = LinkGroup()
@@ -139,7 +139,7 @@ def create_link(organization_key):
     link.group = group.key
     group.links = [link.put()]
     group.put()
-    sleep(0.15)
+    sleep(0.25)
 
 
 
