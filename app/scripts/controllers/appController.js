@@ -1,16 +1,20 @@
-App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', '$location', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Directory', 'Channels',
-    function($scope, $interval, $rootScope, $timeout, $location, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Channels) {
+App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', '$location', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Directory', 'Channels', 'Updates',
+    function($scope, $interval, $rootScope, $timeout, $location, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Channels, Updates) {
         var notification_update_interval;
         AuthService.cachedLogin();
         $scope.authenticated = AuthService.isAuthenticated();
-
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
             Notifications.get();
             Channels.connect();
             $scope.authenticated = true;
+            if (!angular.isDefined(notification_update_interval)) {
+                Updates.get();
+                notification_update_interval = $interval(function(){
+                    Updates.get();
+                }, 15000)
+            }
         });
         $scope.$on('organization:updated', function() {
-            console.log('Organization just updated');
             if ($rootScope.color != Organization.organization.color) {
                 $scope.authenticated = false;
                 $rootScope.color = Organization.organization.color;

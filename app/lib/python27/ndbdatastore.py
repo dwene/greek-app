@@ -32,7 +32,6 @@ class Organization(ModelUtils, ndb.Model):
     calendars = ndb.KeyProperty(repeated=True)
 
 
-
 class User(UserUtils, ndb.Model):
     # login stuff
     user_name = ndb.StringProperty()
@@ -243,3 +242,9 @@ class ChatterComment(ModelUtils, ndb.Model):
     timestamp = ndb.DateTimeProperty()
     likes = ndb.KeyProperty(repeated=True)
     edited = ndb.DateTimeProperty()
+
+
+class Update(ndb.Model):
+    users = ndb.KeyProperty(repeated=True, kind=User)
+    data = ndb.JsonProperty()
+    timestamp = ndb.DateTimeProperty(default=datetime.datetime.now())

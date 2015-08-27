@@ -1,5 +1,5 @@
-App.factory('Notifications', ['RESTService', '$rootScope', 'localStorageService', '$q',
-    function(RESTService, $rootScope, localStorageService, $q) {
+App.factory('Notifications', ['RESTService', '$rootScope', 'localStorageService', '$q', 'Events',
+    function(RESTService, $rootScope, localStorageService, $q, Events) {
         var item = {};
         item.hasLoaded = false;
         item.notifs = [];
@@ -48,7 +48,6 @@ App.factory('Notifications', ['RESTService', '$rootScope', 'localStorageService'
                                     has_changed = true;
                                     item.notifs.push(new_notifications[i]);
                                 }
-
                             }
                             if (has_changed) {
                                 $rootScope.$broadcast('notifications:updated');
@@ -64,6 +63,9 @@ App.factory('Notifications', ['RESTService', '$rootScope', 'localStorageService'
         }
         item.add = function(notify){
             item.notifs.push(notify);
+            if (notify.type === 'NEWEVENT'){
+                Events.refresh();
+            }
             localStorageService.set('notifications', item.notifs);
             $rootScope.$broadcast('notifications:updated');
         }

@@ -11,8 +11,8 @@ def regenerate_data_set():
     user_key = create_creator(organization_key)
     chatter_key = create_chatter(organization_key, user_key)
     generate_calendars(organization_key)
-    create_event(user_key, organization_key)
     create_link(organization_key)
+    create_event(user_key, organization_key)
 
 
 def destroy_data_set():

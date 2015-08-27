@@ -21,7 +21,7 @@ angular.module('App')
         return item;
      });
 
-angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notifications){
+angular.module('App').factory('ChannelMessageHandler', function($rootScope, Chatter, Notifications){
     var self = {};
     self.handle = function(message){
         console.log("Recieving new Channel Message", message);
@@ -37,6 +37,9 @@ angular.module('App').factory('ChannelMessageHandler', function(Chatter, Notific
                 if (data.data.type === "NEWCHATTER"){
                     Chatter.updateNewChatter(data.data.chatter);
                 }
+            }
+            else if(data.type === "CHECKIN"){
+                $rootScope.$broadcast('checkin:new', data.data);
             }
         }
     }

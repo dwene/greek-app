@@ -3,7 +3,7 @@ from protorpc import remote
 import datetime
 from notifications import Notifications
 from dateutil.relativedelta import relativedelta
-from pushfactory import PushFactory
+from pushfactory import PushFactory, LiveUpdate
 events = endpoints.api(name='event', version='v1',
                        allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                        audiences=[ANDROID_AUDIENCE])
@@ -97,13 +97,15 @@ class EventsApi(remote.Service):
         else:
             notification['content'] = request_user.first_name + ' ' + request_user.last_name + ' invited you to the event: ' + event_data['title']
         notification['sender'] = new_event.creator
-        notification['type'] = 'EVENT'
+        notification['type'] = 'NEWEVENT'
         notification['type_key'] = new_event_key
         if new_event.calendar:
             calendar = new_event.calendar.get()
             push_keys = list(set(calendar.users) | set(new_event.invites))
         else:
             push_keys = new_event.invites
+        if request_user.key in push_keys:
+            push_keys.remove(request_user.key)
         PushFactory.send_notification_with_keys(notification, push_keys)
         return OutgoingMessage(error='', data=json_dump(new_event_key.urlsafe()))
 
@@ -203,7 +205,7 @@ class EventsApi(remote.Service):
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get_check_in_info',
-                      http_method='POST', name='event.get_check_in_info')
+                      http_method='POST', name='get_check_in_info')
     def get_check_in_info(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
@@ -211,30 +213,36 @@ class EventsApi(remote.Service):
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_key = ndb.Key(urlsafe=json.loads(request.data))
+        event_future = event_key.get_async()
         users_future = User.query(ndb.AND(User.organization ==
                                   request_user.organization, User.perms != 'alumni'))\
             .fetch_async(projection=[User.user_name, User.prof_pic, User.first_name, User.last_name])
         attendance_data_future = AttendanceData.query(AttendanceData.event == event_key).fetch_async()
         users = users_future.get_result()
         attendance_data = attendance_data_future.get_result()
-        data_list = list()
+        user_list = list()
         for user in users:
             user_dict = user.to_dict()
             user_dict['key'] = user.key
             for att in attendance_data:
                 if att.user == user.key:
                     user_dict['attendance_data'] = att.to_dict()
-            data_list.append(user_dict)
-        return OutgoingMessage(error='', data=json_dump(data_list))
+            user_list.append(user_dict)
+        event = event_future.get_result()
+        out_event = {'title': event.title}
+        out = {'event': out_event, 'users': user_list}
+        return OutgoingMessage(error='', data=json_dump(out))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='check_in',
-                      http_method='POST', name='event.check_in')
+                      http_method='POST', name='check_in')
     def check_in(self, request):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        push_keys_future = User.query(User.organization == request_user.organization,
+                               User.perms.IN([COUNCIL, LEADERSHIP])).fetch_async(keys_only=True)
         data = json.loads(request.data)
         user_key = ndb.Key(urlsafe=data['user_key'])
         event_key = ndb.Key(urlsafe=data['event_key'])
@@ -244,13 +252,9 @@ class EventsApi(remote.Service):
             if data['clear'] is True and att_data:
                 att_data.time_in = None
                 att_data.put()
-                return OutgoingMessage(error='', data='OK')
-            elif data['clear'] is True and not att_data:
-                return OutgoingMessage(error='', data='OK')
-        if att_data:
+        elif att_data:
             att_data.time_in = datetime.datetime.now()
             att_data.put()
-            return OutgoingMessage(error='', data='OK')  # They are already checked in
         else:
             att_data = AttendanceData()
             att_data.user = user_key
@@ -259,6 +263,13 @@ class EventsApi(remote.Service):
             if 'note' in data:
                 att_data.note = data['note']
             att_data.put()
+        update = LiveUpdate()
+        update.type = 'CHECKIN'
+        update.key = att_data.key
+        update.data = att_data.to_dict()
+        push_keys = push_keys_future.get_result()
+        logging.error("Push Keys: " + str(len(push_keys)))
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='check_out',
@@ -267,8 +278,10 @@ class EventsApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
+        if not (request_user.perms == 'council' or request_user.perms == LEADERSHIP):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
+        push_keys = User.query(User.organization == request_user.organization,
+                               User.perms.IN([COUNCIL, LEADERSHIP])).fetch(keys_only=True)
         data = json.loads(request.data)
         user_key = ndb.Key(urlsafe=data['user_key'])
         event_key = ndb.Key(urlsafe=data['event_key'])
@@ -278,10 +291,7 @@ class EventsApi(remote.Service):
             if data['clear'] is True and att_data:
                 att_data.time_out = None
                 att_data.put()
-                return OutgoingMessage(error='', data='OK')
-            elif data['clear'] is True and not att_data:
-                return OutgoingMessage(error='', data='OK')
-        if att_data:
+        elif att_data:
             att_data.time_out = datetime.datetime.now()
             att_data.put()
         else:
@@ -292,6 +302,11 @@ class EventsApi(remote.Service):
             if 'note' in data:
                 att_data.note = data['note']
             att_data.put()
+        update = LiveUpdate()
+        update.type = 'CHECKIN'
+        update.key = att_data.key
+        update.data = att_data.to_dict()
+        PushFactory.push_update(update, push_keys)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='delete',
