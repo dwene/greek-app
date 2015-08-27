@@ -1326,7 +1326,6 @@ a:hover {
 }
 md-backdrop.md-opaque {
   z-index: 1040 !important;
-  background: rgba(0, 0, 0, 0.2) !important;
 }
 .md-dialog-container {
   z-index: 1042;
@@ -1437,8 +1436,6 @@ md-backdrop.md-opaque {
 }
 md-sidenav {
   z-index: 1051;
-  position: fixed;
-  top: 0;
 }
 md-sidenav md-toolbar .md-header {
   background-color: rgba(0, 0, 0, 0) !important;
