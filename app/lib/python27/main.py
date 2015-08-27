@@ -30,7 +30,6 @@ from google.appengine.api import urlfetch
 from apns import APNs, Payload
 import json
 from google.appengine.api import channel
-# import braintree
 import logging
 import datetime
 import jinja2

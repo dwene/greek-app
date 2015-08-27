@@ -5,38 +5,46 @@
         </div>
     </md-toolbar>
     <md-content class="md-padding md-whiteframe-z1">
-    <md-subheader>App Color</md-subheader>
-    <div id="colorPicker">
-        <md-button md-theme="cyan" ng-click="$root.changeTheme('cyan');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="red" ng-click="$root.changeTheme('red');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="purple" ng-click="$root.changeTheme('purple');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="pink" ng-click="$root.changeTheme('pink');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="green" ng-click="$root.changeTheme('green');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="orange" ng-click="$root.changeTheme('orange');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="brown" ng-click="$root.changeTheme('brown');" class="colorPick md-raised"></md-button>
-        <md-button md-theme="gray" ng-click="$root.changeTheme('gray');" class="colorPick md-raised"></md-button>
-    </div>
-    
+      <md-subheader>App Color</md-subheader>
+      <div id="colorPicker">
+          <md-button md-theme="cyan" ng-click="$root.changeTheme('cyan');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="red" ng-click="$root.changeTheme('red');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="purple" ng-click="$root.changeTheme('purple');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="pink" ng-click="$root.changeTheme('pink');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="green" ng-click="$root.changeTheme('green');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="orange" ng-click="$root.changeTheme('orange');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="brown" ng-click="$root.changeTheme('brown');" class="colorPick md-raised"></md-button>
+          <md-button md-theme="gray" ng-click="$root.changeTheme('gray');" class="colorPick md-raised"></md-button>
+      </div>
+      <md-subheader>Features</md-subheader>
+      <div id="features">
+        <div ng-repeat="feature in features">
+          <span>{{feature.name}} - <span ng-hide="feature.expired"> renews on {{feature.expires}}</span> <span ng-show="feature.expired">Expired</span> </span>
+        </div>
+      </div>
+    </md-content>
+
+
     <!-- <md-subheader>Organization Image</md-subheader>
     <img class="orgLetters img-responsive" ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}"><br>
     <md-button ng-href="#/app/uploadorganizationimage">Change Organization Image</md-button> -->
-      
+
 <!--
     <section ng-hide="false">
     <h2 class="page-header">Subscription Information</h2>
 -->
-<!--       
+<!--
        <div ng-hide="subscription.no_subscription">
         <p>Next Billing Date: {{subscription.next_billing_date}}</p>
         </div> -->
-        
+
 <!--
         <img ng-src="{{subscription.credit_card.image_url}}"><span>{{subscription.credit_card.masked_number}}</span>
         <p>Expires: {{subscription.credit_card.expiration}}</p>
         <button ng-hide="subscription.no_subscription" class="btn btn-default" ng-click="cancelSubscription()">Cancel Subscription</button>
         <button ng-show="subscription.no_subscription" class="btn btn-default" ng-click="subscribe()">Subscribe with this card</button>
         <div ng-show="subscription.no_subscription">
-      action needs to be: action="/create_transaction" method="POST" 
+      action needs to be: action="/create_transaction" method="POST"
           <form id="braintree-payment-form">
             <p>
               <label>First Name</label>
@@ -62,9 +70,4 @@
             <button type="submit" ng-click="subscribe(pay)" class="btn btn-default">Save Payment Info</button>
           </form>
 -->
-        </div>
-        
-    </section>
-    </md-content>
-    
 </div>

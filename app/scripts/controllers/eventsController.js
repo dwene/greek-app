@@ -1,6 +1,5 @@
 App.controller('eventsController', ['$scope', 'Organization', 
     function($scope, Organization) {
-    	$scope.permitted = true;
     	$scope.$on('organization:updated', function(){
     		evaluatePermitted();
     	});
@@ -12,6 +11,5 @@ App.controller('eventsController', ['$scope', 'Organization',
 	    	}
     	}
     	evaluatePermitted();
-    	
     }
 ])
