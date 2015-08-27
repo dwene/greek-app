@@ -4,22 +4,25 @@
             <h1>Select Members</h1>
         </div>
     </md-toolbar>
-       <md-button ng-repeat="cal in calendars" ng-class="{'md-primary': cal === selectedCalendar.calendar}" ng-click="selectCalendar(cal)">{{cal.name | capitalizeFirst}}</md-button>
-       <md-button ng-class="{'md-primary': noneCalendar === selectedCalendar.calendar}" ng-click="selectCalendar(noneCalendar)">None</md-button>
-      <md-content id="memberContainer">
-        <div class="md-padding no-padding-top">
-          <search ng-model="search"></search>
-          <md-list>
-              <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member)" ng-disabled="member.disabled">
-                  <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
-                  <div class="md-list-item-text compact">
-                      <p ng-class="{'selected':member.disabled || member.checked}">{{member.first_name}} {{member.last_name}}</p>
-                      <md-checkbox md-no-ink ng-model="member.checked" ng-disabled="member.disabled" class="md-secondary md-primary" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
-                  </div>
-              </md-list-item>
-          </md-list>
+
+    <md-content id="memberContainer">
+        <div class="md-padding">
+            <search ng-model="search"></search>
+            <div layout="row" layout-align="space-around">
+                <md-button ng-repeat="cal in calendars" ng-class="{'md-primary': cal === selectedCalendar.calendar}" ng-click="selectCalendar(cal)">{{cal.name | capitalizeFirst}}</md-button>
+                <md-button ng-class="{'md-primary': noneCalendar === selectedCalendar.calendar}" ng-click="selectCalendar(noneCalendar)">None</md-button>
+            </div>
+            <md-list>
+                <md-list-item class="md-2-line contact-item" ng-repeat="member in members | orderBy : 'last_name' | nameSearch:search" ng-click="toggle(member)" ng-disabled="member.disabled">
+                    <img ng-src="{{member.prof_pic || $root.defaultProfilePicture}}" class="md-avatar" alt="{{member.first_name}}" style="background-color:#ccc;" />
+                    <div class="md-list-item-text compact">
+                        <p ng-class="{'selected':member.disabled || member.checked}">{{member.first_name}} {{member.last_name}}</p>
+                        <md-checkbox md-no-ink ng-model="member.checked" ng-disabled="member.disabled" class="md-secondary md-primary" aria-label="Toggle {{member.first_name}} {{member.last_name}}"></md-checkbox>
+                    </div>
+                </md-list-item>
+            </md-list>
         </div>
-      </md-content>
+    </md-content>
 
     <div class="md-actions" layout="row">
         <span flex></span>
