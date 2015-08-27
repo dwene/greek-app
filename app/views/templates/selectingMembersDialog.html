@@ -17,8 +17,15 @@
         placeholder="Select members or groups">
     </md-contact-chips>
     <md-list>
+        <md-subheader class="md-no-sticky">Group</md-subheader>
+        <md-list-item class="contact-item" ng-class="{'selected': (index, group) in selectingMembersDialog.selectedGroups}" ng-repeat="(index, group) in selectingMembersDialog.groups">
+            <img ng-src="{{group.image}}" class="md-avatar" alt="{{group.name}}" />
+            <div class="md-list-item-text compact">
+                <h3>{{group.name}}</h3>
+            </div>
+        </md-list-item>
         <md-subheader class="md-no-sticky">Contacts</md-subheader>
-        <md-list-item class="md-2-line contact-item" ng-class="{'selected': (index, member) in selectingMembersDialog.selectedMembers}" ng-repeat="(index, member) in selectingMembersDialog.members" ng-if="selectingMembersDialog.members.indexOf(members) < 0">
+        <md-list-item class="contact-item" ng-class="{'selected': (index, member) in selectingMembersDialog.selectedMembers}" ng-repeat="(index, member) in selectingMembersDialog.members">
             <img ng-src="{{member.image}}" class="md-avatar" alt="{{member.name}}" />
             <div class="md-list-item-text compact">
                 <h3>{{member.name}}</h3>
