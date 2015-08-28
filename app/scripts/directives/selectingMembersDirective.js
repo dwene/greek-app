@@ -168,7 +168,9 @@ function() {
         scope.members = directory;
         scope.calendars = $scope.calendars;
         console.log(scope.calendars);
-
+        setTimeout(function(){
+          console.log(scope.calendars);
+        }, 5000)
         scope.$watch('selectingMembersDialog.selected', function() {
           // #TODO
           if (complete === true){

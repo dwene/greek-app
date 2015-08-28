@@ -16,24 +16,33 @@ def changePasswords():
             user.hash_pass = hashlib.sha224(user.hash_pass + user.user_name).hexdigest()
             user.put()
 
+
 def add_calendars():
-    organization = ndb.Key(Organization, 5629499534213120).get()
+    organization = ndb.Key(Organization, 5733679603122176).get()
     public = Calendar()
     public.organization = organization.key
     public.name = 'public'
-    public.users = User.query(User.perms.IN(['council', 'leadership', 'members', 'alumni'])).fetch(keys_only=True)
-    # everyone = Calendar()
-    # everyone.organization = organization.key
-    # everyone.name = "everyone"
-    # everyone.users = User.query(User.perms.IN(['council', 'leadership', 'members'])).fetch(keys_only=True)
-    # leadership = Calendar()
-    # leadership.organization = organization.key
-    # leadership.name = "leadership"
-    # leadership.users = User.query(User.perms.IN(['council', 'alumni'])).fetch(keys_only=True)
-    # council = Calendar()
-    # council.name = 'council'
-    # council.organization = organization.key
-    # council.users = User.query(User.perms.IN(['council'])).fetch(keys_only=True)
+    public.users = User.query(User.organization == organization.key).fetch(keys_only=True)
+
+    everyone = Calendar()
+    everyone.organization = organization.key
+    everyone.name = "everyone"
+    everyone.users = User.query(User.perms.IN(['council', 'leadership', 'member']),
+                                User.organization == organization.key).fetch(keys_only=True)
+    leadership = Calendar()
+    leadership.organization = organization.key
+    leadership.name = "leadership"
+    leadership.users = User.query(User.perms.IN(['council', 'leadership']),
+                                  User.organization == organization.key).fetch(keys_only=True)
+    council = Calendar()
+    council.name = 'council'
+    council.organization = organization.key
+    council.users = User.query(User.perms.IN(['council']),
+                               User.organization == organization.key).fetch(keys_only=True)
+    organization.calendars = []
+    organization.calendars.append(everyone.put())
+    organization.calendars.append(leadership.put())
+    organization.calendars.append(council.put())
     organization.calendars.append(public.put())
     organization.put()
 
