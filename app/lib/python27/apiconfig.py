@@ -375,3 +375,8 @@ def check_if_user_in_tags(user, perms_tags, org_tags, event_tags):
         if len(frozenset(user_event_tags).intersection(event_tags)) > 0:
             return True
     return False
+
+
+def hash_password(password, user_name):
+    h1 = hashlib.sha224(password+OLD_SALT).hexdigest()
+    return hashlib.sha224(h1+user_name).hexdigest()

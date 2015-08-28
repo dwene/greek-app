@@ -1,18 +1,50 @@
 __author__ = 'anakin'
 from ndbdatastore import *
-from apiconfig import generate_token
-from endpoint_apis.auth import hash_password
+from apiconfig import generate_token, hash_password
 from time import sleep
 from dateutil.relativedelta import relativedelta
 
 
+def setup_organization(organization_key, local_development):
+    netebot = User.query(User.user_name == "netebot").get().key
+    create_chatter(organization_key, netebot)
+    if local_development:
+        sleep(0.25)
+    generate_calendars(organization_key)
+    if local_development:
+        sleep(0.25)
+    setup_events(organization_key, netebot)
+    return
+
+
+def setup_events(organization, netebot_key):
+    feature = Feature()
+    feature.name = "events"
+    feature.expires = datetime.datetime.now() + relativedelta(months=1)
+    feature.organization = organization
+    futures = []
+    futures.append(feature.put_async())
+    event = Event()
+    event.organization = organization
+    event.calendar = Calendar.query(Calendar.name == "council", Calendar.organization == organization).get().key
+    event.creator = netebot_key
+    event.time_start = feature.expires
+    event.time_end = feature.expires + relativedelta(hours=1)
+    event.title = "Events Trial End Date"
+    event.description = "Events trial will end on this day unless you decide to upgrade to premium events."
+    event.time_created = datetime.datetime.now()
+    futures.append(event.put_async())
+    for future in futures:
+        future.get_result()
+    return
+
+
 def regenerate_data_set():
     organization_key = create_organization()
+    netebot = create_netebot()
     user_key = create_creator(organization_key)
-    chatter_key = create_chatter(organization_key, user_key)
-    generate_calendars(organization_key)
+    setup_organization(organization_key, True)
     create_link(organization_key)
-    create_event(user_key, organization_key)
 
 
 def destroy_data_set():
@@ -33,6 +65,19 @@ def destroy_data_set():
     ndb.delete_multi(Chatter.query().fetch(keys_only=True))
     ndb.delete_multi(ChatterComment.query().fetch(keys_only=True))
     ndb.delete_multi(Organization.query().fetch(keys_only=True))
+
+
+def create_netebot():
+    netebot = User()
+    netebot.first_name = 'NeteBot'
+    netebot.user_name = 'netebot'
+    netebot.perms = 'council'
+    netebot.timestamp = datetime.datetime.now()
+    netebot.email = 'support@netegreek.com'
+    key = netebot.put()
+    sleep(0.15)
+    return key
+
 
 
 def create_creator(org_key):
@@ -90,8 +135,7 @@ def generate_calendars(org_key):
     organization.calendars.append(leadership.put())
     organization.calendars.append(council.put())
     organization.put()
-    sleep(0.25)
-
+    sleep(0.15)
 
 def create_chatter(org_key, user_key):
     chatter = Chatter()
@@ -103,7 +147,17 @@ def create_chatter(org_key, user_key):
     chatter.timestamp = datetime.datetime.now()
     chatter.following = [user_key]
     key = chatter.put()
-    sleep(0.25)
+    comment = ChatterComment()
+    comment.organization = org_key
+    comment.author = user_key
+    comment.content = "Feel free to delete this chatter whenever you want!" \
+                      " Just click the trash can in the top right corner."
+    comment.timestamp = datetime.datetime.now()
+    comment.likes = [user_key]
+    comment.chatter = chatter.put()
+    comment.put()
+    chatter.comments = [comment.key]
+    chatter.put()
     return key
 
 
@@ -135,7 +189,7 @@ def create_link(organization_key):
     link = Link()
     link.organization = organization_key
     link.title = "How to kill a Jedi"
-    link.link = "http://starwars.wikia.com/wiki/Jedi_hunter"
+    link.link = "starwars.wikia.com/wiki/Jedi_hunter"
     link.group = group.key
     group.links = [link.put()]
     group.put()

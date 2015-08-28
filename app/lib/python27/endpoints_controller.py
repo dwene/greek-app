@@ -464,6 +464,5 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error='', data=json_dump({'updates': out_updates, 'timestamp': new_timestamp}))
 
 
-
 APPLICATION = endpoints.api_server([api, chatter_api, links, polls, events, auth, channels, notifications_api,
                                     admin_api])

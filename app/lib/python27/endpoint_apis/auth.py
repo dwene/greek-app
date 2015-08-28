@@ -1,15 +1,14 @@
-from apiconfig import *
-from protorpc import remote
 import datetime
+
+from protorpc import remote
+
+from apiconfig import *
+from golden_data_set import setup_organization
+
 
 auth = endpoints.api(name='auth', version='v1',
                      allowed_client_ids=[WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
                      audiences=[ANDROID_AUDIENCE])
-
-
-def hash_password(password, user_name):
-    h1 = hashlib.sha224(password+OLD_SALT).hexdigest()
-    return hashlib.sha224(h1+user_name).hexdigest()
 
 
 @auth.api_class(resource_name='auth')
@@ -39,6 +38,7 @@ class AuthApi(remote.Service):
         new_user.class_year = int(user['class_year'])
         new_user.timestamp = datetime.datetime.now()
         new_user.put()
+        setup_organization(new_org.key, False)
         content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
         content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
         content += '\nUser Name: ' + new_user.user_name
