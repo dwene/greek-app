@@ -1520,3 +1520,8 @@ md-bottom-sheet.md-grid md-item .md-icon-container {
 .md-input-invalid .invalid-text {
   display: block;
 }
+.md-sidenav-backdrop,
+.md-sidenav-backdrop.md-opaque.ng-leave {
+  opacity: 1 !important;
+  transition: none !important;
+}
