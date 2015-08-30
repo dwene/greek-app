@@ -12,7 +12,7 @@
     "angular-animate": "~1.2.0",
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
-    "angular-material": "~0.10.1",
+    "angular-material": "0.10.0",
     "angular-permission": "~0.1.6",
     "ngCordova": "~0.1.10-alpha",
     "components-font-awesome": "~4.4.0"

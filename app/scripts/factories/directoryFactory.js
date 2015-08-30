@@ -1,7 +1,6 @@
 App.factory('Directory', ['RESTService', '$rootScope', 'localStorageService', '$q', 'Session',
     function(RESTService, $rootScope, localStorageService, $q, Session) {
         var item = {};
-        item.directory = localStorageService.get('directory');
         item.cacheTimestamp = undefined;
 
         item.get = function() {
@@ -11,6 +10,16 @@ App.factory('Directory', ['RESTService', '$rootScope', 'localStorageService', '$
                     .success(function(data) {
                         if (!checkResponseErrors(data)) {
                             item.directory = JSON.parse(data.data);
+                            for (var i = 0; i < item.directory.members.length; i++){
+                                item.directory.members[i].name = item.directory.members[i].first_name + " " + item.directory.members[i].last_name;
+                                if (item.directory.members[i].prof_pic){
+                                    item.directory.members[i].image = item.directory.members[i].prof_pic;
+                                }
+                                else{
+                                    item.directory.members[i].image = 'images/defaultprofile.png';
+                                }
+                            }
+
                             localStorageService.set('directory', item.directory);
                             $rootScope.$broadcast('directory:updated');
                         } else {

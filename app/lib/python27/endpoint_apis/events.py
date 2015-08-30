@@ -38,20 +38,17 @@ class EventsApi(remote.Service):
             cal_key = ndb.Key(urlsafe=event_data['calendar'])
             if cal_key in organization.calendars:
                 new_event.calendar = cal_key
-        new_event_key = new_event.put()
-        individuals = []
         if 'individuals' in event_data:
+            logging.error(str(len(event_data['individuals'])))
             invite_keys = []
             for individual in event_data['individuals']:
                 invite_key = ndb.Key(urlsafe=individual)
-                if invite_key.kind() is User:
+                if invite_key:
                     invite_keys.append(invite_key)
-            individuals = ndb.get_multi(invite_keys)
-            for invite in individuals:
-                if invite.organization is not organization.key:
-                    individuals.remove(invite)
-        new_event.invites = individuals
+            new_event.invites = invite_keys
+            logging.error(str(len(new_event.invites)))
         future_list = list()
+        new_event_key = new_event.put()
         recurring = False
         if 'recurring' in event_data and event_data['recurring'] is True:
             recurring_type = event_data['recurring_type']
@@ -73,12 +70,11 @@ class EventsApi(remote.Service):
                 ev.time_end = curr_end_date
                 ev.time_created = new_event.time_created
                 ev.organization = new_event.organization
-                ev.org_tags = new_event.org_tags
                 if 'location' in event_data:
                     ev.location = event_data['location']
                 if 'address' in event_data:
                     ev.address = event_data['address']
-                ev.calendar = new_event.invites
+                ev.calendar = new_event.calendar
                 ev.invites = new_event.invites
                 ev.parent_event = new_event_key
                 recurring = True
@@ -341,6 +337,7 @@ class EventsApi(remote.Service):
         calendar_list = []
         for calendar in calendars:
             cal = calendar.to_dict()
+            cal['image'] = 'images/groups.png'
             users = []
             for user in calendar.users:
                 if user_dict[user] is not None:

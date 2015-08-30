@@ -10,9 +10,13 @@ App.factory('Events', ['RESTService', '$rootScope', 'localStorageService', '$q',
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/calendars', '')
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        if (item.events != JSON.parse(data.data)) {
-                            item.calendars = JSON.parse(data.data);
+                        var calendars = JSON.parse(data.data);
+                        for (var i = 0; i < calendars.length; i++){
+                            if (calendars[i].name){
+                                calendars[i].name = calendars[i].name[0].toUpperCase() + calendars[i].name.slice(1);
+                            }
                         }
+                        item.calendars = calendars;
                         deferred.resolve();
                     } else {
                         console.log('ERROR: ', data);

@@ -17,6 +17,12 @@ def changePasswords():
             user.put()
 
 
+def editNeteBot():
+    netebot = User.query(User.user_name == "netebot").get()
+    netebot.organization = ndb.Key('Organization', 5746664899870720)
+    netebot.put()
+
+
 def add_calendars():
     organization = ndb.Key(Organization, 5733679603122176).get()
     public = Calendar()

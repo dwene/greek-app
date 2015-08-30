@@ -351,6 +351,7 @@ class RESTApi(remote.Service):
         alumni_list = list()
         for user in organization_users:
             user_dict = user.to_dict()
+            user_dict['key'] = user.key
             if user_dict["perms"] == 'alumni':
                 alumni_list.append(user_dict)
             else:

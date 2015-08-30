@@ -18,6 +18,7 @@ class ModelUtils(object):
 class UserUtils(ModelUtils, object):
     def to_dict(self):
         result = super(ModelUtils, self).to_dict()
+        result['key'] = self.key.urlsafe()
         for item in ['hash_pass', 'current_token', 'timestamp', 'notifications', 'new_notifications']:
             if item in result:
                 del result[item]
@@ -127,7 +128,7 @@ class Event(ModelUtils, ndb.Model):
     organization = ndb.KeyProperty()
     attendance_data = ndb.KeyProperty(repeated=True)
     parent_event = ndb.KeyProperty()
-    invites = ndb.KeyProperty(repeated=True, kind=User)
+    invites = ndb.KeyProperty(repeated=True)
 
 
 class AttendanceData(ndb.Model):
