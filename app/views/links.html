@@ -33,8 +33,8 @@
                     </md-toolbar>
                     <md-content class="linkgroup">
                         <md-list class="itemList">
-                           <div ng-repeat="link in group.links">
-                            <md-list-item class="link" ng-click="doNothing()" >
+                           <div class="listItem" ng-repeat="link in group.links">
+                            <md-list-item md-no-ink class="link" ng-click="doNothing()" >
                                 <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
                                 <div class="pull-right" ng-show="$root.checkPermissions('leadership')">
                                 <md-button class="btn-touch" ng-click="openEditLinkDialog(link, group)"><i class="fa fa-edit fa-fw"></i></md-button>
