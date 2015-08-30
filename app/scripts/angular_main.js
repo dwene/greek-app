@@ -1,4 +1,4 @@
-// Final/static variables. These variables are used for cookies
+// Final/static variables
 // var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
 var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 var USER_NAME = 'USER_NAME';

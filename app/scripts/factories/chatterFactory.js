@@ -41,14 +41,14 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
   function getChattersByKey(key){
     var chatters = [];
     if (chatter.data.feed){
-      for (i = 0; i < chatter.data.feed.length; i++){
-        if (chatter.data.feed[i].key == key){
-          chatters.push(chatter.data.feed[i]);
+      for (i = 0; i < chatter.data.feed.chatters.length; i++){
+        if (chatter.data.feed.chatters[i].key === key){
+          chatters.push(chatter.data.feed.chatters[i]);
           break;
         }
       }
       for (i = 0; i < chatter.data.important.chatters.length; i++){
-        if (chatter.data.important.chatters[i].key == key){
+        if (chatter.data.important.chatters[i].key === key){
           chatters.push(chatter.data.important.chatters[i]);
           break;
         }

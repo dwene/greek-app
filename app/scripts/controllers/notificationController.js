@@ -1,6 +1,5 @@
 App.controller('notificationController', ['$scope', '$http', '$rootScope', '$location', 'Session', 'Organization', 'AUTH_EVENTS', 'Notifications',
     function($scope, $http, $rootScope, $location, Session, Organization, AUTH_EVENTS, Notifications) {
-        Notifications.get();
         $scope.notifications = Notifications.notifs;
         $scope.$on('notifications:updated', function() {
             $scope.notifications = Notifications.notifs;

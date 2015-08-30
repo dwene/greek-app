@@ -5,7 +5,6 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
         });
         var interval, i;
         function liveUpdate(attendanceData){
-            debugger;
             for (i = 0; i < $scope.users.length; i++){
                 if ($scope.users[i].key === attendanceData.user){
                     var user = $scope.users[i];

@@ -28,7 +28,6 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
    $scope.addEvent = function(isValid, event) {
       if (isValid) {
          var to_send = JSON.parse(JSON.stringify(event));
-         debugger;
          if ($scope.individuals){
             to_send.individuals = [];
             for (i = 0; i < $scope.individuals.length; i++){
