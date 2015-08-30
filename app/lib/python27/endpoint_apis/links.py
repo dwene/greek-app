@@ -95,6 +95,9 @@ class LinksApi(remote.Service):
         link.title = data['link']['title']
         link.link = data['link']['link']
         if data['newGroup'] is True:
+            old_group = link.group.get()
+            old_group.links.remove(link.key)
+            old_group.put()
             group = LinkGroup()
             group.name = data['group']
             group.organization = request_user.organization
