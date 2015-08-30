@@ -32,6 +32,7 @@
                         </div>
                     </md-toolbar>
                     <md-content class="linkgroup">
+                        <p class="md-padding" ng-show="!group.links.length">This link group is empty.</p>
                         <md-list class="itemList">
                            <div class="listItem" ng-repeat="link in group.links">
                             <md-list-item md-no-ink class="link" ng-click="doNothing()" >
