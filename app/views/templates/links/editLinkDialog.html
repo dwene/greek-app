@@ -22,12 +22,12 @@
 
       <md-input-container ng-show="group === 'new_group_listing'">
           <label for="new_group">New Group</label>
-          <input type="text" name="new_group" ng-model="newGroup" ng-required="group === 'new_group_listing'">
+          <input type="text" name="new_group" ng-model="new_group" ng-required="group === 'new_group_listing'">
       </md-input-container>
   </md-content>
 
   <div class="md-actions" layout="row">
-        <md-button ng-click="editLink(tempLink, group === 'new_group_listing' ? newGroup:group, group === 'new_group_listing' ? true:false)">save</md-button>
+        <md-button ng-click="editLink(tempLink, group === 'new_group_listing' ? new_group:group, group === 'new_group_listing' ? true:false)" ng-disabled="!tempLink.title || !tempLink.link || (group === 'new_group_listing' && !new_group)">save</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
   </div>
 </md-dialog>
