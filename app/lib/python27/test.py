@@ -23,6 +23,10 @@ def editNeteBot():
     netebot.put()
 
 
+def testKey():
+    item = ndb.Key(urlsafe="agtzfmdyZWVrLWFwcHISCxIFRXZlbnQYgICA4OLyhwkM").get()
+    print(item.to_dict())
+
 def add_features():
     organization = ndb.Key('Organization', 5746664899870720)
     feature = Feature()

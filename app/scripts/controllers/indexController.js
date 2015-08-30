@@ -43,7 +43,7 @@ App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSide
             }
             else if (notify.type === 'NEWEVENT'){
                 $scope.toggleNotifications();
-                $timeout(function(){$location.assign('app/events/' + notify.type_key)})
+                $timeout(function(){$location.path('app/events/' + notify.type_key)})
             }
             else if(notify.link){
                 $location.url(notify.link);

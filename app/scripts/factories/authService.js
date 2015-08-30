@@ -9,21 +9,19 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                 .post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/login', credentials)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
+                        console.log('login success!!!!');
                         var parsed_data = JSON.parse(data.data);
-                        console.log('Parsed Data in Login', parsed_data);
                         var creds = {
                             USER_NAME: credentials.user_name.toLowerCase(),
                             TOKEN: parsed_data.token
                         };
-                        localStorageService.set('credentials', creds);
-                        Session.create(credentials.user_name, parsed_data.token, parsed_data.me);
                         Directory.destroy();
                         Events.destroy();
-                        Tags.destroy();
-                        Polls.destroy();
                         Links.destroy();
                         Organization.destroy();
                         Chatter.destroy();
+                        localStorageService.set('credentials', creds);
+                        Session.create(creds.USER_NAME, creds.TOKEN, parsed_data.me);
                         Organization.set(parsed_data.organization);
                         $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                         return credentials.user_name;

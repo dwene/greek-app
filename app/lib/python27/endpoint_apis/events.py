@@ -126,7 +126,10 @@ class EventsApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
-        event = Event.query(Event.key == ndb.Key(urlsafe=data['key'])).get()
+        logging.error('returned key: ', data['key'])
+        event = ndb.Key(urlsafe=data['key']).get()
+        if not event:
+            return OutgoingMessage(error='EVENT NOT FOUND', data='')
         calendar = event.calendar.get()
         invited = list(set(calendar.users) | set(event.invites))
         users = User.query(User.key.IN(invited)).fetch(projection=[User.first_name, User.last_name, User.prof_pic]).fetch()
@@ -322,6 +325,9 @@ class EventsApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_key = ndb.Key(urlsafe=json.loads(request.data))
         event_data = AttendanceData.query(AttendanceData.event == event_key).fetch(keys_only=True)
+        notifications = Notification.query(Notification.type_key == event_key).fetch(keys_only=True)
+        if notifications:
+            ndb.delete_multi(notifications)
         ndb.delete_multi(event_data)
         event_key.delete()
         return OutgoingMessage(error='', data='OK')

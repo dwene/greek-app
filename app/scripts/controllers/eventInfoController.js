@@ -3,7 +3,7 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
         var vm = this;
         vm.eventNotFound = false;
         vm.loading = true;
-        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/getEvent', {key: $stateParams.tag})
+        RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/getEventInfo', {key: $stateParams.tag})
             .success(function(data) {
                 if(!RESTService.hasErrors(data)) {
                     vm.event = JSON.parse(data.data);

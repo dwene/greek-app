@@ -11,8 +11,7 @@ App.factory('RESTService', ['$http', 'Session', 'AUTH_EVENTS', '$rootScope',
             return out;
         };
         dataFactory.post = function(url, data, extras) {
-
-            console.log(('post called: ' + url.toString()), data);
+            console.log(('post called: ' + url.toString()), dataFactory.packageContent(data));
             return $http.post(url, dataFactory.packageContent(data), extras);
         };
         dataFactory.hasErrors = function(received_data) {
