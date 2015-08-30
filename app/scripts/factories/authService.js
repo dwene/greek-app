@@ -9,7 +9,6 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                 .post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/login', credentials)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        console.log('login success!!!!');
                         var parsed_data = JSON.parse(data.data);
                         var creds = {
                             USER_NAME: credentials.user_name.toLowerCase(),
