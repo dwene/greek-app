@@ -24,7 +24,7 @@ def editNeteBot():
 
 
 def add_features():
-    organization = ndb.Key(Organization, 5733679603122176)
+    organization = ndb.Key('Organization', 5746664899870720)
     feature = Feature()
     feature.name = "events"
     feature.expires = datetime.datetime(2099, 12, 31, 23, 59, 59, 0)
@@ -33,7 +33,7 @@ def add_features():
 
 
 def add_calendars():
-    organization = ndb.Key(Organization, 5733679603122176).get()
+    organization = ndb.Key('Organization', 5746664899870720).get()
     public = Calendar()
     public.organization = organization.key
     public.name = 'public'

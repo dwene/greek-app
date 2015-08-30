@@ -58,6 +58,7 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
          .success(function(data) {
             if (!RESTService.hasErrors(data)) {
                JSON.parse(data.data);
+               Events.refresh();
                $timeout(function() {
                   $location.url('app/events/' + JSON.parse(data.data));
                }, 500);
