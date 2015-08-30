@@ -103,6 +103,8 @@ class EventsApi(remote.Service):
         if request_user.key in push_keys:
             push_keys.remove(request_user.key)
         PushFactory.send_notification_with_keys(notification, push_keys)
+        for future in future_list:
+            future.get_result()
         return OutgoingMessage(error='', data=json_dump(new_event_key.urlsafe()))
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='getEvent',
@@ -320,9 +322,7 @@ class EventsApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         event_key = ndb.Key(urlsafe=json.loads(request.data))
         event_data = AttendanceData.query(AttendanceData.event == event_key).fetch(keys_only=True)
-        notifications = Notification.query(Notification.created_key == event_key).fetch(keys_only=True)
         ndb.delete_multi(event_data)
-        ndb.delete_multi(notifications)
         event_key.delete()
         return OutgoingMessage(error='', data='OK')
 

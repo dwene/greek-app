@@ -44,7 +44,12 @@ function($scope, RESTService, $rootScope, $timeout, $location, localStorageServi
             $scope.time_broken = true;
             return;
          }
-         if ($scope.event.recurring) {
+         if ($scope.weekly){
+            to_send.recurring_type = "weekly";
+            to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
+            to_send.recurring = true;
+         }
+         else if ($scope.monthly){
             to_send.recurring_type = "weekly";
             to_send.until = moment($scope.event.until).format('MM/DD/YYYY');
             to_send.recurring = true;

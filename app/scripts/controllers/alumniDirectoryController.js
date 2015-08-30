@@ -25,21 +25,23 @@ App.controller('alumniDirectoryController', ['$scope', '$location', '$rootScope'
             }
             $scope.directoryLoaded = true;
         }
+
         $scope.getProfPic = function(link) {
             if (link) {
                 return link + '=s50';
             } else {
-                return $rootScope.defaultProfilePicture;
+                return 'images/defaultprofile.png';
             }
         }
+
         $scope.showIndividual = function(member) {
             $location.path("app/directory/" + member.user_name);
         }
 
         //click the buttons to search for that button text
-        $('#searchTags button').click(function() {
-            var searchValue = $(this).text();
-            $('#directorySearch').val(searchValue).change();
-        });
+        // $('#searchTags button').click(function() {
+        //     var searchValue = $(this).text();
+        //     $('#directorySearch').val(searchValue).change();
+        // });
     }
 ]);
