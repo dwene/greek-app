@@ -262,16 +262,18 @@ def send_mandrill_email(from_email, to_email, subject, body, html):
     return
 
 
-def send_email(from_email, to_email, subject, body):
-    footer = 'If you believe you are receiving this email in error, please email support@netegreek.com'
-    html_title = """<h1 style="text-align: center;font-family:sans-serif;color:#000">""" + subject.replace('\n', '<br/>') + """</h1>"""
-    html_body = """<p style="text-align: left;font-family:sans-serif;color: #000">""" + body.replace('\n', '<br/>') + """</p>"""
-    full_body = body + '\n\n' + footer
-    html_full = HTML_EMAIL_1 + html_title + html_body + HTML_EMAIL_2
+def send_email(from_email, to_email, subject, body, html=True):
+    full_body = body
+    msg = mail.EmailMessage()
+    msg.body = full_body
+    msg.subject = subject
+    msg.to = to_email
+    msg.sender = from_email
+    msg.reply_to = 'derek.wene@yahoo.com'
     try:
-        mail.send_mail(from_email, to_email, subject, full_body, html=html_full)
+        msg.send()
     except:
-        send_mandrill_email(from_email, to_email, subject, full_body, html_full)
+        send_mandrill_email(from_email, to_email, subject, full_body)
 
 
 def removal_email(user):

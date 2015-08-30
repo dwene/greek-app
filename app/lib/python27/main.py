@@ -72,7 +72,7 @@ def send_email(from_email, to_email, subject, body):
     full_body = body + '\n\n' + footer
     html_full = HTML_EMAIL_1 + html_title + html_body + HTML_EMAIL_2
     try:
-        mail.send_mail(from_email, to_email, subject, full_body, html=html_full)
+        mail.send_mail(from_email, to_email, subject, full_body, html=html_full, headers={'On-Behalf-Of': from_email})
     except:
         send_mandrill_email(from_email, to_email, subject, full_body, html_full)
 
