@@ -1,6 +1,10 @@
-<div id="alumniDirectory" load-directive ng-model="directoryLoaded">
+<div ng-hide="$scope.directory.alumni" class="md-padding">
+    <p class="bg-info md-padding">There are no almuni added yet.<br>
+    When members graduate, their information will be show up here.</p>
+</div>
+<div ng-hide="!$scope.directory.alumni" id="alumniDirectory" load-directive ng-model="directoryLoaded" class="md-padding no-padding-top">
 <search ng-model="search"></search>
-       <alumni-year-picker id="yearSelect" alumni="directory.alumni" selected-year="selected_year" search="search" require-registration="true"></alumni-year-picker>
+    <alumni-year-picker id="yearSelect" alumni="directory.alumni" selected-year="selected_year" search="search" require-registration="true"></alumni-year-picker>
 <section>
     <md-list class="itemList">
         <md-list-item ng-repeat="member in directory.alumni | nameSearch:search | pledgeClassSearch:selected_year | orderBy:'last_name' " ng-click="showIndividual(member)" ng-show="member.user_name">
@@ -14,5 +18,3 @@
     </md-list>
 </section>
 </div>
-
-
