@@ -1,4 +1,4 @@
-<md-dialog md-theme="{{$root.color}}" flex="66" flex-sm="80">
+<md-dialog id="newChatter" md-theme="{{$root.color}}" flex="66" flex-sm="80">
    <md-content>
       <md-toolbar>
          <div class="md-toolbar-tools">
@@ -11,7 +11,7 @@
             <textarea id="content" ng-model="content" name="content"></textarea>
          </md-input-container>
          <br>
-         <div layout="row">
+         <div layout-sm="column" layout="row">
             <md-checkbox class="md-primary" ng-show="me.perms == 'leadership' || me.perms == 'council'" ng-model="important" aria-label="make important">
                Mark as Important
             </md-checkbox>

@@ -859,6 +859,10 @@ md-toolbar.md-tall {
     padding: 0px 8px;
   }
 }
+#newChatter md-checkbox span {
+  display: block;
+  min-width: 131px;
+}
 #profile md-toolbar #social {
   background: rgba(0, 0, 0, 0.5);
 }

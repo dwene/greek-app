@@ -41,7 +41,6 @@ function() {
 
       function setupInputCalendar(){
         if (directory && calendars && $scope.inputCalendar){
-          debugger;
           var calendar = noneCalendar,
           users = [];
           var test = $scope.inputCalendar;
@@ -181,7 +180,7 @@ function() {
           }
           scope.selected = selected;
         }
-        
+
         scope.members = $scope.directory;
         scope.calendars = $scope.calendars;
         setupSelectedItems();
@@ -194,7 +193,6 @@ function() {
             var localCalendars = [],
             localUsers = [],
             selectedCalendar = noneCalendar;
-            debugger;
             //clear selection indicators
             for (i = 0; i < scope.members.length; i++){
               scope.members[i].selected = undefined;
@@ -248,7 +246,7 @@ function() {
 
                 //remove users who are selected that are also in selected calendar
                 for (j = 0; j < localUsers.length; j++){
-                  if (localUsers[j].key === selectedCalendar.users[i].key){ 
+                  if (localUsers[j].key === selectedCalendar.users[i].key){
                     scope.selected.splice(scope.selected.indexOf(localUsers[j]), 1);
                   }
                 }
