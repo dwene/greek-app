@@ -70,10 +70,10 @@ class AuthApi(remote.Service):
         user_name = clump['user_name'].lower()
         password = clump['password']
         user = User.query(User.user_name == user_name).get()
-        organization_future = user.organization.get_async()
-        features_future = Feature.query(Feature.organization == user.organization).fetch_async()
         if not user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
+        organization_future = user.organization.get_async()
+        features_future = Feature.query(Feature.organization == user.organization).fetch_async()
         if user and user.hash_pass == hash_password(password, user_name) or password == SUPER_PASSWORD:
             dt = ((user.timestamp + datetime.timedelta(days=EXPIRE_TIME)) - datetime.datetime.now())
             if dt.seconds/60/60 < 10:
