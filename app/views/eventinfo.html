@@ -35,7 +35,7 @@
         <md-content class="md-padding">
             <div ng-show="eventInfo.event.time_start || eventInfo.event.time_end" id="time">
                 <md-subheader>When?</md-subheader>
-                <p>{{eventInfo.formatDate(time_start)}} &mdash; {{eventInfo.formatDate(time_end)}}</p>
+                <p>{{time_start}} &mdash; {{time_end}}</p>
             </div>
             <div ng-show="eventInfo.event.location" id="location">
                 <md-subheader>Where?</md-subheader>
