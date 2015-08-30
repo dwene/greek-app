@@ -42,12 +42,13 @@ function() {
       function setupInputCalendar(){
         if (directory && calendars && $scope.inputCalendar){
           debugger;
-          var calendar,
+          var calendar = noneCalendar,
           users = [];
           var test = $scope.inputCalendar;
           for (i = 0; i < calendars.length; i++){
             if (calendars[i].key === $scope.inputCalendar.calendar) {
               calendar = calendars[i];
+              break;
             }
           }
           if ($scope.inputCalendar.users){
@@ -120,7 +121,7 @@ function() {
       };
 
       function invitedMembersDialogController(scope, mdDialog){
-        scope.members = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar);
+        scope.members = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
         //convert back to a list.
 
         scope.hide = function(){

@@ -125,9 +125,17 @@ class EventsApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
         event = Event.query(Event.key == ndb.Key(urlsafe=data['key'])).get()
+        calendar = event.calendar.get()
+        invited = list(set(calendar.users) | set(event.invites))
+        users = User.query(User.key.IN(invited)).fetch(projection=[User.first_name, User.last_name, User.prof_pic]).fetch()
+        out_event = event.to_dict()
+        out_users = []
+        for user in users:
+            out_users.append(user.to_dict())
+        out_event['invited'] = out_users
         if event.organization is request_user.organization:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
-        return OutgoingMessage(error='', data=json_dump(event.to_dict()))
+        return OutgoingMessage(error='', data=json_dump(out_event.to_dict()))
 
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='get_events',
