@@ -1529,6 +1529,9 @@ md-backdrop.md-opaque {
 .md-autocomplete-suggestions {
   z-index: 1043;
 }
+md-menu-item div[layout="row"] {
+  width: 100%;
+}
 .md-sidenav-backdrop,
 .md-sidenav-backdrop.md-opaque.ng-leave {
   opacity: 1 !important;
