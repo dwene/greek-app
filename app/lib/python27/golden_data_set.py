@@ -43,6 +43,7 @@ def regenerate_data_set():
     organization_key = create_organization()
     netebot = create_netebot()
     user_key = create_creator(organization_key)
+    create_luke(organization_key)
     setup_organization(organization_key, True)
     create_link(organization_key)
 
@@ -95,6 +96,22 @@ def create_creator(org_key):
     sleep(0.15)
     return key
 
+
+
+def create_luke(org_key):
+    luke = User()
+    luke.organization = org_key
+    luke.user_name = 'lskywalker'
+    luke.hash_pass = hash_password('password', luke.user_name)
+    luke.perms = 'council'
+    luke.email = 'luke@gmail.com'
+    luke.first_name = 'Luke'
+    luke.last_name = 'Skywalker'
+    luke.current_token = generate_token()
+    luke.timestamp = datetime.datetime.now()
+    key = luke.put()
+    sleep(0.15)
+    return key
 
 def create_organization():
     organization = Organization()

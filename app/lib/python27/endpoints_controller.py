@@ -368,7 +368,14 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
         user = User.query(User.user_name == data['user']).get()
-        if user.organization is not request_user.organization:
+        logging.error(str(user.to_dict()))
+        logging.error(str(request_user.organization))
+        logging.error(str(user.organization))
+        if not user:
+            logging.error('user not found for username: ' + str(data['user']))
+        else:
+            logging.error('User is: ' + str(user.to_dict()))
+        if not user.organization == request_user.organization:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         return_data = json_dump(user.to_dict())
         return OutgoingMessage(error='', data=return_data)
