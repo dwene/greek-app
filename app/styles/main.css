@@ -764,20 +764,6 @@ md-toolbar.md-tall {
   word-wrap: break-word;
   word-break: break-word;
 }
-@media (max-width: 600px) {
-  #chatterTitle .md-toolbar-tools {
-    padding: 0px 4px 0px 8px;
-  }
-  #chatterTitle .md-toolbar-tools img {
-    margin-right: 8px;
-  }
-  #chatterTitle .md-toolbar-tools h3 {
-    font-size: 14px;
-  }
-  #confirmImportant .md-toolbar-tools {
-    padding: 0px 8px;
-  }
-}
 #chatterDialog {
   max-width: 95%;
   max-height: 95%;
@@ -800,6 +786,9 @@ md-toolbar.md-tall {
 }
 #chatterDialog #confirmImportant .md-toolbar-tools .md-button {
   width: 48px;
+}
+#chatterDialog #confirmImportant .md-toolbar-tools .md-button:last-child {
+  width: auto;
 }
 #chatterDialog .followButton {
   font-size: 10px;
@@ -856,6 +845,18 @@ md-toolbar.md-tall {
   }
   #chatterDialog .commentOptions button {
     height: auto;
+  }
+  #chatterTitle .md-toolbar-tools {
+    padding: 0px 4px 0px 8px;
+  }
+  #chatterTitle .md-toolbar-tools img {
+    margin-right: 8px;
+  }
+  #chatterTitle .md-toolbar-tools h3 {
+    font-size: 14px;
+  }
+  #confirmImportant .md-toolbar-tools {
+    padding: 0px 8px;
   }
 }
 #profile md-toolbar #social {
