@@ -15,7 +15,7 @@
             <input type="text" name="link" ng-model="tempLink.link" remove-http required>
             {{tempGroup.name}}
         </md-input-container>
-          <md-select id="newGroup" name="newGroup" ng-model="group" required>
+          <md-select class="btn-touch" id="newGroup" name="newGroup" ng-model="group" required>
             <md-option ng-value="gr" ng-repeat="gr in groups">{{gr.name}}</md-option>
             <md-option value="new_group_listing">Add New Group</md-option>
           </md-select>

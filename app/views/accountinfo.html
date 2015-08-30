@@ -75,7 +75,7 @@
                     <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.grad_month.$invalid && !memberAccount.grad_month.$pristine) || (memberAccount.grad_month.$invalid && submitted), required:!checkAlumni}">
                         <label for="grad_month" class="col-xs-12">Graduation Month</label>
                         <div class="col-xs-12">
-                            <md-select placeholder="select month" id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni">
+                            <md-select class="btn-touch" placeholder="select month" id="gradMonth" name="grad_month" ng-model="item.grad_month" ng-required="!checkAlumni">
                             <md-option ng-repeat="month in months" value="{{month.value}}">{{month.name}}</md-option>
                             </md-select>
                             <p class="text-danger invalid-text">Please enter your graduation month.</p>
@@ -89,7 +89,7 @@
                     <div class="form-group required" ng-class="{ 'md-input-invalid' : (memberAccount.pledge_class_semester.$invalid && !memberAccount.pledge_class_semester.$pristine) || (memberAccount.pledge_class_semester.$invalid && submitted), required:!checkAlumni}">
                         <label for="pledgeClassSemester" class="col-xs-12">Pledge Semester</label>
                         <div class="col-xs-12">
-                            <md-select placeholder="select semester" id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" style="width:100%;" required>
+                            <md-select class="btn-touch" placeholder="select semester" id="pledgeClassSemester" name="pledge_class_semester" ng-model="item.pledge_class_semester" style="width:100%;" required>
                             <md-option value="fall">Fall</md-option>
                             <md-option value="spring">Spring</md-option>
                             </md-select>
@@ -134,7 +134,7 @@
                     <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.state.$invalid && !memberAccount.state.$pristine) || (memberAccount.state.$invalid && submitted), required: !checkAlumni}">
                         <label for="currentState" class="col-xs-12">Current State</label>
                         <div class="col-xs-12">
-                            <md-select placeholder="select state" id="currentState" name="state" ng-model="item.state">
+                            <md-select class="btn-touch" placeholder="select state" id="currentState" name="state" ng-model="item.state">
                             <md-option ng-repeat="state in states" value="{{state.value}}">{{state.name}}</md-option>
                             </md-select>
                         </div>
@@ -163,7 +163,7 @@
                     <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.perm_state.$invalid && !memberAccount.perm_state.$pristine) || (memberAccount.perm_state.$invalid && submitted)}">
                         <label for="perm_state" class="col-xs-12">Permanent State</label>
                         <div class="col-xs-12">
-                            <md-select placeholder="select state" id="perm_state" name="perm_state" ng-model="item.perm_state">
+                            <md-select class="btn-touch" placeholder="select state" id="perm_state" name="perm_state" ng-model="item.perm_state">
                             <md-option ng-repeat="state in states" value="{{state.value}}">{{state.name}}</md-option>
                             </md-select>
                         </div>
@@ -179,39 +179,39 @@
                     <input type="number" name="perm_zip" ng-model="item.perm_zip" ng-pattern="/[0-9]{5}/"/>
                     <p class="text-danger invalid-text">Please enter your permanent 5 digit zip code.</p>
                     </md-input-container>
-                    
-                    
-                    
+
+
+
                     <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.website.$invalid && !memberAccount.website.$pristine) || (memberAccount.website.$invalid && submitted)}">
                     <label for="website">Website</label>
                     <input type="text" name="website" ng-model="item.website" remove-http>
                     <p class="text-danger invalid-text">Please enter a valid url.</p>
                     </md-input-container>
-                    
+
                     <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.facebook.$invalid && !memberAccount.facebook.$pristine) || (memberAccount.facebook.$invalid && submitted)}">
                     <label for="facebook">Facebook Profile</label>
                     <input type="text" name="facebook" ng-model="item.facebook" remove-http>
                     <p class="text-danger invalid-text">Please enter a valid url.</p>
                     </md-input-container>
-                    
+
                     <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.twitter.$invalid && !memberAccount.twitter.$pristine) || (memberAccount.twitter.$invalid && submitted)}">
                     <label for="twitter">Twitter Profile</label>
                     <input type="text" name="twitter" ng-model="item.twitter" remove-http>
                     <p class="text-danger invalid-text">Please enter a valid url.</p>
                     </md-input-container>
-                    
+
                     <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.instagram.$invalid && !memberAccount.instagram.$pristine) || (memberAccount.instagram.$invalid && submitted)}">
                     <label for="instagram">Instagram Profile</label>
                     <input type="text" name="instagram" ng-model="item.instagram" remove-http>
                     <p class="text-danger invalid-text">Please enter a valid url.</p>
                     </md-input-container>
-                    
+
                     <md-input-container class="url" ng-class="{ 'md-input-invalid' : (memberAccount.linkedin.$invalid && !memberAccount.linkedin.$pristine) || (memberAccount.linkedin.$invalid && submitted)}">
                     <label for="linkedin">LinkedIn Profile</label>
                     <input type="text" name="linkedin" ng-model="item.linkedin" remove-http>
                     <p class="text-danger invalid-text">Please enter a valid url.</p>
                     </md-input-container>
-                    
+
                     <br>
                     <md-button type="submit" class="pull-right" ng-disabled="working == 'pending'"><span ng-hide="working == 'pending'">Save Info</span><span ng-show="working == 'pending'">Saving</span></md-button>
                 </div>

@@ -15,7 +15,7 @@
 
         <br>
         <div class="form-group">
-            <md-select id="newGroup" name="newGroup" ng-model="newGroup" placeholder="Select a Group" required>
+            <md-select class="btn-touch" id="newGroup" name="newGroup" ng-model="newGroup" placeholder="Select a Group" required>
                 <md-option ng-value="group" ng-repeat="group in groups">{{group.name}}</md-option>
                 <md-option value="new_group_listing">Add New Group</md-option>
             </md-select>
