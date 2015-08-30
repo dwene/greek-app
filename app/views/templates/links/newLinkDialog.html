@@ -16,7 +16,6 @@
         <br>
         <div class="form-group">
             <md-select id="newGroup" name="newGroup" ng-model="newGroup" placeholder="Select a Group" required>
-<!--                <md-option value="" disabled selected>Select a Group</md-option>-->
                 <md-option ng-value="group" ng-repeat="group in groups">{{group.name}}</md-option>
                 <md-option value="new_group_listing">Add New Group</md-option>
             </md-select>
@@ -27,12 +26,10 @@
             <input type="text" name="new_group" ng-model="new_group" ng-required="temp_link.group === 'new_group_listing'">
         </md-input-container>
     </md-content>
-        
+
     <div class="md-actions" layout="row">
        <md-button ng-click="createLink(newTitle, newLink, newGroup === 'new_group_listing' ? new_group : newGroup, newGroup === 'new_group_listing' ? true: false)" ng-disabled="!newTitle || !newLink || !newGroup">add</md-button>
         <md-button ng-click="closeDialog()">cancel</md-button>
     </div>
-
-
 
 </md-dialog>
