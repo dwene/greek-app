@@ -1523,3 +1523,12 @@ md-bottom-sheet.md-grid md-item .md-icon-container {
 .md-input-invalid .invalid-text {
   display: block;
 }
+.md-contact-suggestion img {
+  vertical-align: top;
+}
+md-backdrop.md-opaque {
+  background-color: rgba(0, 0, 0, 0.34) !important;
+}
+.md-autocomplete-suggestions {
+  z-index: 1043;
+}
