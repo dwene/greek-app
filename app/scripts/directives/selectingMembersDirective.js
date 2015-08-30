@@ -189,7 +189,6 @@ function() {
 
 
         scope.$watchCollection('selected.length', function() {
-          console.log('Evaluating function: ', !evaluatingWatch);
           if (!evaluatingWatch){
             evaluatingWatch = true;
             var localCalendars = [],

@@ -262,14 +262,15 @@ def send_mandrill_email(from_email, to_email, subject, body, html):
     return
 
 
-def send_email(from_email, to_email, subject, body, html=True):
+def send_email(from_email, to_email, subject, body, reply_to):
     full_body = body
     msg = mail.EmailMessage()
     msg.body = full_body
     msg.subject = subject
     msg.to = to_email
     msg.sender = from_email
-    msg.reply_to = 'derek.wene@yahoo.com'
+    if reply_to:
+        msg.reply_to = reply_to
     try:
         msg.send()
     except:

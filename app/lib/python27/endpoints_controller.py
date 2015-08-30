@@ -57,7 +57,7 @@ class RESTApi(remote.Service):
         content += '\nEmail: ' + request_user.email
         content += '\n\nMessage: ' + message
         title = 'Message from ' + request_user.user_name
-        send_email('NeteGreek <support@netegreek.com>', email, title, content, False)
+        send_email('NeteGreek <support@netegreek.com>', email, title, content, request_user.email)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/check_username',
