@@ -1447,6 +1447,8 @@ md-backdrop.md-opaque {
 }
 md-sidenav {
   z-index: 1051;
+  position: fixed;
+  top: 0;
 }
 md-sidenav md-toolbar .md-header {
   background-color: rgba(0, 0, 0, 0) !important;
