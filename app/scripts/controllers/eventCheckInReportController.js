@@ -55,7 +55,6 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
                         var parsed = JSON.parse(data.data);
 
                         $scope.users = parsed.users;
-                        console.log($scope.users);
                         $scope.event = parsed.event;
                         for (var i = 0; i < $scope.events.length; i++) {
                             if ($scope.events[i].key == $stateParams.tag) {
@@ -158,7 +157,6 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
                         doc.setFontSize(13);
                         doc.text(10 + shifted, current_line += 8, users[i].first_name + ' ' + users[i].last_name);
                         doc.setFontSize(10);
-                        console.log(users[i].attendance_data);
                         if (users[i].attendance_data.time_in) {
                             doc.text(15 + shifted, current_line += 5, 'Time in:  ' + ' ' + $scope.formatDate(users[i].attendance_data.time_in));
                         }
