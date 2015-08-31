@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "dependencies": {
     "grunt-exec": "^0.4.6",
-    "jslint": "^0.6.4"
+    "jslint": "^0.6.4",
+    "linkifyjs": "^2.0.0-beta.4"
   },
   "devDependencies": {
     "grunt": "^0.4.1",

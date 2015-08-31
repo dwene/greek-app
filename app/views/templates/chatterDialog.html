@@ -40,7 +40,7 @@
       </div>
     </md-toolbar>
     <div id="chatterContent" class="md-padding no-padding-bottom">
-      <h3 class="break-newline chatContent" ng-show="!CD.editing">{{CD.chat.content}}</h3>
+      <h3 class="break-newline chatContent" ng-show="!CD.editing" data-linkify="this">{{CD.chat.content}}</h3>
       <md-input-container class="slideDown" ng-show="CD.editing">
         <label for="chattercontent">Edit your chatter here:</label>
         <textarea id="chattercontent" nete-focus="CD.editing" ng-model="CD.content_temp" name="content"></textarea>
@@ -51,7 +51,7 @@
         <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.cancelEditChatter()">cancel</md-button>
       </div>
     </div>
-    
+
     <div id="chatterComments" class="md-padding no-padding-top">
       <div id="commentInput" layout="row">
         <md-input-container flex>
