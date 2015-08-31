@@ -12,7 +12,7 @@ App.controller('changePasswordFromTokenController', ['$scope', '$http', '$rootSc
                 }
             })
             .error(function(data) {
-                window.location.replace('#/login');
+                $location.path('login');
             });
         $scope.passwordChanged = false;
         $scope.changeFailed = false;
