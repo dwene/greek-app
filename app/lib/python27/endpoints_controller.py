@@ -94,18 +94,15 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        if not (request_user.perms == 'council'):
+        if not request_user.perms == 'council':
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
 
-        @ndb.tasklet
-        def calendars_and_user(user_key, organization):
-            calendars_fetch = Calendar.query(Calendar.organization == organization).fetch_async()
-            user_fetch = user_key.get_async()
-            usr, cal = yield user_fetch, calendars_fetch
-            raise ndb.Return((cal, usr))
-
-        calendars, user = calendars_and_user(ndb.Key(urlsafe=request_object["key"]), request_user.organization)
+        calendars_fetch = Calendar.query(Calendar.organization == request_user.organization).fetch_async()
+        user_fetch = ndb.Key(urlsafe=request_object["key"]).get_async()
+        calendars = calendars_fetch.get_result()
+        user = user_fetch.get_result()
+        
         if not user:
             return OutgoingMessage(error=INVALID_USERNAME, data='')
         if request_object["perms"] not in ["leadership", "council", "member"]:
