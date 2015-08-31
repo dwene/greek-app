@@ -17,8 +17,11 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
                 console.log('error', data);
             });
         vm.goToReport = function() {
-            $location.url("app/events/" + $stateParams.tag + "/report");
+            $location.path("app/events/" + $stateParams.tag + "/report");
         };
+        vm.goToCheckin = function(){
+            $location.path("app/events/" + $stateParams.tag + "/checkin");
+        }
         vm.back = function() {
             $location.path('app/events');
         };
@@ -26,8 +29,6 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
         this.openMenu = function($mdOpenMenu, ev) {
           $mdOpenMenu(ev);
         };
-
-
 
         vm.saveEvent = function() {
             /*BEGIN:VCALENDAR
@@ -47,7 +48,9 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
             if (event.address) {
                 out_string += 'LOCATION:' + event.address + '\n';
             }
-            out_string += 'DESCRIPTION:' + event.description.replace(/(\r\n|\n|\r)/gm, " ") + '\n';
+            if (event.description){
+                out_string += 'DESCRIPTION:' + event.description.replace(/(\r\n|\n|\r)/gm, " ") + '\n';
+            }
             out_string += 'END:VEVENT\nEND:VCALENDAR';
             var a = document.createElement('a');
             a.href = 'data:text/calendar,' + encodeURIComponent(out_string);

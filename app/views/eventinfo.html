@@ -9,25 +9,29 @@
                 <h1>{{eventInfo.event.title}}</h1>
                 <div flex></div>
                 <md-menu md-position-mode="target-right target">
-                    <md-button class="btn-touch" aria-label="open menu" md-menu-origin ng-click="eventInfo.openMenu($mdOpenMenu, $event)"><i class="fa fa-ellipsis-h"></i></md-button>
-                    <md-menu-content width="4">
-                        <md-menu-item>
-                            <md-button ng-click="eventInfo.editEvent()"  md-menu-align-target>
-                              <div layout="row">
-                                  <p flex>Edit</p>
-                                  <md-icon class="fa fa-pencil-square-o"></md-icon>
-                              </div>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                          <md-button ng-click="eventInfo.saveEvent()">
-                            <div layout="row">
-                                <p flex>Save</p>
-                                <md-icon class="fa fa-floppy-o"></md-icon>
-                            </div>
-                          </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
+                  <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                    <i md-menu-origin class="fa fa-ellipsis-h"></i>
+                  </md-button>
+                  <md-menu-content width="4">
+                    <md-menu-item ng-show="main.leadership">
+                      <md-button ng-click="eventInfo.editEvent()">
+                        <p>Edit</p>
+                        <md-icon md-menu-align-target class="fa fa-pencil-square-o"></md-icon>
+                      </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                      <md-button ng-click="eventInfo.saveEvent()">
+                        <p>Save</p>
+                        <md-icon md-menu-align-target class="fa fa-floppy-o"></md-icon>
+                      </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-show="main.leadership">
+                      <md-button ng-click="eventInfo.goToCheckin()">
+                        <p>Check-In</p>
+                        <md-icon md-menu-align-target class="fa fa-sign-in"></md-icon>
+                      </md-button>
+                    </md-menu-item>
+                  </md-menu-content>
                 </md-menu>
             </div>
         </md-toolbar>
@@ -51,3 +55,30 @@
 
     </div>
 </div>
+
+
+
+<!-- 
+<md-menu md-position-mode="target-right target">
+                    <md-button class="btn-touch" md-menu-origin aria-label="open menu" ng-click="$mdOpenMenu()">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item ng-show="app.leadership">
+                            <md-button ng-click="eventInfo.editEvent()">
+                              <div layout="row">
+                                  <p flex>Edit</p>
+                                  <md-icon md-menu-align-target class="fa fa-pencil-square-o"></md-icon>
+                              </div>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                          <md-button ng-click="eventInfo.saveEvent()">
+                            <div layout="row">
+                                <p flex>Save</p>
+                                <md-icon md-menu-align-target class="fa fa-floppy-o"></md-icon>
+                            </div>
+                          </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu> -->

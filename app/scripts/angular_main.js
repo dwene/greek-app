@@ -1,6 +1,6 @@
 // Final/static variables
-// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-var ENDPOINTS_DOMAIN = 'http://localhost:9001';
+var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+// var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -102,7 +102,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
         .state('app', {
             url: '/app',
             templateUrl: 'views/app.html',
-            controller: 'appController',
+            controller: 'appController as app',
         })
             .state('app.home', {
                 url : '/home',

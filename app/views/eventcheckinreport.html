@@ -24,9 +24,12 @@
         <md-divider ng-show="noShows.length > 0"></md-divider>
 			<h1 ng-show="noShows.length > 0">No Check In</h1>
 			<md-list>
-				<md-item ng-repeat="member in noShows | orderBy: 'last_name'| nameSearch:search:0 | limitTo: maxNoShowsLength">
-					<span>{{member.first_name}} {{member.last_name}}</span>
-				</md-item>
+				<md-list-item class="contact-item" ng-repeat="member in (noShows | orderBy: 'last_name' | nameSearch:search:0 | limitTo:maxNoShowsLength)">
+                <img ng-src="{{member.prof_pic ? member.prof_pic + '=s50' : 'images/defaultprofile.png'}}" class="md-avatar" alt="{{member.name}}" />
+                <div class="md-list-item-text compact">
+                    <h3>{{member.first_name}} {{member.last_name}}</h3>
+                </div>
+            </md-list-item>
 			</md-list>        
     </md-content>
 </div>

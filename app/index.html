@@ -236,9 +236,9 @@
             <div role="tabpanel" id="setingsTab-content" class="fadingIn md-padding" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1">
               <ul class="nav">
                 <li ng-click="toggleSidenav('app/accountinfo')"><md-button class="md-primary" md-theme-watch><i class="fa fa-user fa-fw"></i> Info</md-button></li>
-                <li ng-click="toggleSidenav('app/managemembers')" ng-show="$parent.checkPermissions('leadership')"><md-button class="md-primary" md-theme-watch><i class="fa fa-users fa-fw"></i> Members</md-button></li>
-                <li ng-click="toggleSidenav('app/managealumni')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary" md-theme-watch><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
-                <li ng-click="toggleSidenav('app/admin')" ng-show="$parent.checkPermissions('council')"><md-button class="md-primary" md-theme-watch><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
+                <li ng-click="toggleSidenav('app/managemembers')" ng-show="main.council"><md-button class="md-primary" md-theme-watch><i class="fa fa-users fa-fw"></i> Members</md-button></li>
+                <li ng-click="toggleSidenav('app/managealumni')" ng-show="main.council"><md-button class="md-primary" md-theme-watch><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button></li>
+                <li ng-click="toggleSidenav('app/admin')" ng-show="main.council"><md-button class="md-primary" md-theme-watch><i class="fa fa-gears fa-fw"></i> Admin</md-button></li>
                 <li ng-click="toggleSidenav()"><md-button ng-click="logout()" class="md-primary" md-theme-watch><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button></li>
               </ul>
             </div>

@@ -1,5 +1,6 @@
 App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout', '$location', 'localStorageService', 'AuthService', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Directory', 'Updates',
     function($scope, $interval, $rootScope, $timeout, $location, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Updates) {
+        var vm = this;
         var notification_update_interval;
         AuthService.cachedLogin();
         $scope.authenticated = AuthService.isAuthenticated();

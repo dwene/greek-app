@@ -52,8 +52,11 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
                 .success(function(data) {
                     if (!RESTService.hasErrors(data)) {
-                        $scope.users = JSON.parse(data.data);
-                        $scope.event = undefined;
+                        var parsed = JSON.parse(data.data);
+
+                        $scope.users = parsed.users;
+                        console.log($scope.users);
+                        $scope.event = parsed.event;
                         for (var i = 0; i < $scope.events.length; i++) {
                             if ($scope.events[i].key == $stateParams.tag) {
                                 $scope.event = $scope.events[i];
@@ -64,23 +67,16 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
                         $scope.shows = [];
                         if ($scope.event) {
                             for (var i = 0; i < $scope.users.length; i++) {
-                                for (var j = 0; j < $scope.invited.length; j++) {
-                                    if ($scope.users[i].key == $scope.invited[j].key) {
-                                        var shouldAdd = false;
-                                        if (!$scope.users[i].attendance_data) {
-                                            shouldAdd = true;
-                                        } else if (!($scope.users[i].attendance_data.time_in || $scope.users[i].attendance_data.time_out)) {
-                                            shouldAdd = true;
-                                        }
-                                        if (shouldAdd) {
-                                            console.log('Im adding');
-                                            $scope.noShows.push($scope.users[i]);
-                                        } else if (!shouldAdd) {
-                                            $scope.shows.push($scope.users[i]);
-                                        }
-                                        console.log('found a user: ' + $scope.users[i].first_name);
-                                        break;
-                                    }
+                                var shouldAdd = false;
+                                if (!$scope.users[i].attendance_data) {
+                                    shouldAdd = true;
+                                } else if (!($scope.users[i].attendance_data.time_in || $scope.users[i].attendance_data.time_out)) {
+                                    shouldAdd = true;
+                                }
+                                if (shouldAdd) {
+                                    $scope.noShows.push($scope.users[i]);
+                                } else if (!shouldAdd) {
+                                    $scope.shows.push($scope.users[i]);
                                 }
                             }
                         }
@@ -270,6 +266,13 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
                         var val2 = moment(momentInTimezone(users[i].attendance_data.time_out));
                         time_out = val2.format('hh:mm a');
                         date_out = val2.format('MM/DD/YYYY');
+                    }
+                }
+                var checkList = ['last_name', 'first_name', 'date_in', 'date_out', 'time_in', 'time_out'];
+
+                for (var j = 0; j < checkList.length; j++){
+                    if (!users[i][checkList[j]]){
+                        users[i][checkList[j]] = "";
                     }
                 }
                 out.push([users[i].last_name.replaceAll(' ', '%20'), users[i].first_name.replaceAll(' ', '%20'), date_in.replaceAll(' ', '%20'), time_in.replaceAll(' ', '%20'), date_out.replaceAll(' ', '%20'), time_out.replaceAll(' ', '%20')]);
