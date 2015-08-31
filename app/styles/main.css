@@ -658,10 +658,7 @@ md-toolbar.md-tall {
 .itemList md-list-item:not(:last-child) {
   border-bottom: 1px solid #ccc;
 }
-.itemList md-list-item.md-padding {
-  padding: 0;
-}
-.itemList md-list-item.md-padding .md-button {
+.itemList md-list-item > .md-button {
   padding: 8px;
 }
 .chatterList .listItem {
