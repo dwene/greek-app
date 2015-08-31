@@ -34,8 +34,8 @@
             <input name="class_year" ng-model="input.pledge_class_year" ng-pattern="/[0-9]{4}/" required/>
         </md-input-container>
         <md-radio-group name="pledge_class_semester" ng-model="input.pledge_class_semester" required>
-            <md-radio-button value="fall">Fall</md-radio-button>
-            <md-radio-button value="spring">Spring</md-radio-button>
+            <md-radio-button class="md-primary" value="fall">Fall</md-radio-button>
+            <md-radio-button class="md-primary" value="spring">Spring</md-radio-button>
         </md-radio-group>
     </div>
     <div layout="row" layout-align="start center">
@@ -67,27 +67,27 @@
 <!--
 <div class="container">
 
-		 HEADER AND TODO COUNT 
+		 HEADER AND TODO COUNT
 		<div class="jumbotron text-center">
 			<h1>Add Alumni</h1>
 		</div>
 
         </div>
-        
+
 -->
-            
+
 <!--
         <div class="container">
-            
+
             <ul ng-repeat="add in adds | orderBy:'last_name'">
-                
+
                     <li>{{add.first_name}}, {{add.last_name}}, {{ add.email }} <button class="btn btn-danger btn-sm trash" ng-click="deleteAdd(add)"><i class="fa fa-trash-o"></i></button></li>
-                
+
             </ul>
             <button ng-click="submitAlumni()" class="btn btn-default">Submit Alumni</button>
-            
+
             <hr>
-            
+
             <p id='areAdded'></p>
             <form id="addalumniForm" role="form">
                 <div class="form-group">
@@ -99,9 +99,9 @@
                 </div>
                 <p ng-show="memberSkippedNotifier">Some alumni may not have loaded due to an invalid format in the .csv file :(</p>
             </form>
-            
+
             <hr>
-            
+
             <form id="addalumnusForm" name="addalumnusForm" ng-submit="addAlumnus(addalumnusForm.$valid)" role="form" novalidate>
             <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'md-input-invalid' : (addalumnusForm.first_name.$invalid && !addalumnusForm.first_name.$pristine) || (addalumnusForm.first_name.$invalid && submitted)}">
                 <label for="first_name" class="control-label">First Name</label>
@@ -110,7 +110,7 @@
             <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'md-input-invalid' : (addalumnusForm.last_name.$invalid && !addalumnusForm.last_name.$pristine) || (addalumnusForm.last_name.$invalid && submitted)}">
                 <label for="last_name" class="control-label">Last Name</label>
                   <input type="text" class="form-control" id="last_name" name="last_name" ng-model="input.last_name" placeholder="Doe">
-              </div>  
+              </div>
             <div class="form-group col-sm-4 col-xs-6" ng-class="{ 'md-input-invalid' : (addalumnusForm.email.$invalid && !addalumnusForm.email.$pristine) || (addalumnusForm.email.$invalid && submitted)}">
                 <label for="email" class="control-label">Email*</label>
                   <input type="email" class="form-control" id="email" name="email" ng-model="input.email" placeholder="john.doe@email.com" required>
@@ -124,10 +124,6 @@
               <p ng-show="addalumnusForm.$invalid && submitted" class="help-block">Please fill out all fields correctly.</p>
             </div>
              </form>
-            
+
         </div>
 -->
-        
-       
-      
-     

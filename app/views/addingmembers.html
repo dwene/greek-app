@@ -34,8 +34,8 @@
             <input name="class_year" ng-model="input.pledge_class_year" ng-pattern="/[0-9]{4}/" required/>
         </md-input-container>
         <md-radio-group name="pledge_class_semester" ng-model="input.pledge_class_semester" required>
-            <md-radio-button value="fall">Fall</md-radio-button>
-            <md-radio-button value="spring">Spring</md-radio-button>
+            <md-radio-button class="md-primary" value="fall">Fall</md-radio-button>
+            <md-radio-button class="md-primary" value="spring">Spring</md-radio-button>
         </md-radio-group>
     </div>
     <div layout="row" layout-align="start center">
@@ -64,8 +64,8 @@
 </div>
 
 <!--
-   
-   
+
+
     <form id="addmemberForm" name="addmemberForm" role="form" ng-submit="addMember(addmemberForm.$valid, input)" novalidate>
          <div class="row">
           <div class="form-group col-sm-4 col-xs-6 required">
@@ -111,7 +111,7 @@
         </div>
 
         <button ng-click="addMembers()" class="btn btn-default">Add Members</button>    <a class="btn btn-default" href="../files/AddMembers.csv" target="_blank" download="addmembers.csv"><i class="fa fa-download"></i> CSV Template</a>
-        
+
         <p ng-show="memberSkippedNotifier">Some members may not have loaded due to an invalid format in the .csv file</p>
     </form>
     </div>
@@ -148,7 +148,7 @@
           </div>
           </div>
      </form>
-     
+
     <ul ng-show="adds.length" id="addMembers" class="card">
     <li class="addPerson" ng-repeat="add in adds | orderBy:'last_name'">
     <div class="row">
