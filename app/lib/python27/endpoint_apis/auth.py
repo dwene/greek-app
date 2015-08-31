@@ -4,6 +4,7 @@ from protorpc import remote
 
 from apiconfig import *
 from golden_data_set import setup_organization
+from pushfactory import PushFactory
 
 
 auth = endpoints.api(name='auth', version='v1',
@@ -143,7 +144,7 @@ class AuthApi(remote.Service):
                 new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             new_user.perms = 'member'
             user['future'] = new_user.put_async()
-
+        PushFactory.push_emails(email_list)
         new_users = list()
         for user in clump['users']:
             new_users.append(user['future'].get_result().get_async())
@@ -196,15 +197,6 @@ class AuthApi(remote.Service):
         for future in futures2:
             user = future.get_result()
             user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            del user_dict["messages"]
-            del user_dict["new_messages"]
-            del user_dict["archived_messages"]
             user_dict["key"] = new_user.key.urlsafe()
             return_users.append(user_dict)
         return OutgoingMessage(error='', data=json_dump(return_users))
@@ -231,9 +223,6 @@ class AuthApi(remote.Service):
         user = User.query(User.current_token == request.token).get()
         if user and user.user_name == '':
             user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
             return OutgoingMessage(error='', data=json_dump(user_dict))
         return OutgoingMessage(error=BAD_FIRST_TOKEN, data='')
 
@@ -253,9 +242,6 @@ class AuthApi(remote.Service):
             user.timestamp = datetime.datetime.now()
             user.put()
             user_dict = user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
             return OutgoingMessage(error='', data=json_dump({'token': user.current_token,
                                                              'perms': user.perms,
                                                              'me': user_dict}))
