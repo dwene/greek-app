@@ -330,6 +330,7 @@ module.exports = function (grunt) {
             'requests/*',
             'cloudstorage/*',
             'lib/**',
+            '!lib/python27/developer.py'
           ]
         }, {
           expand: true,

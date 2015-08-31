@@ -278,14 +278,7 @@ def send_email(from_email, to_email, subject, body, reply_to):
 
 
 def removal_email(user):
-    subject = 'Removal from NeteGreek App'
-    body = "Hello\n"
-    body += "This if a notice that you have been removed from the organization '" + user.organization.get().name
-    body += "' Please email your NeteGreek administrators for more information\n"
-    body += "Have a great day\n\n"
-    body += "NeteGreek Team"
-    EmailTask(type='member_removal', title=subject, content=body, email=user.email,
-              pending=True, timestamp=datetime.datetime.now()).put()
+    return
 
 
 def forgotten_password_email(user):
@@ -295,9 +288,9 @@ def forgotten_password_email(user):
     token = generate_token() + user.user_name
     user.current_token = token
     user.put()
-    link = DOMAIN+ '/#/changepasswordfromtoken/'+token
-    body = 'Hello\n\n'
-    body += 'Please follow the link to reset your password for the NeteGreek app.\n' + link + '\nHave a great day!\nNeteGreek Team'
+    link = DOMAIN + '/#/changepasswordfromtoken/' + token
+    body = 'NeteGreek Password Reset\n\n'
+    body += 'Please follow the link to reset your password for the NeteGreek app.\n' + link + '\n\n\nHave a great day!\n\nNeteGreek Team'
     send_email(from_email, to_email, subject, body, from_email)
 
 def check_form_status(user):
