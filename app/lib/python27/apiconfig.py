@@ -298,7 +298,7 @@ def forgotten_password_email(user):
     link = DOMAIN+ '/#/changepasswordfromtoken/'+token
     body = 'Hello\n\n'
     body += 'Please follow the link to reset your password for the NeteGreek app.\n' + link + '\nHave a great day!\nNeteGreek Team'
-    send_email(from_email, to_email, subject, body)
+    send_email(from_email, to_email, subject, body, from_email)
 
 def check_form_status(user):
     if user:
