@@ -42,7 +42,7 @@ class AuthApi(remote.Service):
         content = 'New Organization Registered\nName: ' + new_org.name + '\nSchool: ' + new_org.school
         content += '\nCreator: ' + new_user.first_name + ' ' + new_user.last_name + '\nEmail: ' + new_user.email
         content += '\nUser Name: ' + new_user.user_name
-        send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content)
+        send_email('NeteGreek <support@netegreek.com>', 'support@netegreek.com', 'New Organization Registered', content, 'support@netegreek.com')
         return OutgoingMessage(error='',
                                data=json_dump({'token': new_user.current_token,
                                     'perms': new_user.perms,
@@ -126,17 +126,10 @@ class AuthApi(remote.Service):
         if request_user.perms != 'council':
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
-        futures = list()
+        email_list = list()
         for user in clump['users']:
             token = generate_token()
-            email_item = member_signup_email(user, token)
-            cron_email = EmailTask()
-            cron_email.title = email_item["subject"]
-            cron_email.content = email_item["text"]
-            cron_email.email = email_item["to"]
-            cron_email.type = 'new_member'
-            cron_email.pending = True
-            futures.append(cron_email.put_async())
+            email_list.append(member_signup_email(user, token))
             new_user = User()
             new_user.email = user['email']
             new_user.current_token = token
@@ -150,6 +143,7 @@ class AuthApi(remote.Service):
                 new_user.pledge_class_semester = user['pledge_class_semester'].lower()
             new_user.perms = 'member'
             user['future'] = new_user.put_async()
+
         new_users = list()
         for user in clump['users']:
             new_users.append(user['future'].get_result().get_async())
@@ -157,16 +151,6 @@ class AuthApi(remote.Service):
         for user in new_users:
             added_user = user.get_result()
             user_dict = added_user.to_dict()
-            del user_dict["hash_pass"]
-            del user_dict["current_token"]
-            del user_dict["organization"]
-            del user_dict["timestamp"]
-            del user_dict["notifications"]
-            del user_dict["new_notifications"]
-            del user_dict["messages"]
-            del user_dict["new_messages"]
-            del user_dict["archived_messages"]
-            user_dict["key"] = added_user.key.urlsafe()
             return_users.append(user_dict)
         return OutgoingMessage(error='', data=json_dump(return_users))
 

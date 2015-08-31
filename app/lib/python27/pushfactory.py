@@ -32,6 +32,10 @@ class PushFactory:
         return
 
     @staticmethod
+    def push_emails(data):
+        taskqueue.add(url="/tasks/channels/pushemails/", params={'data': json_dump(data)})
+
+    @staticmethod
     def push_update(data, user_keys):
         out = {'data': data.to_dict(), 'users': user_keys}
         taskqueue.add(url="/tasks/channels/pushupdate/", params={'data': json_dump(out)})
@@ -96,3 +100,6 @@ class LiveUpdate:
 
     def to_dict(self):
         return {'type': self.type, 'key': self.key, 'data': self.data}
+
+
+

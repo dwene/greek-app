@@ -34,7 +34,7 @@ import logging
 import datetime
 import jinja2
 import webapp2
-from apiconfig import json_dump
+from apiconfig import json_dump, send_email
 from notifications import Notifications
 
 
@@ -65,16 +65,16 @@ def send_mandrill_email(from_email, to_email, subject, body, html):
     return
 
 
-def send_email(from_email, to_email, subject, body):
-    footer = 'If you believe you are receiving this email in error, please email support@netegreek.com'
-    html_title = """<h1 style="text-align: center;font-family:sans-serif;color:#000">""" + subject.replace('\n', '<br/>') + """</h1>"""
-    html_body = """<p style="text-align: left;font-family:sans-serif;color: #000">""" + body.replace('\n', '<br/>') + """</p>"""
-    full_body = body + '\n\n' + footer
-    html_full = HTML_EMAIL_1 + html_title + html_body + HTML_EMAIL_2
-    try:
-        mail.send_mail(from_email, to_email, subject, full_body, html=html_full, headers={'On-Behalf-Of': from_email})
-    except:
-        send_mandrill_email(from_email, to_email, subject, full_body, html_full)
+# def send_email(from_email, to_email, subject, body):
+#     footer = 'If you believe you are receiving this email in error, please email support@netegreek.com'
+#     html_title = """<h1 style="text-align: center;font-family:sans-serif;color:#000">""" + subject.replace('\n', '<br/>') + """</h1>"""
+#     html_body = """<p style="text-align: left;font-family:sans-serif;color: #000">""" + body.replace('\n', '<br/>') + """</p>"""
+#     full_body = body + '\n\n' + footer
+#     html_full = HTML_EMAIL_1 + html_title + html_body + HTML_EMAIL_2
+#     try:
+#         mail.send_mail(from_email, to_email, subject, full_body, html=html_full, headers={'On-Behalf-Of': from_email})
+#     except:
+#         send_mandrill_email(from_email, to_email, subject, full_body, html_full)
 
 
 def get_user(user_name, token):
@@ -484,6 +484,14 @@ class PushUpdate(webapp2.RedirectHandler):
                 channel.send_message(token, packet)
 
 
+class PushEmails(webapp2.RedirectHandler):
+    def post(self):
+        packaged = self.request.get('data')
+        email_list = json.loads(packaged)
+        for email in email_list:
+            send_email(email['from_email'], email['to_email'], email['subject'], email['body'], email['from_email'])
+
+
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
@@ -500,7 +508,9 @@ app = webapp2.WSGIApplication([
     ('/_ah/channel/connected/', Connected),
     ('/_ah/channel/disconnected/', Disconnected),
     ('/tasks/channels/sendnotificationbykey/', SendNotificationByKey),
-    ('/tasks/channels/pushupdate/', PushUpdate)
+    ('/tasks/channels/pushupdate/', PushUpdate),
+    ('/tasks/channels/pushemails/', PushEmails)
+
 
 
 ], debug=True)

@@ -12,4 +12,5 @@ www
 .idea
 stage
 app/styles/less/*.css
+app/styles/main.css
 app/fonts

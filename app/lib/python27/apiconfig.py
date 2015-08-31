@@ -173,11 +173,10 @@ def member_signup_email(user, token):
     body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
     body += signup_link + "\n\n -NeteGreek Team"
     message = dict()
-    message["text"] = body
+    message["body"] = body
     message["subject"] = subject
-    message["from_email"] = 'support@netegreek.com'
-    message["from_name"] = 'NeteGreek'
-    message["to"] = user['email']
+    message["from_email"] = 'NeteGreek <support@netegreek.com>'
+    message["to_email"] = user['email']
     return message
 
 def test_directory():
