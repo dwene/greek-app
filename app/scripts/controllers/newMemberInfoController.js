@@ -1,5 +1,5 @@
-App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$rootScope', '$stateParams', '$location', 'Session', 'AUTH_EVENTS',
-    function($scope, RESTService, $http, $rootScope, $stateParams, $location, Session, AUTH_EVENTS) {
+App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$rootScope', '$stateParams', '$location', 'Session', 'AUTH_EVENTS', 'AuthService',
+    function($scope, RESTService, $http, $rootScope, $stateParams, $location, Session, AUTH_EVENTS, AuthService) {
         routeChange();
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         $scope.loading = true;
@@ -56,9 +56,9 @@ App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$r
                 })
                     .success(function(data) {
                         if (!RESTService.hasErrors(data)) {
-                            var ret_data = JSON.parse(data.data);
-                            Session.create(to_send.user_name, ret_data.token, ret_data.me);
-                            $location.path("app/accountinfo");
+                            AuthService.login(to_send).then(function(){
+                                $location.path("app/accountinfo");
+                            });    
                         } else {
                             if (data.error == "INVALID_USERNAME") {
                                 $scope.unavailable = true;

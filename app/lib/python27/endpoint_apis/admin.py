@@ -18,7 +18,6 @@ class AdminApi(remote.Service):
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         features = Feature.query(Feature.organization == request_user.organization).fetch()
-        logging.error(len(features))
         feats = []
         for feature in features:
             if feature.expires < datetime.datetime.now():

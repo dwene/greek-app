@@ -99,7 +99,11 @@ App.controller('manageMembersController', ['Session', '$scope', '$mdDialog', '$r
                 }
             }
         };
-
+        
+        $scope.resendWelcomeEmail = function(user) {
+            resendWelcomeEmail(user);
+            $mdDialog.hide();
+        };
         function resendWelcomeEmail(member) {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/manage/resend_welcome_email', {
                 key: member.key

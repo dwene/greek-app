@@ -165,20 +165,6 @@ def set_profile_picture(filename, data, crop_data):
     return blobstore.create_gs_key(blobstore_filename)
 
 
-
-def member_signup_email(user, token):
-    signup_link = DOMAIN+'/#/newuser/'+token
-    subject = "Registration for NeteGreek App!"
-    body = "Hello!\n"
-    body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
-    body += signup_link + "\n\n -NeteGreek Team"
-    message = dict()
-    message["body"] = body
-    message["subject"] = subject
-    message["from_email"] = 'NeteGreek <support@netegreek.com>'
-    message["to_email"] = user['email']
-    return message
-
 def test_directory():
     time1 = datetime.datetime.now()
     # agtzfmdyZWVrLWFwcHIZCxIMT3JnYW5pemF0aW9uGICAgICF2JcKDA
@@ -222,6 +208,20 @@ def test_directory():
     print time6 - time1
 
 
+def member_signup_email(user, token):
+    signup_link = DOMAIN+'/#/newuser/'+token
+    subject = "Registration for NeteGreek App!"
+    body = "Hello!\n"
+    body += "Your account has been created! To finish setting up your NeteGreek account please follow the link below.\n"
+    body += signup_link + "\n\n -NeteGreek Team"
+    message = dict()
+    message["body"] = body
+    message["subject"] = subject
+    message["from_email"] = 'NeteGreek <support@netegreek.com>'
+    message["to_email"] = user['email']
+    return message
+
+
 def alumni_signup_email(user, organization_key, token):
     # to_email = [{'email': user['email'], 'type': 'to'}]
     org = organization_key.get()
@@ -233,11 +233,10 @@ def alumni_signup_email(user, organization_key, token):
                                              " to add yourself please go to the following link\n"
     body += signup_link + "\n\n -NeteGreek Team"
     message = dict()
-    message["text"] = body
+    message["body"] = body
     message["subject"] = subject
-    message["from_email"] = 'support@netegreek.com'
-    message["from_name"] = 'NeteGreek'
-    message["to"] = user['email']
+    message["from_email"] = 'NeteGreek <support@netegreek.com>'
+    message["to_email"] = user['email']
     return message
 
 

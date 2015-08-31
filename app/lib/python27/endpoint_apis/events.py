@@ -39,14 +39,12 @@ class EventsApi(remote.Service):
             if cal_key in organization.calendars:
                 new_event.calendar = cal_key
         if 'individuals' in event_data:
-            logging.error(str(len(event_data['individuals'])))
             invite_keys = []
             for individual in event_data['individuals']:
                 invite_key = ndb.Key(urlsafe=individual)
                 if invite_key:
                     invite_keys.append(invite_key)
             new_event.invites = invite_keys
-            logging.error(str(len(new_event.invites)))
         future_list = list()
         new_event_key = new_event.put()
         recurring = False

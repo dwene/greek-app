@@ -128,6 +128,7 @@ class AuthApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         email_list = list()
+        calendar_future = Calendar.query(Calendar.name == "everyone", Calendar.organization == request_user.organization).get_async()
         for user in clump['users']:
             token = generate_token()
             email_list.append(member_signup_email(user, token))
@@ -146,9 +147,13 @@ class AuthApi(remote.Service):
             user['future'] = new_user.put_async()
         PushFactory.push_emails(email_list)
         new_users = list()
+        calendar = calendar_future.get_result()
         for user in clump['users']:
             new_users.append(user['future'].get_result().get_async())
+            if user['future'].get_result() not in calendar.users:
+                calendar.users.append(user['future'].get_result())
         return_users = list()
+        calendar.put()
         for user in new_users:
             added_user = user.get_result()
             user_dict = added_user.to_dict()
@@ -211,7 +216,12 @@ class AuthApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         user_info = json.loads(request.data)
         user_to_remove = ndb.Key(urlsafe=user_info["key"]).get()
+
         if user_to_remove:
+            calendars = Calendar.query(Calendar.users == user_to_remove.key).fetch()
+            for calendar in calendars:
+                calendar.users.remove(user_to_remove.key)
+                calendar.put()
             # removal_email(user_to_remove)
             user_to_remove.key.delete()
             return OutgoingMessage(error='', data='OK')
@@ -236,15 +246,24 @@ class AuthApi(remote.Service):
                 return OutgoingMessage(error='INVALID_USERNAME')
             if not len(data["password"]) >= 6:
                 return OutgoingMessage(error='INVALID_PASSWORD')
+            features = Feature.query(Feature.organization == user.organization).fetch()
+            organization = user.organization.get()
             user.user_name = data["user_name"].lower().replace(' ', '')
             user.hash_pass = hash_password(data["password"], user.user_name)
             user.current_token = generate_token()
             user.timestamp = datetime.datetime.now()
             user.put()
             user_dict = user.to_dict()
+            org = organization.to_dict()
+            feats = []
+            for feature in features:
+                if feature.expires > datetime.datetime.now():
+                    feats.append(feature.to_dict())
+            org['features'] = feats
             return OutgoingMessage(error='', data=json_dump({'token': user.current_token,
                                                              'perms': user.perms,
-                                                             'me': user_dict}))
+                                                             'me': user_dict,
+                                                             'organization': org}))
         return OutgoingMessage(error=ERROR_BAD_ID, data='')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='forgot_password',

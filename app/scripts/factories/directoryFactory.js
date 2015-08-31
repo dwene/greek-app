@@ -32,6 +32,14 @@ App.factory('Directory', ['RESTService', '$rootScope', 'localStorageService', '$
             }
         }
 
+        item.updateMe = function(me) {
+            for (var i = 0; i < item.directory.members.length; i++){
+                if (item.directory.members[i].key === Session.me.key){
+                    item.directory.members[i] = me;
+                }
+            }
+        }
+        
         item.set = function(data) {
             item.directory = data;
         }

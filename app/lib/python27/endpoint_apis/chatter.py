@@ -265,6 +265,7 @@ class ChatterApi(remote.Service):
                                           ' just posted an important chatter.'
                 notification['sender'] = request_user.key
                 notification['type'] = 'CHATTERCOMMENT'
+                notification['type_key'] = chatter.key
 
                 if request_user.key in push_keys:
                     push_keys.remove(request_user.key)

@@ -11,6 +11,7 @@ from endpoint_apis.auth import auth
 from endpoint_apis.admin import admin_api
 from channels import channels
 from notifications import notifications_api
+from pushfactory import PushFactory
 from apiconfig import *
 
 api = endpoints.api(name='netegreek', version='v1',
@@ -154,13 +155,25 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
+        calendars = Calendar.query(Calendar.organization == request_user.organization).fetch()
+        cal_keys = list()
+        for calendar in calendars:
+            cal_keys.append(calendar.key)
         for key in request_object["keys"]:
             user = ndb.Key(urlsafe=key).get()
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             user.perms = 'alumni'
-
+            for calendar in calendar:
+                if calendar.name == "alumni":
+                    if user.key not in calendar.users:
+                        calendar.users.append(user.key)
+                else:
+                    if user.key in calendar.users:
+                        calendar.users.remove(user.key)
+                cal_keys.append(calendar.key)
             user.put()
+        ndb.put_multi(cal_keys)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/revert_from_alumni',
@@ -177,6 +190,16 @@ class RESTApi(remote.Service):
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             user.perms = 'member'
+            cal_keys = []
+            for calendar in calendar:
+                if calendar.name == "everyone":
+                    if user.key not in calendar.users:
+                        calendar.users.append(user.key)
+                else:
+                    if user.key in calendar.users:
+                        calendar.users.remove(user.key)
+                cal_keys.append(calendar.key)
+            ndb.put_multi(cal_keys)
             user.put()
         return OutgoingMessage(error='', data='OK')
 
@@ -189,30 +212,16 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
+        email_list = list()
         if 'key' in request_object:
             user = ndb.Key(urlsafe=request_object["key"]).get()
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             if user.perms == 'alumni':
-                email = alumni_signup_email(user.to_dict(), request_user.organization, user.current_token)
-                cron = EmailTask()
-                cron.content = email["text"]
-                cron.title = email["subject"]
-                cron.pending = True
-                cron.type = 'welcome_again'
-                cron.timestamp = datetime.datetime.now()
-                cron.email = user.email
-                cron.put()
+                email_list.append(alumni_signup_email(user.to_dict(), request_user.organization, user.current_token))
             else:
-                email = member_signup_email(user=user.to_dict(), token=user.current_token)
-                cron = EmailTask()
-                cron.content = email["text"]
-                cron.title = email["subject"]
-                cron.pending = True
-                cron.type = 'welcome_again'
-                cron.timestamp = datetime.datetime.now()
-                cron.email = user.email
-                cron.put()
+                email_list.append(member_signup_email(user=user.to_dict(), token=user.current_token))
+            PushFactory.push_emails(email_list)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/resend_all_welcome_emails',
@@ -224,20 +233,11 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         users = User.query(User.organization == request_user.organization).fetch()
-        async_items = []
+        email_list = []
         for user in users:
             if not user.user_name:
-                email = member_signup_email(user=user.to_dict(), token=user.current_token)
-                cron = EmailTask()
-                cron.content = email["text"]
-                cron.title = email["subject"]
-                cron.pending = True
-                cron.type = 'welcome_again'
-                cron.timestamp = datetime.datetime.now()
-                cron.email = user.email
-                async_items.append(cron.put_async())
-        for item in async_items:
-            item.get_result()
+                email_list.append(member_signup_email(user=user.to_dict(), token=user.current_token))
+        PushFactory.push_emails(email_list)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='user/update_user_directory_info',
@@ -365,13 +365,6 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
         data = json.loads(request.data)
         user = User.query(User.user_name == data['user']).get()
-        logging.error(str(user.to_dict()))
-        logging.error(str(request_user.organization))
-        logging.error(str(user.organization))
-        if not user:
-            logging.error('user not found for username: ' + str(data['user']))
-        else:
-            logging.error('User is: ' + str(user.to_dict()))
         if not user.organization == request_user.organization:
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         return_data = json_dump(user.to_dict())

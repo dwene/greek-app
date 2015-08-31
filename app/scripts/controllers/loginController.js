@@ -6,9 +6,6 @@ App.controller('loginController', ['$scope', 'RESTService', '$rootScope', 'local
         if (AuthService.isAuthenticated() || !AuthService.loginAttempted()) {
             $location.path('app');
         }
-        // $.removeCookie(USER_NAME);
-        // $.removeCookie(TOKEN);
-        // $.removeCookie('FORM_INFO_EMPTY');
         $scope.login = function(user_name, password) {
             $scope.showScreen = false;
             AuthService.login({
