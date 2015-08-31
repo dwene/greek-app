@@ -32,6 +32,7 @@ App.controller('profilePictureController', ['$scope', '$location', 'RESTService'
                     me.prof_pic = JSON.parse(data.data);
                     console.log('What prof pic Im getting', me.prof_pic);
                     Directory.updateMe(me);
+                    Session.updateMe(me);
                     $location.url('app/accountinfo');
                 })
                 .error(function(data) {
