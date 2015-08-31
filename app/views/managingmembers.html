@@ -15,8 +15,8 @@
                         <form class="permsSelect">
                             <md-select class="btn-touch" ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
                                 <md-option value="council">council</md-option>
-                                <md-option value="member">member</md-option>
                                 <md-option value="leadership">leadership</md-option>
+                                <md-option value="member">member</md-option>
                             </md-select>
                         </form>
                         <md-button ng-click="openDeleteMemberModal(member, $event)" class="btn-touch" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
