@@ -51,7 +51,7 @@
         <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.cancelEditChatter()">cancel</md-button>
       </div>
     </div>
-    
+
     <div id="chatterComments" class="md-padding no-padding-top">
       <div id="commentInput" layout="row">
         <md-input-container flex>
@@ -68,8 +68,8 @@
             <label for="commentcontent">Edit your comment here:</label>
             <textarea id="commentcontent" nete-focus="comment.editingComment" ng-model="comment.comment_temp" name="content"></textarea>
           </md-input-container>
-          <md-list-item ng-hide="comment.editingComment || !comment.timestamp" layout="row" layout-sm="column">
-            <div layout="row" style="width:100%;">
+          <md-list-item ng-hide="comment.editingComment || !comment.timestamp" layout="row" layout-sm="column" >
+            <div layout="row" style="width:100%;" layout-align="center center">
               <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
               <div class="md-list-item-text">
                 <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.edited? "Edited":""}} {{(comment.edited?comment.edited:comment.timestamp) | displayTime}}</p>
