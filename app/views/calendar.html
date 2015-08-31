@@ -33,7 +33,7 @@
                <md-content ng-show="selectedTab==0">
                   <p class="md-padding" ng-show="current_events.length == 0">There are no upcoming events.</p>
                   <md-list class="itemList">
-                     <md-list-item class="md-padding listItem" md-no-ink ng-repeat="event in (current_events = (events | removePassedEvents:true) | multipleSearch: search) | orderBy:'time_start' " ng-click="goToEvent(event.key)">
+                     <md-list-item class="listItem" md-no-ink ng-repeat="event in (current_events = (events | removePassedEvents:true) | multipleSearch: search) | orderBy:'time_start' " ng-click="goToEvent(event.key)">
                         <div class="md-list-item-text">
                            <h3>{{event.title}}</h3>
                            <p class="description">{{showDate(event.time_start, event.time_end)}}</p>
