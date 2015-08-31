@@ -290,7 +290,11 @@ md-toolbar.md-tall{
 
 #managingMembers{
     #members{
-        .email{padding-left:15px;}
+        [layout="row"] > div{
+            &:first-of-type{margin:8px;}
+            form{display:inline-block;}
+            .md-button{display:inline;}
+        }
     }
     #pagingButtons{margin-top:10px;}
 }

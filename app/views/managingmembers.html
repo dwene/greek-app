@@ -6,21 +6,21 @@
     <div>
         <md-list id="members" class="striped">
             <md-item ng-repeat="member in directory.members | orderBy:'last_name' | nameSearch:search | startFrom:startsWith | limitTo:10 track by member.key" ng-show="member.user_name != session.me.user_name">
-                <div layout="row" layout-sm="column" layout-margin layout-align="space-between center">
+                <div layout-sm="column" layout="row" layout-margin layout-align="space-between center">
                     <md-checkbox class="md-primary" ng-model="member.checked">{{member.name}}</md-checkbox>
-                    <div class="email">{{member.email}}</div>
-                    <md-button ng-click="openChangeEmailModal(member, $event)" class="btn-touch" href="" aria-label="edit email"><i class="fa fa-pencil fa-fw"></i></md-button>
+                    <div class="email text-center">{{member.email}} <md-button ng-click="openChangeEmailModal(member, $event)" class="btn-touch" href="" aria-label="edit email"><i class="fa fa-pencil fa-fw"></i></md-button></div>
                     <md-button ng-click="resendWelcomeEmail(member)" ng-hide="member.user_name" class="resendWelcome">Resend Email</md-button>
                     <div class="no-margin" flex></div>
-                    <form class="permsSelect">
-                    <!-- <update-status ng-model="member.updating" fn-call="updatePerms(member, option)"></update-status> -->
-                        <md-select class="btn-touch" ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
-                            <md-option value="council">council</md-option>
-                            <md-option value="member">member</md-option>
-                            <md-option value="leadership">leadership</md-option>
-                        </md-select>
-                    </form>
-                    <md-button ng-click="openDeleteMemberModal(member, $event)" class="btn-touch" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                    <div class="text-center">
+                        <form class="permsSelect">
+                            <md-select class="btn-touch" ng-init="option=member.perms" ng-model="option" ng-change="updatePerms(member, option)">
+                                <md-option value="council">council</md-option>
+                                <md-option value="member">member</md-option>
+                                <md-option value="leadership">leadership</md-option>
+                            </md-select>
+                        </form>
+                        <md-button ng-click="openDeleteMemberModal(member, $event)" class="btn-touch" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                    </div>
                 </div>
             </md-item>
         </md-list>

@@ -1088,8 +1088,14 @@ md-toolbar.md-tall {
 #taggingMembers #memberSelect .member {
   margin-top: 2px;
 }
-#managingMembers #members .email {
-  padding-left: 15px;
+#managingMembers #members [layout="row"] > div:first-of-type {
+  margin: 8px;
+}
+#managingMembers #members [layout="row"] > div form {
+  display: inline-block;
+}
+#managingMembers #members [layout="row"] > div .md-button {
+  display: inline;
 }
 #managingMembers #pagingButtons {
   margin-top: 10px;
