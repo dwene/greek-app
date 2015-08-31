@@ -1139,12 +1139,6 @@ md-toolbar.md-tall {
 #adminPage button.md-gray-theme {
   background: #9e9e9e;
 }
-#newEvent md-radio-group md-radio-button {
-  display: inline-block;
-}
-#newEvent #showInvited {
-  margin-top: 10px;
-}
 #newEvent #recurring md-checkbox {
   display: inline-block;
 }
@@ -1155,6 +1149,19 @@ md-toolbar.md-tall {
 }
 #newEvent #until #untilDate {
   display: inline-block;
+}
+#newEvent #showInvited {
+  text-align: center;
+  width: 100%;
+}
+@media (min-width: 600px) {
+  #newEvent md-radio-group md-radio-button {
+    display: inline-block;
+  }
+  #newEvent #showInvited {
+    margin-top: 10px;
+    text-align: right;
+  }
 }
 #notifications md-list-item {
   font-size: 12px;

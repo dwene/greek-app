@@ -316,8 +316,6 @@ md-toolbar.md-tall{
 }
 
 #newEvent{
-    md-radio-group md-radio-button{display:inline-block;}
-    #showInvited{margin-top:10px;}
     #recurring{
         md-checkbox{display:inline-block;}
     }
@@ -325,6 +323,11 @@ md-toolbar.md-tall{
         span{position:relative; top:26px; margin-right:5px;}
         #untilDate{display:inline-block;}
      }
+     #showInvited{text-align:center; width:100%;}
+     @media (min-width:600px){
+     md-radio-group md-radio-button{display:inline-block;}
+     #showInvited{margin-top:10px; text-align:right;}
+ }
 }
 
 #notifications{
