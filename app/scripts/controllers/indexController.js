@@ -1,5 +1,6 @@
 App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSidenav', '$mdDialog', '$location', 'AUTH_EVENTS', 'Organization', 'Session', 'Notifications', 'Chatter',
   function($scope, RESTService, $timeout, $mdSidenav, $mdDialog, $location, AUTH_EVENTS, Organization, Session, Notifications, Chatter) {
+        var vm = this;
         $scope.notifications = Notifications.notifs;
         $scope.item = Organization.me;
         $scope.perms = Session.perms;
@@ -14,6 +15,9 @@ App.controller('indexController', ['$scope', 'RESTService', '$timeout', '$mdSide
             $scope.name = Session.me.first_name +' '+ Session.me.last_name;
             $scope.email = Session.me.email;
             $scope.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
+            vm.council = Session.council
+            vm.leadership = Session.leadership;
+            vm.member = Session.member;
         });
         $scope.$on('me:updated', function(){
             $scope.me = Session.me;

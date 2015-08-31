@@ -6,7 +6,7 @@
         <h3>{{CD.chat.author.first_name}} {{CD.chat.author.last_name}}</h3>
         <span flex></span>
         <div id="chatterOptions" ng-hide="CD.editing">
-          <md-button class="btn-touch" ng-click="CD.showconfirmImportant(CD.chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !CD.chat.important, 'fa-star': CD.chat.important}"></i>
+          <md-button class="btn-touch" ng-show="CD.admin" ng-click="CD.showconfirmImportant(CD.chat)" aria-label="mark important"><i class="fa" ng-class="{'fa-star-o': !CD.chat.important, 'fa-star': CD.chat.important}"></i>
             <md-tooltip md-direction="left">
               Make Important
             </md-tooltip>

@@ -186,22 +186,3 @@ class LinksApi(remote.Service):
         ndb.delete_multi(group.links)
         group.key.delete()
         return OutgoingMessage(error='', data='OK')
-
-
-    # @endpoints.method(IncomingMessage, OutgoingMessage, path='edit_group',
-    #                   http_method='POST', name='edit_group')
-    # def edit_link_group(self, request):
-    #     data = json.loads(request.data)
-    #     request_user = get_user(request.user_name, request.token)
-    #     if not request_user:
-    #         return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-    #     if not (request_user.perms == 'council' or request_user.perms == 'leadership'):
-    #         return OutgoingMessage(error=INCORRECT_PERMS, data='')
-    #     group = LinkGroup.query(LinkGroup.key == ndb.Key(urlsafe=data['key'])).fetch()
-    #     group.name = data['name']
-    #     group.
-    #     for link in data['links']:
-    #
-    #     links = Link.query(Link.group == data['group'], Link.organization ==
-    #                        request_user.organization).fetch(keys_only=True)
-    #     return OutgoingMessage(error='', data='OK')
