@@ -1093,14 +1093,13 @@ md-toolbar.md-tall {
 #taggingMembers #memberSelect .member {
   margin-top: 2px;
 }
-#managingMembers #members [layout="row"] > div:first-of-type {
-  margin: 8px;
+#managingMembers .editEmail,
+#managingMembers .resendWelcome {
+  font-size: 12px;
 }
-#managingMembers #members [layout="row"] > div form {
+#managingMembers md-item .inline-block {
   display: inline-block;
-}
-#managingMembers #members [layout="row"] > div .md-button {
-  display: inline;
+  vertical-align: middle;
 }
 #managingMembers #pagingButtons {
   margin-top: 10px;
@@ -1556,6 +1555,9 @@ md-backdrop.md-opaque {
 }
 .md-autocomplete-suggestions {
   z-index: 1043;
+}
+md-select.btn-touch {
+  margin: 0;
 }
 md-menu-item div[layout="row"] {
   width: 100%;
