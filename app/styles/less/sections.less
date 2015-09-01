@@ -53,7 +53,9 @@ md-toolbar.md-tall{
 .chatterList{
     .listItem{position:relative; overflow:hidden; -webkit-backface-visibility: hidden;}
     .listItem:not(:last-child){border-bottom:1px solid #ccc;}
-    .listItem.md-padding{padding:8px;}
+    .listItem.md-padding{padding:8px;
+        button{padding:0;}
+    }
 }
 
 .message{
@@ -92,7 +94,6 @@ md-toolbar.md-tall{
 
 
 #chatter{
-    md-list-item button{padding:8px 4px;}
     .heart{height:50px;}
     md-list-item{padding-bottom: 22px;}
     .readmore{color:#ccc;}

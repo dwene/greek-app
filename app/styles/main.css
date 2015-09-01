@@ -672,6 +672,9 @@ md-toolbar.md-tall {
 .chatterList .listItem.md-padding {
   padding: 8px;
 }
+.chatterList .listItem.md-padding button {
+  padding: 0;
+}
 .message .isNew {
   display: none;
 }
@@ -734,9 +737,6 @@ md-toolbar.md-tall {
 }
 #yearSelect label {
   cursor: pointer;
-}
-#chatter md-list-item button {
-  padding: 8px 4px;
 }
 #chatter .heart {
   height: 50px;
