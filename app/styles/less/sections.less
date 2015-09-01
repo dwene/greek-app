@@ -95,12 +95,12 @@ md-toolbar.md-tall{
 
 #chatter{
     .heart{height:50px;}
-    md-list-item{padding-bottom: 22px;}
+    md-list-item{padding-bottom: 28px;}
     .readmore{color:#ccc;}
     .details{color:#ccc; font-size:12px;
         position:absolute;
         bottom:8px;
-        left:8px;
+        left:12px;
         @media (min-width:600px){
             left:16px;
         }
@@ -132,8 +132,6 @@ md-toolbar.md-tall{
         }
     }
 
-
-
     .followButton{font-size:10px;}
 
     md-list-item button{padding:8px 16px; height:50px;}
@@ -141,7 +139,13 @@ md-toolbar.md-tall{
     .details{color:#ccc; font-size:12px; line-height:1.8em;}
     .numberoflikes{width:100%; position:absolute; bottom:-2px; left:0px; font-size:10px; color:#ccc; text-align:center;}
     #chatterContent .details{text-align:right; margin-right:4px;}
-    #chatterComments .itemList md-list-item{padding:10px 0px;}
+    #chatterComments .itemList md-list-item{padding:10px 0px;
+        padding-bottom:38px;
+        .details{
+            position: absolute;
+            bottom: 8px; left:8px;
+        }
+    }
     @media (min-width:600px){.commentOptions{min-width:92px;}}
     h3.chatContent, #chatterComments h3{font-size:14px; line-height:1.4em; word-wrap: break-word;
     word-break: break-word;}
@@ -274,8 +278,16 @@ md-toolbar.md-tall{
 .url.md-input-focused:before{content:'https://'; position:absolute; bottom:7px; color:#888;}
 
 /*Upload Profile Page*/
-#crop{display:block; width:240px; margin:0 auto 10px auto;}
-#crop .page-header{padding-bottom: 5px; margin: 10px 0 5px;}
+#uploadProfilePicture{
+    .image_rotate_button_box{
+        position: relative;
+        md-progress-linear{
+            position:absolute;
+            top:-10px;
+        }
+    }
+    #crop{display:block; width:240px; margin:0 auto 10px auto;}
+}
 
 #registerInfo{
     #username{

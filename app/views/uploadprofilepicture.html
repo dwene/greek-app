@@ -1,31 +1,40 @@
-<div class="container" ng-controller="ProfilePicCtrl as P">  
-	<md-progress-circular md-mode="indeterminate" ng-show="uploading" style="margin:20px auto;"></md-progress-circular>
-	<div ng-hide="uploading">
-	    <section id="crop">
-	    
-	    <div ng-show="imageSrc.length">
-			<h2 class="page-header" ng-show="imageSrc.length">Image<i class="fa fa-crop"></i></h2>
-			<img-cropped src="imageSrc" selected="selected(cords)" ratio="1"></img-cropped>
-			<div class="image_rotate_button_box">
-			<md-button ng-click="rotateImage('left')">left</md-button>
-			<md-button ng-click="rotateImage('right')">right</md-button>
-			<br>
-			<md-progress-linear ng-show="loading_image" md-mode="indeterminate"></md-progress-linear>
+<div id="uploadProfilePicture" class="container" ng-controller="ProfilePicCtrl as P">
+	<div class="md-whiteframe-z1">
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h1>New Profile Picture</h1>
 			</div>
-		</div>
-			<h2 class="page-header" ng-show="P.cropData.length">Preview</h2>
-			<div id="cropped-image" ng-show="cropped" style="width:240px; height:240px; overflow:hidden;">
-				<img id="preview" ng-src="{{ P.imageSrc }}">
-			</div>
-			<div class="canvas-preview">
-				<p class="test"></p>
-			</div>
-	    </section>
-		<form enctype="multipart/form-data" ng-submit="uploadImage(P.imageSrc, P.cropData)" id="profilePic">
-		<input type="file" name="file" accept="image/*" value="upload" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
-		<br>
-	    <input  ng-disabled="!P.cropData || uploading_image" type="submit" name="submit" value="Upload" class="btn btn-default">
-	   </form>
-	   <p class="alert alert-danger" ng-show="error">Something went wrong. Please try again.</p>
-   </div>
+		</md-toolbar>
+		<md-content class="md-padding">
+
+			<form enctype="multipart/form-data" ng-submit="uploadImage(P.imageSrc, P.cropData)" id="profilePic">
+				<input type="file" name="file" accept="image/*" value="upload" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
+				<br>
+				<div ng-hide="uploading">
+				    <section id="crop" class="text-center" layout="column" layout-align="center center">
+				    	<div ng-show="imageSrc.length">
+							<img-cropped src="imageSrc" selected="selected(cords)" ratio="1"></img-cropped>
+							<div class="image_rotate_button_box text-center">
+								<md-progress-linear ng-show="loading_image" md-mode="indeterminate"></md-progress-linear>
+								<md-button class="btn-touch" ng-click="rotateImage('left')"><i class="fa fa-undo"></i></md-button>
+								<md-button class="btn-touch" ng-click="rotateImage('right')"><i class="fa fa-repeat"></i></md-button>
+							</div>
+						</div>
+						<md-subheader ng-show="cropped">Preview</md-subheader>
+						<div id="cropped-image" ng-show="cropped" style="width:240px; height:240px; overflow:hidden;">
+							<img id="preview" ng-src="{{ P.imageSrc }}">
+						</div>
+						<div class="canvas-preview">
+							<p class="test"></p>
+						</div>
+						<md-button ng-show="cropped" ng-disabled="!P.cropData || uploading_image" type="submit" name="submit" >Upload</md-button>
+						<p class="alert alert-danger" ng-show="error">Something went wrong. Please try again.</p>
+				    </section>
+			   </div>
+
+		 	</form>
+
+		   	<md-progress-circular md-mode="indeterminate" ng-show="uploading" style="margin:20px auto;"></md-progress-circular>
+		</md-content>
+	</div>
 </div>

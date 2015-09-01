@@ -47,13 +47,13 @@
       </md-input-container>
       <div layout="row">
         <span flex></span>
-        <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.saveChatter(CD.content_temp)">save</md-button>
-        <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.cancelEditChatter()">cancel</md-button>
+        <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.saveChatter(CD.content_temp)" md-no-ink>save</md-button>
+        <md-button ng-show="CD.editing" class="slideDown md-primary" ng-click="CD.cancelEditChatter()" md-no-ink>cancel</md-button>
       </div>
     </div>
 
     <div id="chatterComments" class="md-padding no-padding-top">
-      <div id="commentInput" layout="row">
+      <div id="commentInput" layout="row" layout-align="center end">
         <md-input-container flex>
           <label for="content">Enter new comment here:</label>
           <textarea id="content" ng-model="CD.comment" name="content" ng-enter="CD.commentOnChatter(CD.chat, CD.comment)"></textarea>
@@ -72,7 +72,6 @@
             <div layout="row" style="width:100%;" layout-align="center center">
               <img ng-src="{{comment.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{comment.author.first_name}}" />
               <div class="md-list-item-text">
-                <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.edited? "Edited":""}} {{(comment.edited?comment.edited:comment.timestamp) | displayTime}}</p>
                 <h3 class="break-newline">{{comment.content}}</h3>
               </div>
               <span flex></span>
@@ -83,12 +82,13 @@
               <md-button class="btn-touch md-primary pull-right" aria-label="delete comment" ng-click="comment.confirmDelete = !comment.confirmDelete"><i class="fa fa-trash"></i></md-button>
               <md-button class="btn-touch md-primary pull-right" aria-label="edit comment" ng-click="CD.editComment(comment)"><i class="fa fa-edit"></i></md-button>
             </div>
+            <p class="details">{{comment.author.first_name}} {{comment.author.last_name}} | {{comment.edited? "Edited":""}} {{(comment.edited?comment.edited:comment.timestamp) | displayTime}}</p>
           </md-list-item>
           <md-toolbar ng-show="comment.editingComment" class="md-primary slideDown">
             <div class="md-toolbar-tools">
               <span flex></span>
-              <md-button ng-click="CD.saveComment(comment)">Save</md-button>
-              <md-button ng-click="CD.cancelEditComment(comment)">Cancel</md-button>
+              <md-button ng-click="CD.saveComment(comment)" md-no-ink>Save</md-button>
+              <md-button ng-click="CD.cancelEditComment(comment)" md-no-ink>Cancel</md-button>
             </div>
           </md-toolbar>
           <md-toolbar ng-show="comment.confirmDelete" class="md-warn slideDown">
