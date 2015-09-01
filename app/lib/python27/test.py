@@ -36,6 +36,52 @@ def add_features():
     feature.put()
 
 
+def add_startup_chatter():
+    content = '''
+Welcome to NeteGreek, thanks for signing up!
+
+Here is a quick run through of what we offer so far:
+
+CHATTER
+Chatter allows anyone to post, comment and like. But leaders can set make a chatter important so they don't have to worry about all your posts about the Bachelor getting in the way.
+
+DIRECTORY
+Have everyone's information close on hand. Quickly text or email anyone directly from the directory. You can even keep in touch with your organization's alumni after they graduate so you can stalk them and keep inviting them back for fundraisers.
+
+EVENTS
+The calendar keeps you up to date with everything that is happening in the organization. Now the freshman don't have to keep asking where the meeting is. We have also made it easy to keep attendance at meetings with our event check-in system so it's harder to get away with skipping out -- sorry 'bout that.
+
+LINKS
+You know that really important release form that you lost and was supposed to turn in signed tomorrow? Luckily for you it was added to the link page so don't have to worry about asking the right person for another copy. Now hopefully you have enough ink.
+
+NOTIFICATIONS
+We knew you didn't get enough of these everyday. Just wanted to make sure you felt good when everyone is commenting on your chatter. Oh, and when we launch our iPhone/Android apps, they'll even make your phone ding.
+
+HELP/CONTACT
+Need someone to talk to? No, really -- we're here for you. If you have a question, we'll answer it (if we can). We also want to know everything you think about our app so we can make it better for you. We're probably working on it right now, so let us know you care by saying hi sometime.
+
+Thanks!
+
+Jake and Derek
+Co-Founders of NeteGreek
+    '''
+    netebot = User.query(User.user_name == 'netebot').get()
+    orgs = Organization.query(Organization.key != ndb.Key('Organization', 5746664899870720)).fetch(keys_only=True)
+    print (str(len(orgs)))
+    futures = list()
+    for org in orgs:
+        chatter = Chatter()
+        chatter.content = content
+        chatter.important = True
+        chatter.author = netebot.key
+        chatter.timestamp = datetime.datetime.now()
+        chatter.organization = org
+        chatter.following = []
+        futures.append(chatter.put_async())
+    for future in futures:
+        future.get_result()
+
+
 def add_calendars():
     organization = ndb.Key('Organization', 5746664899870720).get()
     public = Calendar()
