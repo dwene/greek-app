@@ -156,25 +156,41 @@ def generate_calendars(org_key):
 
 def create_chatter(org_key, user_key):
     chatter = Chatter()
+    content = '''
+Welcome to NeteGreek, thanks for signing up!
+
+Here is a quick run through of what we offer so far:
+
+CHATTER
+Chatter allows anyone to post, comment and like. But leaders can set make a chatter important so they don't have to worry about all your posts about the Bachelor getting in the way.
+
+DIRECTORY
+Have everyone's information close on hand. Quickly text or email anyone directly from the directory. You can even keep in touch with your organization's alumni after they graduate so you can stalk them and keep inviting them back for fundraisers.
+
+EVENTS
+The calendar keeps you up to date with everything that is happening in the organization. Now the freshman don't have to keep asking where the meeting is. We have also made it easy to keep attendance at meetings with our event check-in system so it's harder to get away with skipping out -- sorry 'bout that.
+
+LINKS
+You know that really important release form that you lost and was supposed to turn in signed tomorrow? Luckily for you it was added to the link page so don't have to worry about asking the right person for another copy. Now hopefully you have enough ink.
+
+NOTIFICATIONS
+We knew you didn't get enough of these everyday. Just wanted to make sure you felt good when everyone is commenting on your chatter. Oh, and when we launch our iPhone/Android apps, they'll even make your phone ding.
+
+HELP/CONTACT
+Need someone to talk to? No, really -- we're here for you. If you have a question, we'll answer it (if we can). We also want to know everything you think about our app so we can make it better for you. We're probably working on it right now, so let us know you care by saying hi sometime.
+
+Thanks!
+
+Jake and Derek
+Co-Founders of NeteGreek
+    '''
     chatter.organization = org_key
-    chatter.content = "Welcome to NeteGreek 2.0! This is our new feature called Chatter! " + \
-        "Check it out and let us know if you have any questions!"
+    chatter.content = content
     chatter.author = user_key
     chatter.important = True
     chatter.timestamp = datetime.datetime.now()
     chatter.following = [user_key]
     key = chatter.put()
-    comment = ChatterComment()
-    comment.organization = org_key
-    comment.author = user_key
-    comment.content = "Feel free to delete this chatter whenever you want!" \
-                      " Just click the trash can in the top right corner."
-    comment.timestamp = datetime.datetime.now()
-    comment.likes = [user_key]
-    comment.chatter = chatter.put()
-    comment.put()
-    chatter.comments = [comment.key]
-    chatter.put()
     return key
 
 

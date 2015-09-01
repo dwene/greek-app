@@ -1,5 +1,6 @@
-<div ng-hide="loading_finished"  class="text-center">Person not found :(</div>
-<div id="profile" class="container" ng-show="loading_finished">
+<div ng-show="notFound" class="text-center">Person not found :(</div>
+<load-directive ng-model="loadingFinished">
+<div id="profile" class="container" ng-show="loadingFinished && !notFound">
   <div class="md-whiteframe-z1">
     
     <md-toolbar class="md-tall">

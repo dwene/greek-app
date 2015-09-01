@@ -15,10 +15,14 @@ App.controller('memberprofileController', ['$scope', '$rootScope', '$stateParams
                     formatMemberData();
                 } else {
                     console.log('Directory Get Error: ', data);
+                    $scope.notFound = true;
+                    $scope.loadingFinished = true;
                 }
             })
             .error(function(data) {
                 console.log('Directory Get Error: ', data);
+                $scope.notFound = true;
+                $scope.loadingFinished = true;
             });
 
         $scope.showProfileoptions = function($event) {
@@ -165,7 +169,7 @@ App.controller('memberprofileController', ['$scope', '$rootScope', '$stateParams
             $scope.twitter = $scope.member.twitter;
             $scope.instagram = $scope.member.instagram;
             $scope.linkedin = $scope.member.linkedin;
-            $scope.loading_finished = true;
+            $scope.loadingFinished = true;
             return;
         }
     }
