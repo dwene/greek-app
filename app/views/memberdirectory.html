@@ -6,8 +6,8 @@
    <md-subheader>
        COUNCIL
    </md-subheader>
-    <md-list class="memberList">
-        <md-list-item ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
+    <md-list class="itemList">
+        <md-list-item class="listItem" md-no-ink ng-repeat="member in council | multipleSearch:search  track by member.key" ng-click="showIndividual(member)">
                 <div class="md-tile-left">
                     <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
@@ -22,7 +22,7 @@
        LEADERSHIP
    </md-subheader>
     <md-list class="memberList">
-        <md-list-item ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
+        <md-list-item md-no-ink ng-repeat="member in leadership | multipleSearch:search track by member.key" ng-click="showIndividual(member)">
                 <div class="md-tile-left">
                     <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>
@@ -39,7 +39,7 @@
    </md-subheader>
       <div infinite-scroll="increaseDirectoryLength()" infinite-scroll-distance="0" infinite-scroll-disabled="search">
     <md-list class="memberList">
-        <md-list-item ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" ng-click="showIndividual(member)">
+        <md-list-item md-no-ink ng-repeat="member in members | multipleSearch:search | limitTo:memberdirectorylength track by member.key" ng-click="showIndividual(member)">
                 <div class="md-tile-left">
                   <img ng-src="{{getProfPic(member.prof_pic)}}" class="face">
                 </div>

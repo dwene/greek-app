@@ -742,7 +742,7 @@ md-toolbar.md-tall {
   height: 50px;
 }
 #chatter md-list-item {
-  padding-bottom: 22px;
+  padding-bottom: 28px;
 }
 #chatter .readmore {
   color: #ccc;
@@ -752,7 +752,7 @@ md-toolbar.md-tall {
   font-size: 12px;
   position: absolute;
   bottom: 8px;
-  left: 8px;
+  left: 12px;
 }
 @media (min-width: 600px) {
   #chatter .details {
@@ -830,6 +830,12 @@ md-toolbar.md-tall {
 }
 #chatterDialog #chatterComments .itemList md-list-item {
   padding: 10px 0px;
+  padding-bottom: 38px;
+}
+#chatterDialog #chatterComments .itemList md-list-item .details {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
 }
 @media (min-width: 600px) {
   #chatterDialog .commentOptions {
@@ -1070,14 +1076,17 @@ md-toolbar.md-tall {
   color: #888;
 }
 /*Upload Profile Page*/
-#crop {
+#uploadProfilePicture .image_rotate_button_box {
+  position: relative;
+}
+#uploadProfilePicture .image_rotate_button_box md-progress-linear {
+  position: absolute;
+  top: -10px;
+}
+#uploadProfilePicture #crop {
   display: block;
   width: 240px;
   margin: 0 auto 10px auto;
-}
-#crop .page-header {
-  padding-bottom: 5px;
-  margin: 10px 0 5px;
 }
 #registerInfo #username .md-button {
   height: 28px;
