@@ -1,0 +1,13 @@
+<md-dialog md-theme="{{$root.color}}">
+  <md-content>
+       <md-subheader>
+            Delete this event?
+        </md-subheader>
+        <md-divider></md-divider>
+  </md-content>
+  
+  <div class="md-actions" layout="row">
+      <md-button ng-click="delete()" class="md-warn">delete</md-button>
+      <md-button ng-click="closeDialog()">cancel</md-button>
+  </div>
+</md-dialog>

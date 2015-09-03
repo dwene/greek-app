@@ -1,0 +1,60 @@
+<md-button class="fixed md-fab md-warn md-fab-bottom-right" ng-href="#/app/events/newevent" ng-show="session.leadership"><i class="fa fa-plus"></i>
+   <md-tooltip md-direction="left">
+      Create Event
+   </md-tooltip>
+</md-button>
+
+<div id="events" class="container" ng-init="current = {maxPageNumber: 5, currentPage: 0}; order = (present ? 'time_start': '-time_start');" load-directive ng-model="dataLoaded">
+   <div class="row">
+      <div class="col-xs-12 col-sm-6">
+         <div id="calendar" class="md-whiteframe-z1">
+            <md-toolbar>
+               <div class="md-toolbar-tools">
+                  <h1>Events</h1>
+               </div>
+            </md-toolbar>
+            <md-content ng-model="eventsLoaded">
+               <calendar calendar-mode="mode" event-source="eventSource">
+            </md-content>
+            </div>
+         </div>
+         <div class="col-xs-12 col-sm-6">
+            <div id="eventList" class="md-whiteframe-z1">
+               <md-toolbar>
+                  <md-tabs md-selected="selectedTab">
+                     <md-tab id="upcomingeventsTab" aria-controls="upcomingeventsTab-content">
+                        Upcoming
+                     </md-tab>
+                     <md-tab id="pasteventsTab" aria-controls="pasteventsTab-content">
+                        Past
+                     </md-tab>
+                  </md-tabs>
+               </md-toolbar>
+               <md-content ng-show="selectedTab==0">
+                  <p class="md-padding" ng-show="current_events.length == 0">There are no upcoming events.</p>
+                  <md-list class="itemList">
+                     <md-list-item class="listItem" md-no-ink ng-repeat="event in (current_events = (events | removePassedEvents:true) | multipleSearch: search) | orderBy:'time_start' " ng-click="goToEvent(event.key)">
+                        <div class="md-list-item-text">
+                           <h3>{{event.title}}</h3>
+                           <p class="description">{{showDate(event.time_start, event.time_end)}}</p>
+                        </div>
+                     </md-list-item>
+                  </md-list>
+               </md-content>
+
+               <md-content ng-show="selectedTab==1">
+                  <p class="md-padding" ng-show="past_events.length == 0">There are no past events.</p>
+                  <md-list class="itemList">
+                     <md-list-item class="md-padding" ng-repeat="event in (past_events = (events | removePassedEvents:false | multipleSearch: search)) | orderBy:'-time_start' " ng-click="goToEvent(event.key)">
+                        <div class="md-list-item-text">
+                           <h3>{{event.title}}</h3>
+                           <p>{{showDate(event.time_start, event.time_end)}}</p>
+                        </div>
+                     </md-list-item>
+                  </md-list>
+               </md-content>
+
+            </div>
+         </div>
+      </div>
+   </div>

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+function help {
+	echo "How to use this script"
+	echo "./gruntw web [serve, build, etc]...........use gruntfile for web build"
+	echo "./gruntw ios [serve, build, etc]...........use gruntfile for ios build"
+	echo "./gruntw android [serve, build, etc].......use gruntfile for android build"
+}
+
+
+if [[ $# == 0 ]]; then
+	help
+	exit 1
+fi
+
+
+if [[ $1 == "web" ]]; then
+	echo "Using Gruntfile.js"
+	grunt "${@:2}"
+fi
+
+
+
+if [[ $1 == "ios" ]]; then
+	echo "Using iosGruntfile.js"
+	grunt "${@:2}" --gruntfile iosGruntfile.js
+fi
+
+
+

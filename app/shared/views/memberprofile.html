@@ -1,0 +1,66 @@
+<div ng-show="notFound" class="text-center">Person not found :(</div>
+<load-directive ng-model="loadingFinished">
+<div id="profile" class="container" ng-show="loadingFinished && !notFound">
+  <div class="md-whiteframe-z1">
+    
+    <md-toolbar class="md-tall">
+      <div id="social" layout="row" layout-align="center center" ng-show="website.length || facebook.length || twitter.length || instagram.length || linkedin.length">
+        <a target="_blank" href="http://{{website}}" class="btn-touch"><i class="fa fa-globe fa-fw"></i></a>
+        <a target="_blank" href="http://{{facebook}}" class="btn-touch"><i class="fa fa-facebook-square fa-fw"></i></a>
+        <a target="_blank" href="http://{{twitter}}" class="btn-touch"><i class="fa fa-twitter-square fa-fw"></i></a>
+        <a target="_blank" href="http://{{instagram}}" class="btn-touch"><i class="fa fa-instagram fa-fw"></i></a>
+        <a target="_blank" href="http://{{linkedin}}" class="btn-touch"><i class="fa fa-linkedin-square fa-fw"></i></a>
+      </div>
+      
+      <div id="profile-top" layout="row" layout-align="center center">
+        <div flex="20" flex-md="25" flex-sm="45">
+          <img class="face pull-right" ng-src="{{prof_pic || $root.defaultProfilePicture}}" alt="{{firstName}} {{lastName}}">
+        </div>
+        <div class="name" flex="80" flex-md="75" flex-sm="55">
+          <h2>{{firstName}} {{lastName}}</h2>
+          <h5 ng-show="position.length">{{position}}</h5>
+        </div>
+      </div>
+    
+      <md-button class="edit-profile" ng-href="#/app/accountinfo" ng-show="isThisMe()">edit <i class="fa fa-fw fa-pencil-square-o"></i></md-button>
+      <md-button id="back" class="md-fab lower md-warn md-hue-3" aria-label="back" onclick="window.history.back()">
+        <i class="fa fa-arrow-left"></i>
+      </md-button>
+    </md-toolbar>
+    
+    <md-content class="md-padding">
+      <span id="info"><br><br>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6" ng-show="phone">
+            <a href="sms:{{phone}}">
+              <div layout="row" layout-align="start center"><i class="fa fa-fw fa-phone fa-3x theme-color" flex="30"></i><p flex>{{phone}}</p></div>
+            </a>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="email">
+            <a href="mailto:{{email}}">
+              <div layout="row" layout-align="start center"><i class="fa fa-fw fa-envelope-o fa-3x theme-color" flex="30"></i><p flex>{{email}}</p></div>
+            </a>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="pledgeClass">
+            <div layout="row" layout-align="start center"><i class="fa fa-fw fa-shield fa-3x theme-color" flex="30"></i><p flex>Pledged {{pledgeClass | capitalizeFirst}}</p></div>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="birthday">
+            <div layout="row" layout-align="start center"><i class="fa fa-fw fa-birthday-cake fa-3x theme-color" flex="30"></i><p flex>{{birthday}}</p></div>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="major">
+            <div layout="row" layout-align="start center"><i class="fa fa-fw fa-book fa-3x theme-color" flex="30"></i><p flex>{{major}}</p></div>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="graduation">
+            <div layout="row" layout-align="start center"><i class="fa fa-fw fa-graduation-cap fa-3x theme-color" flex="30"></i><p flex>{{graduation}}</p></div>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="currentAddress">
+            <div layout="row" layout-align="start center"><i class="fa fa-fw fa-home fa-3x theme-color" flex="30"></i><p flex>Lives at {{currentAddress}}</p></div>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="permanentAddress">
+            <div layout="row" layout-align="start center"><i class="fa fa-fw fa-heart-o fa-3x theme-color" flex="30"></i><p flex>Permanent Address at {{permanentAddress}}</p></div>
+          </div>
+        </div>
+      </span>
+    </md-content>
+  </div>
+</div>

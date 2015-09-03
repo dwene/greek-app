@@ -1,0 +1,54 @@
+<md-dialog id="selectingMembers" md-theme="{{$root.color}}" flex="80">
+    <md-toolbar class="md-primary">
+        <div class="md-toolbar-tools">
+            <h1>Select Members</h1>
+        </div>
+    </md-toolbar>
+
+    <md-content class="md-padding autocomplete">
+
+        <md-contact-chips
+            ng-model="selected"
+            md-contacts="filter($query)"
+            md-contact-name="name"
+            md-contact-image="image"
+            md-contact-email="email"
+            md-require-match
+            placeholder="Select members or groups">
+        </md-contact-chips>
+        
+        <br>
+        <md-subheader> Contacts</md-subheader>
+        <md-list>
+            <md-list-item class="contact-item" ng-repeat="g in calendars" ng-click="select(g)" ng-disabled="g.selected">
+                <img ng-src="{{g.image}}" class="md-avatar" alt="{{g.name}}" />
+                <div class="md-list-item-text compact">
+                    <h3>{{g.name | capitalizeFirst}}</h3>
+                </div>
+            </md-list-item>
+            <md-list-item class="contact-item" ng-repeat="member in members" ng-click="select(member)" ng-disabled="member.selected">
+                <img ng-src="{{member.prof_pic ? member.prof_pic + 's=50' : 'images/defaultprofile.png'}}" class="md-avatar" alt="{{member.name}}" />
+                <div class="md-list-item-text compact">
+                    <h3>{{member.name}}</h3>
+                </div>
+            </md-list-item>
+        </md-list>
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <md-button class="md-primary" ng-click="save()">
+            Close
+        </md-button>
+    </div>
+</md-dialog>
+
+<!-- 
+        <md-subheader class="md-no-sticky">Groups</md-subheader>
+        <md-list-item class="contact-item" ng-repeat="g in calendars" ng-class="{'selected': group.selected}" >
+            <img ng-src="{{g.image}}" class="md-avatar" alt="{{g.name}}" />
+            hi
+            <div class="md-list-item-text compact">
+                <h3>{{g.name}}</h3>
+            </div>
+        </md-list-item> -->

@@ -1,0 +1,51 @@
+/*ng-animation code*/
+.fadingIn.ng-enter, .fadingIn.ng-hide-remove{
+    -webkit-animation: fadeIn .5s;
+    -moz-animation: fadeIn .5s;
+    -ms-animation: fadeIn .5s;
+    animation: fadeIn .5s;
+}
+
+.fadingOut.ng-leave, .fadingOut.ng-hide-show{
+    -webkit-animation: fadeOut .5s;
+    -moz-animation: fadeOut .5s;
+    -ms-animation: fadeOut .5s;
+    animation: fadeOut .5s;
+}
+
+.fadingInLeftBig.ng-enter{
+    position:absolute !important; left:0px; right:0px; visibility:hidden;
+    -webkit-animation: fadeInRightBig .5s;
+    -moz-animation: fadeInRightBig .5s;
+    -ms-animation: fadeInRightBig .5s;
+    animation: fadeInRightBig .5s;
+}
+.fadingInLeftBig.ng-enter.ng-enter-active { visibility:visible;}
+.fadingOutRightBig.ng-leave{
+    position:absolute !important; left:0px; right:0px;
+    -webkit-animation: fadeOutLeftBig .5s;
+    -moz-animation: fadeOutLeftBig .5s;
+    -ms-animation: fadeOutLeftBig .5s;
+    animation: fadeOutLeftBig .5;
+}
+.removeNotification.ng-leave{
+    -webkit-animation: fadeOutUp .2s;
+    -moz-animation: fadeOutUp .2s;
+    -ms-animation: fadeOutUp .2s;
+    animation: fadeOutUp .2s;
+}
+
+.slideDown{z-index:0;}
+.slideDown.ng-hide-remove{
+    -webkit-animation: slideInDown .2s;
+    -moz-animation: slideInDown .2s;
+    -ms-animation: slideInDown .2s;
+    animation: slideInDown .2s;
+}
+
+.bounceIn.ng-enter{
+    -webkit-animation: bounceIn .5s;
+    -moz-animation: bounceIn .5s;
+    -ms-animation: bounceIn .5s;
+    animation: bounceIn .5s;
+}

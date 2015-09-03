@@ -1,0 +1,53 @@
+<md-dialog id="taggingMembersDialog" md-theme="{{$root.color}}">
+  <md-content>
+      <md-subheader class="md-sticky-no-effect">
+          View Tags
+      </md-subheader>
+
+       <form layout="row" id="addTagForm" name="addTagForm" ng-submit="addOrganizationTag(new_tag)">
+              <md-input-container flex>
+                  <label for="new_tag">Tag Name</label>
+                  <input type="text" name="tag_name" ng-model="new_tag">
+              </md-input-container>
+              <md-button type="submit">Add Tag</md-button>
+      </form>
+       <div id="memberTags">
+        <div class="btn-group memberTags" ng-repeat="tag in tags.org_tags | orderBy : 'name'">
+            <netetag-all></netetag-all>
+        </div>
+        </div>
+        
+        <div id="tagOptions">
+        
+        <div ng-show="showRename">
+        <h2>Rename "{{selectedTag.name}}"?</h2>
+            <form id="renameTagForm" name="renameTagForm" ng-submit="renameTag(new_name, renameTagForm.$valid)" novalidate>
+               <md-input-container ng-class="{ 'md-input-invalid' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
+                   <label for="rename_tag">New Tag Name</label>
+                   <input type="text" name="rename_tag" ng-model="new_name" required>
+                    <p class="text-danger invalid-text">Please enter a new tag name.</p>
+               </md-input-container>
+                <!-- <div ng-class="{ 'md-input-invalid' : (renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)}">
+                <input type="text" name="rename" ng-model="rename" class="form-control" placeholder="enter new tag name" required>
+                <p ng-show="(renameTagForm.rename.$invalid && !renameTagForm.rename.$pristine) || (renameTagForm.rename.$invalid && submitted)" class="help-block">Please enter a new tag name.</p>
+                </div> -->
+                <md-button type="button" ng-click="showRename = false">Cancel</md-button>
+                <br>
+                <md-button type="submit">Rename Tag</md-button>
+            </form>
+        
+        </div>
+        
+        <div ng-show="showDelete">
+            <h2>Are you sure you want to delete "{{selectedTag.name}}"?</h2><br>
+            <md-button ng-click="showDelete = false">Cancel</md-button>
+            <md-button ng-click="deleteTag()" class="md-warn">Delete</md-button>
+        </div>
+        
+        </div>
+        
+  </md-content>
+  <div class="md-actions" layout="row">
+    <md-button class="pull-right" ng-click="closeModal()">done</md-button>
+  </div>
+</md-dialog>

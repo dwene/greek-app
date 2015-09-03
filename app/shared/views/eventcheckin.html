@@ -1,0 +1,45 @@
+<div ng-show="eventNotFound" class="text-center"><h1>Event not found :(</h1></div>
+<md-progress-circular md-mode="indeterminate" ng-show="loading" style="margin:20px auto;"></md-progress-circular>
+<div id="eventCheckin" class="container" ng-hide="loading || eventNotFound">
+    <div class="md-whiteframe-z1" infinite-scroll="maxLengthIncrease()" infinite-scroll-disabled="search">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Event Checkin for {{title}}</h1>
+            </div>
+            <md-button id="back" class="md-fab" aria-label="back" ng-click="back()">
+                <i class="fa fa-arrow-left"></i>
+            </md-button>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <search ng-model="search" change="change()"></search>
+            <md-list class="itemList">
+                <md-list-item class="md-padding" ng-repeat="member in users | orderBy:'last_name' | nameSearch: search: 0 | limitTo:maxLength track by member.key"  layout="row" layout-sm="column" layout-align="center center">
+                        <div>
+                            <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="check in" ng-click="checkIn(member, true, false)">
+                                    <i class="fa fa-sign-in fa-lg fa-fw"></i>
+                            </md-button>
+                            <md-button ng-hide="!member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="clear check in" ng-click="checkIn(member, false, true)">
+                                    <i class="fa fa-times fa-lg fa-fw"></i>
+                            </md-button>
+                        </div>
+                        <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">
+                        <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                        <div flex></div>
+                        <div>
+                                <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
+                                <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span>
+                        </div>
+                        <div flex class="no-margin"></div>
+                        <div>
+                        <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, true, false)" aria-label="check out">
+                                <i class="fa fa-sign-out fa-lg fa-fw"></i>
+                        </md-button>
+                        <md-button ng-show="member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, false, true)" aria-label="check out">
+                                <i class="fa fa-times fa-lg fa-fw"></i>
+                        </md-button>
+                        </div>
+                </md-list-item>
+            </md-list>
+        </md-content>
+    </div>
+</div>

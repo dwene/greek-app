@@ -1,0 +1,33 @@
+<md-dialog md-theme="{{$root.color}}">
+  <md-content>
+       <md-subheader>
+            Delete group "{{selectedGroup}}" and all included links?
+        </md-subheader>
+        <md-divider></md-divider>
+  </md-content>
+  
+  <div class="md-actions" layout="row">
+        <md-button class="md-warn" ng-click="deleteGroup(selectedGroup)">delete</md-button>
+        <md-button ng-click="closeDialog()">cancel</md-button>
+  </div>
+</md-dialog>
+
+
+
+<!-- <div class="modal fade" id="deleteGroupModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Delete group: {{selectedGroup}}?
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+              <p>This will also delete all links within this group.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteGroup(selectedGroup)">Delete<update-status ng-model="checkDeleteGroup"></update-status></button>
+      </div>
+    </div>
+  </div>
+</div> -->

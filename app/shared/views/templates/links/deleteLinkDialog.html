@@ -1,0 +1,15 @@
+<md-dialog md-theme="{{$root.color}}">
+       <md-toolbar class="md-warn">
+           <div class="md-toolbar-tools">
+            <h1>Delete Link "{{selectedLink.title}}"?</h1>
+            </div>
+        </md-toolbar>
+    <md-divider></md-divider>
+    <md-content>
+    </md-content>
+  
+  <div class="md-actions" layout="row">
+        <md-button class="md-warn" ng-click="deleteLink(selectedLink)">delete</md-button>
+        <md-button ng-click="closeDialog()">cancel</md-button>
+  </div>
+</md-dialog>

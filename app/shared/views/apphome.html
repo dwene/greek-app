@@ -1,0 +1,128 @@
+<div id="appHome" class="container" ng-init="hidden = {maxPageNumber: 5, currentPage: 0}; current = {maxPageNumber: 5, currentPage: 0};">
+<!--
+<md-card class="hidden-xs">
+       <img ng-src="{{$root.organization.image || 'images/defaultorgimage.png'}}">
+</md-card>
+-->
+<div class="row">
+
+<div class="col-sm-6">
+
+<div class="md-whiteframe-z1">
+    <md-content class="md-padding no-padding-top">
+        <div>
+            <div>
+                    <form layout="row" name="statusUpdate" id="statusUpdate" ng-submit="updateStatus(status)">
+                    <md-input-container flex class="md-default-theme no-margin">
+                        <label for="update_status">Update Your status <span ng-show="status">({{status.length}}/140}</span></label>
+                        <input name="update_status" ng-model="status"  maxlength="140"/>
+                    </md-input-container>
+                    <md-button type="submit" aria-label="submit status" ng-show="status"><i class="fa fa-check"></i></md-button>
+                    </form>
+                <md-subheader class="no-padding-bottom">
+                    <span ng-hide="me.status">No Status</span>
+                    <span ng-show="me.status">{{me.status}} <md-button aria-label="clear status" ng-click="openClearStatusDialog($event)" ng-hide="!me.status || status"><i class="fa fa-times"></i></md-button></span>
+                </md-subheader>
+            </div>
+            <div style="padding-top:16px;">
+                    <md-list id="upcomingEvents" class="itemList hover">
+                        <md-item ng-repeat="event in eventsList =  (events | removePassedEvents:true | orderBy: 'time_start' | limitTo: 3)">
+                            <md-item-content>
+                                <a ng-href="#/app/events/{{event.key}}">{{event.title}} {{showDate(event.time_start, event.time_end)}}</a>
+                            </md-item-content>
+                        </md-item>
+                    </md-list>
+            </div>
+        </div>
+    </md-content>
+</div>
+
+</div>
+
+<div class="col-sm-6">
+
+<div id="notifications" class="md-whiteframe-z1" ng-controller="inboxController">
+    <md-toolbar class="no-min-height">
+        <md-tabs md-selected="data.selectedIndex">
+          <md-tab id="inboxTab" aria-controls="inboxTab-content">
+            Inbox
+          </md-tab>
+          <md-tab id="archivedTab" aria-controls="archivedTab-content">
+            Archived
+          </md-tab>
+        </md-tabs>  
+    </md-toolbar>
+
+    <div class="tabpanel-container" load-directive ng-model="showInbox">
+        <div role="tabpanel" id="inboxTab-content" aria-labelledby="inboxTab" ng-show="data.selectedIndex == 0" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseMessagesLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 0 || !showInbox">
+            <md-content class="md-padding">
+                <span ng-show="inbox.messages < 1">You have a clear inbox!</span>
+                <md-list class="itemList hover">
+                  <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openMessageDialog(notify, $event)" ng-repeat="notify in (inbox.messages | orderBy:'-timestamp' | limitTo: messagesLength) track by notify.key">
+                    <div class="isNew md-primary"></div>
+                    <md-item-content>
+                      <div class="md-tile-content">
+                        <h3 class="md-primary title">
+                            {{notify.title}}
+                        </h3>
+                        <!-- <md-button class="archive pull-right btn-touch" type="button" ng-click="hideNotification(notify, this);$event.stopPropagation();" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></md-button> -->
+                            <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                            <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                      </div>
+                    </md-item-content>
+                  </md-item>
+                </md-list>
+            </md-content>
+        </div>
+        <div role="tabpanel" id="archivedTab-content" aria-labelledby="archivedTab" ng-show="data.selectedIndex == 1" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="increaseArchivedLength()" infinite-scroll-distance="3" infinite-scroll-disabled="data.selectedIndex != 1 || !showInbox">
+            <md-content class="md-padding">
+               <span ng-show="inbox.archived < 1">You have no archived messages!</span>
+                <md-list class="itemList hover">
+                  <md-item class="message" ng-class="{new: notify.new, removeNotification: notify.garbage}" ng-click="openArchivedDialog(notify, $event)" ng-repeat="notify in (inbox.archived | orderBy:'-timestamp' | limitTo: archivedLength) track by notify.key">
+                    <div class="isNew md-primary"></div>
+                    <md-item-content>
+                      <div class="md-tile-content">
+                        <h3 class="md-primary title">
+                            {{notify.title}}
+                        </h3>
+                        <!-- <button class="archive pull-right btn-touch" type="button" aria-label="archive"><i class="fa fa-folder-open-o fa-fw"></i></button> -->
+                            <p class="notificationText">{{notify.content | htmlToPlaintext}}</p>
+                            <p class="sentBy" ng-show="notify.sender_name">sent by: {{notify.sender_name}}</p>
+                      </div>
+                    </md-item-content>
+                  </md-item>
+                </md-list>
+            </md-content>
+        </div>
+    </div>
+    <md-progress-circular md-mode="indeterminate" class="small" ng-show="loadingArchived || loadingMessages"></md-progress-circular>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<div class="modal fade" id="notificationModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title preText">{{selectedNotification.title}}</h4>
+        <p class="">{{formatTimestamp(selectedNotification.timestamp)}}</p>
+      </div>
+      <div class="modal-body">
+        <p ng-bind-html="messageHTML"></p>
+        <br>
+        <span class="notificationSender">sent by: {{selectedNotification.sender_name}}</span>
+      </div>
+      <div class="modal-footer">
+        <a href="mailto:{{selectedNotificationUser.email}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" class="btn btn-info pull-left"><i class="fa fa-envelope-o"></i></a>
+        <a href="sms:{{selectedNotificationUser.phone}}" target="_blank" ng-show="selectedNotificationUser && selectedNotification.type == 'message'" class="btn btn-info pull-left"><i class="fa fa-phone"></i></a>
+        <a type="button" class="btn btn-info" ng-show="selectedNotification.type == 'event'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Event</a>
+        <a type="button" class="btn btn-info" ng-show="selectedNotification.type == 'poll'" ng-click="closeNotificationModal()" ng-href="{{selectedNotification.link}}">Go To Poll</a>
+        <button type="button" class="btn btn-primary" ng-click="closeNotificationModal()">OK</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

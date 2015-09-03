@@ -1,0 +1,5 @@
+<span class="btn-group">
+    <label ng-repeat="year in years | orderBy:['-year', 'semester']" ng-click="$parent.selectedYear = year; $parent.search = undefined;" ng-class="{'label-default': selectedYear != year, 'label-primary': selectedYear == year}" class="label">
+        <span>{{year.value | capitalizeFirst}}</span>
+    </label>
+</span>

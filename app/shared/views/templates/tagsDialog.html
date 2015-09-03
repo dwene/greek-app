@@ -1,0 +1,54 @@
+<md-dialog id="tagsDialog"  md-theme="{{$root.color}}">
+  <md-content>
+      <md-toolbar class="no-min-height">
+        <md-tabs md-selected="data.selectedIndex">
+          <md-tab id="TagsTab" aria-controls="tagsTab-content">
+            Tags
+          </md-tab>
+          <md-tab id="UsersTab" aria-controls="usersTab-content" ng-show="usersList">
+            Users
+          </md-tab>
+        </md-tabs>  
+      </md-toolbar>
+        <div role="tabpanel" aria-labelledby="TagsTab" ng-show="data.selectedIndex == 0">
+            <md-content class="md-padding">
+                <div class="btn-group" ng-repeat="tag in tags.perms_tags | multipleSearch:modalSearch">
+                    <netetag-check></netetag-check>
+                </div>
+                <div class="btn-group" ng-repeat="tag in tags.org_tags | multipleSearch:modalSearch">
+                    <netetag-check></netetag-check>
+                </div>
+            </md-content>
+        </div>
+        <div role="tabpanel" aria-labelledby="UsersTab" ng-show="data.selectedIndex == 1">
+              <search ng-model="modalSearch"></search>
+                <!-- <h2 class="page-header">Users</h2> -->
+                <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch">
+                    <netemember-check ng-model="tag"></netemember-check>
+                </div>
+        </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <md-button class="pull-right md-primary" ng-click="closeModal()">done</md-button>
+  </div>
+</md-dialog>
+
+
+<!-- <ul class="selectTags">
+            <div>
+               <h2 class="page-header">Organization Tags</h2>
+                <div class="btn-group" ng-repeat="tag in tags.org_tags | multipleSearch:modalSearch">
+                    <netetag-check></netetag-check>
+                </div>
+                <h2 class="page-header">Preset Tags</h2>
+                <div class="btn-group" ng-repeat="tag in tags.perms_tags | multipleSearch:modalSearch">
+                    <netetag-check></netetag-check>
+                </div>
+                <span ng-show="includeUsers">
+                <h2 class="page-header">Users</h2>
+                <div class="btn-group" ng-repeat="tag in usersList | multipleSearch:modalSearch">
+                    <netemember-check ng-model="tag"></netemember-check>
+                </div>
+                </span>
+            </div>
+          </ul> -->
