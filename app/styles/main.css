@@ -418,6 +418,9 @@ md-progress-circular.small {
   -ms-user-select: none;
   user-select: none;
 }
+.noclick {
+  pointer-events: none;
+}
 .capitalize {
   text-transform: capitalize;
 }

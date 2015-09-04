@@ -1,11 +1,11 @@
 App.factory('Chatter', ['RESTService', '$rootScope', 'localStorageService', '$q', '$mdToast', '$mdDialog',
 function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) {
-  
+
   var chatter = {};
   chatter.hasLoaded = false;
   chatter.data = {};
   var meta = {feedLoaded: false, importantLoaded: false};
-  
+
   //for loops
   var i;
   var j;
@@ -56,10 +56,10 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
     }
     return chatters;
   }
-  
+
   function updateChatter(chat){
     var has_changed = false;
-    
+
     if (meta.feedLoaded){
       for (i = 0; i < chatter.data.feed.chatters.length; i++){
         if (chatter.data.feed.chatters[i].key == chat.key){
@@ -88,7 +88,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       }
     }
   }
-  
+
   chatter.get = function() {
     if (meta.feedLoaded) {
       return;
@@ -138,14 +138,14 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       });
     }
   };
-  
+
   chatter.destroy = function(){
     chatter.data = {};
     localStorageService.remove('chatter');
     chatter.hasLoaded = false;
     meta = {feedLoaded: false, importantLoaded: false};
   };
-  
+
   chatter.getImportant = function() {
     if (meta.importantLoaded) {
       return;
@@ -165,7 +165,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.getComments = function(chat){
     var deferred = $q.defer();
 
@@ -188,7 +188,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
     });
     return deferred.promise;
   };
-  
+
   chatter.create = function(content, important, notify){
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/post', {content:content, important:important, notify:notify})
     .success(function(data) {
@@ -209,7 +209,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.like = function(chat){
     if (chat.like){
       chat.like = false;
@@ -234,7 +234,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
             chatter.data.important.chatters[i] = chat;
           }
         }
-        
+
       } else {
         console.log('Err', data);
       }
@@ -243,7 +243,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.comment = function(chat, content){
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/post', {key:chat.key, content:content})
     .success(function(data){
@@ -262,7 +262,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.saveComment = function(comment, content){
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/comment/edit', {key:comment.key, content:content})
     .success(function(data){
@@ -299,7 +299,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
     });
     return def.promise;
   }
-  
+
   chatter.likeComment = function(comment){
     if (comment.like){
       comment.like = false;
@@ -320,7 +320,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.deleteComment = function(comment, chat){
     for (var i = 0; i < this.data.feed.chatters.length; i++){
       if (this.data.feed.chatters[i].key == chat.key){
@@ -353,7 +353,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.makeImportant = function(chat, notify) {
     chat.important = !chat.important;
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/important', {key:chat.key, notify:notify})
@@ -377,7 +377,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.delete = function(chat){
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/delete', {key:chat.key})
     .success(function(data) {
@@ -400,7 +400,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.edit = function(chat, content){
     RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/chatter/v1/edit', {key:chat.key, content:content})
     .success(function(data) {
@@ -425,7 +425,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.mute = function(chat){
     if (chat.following){
       chat.following = false;
@@ -454,7 +454,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       console.log('Error: ', data);
     });
   };
-  
+
   chatter.updateLikes = function(data){
     var key = data.key;
     var chatters = getChattersByKey(key);
@@ -462,7 +462,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       chatters[i].likes = data.data.likes;
     }
   };
-  
+
   chatter.updateNewChatter = function(chat) {
     if (getChattersByKey(chat.key).length === 0){
       this.data.feed.chatters.push(chat);
@@ -489,7 +489,8 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
           locals: {chat: chat},
           bindToController: true
         });
-      })
+        chat.chatLoading = false;
+    });
     }
   };
 
@@ -502,7 +503,7 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
       loadChatterByKey(chatter_key, true);
     }
   };
-  
+
   return chatter;
 }
 ]);

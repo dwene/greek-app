@@ -86,13 +86,14 @@ function($scope, RESTService, $rootScope, $mdDialog, $timeout, $stateParams, loc
                templateUrl: 'views/templates/chatterDialog.html',
                locals: {chat: chat},
                bindToController: true
-            });
+           });
             break;
          }
       }
-   }
+  }
 
    $scope.openChatter = function(chat){
+      chat.chatLoading = true;
       Chatter.openChatter(chat);
    };
 
