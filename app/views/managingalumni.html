@@ -9,12 +9,12 @@
                     <div class="email" ng-bind="alumnus.email"></div>
                         <!-- <md-button ng-click="resendWelcomeEmail(alumnus, ev)" ng-hide="alumnus.user_name" class="resendWelcome">Resend Email</md-button> -->
                     <div>
-                        <md-button ng-click="openConvertAlumniModal(alumnus, ev)" aria-label="convert alumni to member">
+                        <md-button class="btn-touch" ng-click="openConvertAlumniModal(alumnus, ev)" aria-label="convert alumni to member">
                             <i class="fa fa-graduation-cap"></i>
                             <i class="fa fa-arrow-right"></i>
                             <i class="fa fa-user"></i>
                         </md-button>
-                        <md-button ng-click="openDeleteAlumniModal(alumnus, ev)" aria-label="delete alumni"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                        <md-button class="btn-touch" ng-click="openDeleteAlumniModal(alumnus, ev)" aria-label="delete alumni"><i class="fa fa-fw fa-trash-o"></i></md-button>
                     </div>
                 </div>
             </md-item>
