@@ -1,16 +1,21 @@
-
 <div id="managingAlumni" load-directive ng-model="finished_loading">
 <search ng-model="search"></search><br>
    <alumni-year-picker id="yearSelect" alumni="directory.alumni" selected-year="selected_year" search="search"></alumni-year-picker>
-    <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search"> 
-        <md-list id="members" class="memberList">
-            <md-item ng-repeat="alumnus in directory.alumni | orderBy:'last_name' | pledgeClassSearch:selected_year | nameSearch:search">
+    <div infinite-scroll="loadMoreMembers()" infinite-scroll-disabled="search">
+        <md-list id="members" class="itemList striped">
+            <md-item class="listItem" ng-repeat="alumnus in directory.alumni | orderBy:'last_name' | pledgeClassSearch:selected_year | nameSearch:search">
                 <div layout="row" layout-sm="column" layout-margin layout-align="space-between center">
                     <div>{{alumnus.first_name + ' ' + alumnus.last_name}}</div>
                     <div class="email" ng-bind="alumnus.email"></div>
-                    <md-button ng-click="resendWelcomeEmail(alumnus, ev)" ng-hide="alumnus.user_name" class="resendWelcome">Resend Email</md-button>
-                    <md-button ng-click="openConvertAlumniModal(alumnus, ev)" aria-label="delete">Convert To Member</md-button>
-                    <md-button ng-click="openDeleteAlumniModal(alumnus, ev)" aria-label="delete"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                        <!-- <md-button ng-click="resendWelcomeEmail(alumnus, ev)" ng-hide="alumnus.user_name" class="resendWelcome">Resend Email</md-button> -->
+                    <div>
+                        <md-button ng-click="openConvertAlumniModal(alumnus, ev)" aria-label="convert alumni to member">
+                            <i class="fa fa-graduation-cap"></i>
+                            <i class="fa fa-arrow-right"></i>
+                            <i class="fa fa-user"></i>
+                        </md-button>
+                        <md-button ng-click="openDeleteAlumniModal(alumnus, ev)" aria-label="delete alumni"><i class="fa fa-fw fa-trash-o"></i></md-button>
+                    </div>
                 </div>
             </md-item>
         </md-list>
@@ -19,107 +24,5 @@
         <md-button aria-label="page left" ng-disabled="startsWith == 0" ng-click="startsWith = startsWith - 10;"><i class="fa fa-arrow-left"></i></md-button>
         <div flex></div>
         <md-button aria-label="page right" ng-disabled= "startsWith == end*10" ng-click="startsWith = startsWith + 10;"><i class="fa fa-arrow-right"></i></md-button>
-    </div>   
-</div>
-
-<!--
-
-<div class="container">
-
-    <ul ng-repeat="alumnus in alumni | orderBy:'last_name'">
-
-            <li>
-            <br>
-            {{ alumnus.email }}
-            <button ng-click="openDeleteAlumniModal(alumnus)" class="btn btn-default">Delete Alumnus</button>
-            <button ng-click="openConvertAlumniModal(alumnus)" class="btn btn-default">Convert Alumnus</button>
-            </li>
-
-    </ul>
-    <p ng-show="alumni.length < 1">There are no alumni to manage!</p>
-
-</div>
--->
-
-<!--
-<div id="manageMembers" class="container" load-directive ng-model="finished_loading">
-    <div class="card">
-    <search ng-model="search" id="manageMembersSearch"></search>
-       <alumni-year-picker id="yearSelect" alumni="directory.alumni" selected-year="selected_year" search="search"></alumni-year-picker>
-    <ul id="members">
-       
-        <li ng-repeat="alumnus in directory.alumni | orderBy:'last_name' | pledgeClassSearch:selected_year | nameSearch:search">
-           
-           <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                   <label class="label label-primary">
-                        <div>{{alumnus.first_name + ' ' + alumnus.last_name}}</div>
-                    </label>
-
-                </div>
-                <div class="col-xs-12 col-sm-6">
-                    <div class="pull-right">
-                        <button ng-click="resendWelcomeEmail(alumnus)" ng-hide="alumnus.user_name" class="btn btn-info btn-sm resendWelcome">Resend Welcome Email</button>
-                        <button ng-click="openConvertAlumniModal(alumnus)" class="btn btn-info btn-sm resendWelcome">Convert to Member</button>
-                        <button ng-click="openDeleteAlumniModal(alumnus)" class="btn btn-danger btn-sm trash"><i class="fa fa-trash-o"></i></button>
-                    </div>
-                </div>
-            </div>     
-        </li>
-    </ul>
-        <p ng-show="members.length < 1">There are no alumni to manage!</p>    
     </div>
 </div>
--->
-
-
-<div class="modal fade" id="deleteAlumniModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Delete {{selectedUser.first_name}} {{selectedUser.last_name}} ?</h4>
-      </div>
-      <div class="modal-body">
-        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic || $root.defaultProfilePicture}});" >
-    </div>    
-    
-    <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>
-    <div class="row" ng-show="selectedUser.dob">Birthday: {{selectedUser.dob}}</div>
-    <div class="row" ng-show="selectedUser.phone">Phone: {{selectedUser.phone}}</div>
-    <div class="row" ng-show="selectedUser.email">Email: {{selectedUser.email}}</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="removeAlumni(selectedUser)">Delete Alumnus</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-
-
-<div class="modal fade" id="convertAlumniModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Convert Alumnus to Member?</h4>
-      </div>
-      <div class="modal-body">
-        <div class="profilepic" style="background-image:url({{selectedUser.prof_pic || $root.defaultProfilePicture}});" >
-    </div>    
-    
-    <div class="row"><h1>{{selectedUser.first_name}} {{selectedUser.last_name}}</h1></div>
-    <div class="row" ng-show="selectedUser.dob">Birthday: {{selectedUser.dob}}</div>
-    <div class="row" ng-show="selectedUser.phone">Phone: {{selectedUser.phone}}</div>
-    <div class="row" ng-show="selectedUser.email">Email: {{selectedUser.email}}</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="convertAlumniToMember(selectedUser)">Convert Alumnus</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

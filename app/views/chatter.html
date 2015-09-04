@@ -18,10 +18,12 @@
       <div class="tabpanel-container" ng-model="showChatter">
          <div role="tabpanel" id="chatterTab-content" aria-labelledby="chatterTab" md-swipe-left="next()" md-swipe-right="previous()" infinite-scroll="loadMoreChatters()" infinite-scroll-distance="1" infinite-scroll-disabled="meta.loading || !meta.more">
             <md-content class="no-padding-top">
-               <md-list class="chatterList">
-                  <md-progress-circular class="md-primary" md-mode="indeterminate" ng-show="currentFeed === undefined" style="margin: 20px auto;"></md-progress-circular>
-                  <div class="listItem" ng-repeat="chat in currentFeed | orderBy:'-timestamp'">
-                  <md-list-item class="md-padding" md-no-ink ng-click="openChatter(chat)">
+               <md-list id="chatterList">
+                  <div ng-show="currentFeed === undefined" class="md-padding">
+                      <md-progress-circular class="md-primary" md-mode="indeterminate"  style="margin: auto;"></md-progress-circular>
+                  </div>
+                  <div class="listItem" ng-repeat="chat in currentFeed | orderBy:'-timestamp'" ng-click="openChatter(chat)">
+                  <md-list-item class="md-padding">
                      <img ng-src="{{chat.author.prof_pic || 'images/defaultprofile.png'}}" class="md-avatar" alt="{{chat.author.first_name}}" />
                      <div class="md-list-item-text">
                         <h3>{{chat.content | limitTo: 140}} <span class="readmore" ng-show="chat.content.length > 140">...read more</span></h3>
