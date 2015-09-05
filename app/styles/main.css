@@ -418,6 +418,9 @@ md-progress-circular.small {
   -ms-user-select: none;
   user-select: none;
 }
+.noclick {
+  pointer-events: none;
+}
 .capitalize {
   text-transform: capitalize;
 }
@@ -661,18 +664,19 @@ md-toolbar.md-tall {
 .itemList md-list-item > .md-button {
   padding: 8px;
 }
-.chatterList .listItem {
+#chatterList .listItem {
   position: relative;
   overflow: hidden;
   -webkit-backface-visibility: hidden;
+  cursor: pointer;
 }
-.chatterList .listItem:not(:last-child) {
+#chatterList .listItem:not(:last-child) {
   border-bottom: 1px solid #ccc;
 }
-.chatterList .listItem.md-padding {
+#chatterList .listItem.md-padding {
   padding: 8px;
 }
-.chatterList .listItem.md-padding button {
+#chatterList .listItem.md-padding button {
   padding: 0;
 }
 .message .isNew {
