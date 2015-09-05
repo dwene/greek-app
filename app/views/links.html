@@ -38,8 +38,8 @@
                             <md-list-item md-no-ink class="link" ng-click="doNothing()" >
                                 <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
                                 <div class="pull-right" ng-show="$root.checkPermissions('leadership')">
-                                <md-button class="btn-touch" ng-click="openEditLinkDialog(link, group)"><i class="fa fa-edit fa-fw"></i></md-button>
-                                <md-button class="btn-touch" ng-click="link.confirmDelete = !link.confirmDelete"><i class="fa fa-trash-o fa-fw"></i></md-button>
+                                <md-button class="btn-touch" ng-click="openEditLinkDialog(link, group)" aria-label="edit link"><i class="fa fa-edit fa-fw"></i></md-button>
+                                <md-button class="btn-touch" ng-click="link.confirmDelete = !link.confirmDelete" aria-label="delete link"><i class="fa fa-trash-o fa-fw"></i></md-button>
                                 </div>
                             </md-list-item>
                             <md-toolbar ng-show="link.confirmDelete" class="md-warn slideDown">
@@ -57,44 +57,3 @@
         </md-content>
     </div>
 </div>
-
-<!--
-<div id="links" class="container" load-directive ng-model="loading_finished">
-    <div class="md-whiteframe-z1">
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <h1>Links</h1>
-                <div flex></div>
-            </div>
-        </md-toolbar>
-        <md-content class="md-padding">
-            <md-list>
-            <p ng-show="group.length == 0">There are no links yet.</p>
-                <md-list-item class="link-group" ng-repeat="group in groups track by group">
-                    <md-content>
-                        <md-toolbar>
-                            <div class="md-toolbar-tools">
-                                <h1 flex>{{group}}</h1>
-                                <div class="linkButtons" ng-show="$root.checkPermissions('leadership')">
-                                    <md-button class="btn-touch" ng-click="openRenameGroupModal(group)"><i class="fa fa-edit fa-fw"></i></md-button>
-                                    <md-button class="btn-touch" ng-click="openDeleteGroupModal(group)"><i class="fa fa-trash-o fa-fw"></i></md-button>
-                                </div>
-                            </div>
-                        </md-toolbar>
-                        <md-list class="itemList">
-                            <md-list-item ng-href="http://{{link.link}}" ng-repeat="link in links | linkGroup:group" ng-show="link.group == group">
-                                <div layout="row" layout-align="space-between center" layout-margin>
-                                    <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
-                                    <div ng-show="$root.checkPermissions('leadership')">
-                                        <md-button class="btn-touch" ng-click="openEditLinkDialog(link)"><i class="fa fa-edit fa-fw"></i></md-button>
-                                        <md-button class="btn-touch" ng-click="openDeleteLinkDialog(link)"><i class="fa fa-trash-o fa-fw"></i></md-button>
-                                    </div>
-                                </div>
-                            </md-list-item>
-                        </md-list>
-                    </md-content>
-                </md-list-item>
-            </md-list>
-        </md-content>
-    </div>
-</div>-->
