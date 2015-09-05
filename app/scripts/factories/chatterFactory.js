@@ -480,17 +480,18 @@ function(RESTService, $rootScope, localStorageService, $q, $mdToast, $mdDialog) 
         locals: {chat: chat},
         bindToController: true
       });
+      chat.chatLoading = false;
     }
     else{
       this.getComments(chat).then(function(){
-        $mdDialog.show({
-          controller: 'chatterDialogController as CD',
-          templateUrl: 'views/templates/chatterDialog.html',
-          locals: {chat: chat},
-          bindToController: true
+            $mdDialog.show({
+              controller: 'chatterDialogController as CD',
+              templateUrl: 'views/templates/chatterDialog.html',
+              locals: {chat: chat},
+              bindToController: true
+            });
+            chat.chatLoading = false;
         });
-        chat.chatLoading = false;
-    });
     }
   };
 
