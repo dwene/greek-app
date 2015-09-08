@@ -13,7 +13,7 @@
           </md-button>
           <md-button class="btn-touch" ng-click="CD.editChatter(CD.chat.content)" aria-label="edit" ng-show="CD.chat.author.key == CD.me.key"><i class="fa fa-pencil-square-o"></i></md-button>
           <md-button class="btn-touch" aria-label="like chatter" ng-click="CD.likeChatter(CD.chat);" ng-hide="CD.chat.author.key == CD.me.key"><i class="fa" ng-class="{'fa-heart-o': !CD.chat.like, 'fa-heart': CD.chat.like}"></i></md-button>
-          <md-button class="btn-touch" ng-click="CD.confirmDelete = !CD.confirmDelete" aria-label="delete" ng-show="CD.chat.author.key == CD.me.key || CD.admin"><i class="fa fa-trash"></i></md-button>
+          <md-button class="btn-touch" ng-click="CD.confirmDelete = !CD.confirmDelete" aria-label="delete chatter" ng-show="CD.chat.author.key == CD.me.key || CD.admin"><i class="fa fa-trash"></i></md-button>
         </div>
       </div>
     </md-toolbar>
@@ -21,10 +21,10 @@
       <div class="md-toolbar-tools">
         <span class="description">Notify all members?</span>
         <span flex></span>
-        <md-button ng-click="CD.makeImportant(CD.chat, true); CD.confirmImportant = !CD.confirmImportant">
+        <md-button ng-click="CD.makeImportant(CD.chat, true); CD.confirmImportant = !CD.confirmImportant" aria-label="send notification">
           <i class="fa fa-check"></i>
         </md-button>
-        <md-button ng-click="CD.makeImportant(CD.chat, false); CD.confirmImportant = !CD.confirmImportant">
+        <md-button ng-click="CD.makeImportant(CD.chat, false); CD.confirmImportant = !CD.confirmImportant" aria-label="do not send notification">
           <i class="fa fa-times"></i>
         </md-button>
         <md-button ng-click="CD.confirmImportant = !CD.confirmImportant">
@@ -58,7 +58,7 @@
           <label for="content">Enter new comment here:</label>
           <textarea id="content" ng-model="CD.comment" name="content" ng-enter="CD.commentOnChatter(CD.chat, CD.comment)"></textarea>
         </md-input-container>
-        <md-button class="md-primary md-icon-button" ng-disabled="!CD.comment.length" ng-click="CD.commentOnChatter(CD.chat, CD.comment)">
+        <md-button class="md-primary md-icon-button" ng-disabled="!CD.comment.length" ng-click="CD.commentOnChatter(CD.chat, CD.comment)" aria-label="comment on chatter"> 
           <md-icon md-font-icon="fa-comment" class="fa"></md-icon>
         </md-button>
       </div>
