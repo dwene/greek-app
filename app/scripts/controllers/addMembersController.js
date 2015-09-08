@@ -185,9 +185,8 @@
 
             //this function takes the CSV, converts it to JSON and outputs it
             $scope.addMembers = function() {
-
                 //check to see if file is being read
-                if (filecontents == null) {
+                if (filecontents === null) {
                     //do nothing
                     alert('you have not selected a file');
                 } else {
@@ -203,7 +202,6 @@
                         }
                         newMembersList.push(newMember);
                     }
-                    console.log(newMembersList);
                     checkEmail = function(email) {
                         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                         return re.test(email);

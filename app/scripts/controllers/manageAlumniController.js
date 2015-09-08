@@ -14,7 +14,7 @@ App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope',
 
         $scope.openDeleteAlumniModal = function(user, ev) {
             $mdDialog.show({
-                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
+                controller: ('dialogController', ['$scope', '$mdDialog', dialogController]),
                 templateUrl: 'views/templates/alumni/deleteAlumniDialog.html',
                 targetEvent: ev
             });
@@ -42,7 +42,7 @@ App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope',
 
         $scope.openConvertAlumniModal = function(user, ev) {
             $mdDialog.show({
-                controller: ('dialogController' ['$scope', '$mdDialog', dialogController]),
+                controller: ('dialogController', ['$scope', '$mdDialog', dialogController]),
                 templateUrl: 'views/templates/alumni/convertAlumniDialog.html',
                 targetEvent: ev
             });
@@ -64,7 +64,6 @@ App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope',
 
         function convertAlumniToMember(alumnus) {
             $scope.selectedUser = {}
-            $('#convertAlumniModal').modal('hide');
             var to_send = {
                 'keys': [alumnus.key]
             }
@@ -88,7 +87,6 @@ App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope',
 
         function removeAlumni(alumnus) {
             $scope.selectedUser = {}
-            $('#deleteAlumniModal').modal('hide');
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/remove_user', alumnus);
             if ($scope.directory.alumni.indexOf(alumnus) > -1) {
                 $scope.directory.alumni.splice($scope.directory.alumni.indexOf(alumnus), 1);
