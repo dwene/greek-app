@@ -1,7 +1,6 @@
 //login page
 App.controller('loginController', ['$scope', 'RESTService', '$rootScope', 'localStorageService', '$location', '$log', 'AuthService', 'Session', 'AUTH_EVENTS',
     function($scope, RESTService, $rootScope, localStorageService, $location, $log, AuthService, Session, AUTH_EVENTS) {
-        routeChange();
         $scope.showScreen = true;
         if (AuthService.isAuthenticated() || !AuthService.loginAttempted()) {
             $location.path('app');

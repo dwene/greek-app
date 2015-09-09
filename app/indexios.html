@@ -228,10 +228,8 @@
               <ul class="nav">
                 <li ng-click="toggleSidenav('app/chatter')"><md-button class="md-primary" md-theme-watch><i class="fa fa-comments-o fa-fw"></i> Chatter</md-button></li>
                 <li ng-click="toggleSidenav('app/directory/members')"><md-button class="md-primary" md-theme-watch><i class="fa fa-book fa-fw"></i> Directory</md-button></li>
-                <!--                            <li ng-click="toggleSidenav('app/messaging')" ng-show="$parent.checkPermissions('leadership') && $parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-envelope fa-fw"></i> Messaging</md-button></li>-->
                 <li ng-click="toggleSidenav('app/events/calendar')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button></li>
                 <li ng-click="toggleSidenav('app/links')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button></li>
-                <!--                            <li ng-click="toggleSidenav('app/polls')" ng-show="$parent.subscribed"><md-button class="md-primary" md-theme-watch><i class="fa fa-th-list fa-fw"></i> Surveys</md-button></li>-->
               </ul>
             </div>
             <div role="tabpanel" id="setingsTab-content" class="fadingIn md-padding" aria-labelledby="settingsTab" ng-show="menu.selectedIndex == 1">
@@ -281,6 +279,6 @@
 
 ga('create', 'UA-53982204-1', 'auto');
 </script>
-<!-- <script src="cordova.js"></script> -->
+<script src="cordova.js"></script>
 <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>-->
 </html>

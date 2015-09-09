@@ -1,6 +1,5 @@
 App.controller('newmemberinfoController', ['$scope', 'RESTService', '$http', '$rootScope', '$stateParams', '$location', 'Session', 'AUTH_EVENTS', 'AuthService',
     function($scope, RESTService, $http, $rootScope, $stateParams, $location, Session, AUTH_EVENTS, AuthService) {
-        routeChange();
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         $scope.loading = true;
         $scope.user_is_taken = false;

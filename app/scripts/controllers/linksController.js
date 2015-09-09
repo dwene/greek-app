@@ -1,6 +1,5 @@
 App.controller('LinksController', ['$scope', '$rootScope', '$mdDialog', 'RESTService', 'localStorageService', 'Links', 'Organization',
     function($scope, $rootScope, $mdDialog, RESTService, localStorageService, Links, Organization) {
-        routeChange();
         Links.get();
         $scope.linkGroups = Links.groups;
         if ($scope.linkGroups) {

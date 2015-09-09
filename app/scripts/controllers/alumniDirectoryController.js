@@ -37,11 +37,5 @@ App.controller('alumniDirectoryController', ['$scope', '$location', '$rootScope'
         $scope.showIndividual = function(member) {
             $location.path("app/directory/" + member.user_name);
         }
-
-        //click the buttons to search for that button text
-        // $('#searchTags button').click(function() {
-        //     var searchValue = $(this).text();
-        //     $('#directorySearch').val(searchValue).change();
-        // });
     }
 ]);

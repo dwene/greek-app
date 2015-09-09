@@ -1,6 +1,5 @@
 App.controller('changePasswordFromTokenController', ['$scope', '$http', '$rootScope', '$stateParams', '$location',
     function($scope, $http, $rootScope, $stateParams, $location) {
-        routeChange();
         $.removeCookie(USER_NAME);
         $.cookie(TOKEN, $stateParams.token);
         $http.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/check_password_token', packageForSending(''))

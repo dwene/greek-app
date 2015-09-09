@@ -1,6 +1,5 @@
 App.controller('organizationPictureController', ['$scope', 'RESTService', '$rootScope',
     function($scope, RESTService, $rootScope) {
-        routeChange();
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', RESTService(''))
             .success(function(data) {
                 if (!RESTService.hasErrors(data)) {

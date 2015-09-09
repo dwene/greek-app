@@ -1,6 +1,5 @@
 App.controller('managealumniController', ['$scope', 'RESTService', '$rootScope', '$mdDialog', 'localStorageService', 'Directory',
     function($scope, RESTService, $rootScope, $mdDialog, localStorageService, Directory) {
-        routeChange();
         Directory.get();
         var selectedUser = undefined;
         $scope.directory = Directory.directory;

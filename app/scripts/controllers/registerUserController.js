@@ -1,6 +1,5 @@
 App.controller('registerUserController', ['$scope', 'RESTService', '$rootScope', 'Session', 'registerOrganizationService',
     function($scope, RESTService, $rootScope, Session, registerOrganizationService) {
-        routeChange();
         $scope.data = {};
         $scope.findMe = function(email) {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/auth/v1/find_unregistered_users', {

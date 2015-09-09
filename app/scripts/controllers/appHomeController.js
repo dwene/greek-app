@@ -1,6 +1,5 @@
 App.controller('appHomeController', ['$scope', 'RESTService', '$rootScope', '$timeout', '$sce', '$mdDialog', 'Events', 'removePassedEventsFilter', 'Directory', 'Session',
     function($scope, RESTService, $rootScope, $timeout, $sce, $mdDialog, Events, removePassedEventsFilter, Directory, Session) {
-        routeChange();
         Events.get();
         $scope.events = Events.events;
         $scope.events_loaded = false;

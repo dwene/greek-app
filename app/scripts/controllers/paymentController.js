@@ -1,6 +1,5 @@
 App.controller('paymentController', ['$scope', 'RESTService', '$rootScope',
     function($scope, RESTService, $rootScope) {
-        routeChange();
         //skip payment page right now
         $scope.pay = {};
         $scope.submitPayment = function() {

@@ -1,6 +1,5 @@
 App.controller('membersDirectoryController', ['$scope', '$rootScope', 'directoryFilterFilter', '$filter', '$location', 'localStorageService', 'Directory',
     function($scope, $rootScope, directoryFilterFilter, $filter, $location, localStorageService, Directory) {
-        routeChange();
         Directory.get();
         $scope.loaded = false;
         $scope.memberdirectorylength = 20;
@@ -44,11 +43,5 @@ App.controller('membersDirectoryController', ['$scope', '$rootScope', 'directory
             }
 
         }
-
-        //click the buttons to search for that button text
-        $('#searchTags button').click(function() {
-            var searchValue = $(this).text();
-            $('#directorySearch').val(searchValue).change();
-        });
     }
 ]);

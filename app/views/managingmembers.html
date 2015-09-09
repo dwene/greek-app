@@ -1,5 +1,5 @@
 <div id="managingMembers" load-directive ng-model="directoryLoaded">
-    <md-button ng-click="openConvertMembersModal($event)" ng-disabled = "!((directory.members|checkedFilter).length)">Convert To Alumni</md-button>
+    <md-button ng-click="openConvertMembersModal($event)" ng-disabled = "!((directory.members|checked).length)">Convert To Alumni</md-button>
     <md-button ng-click="resendAllWelcomeEmails()">Resend All Welcome Emails</md-button>
 
 <search ng-model="search" change="startsWith = 0;"></search><br>

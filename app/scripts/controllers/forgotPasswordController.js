@@ -1,6 +1,5 @@
 App.controller('forgotPasswordController', ['$scope', 'RESTService', '$rootScope',
 function($scope, RESTService, $rootScope) {
-  routeChange();
   $scope.sentEmail = false;
   $scope.reset = function(input) {
     $scope.gettingnewPassword = 'pending';

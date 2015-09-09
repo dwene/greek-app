@@ -1,6 +1,5 @@
 App.controller('newPollController', ['$scope', 'RESTService', '$rootScope', 'Tags',
     function($scope, RESTService, $rootScope, Tags) {
-        routeChange();
         Tags.get();
         $scope.tags = Tags.tags;
         $scope.deletePollTip = {

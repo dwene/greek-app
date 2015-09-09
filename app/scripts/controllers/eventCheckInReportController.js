@@ -1,6 +1,5 @@
-App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$filter', 'eventTagDirectorySearchFilter', 'Directory', 'Events',
-    function($scope, RESTService, $stateParams, $rootScope, $filter, eventTagDirectorySearchFilter, Directory, Events) {
-        routeChange();
+App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$filter', 'Directory', 'Events',
+    function($scope, RESTService, $stateParams, $rootScope, $filter, Directory, Events) {
         $scope.maxLength = 0;
         $scope.maxNoShowsLength = 0;
         $scope.loading = true;
@@ -61,7 +60,6 @@ App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$state
                                 $scope.event = $scope.events[i];
                             }
                         }
-                        $scope.invited = eventTagDirectorySearchFilter($scope.directory.members, $scope.event.tags);
                         $scope.noShows = [];
                         $scope.shows = [];
                         if ($scope.event) {
