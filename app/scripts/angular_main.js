@@ -592,15 +592,15 @@ App.config(function($mdThemingProvider) {
         'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
         'contrastLightColors': undefined
     });
-    $mdThemingProvider.theme('default').primaryPalette('cyan');
-    $mdThemingProvider.theme('cyan').primaryPalette('cyan');
-    $mdThemingProvider.theme('red').primaryPalette('red');
-    $mdThemingProvider.theme('purple').primaryPalette('purple');
-    $mdThemingProvider.theme('pink').primaryPalette('pink');
-    $mdThemingProvider.theme('orange').primaryPalette('orange');
-    $mdThemingProvider.theme('green').primaryPalette('green');
-    $mdThemingProvider.theme('brown').primaryPalette('brown');
-    $mdThemingProvider.theme('gray').primaryPalette('gray');
+    $mdThemingProvider.theme('default').primaryPalette('cyan').accentPalette('pink');
+    $mdThemingProvider.theme('cyan').primaryPalette('cyan').accentPalette('pink');
+    $mdThemingProvider.theme('red').primaryPalette('red').accentPalette('gray');
+    $mdThemingProvider.theme('purple').primaryPalette('purple').accentPalette('pink');
+    $mdThemingProvider.theme('pink').primaryPalette('pink').accentPalette('gray');
+    $mdThemingProvider.theme('orange').primaryPalette('orange').accentPalette('gray');
+    $mdThemingProvider.theme('green').primaryPalette('green').accentPalette('pink');
+    $mdThemingProvider.theme('brown').primaryPalette('brown').accentPalette('pink');
+    $mdThemingProvider.theme('gray').primaryPalette('gray').accentPalette('pink');
 
 });
 

@@ -156,24 +156,20 @@ class RESTApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
         calendars = Calendar.query(Calendar.organization == request_user.organization).fetch()
-        cal_keys = list()
-        for calendar in calendars:
-            cal_keys.append(calendar.key)
         for key in request_object["keys"]:
             user = ndb.Key(urlsafe=key).get()
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             user.perms = 'alumni'
-            for calendar in calendar:
+            for calendar in calendars:
                 if calendar.name == "alumni":
                     if user.key not in calendar.users:
                         calendar.users.append(user.key)
                 else:
                     if user.key in calendar.users:
                         calendar.users.remove(user.key)
-                cal_keys.append(calendar.key)
             user.put()
-        ndb.put_multi(cal_keys)
+        ndb.put_multi(calendars)
         return OutgoingMessage(error='', data='OK')
 
     @endpoints.method(IncomingMessage, OutgoingMessage, path='manage/revert_from_alumni',
@@ -185,21 +181,20 @@ class RESTApi(remote.Service):
         if not (request_user.perms == 'council'):
             return OutgoingMessage(error=INCORRECT_PERMS, data='')
         request_object = json.loads(request.data)
+        calendars = Calendar.query(Calendar.organization == request_user.organization).fetch()
         for key in request_object["keys"]:
             user = ndb.Key(urlsafe=key).get()
             if not user:
                 return OutgoingMessage(error=INVALID_USERNAME, data='')
             user.perms = 'member'
-            cal_keys = []
-            for calendar in calendar:
+            for calendar in calendars:
                 if calendar.name == "everyone":
                     if user.key not in calendar.users:
                         calendar.users.append(user.key)
                 else:
                     if user.key in calendar.users:
                         calendar.users.remove(user.key)
-                cal_keys.append(calendar.key)
-            ndb.put_multi(cal_keys)
+            ndb.put_multi(calendars)
             user.put()
         return OutgoingMessage(error='', data='OK')
 

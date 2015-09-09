@@ -34,7 +34,7 @@
       <md-content>
          <h3 class="md-padding" ng-show="!selectedDate.events">No Events on {{selectedDate.date|date: 'MMM d'}}</h3>
          <md-list ng-show="selectedDate.events" class="itemList">
-            <md-list-item class="listItem" ng-repeat="event in selectedDate.events" ng-click="goToEvent(event.key)" ng-if="selectedDate.events">
+            <md-list-item class="listItem" ng-repeat="event in selectedDate.events" md-no-ink ng-click="goToEvent(event.key)" ng-if="selectedDate.events">
                   <div class="md-list-item-text">
                      <h3>{{event.title}}</h3>
                      <p>{{event.startTime|date: 'hh:mma'}} - {{event.endTime|date: 'hh:mma'}}</p>
