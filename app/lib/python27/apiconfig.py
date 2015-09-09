@@ -222,9 +222,8 @@ def member_signup_email(user, token):
     return message
 
 
-def alumni_signup_email(user, organization_key, token):
+def alumni_signup_email(user, org, token):
     # to_email = [{'email': user['email'], 'type': 'to'}]
-    org = organization_key.get()
     user['token'] = token
     signup_link = DOMAIN+'/#/newuser/'+token
     subject = "Registration for NeteGreek App!"

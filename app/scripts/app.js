@@ -21,9 +21,6 @@ var App = angular.module('App', ['ui.router', 'ngAnimate', 'ngTouch', 'mgcrea.ng
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms|tel|data):/);
 });
 
-
-
-
 //Set up run commands for the app
 App.run( function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Chatter) {
     $rootScope.$on('$stateChangeStart', function(event, next) {
@@ -146,7 +143,7 @@ App.run( function($rootScope, $state, $stateParams, $q, $timeout, $state, $locat
     };
 
     $rootScope.logout = function() {};
-    
+
     if (Organization.organization) {
         if (Organization.organization.color) {
             $rootScope.color = Organization.organization.color;
@@ -167,7 +164,6 @@ App.run( function($rootScope, $state, $stateParams, $q, $timeout, $state, $locat
 function logoutCookies() {
     $.removeCookie(USER_NAME);
     $.removeCookie(TOKEN);
-    //    $.removeCookie(PERMS);
     $.removeCookie('FORM_INFO_EMPTY');
 }
 
@@ -178,7 +174,6 @@ function packageForSending(send_data) {
         token: $.cookie(TOKEN),
         data: JSON.stringify(send_data)
     };
-    //    console.log(output);
     return output;
 }
 

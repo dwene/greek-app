@@ -170,16 +170,11 @@ class AuthApi(remote.Service):
             return OutgoingMessage(error=INCORRECT_PERMS)
         clump = json.loads(request.data)
         futures = list()
+        email_list = list()
+        organization = request_user.organization.get()
         for user in clump['users']:
             token = generate_token()
-            email_item = alumni_signup_email(user, request_user.organization, token)
-            cron_email = EmailTask()
-            cron_email.title = email_item["subject"]
-            cron_email.content = email_item["text"]
-            cron_email.email = email_item["to"]
-            cron_email.type = 'new_alumni'
-            cron_email.pending = True
-            futures.append(cron_email.put_async())
+            email_list.append(alumni_signup_email(user, organization, token))
             new_user = User()
             new_user.email = user['email']
             new_user.organization = request_user.organization
@@ -196,6 +191,7 @@ class AuthApi(remote.Service):
             new_user.perms = 'alumni'
             futures.append(new_user.put_async())
             futures2 = list()
+        PushFactory.push_emails(email_list)
         for future in futures:
             futures2.append(future.get_result().get_async())
         return_users = list()

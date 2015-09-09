@@ -2,10 +2,11 @@ App.controller('addAlumniController', ['$scope', 'RESTService', '$rootScope', 'l
     function($scope, RESTService, $rootScope, localStorageService) {
 
         $scope.finished_loading = true;
-        var formObject = document.getElementById('uploadMembers');
+       var formObject = document.getElementById('uploadAlumni');
         if (formObject) {
             formObject.addEventListener('change', readSingleFile, false);
         }
+        var filecontents;
         $scope.adds = [];
         //initialize a filecontents variable
         var filecontents;
@@ -66,7 +67,6 @@ App.controller('addAlumniController', ['$scope', 'RESTService', '$rootScope', 'l
         function readSingleFile(evt) {
             //Retrieve the first (and only!) File from the FileList object
             var f = evt.target.files[0];
-
             if (f) {
                 var r = new FileReader();
                 r.onload = function(e) {
@@ -85,21 +85,29 @@ App.controller('addAlumniController', ['$scope', 'RESTService', '$rootScope', 'l
         $scope.addAlumni = function() {
 
             //check to see if file is being read
-            if (filecontents == null) {
+            if (filecontents === null) {
                 //do nothing
                 alert('you have not selected a file');
             } else {
                 //converts CSV file to array of usable objects
-                var csvMemberList = CSV2ARRAY(filecontents);
-                console.log(csvMemberList);
+                var listCSV = Papa.parse(filecontents).data;
+                console.log(listCSV);
+                var columnNames = listCSV[0];
+                var newMembersList = [];
+                for (var i = 1; i < listCSV.length; i++){
+                    var newMember = {};
+                    for (var j = 0; j < columnNames.length; j++){
+                        newMember[columnNames[j]] = listCSV[i][j];
+                    }
+                    newMembersList.push(newMember);
+                }
                 checkEmail = function(email) {
                     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     return re.test(email);
                 }
-
                 var new_item_list = [];
-                for (var i = 0; i < csvMemberList.length; i++) {
-                    var item = csvMemberList[i];
+                for (var i = 0; i < newMembersList.length; i++) {
+                    var item = newMembersList[i];
                     var new_item = {};
                     if (item['First']) {
                         new_item.first_name = item['First'];
@@ -116,7 +124,7 @@ App.controller('addAlumniController', ['$scope', 'RESTService', '$rootScope', 'l
                     if (item['Email']) {
                         new_item.email = item['Email'];
                     }
-                    if (!new_item.email || !new_item.pledge_class_year || !new_item.pledge_class_semester) {
+                    if (!new_item.email || !new_item.first_name || !new_item.last_name || !new_item.pledge_class_year || !new_item.pledge_class_semester) {
                         continue;
                     }
                     if (!checkEmail(new_item.email)) {
