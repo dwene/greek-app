@@ -83,7 +83,6 @@ App.run( function($rootScope, $state, $stateParams, $q, $timeout, $state, $locat
         $rootScope.events = undefined;
         $rootScope.notifications = undefined;
         $rootScope.hidden_notifications = undefined;
-        $rootScope.updateNotificationBadge();
         if ($state.current.name != 'login' && $state.current.name != 'register' && $state.current.name != 'registerorg' && $state.current.name != 'newmember') {
             $location.path('login');
         }
