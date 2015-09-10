@@ -337,7 +337,7 @@ class RESTApi(remote.Service):
         request_user = get_user(request.user_name, request.token)
         if not request_user:
             return OutgoingMessage(error=TOKEN_EXPIRED, data='')
-        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.email])
+        organization_users_future = User.query(User.organization == request_user.organization).fetch_async(projection=[User.user_name, User.first_name, User.last_name, User.perms, User.prof_pic, User.email, User.position])
         organization_users = organization_users_future.get_result()
         user_list = list()
         alumni_list = list()

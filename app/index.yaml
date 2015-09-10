@@ -130,6 +130,17 @@ indexes:
   - name: first_name
   - name: last_name
   - name: perms
+  - name: position
+  - name: prof_pic
+  - name: user_name
+
+- kind: User
+  properties:
+  - name: organization
+  - name: email
+  - name: first_name
+  - name: last_name
+  - name: perms
   - name: prof_pic
   - name: user_name
 

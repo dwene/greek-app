@@ -220,7 +220,7 @@ class EventsApi(remote.Service):
         event_future = event_key.get_async()
         users_future = User.query(ndb.AND(User.organization ==
                                   request_user.organization, User.perms != 'alumni'))\
-            .fetch_async(projection=[User.user_name, User.prof_pic, User.first_name, User.last_name])
+            .fetch_async(projection=[User.prof_pic, User.first_name, User.last_name])
         attendance_data_future = AttendanceData.query(AttendanceData.event == event_key).fetch_async()
         users = users_future.get_result()
         attendance_data = attendance_data_future.get_result()

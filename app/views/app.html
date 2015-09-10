@@ -1,2 +1,113 @@
+<div ng-controller="navigationController as nav">
+
+    <header>
+      <md-toolbar class="navbar-fixed-top md-whiteframe-z1" md-theme-watch>
+        <nav class="container" layout="row" layout-align="center center" flex>
+          <div>
+            <md-button aria-label="home button" class="navbar-brand btn-touch" id="homeButton" ng-click="nav.homeButton()"></md-button>
+          </div>
+          <md-button id="notificationButton" class="btn-touch" aria-label="notification count" ng-click="nav.toggleNotifications()">
+            <div class="notification_count">
+              <i class="fa fa-bell"></i>
+              <div class="bounceIn" ng-show="nav.notification_count > 0" ng-bind="nav.notification_count">0</div>
+            </div>
+          </md-button>
+          <div flex></div>
+          <md-button class="btn-touch" ng-click="nav.showHelpdialog()" aria-label="Help Dialog">
+            <i class="fa fa-question-circle fa-fw"></i>
+          </md-button>
+
+          <md-button class="btn-touch" ng-click="nav.toggleSidenav()" aria-label="Menu">
+            <i class="fa fa-bars fa-fw" style="color:white;"></i>
+          </md-button>
+        </nav>
+      </md-toolbar>
+    </header>
+
+    <md-sidenav id="menu" class="md-sidenav-right md-whiteframe-z3" md-component-id="sidenav">
+      <div layout="column" layout-fill>
+        <md-toolbar class="md-tall" md-theme-watch>
+          <div class="md-toolbar-tools">
+            <img class="face" ng-src="{{ nav.prof_pic }}" ng-click="nav.goToMe()">
+            <span id="details" ng-click="nav.goToMe()">
+              <p id="name">{{ nav.name }}</p>
+              <p>{{ nav.email }}</p>
+            </span>
+            <span flex></span>
+            <md-button class="btn-touch" ng-click="nav.toggleSidenav()" aria-label="close">
+              <i class="fa fa-times"></i>
+            </md-button>
+          </div>
+        </md-toolbar>
+        <md-content>
+          <md-tabs md-selected="nav.menu.selectedIndex" class="md-primary" md-stretch-tabs="always" md-center-tabs="true" md-swipe-content="true" md-theme-watch>
+            <md-tab id="menuTab" aria-controls="menuTab-content">
+              Menu
+            </md-tab>
+            <md-tab id="settingsTab" aria-controls="settingsTab-content">
+              Account
+            </md-tab>
+          </md-tabs>
+          <div class="tabpanel-container">
+            <div role="tabpanel" id="menuTab-content" class="fadingIn md-padding" aria-labelledby="menuTab" ng-show="nav.menu.selectedIndex == 0">
+              <ul class="nav">
+                <li ng-click="nav.toggleSidenav('app/chatter')">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-comments-o fa-fw"></i> Chatter</md-button>
+                </li>
+                <li ng-click="nav.toggleSidenav('app/directory/members')">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-book fa-fw"></i> Directory</md-button>
+                </li>
+                <li ng-click="nav.toggleSidenav('app/events/calendar')" ng-show="app.subscribed">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button>
+                </li>
+                <li ng-click="toggleSidenav('app/links')">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button>
+                </li>
+              </ul>
+            </div>
+            <div role="tabpanel" id="setingsTab-content" class="fadingIn md-padding" aria-labelledby="settingsTab" ng-show="nav.menu.selectedIndex == 1">
+              <ul class="nav">
+                <li ng-click="nav.toggleSidenav('app/accountinfo')">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-user fa-fw"></i> Info</md-button>
+                </li>
+                <li ng-click="nav.toggleSidenav('app/managemembers')" ng-show="app.council">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-users fa-fw"></i> Members</md-button>
+                </li>
+                <li ng-click="nav.toggleSidenav('app/managealumni')" ng-show="app.council">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-graduation-cap fa-fw"></i> Alumni</md-button>
+                </li>
+                <li ng-click="nav.toggleSidenav('app/admin')" ng-show="app.council">
+                	<md-button class="md-primary" md-theme-watch><i class="fa fa-gears fa-fw"></i> Admin</md-button>
+                </li>
+                <li ng-click="nav.toggleSidenav()">
+                	<md-button ng-click="nav.logout()" class="md-primary" md-theme-watch><i class="fa fa-sign-out fa-fw"></i> Log Out</md-button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </md-content>
+      </div>
+    </md-sidenav>
+
+    <md-sidenav id="notifications" class="md-sidenav-left md-whiteframe-z3" md-component-id="notifications">
+      <md-toolbar md-theme-watch>
+        <div class="md-toolbar-tools">
+          <h1>Notifications</h1>
+          <span flex></span>
+          <md-button class="btn-touch" ng-click="toggleNotifications()" aria-label="close">
+            <i class="fa fa-times"></i>
+          </md-button>
+        </div>
+      </md-toolbar>
+      <md-content>
+        <md-list class="itemList">
+          <md-list-item ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25"  ng-click="goToNotification(notify)" aria-label="notification content">
+            <span ng-bind="notify.content"></span>
+          </md-list-item>
+        </md-list>
+      </md-content>
+    </md-sidenav>
+
+</div>
 <div ui-view class="fadingInLeftBig fadingOutRightBig" ng-if="authenticated"></div>
 <md-progress-circular md-mode="indeterminate" ng-if="!authenticated" style="margin:20px auto;"></md-progress-circular>
