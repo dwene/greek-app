@@ -1,12 +1,12 @@
 App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$mdDialog', '$location', '$timeout', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS',
     function($scope, $http, $rootScope, $mdSidenav, $mdDialog, $location, $timeout, Session, Organization, Notifications, AUTH_EVENTS) {
         var vm = this;
-        if (Session.me){
-            vm.me = Session.me;
-            vm.name = Session.me.first_name +' '+ Session.me.last_name;
-            vm.email = Session.me.email;
-            vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        }
+        // if (Session.me){
+        //     vm.me = Session.me;
+        //     vm.name = Session.me.first_name +' '+ Session.me.last_name;
+        //     vm.email = Session.me.email;
+        //     vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
+        // }
 
         vm.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
@@ -84,19 +84,19 @@ App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSid
             vm.notifications = Notifications.notifs;
         });
 
-        $scope.$on('me:updated', function(){
-            vm.me = Session.me;
-            vm.name = Session.me.first_name +' '+ Session.me.last_name;
-            vm.email = Session.me.email;
-            vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        });
+        // $scope.$on('me:updated', function(){
+        //     vm.me = Session.me;
+        //     vm.name = Session.me.first_name +' '+ Session.me.last_name;
+        //     vm.email = Session.me.email;
+        //     vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
+        // });
 
-        $scope.$on(AUTH_EVENTS.loginSuccess, function(){
-            console.log('I saw the update');
-            vm.me = Session.me;
-            vm.name = Session.me.first_name +' '+ Session.me.last_name;
-            vm.email = Session.me.email;
-            vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        });
+        // $scope.$on(AUTH_EVENTS.loginSuccess, function(){
+        //     console.log('I saw the update');
+        //     vm.me = Session.me;
+        //     vm.name = Session.me.first_name +' '+ Session.me.last_name;
+        //     vm.email = Session.me.email;
+        //     vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
+        // });
     }
 ]);

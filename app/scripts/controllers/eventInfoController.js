@@ -16,7 +16,7 @@ App.controller('eventInfoController', ['$scope', 'RESTService', '$stateParams', 
             .error(function(data){
                 console.log('error', data);
             });
-        vm.goToReport = function() {
+        vm.goToCheckinReport = function() {
             $location.path("app/events/" + $stateParams.tag + "/report");
         };
         vm.goToCheckin = function(){

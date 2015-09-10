@@ -2,66 +2,37 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
     function($scope, $interval, $rootScope, $timeout, $location, $mdSidenav, $mdDialog, localStorageService, AuthService, AUTH_EVENTS, Organization, Session, Notifications, Directory, Updates, Chatter) {
         var vm = this,
         notification_update_interval;
-        $scope.perms = Session.perms;
-        vm.me = Session.me;
-        vm.subscribed = true;
-        vm.session = Session;
         vm.prof_pic = 'images/defaultprofile.png';
+        setControllerVariables();
         AuthService.cachedLogin();
         $scope.authenticated = AuthService.isAuthenticated();
 
-        $scope.toggleSidenav = function(url){
-            $mdSidenav('sidenav').toggle();
-            $timeout(function(){
-                $location.path(url);
-            }, 500);
+        // $scope.toggleSidenav = function(url){
+        //     $mdSidenav('sidenav').toggle();
+        //     $timeout(function(){
+        //         $location.path(url);
+        //     }, 500);
             
-        };
-        $scope.toggleNotifications = function(){
-            Notifications.readAll();
-            $mdSidenav('notifications').toggle();
-        };
+        // };
+        // $scope.toggleNotifications = function(){
+        //     Notifications.readAll();
+        //     $mdSidenav('notifications').toggle();
+        // };
 
-        $scope.goToNotification = function(notify){
-            if (notify.type == 'CHATTERCOMMENT'){
-                $scope.toggleNotifications();
-                $timeout(function(){Chatter.openChatterByKey(notify.type_key)});
-            }
-            else if (notify.type === 'NEWEVENT'){
-                $scope.toggleNotifications();
-                $timeout(function(){$location.path('app/events/' + notify.type_key)})
-            }
-            else if(notify.link){
-                $location.url(notify.link);
-                $scope.toggleNotifications();
-            }
-        };
-
-        $scope.showHelpdialog = function(){
-            $mdDialog.show({
-                    controller: ('helpDialogController', ['$scope', '$mdDialog', helpDialogController]),
-                    templateUrl: 'views/templates/helpDialog.html'
-            });
-        };
-        function helpDialogController($scope, $mdDialog){
-            $scope.message = '';
-            $scope.sendHelpMessage = function(){
-                RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/report_error', $scope.message)
-                .success(function(){console.log('success');})
-                .error(function(){console.log('error');});
-                $scope.message = '';
-                $mdDialog.hide();
-            };
-            $scope.hide = function(){
-                $mdDialog.hide();
-            };
-        }
-        $scope.checkPermissions = function(perms){
-            if (PERMS_LIST.indexOf(perms) > PERMS_LIST.indexOf(Session.perms)){
-                return false;
-            }
-            return true;
-        };
+        // $scope.goToNotification = function(notify){
+        //     if (notify.type == 'CHATTERCOMMENT'){
+        //         $scope.toggleNotifications();
+        //         $timeout(function(){Chatter.openChatterByKey(notify.type_key)});
+        //     }
+        //     else if (notify.type === 'NEWEVENT'){
+        //         $scope.toggleNotifications();
+        //         $timeout(function(){$location.path('app/events/' + notify.type_key)})
+        //     }
+        //     else if(notify.link){
+        //         $location.url(notify.link);
+        //         $scope.toggleNotifications();
+        //     }
+        // };
 
         $scope.$on('organization:updated', function() {
             if ($rootScope.color != Organization.organization.color) {
@@ -106,15 +77,22 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
                     Updates.get();
                 }, 15000)
             }
-            vm.session = Session;
-            vm.perms = Session.perms;
-            vm.me = Session.me;
-            vm.name = Session.me.first_name +' '+ Session.me.last_name;
-            vm.email = Session.me.email;
-            vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-            vm.council = Session.council;
-            vm.leadership = Session.leadership;
-            vm.member = Session.member;
+            setControllerVariables();
         });
+
+        function setControllerVariables(){
+            if (AuthService.isAuthenticated()){
+                vm.session = Session;
+                vm.perms = Session.perms;
+                vm.me = Session.me;
+                vm.name = Session.me.first_name +' '+ Session.me.last_name;
+                vm.email = Session.me.email;
+                vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
+                vm.council = Session.council;
+                vm.leadership = Session.leadership;
+                vm.member = Session.member;
+                vm.subscribed = true;
+            }
+        }
     }
 ]);

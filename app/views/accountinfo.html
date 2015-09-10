@@ -39,7 +39,7 @@
         </div>
         </md-toolbar>
         <md-content class="md-padding">
-        <img ng-src="{{item.prof_pic}}" class="face">
+        <img ng-src="{{item.prof_pic || 'images/defaultprofile.png'}}" class="face">
         <md-button id="changePic" ng-href="#/app/uploadprofilepicture">Change Picture</md-button>
         <br/>
         <form id="memberAccount" name="memberAccount" ng-submit="updateAccount(memberAccount.$valid)" class="form-horizontal" role="form" novalidate>

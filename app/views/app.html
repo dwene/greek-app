@@ -28,10 +28,10 @@
       <div layout="column" layout-fill>
         <md-toolbar class="md-tall" md-theme-watch>
           <div class="md-toolbar-tools">
-            <img class="face" ng-src="{{ nav.prof_pic }}" ng-click="nav.goToMe()">
+            <img class="face" ng-src="{{ app.prof_pic }}" ng-click="nav.goToMe()">
             <span id="details" ng-click="nav.goToMe()">
-              <p id="name">{{ nav.name }}</p>
-              <p>{{ nav.email }}</p>
+              <p id="name">{{ app.name }}</p>
+              <p>{{ app.email }}</p>
             </span>
             <span flex></span>
             <md-button class="btn-touch" ng-click="nav.toggleSidenav()" aria-label="close">
@@ -60,7 +60,7 @@
                 <li ng-click="nav.toggleSidenav('app/events/calendar')" ng-show="app.subscribed">
                 	<md-button class="md-primary" md-theme-watch><i class="fa fa-calendar fa-fw"></i> Events</md-button>
                 </li>
-                <li ng-click="toggleSidenav('app/links')">
+                <li ng-click="nav.toggleSidenav('app/links')">
                 	<md-button class="md-primary" md-theme-watch><i class="fa fa-file-text-o fa-fw"></i> Links</md-button>
                 </li>
               </ul>
@@ -94,14 +94,14 @@
         <div class="md-toolbar-tools">
           <h1>Notifications</h1>
           <span flex></span>
-          <md-button class="btn-touch" ng-click="toggleNotifications()" aria-label="close">
+          <md-button class="btn-touch" ng-click="nav.toggleNotifications()" aria-label="close">
             <i class="fa fa-times"></i>
           </md-button>
         </div>
       </md-toolbar>
       <md-content>
         <md-list class="itemList">
-          <md-list-item ng-repeat="notify in notifications | orderBy:'-timestamp' | limitTo:25"  ng-click="goToNotification(notify)" aria-label="notification content">
+          <md-list-item ng-repeat="notify in nav.notifications | orderBy:'-timestamp' | limitTo:25"  ng-click="nav.goToNotification(notify)" aria-label="notification content">
             <span ng-bind="notify.content"></span>
           </md-list-item>
         </md-list>

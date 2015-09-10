@@ -31,6 +31,12 @@
                         <md-icon md-menu-align-target class="fa fa-sign-in"></md-icon>
                       </md-button>
                     </md-menu-item>
+                    <md-menu-item ng-show="app.leadership">
+                      <md-button ng-click="eventInfo.goToCheckinReport()">
+                        <p>Report</p>
+                        <md-icon md-menu-align-target class="fa fa-file"></md-icon>
+                      </md-button>
+                    </md-menu-item>
                   </md-menu-content>
                 </md-menu>
             </div>
