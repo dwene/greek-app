@@ -5,5 +5,12 @@
             "url": "https://github.com/phonegap-build/PushPlugin.git",
             "subdir": "."
         }
+    },
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "git",
+            "url": "git://git.apache.org/cordova-plugin-inappbrowser.git",
+            "subdir": "."
+        }
     }
 }

@@ -36,7 +36,7 @@
                         <md-list class="itemList">
                            <div class="listItem" ng-repeat="link in group.links">
                             <md-list-item md-no-ink class="link" ng-click="doNothing()" >
-                                <a target="_blank" ng-href="http://{{link.link}}" flex>{{link.title}}</a>
+                                <a external-href="http://{{link.link}}" flex>{{link.title}}</a>
                                 <div class="pull-right" ng-show="app.leadership">
                                 <md-button class="btn-touch" ng-click="openEditLinkDialog(link, group)" aria-label="edit link"><i class="fa fa-edit fa-fw"></i></md-button>
                                 <md-button class="btn-touch" ng-click="link.confirmDelete = !link.confirmDelete" aria-label="delete link"><i class="fa fa-trash-o fa-fw"></i></md-button>

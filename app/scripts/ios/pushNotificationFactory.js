@@ -1,4 +1,4 @@
-App.factory('Links', ['RESTService', '$rootScope', 'AUTH_EVENTS',   
+App.factory('pushNotificationFactory', ['RESTService', '$rootScope', 'AUTH_EVENTS',   
     function(RESTService, $rootScope, AUTH_EVENTS) {
         var pushNotifiation;
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function(){
