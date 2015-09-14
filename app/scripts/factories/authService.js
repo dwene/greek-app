@@ -22,7 +22,6 @@ App.factory('AuthService', ['$http', 'Session', '$location', '$q', 'RESTService'
                         localStorageService.set('credentials', creds);
                         Session.create(creds.USER_NAME, creds.TOKEN, parsed_data.me);
                         Organization.set(parsed_data.organization);
-                        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                         return credentials.user_name;
                     }
                 })

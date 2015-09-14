@@ -17,9 +17,7 @@ App.controller('profilePictureController', ['$scope', '$location', 'RESTService'
         $scope.type = "prof_pic";
         //initialize profile image variable
         var newprofileImage;
-
         $scope.uploadImage = function(src, crop_data) {
-            console.log(crop_data);
             $scope.uploading = true;
             var img = src.slice(src.indexOf(',') + 1);
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/change_profile_image', {
@@ -30,7 +28,6 @@ App.controller('profilePictureController', ['$scope', '$location', 'RESTService'
                     console.log("success");
                     var me = Session.me;
                     me.prof_pic = JSON.parse(data.data);
-                    console.log('What prof pic Im getting', me.prof_pic);
                     Directory.updateMe(me);
                     Session.updateMe(me);
                     $location.url('app/accountinfo');

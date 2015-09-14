@@ -1,13 +1,6 @@
-App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$mdDialog', '$location', '$timeout', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS',
-    function($scope, $http, $rootScope, $mdSidenav, $mdDialog, $location, $timeout, Session, Organization, Notifications, AUTH_EVENTS) {
+App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$mdDialog', '$location', '$timeout', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS', 'Chatter',
+    function($scope, $http, $rootScope, $mdSidenav, $mdDialog, $location, $timeout, Session, Organization, Notifications, AUTH_EVENTS, Chatter) {
         var vm = this;
-        // if (Session.me){
-        //     vm.me = Session.me;
-        //     vm.name = Session.me.first_name +' '+ Session.me.last_name;
-        //     vm.email = Session.me.email;
-        //     vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        // }
-
         vm.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
             $timeout(function(){
@@ -22,16 +15,16 @@ App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSid
 
         vm.goToNotification = function(notify){
             if (notify.type == 'CHATTERCOMMENT'){
-                $scope.toggleNotifications();
+                vm.toggleNotifications();
                 $timeout(function(){Chatter.openChatterByKey(notify.type_key)});
             }
             else if (notify.type === 'NEWEVENT'){
-                $scope.toggleNotifications();
+                vm.toggleNotifications();
                 $timeout(function(){$location.path('app/events/' + notify.type_key)})
             }
             else if(notify.link){
                 $location.url(notify.link);
-                $scope.toggleNotifications();
+                vm.toggleNotifications();
             }
         };
 

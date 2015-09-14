@@ -7,10 +7,10 @@
 		</md-toolbar>
 		<md-content class="md-padding">
 
-			<form enctype="multipart/form-data" ng-submit="uploadImage(P.imageSrc, P.cropData)" id="profilePic">
+			<form enctype="multipart/form-data" id="profilePic">
+				<div ng-hide="uploading">
 				<input type="file" name="file" accept="image/*" value="upload" aj-file-select="P.onFileSelect($files)" aj-change="P.getFile($files)" aj-model="P.file">
 				<br>
-				<div ng-hide="uploading">
 				    <section id="crop" class="text-center" layout="column" layout-align="center center">
 				    	<div ng-show="imageSrc.length">
 							<img-cropped src="imageSrc" selected="selected(cords)" ratio="1"></img-cropped>
@@ -27,7 +27,7 @@
 						<div class="canvas-preview">
 							<p class="test"></p>
 						</div>
-						<md-button ng-show="cropped" ng-disabled="!P.cropData || uploading_image" type="submit" name="submit" >Upload</md-button>
+						<md-button ng-show="cropped" ng-disabled="!P.cropData || uploading_image" ng-click="uploadImage(P.imageSrc, P.cropData)" >Upload</md-button>
 						<p class="alert alert-danger" ng-show="error">Something went wrong. Please try again.</p>
 				    </section>
 			   </div>

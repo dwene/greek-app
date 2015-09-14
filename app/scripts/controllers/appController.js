@@ -7,33 +7,6 @@ App.controller('appController', ['$scope', '$interval', '$rootScope', '$timeout'
         AuthService.cachedLogin();
         $scope.authenticated = AuthService.isAuthenticated();
 
-        // $scope.toggleSidenav = function(url){
-        //     $mdSidenav('sidenav').toggle();
-        //     $timeout(function(){
-        //         $location.path(url);
-        //     }, 500);
-            
-        // };
-        // $scope.toggleNotifications = function(){
-        //     Notifications.readAll();
-        //     $mdSidenav('notifications').toggle();
-        // };
-
-        // $scope.goToNotification = function(notify){
-        //     if (notify.type == 'CHATTERCOMMENT'){
-        //         $scope.toggleNotifications();
-        //         $timeout(function(){Chatter.openChatterByKey(notify.type_key)});
-        //     }
-        //     else if (notify.type === 'NEWEVENT'){
-        //         $scope.toggleNotifications();
-        //         $timeout(function(){$location.path('app/events/' + notify.type_key)})
-        //     }
-        //     else if(notify.link){
-        //         $location.url(notify.link);
-        //         $scope.toggleNotifications();
-        //     }
-        // };
-
         $scope.$on('organization:updated', function() {
             if ($rootScope.color != Organization.organization.color) {
                 $scope.authenticated = false;
