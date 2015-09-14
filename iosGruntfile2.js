@@ -144,11 +144,11 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
-        src: ['<%= yeoman.app %>/indexios.html'],
+        src: ['<%= yeoman.app %>/index.html'],
         //ignorePath:  /\.\.\//
       },
       mobile: {
-        src:['<%= yeoman.mobile %>/indexios.html'],
+        src:['<%= yeoman.mobile %>/index.html'],
       }
     },
 
@@ -167,7 +167,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-        html: '<%= yeoman.app %>/indexios.html',
+        html: '<%= yeoman.app %>/index.html',
         options: {
           dest: '<%= yeoman.dist %>',
           flow: {
@@ -213,6 +213,17 @@ module.exports = function (grunt) {
         }
       }
     },
+    // concat: {
+    //   angular: {
+    //     src: ['<%= yeoman.app %>/scripts/angular_main.js', '<%= yeoman.app %>/scripts/controllers/*.js', '<%= yeoman.app %>/scripts/factories/*.js','<%= yeoman.app %>/scripts/vendor/*.js' ],
+    //     dest: '<%= yeoman.dist %>/scripts/scripts.js',
+    //   },
+    //   dist: {
+    //     src: ['<%= yeoman.app %>/scripts/vendor/*.js', '<%= yeoman.app %>/scripts/netegreek.js'],
+    //     dest: '<%= yeoman.dist %>/scripts/scripts.js',
+    //   }
+    // },
+
     imagemin: {
       dist: {
         files: [{
@@ -275,11 +286,14 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,png,txt}',
+            '*.{ico,png,txt,py,yaml}',
             '.htaccess',
-            'views/**',
+            '*.html',
+			      'views/**',
             'images/{,*/}*.{webp}',
             'fonts/*',
+            'dateutil/{,*/}*',
+            'certs/*',
             'files/*',
           ]
         },{
@@ -288,7 +302,7 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: ['indexios.html'],
           rename: function(dest, src) {
-            return dest + "/index.html";
+            return dest + "index.html";
           }
         },{
           expand: true,
@@ -309,6 +323,17 @@ module.exports = function (grunt) {
           cwd: 'bower_components/components-font-awesome',
           src: ['fonts/*.*'],
           dest: '<%= yeoman.dist %>'
+        }]
+      },
+      server:{
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.dist %>',
+          src: [
+            'lib/**'
+          ]
         }]
       },
       styles: {
@@ -359,24 +384,6 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
-    },
-
-    exec: {
-      build_android: {
-        command: 'cordova build android'
-      },
-      build_ios: {
-        command: 'cordova build ios'
-      },
-      run_android: {
-        command: 'cordova run android'
-      },
-      run_ios:{
-        command: 'cordova run ios'
-      },
-      emulate_ios:{
-        command: 'cordova emulate ios'
-      }
     }
   });
 
@@ -409,7 +416,6 @@ module.exports = function (grunt) {
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
   ]);
 
 
@@ -419,7 +425,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'wiredep:app',
+    'wiredep',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -431,14 +437,6 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
-
-   grunt.registerTask('ios', 'Compile into www, then emulate ios', function (target) {
-      return grunt.task.run([
-        'build',
-        'exec:build_ios',
-        'exec:emulate_ios'
-      ]);
-  });
 
   grunt.registerTask('default', [
     'test',
