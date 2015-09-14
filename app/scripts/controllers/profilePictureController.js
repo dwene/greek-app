@@ -1,5 +1,6 @@
 App.controller('profilePictureController', ['$scope', '$location', 'RESTService', '$http', '$rootScope', 'Session', 'Directory',
     function($scope, $location, RESTService, $http, $rootScope, Session, Directory) {
+        var vm = this;
         RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/get_upload_url', '')
             .success(function(data) {
                 if (!RESTService.hasErrors(data)) {
@@ -18,8 +19,12 @@ App.controller('profilePictureController', ['$scope', '$location', 'RESTService'
         //initialize profile image variable
         var newprofileImage;
 
+        $scope.hello = function(){
+            console.log('hello');
+        }
+
         $scope.uploadImage = function(src, crop_data) {
-            console.log(crop_data);
+            console.log("time to upload!");
             $scope.uploading = true;
             var img = src.slice(src.indexOf(',') + 1);
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/change_profile_image', {
