@@ -336,6 +336,7 @@ md-toolbar.md-orange-theme.md-warn {
 }
 .fadingOut.ng-leave,
 .fadingOut.ng-hide-show {
+  position: absolute;
   -webkit-animation: fadeOut .5s;
   -moz-animation: fadeOut .5s;
   -ms-animation: fadeOut .5s;
