@@ -293,7 +293,7 @@ angular.module("App").config(function($stateProvider, $urlRouterProvider) {
             .state('app.events.eventCheckin',{
                     url : '/:tag/checkin',
                     templateUrl : 'views/eventcheckin.html',
-                    controller : 'eventCheckInController',
+                    controller : 'eventCheckInController as checkIn',
                     data: {
                         permissions: {
                             only: [LEADERSHIP],

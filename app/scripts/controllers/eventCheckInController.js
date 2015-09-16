@@ -1,5 +1,12 @@
 App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$stateParams', '$rootScope', '$timeout', '$location', '$interval',
     function($scope, RESTService, Events, $stateParams, $rootScope, $timeout, $location, $interval) {
+        var vm = this;
+        var event_key = $stateParams.tag;
+
+        vm.back = function() {
+            $location.path('app/events/'+event_key);
+        };
+
         $scope.$on('checkin:new', function(event, data){
             liveUpdate(data);
         });

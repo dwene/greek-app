@@ -1013,10 +1013,21 @@ md-toolbar.md-tall {
   font-size: 24px;
 }
 #eventCheckin md-toolbar {
-  padding-bottom: 25px;
+  position: relative;
+  height: auto;
+  max-height: none;
 }
-#eventCheckin md-content {
-  padding-top: 25px;
+#eventCheckin md-toolbar h1 {
+  margin-left: 5px;
+  word-wrap: break-word;
+}
+#eventCheckin md-toolbar .fa-chevron-left {
+  position: relative;
+  top: -2px;
+  left: -2px;
+}
+#eventCheckin md-toolbar .fa-calendar {
+  font-size: 24px;
 }
 #eventCheckin .face {
   margin-right: 5px;

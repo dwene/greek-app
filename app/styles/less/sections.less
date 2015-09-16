@@ -246,8 +246,17 @@ md-toolbar.md-tall{
 }
 
 #eventCheckin{
-    md-toolbar{padding-bottom:25px;}
-    md-content{padding-top:25px;}
+    md-toolbar{
+        position:relative;
+        height: auto;
+        max-height: none;
+        h1{
+            margin-left: 5px;
+            word-wrap: break-word;
+        }
+        .fa-chevron-left{position:relative; top:-2px; left:-2px;}
+        .fa-calendar{font-size:24px;}
+    }
     .face{margin-right:5px;}
 }
 

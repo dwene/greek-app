@@ -4,13 +4,11 @@
     <div class="md-whiteframe-z1" infinite-scroll="maxLengthIncrease()" infinite-scroll-disabled="search">
         <md-toolbar>
             <div class="md-toolbar-tools">
+                <md-button class="btn-touch" ng-click="checkIn.back()"><i class="fa fa-chevron-left"></i> <i class="fa fa-calendar"></i></md-button>
                 <h1>Event Checkin for {{title}}</h1>
             </div>
-            <md-button id="back" class="md-fab" aria-label="back" ng-click="back()">
-                <i class="fa fa-arrow-left"></i>
-            </md-button>
         </md-toolbar>
-        <md-content class="md-padding">
+        <md-content class="md-padding no-padding-top">
             <search ng-model="search" change="change()"></search>
             <md-list class="itemList">
                 <md-list-item class="md-padding" ng-repeat="member in users | orderBy:'last_name' | nameSearch: search: 0 | limitTo:maxLength track by member.key"  layout="row" layout-sm="column" layout-align="center center">
