@@ -1,5 +1,10 @@
-App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$stateParams', '$rootScope', '$filter', 'Directory', 'Events',
-    function($scope, RESTService, $stateParams, $rootScope, $filter, Directory, Events) {
+App.controller('eventCheckInReportController', ['$scope', 'RESTService', '$stateParams', '$location', '$rootScope', '$filter', 'Directory', 'Events',
+    function($scope, RESTService, $stateParams, $location, $rootScope, $filter, Directory, Events) {
+        var vm = this;
+        var event_key = $stateParams.tag;
+        vm.back = function() {
+            $location.path('app/events/'+event_key);
+        };
         $scope.maxLength = 0;
         $scope.maxNoShowsLength = 0;
         $scope.loading = true;

@@ -2,7 +2,6 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
     function($scope, RESTService, Events, $stateParams, $rootScope, $timeout, $location, $interval) {
         var vm = this;
         var event_key = $stateParams.tag;
-
         vm.back = function() {
             $location.path('app/events/'+event_key);
         };

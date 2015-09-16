@@ -1,11 +1,12 @@
 <div ng-show="eventNotFound" class="jumbotron text-center"><h1>Event not found :(</h1></div>  
-<div id="report" class="container" ng-hide="eventNotFound || loading" infinite-scroll="increaseMaxLength()">
+<div id="eventCheckinReport" class="container" ng-hide="eventNotFound || loading" infinite-scroll="increaseMaxLength()">
 <div class="md-whiteframe-z1">
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <md-button class="btn-touch" ng-click="checkInReport.back()"><i class="fa fa-chevron-left"></i> <i class="fa fa-calendar"></i></md-button>
             <h1>Checkin Report for {{event.title}}</h1>
                 <div flex></div>
-            <md-button class="pull-right" ng-click="downloadCSV()"><i class="fa fa-download"></i> Download</md-button>
+            <md-button class="btn-touch" ng-click="downloadCSV()"><i class="fa fa-download"></i></md-button>
         </div>
     </md-toolbar>
     <md-content class="md-padding no-padding-top">

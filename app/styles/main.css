@@ -995,41 +995,34 @@ md-toolbar.md-tall {
   font-size: 14px;
   text-align: right;
 }
-#eventInfo md-toolbar .md-toolbar-tools {
+#eventInfo md-toolbar .md-toolbar-tools,
+#eventCheckin md-toolbar .md-toolbar-tools,
+#eventCheckinReport md-toolbar .md-toolbar-tools {
   position: relative;
-  height: auto;
+  height: 64px;
   max-height: none;
 }
-#eventInfo md-toolbar .md-toolbar-tools h1 {
+#eventInfo md-toolbar .md-toolbar-tools h1,
+#eventCheckin md-toolbar .md-toolbar-tools h1,
+#eventCheckinReport md-toolbar .md-toolbar-tools h1 {
   margin-left: 5px;
   word-wrap: break-word;
 }
-#eventInfo md-toolbar .fa-chevron-left {
+#eventInfo md-toolbar .fa-chevron-left,
+#eventCheckin md-toolbar .fa-chevron-left,
+#eventCheckinReport md-toolbar .fa-chevron-left {
   position: relative;
   top: -2px;
   left: -2px;
 }
-#eventInfo md-toolbar .fa-calendar {
+#eventInfo md-toolbar .fa-calendar,
+#eventCheckin md-toolbar .fa-calendar,
+#eventCheckinReport md-toolbar .fa-calendar {
   font-size: 24px;
 }
-#eventCheckin md-toolbar {
-  position: relative;
-  height: auto;
-  max-height: none;
-}
-#eventCheckin md-toolbar h1 {
-  margin-left: 5px;
-  word-wrap: break-word;
-}
-#eventCheckin md-toolbar .fa-chevron-left {
-  position: relative;
-  top: -2px;
-  left: -2px;
-}
-#eventCheckin md-toolbar .fa-calendar {
-  font-size: 24px;
-}
-#eventCheckin .face {
+#eventInfo .face,
+#eventCheckin .face,
+#eventCheckinReport .face {
   margin-right: 5px;
 }
 #links .groupTitle .md-toolbar-tools {
@@ -1481,6 +1474,9 @@ md-dialog .md-sticky-clone[sticky-state="active"]:not(.md-sticky-no-effect):afte
 #sectionLoading md-progress-circular {
   display: block;
   margin: 0px auto;
+}
+.md-toolbar-tools > .md-menu:last-child {
+  margin-right: -8px;
 }
 .md-dialog-container,
 md-backdrop.md-opaque {
