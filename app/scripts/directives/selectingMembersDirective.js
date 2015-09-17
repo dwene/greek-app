@@ -71,6 +71,7 @@ function() {
             $scope.internalSelectedCalendar = calendar;
             $scope.selectedCalendar = calendar;
           }
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
         }
       }
 
@@ -79,6 +80,7 @@ function() {
             $scope.selectedCalendar = $scope.internalSelectedCalendar;
             $scope.selectedIndividuals = [];
           }
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
       });
 
       // function evaluateSelectedMembers() {
@@ -121,7 +123,7 @@ function() {
 
       function invitedMembersDialogController(scope, mdDialog){
         $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
-        scope.members = $scope.invitedMembersDialog;
+        scope.members = $scope.invitedMembers;
         //convert back to a list.
 
         scope.hide = function(){
@@ -303,6 +305,7 @@ function() {
           if ($scope.selectedIndividuals.length === 0){
             $scope.internalSelectedCalendar = $scope.customCalendar.calendar;
           }
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
           mdDialog.hide();
         };
       }
