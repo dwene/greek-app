@@ -24,10 +24,10 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                                 return;
                             }
                         }
-                        
+
                         $scope.$apply(function(){
                             $scope.users[i].attendance_data = attendanceData;
-                        });
+                        })
                     }
                     return;
                 }
@@ -70,11 +70,11 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                     $scope.maxLength += 20;
                 }
             }
-        }
+        };
 
         $scope.change = function() {
             $scope.maxLength = 10;
-        }
+        };
 
         function getCheckInData() {
             RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/event/v1/get_check_in_info', $stateParams.tag)
@@ -103,7 +103,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
             }
         });
 
-        $scope.checkIn = function(member, checkStatus, clear) { //#TODO: fix controller so we can check in more than once
+        vm.checkIn = function(member, checkStatus, clear) { //#TODO: fix controller so we can check in more than once
             member.timestamp_moment = moment();
             if (checkStatus && member.attendance_data && member.attendance_data.time_in) {
                 $scope.selectedUser = member;
@@ -114,7 +114,7 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                 user_key: member.key
             };
             if (!member.attendance_data) {
-                member.attendance_data = {}
+                member.attendance_data = {};
             }
             if (clear) {
                 to_send.clear = true;
@@ -133,9 +133,9 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                 .error(function(data) {
                     console.log('Error: ', data);
                 });
-        }
+        };
 
-        $scope.checkOut = function(member, checkStatus, clear) {
+        vm.checkOut = function(member, checkStatus, clear) {
             member.timestamp_moment = moment();
             if (checkStatus && member.attendance_data && member.attendance_data.time_out && member.attendance_data.time_in) {
                 $scope.selectedUser = member;
@@ -165,14 +165,14 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
                 .error(function(data) {
                     console.log('Error: ', data);
                 });
-        }
+        };
 
         $scope.formatDate = function(date) {
             return momentInTimezone(date).format('lll');
-        }
+        };
 
         $scope.back = function() {
             $location.path('app/events/' + $stateParams.tag);
-        }
+        };
     }
 ]);

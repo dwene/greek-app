@@ -1025,6 +1025,37 @@ md-toolbar.md-tall {
 #eventCheckinReport .face {
   margin-right: 5px;
 }
+#eventCheckin table,
+#eventCheckinReport table {
+  width: 200px;
+  margin: 0px;
+}
+#eventCheckin table td,
+#eventCheckinReport table td {
+  width: 100%;
+  display: block;
+}
+@media (min-width: 530px) {
+  #eventCheckin table,
+  #eventCheckinReport table {
+    width: 400px;
+  }
+  #eventCheckin table td,
+  #eventCheckinReport table td {
+    width: 200px;
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+#eventCheckin md-list-item > div:last-child {
+  width: 45px;
+}
+#eventCheckinReport md-list-item:not(:last-child) {
+  margin-bottom: 8px;
+}
+#eventCheckinReport #missedCheckin > div {
+  display: inline-block;
+}
 #links .groupTitle .md-toolbar-tools {
   padding-right: 0px;
 }

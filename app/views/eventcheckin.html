@@ -5,36 +5,46 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <md-button class="btn-touch" ng-click="checkIn.back()"><i class="fa fa-chevron-left"></i> <i class="fa fa-calendar"></i></md-button>
-                <h1>Event Checkin for {{title}}</h1>
+                <h1>CheckIn for {{title}}</h1>
             </div>
         </md-toolbar>
         <md-content class="md-padding no-padding-top">
             <search ng-model="search" change="change()"></search>
             <md-list class="itemList">
-                <md-list-item class="md-padding" ng-repeat="member in users | orderBy:'last_name' | nameSearch: search: 0 | limitTo:maxLength track by member.key"  layout="row" layout-sm="column" layout-align="center center">
+                <md-list-item class="md-padding" ng-repeat="member in users | orderBy:'last_name' | nameSearch: search: 0 | limitTo:maxLength track by member.key"  layout="row" layout-align="space-between center" layout-align-sm="space-around center">
                         <div>
-                            <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="check in" ng-click="checkIn(member, true, false)">
+                            <md-button ng-hide="member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="check in" ng-click="checkIn.checkIn(member, true, false)">
                                     <i class="fa fa-sign-in fa-lg fa-fw"></i>
                             </md-button>
-                            <md-button ng-hide="!member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="clear check in" ng-click="checkIn(member, false, true)">
+                            <md-button ng-hide="!member.attendance_data.time_in" class="md-primary md-hue-1 btn-touch" aria-label="clear check in" ng-click="checkIn.checkIn(member, false, true)">
                                     <i class="fa fa-times fa-lg fa-fw"></i>
                             </md-button>
                         </div>
-                        <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">
-                        <div class="name">{{member.first_name}} {{member.last_name}}</div>
-                        <div flex></div>
                         <div>
-                                <span ng-show="member.attendance_data.time_in">In: {{formatDate(member.attendance_data.time_in)}}</span><br>
-                                <span ng-show="member.attendance_data.time_out">Out: {{formatDate(member.attendance_data.time_out)}}</span>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>
+                                        <div layout="row" layout-align="start center">
+                                            <div>
+                                                <img ng-src="{{member.prof_pic? member.prof_pic+'=s50':$root.defaultProfilePicture}}" class="face">
+                                            </div>
+                                            <div class="name">{{member.first_name}} {{member.last_name}}</div>
+                                        </div>
+                                    </td>
+                                    <td ng-show="member.attendance_data.time_in || member.attendance_data.time_out">
+                                        <span ng-show="member.attendance_data.time_in"><i class="fa fa-sign-in fa-fw"></i> {{formatDate(member.attendance_data.time_in)}}</span><br>
+                                        <span ng-show="member.attendance_data.time_out"><i class="fa fa-sign-out fa-fw"></i> {{formatDate(member.attendance_data.time_out)}}</span>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                        <div flex class="no-margin"></div>
                         <div>
-                        <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, true, false)" aria-label="check out">
-                                <i class="fa fa-sign-out fa-lg fa-fw"></i>
-                        </md-button>
-                        <md-button ng-show="member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkOut(member, false, true)" aria-label="check out">
-                                <i class="fa fa-times fa-lg fa-fw"></i>
-                        </md-button>
+                            <md-button ng-hide="!member.attendance_data.time_in || member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkIn.checkOut(member, true, false)" aria-label="check out">
+                                    <i class="fa fa-sign-out fa-lg fa-fw"></i>
+                            </md-button>
+                            <md-button ng-show="member.attendance_data.time_out" class="md-warn md-hue-1 btn-touch" ng-click="checkIn.checkOut(member, false, true)" aria-label="check out">
+                                    <i class="fa fa-times fa-lg fa-fw"></i>
+                            </md-button>
                         </div>
                 </md-list-item>
             </md-list>

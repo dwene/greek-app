@@ -246,6 +246,38 @@ md-toolbar.md-tall{
     .face{margin-right:5px;}
 }
 
+#eventCheckin, #eventCheckinReport{
+    table{
+        width: 200px;
+        margin: 0px;
+        td{
+            width: 100%;
+            display: block;
+        }
+        @media (min-width:530px){
+            width: 400px;
+            td{
+                width: 200px;
+                display: table-cell;
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+#eventCheckin{
+    md-list-item > div:last-child{
+            width: 45px;
+    }
+}
+
+#eventCheckinReport{
+    md-list-item:not(:last-child){margin-bottom:8px;}
+    #missedCheckin > div{
+        display: inline-block;
+    }
+}
+
 #links{
     .groupTitle .md-toolbar-tools{padding-right:0px;}
     .groupButtons{width:96px;}
