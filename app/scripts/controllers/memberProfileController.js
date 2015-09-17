@@ -154,7 +154,7 @@ App.controller('memberprofileController', ['$scope', '$rootScope', '$stateParams
             $scope.lastName = $scope.member.last_name;
             $scope.email = $scope.member.email;
             $scope.birthday = $scope.member.dob;
-            $scope.phone = $scope.member.phone;
+            $scope.phone = $scope.member.phone.replace(/[^0-9.]/g, '');
             $scope.currentAddress = $scope.member.address + " " + $scope.member.city + " " + $scope.member.state + " " + $scope.member.zip;
             $scope.position = $scope.member.position;
             $scope.permanentAddress = $scope.member.perm_address + " " + $scope.member.perm_city + " " + $scope.member.perm_state + " " + $scope.member.perm_zip;
