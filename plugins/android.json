@@ -13,10 +13,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"EmailComposer\"><param name=\"android-package\" value=\"de.appplant.cordova.emailcomposer.EmailComposer\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Contacts\"><param name=\"android-package\" value=\"org.apache.cordova.contacts.ContactManager\" /></feature>",
                             "count": 1
                         },
@@ -108,9 +104,6 @@
             "PACKAGE_NAME": "com.netegreek.NeteGreek"
         },
         "org.apache.cordova.inappbrowser": {
-            "PACKAGE_NAME": "com.netegreek.NeteGreek"
-        },
-        "de.appplant.cordova.plugin.email-composer": {
             "PACKAGE_NAME": "com.netegreek.NeteGreek"
         },
         "org.apache.cordova.contacts": {
