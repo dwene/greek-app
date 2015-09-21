@@ -13,10 +13,9 @@
             md-contact-name="name"
             md-contact-image="image"
             md-contact-email="email"
-            md-require-match
+            md-require-match="true"
             placeholder="Select members or groups">
         </md-contact-chips>
-        
         <br>
         <md-subheader> Contacts</md-subheader>
         <md-list>
@@ -43,7 +42,7 @@
     </div>
 </md-dialog>
 
-<!-- 
+<!--
         <md-subheader class="md-no-sticky">Groups</md-subheader>
         <md-list-item class="contact-item" ng-repeat="g in calendars" ng-class="{'selected': group.selected}" >
             <img ng-src="{{g.image}}" class="md-avatar" alt="{{g.name}}" />

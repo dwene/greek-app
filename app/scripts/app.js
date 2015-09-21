@@ -1,6 +1,6 @@
 // Final/static variables
-// var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
-var ENDPOINTS_DOMAIN = 'http://localhost:9001';
+var ENDPOINTS_DOMAIN = 'https://greek-app.appspot.com';
+// var ENDPOINTS_DOMAIN = 'http://localhost:9001';
 var USER_NAME = 'USER_NAME';
 var TOKEN = 'TOKEN';
 var PERMS = 'PERMS';
@@ -21,7 +21,7 @@ var App = angular.module('App', ['ui.router', 'ngAnimate', 'ngTouch', 'mgcrea.ng
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms|tel|data):/);
 });
 
-//Set up run commands for the app
+// Set up run commands for the app
 App.run( function($rootScope, $state, $stateParams, $q, $timeout, $state, $location, AuthService, Session, AUTH_EVENTS, RESTService, localStorageService, Links, Polls, Directory, Tags, Events, Organization, Chatter) {
     $rootScope.$on('$stateChangeStart', function(event, next) {
         if (!next.data) {
@@ -155,7 +155,7 @@ App.run( function($rootScope, $state, $stateParams, $q, $timeout, $state, $locat
 
     $rootScope.$state = $state;
     $rootScope.defaultProfilePicture = 'images/defaultprofile.png';
-    
+
 });
 
 //More Functions
@@ -208,4 +208,3 @@ function momentUTCTime(date) {
 function spliceSlice(str, index, count) {
     return str.slice(0, index) + str.slice(index + count);
 }
-

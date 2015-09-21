@@ -1567,9 +1567,6 @@ md-bottom-sheet.md-grid md-item .md-icon-container {
 md-backdrop.md-opaque {
   background-color: rgba(0, 0, 0, 0.34) !important;
 }
-.md-autocomplete-suggestions {
-  z-index: 1043;
-}
 md-select.btn-touch {
   margin: 0;
 }
@@ -1582,6 +1579,12 @@ md-menu-item div[layout="row"] {
 .listItem:hover,
 .listItem:active {
   background-color: #f9f9f9;
+}
+.md-virtual-repeat-container.md-autocomplete-suggestions-container {
+  z-index: 1045;
+}
+.md-contact-chips .md-chips .md-chip .md-contact-avatar img {
+  vertical-align: top;
 }
 .md-sidenav-backdrop,
 .md-sidenav-backdrop.md-opaque.ng-leave {
