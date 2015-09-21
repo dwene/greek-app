@@ -80,7 +80,7 @@ function() {
             $scope.selectedCalendar = $scope.internalSelectedCalendar;
             $scope.selectedIndividuals = [];
           }
-          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar ? $scope.selectedCalendar.users : []);
       });
 
       // function evaluateSelectedMembers() {
