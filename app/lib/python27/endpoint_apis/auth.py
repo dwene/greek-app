@@ -79,8 +79,8 @@ class AuthApi(remote.Service):
             dt = ((user.timestamp + datetime.timedelta(days=EXPIRE_TIME)) - datetime.datetime.now())
             if dt.seconds/60/60 < 10:
                 user.current_token = generate_token()
+                user.timestamp = datetime.datetime.now()
                 user.put()
-            user.timestamp = datetime.datetime.now()
             organization = organization_future.get_result()
             features = features_future.get_result()
             org = organization.to_dict()
