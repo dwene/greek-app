@@ -19,9 +19,8 @@
                 <textarea id="description" name="description" rows="6" ng-model="event.description" placeholder="Enter your event description here:"></textarea>
                 <p ng-show="(newEvent.description.$invalid && !newEvent.description.$pristine) || (newEvent.description.$invalid && submitted)" class="help-block">Please enter a description.</p>
             </md-input-container>
-
             <md-input-container ng-if="mapsLoaded" class="md-default-theme" ng-class="{ 'md-input-invalid' : (newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)}">
-                <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="event location"/>
+                <input name="location" ng-autocomplete options="options" address="event.address" details="details" ng-model="event.location" aria-label="location of event">
                 <p ng-show="(newEvent.location.$invalid && !newEvent.location.$pristine) || (newEvent.location.$invalid && submitted)" class="help-block">Please enter a location</p>
             </md-input-container>
             <div class="form-group" ng-class="{ 'md-input-invalid' : ((newEvent.date_start.$invalid && !newEvent.date_start.$pristine) || (newEvent.date_start.$invalid && submitted)) || ((newEvent.time_start.$invalid && !newEvent.time_start.$pristine) || (newEvent.time_start.$invalid && submitted))}">

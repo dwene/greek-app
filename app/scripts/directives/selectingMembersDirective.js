@@ -71,6 +71,7 @@ function() {
             $scope.internalSelectedCalendar = calendar;
             $scope.selectedCalendar = calendar;
           }
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
         }
       }
 
@@ -79,6 +80,7 @@ function() {
             $scope.selectedCalendar = $scope.internalSelectedCalendar;
             $scope.selectedIndividuals = [];
           }
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
       });
 
       // function evaluateSelectedMembers() {
@@ -96,7 +98,7 @@ function() {
       // }
 
       function mergeMembers(a, b) {
-        usersDictionary = {}
+        usersDictionary = {};
         if (a && b){
           for (i = 0; i < a.length; i++){
             usersDictionary[a[i].key] = a[i];
@@ -106,11 +108,11 @@ function() {
           }
         }
         var mergedMembers = [];
-        for (user in usersDictionary){
+        for (var user in usersDictionary){
           mergedMembers.push(usersDictionary[user]);
         }
         return mergedMembers;
-      };
+      }
 
       $scope.showInvitedMembersDialog = function(){
         $mdDialog.show({
@@ -120,7 +122,8 @@ function() {
       };
 
       function invitedMembersDialogController(scope, mdDialog){
-        scope.members = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
+        $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
+        scope.members = $scope.invitedMembers;
         //convert back to a list.
 
         scope.hide = function(){
@@ -288,6 +291,7 @@ function() {
           }
           return retList;
         }
+
         scope.save = function() {
           //clear selection indicators
           for (i = 0; i < scope.members.length; i++){
@@ -298,9 +302,10 @@ function() {
           }
           $scope.selectedIndividuals = $scope.customCalendar.users;
           $scope.selectedCalendar = $scope.customCalendar.calendar;
-          if ($scope.selectedIndividuals.length == 0){
+          if ($scope.selectedIndividuals.length === 0){
             $scope.internalSelectedCalendar = $scope.customCalendar.calendar;
           }
+          $scope.invitedMembers = mergeMembers($scope.selectedIndividuals, $scope.selectedCalendar.users);
           mdDialog.hide();
         };
       }

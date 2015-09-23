@@ -162,8 +162,8 @@ App.controller('eventCheckInController', ['$scope', 'RESTService', 'Events', '$s
         }
 
         $scope.formatDate = function(date) {
-            return momentInTimezone(date).format('lll');
-        }
+            return momentInTimezone(date).format('MMM Do h:ss a');
+        };
 
         $scope.back = function() {
             $location.path('app/events/' + $stateParams.tag);
