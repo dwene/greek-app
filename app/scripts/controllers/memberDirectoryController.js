@@ -1,18 +1,5 @@
 App.controller('membersDirectoryController', ['$scope', '$rootScope', 'directoryFilterFilter', '$filter', '$location', 'localStorageService', 'Directory',
     function($scope, $rootScope, directoryFilterFilter, $filter, $location, localStorageService, Directory) {
-        Directory.get();
-        $scope.loaded = false;
-        $scope.memberdirectorylength = 20;
-        $scope.$on('directory:updated', function() {
-            $scope.directory = Directory.directory;
-            $scope.createDirectory();
-        });
-        $scope.createDirectory();
-        $scope.$watch('search', function() {
-            if ($scope.search) {
-                $scope.memberdirectorylength = 20;
-            }
-        });
         $scope.increaseDirectoryLength = function() {
             if ($scope.members) {
                 if ($scope.memberdirectorylength < $scope.members.length) {
@@ -41,5 +28,20 @@ App.controller('membersDirectoryController', ['$scope', '$rootScope', 'directory
             }
 
         }
+
+        Directory.get();
+        $scope.loaded = false;
+        $scope.memberdirectorylength = 20;
+        $scope.$on('directory:updated', function() {
+            $scope.directory = Directory.directory;
+            $scope.createDirectory();
+        });
+        $scope.createDirectory();
+        $scope.$watch('search', function() {
+            if ($scope.search) {
+                $scope.memberdirectorylength = 20;
+            }
+        });
+
     }
 ]);

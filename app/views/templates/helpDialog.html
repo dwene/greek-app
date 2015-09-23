@@ -1,5 +1,4 @@
 <md-dialog id="helpDialog" aria-label="help dialog" md-theme="{{$root.color}}">
-<!-- <form id="helpMessage" name="helpMessage" ng-init="message={subject:'', content:''};" novalidate> -->
   <md-content>
        <md-toolbar>
         <div class="md-toolbar-tools">
@@ -7,18 +6,12 @@
            </div>
       </md-toolbar>
 
-<!--            <md-divider class="no-margin-bottom"></md-divider>-->
         <md-content class="md-padding no-padding-top no-padding-bottom">
         <md-input-container>
            <label for="content">Enter your message here:</label>
             <textarea id="content" ng-model="message" name="content"></textarea>
         </md-input-container>
         </md-content>
-<!--
-            <div class="form-group">
-                 <textarea id="content" ng-model="message" name="content" class="form-control" placeholder="Enter your message here..." required></textarea>
-            </div>
--->
   </md-content>
   <div class="md-actions" layout="row">
     <span flex></span>
@@ -29,5 +22,4 @@
         Cancel
     </md-button>
   </div>
-<!-- </form> -->
 </md-dialog>
