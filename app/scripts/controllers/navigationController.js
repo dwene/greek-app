@@ -1,5 +1,5 @@
-App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$mdDialog', '$location', '$timeout', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS', 'Chatter',
-    function($scope, $http, $rootScope, $mdSidenav, $mdDialog, $location, $timeout, Session, Organization, Notifications, AUTH_EVENTS, Chatter) {
+App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSidenav', '$mdDialog', '$location', '$timeout', 'Session', 'Organization', 'Notifications', 'AUTH_EVENTS', 'Chatter', 'RESTService',
+    function($scope, $http, $rootScope, $mdSidenav, $mdDialog, $location, $timeout, Session, Organization, Notifications, AUTH_EVENTS, Chatter, RESTService) {
         var vm = this;
         vm.toggleSidenav = function(url){
             $mdSidenav('sidenav').toggle();
@@ -76,20 +76,5 @@ App.controller('navigationController', ['$scope', '$http', '$rootScope', '$mdSid
             vm.notification_count = count;
             vm.notifications = Notifications.notifs;
         });
-
-        // $scope.$on('me:updated', function(){
-        //     vm.me = Session.me;
-        //     vm.name = Session.me.first_name +' '+ Session.me.last_name;
-        //     vm.email = Session.me.email;
-        //     vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        // });
-
-        // $scope.$on(AUTH_EVENTS.loginSuccess, function(){
-        //     console.log('I saw the update');
-        //     vm.me = Session.me;
-        //     vm.name = Session.me.first_name +' '+ Session.me.last_name;
-        //     vm.email = Session.me.email;
-        //     vm.prof_pic = Session.me.prof_pic ? Session.me.prof_pic : 'images/defaultprofile.png';
-        // });
     }
 ]);

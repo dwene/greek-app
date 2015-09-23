@@ -3,25 +3,6 @@ App.controller('membersDirectoryController', ['$scope', '$rootScope', 'directory
         Directory.get();
         $scope.loaded = false;
         $scope.memberdirectorylength = 20;
-        $scope.increaseDirectoryLength = function() {
-            if ($scope.members) {
-                if ($scope.memberdirectorylength < $scope.members.length) {
-                    console.log('Increasing number of shown elements');
-                    $scope.memberdirectorylength += 20;
-                }
-            }
-        }
-        $scope.createDirectory = function() {
-            $scope.directory = Directory.directory;
-            console.log('directory: ', $scope.directory);
-            if ($scope.directory) {
-                $scope.council = $filter('orderBy')(directoryFilterFilter($scope.directory.members, 'council'), 'last_name');
-                $scope.leadership = $filter('orderBy')(directoryFilterFilter($scope.directory.members, 'leadership'), 'last_name');
-                $scope.members = $filter('orderBy')(directoryFilterFilter($scope.directory.members, 'member'), 'last_name');
-                $scope.loaded = $scope.directory;
-            }
-
-        }
         $scope.$on('directory:updated', function() {
             $scope.directory = Directory.directory;
             $scope.createDirectory();
@@ -31,7 +12,24 @@ App.controller('membersDirectoryController', ['$scope', '$rootScope', 'directory
             if ($scope.search) {
                 $scope.memberdirectorylength = 20;
             }
-        })
+        });
+        $scope.increaseDirectoryLength = function() {
+            if ($scope.members) {
+                if ($scope.memberdirectorylength < $scope.members.length) {
+                    $scope.memberdirectorylength += 20;
+                }
+            }
+        }
+        $scope.createDirectory = function() {
+            $scope.directory = Directory.directory;
+            if ($scope.directory) {
+                $scope.council = $filter('orderBy')(directoryFilterFilter($scope.directory.members, 'council'), 'last_name');
+                $scope.leadership = $filter('orderBy')(directoryFilterFilter($scope.directory.members, 'leadership'), 'last_name');
+                $scope.members = $filter('orderBy')(directoryFilterFilter($scope.directory.members, 'member'), 'last_name');
+                $scope.loaded = $scope.directory;
+            }
+
+        }
         $scope.showIndividual = function(member) {
             $location.path("app/directory/" + member.user_name);
         }
