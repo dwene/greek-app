@@ -62,7 +62,7 @@
                     </md-input-container>
                     <md-input-container class="md-default-theme required" ng-class="{ 'md-input-invalid' : (memberAccount.phone.$invalid && !memberAccount.phone.$pristine) || (memberAccount.phone.$invalid && submitted)}">
                     <label for="phone">###-###-####</label>
-                    <input type="tel" name="phone" ng-model="item.phone" required/>
+                    <input type="tel" name="phone" ng-model="item.phone" pattern="\d{3}-\d{3}-\d{4}" required/>
                     <p class="text-danger invalid-text">Please select a valid phone number.</p>
                     </md-input-container>
                     <div class="form-group" ng-class="{ 'md-input-invalid' : (memberAccount.dob.$invalid && !memberAccount.dob.$pristine) || (memberAccount.dob.$invalid && submitted)}">

@@ -32,12 +32,12 @@
       <span id="info"><br><br>
         <div class="row">
           <div class="col-xs-12 col-sm-6" ng-show="phone">
-            <a ng-href="sms://{{phone}}">
-              <div layout="row" layout-align="start center"><i class="fa fa-fw fa-phone fa-3x theme-color" flex="30"></i><p flex>{{phone}}</p></div>
+            <a external-href="sms:+1{{phone}}">
+              <div layout="row" layout-align="start center"><i class="fa fa-fw fa-phone fa-3x theme-color" flex="30"></i><p flex>{{phone | phoneNumber}}</p></div>
             </a>
           </div>
           <div class="col-xs-12 col-sm-6" ng-show="email">
-            <a ng-href="mailto://{{email}}">
+            <a external-href="mailto:{{email}}">
               <div layout="row" layout-align="start center"><i class="fa fa-fw fa-envelope-o fa-3x theme-color" flex="30"></i><p flex>{{email}}</p></div>
             </a>
           </div>

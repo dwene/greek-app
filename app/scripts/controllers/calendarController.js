@@ -82,8 +82,9 @@ App.controller('calendarController', ['Session', '$scope', 'RESTService', '$root
             }
         };
 
-        $scope.goToEvent = function(event) {
-            $location.path('app/events/' + event);
+        $scope.goToEvent = function(key) {
+            $location.path('app/events/' + key);
+
         };
 
         $scope.$watch('search', function() {

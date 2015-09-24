@@ -26,7 +26,8 @@
                             "xml": false,
                             "count": 1
                         }
-                    ]
+                    ],
+                    "MessageUI.framework": []
                 }
             }
         }

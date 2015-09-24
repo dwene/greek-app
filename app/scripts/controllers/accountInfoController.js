@@ -1,10 +1,24 @@
 App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', '$timeout', 'Organization', 'AUTH_EVENTS', 'Session', 'Directory', '$location', function($scope, RESTService, $rootScope, $timeout, Organization, AUTH_EVENTS, Session, Directory, $location){
     $scope.session = Session;
     $scope.updatedInfo = false;
-    $scope.item = Session.me;
-    $scope.checkAlumni = Session.perms == 'alumni';
-    if ($scope.item.dob){
-        $scope.item.dob = moment($scope.item.dob).format('MM/DD/YYYY');
+    initialize();
+    $scope.checkAlumni = Session.perms === 'alumni';
+
+    function initialize(){
+        var me = JSON.parse(JSON.stringify(Session.me));
+        if(me.dob){
+            me.dob = moment(me.dob).format('MM/DD/YYYY');
+        }
+        if(me.phone){
+            me.phone = me.phone.replace(/[^0-9.]/g, '');
+            if (me.phone.length === 10){
+                me.phone = me.phone.slice(0, 3) + '-' + me.phone.slice(3, 6) + '-' + me.phone.slice(6, 10);
+            }
+            else{
+                me.phone = "";
+            }
+        }
+        $scope.item = me;
     }
 
     $scope.changePassword = function(old_pass, new_pass) {
@@ -34,20 +48,24 @@ App.controller('accountinfoController', ['$scope', 'RESTService', '$rootScope', 
             $location.path('app/directory/'+Session.user_name);
     }
     
-    $scope.checkAlumni = function(){
+    $scope.checkAlumni = function() {
         return Session.perms != 'alumni';
     }
         
         
     $scope.updateAccount = function(isValid){
-        console.log(isValid);
+        debugger;
+        var to_send = JSON.parse(JSON.stringify($scope.item));
+        to_send.phone = to_send.phone.replace(/[^0-9.]/g, '');
+
         if(isValid){
-            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', $scope.item)
+            RESTService.post(ENDPOINTS_DOMAIN + '/_ah/api/netegreek/v1/user/update_user_directory_info', to_send)
             .success(function(data){
                 if (!RESTService.hasErrors(data))
                 {
                     $scope.updatedInfo = true;
-                    Directory.updateMe($scope.item);
+                    Directory.updateMe(to_send);
+                    Session.updateMe(to_send);
                 }
                 else
                 {
